@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | TASI 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/tasi-csr-logo.png" alt="TASI 2026 Logo" style="height: 48px; width: auto;">
+                
+                
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <i class="ph ph-list"></i>
+            </button>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="about.html" class="nav-link">About</a>
+                <a href="past-editions.html" class="nav-link">Past Editions</a>
+                <a href="themes.html" class="nav-link">Themes</a>
+                <a href="speakers.html" class="nav-link">Speakers</a>
+                <a href="sponsor.html" class="nav-link">Sponsor</a>
+                <a href="contact.html" class="nav-link" style="color: var(--color-primary);">Contact</a>
+                <a href="register.html" class="btn btn-primary btn-sm">Register Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container text-center reveal-up">
+            <span class="section-label">Get in Touch</span>
+            <h1 class="section-title">Contact Us</h1>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-page">
+        <div class="container">
+            <div class="contact-grid">
+                
+                <div class="contact-info reveal-up">
+                    <div class="contact-block">
+                        <h3>For Participation</h3>
+                        <p><strong>Jyoti Vadehra</strong><br>Lead, Digital Trust and Safety | Head, Media & Communications<br>Centre for Social Research</p>
+                        <p><i class="ph ph-envelope-simple"></i> <a href="mailto:jyoti@csrindia.org">jyoti@csrindia.org</a></p>
+                        <p><i class="ph ph-envelope-simple"></i> <a href="mailto:info1@csrindia.org">info1@csrindia.org</a></p>
+                        <p><i class="ph ph-phone"></i> +91 98105 11540</p>
+                        <p><i class="ph ph-globe"></i> <a href="https://www.csrindia.org" target="_blank">www.csrindia.org</a></p>
+                    </div>
+
+                    <div class="contact-block mt-6">
+                        <h3>For Sponsorship</h3>
+                        <p><strong>Karuna Nain</strong> — Online Safety Expert / Advisor<br>
+                        <a href="mailto:karunanain@googlemail.com">karunanain@googlemail.com</a></p>
+                        <p class="mt-4"><strong>Caroline Humer</strong> — Co-Founder, Trust & Safety Festival<br>
+                        <a href="mailto:c.humer@trustandsafetyforum.org">c.humer@trustandsafetyforum.org</a></p>
+                        <p class="mt-4"><strong>JC Le Toquin</strong> — Co-Founder, Trust & Safety Festival<br>
+                        <a href="mailto:jc.letoquin@trustandsafetyforum.org">jc.letoquin@trustandsafetyforum.org</a></p>
+                        <p class="mt-4"><strong>Dr. Ranjana Kumari</strong> — Director, Centre for Social Research<br>
+                        <a href="mailto:ranjanakumari@csrindia.org">ranjanakumari@csrindia.org</a></p>
+                    </div>
+
+                    <div class="contact-block mt-6">
+                        <h3>Visit Our Office</h3>
+                        <p>Centre for Social Research<br>
+                        2, Nelson Mandela Marg, Vasant Kunj<br>
+                        New Delhi – 110070, India</p>
+                    </div>
+                    
+                    <p class="mt-6 text-sm" style="color: var(--color-text-light);">
+                        <em>Note: TASI 2026 is convened by the Centre for Social Research and the Trust & Safety Forum, with support from MeitY and in collaboration with leading diplomatic missions, technology platforms and international organisations.</em>
+                    </p>
+                </div>
+
+                <div class="contact-form form-card reveal-up" style="animation-delay: 0.2s;">
+                    <form class="custom-form" id="contactForm" onsubmit="event.preventDefault(); alert('Enquiry sent successfully! Our team will get back to you shortly.'); this.reset();">
+                        <div class="form-group">
+                            <label for="cName">Your Name *</label>
+                            <input type="text" id="cName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cEmail">Email *</label>
+                            <input type="email" id="cEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cOrg">Organisation</label>
+                            <input type="text" id="cOrg">
+                        </div>
+                        <div class="form-group">
+                            <label for="cSubject">Subject</label>
+                            <select id="cSubject">
+                                <option value="Registration Enquiry">Registration Enquiry</option>
+                                <option value="Sponsorship Enquiry">Sponsorship Enquiry</option>
+                                <option value="Speaker / Programme">Speaker / Programme</option>
+                                <option value="Media Accreditation">Media Accreditation</option>
+                                <option value="Partnership">Partnership</option>
+                                <option value="General Enquiry">General Enquiry</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cMessage">Message *</label>
+                            <textarea id="cMessage" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
+                            Send Enquiry <i class="ph ph-paper-plane-right"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Trust and Safety India Festival — TASI 2026. All rights reserved.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="index.html" style="color: var(--color-text-light);">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

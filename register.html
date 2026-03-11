@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | TASI 2026</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- QRCode.js and html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/tasi-csr-logo.png" alt="TASI 2026 Logo" style="height: 48px; width: auto;">
+                
+                
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <i class="ph ph-list"></i>
+            </button>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="about.html" class="nav-link">About</a>
+                <a href="past-editions.html" class="nav-link">Past Editions</a>
+                <a href="themes.html" class="nav-link">Themes</a>
+                <a href="speakers.html" class="nav-link">Speakers</a>
+                <a href="sponsor.html" class="nav-link">Sponsor</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="register.html" class="btn btn-primary btn-sm">Register Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header" style="padding-top: 151px;">
+        <div class="container text-center reveal-up">
+            <span class="section-label">Join TASI 2026</span>
+            <h1 class="section-title">Secure Your Delegate Place</h1>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section class="section register-section">
+        <div class="container">
+            <div class="register-grid">
+                
+                <!-- Left Column -->
+                <div class="register-info reveal-up">
+                    <p class="lead-text">
+                        Registration is open for all delegate categories. Upon registering you will receive an automated confirmation email with your unique delegate ID immediately.
+                    </p>
+                    <p class="mb-6">
+                        Closer to the event, a QR-coded entry pass will be issued to your registered email — your ticket for seamless check-in at all sessions, receptions, and the Gala Dinner.
+                    </p>
+
+                    <div class="process-steps">
+                        <div class="step-item">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <h4>Complete Registration</h4>
+                                <p>Fill in your details and select your delegate category.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <h4>Instant Confirmation Email</h4>
+                                <p>Receive a confirmation with your unique TASI 2026 delegate ID immediately.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <h4>QR Entry Pass (30 Days Prior)</h4>
+                                <p>Your personalised QR-coded entry ticket will be emailed 30 days before the event.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">4</div>
+                            <div class="step-content">
+                                <h4>Attend TASI 2026</h4>
+                                <p>Present your QR pass at venue entry — mobile check-in accepted at all gates.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Google Form -->
+                <div class="form-card reveal-up" style="animation-delay: 0.2s; padding: 0; overflow: hidden; background: transparent; box-shadow: none;">
+                    <iframe 
+                        src="https://docs.google.com/forms/d/e/1FAIpQLSfqBWA1ILnAxbu2Dq-gEesIWB2sgFjhxqfhLJcerXXTIsuAkg/viewform?embedded=true" 
+                        width="100%" 
+                        height="1807" 
+                        frameborder="0" 
+                        marginheight="0" 
+                        marginwidth="0"
+                        style="border-radius: var(--radius-lg); display: block;">
+                        Loading…
+                    </iframe>
+                    <p style="text-align: center; font-size: 0.85rem; color: var(--color-text-light); margin-top: 1rem;">
+                        For participation enquiries contact <a href="mailto:info1@csrindia.org">info1@csrindia.org</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal & Pass Generator -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal"><i class="ph ph-x"></i></button>
+            <div class="modal-body">
+                <div class="success-icon"><i class="ph-fill ph-check-circle"></i></div>
+                <h2>Registration Successful!</h2>
+                <p>An automated confirmation has been sent to your email.</p>
+                
+                <div class="pass-wrapper mt-6" id="delegatePass">
+                    <div class="pass-header">
+                        <div>
+                            <span class="pass-event">TASI 2026</span>
+                            <span class="pass-date">13-14th October 2026 &bull; New Delhi</span>
+                        </div>
+                        <div class="pass-logo">Trust &amp; Safety<br>India Festival</div>
+                    </div>
+                    <div class="pass-body">
+                        <div class="pass-details">
+                            <div class="pass-label">Delegate</div>
+                            <div class="pass-name" id="passName">John Doe</div>
+                            <div class="pass-org" id="passOrg">Organization</div>
+                            
+                            <div class="pass-meta">
+                                <div>
+                                    <span class="p-label">Category</span>
+                                    <span class="p-value" id="passCat">Technology / Industry</span>
+                                </div>
+                                <div>
+                                    <span class="p-label">ID</span>
+                                    <span class="p-value" id="passID">TASI26-JD-1A2B3C</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pass-qr" id="qrcode"></div>
+                    </div>
+                    <div class="pass-footer">
+                        Valid for all sessions, receptions, and Gala Dinner.
+                    </div>
+                </div>
+
+                <div class="modal-actions mt-6">
+                    <button id="downloadPass" class="btn btn-primary">
+                        <i class="ph ph-download-simple"></i> Download Pass
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">TASI 2026</h3>
+                    <p class="footer-tagline">
+                        The Trust and Safety India Festival (TASI) is convened by the Centre for Social Research and the Trust & Safety Forum.<br><br>
+                        <em>People First. Safety Always.</em>
+                    </p>
+                </div>
+                <!-- Navigation identical to index.html -->
+                <div class="footer-links">
+                    <h4>Event</h4>
+                    <a href="about.html">About TASI</a>
+                    <a href="past-editions.html">Past Editions</a>
+                    <a href="themes.html">Themes 2026</a>
+                    <a href="speakers.html">Speakers</a>
+                    <a href="register.html">Register</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Partner</h4>
+                    <a href="sponsor.html">Sponsorship</a>
+                    <a href="sponsor.html#details">Become a Sponsor</a>
+                    <a href="contact.html">Media Accreditation</a>
+                    <a href="contact.html">Speaker Proposals</a>
+                    <a href="sponsor.html#partners">Our Partners</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <a href="mailto:info1@csrindia.org">info1@csrindia.org</a>
+                    <a href="tel:+919810511540">+91 98105 11540</a>
+                    <a href="https://www.csrindia.org" target="_blank">www.csrindia.org</a>
+                    <a href="#">Code of Conduct</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Trust and Safety India Festival — TASI 2026. All rights reserved.</p>
+                <p>Convened by Centre for Social Research India & Trust & Safety Forum</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/register.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASI 2026 | Trust and Safety India Festival</title>
+    <meta name="description" content="India's foremost trust and safety convening. People First. Safety Always.">
+    <!-- Google Fonts: Inter & Outfit for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/tasi-csr-logo.png" alt="TASI 2026 Logo" style="height: 48px; width: auto;">
+                
+                
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <i class="ph ph-list"></i>
+            </button>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="about.html" class="nav-link">About</a>
+                <a href="past-editions.html" class="nav-link">Past Editions</a>
+                <a href="themes.html" class="nav-link">Themes</a>
+                <a href="speakers.html" class="nav-link">Speakers</a>
+                <a href="sponsor.html" class="nav-link">Sponsor</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="register.html" class="btn btn-primary btn-sm">Register Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-glow"></div>
+        <div class="container hero-container">
+            <div class="hero-content reveal-up">
+                <div class="hero-eyebrow">
+                    <span>Centre for Social Research India</span>
+                    <span class="dot">•</span>
+                    <span>Trust & Safety Forum</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Trust and Safety<br>
+                    <span class="text-gradient">India Festival</span>
+                </h1>
+                
+                <p class="hero-subtitle"><em>People First. Safety Always.</em></p>
+                
+                <p class="hero-desc">
+                    From AI to digital rights, regulations, tech policy and algorithms — we invite the best of the industry to collaborate on emerging trends and create solutions in digital spaces.
+                </p>
+
+                <div class="meta-pills">
+                    <div class="pill"><i class="ph ph-calendar-blank"></i> 13-14th October 2026</div>
+                    <div class="pill"><i class="ph ph-map-pin"></i> New Delhi, India</div>
+                    <div class="pill"><i class="ph ph-users"></i> 1,000+ Delegates</div>
+                </div>
+
+                <div class="hero-ctas">
+                    <a href="register.html" class="btn btn-primary btn-lg">
+                        Register Now
+                        <i class="ph ph-arrow-right"></i>
+                    </a>
+                    <a href="sponsor.html" class="btn btn-secondary btn-lg">
+                        Become a Sponsor
+                    </a>
+                    <a href="https://drive.google.com/file/d/1S9dHlHQg8pm0-HjsjkXK0dwOSUCYqhxn/view?usp=sharing" target="_blank" class="btn btn-secondary btn-lg" style="border-color: var(--color-accent); color: var(--color-accent);">
+                        <i class="ph ph-download-simple"></i>
+                        Download Brochure
+                    </a>
+                    <a href="https://drive.google.com/file/d/1oG8biMtiPTBxKnABevMPAOsqx2paykwS/view?usp=sharing" target="_blank" class="btn btn-secondary btn-lg" style="border-color: var(--color-accent); color: var(--color-accent);">
+                        <i class="ph ph-book-open"></i>
+                        Read TASI 2025 Report
+                    </a>
+                </div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="countdown-wrapper reveal-up" style="animation-delay: 0.2s;">
+                <div class="countdown-header">Countdown to TASI 2026</div>
+                <div class="countdown" id="countdown">
+                    <div class="time-block">
+                        <span class="time-num" id="cd-days">00</span>
+                        <span class="time-label">Days</span>
+                    </div>
+                    <span class="colon">:</span>
+                    <div class="time-block">
+                        <span class="time-num" id="cd-hours">00</span>
+                        <span class="time-label">Hours</span>
+                    </div>
+                    <span class="colon">:</span>
+                    <div class="time-block">
+                        <span class="time-num" id="cd-minutes">00</span>
+                        <span class="time-label">Mins</span>
+                    </div>
+                    <span class="colon">:</span>
+                    <div class="time-block">
+                        <span class="time-num" id="cd-seconds">00</span>
+                        <span class="time-label">Secs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Snippet & Stats -->
+    <section class="section about-preview bg-light">
+        <div class="container">
+            <div class="section-header reveal-up">
+                <span class="section-label">About TASI 2026</span>
+                <h2 class="section-title">India's Foremost<br>Trust & Safety Convening</h2>
+            </div>
+            
+            <div class="about-grid">
+                <div class="about-text reveal-up">
+                    <p class="lead-text">
+                        The Trust and Safety India Festival (TASI) is India's first national convening focused on trust and safety, led by civil society. TASI creates a rare, collaborative space for dialogue between government, industry, academia, and civil society.
+                    </p>
+                    <p>
+                        Convened by the Centre for Social Research (CSR) and The Trust & Safety Forum, TASI is recognised as a pre-summit event for India's AI Impact Summit and underscores India's growing role in shaping global conversations on technology governance, ethics, and digital safety.
+                    </p>
+                    <a href="about.html" class="link-arrow mt-4">Read Full Vision <i class="ph ph-arrow-right"></i></a>
+                </div>
+
+                <div class="stats-grid reveal-up">
+                    <div class="stat-card">
+                        <div class="stat-num">500+</div>
+                        <div class="stat-label">Participants (2025)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">100+</div>
+                        <div class="stat-label">Expert Speakers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">15</div>
+                        <div class="stat-label">Countries Represented</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">32</div>
+                        <div class="stat-label">Partner Organisations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">30+</div>
+                        <div class="stat-label">Sessions Held</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">10+</div>
+                        <div class="stat-label">Workshop Sessions</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Testimonial -->
+            <div class="testimonial-banner reveal-up mt-8">
+                <i class="ph-fill ph-quotes lg-icon"></i>
+                <blockquote>
+                    India bears a special responsibility in shaping global conversations on technology. Platforms such as the Trust and Safety India Festival become vital spaces for advancing responsible and inclusive AI.
+                </blockquote>
+                <cite>— EAM Dr. S. Jaishankar, External Affairs Minister, Government of India</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- What to Expect / Format -->
+    <section class="section format">
+        <div class="container">
+            <div class="section-header text-center reveal-up">
+                <span class="section-label">Format</span>
+                <h2 class="section-title">What to Expect at TASI 2026</h2>
+            </div>
+
+            <div class="cards-grid-4 mt-6">
+                <div class="feature-card reveal-up">
+                    <div class="card-icon"><i class="ph ph-chats-circle"></i></div>
+                    <h3>Conversations</h3>
+                    <p>Fireside chats, keynote addresses and curated panels bringing together policymakers, tech leaders and civil society experts focusing on AI governance and platform accountability.</p>
+                </div>
+                
+                <div class="feature-card reveal-up" style="animation-delay: 0.1s;">
+                    <div class="card-icon"><i class="ph ph-chalkboard-teacher"></i></div>
+                    <h3>Workshops</h3>
+                    <p>Focused workshops and deep-dive sessions exploring real-world case studies, risk mitigation tools and frameworks, moving beyond dialogue toward operational clarity.</p>
+                </div>
+
+                <div class="feature-card reveal-up" style="animation-delay: 0.2s;">
+                    <div class="card-icon"><i class="ph ph-lightbulb"></i></div>
+                    <h3>Spotlights</h3>
+                    <p>Industry spotlight sessions showcasing emerging tools, research and innovations addressing online harms, fraud detection and algorithmic accountability.</p>
+                </div>
+
+                <div class="feature-card reveal-up" style="animation-delay: 0.3s;">
+                    <div class="card-icon"><i class="ph ph-martini"></i></div>
+                    <h3>Receptions</h3>
+                    <p>Leadership receptions and a signature networking dinner across all days, fostering meaningful engagement and sustained collaboration beyond the Festival.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Structure Section -->
+    <section class="section structure bg-light">
+        <div class="container">
+            <div class="section-header reveal-up">
+                <span class="section-label">Structure</span>
+                <h2 class="section-title">Convening Format</h2>
+                <p class="section-subtitle">TASI 2026 is designed as a dynamic, multi-layered convening integrating high-level policy dialogue with practical, implementation-focused engagement. Moving from vision to execution.</p>
+            </div>
+
+            <div class="structure-grid mt-6">
+                <!-- Highlight Stats inline -->
+                <div class="structure-stats reveal-up">
+                    <div class="s-stat border-b">
+                        <span class="s-num">100+</span>
+                        <span class="s-text">Strategic Conference Speakers</span>
+                    </div>
+                    <div class="s-stat border-b">
+                        <span class="s-num">50+</span>
+                        <span class="s-text">Strategic Conference Sessions</span>
+                    </div>
+                    <div class="s-stat">
+                        <span class="s-num">3</span>
+                        <span class="s-text">Strategic Conference Stages</span>
+                    </div>
+                </div>
+
+                <div class="format-list reveal-up">
+                    <div class="format-item">
+                        <h4>01. Keynote Addresses</h4>
+                        <p>Vision-setting speeches from global leaders shaping AI governance and digital trust establishing the strategic direction.</p>
+                    </div>
+                    <div class="format-item">
+                        <h4>02. High Level Panels</h4>
+                        <p>Multi-stakeholder exchanges on trust, safety and platform accountability encouraging shared problem solving.</p>
+                    </div>
+                    <div class="format-item">
+                        <h4>03. Fireside Chats</h4>
+                        <p>Intimate moderated conversations exploring practical challenges and forward-looking solutions.</p>
+                    </div>
+                    <div class="format-item">
+                        <h4>04. Policy Roundtables</h4>
+                        <p>Closed-door, invitation-only discussions fostering candid dialogue to advance regulatory convergence.</p>
+                    </div>
+                    <div class="format-item">
+                        <h4>05. Industry Spotlights</h4>
+                        <p>Curated presentations highlighting emerging safety tools and responsible innovation models.</p>
+                    </div>
+                    <div class="format-item">
+                        <h4>06. Interactive Workshops</h4>
+                        <p>Hands-on sessions examining tools and case studies where participants engage directly with best practices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Themes Section -->
+    <section class="section themes bg-main">
+        <div class="container">
+            <div class="section-header text-center reveal-up">
+                <span class="section-label">Strategic Focus</span>
+                <h2 class="section-title">TASI 2026 Themes</h2>
+                <p class="section-subtitle">TASI 2026 will convene leaders across government, industry, civil society and academia to examine the most urgent questions shaping AI governance and digital trust.</p>
+            </div>
+            
+            <div class="themes-grid mt-6">
+                <div class="theme-card reveal-up">
+                    <span class="theme-num">01</span>
+                    <h3>AI Governance and Regulatory Frameworks</h3>
+                </div>
+                <div class="theme-card reveal-up" style="animation-delay: 0.1s;">
+                    <span class="theme-num">02</span>
+                    <h3>Safety by Design and Platform Accountability</h3>
+                </div>
+                <div class="theme-card reveal-up" style="animation-delay: 0.2s;">
+                    <span class="theme-num">03</span>
+                    <h3>Online Gender Based Violence and Digital Safety</h3>
+                </div>
+                <div class="theme-card reveal-up">
+                    <span class="theme-num">04</span>
+                    <h3>Fraud, Scams and Financial Exploitation</h3>
+                </div>
+                <div class="theme-card reveal-up" style="animation-delay: 0.1s;">
+                    <span class="theme-num">05</span>
+                    <h3>Mental Health and Digital Wellbeing</h3>
+                </div>
+                <div class="theme-card reveal-up" style="animation-delay: 0.2s;">
+                    <span class="theme-num">06</span>
+                    <h3>AI for Inclusive Development</h3>
+                </div>
+                <div class="theme-card reveal-up">
+                    <span class="theme-num">07</span>
+                    <h3>Global South Leadership in AI Governance</h3>
+                </div>
+                <div class="theme-card reveal-up" style="animation-delay: 0.1s;">
+                    <span class="theme-num">08</span>
+                    <h3>Cross Border Digital Harms and Cooperation</h3>
+                </div>
+                <div class="theme-card reveal-up" style="animation-delay: 0.2s;">
+                    <span class="theme-num">09</span>
+                    <h3>Transparency, Risk Assessment and Compliance</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Audience Section -->
+    <section class="section audience bg-light">
+        <div class="container">
+            <div class="section-header reveal-up">
+                <span class="section-label">Audience</span>
+                <h2 class="section-title">Who Will You Meet?</h2>
+            </div>
+
+            <div class="cards-grid-4 mt-6">
+                <!-- Delegate Card 1 -->
+                <div class="audience-card reveal-up">
+                    <div class="audience-icon"><i class="ph ph-bank"></i></div>
+                    <h3>Government & Regulators</h3>
+                    <p>Senior officials from national and state governments, regulatory authorities and policy institutions shaping AI governance frameworks, digital policy, cybersecurity strategy, and platform compliance.</p>
+                </div>
+                <!-- Delegate Card 2 -->
+                <div class="audience-card reveal-up" style="animation-delay: 0.1s;">
+                    <div class="audience-icon"><i class="ph ph-buildings"></i></div>
+                    <h3>Industry Leaders</h3>
+                    <p>Delegations from global technology companies, AI developers, social media platforms and emerging startups working on safety by design, risk mitigation, and transparency standards.</p>
+                </div>
+                <!-- Delegate Card 3 -->
+                <div class="audience-card reveal-up" style="animation-delay: 0.2s;">
+                    <div class="audience-icon"><i class="ph ph-users-three"></i></div>
+                    <h3>Civil Society Organisations</h3>
+                    <p>Leading civil society organisations, digital rights advocates, academic institutions and independent researchers specialising in AI ethics, platform governance, and youth safety.</p>
+                </div>
+                <!-- Delegate Card 4 -->
+                <div class="audience-card reveal-up" style="animation-delay: 0.3s;">
+                    <div class="audience-icon"><i class="ph ph-globe-hemisphere-east"></i></div>
+                    <h3>International Delegations</h3>
+                    <p>Representatives from embassies, multilateral organisations, and development agencies. Their participation strengthens cross-border cooperation on digital harms and regulatory convergence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Gallery Section -->
+    <section class="section gallery">
+        <div class="container">
+            <div class="section-header text-center reveal-up">
+                <span class="section-label">Moments</span>
+                <h2 class="section-title">Event Highlights</h2>
+                <p class="section-subtitle">A glimpse into past gatherings, workshops, and high-level dialogues driving the future of digital trust and safety.</p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item reveal-up">
+                    <img src="img/Gallery/7T7A0181.webp" alt="TASI 2025 Lanyards" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Registration & Delegate Passes</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.1s;">
+                    <img src="img/Gallery/7T7A0215.webp" alt="Attendees conversing" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Networking & Connections</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.2s;">
+                    <img src="img/Gallery/7T7A0259.webp" alt="Outdoor reception gathering" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Outdoor Receptions</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.3s;">
+                    <img src="img/Gallery/7T7A0527.webp" alt="Panel discussion" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">High-Level Panel Discussions</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.4s;">
+                    <img src="img/Gallery/7T7A0573.webp" alt="S. Jaishankar lighting lamp" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Inaugural Lamp Lighting</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.5s;">
+                    <img src="img/Gallery/7T7A0646.webp" alt="Dr. S. Jaishankar speaking" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Ministerial Keynote Address</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.6s;">
+                    <img src="img/Gallery/7T7A1512.webp" alt="Audience members discussing" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Interactive Policy Rounds</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.7s;">
+                    <img src="img/Gallery/7T7A2715.webp" alt="Audience listening" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Plenary Sessions</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.8s;">
+                    <img src="img/Gallery/7T7A2996.webp" alt="Speaker on stage" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Expert Insights</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 0.9s;">
+                    <img src="img/Gallery/7T7A3314 (1).webp" alt="Panel discussion" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Cross-Border Cooperation Panel</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 1.0s;">
+                    <img src="img/Gallery/7T7A3544.webp" alt="Speaker address" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Safety by Design</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 1.1s;">
+                    <img src="img/Gallery/7T7A3637.webp" alt="Group of sponsors and partners" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Industry Partners & Exhibitors</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 1.2s;">
+                    <img src="img/Gallery/7T7A4136.webp" alt="Panel discussion" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Civil Society Perspectives</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 1.3s;">
+                    <img src="img/Gallery/7T7A4166.webp" alt="Panel interview style" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Fireside Chats</div>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="animation-delay: 1.4s;">
+                    <img src="img/Gallery/7T7A4504.webp" alt="Panel discussion" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">Regulatory Frameworks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global CTA -->
+    <section class="section global-cta">
+        <div class="cta-glow"></div>
+        <div class="container text-center text-white reveal-up">
+            <h2 class="h1 mb-4">Be Part of the Conversation</h2>
+            <p class="large-text mb-6">Join 1,000+ delegates shaping the future of digital trust, safety, and AI governance.</p>
+            <div class="hero-ctas justify-center">
+                <a href="register.html" class="btn btn-primary btn-lg btn-white">Register for TASI 2026</a>
+                <a href="sponsor.html" class="btn btn-secondary btn-lg btn-transparent">Sponsorship Opportunities</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">TASI 2026</h3>
+                    <p class="footer-tagline">
+                        The Trust and Safety India Festival (TASI) is convened by the Centre for Social Research and the Trust & Safety Forum.<br><br>
+                        <em>People First. Safety Always.</em>
+                    </p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Event</h4>
+                    <a href="about.html">About TASI</a>
+                    <a href="past-editions.html">Past Editions</a>
+                    <a href="themes.html">Themes 2026</a>
+                    <a href="speakers.html">Speakers</a>
+                    <a href="register.html">Register</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Partner</h4>
+                    <a href="sponsor.html">Sponsorship</a>
+                    <a href="sponsor.html#details">Become a Sponsor</a>
+                    <a href="contact.html">Media Accreditation</a>
+                    <a href="contact.html">Speaker Proposals</a>
+                    <a href="sponsor.html#partners">Our Partners</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <a href="mailto:info1@csrindia.org">info1@csrindia.org</a>
+                    <a href="tel:+919810511540">+91 98105 11540</a>
+                    <a href="https://www.csrindia.org" target="_blank">www.csrindia.org</a>
+                    <a href="#">Code of Conduct</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Trust and Safety India Festival — TASI 2026. All rights reserved.</p>
+                <p>Convened by Centre for Social Research India & Trust & Safety Forum</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+const teamMembers = [
+    {
+        name: "Dr. Ranjana Kumari",
+        designation: "Director, Centre for Social Research",
+        photo: "Ranjana Kumari.jpg",
+        bio: "Dr. Ranjana Kumari has been a leading advocate for women's rights in India for over four decades, combining activism, scholarship, and policy engagement. She has advised the Government of India through roles on the National Commission for Women, Ministry of Women and Child Development, NHRC, and Ministry of Labour, and has served as a Gender Expert at the ILO and United Nations in Geneva. Recognized with national and international awards, including the Lotus Leadership Award, she was named among Apolitical's 100 Most Influential People in Gender Policy. She also serves on Meta's Global Advisory Council, the Advertising Standards Council of India, and was previously member of the Trust and Safety Council of Teleperformance and Twitter advocating for safe, respectful online spaces."
+    },
+    {
+        name: "Jyoti Vadehra",
+        designation: "Head, Online Safety and Wellbeing, CSR India",
+        photo: "Jyoti Vadehra.jpg",
+        bio: "Jyoti Vadehra is the Lead Digital Trust and Safety, CSR and founding secretariat of the Alliance for Cyber Trust and Safety (ACTS). A strategic expert in the field, she specializes in online safety and wellbeing, and the design and execution of large-scale online safety projects. Jyoti spearheaded the formation of the ACTS alliance and is dedicated to fostering a safer digital ecosystem at the nexus of Gen AI, child safety and wellbeing, gender equality, and sustainable development. Her experience includes significant contributions to policy advocacy, and she is the first Indian representative on Meta's Board of Global Women's Safety Expert Advisors."
+    },
+    {
+        name: "Karuna Nain",
+        designation: "Online Safety Expert/ Advisor, Centre for Social Research",
+        photo: "Karuna Nain.jpg",
+        bio: "Karuna Nain is a global online safety expert with two decades' experience in technology policy, safety strategy, government affairs and communications. She advises technology companies, non-profits and governments on building safer digital ecosystems through practical policy, product design and stakeholder engagement. Karuna spent a decade at Meta and served as Global Safety Policy Director, leading work on child safety and well-being, women's safety and suicide prevention. She co-founded StopNCII.org with UK charity SWGfL and serves on its Board of Trustees."
+    },
+    {
+        name: "Jean-Christophe Le Toquin",
+        designation: "Co-Founder, Trust & Safety Festival",
+        photo: "JC Le Toquin.jpg",
+        bio: "Jean-Christophe Le Toquin is Co-Founder of the Trust & Safety Festival, bringing together industry leaders, policymakers, and civil society to advance safer digital ecosystems globally."
+    },
+    {
+        name: "Caroline Humer",
+        designation: "Co-Founder, Trust & Safety Festival",
+        photo: "Caroline Humer.jpg",
+        bio: "Caroline Humer is Co-Founder of the Trust & Safety Festival, dedicated to building bridges across sectors to shape responsible and trustworthy digital environments worldwide."
+    },
+    {
+        name: "Saquib Jamil",
+        designation: "Project Coordinator, Centre for Social Research",
+        photo: "Saquib Jamil.jpg",
+        bio: "Saquib Jamil is Project Coordinator in the Media and Communication Department at the Centre for Social Research (CSR), New Delhi. He specializes in research, digital advocacy, and media engagement to advance CSR's mission of promoting gender equality and social justice. Saquib holds an MA in Development Studies from Dr. B.R. Ambedkar University and a BA (Hons) in Political Science from Jamia Millia Islamia. His experience includes research on socio-economic disparities, urban development, and gender-focused policies, as well as roles in community management and fieldwork on water conservation. Passionate about media, digital rights, and social impact, His expertise spans qualitative and quantitative research, social media marketing, and content creation."
+    },
+    {
+        name: "Ketaki Ruchika Singh",
+        designation: "Project Coordinator, Centre for Social Research",
+        photo: "Ketaki Ruchika Singh.png",
+        bio: "Ketaki Ruchika Singh is an Online Digital Safety Researcher & Trainer and Project Coordinator in the Media Department at the Centre for Social Research, India. With experience across cyber trust and safety initiatives, editorial projects, and policy research, she brings a strong interdisciplinary perspective. She holds an M.A. in Psychology from Bangor University, UK, and has previously worked with WHO, Sangath, and INTACH. A former Behavioral Technician, Ketaki has also supported children on the autism spectrum. Outside of work, she trains in Shaolin Kung Fu, practices classical and semi-classical Indian music, and enjoys storytelling, reading, and creative arts."
+    },
+    {
+        name: "Akankshya Acharya",
+        designation: "Project Coordinator, Digital Safety and Online Wellbeing, Centre for Social Research",
+        photo: "Akankshya Acharya.jpg",
+        bio: "Akankshya Acharya is a development practitioner with a Master's in Development Studies and a background in social sciences research and media. She has extensive experience in copywriting, editing, and policy communications, with a focus on media and governance. Her experience spans research, advocacy, and editorial projects for legacy media outlets. She currently serves as Project Coordinator for CSR's Digital Safety and Online Wellbeing vertical, where she supports and contributes to initiatives that foster safer and more inclusive engagement in digital spaces."
+    }
+];
