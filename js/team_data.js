@@ -44,7 +44,7 @@ const teamMembers = [
     {
         name: "Akankshya Acharya",
         designation: "Project Coordinator, Digital Safety and Online Wellbeing, Centre for Social Research",
-        photo: "Akankshya Acharya.jpg",
+        photo: "Akankshya.jpeg",
         bio: "Akankshya Acharya is a development practitioner with a Master's in Development Studies and a background in social sciences research and media. She has extensive experience in copywriting, editing, and policy communications, with a focus on media and governance. Her experience spans research, advocacy, and editorial projects for legacy media outlets. She currently serves as Project Coordinator for CSR's Digital Safety and Online Wellbeing vertical, where she supports and contributes to initiatives that foster safer and more inclusive engagement in digital spaces."
     }
 ];

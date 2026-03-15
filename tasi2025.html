@@ -3,30 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Past Editions | TASI 2026</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@phosphor-icons/web"></script>
-<link rel="stylesheet" href="css/styles.css">
+<title>TASI 2025 | Trust & Safety India Festival</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* ── Past-editions page supplementary styles ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Local colour aliases (reuse global vars) */
   :root {
-    --ink: var(--color-dark);
-    --cream: var(--color-bg-main);
-    --rust: var(--color-primary);
-    --gold: var(--color-accent);
-    --sage: var(--color-primary-dark);
-    --dust: var(--color-primary-light);
-    --muted: var(--color-dark-muted);
+    --ink: #0d0d0d;
+    --cream: #f5f0e8;
+    --rust: #c0421a;
+    --gold: #c9943a;
+    --sage: #3a6b52;
+    --dust: #e8e0d0;
+    --muted: #6b6258;
     --white: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--ink);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(192,66,26,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(58,107,82,0.15) 0%, transparent 60%);
+  }
+
+  .hero-topbar {
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .hero-topbar .org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+  }
+
+  .hero-topbar .year-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    border: 1px solid rgba(201,148,58,0.4);
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+  }
+
+  .hero-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-pretitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    color: var(--rust);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-pretitle::before {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: 1px;
+    background: var(--rust);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 0.93;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-desc {
+    max-width: 55ch;
+    font-size: 1.15rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.62);
+    font-weight: 300;
+    margin-bottom: 3rem;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--rust);
+    color: var(--white);
+    padding: 0.85rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #a33516; }
+
+  .btn-outline {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    padding: 0.85rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.6); color: var(--white); }
+
+  .hero-footer {
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .hero-stats-row {
+    display: flex;
+    gap: 3.5rem;
+  }
+
+  .hstat { text-align: center; }
+  .hstat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    line-height: 1;
+  }
+  .hstat .label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.38);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  .hero-date-info {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.8;
+  }
+
+  /* ── SECTION BASICS ── */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 3rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section-sub {
+    font-size: 1.05rem;
+    line-height: 1.78;
+    color: var(--muted);
+    max-width: 65ch;
+    font-weight: 300;
   }
 
   /* ── CONTEXT BAND ── */
   .context-band {
-    background: var(--color-bg-alt);
+    background: var(--white);
+    border-top: 4px solid var(--rust);
   }
 
   .context-band .inner {
@@ -39,43 +263,25 @@
   .context-band .text-col p {
     font-size: 1rem;
     line-height: 1.85;
-    color: var(--color-text);
+    color: #444;
     margin-bottom: 1.2rem;
   }
+
   .context-band .text-col p:last-child { margin-bottom: 0; }
 
-  .section-heading {
-    font-family: var(--font-heading);
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.01em;
-    color: var(--color-dark);
-  }
-
-  .section-sub {
-    font-size: 1.05rem;
-    line-height: 1.78;
-    color: var(--color-dark-muted);
-    max-width: 65ch;
-    font-weight: 300;
-  }
-
   .highlight-block {
-    background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-primary) 100%);
-    color: #fff;
+    background: var(--ink);
+    color: var(--cream);
     padding: 2.5rem;
     position: relative;
-    border-radius: var(--radius-sm);
   }
 
   .highlight-block::before {
     content: '\201C';
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', serif;
     font-size: 6rem;
-    color: #f5d4b0;
-    opacity: 0.7;
+    color: var(--rust);
+    opacity: 0.6;
     position: absolute;
     top: 0.5rem;
     left: 1.5rem;
@@ -83,12 +289,11 @@
   }
 
   .highlight-block blockquote {
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
     font-style: italic;
     line-height: 1.65;
-    color: rgba(255,255,255,0.92);
-    padding-top: 2.5rem;
+    padding-top: 2rem;
     margin-bottom: 1.5rem;
   }
 
@@ -96,62 +301,65 @@
     font-style: normal;
     font-size: 0.78rem;
     letter-spacing: 0.1em;
-    color: #a8cc88;
+    color: var(--gold);
     text-transform: uppercase;
-    font-weight: 500;
   }
 
   .presummit-tag {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    background: rgba(92,122,62,0.12);
-    border: 1px solid rgba(92,122,62,0.35);
-    color: #3a5228;
+    background: rgba(201,148,58,0.12);
+    border: 1px solid rgba(201,148,58,0.35);
+    color: var(--gold);
     padding: 0.5rem 1rem;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
     margin-top: 1.5rem;
-    border-radius: var(--radius-sm);
-    font-weight: 500;
+    display: block;
+    width: fit-content;
   }
 
   .presummit-tag::before {
     content: '●';
-    color: var(--color-accent);
+    color: var(--gold);
     font-size: 0.5rem;
-    animation: pe-pulse 2s infinite;
+    animation: pulse 2s infinite;
   }
 
-  @keyframes pe-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
   /* ── TRACKS GRID ── */
-  .tracks-section { background: var(--color-bg-main); }
+  .tracks-section {
+    background: var(--cream);
+  }
 
   .tracks-section .top-row {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 4rem;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
     align-items: end;
   }
 
   .tracks-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    background: var(--color-border);
+    gap: 1.5px;
+    background: var(--ink);
   }
 
   .track-card {
-    background: var(--color-bg-main);
+    background: var(--cream);
     padding: 2.2rem;
     position: relative;
     overflow: hidden;
     transition: background 0.25s;
+    cursor: default;
   }
 
-  .track-card:hover { background: #ffffff; }
+  .track-card:hover { background: var(--white); }
 
   .track-card::after {
     content: '';
@@ -165,44 +373,51 @@
 
   .track-card:hover::after { transform: scaleX(1); }
 
-  .track-card.rust::after { background: var(--color-primary); }
-  .track-card.sage::after { background: var(--color-primary-dark); }
-  .track-card.gold::after { background: var(--color-accent); }
+  .track-card.rust::after { background: var(--rust); }
+  .track-card.sage::after { background: var(--sage); }
+  .track-card.gold::after { background: var(--gold); }
 
   .track-num {
+    font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
-    color: var(--color-dark-muted);
+    color: var(--muted);
     letter-spacing: 0.12em;
     margin-bottom: 1.2rem;
   }
 
-  .track-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
+  .track-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
 
   .track-title {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 0.8rem;
     line-height: 1.25;
-    color: var(--color-dark);
   }
 
   .track-desc {
     font-size: 0.88rem;
     line-height: 1.7;
-    color: var(--color-dark-muted);
+    color: var(--muted);
   }
 
   /* ── KEYNOTE ── */
   .keynote-section {
-    background: var(--color-bg-main);
-    color: var(--color-dark);
+    background: var(--ink);
+    color: var(--white);
     position: relative;
     overflow: hidden;
   }
 
   .keynote-section::before {
-    content: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(192,66,26,0.12) 0%, transparent 65%);
   }
 
   .keynote-section .inner {
@@ -215,38 +430,39 @@
   }
 
   .keynote-tag {
+    font-family: 'DM Mono', monospace;
     font-size: 0.68rem;
     letter-spacing: 0.2em;
-    color: var(--color-primary);
+    color: var(--rust);
     text-transform: uppercase;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.7rem;
   }
-  .keynote-tag::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--color-primary); }
+  .keynote-tag::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--rust); }
 
-  .keynote-section .section-heading { color: var(--color-dark); }
+  .keynote-section .section-heading { color: var(--white); }
 
   .keynote-body {
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.85;
-    color: var(--color-text);
+    color: rgba(255,255,255,0.6);
     font-weight: 300;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .keynote-quote {
-    border-left: 3px solid var(--color-accent);
+    border-left: 3px solid var(--rust);
     padding-left: 1.5rem;
     margin: 2rem 0;
   }
 
   .keynote-quote p {
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
     font-style: italic;
-    color: var(--color-dark);
+    color: rgba(255,255,255,0.88);
     line-height: 1.6;
     margin-bottom: 0.7rem;
   }
@@ -255,81 +471,78 @@
     font-style: normal;
     font-size: 0.75rem;
     letter-spacing: 0.1em;
-    color: var(--color-accent);
+    color: var(--gold);
     text-transform: uppercase;
-    font-weight: 500;
   }
 
-  .pe-speaker-card {
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
+  .speaker-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
     padding: 2rem;
-    border-radius: var(--radius-sm);
   }
 
-  .pe-speaker-card + .pe-speaker-card { margin-top: 1rem; }
-
-  .pe-speaker-card .role {
+  .speaker-card .role {
+    font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
     letter-spacing: 0.15em;
-    color: var(--color-accent);
+    color: var(--gold);
     text-transform: uppercase;
     margin-bottom: 0.8rem;
   }
 
-  .pe-speaker-card .name {
-    font-family: var(--font-heading);
-    font-size: 1.4rem;
+  .speaker-card .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: var(--color-dark);
-    margin-bottom: 0.4rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
     line-height: 1.2;
   }
 
-  .pe-speaker-card .affil {
+  .speaker-card .affil {
     font-size: 0.85rem;
-    color: var(--color-dark-muted);
+    color: rgba(255,255,255,0.45);
     margin-bottom: 1.5rem;
   }
 
-  .pe-speaker-card hr {
+  .speaker-card hr {
     border: none;
-    border-top: 1px solid var(--color-border);
-    margin-bottom: 1.2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1.5rem;
   }
 
   .key-points { list-style: none; }
   .key-points li {
     font-size: 0.88rem;
-    color: var(--color-text);
+    color: rgba(255,255,255,0.55);
     padding: 0.5rem 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     display: flex;
     align-items: flex-start;
     gap: 0.7rem;
   }
   .key-points li::before {
     content: '→';
-    color: var(--color-accent);
+    color: var(--rust);
     flex-shrink: 0;
     margin-top: 0.05rem;
   }
 
   /* ── SESSIONS ── */
-  .sessions-section { background: var(--color-bg-alt); }
+  .sessions-section { background: var(--white); }
 
   .sessions-section .top {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
     gap: 4rem;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
     align-items: end;
   }
 
-  .sessions-list { display: flex; flex-direction: column; gap: 1px; background: var(--color-border); }
+  .sessions-list { display: flex; flex-direction: column; gap: 1px; background: var(--dust); }
 
   .session-item {
-    background: var(--color-bg-alt);
+    background: var(--white);
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
@@ -341,13 +554,14 @@
   }
 
   .session-item:hover {
-    background: var(--color-bg-main);
-    border-left-color: var(--color-primary);
+    background: var(--cream);
+    border-left-color: var(--rust);
   }
 
   .session-item .s-num {
+    font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
-    color: var(--color-dark-muted);
+    color: var(--muted);
     letter-spacing: 0.1em;
     white-space: nowrap;
   }
@@ -355,40 +569,39 @@
   .session-item .s-content { min-width: 0; }
 
   .session-item .s-title {
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', serif;
     font-size: 1rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
     line-height: 1.3;
-    color: var(--color-dark);
   }
 
   .session-item .s-meta {
     font-size: 0.78rem;
-    color: var(--color-dark-muted);
+    color: var(--muted);
   }
 
   .session-item .s-tag {
+    font-family: 'DM Mono', monospace;
     font-size: 0.6rem;
     letter-spacing: 0.1em;
-    padding: 0.3rem 0.8rem;
-    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
     white-space: nowrap;
     flex-shrink: 0;
-    font-weight: 500;
   }
 
-  .tag-ai { background: rgba(212,87,42,0.10); color: var(--color-primary); }
-  .tag-child { background: rgba(92,122,62,0.12); color: #3a5228; }
-  .tag-gender { background: rgba(184,74,34,0.10); color: var(--color-primary-dark); }
-  .tag-youth { background: rgba(45,31,14,0.08); color: var(--color-dark); }
-  .tag-safety { background: rgba(92,122,62,0.10); color: #3a5228; }
-  .tag-workforce { background: rgba(212,87,42,0.10); color: var(--color-primary); }
+  .tag-ai { background: rgba(192,66,26,0.1); color: var(--rust); }
+  .tag-child { background: rgba(58,107,82,0.1); color: var(--sage); }
+  .tag-gender { background: rgba(201,148,58,0.12); color: #9a6f1a; }
+  .tag-youth { background: rgba(13,13,13,0.06); color: var(--ink); }
+  .tag-safety { background: rgba(58,107,82,0.08); color: var(--sage); }
+  .tag-workforce { background: rgba(192,66,26,0.08); color: var(--rust); }
 
   /* ── STATS STRIP ── */
   .stats-strip {
-    background: linear-gradient(135deg, #3a5228 0%, var(--color-accent) 50%, #4a6230 100%);
-    padding: 5rem 2rem;
+    background: var(--rust);
+    padding: 4rem;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 2rem;
@@ -397,20 +610,21 @@
   .stat-item { text-align: center; }
 
   .stat-item .big {
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', serif;
     font-size: 3rem;
     font-weight: 900;
-    color: #fff;
+    color: var(--white);
     display: block;
     line-height: 1;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
   }
 
   .stat-item .label {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.8);
-    letter-spacing: 0.06em;
-    line-height: 1.5;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.4;
   }
 
   .stat-divider {
@@ -420,7 +634,7 @@
   }
 
   /* ── DIPLOMATIC ── */
-  .diplomatic-section { background: var(--color-bg-main); }
+  .diplomatic-section { background: var(--cream); }
 
   .diplomatic-section .inner {
     display: grid;
@@ -433,46 +647,42 @@
 
   .embassy-item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
     padding: 1.2rem 1.5rem;
-    background: var(--color-bg-alt);
-    border-left: 3px solid var(--color-accent);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--white);
+    border-left: 3px solid var(--sage);
   }
 
-  .embassy-item .flag { font-size: 1.5rem; flex-shrink: 0; }
+  .embassy-item .flag { font-size: 1.5rem; }
 
   .embassy-item .info .country {
     font-weight: 600;
     font-size: 0.9rem;
-    margin-bottom: 0.25rem;
-    color: var(--color-dark);
+    margin-bottom: 0.15rem;
   }
 
   .embassy-item .info .detail {
-    font-size: 0.82rem;
-    color: var(--color-dark-muted);
-    line-height: 1.6;
+    font-size: 0.78rem;
+    color: var(--muted);
   }
 
   .partner-logos {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
   .partner-pill {
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    padding: 0.85rem 1.1rem;
+    background: var(--white);
+    border: 1px solid var(--dust);
+    padding: 1rem 1.2rem;
     font-size: 0.82rem;
     font-weight: 500;
-    color: var(--color-dark);
+    color: var(--ink);
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    border-radius: var(--radius-sm);
   }
 
   .partner-pill::before {
@@ -480,18 +690,19 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-accent);
+    background: var(--rust);
     flex-shrink: 0;
   }
 
   /* ── IMPACT ── */
   .impact-section {
-    background: linear-gradient(155deg, #2d3e1e 0%, #4a6230 50%, var(--color-accent) 100%);
-    color: #fff;
+    background: var(--sage);
+    color: var(--white);
   }
 
-  .impact-section .section-heading { color: #fff; }
-  .impact-section .section-sub { color: rgba(255,255,255,0.82); }
+  .impact-section .section-label { color: rgba(255,255,255,0.5); }
+  .impact-section .section-label::before { background: rgba(255,255,255,0.3); }
+  .impact-section .section-heading { color: var(--white); }
 
   .impact-grid {
     display: grid;
@@ -501,24 +712,23 @@
   }
 
   .impact-card {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
     padding: 2rem;
-    border-radius: var(--radius-sm);
   }
 
   .impact-card .ic-num {
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', serif;
     font-size: 2.8rem;
     font-weight: 900;
-    color: #fff;
+    color: rgba(255,255,255,0.9);
     line-height: 1;
     margin-bottom: 0.5rem;
   }
 
   .impact-card .ic-label {
     font-size: 0.78rem;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.55);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-bottom: 1rem;
@@ -527,11 +737,11 @@
   .impact-card .ic-desc {
     font-size: 0.88rem;
     line-height: 1.7;
-    color: rgba(255,255,255,0.82);
+    color: rgba(255,255,255,0.7);
   }
 
   /* ── WORKSHOPS ── */
-  .workshops-section { background: var(--color-bg-alt); }
+  .workshops-section { background: var(--white); }
 
   .workshops-grid {
     display: grid;
@@ -541,38 +751,34 @@
   }
 
   .workshop-card {
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--dust);
     padding: 2rem;
-    border-radius: var(--radius-sm);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: var(--color-bg-alt);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
   }
 
-  .workshop-card:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
-  }
+  .workshop-card:hover { border-color: var(--rust); }
 
   .workshop-card .wc-num {
+    font-family: 'DM Mono', monospace;
     font-size: 0.6rem;
     letter-spacing: 0.15em;
-    color: var(--color-dark-muted);
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
   }
 
   .workshop-card .wc-title {
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', serif;
     font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.3;
-    margin-bottom: 0.5rem;
-    color: var(--color-dark);
+    margin-bottom: 0.8rem;
   }
 
   .workshop-card .wc-facilitator {
-    font-size: 0.82rem;
-    color: var(--color-accent);
+    font-size: 0.78rem;
+    color: var(--rust);
     margin-bottom: 1rem;
     font-weight: 500;
   }
@@ -580,16 +786,16 @@
   .workshop-card .wc-desc {
     font-size: 0.88rem;
     line-height: 1.7;
-    color: var(--color-dark-muted);
+    color: var(--muted);
   }
 
   .workshop-card .wc-takeaway {
     margin-top: 1.2rem;
     padding-top: 1.2rem;
-    border-top: 1px solid var(--color-border);
-    font-size: 0.82rem;
-    color: var(--color-primary);
-    font-weight: 600;
+    border-top: 1px solid var(--dust);
+    font-size: 0.8rem;
+    color: var(--sage);
+    font-weight: 500;
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
@@ -598,96 +804,133 @@
   .workshop-card .wc-takeaway::before { content: '↗'; flex-shrink: 0; }
 
   /* ── RECOMMENDATIONS ── */
-  .recs-section { background: var(--color-bg-main); }
+  .recs-section { background: var(--ink); color: var(--white); }
+
+  .recs-section .section-label { color: rgba(255,255,255,0.35); }
+  .recs-section .section-label::before { background: rgba(255,255,255,0.2); }
+  .recs-section .section-heading { color: var(--white); }
+  .recs-section .section-sub { color: rgba(255,255,255,0.5); }
 
   .recs-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
-    background: var(--color-border);
+    gap: 1.5px;
+    background: rgba(255,255,255,0.08);
     margin-top: 3.5rem;
   }
 
   .rec-item {
-    background: var(--color-bg-main);
+    background: var(--ink);
     padding: 2.2rem;
     border-top: 2px solid transparent;
     transition: border-color 0.2s, background 0.2s;
   }
 
   .rec-item:hover {
-    background: var(--color-bg-alt);
-    border-top-color: var(--color-primary-dark);
+    background: #181818;
+    border-top-color: var(--rust);
   }
 
   .rec-item .ri-num {
-    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
     letter-spacing: 0.15em;
-    color: var(--color-primary);
-    margin-bottom: 0.75rem;
-    font-weight: 600;
+    color: var(--rust);
+    margin-bottom: 1rem;
   }
 
   .rec-item .ri-title {
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', serif;
     font-size: 1.05rem;
     font-weight: 700;
-    color: var(--color-dark);
+    color: var(--white);
     margin-bottom: 0.8rem;
     line-height: 1.3;
   }
 
   .rec-item .ri-desc {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     line-height: 1.75;
-    color: var(--color-dark-muted);
+    color: rgba(255,255,255,0.45);
   }
 
   /* ── FUTURE ── */
-  .future-section { background: var(--color-bg-main); }
+  .future-section { background: var(--gold); }
 
   .future-section .inner {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     gap: 5rem;
-    align-items: start;
+    align-items: center;
   }
 
-  .future-items { display: flex; flex-direction: column; gap: 1.2rem; }
+  .future-section .section-label { color: rgba(13,13,13,0.5); }
+  .future-section .section-label::before { background: rgba(13,13,13,0.3); }
+
+  .future-section .section-heading { color: var(--ink); }
+
+  .future-section .section-sub { color: rgba(13,13,13,0.65); }
+
+  .future-items { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1rem; }
 
   .future-item {
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-primary);
+    background: rgba(255,255,255,0.5);
     padding: 1.4rem 1.6rem;
+    border-left: 3px solid var(--ink);
     display: flex;
     gap: 1.2rem;
     align-items: flex-start;
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   }
 
-  .future-item .fi-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .future-item .fi-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
 
   .future-item .fi-title {
     font-weight: 600;
-    font-size: 0.92rem;
-    margin-bottom: 0.3rem;
-    color: var(--color-dark);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
   }
 
   .future-item .fi-desc {
-    font-size: 0.84rem;
+    font-size: 0.82rem;
     line-height: 1.65;
-    color: var(--color-dark-muted);
+    color: rgba(13,13,13,0.6);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.35);
+    padding: 3rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  footer .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  footer .footer-brand span { color: var(--gold); }
+
+  footer .footer-info {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    line-height: 1.9;
+    text-align: right;
   }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 1024px) {
-    .context-band .inner,
-    .keynote-section .inner,
-    .diplomatic-section .inner,
-    .future-section .inner { grid-template-columns: 1fr; gap: 2.5rem; }
-    .tracks-section .top-row { grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (max-width: 900px) {
+    section { padding: 4rem 2rem; }
+    .hero-body, .hero-topbar, .hero-footer { padding-left: 2rem; padding-right: 2rem; }
+    .hero-stats-row { gap: 2rem; }
+    .context-band .inner, .keynote-section .inner,
+    .diplomatic-section .inner, .future-section .inner { grid-template-columns: 1fr; gap: 2.5rem; }
     .tracks-grid { grid-template-columns: 1fr 1fr; }
     .impact-grid { grid-template-columns: 1fr 1fr; }
     .sessions-section .top { grid-template-columns: 1fr; gap: 1.5rem; }
@@ -695,62 +938,73 @@
     .recs-grid { grid-template-columns: 1fr; }
     .stats-strip { grid-template-columns: repeat(3, 1fr); }
     .stat-divider { display: none; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    footer .footer-info { text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-title { font-size: 3rem; }
+    .tracks-grid { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .stats-strip { grid-template-columns: 1fr 1fr; }
+    .hero-stats-row { flex-wrap: wrap; gap: 1.5rem; }
     .partner-logos { grid-template-columns: 1fr; }
   }
 
-  @media (max-width: 640px) {
-    .tracks-grid { grid-template-columns: 1fr; }
-    .impact-grid { grid-template-columns: 1fr; }
-    .stats-strip { grid-template-columns: 1fr 1fr; padding: 3rem 1.5rem; }
-    .stat-item .big { font-size: 2.2rem; }
+  /* animate on load */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
   }
+
+  .hero-pretitle { animation: fadeUp 0.6s ease both; }
+  .hero-title { animation: fadeUp 0.7s 0.1s ease both; }
+  .hero-desc { animation: fadeUp 0.7s 0.2s ease both; }
+  .hero-cta-row { animation: fadeUp 0.7s 0.3s ease both; }
 </style>
 </head>
 <body>
 
-<!-- Navigation -->
-<header class="navbar scrolled" id="navbar">
-    <div class="container nav-container">
-        <a href="index.html" class="nav-logo">
-            <img src="img/tasi-csr-logo.png" alt="TASI 2026 Logo" style="height: 48px; width: auto;">
-        </a>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
-            <i class="ph ph-list"></i>
-        </button>
-        <nav class="nav-links" id="navLinks">
-            <a href="about.html" class="nav-link">About</a>
-            <a href="past-editions.html" class="nav-link" style="color: var(--color-primary);">Past Editions</a>
-            <a href="themes.html" class="nav-link">Themes</a>
-            <a href="speakers.html" class="nav-link">Speakers</a>
-            <a href="sponsor.html" class="nav-link">Sponsor</a>
-            <a href="contact.html" class="nav-link">Contact</a>
-            <a href="register.html" class="btn btn-primary btn-sm">Register Now</a>
-        </nav>
-    </div>
-</header>
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="hero">
+  <div class="hero-topbar">
+    <span class="org">Centre for Social Research &amp; Trust &amp; Safety Forum</span>
+    <span class="year-badge">TASI 2025</span>
+  </div>
 
-<!-- Page Header -->
-<section class="page-header">
-    <div class="container text-center reveal-up">
-        <span class="section-label">Past Editions</span>
-        <h1 class="section-title">TASI 2025 — Trust &amp; Safety<br>India Festival</h1>
-        <p class="section-subtitle" style="max-width: 640px; margin: 1rem auto 0; color: var(--color-dark-muted);">
-            A landmark two-day convening in New Delhi that brought together government leaders, global technology platforms, diplomats, researchers, and civil society to reimagine safer, more inclusive digital ecosystems for India and the Global South.
-        </p>
-        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;">
-            <span class="pill"><i class="ph ph-calendar-blank"></i> October 7–8, 2025</span>
-            <span class="pill"><i class="ph ph-map-pin"></i> The Ambassador Hotel, New Delhi</span>
-            <span class="pill"><i class="ph ph-users"></i> 350+ Participants</span>
-        </div>
+  <div class="hero-body">
+    <div class="hero-pretitle">India's First Civil Society-Led Trust &amp; Safety Convening</div>
+    <h1 class="hero-title">Trust &amp;<br><em>Safety</em><br>India Festival</h1>
+    <p class="hero-desc">
+      A landmark two-day convening in New Delhi that brought together government leaders, global technology platforms, diplomats, researchers, and civil society to reimagine safer, more inclusive digital ecosystems for India and the Global South.
+    </p>
+    <div class="hero-cta-row">
+      <a href="#context" class="btn-primary">Explore the Festival</a>
+      <a href="#sessions" class="btn-outline">View Sessions</a>
     </div>
+  </div>
+
+  <div class="hero-footer">
+    <div class="hero-stats-row">
+      <div class="hstat"><span class="num">350+</span><span class="label">Participants</span></div>
+      <div class="hstat"><span class="num">15</span><span class="label">Countries</span></div>
+      <div class="hstat"><span class="num">100+</span><span class="label">Speakers</span></div>
+      <div class="hstat"><span class="num">30+</span><span class="label">Sessions</span></div>
+      <div class="hstat"><span class="num">32</span><span class="label">Partners</span></div>
+    </div>
+    <div class="hero-date-info">
+      October 7–8, 2025<br>
+      The Ambassador Hotel<br>
+      New Delhi, India
+    </div>
+  </div>
 </section>
 
 <!-- ══════════════════════════ CONTEXT ══════════════════════════ -->
-<section class="context-band section" id="context">
-  <div class="container">
+<section class="context-band" id="context">
   <div class="inner">
     <div class="text-col">
-      <span class="section-label">About the Festival</span>
+      <div class="section-label">About the Festival</div>
       <h2 class="section-heading">A First for India, A Milestone for the Global South</h2>
       <p>
         The Trust and Safety India Festival (TASI) 2025 emerged from a recognition that global conversations on digital safety have long been shaped by frameworks designed in and for the Global North. India, home to one of the world's largest and most diverse digital populations, needed its own platform to surface contextual priorities, advance local innovation, and contribute meaningfully to global governance.
@@ -771,7 +1025,7 @@
         </blockquote>
         <cite>Caroline Humer, Co-Founder, Trust &amp; Safety Forum</cite>
       </div>
-      <div class="highlight-block" style="margin-top:1.5px; background:linear-gradient(135deg, #1e1008 0%, #b84a22 100%);">
+      <div class="highlight-block" style="margin-top:1.5px; background:#1a1a1a;">
         <blockquote>
           "This is the first time global and local platforms, tech providers, civil society, and public officials gather in a leading Global South country to advance Trust &amp; Safety. A different perspective for a borderless dialogue."
         </blockquote>
@@ -779,15 +1033,13 @@
       </div>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ TRACKS ══════════════════════════ -->
-<section class="tracks-section section" id="tracks">
-  <div class="container">
+<section class="tracks-section" id="tracks">
   <div class="top-row">
     <div>
-      <span class="section-label">Thematic Focus</span>
+      <div class="section-label">Thematic Focus</div>
       <h2 class="section-heading">Seven Key Tracks</h2>
     </div>
     <p class="section-sub">
@@ -843,12 +1095,10 @@
       </div>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ KEYNOTE ══════════════════════════ -->
-<section class="keynote-section section" id="keynote">
-  <div class="container">
+<section class="keynote-section" id="keynote">
   <div class="inner">
     <div>
       <div class="keynote-tag">Inaugural Keynote</div>
@@ -871,7 +1121,7 @@
     </div>
 
     <div>
-      <div class="pe-speaker-card">
+      <div class="speaker-card">
         <div class="role">Keynote Speaker</div>
         <div class="name">Dr. S. Jaishankar</div>
         <div class="affil">Minister of External Affairs, Government of India</div>
@@ -885,7 +1135,7 @@
         </ul>
       </div>
 
-      <div class="pe-speaker-card">
+      <div class="speaker-card" style="margin-top:1px; border-top:1px solid rgba(255,255,255,0.08);">
         <div class="role">Fireside Chat</div>
         <div class="name">S. Krishnan</div>
         <div class="affil">Secretary, Ministry of Electronics &amp; Information Technology (MeitY)</div>
@@ -899,15 +1149,26 @@
       </div>
     </div>
   </div>
-  </div>
 </section>
 
+<!-- ══════════════════════════ STATS ══════════════════════════ -->
+<div class="stats-strip">
+  <div class="stat-item"><span class="big">54M</span><span class="label">Children in South Asia experiencing sexual assault in childhood</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="big">1000%</span><span class="label">Increase in AI-generated CSAM globally, 2023–2024</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="big">60%</span><span class="label">Respondents in 18-country study who experienced TFGBV</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="big">11%</span><span class="label">Moderation workers with measurable anxiety disorders</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="big">2,000+</span><span class="label">Calls facilitated by Meri Trust Line for image-based abuse victims</span></div>
+</div>
+
 <!-- ══════════════════════════ SESSIONS ══════════════════════════ -->
-<section class="sessions-section section" id="sessions">
-  <div class="container">
+<section class="sessions-section" id="sessions">
   <div class="top">
     <div>
-      <span class="section-label">Programming</span>
+      <div class="section-label">Programming</div>
       <h2 class="section-heading">Expert Panels &amp; Key Sessions</h2>
     </div>
     <p class="section-sub">
@@ -1013,15 +1274,13 @@
       <span class="s-tag tag-gender">Women's Voice</span>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ IMPACT ══════════════════════════ -->
-<section class="impact-section section" id="impact">
-  <div class="container">
-  <span class="section-label" style="color:rgba(255,255,255,0.65); justify-content:flex-start;">Research &amp; Data Spotlights</span>
+<section class="impact-section" id="impact">
+  <div class="section-label">Research &amp; Data Spotlights</div>
   <h2 class="section-heading">The Numbers Behind the Urgency</h2>
-  <p class="section-sub">
+  <p class="section-sub" style="color:rgba(255,255,255,0.6);">
     Evidence presented at TASI 2025 made a compelling case for why India urgently needs contextual, locally-grounded digital safety frameworks.
   </p>
 
@@ -1057,13 +1316,11 @@
       <div class="ic-desc">Technology partners at TASI demonstrated institutional commitment: Meta alone has invested over $20 billion in online safety technology and launched more than 50 dedicated safety tools and features.</div>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ WORKSHOPS ══════════════════════════ -->
-<section class="workshops-section section" id="workshops">
-  <div class="container">
-  <span class="section-label">Hands-On Learning</span>
+<section class="workshops-section" id="workshops">
+  <div class="section-label">Hands-On Learning</div>
   <h2 class="section-heading">Workshops &amp; Immersive Sessions</h2>
   <p class="section-sub">
     Beyond panels, TASI 2025 featured interactive workshops where participants engaged directly with tools, scenarios, and co-design exercises to produce practical knowledge and actionable frameworks.
@@ -1118,15 +1375,13 @@
       <div class="wc-takeaway">Care isn't censorship; it's competence with conscience. Proactive creator accountability reduces the need for reactive external regulation.</div>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ DIPLOMATIC ══════════════════════════ -->
-<section class="diplomatic-section section" id="diplomatic">
-  <div class="container">
+<section class="diplomatic-section" id="diplomatic">
   <div class="inner">
     <div>
-      <span class="section-label">International Engagement</span>
+      <div class="section-label">International Engagement</div>
       <h2 class="section-heading">Diplomatic Partners &amp; Global Solidarity</h2>
       <p class="section-sub">
         TASI 2025 was distinguished by extraordinary diplomatic engagement, with international missions hosting landmark receptions that reinforced the global stakes of India's digital safety agenda.
@@ -1172,9 +1427,9 @@
     </div>
 
     <div>
-      <span class="section-label">Technology &amp; Civil Society Partners</span>
+      <div class="section-label">Technology &amp; Civil Society Partners</div>
       <h2 class="section-heading" style="font-size:1.8rem;">Partners Across Every Sector</h2>
-      <p style="font-size:0.9rem; line-height:1.75; color:var(--color-dark-muted); margin-bottom:1.5rem;">
+      <p style="font-size:0.9rem; line-height:1.75; color:var(--muted); margin-bottom:1.5rem;">
         Thirty-two organizations across technology platforms, civil society, government, academia, and specialist initiatives shaped TASI 2025 through meaningful, substantive engagement.
       </p>
       <div class="partner-logos">
@@ -1203,13 +1458,11 @@
       </div>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ RECOMMENDATIONS ══════════════════════════ -->
-<section class="recs-section section" id="recommendations">
-  <div class="container">
-  <span class="section-label">Building on TASI 2025</span>
+<section class="recs-section" id="recommendations">
+  <div class="section-label">Building on TASI 2025</div>
   <h2 class="section-heading">Key Recommendations for India's Digital Future</h2>
   <p class="section-sub">
     TASI 2025 generated a comprehensive set of actionable recommendations, grounded in two days of substantive multi-stakeholder dialogue, to advance digital safety across India and the Global South.
@@ -1257,15 +1510,13 @@
       <p class="ri-desc">Research presented at TASI found that 11% of moderation workers develop measurable anxiety disorders. Surface-level wellness programs are insufficient. "Care by Design" must be embedded in operational DNA through peer mentoring, rotational duties, non-stigmatizing support spaces, and early trauma intervention benchmarks.</p>
     </div>
   </div>
-  </div>
 </section>
 
 <!-- ══════════════════════════ FUTURE ══════════════════════════ -->
-<section class="future-section section" id="future">
-  <div class="container">
+<section class="future-section" id="future">
   <div class="inner">
     <div>
-      <span class="section-label">What Comes Next</span>
+      <div class="section-label">What Comes Next</div>
       <h2 class="section-heading">Looking Ahead to TASI 2026</h2>
       <p class="section-sub">
         TASI 2025 concluded not with a final word, but with an invitation. The conversations, partnerships, and commitments forged in New Delhi are the foundation for an even more ambitious second edition, scheduled for October 2026.
@@ -1312,22 +1563,21 @@
       </div>
     </div>
   </div>
-  </div>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="footer-bottom">
-            <p>&copy; 2026 Trust and Safety India Festival — TASI 2026. All rights reserved.</p>
-            <div style="display: flex; gap: 1rem;">
-                <a href="index.html" style="color: var(--color-text-light);">Back to Home</a>
-            </div>
-        </div>
-    </div>
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer>
+  <div>
+    <div class="footer-brand">TASI <span>2025</span></div>
+    <div style="font-size:0.78rem; color:rgba(255,255,255,0.3); margin-top:0.4rem;">Trust &amp; Safety India Festival</div>
+  </div>
+  <div class="footer-info">
+    Co-organized by Centre for Social Research (CSR) &amp; The Trust &amp; Safety Forum<br>
+    October 7–8, 2025 · The Ambassador Hotel, New Delhi<br>
+    Catalogue No. CSR/TASI/ER/1025/01 · Published November 2025<br>
+    www.csrindia.org
+  </div>
 </footer>
-
-<script src="js/main.js"></script>
 
 </body>
 </html>
