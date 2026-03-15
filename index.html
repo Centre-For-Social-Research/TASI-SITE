@@ -361,98 +361,14 @@
                 <p class="section-subtitle">A glimpse into past gatherings, workshops, and high-level dialogues driving the future of digital trust and safety.</p>
             </div>
 
-            <div class="gallery-grid">
-                <div class="gallery-item reveal-up">
-                    <img src="img/Gallery/7T7A0181.webp" alt="TASI 2025 Lanyards" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Registration & Delegate Passes</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.1s;">
-                    <img src="img/Gallery/7T7A0215.webp" alt="Attendees conversing" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Networking & Connections</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.2s;">
-                    <img src="img/Gallery/7T7A0259.webp" alt="Outdoor reception gathering" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Outdoor Receptions</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.3s;">
-                    <img src="img/Gallery/7T7A0527.webp" alt="Panel discussion" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">High-Level Panel Discussions</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.4s;">
-                    <img src="img/Gallery/7T7A0573.webp" alt="S. Jaishankar lighting lamp" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Inaugural Lamp Lighting</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.5s;">
-                    <img src="img/Gallery/7T7A0646.webp" alt="Dr. S. Jaishankar speaking" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Ministerial Keynote Address</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.6s;">
-                    <img src="img/Gallery/7T7A1512.webp" alt="Audience members discussing" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Interactive Policy Rounds</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.7s;">
-                    <img src="img/Gallery/7T7A2715.webp" alt="Audience listening" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Plenary Sessions</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.8s;">
-                    <img src="img/Gallery/7T7A2996.webp" alt="Speaker on stage" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Expert Insights</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 0.9s;">
-                    <img src="img/Gallery/7T7A3314 (1).webp" alt="Panel discussion" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Cross-Border Cooperation Panel</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 1.0s;">
-                    <img src="img/Gallery/7T7A3544.webp" alt="Speaker address" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Safety by Design</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 1.1s;">
-                    <img src="img/Gallery/7T7A3637.webp" alt="Group of sponsors and partners" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Industry Partners & Exhibitors</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 1.2s;">
-                    <img src="img/Gallery/7T7A4136.webp" alt="Panel discussion" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Civil Society Perspectives</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 1.3s;">
-                    <img src="img/Gallery/7T7A4166.webp" alt="Panel interview style" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Fireside Chats</div>
-                    </div>
-                </div>
-                <div class="gallery-item reveal-up" style="animation-delay: 1.4s;">
-                    <img src="img/Gallery/7T7A4504.webp" alt="Panel discussion" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">Regulatory Frameworks</div>
-                    </div>
-                </div>
+            <div class="gallery-toolbar reveal-up">
+                <button id="galleryRefreshBtn" class="gallery-refresh-btn" type="button" title="Re-animate Gallery">
+                    <i class="ph ph-arrows-clockwise"></i>
+                    Re-animate Gallery
+                </button>
             </div>
+
+            <div id="masonryGallery" class="masonry-gallery" aria-live="polite"></div>
         </div>
     </section>
 
@@ -517,6 +433,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

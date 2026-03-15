@@ -215,6 +215,294 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ----------------------------------------------------
+       Masonry Gallery (GSAP)
+       ---------------------------------------------------- */
+    const masonryGallery = document.getElementById('masonryGallery');
+    const galleryRefreshBtn = document.getElementById('galleryRefreshBtn');
+
+    if (masonryGallery) {
+        const INITIAL_ITEMS = [
+            { id: '1', img: 'img/Gallery/7T7A0181.webp', title: 'Registration & Delegate Passes', height: 400 },
+            { id: '2', img: 'img/Gallery/7T7A0215.webp', title: 'Networking & Connections', height: 260 },
+            { id: '3', img: 'img/Gallery/7T7A0259.webp', title: 'Outdoor Receptions', height: 520 },
+            { id: '4', img: 'img/Gallery/7T7A0527.webp', title: 'High-Level Panel Discussions', height: 360 },
+            { id: '5', img: 'img/Gallery/7T7A0573.webp', title: 'Inaugural Lamp Lighting', height: 500 },
+            { id: '6', img: 'img/Gallery/7T7A0646.webp', title: 'Ministerial Keynote Address', height: 320 },
+            { id: '7', img: 'img/Gallery/7T7A1512.webp', title: 'Interactive Policy Rounds', height: 450 },
+            { id: '8', img: 'img/Gallery/7T7A2715.webp', title: 'Plenary Sessions', height: 300 },
+            { id: '9', img: 'img/Gallery/7T7A2996.webp', title: 'Expert Insights', height: 540 },
+            { id: '10', img: 'img/Gallery/7T7A3314 (1).webp', title: 'Cross-Border Cooperation Panel', height: 340 },
+            { id: '11', img: 'img/Gallery/7T7A3544.webp', title: 'Safety by Design', height: 380 },
+            { id: '12', img: 'img/Gallery/7T7A3637.webp', title: 'Industry Partners & Exhibitors', height: 460 },
+            { id: '13', img: 'img/Gallery/7T7A4136.webp', title: 'Civil Society Perspectives', height: 310 },
+            { id: '14', img: 'img/Gallery/7T7A4166.webp', title: 'Fireside Chats', height: 420 },
+            { id: '15', img: 'img/Gallery/7T7A4504.webp', title: 'Regulatory Frameworks', height: 360 }
+        ];
+
+        const options = {
+            ease: 'power3.out',
+            duration: 0.6,
+            stagger: 0.08,
+            animateFrom: 'bottom',
+            scaleOnHover: true,
+            hoverScale: 0.96,
+            blurToFocus: true,
+            colorShiftOnHover: true
+        };
+
+        let items = [...INITIAL_ITEMS];
+        let grid = [];
+        let hasMounted = false;
+
+        const getColumns = () => {
+            const viewport = window.innerWidth;
+            if (viewport >= 1500) return 5;
+            if (viewport >= 1000) return 4;
+            if (viewport >= 600) return 3;
+            if (viewport >= 400) return 2;
+            return 1;
+        };
+
+        const preloadImages = async (urls) => {
+            await Promise.all(urls.map((src) => new Promise((resolve) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = img.onerror = resolve;
+            })));
+        };
+
+        const getInitialPosition = (item) => {
+            const rect = masonryGallery.getBoundingClientRect();
+            let direction = options.animateFrom;
+
+            if (direction === 'random') {
+                const dirs = ['top', 'bottom', 'left', 'right'];
+                direction = dirs[Math.floor(Math.random() * dirs.length)];
+            }
+
+            if (direction === 'top') return { x: item.x, y: -220 };
+            if (direction === 'bottom') return { x: item.x, y: window.innerHeight + 220 };
+            if (direction === 'left') return { x: -220, y: item.y };
+            if (direction === 'right') return { x: window.innerWidth + 220, y: item.y };
+            if (direction === 'center') {
+                return {
+                    x: rect.width / 2 - item.w / 2,
+                    y: rect.height / 2 - item.h / 2
+                };
+            }
+            return { x: item.x, y: item.y + 100 };
+        };
+
+        const calculateGrid = () => {
+            const columns = getColumns();
+            const containerWidth = masonryGallery.clientWidth;
+            const gap = 24;
+            const totalGaps = (columns - 1) * gap;
+            const columnWidth = (containerWidth - totalGaps) / columns;
+            const columnHeights = new Array(columns).fill(0);
+
+            const mapped = items.map((entry) => {
+                const nextColumn = columnHeights.indexOf(Math.min(...columnHeights));
+                const x = nextColumn * (columnWidth + gap);
+                const h = (entry.height / 400) * columnWidth;
+                const y = columnHeights[nextColumn];
+                columnHeights[nextColumn] += h + gap;
+
+                return {
+                    ...entry,
+                    x,
+                    y,
+                    w: columnWidth,
+                    h
+                };
+            });
+
+            grid = mapped;
+            masonryGallery.style.height = `${Math.max(...columnHeights, 420)}px`;
+        };
+
+        const buildCard = (item) => {
+            const card = document.createElement(item.url ? 'a' : 'div');
+            card.className = 'masonry-item';
+            card.dataset.key = item.id;
+            card.setAttribute('aria-label', item.title || 'Gallery image');
+
+            if (item.url) {
+                card.href = item.url;
+                card.target = '_blank';
+                card.rel = 'noopener';
+            }
+
+            const image = document.createElement('img');
+            image.className = 'masonry-image';
+            image.src = item.img;
+            image.alt = item.title || 'Gallery highlight';
+            image.loading = 'lazy';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'masonry-color-overlay';
+
+            const caption = document.createElement('div');
+            caption.className = 'masonry-caption';
+            caption.textContent = item.title || '';
+
+            card.appendChild(image);
+            if (options.colorShiftOnHover) {
+                card.appendChild(overlay);
+            }
+            card.appendChild(caption);
+
+            if (options.scaleOnHover) {
+                card.addEventListener('mouseenter', () => {
+                    if (window.gsap) {
+                        window.gsap.to(card, {
+                            scale: options.hoverScale,
+                            duration: 0.4,
+                            ease: 'power2.out'
+                        });
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    if (window.gsap) {
+                        window.gsap.to(card, {
+                            scale: 1,
+                            duration: 0.4,
+                            ease: 'power2.out'
+                        });
+                    }
+                });
+            }
+
+            if (options.colorShiftOnHover) {
+                card.addEventListener('mouseenter', () => {
+                    if (window.gsap) {
+                        window.gsap.to(overlay, { opacity: 0.32, duration: 0.4 });
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    if (window.gsap) {
+                        window.gsap.to(overlay, { opacity: 0, duration: 0.4 });
+                    }
+                });
+            }
+
+            return card;
+        };
+
+        const ensureCards = () => {
+            grid.forEach((item) => {
+                if (masonryGallery.querySelector(`[data-key="${item.id}"]`)) {
+                    return;
+                }
+                masonryGallery.appendChild(buildCard(item));
+            });
+        };
+
+        const animateGrid = () => {
+            grid.forEach((item, index) => {
+                const element = masonryGallery.querySelector(`[data-key="${item.id}"]`);
+                if (!element) return;
+
+                const toProps = {
+                    x: item.x,
+                    y: item.y,
+                    width: item.w,
+                    height: item.h
+                };
+
+                if (!window.gsap) {
+                    element.style.transform = `translate(${item.x}px, ${item.y}px)`;
+                    element.style.width = `${item.w}px`;
+                    element.style.height = `${item.h}px`;
+                    element.style.opacity = '1';
+                    return;
+                }
+
+                if (!hasMounted) {
+                    const start = getInitialPosition(item);
+                    window.gsap.fromTo(
+                        element,
+                        {
+                            opacity: 0,
+                            x: start.x,
+                            y: start.y,
+                            width: item.w,
+                            height: item.h,
+                            ...(options.blurToFocus ? { filter: 'blur(20px)' } : {})
+                        },
+                        {
+                            opacity: 1,
+                            ...toProps,
+                            ...(options.blurToFocus ? { filter: 'blur(0px)' } : {}),
+                            duration: 1.2,
+                            ease: options.ease,
+                            delay: index * options.stagger,
+                            overwrite: 'auto'
+                        }
+                    );
+                } else {
+                    window.gsap.to(element, {
+                        ...toProps,
+                        duration: options.duration,
+                        ease: options.ease,
+                        overwrite: 'auto'
+                    });
+                }
+            });
+
+            hasMounted = true;
+        };
+
+        const renderGallery = () => {
+            calculateGrid();
+            ensureCards();
+            animateGrid();
+        };
+
+        const shuffleItems = () => {
+            const shuffled = [...INITIAL_ITEMS].sort(() => Math.random() - 0.5);
+            items = shuffled;
+
+            const nodes = Array.from(masonryGallery.children);
+            nodes.sort((a, b) => {
+                const ai = items.findIndex((entry) => entry.id === a.dataset.key);
+                const bi = items.findIndex((entry) => entry.id === b.dataset.key);
+                return ai - bi;
+            }).forEach((node) => masonryGallery.appendChild(node));
+
+            hasMounted = false;
+            renderGallery();
+        };
+
+        const initGallery = async () => {
+            await preloadImages(items.map((entry) => entry.img));
+            renderGallery();
+        };
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(() => {
+                renderGallery();
+            }, 120);
+        });
+
+        if (galleryRefreshBtn) {
+            galleryRefreshBtn.addEventListener('click', () => {
+                shuffleItems();
+                const icon = galleryRefreshBtn.querySelector('i');
+                if (icon && window.gsap) {
+                    window.gsap.fromTo(icon, { rotate: 0 }, { rotate: 180, duration: 0.45, ease: 'power2.out' });
+                }
+            });
+        }
+
+        initGallery();
+    }
+
+    /* ----------------------------------------------------
        Hero Particle Text
        ---------------------------------------------------- */
     const heroParticleCanvas = document.getElementById('heroParticleCanvas');
