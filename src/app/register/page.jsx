@@ -21,7 +21,7 @@ export default function RegisterPage() {
   return (
     <>
       <HomeNavbar />
-      <main className="bg-white pb-20 pt-28 text-slate-900 dark:bg-slate-950 dark:text-slate-100 sm:pt-32">
+      <main className="bg-white pb-20 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 to-white py-14 dark:bg-[radial-gradient(circle_at_20%_0%,#1f2937_0%,#0b1220_45%,#05070e_100%)] md:py-20">
           <DarkHeroParticles />
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
@@ -65,6 +65,7 @@ export default function RegisterPage() {
               title="TASI 2026 Registration Form"
               className="block h-[1807px] w-full"
               loading="lazy"
+              allow="geolocation; microphone; camera"
             >
               Loading registration form...
             </iframe>

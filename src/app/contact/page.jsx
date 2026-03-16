@@ -33,7 +33,7 @@ export default function ContactPage() {
   return (
     <>
       <HomeNavbar />
-      <main className="bg-white pb-20 pt-28 text-slate-900 dark:bg-slate-950 dark:text-slate-100 sm:pt-32">
+      <main>
         <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 to-white py-12 dark:bg-[radial-gradient(circle_at_20%_0%,#1f2937_0%,#0b1220_45%,#05070e_100%)]">
           <DarkHeroParticles />
           <div className="relative z-10 mx-auto max-w-6xl px-6 text-center sm:px-8">

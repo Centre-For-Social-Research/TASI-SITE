@@ -14,19 +14,11 @@ const pills = [
   "1,000+ Delegates",
 ];
 
-const chips = [
-  { label: "Government", className: "left-[4%] top-12" },
-  { label: "Technology Platforms", className: "right-[6%] top-20" },
-  { label: "Civil Society", className: "left-[8%] bottom-28" },
-  { label: "Academia", className: "right-[18%] bottom-12" },
-  { label: "Diplomatic Missions", className: "left-1/2 top-10 -translate-x-1/2" },
-];
-
 const heroHighlights = [
   {
     value: 500,
     suffix: "+",
-    description: "Participants across policy, product, civil society and research.",
+    description: "Participants from government, civil society, diplomatic missions, and academia.",
   },
   {
     value: 100,
@@ -67,20 +59,6 @@ export default function HomeHero() {
       <div className="pointer-events-none absolute inset-0 opacity-90 dark:hidden [background:radial-gradient(circle_at_top_right,_rgba(180,83,9,0.22),_transparent_32%),radial-gradient(circle_at_20%_20%,_rgba(251,191,36,0.14),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(15,118,110,0.14),_transparent_28%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/60 to-transparent dark:hidden" />
 
-      {chips.map((chip, index) => (
-        <motion.div
-          key={chip.label}
-          className={`pointer-events-none absolute hidden rounded-full border border-white/60 bg-white/65 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-700 shadow-[0_20px_50px_rgba(15,23,42,0.08)] backdrop-blur md:block dark:hidden ${chip.className}`}
-          animate={{ y: [0, -8, 0], rotate: [0, index % 2 === 0 ? 1.4 : -1.4, 0] }}
-          transition={{ duration: 7 + index, repeat: Infinity, ease: "easeInOut" }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          {chip.label}
-        </motion.div>
-      ))}
-
       <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 md:px-6 md:py-24 xl:grid-cols-[minmax(0,1.15fr)_420px] xl:items-end">
         <div className="max-w-3xl">
           <motion.p
@@ -118,7 +96,7 @@ export default function HomeHero() {
             variants={fadeUp}
             custom={0.24}
           >
-            From AI to digital rights, regulation, tech policy and algorithms, we invite the best of industry and civil society to build safer digital spaces.
+            From AI to digital rights, regulation, tech policy and algorithms, we bring together government, civil society, diplomatic missions, and industry to build safer digital spaces.
           </motion.p>
 
           <motion.div
