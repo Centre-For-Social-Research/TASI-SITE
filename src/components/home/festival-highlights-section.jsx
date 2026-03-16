@@ -10,7 +10,7 @@ export default function FestivalHighlightsSection() {
   return (
     <section className="bg-[#1f110d]">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8">
-        <div className="grid gap-5 rounded-[16px] border border-white/8 bg-[#0a0b14] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.35)] md:grid-cols-[minmax(0,1.9fr)_minmax(300px,0.72fr)] md:items-stretch">
+        <div className="grid gap-5 md:rounded-[16px] md:border md:border-white/8 md:bg-[#0a0b14] md:p-5 md:shadow-[0_25px_60px_rgba(0,0,0,0.35)] md:grid-cols-[minmax(0,1.9fr)_minmax(300px,0.72fr)] md:items-stretch">
             <MotionReveal>
               <div className="relative overflow-hidden rounded-[12px] border border-white/6 bg-[#0e1015]">
                 <div className="relative aspect-video min-h-[200px] bg-[#0e1222] md:aspect-[16/10] md:min-h-[420px] xl:min-h-[640px]">
