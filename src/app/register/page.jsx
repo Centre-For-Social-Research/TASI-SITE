@@ -1,3 +1,5 @@
+import HomeNavbar from "@/components/home/navbar";
+import HomeFooter from "@/components/home/footer";
 import DarkHeroParticles from "@/components/ui/dark-hero-particles";
 
 const steps = [
@@ -21,16 +23,20 @@ const steps = [
 
 export default function RegisterPage() {
   return (
-    <main className="bg-white pb-20 pt-28 text-slate-900 sm:pt-32">
-      <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 to-white py-12 dark:bg-[radial-gradient(circle_at_20%_0%,#1f2937_0%,#0b1220_45%,#05070e_100%)]">
-        <DarkHeroParticles />
-        <div className="relative z-10 mx-auto max-w-6xl px-6 text-center sm:px-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-300">Join TASI 2026</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight dark:text-slate-100 sm:text-5xl">Secure Your Delegate Place</h1>
-        </div>
-      </section>
+    <>
+      <HomeNavbar />
+      <main className="bg-white pb-20 pt-28 text-slate-900 dark:bg-slate-950 dark:text-slate-100 sm:pt-32">
+        <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 to-white py-14 dark:bg-[radial-gradient(circle_at_20%_0%,#1f2937_0%,#0b1220_45%,#05070e_100%)] md:py-20">
+          <DarkHeroParticles />
+          <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 dark:text-slate-300">Join TASI 2026</p>
+            <h1 className="text-4xl font-black tracking-tight text-stone-900 dark:text-slate-100 md:text-6xl">
+              Secure Your<span className="block text-orange-700">Delegate Place</span>
+            </h1>
+          </div>
+        </section>
 
-      <section className="mx-auto mt-12 max-w-6xl px-6 sm:px-8">
+        <section className="mx-auto mt-12 max-w-6xl px-6 sm:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <p className="text-lg leading-relaxed text-slate-700">
@@ -78,5 +84,7 @@ export default function RegisterPage() {
         </p>
       </section>
     </main>
+    <HomeFooter />
+    </>
   );
 }
