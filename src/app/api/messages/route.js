@@ -30,7 +30,8 @@ export async function POST(request) {
     }
 
     return Response.json({ success: true });
-  } catch {
-    return Response.json({ error: "Unable to submit message." }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to submit message.";
+    return Response.json({ error: message }, { status: 500 });
   }
 }

@@ -67,16 +67,27 @@ function Footerdemo() {
         body: JSON.stringify({ email: messageEmail, message: messageText }),
       });
 
-      const data = await response.json();
+      let data: { error?: string } | null = null;
+      const contentType = response.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        if (text) {
+          data = { error: text };
+        }
+      }
+
       if (!response.ok) {
-        setMessageStatus(data.error || "Unable to send message.");
+        setMessageStatus(data?.error || `Request failed (${response.status}).`);
       } else {
         setMessageStatus("Message sent.");
         setMessageEmail("");
         setMessageText("");
       }
-    } catch {
-      setMessageStatus("Unable to send message.");
+    } catch (error) {
+      setMessageStatus(error instanceof Error ? error.message : "Unable to send message.");
     } finally {
       setIsMessageSubmitting(false);
     }
