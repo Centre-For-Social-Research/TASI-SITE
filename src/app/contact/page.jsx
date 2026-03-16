@@ -93,6 +93,7 @@ export default function ContactPage() {
             New Delhi - 110070, India
           </p>
         </section>
+
       </main>
     </>
   );

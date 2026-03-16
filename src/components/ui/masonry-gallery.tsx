@@ -267,7 +267,7 @@ export default function MasonryGallery({
           key={item.id}
           data-key={item.id}
           className={cn(
-            "absolute cursor-pointer overflow-hidden rounded-xl transition-shadow hover:shadow-2xl",
+            "group absolute cursor-pointer overflow-hidden rounded-xl transition-shadow hover:shadow-2xl",
             itemClassName
           )}
           style={{
@@ -294,7 +294,7 @@ export default function MasonryGallery({
           ) : null}
 
           {item.title ? (
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent p-4">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent p-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 translate-y-2">
               <p className="text-xs font-medium uppercase tracking-wider text-white">{item.title}</p>
             </div>
           ) : null}

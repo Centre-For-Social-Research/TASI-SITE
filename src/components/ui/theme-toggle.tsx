@@ -23,6 +23,18 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     setTheme(isDark ? "light" : "dark");
   };
 
+  if (!mounted) {
+    return (
+      <div
+        className={cn(
+          "w-16 h-8 rounded-full border border-zinc-200 dark:border-zinc-800",
+          className
+        )}
+        aria-hidden="true"
+      />
+    );
+  }
+
   return (
     <div
       className={cn(

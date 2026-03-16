@@ -1,5 +1,6 @@
 import { Inter, Outfit } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/ui/demo";
 import "./globals.css";
 
 const inter = Inter({
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       <body className={`${inter.variable} ${outfit.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

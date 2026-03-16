@@ -56,16 +56,28 @@ export default function AboutPage() {
 
         <section className="bg-stone-100 py-14 md:py-16">
           <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 md:px-6">
-            <article className="rounded-2xl border border-stone-200 bg-white p-6">
-              <h2 className="mb-3 text-2xl font-black tracking-tight text-stone-900">Trust and Safety Festival</h2>
+            <article className="rounded-2xl border border-stone-200 bg-white p-8">
+              <h2 className="mb-4 text-2xl font-black tracking-tight text-orange-700">Trust and Safety Festival</h2>
+              <p className="mb-4 text-stone-700">
+                The Trust &amp; Safety Forum is a global platform dedicated to advancing digital safety through collaboration among technology companies, policymakers, civil society organizations, and researchers. Co-founded by Caroline Humer and Jean-Christophe Le Toquin, the festival brings together diverse stakeholders to address critical challenges in creating safer online environments.
+              </p>
               <p className="text-stone-700">
-                The Trust and Safety Forum is a global platform advancing digital safety through collaboration among technology companies, policymakers, civil society organizations, and researchers.
+                TASI 2025 was co-organized by the Centre for Social Research (CSR) and the Trust &amp; Safety Festival, marking the festival&apos;s first edition in India. This collaboration brought together CSR&apos;s four decades of leadership in gender equality and digital safety with the Trust &amp; Safety Festival&apos;s global network, creating a landmark event in New Delhi that centered Indian perspectives and priorities in shaping the future of online safety for the Global South.
               </p>
             </article>
-            <article className="rounded-2xl border border-stone-200 bg-white p-6">
-              <h2 className="mb-3 text-2xl font-black tracking-tight text-stone-900">Centre for Social Research (CSR)</h2>
-              <p className="text-stone-700">
-                CSR has over four decades of leadership in gender equality and women&apos;s empowerment, with strong digital safety and online wellbeing programs spanning research, advocacy, and capacity building.
+            <article className="rounded-2xl border border-stone-200 bg-white p-8">
+              <h2 className="mb-4 text-2xl font-black tracking-tight text-orange-700">Centre for Social Research (CSR)</h2>
+              <p className="mb-4 text-stone-700">
+                The Centre for Social Research (CSR) is a pioneering organization dedicated to advancing gender equality and women&apos;s empowerment. CSR has been at the forefront of the women&apos;s movement in India for over four decades, working to address various social, cultural, and economic challenges faced by women. The organization engages in research, advocacy, capacity-building, and community outreach initiatives to promote gender justice and create a more inclusive society.
+              </p>
+              <p className="mb-4 text-stone-700">
+                Its areas of focus include combating violence against women; promoting women&apos;s political participation and economic empowerment; gender, water and climate change; and advocating for gender-sensitive policies and legislation.
+              </p>
+              <p className="mb-4 text-stone-700">
+                Recognizing the evolving challenges of the digital age, CSR has developed a comprehensive Digital Safety and Online Well-being program that addresses online gender-based violence, cyber harassment, digital privacy, and responsible technology use. Through digital literacy workshops, training sessions, and strategic advocacy efforts, the organization works to empower women and marginalized communities to navigate digital spaces safely. CSR partners with educational institutions, corporates, and civil society organizations to conduct awareness campaigns, develop policy recommendations, and build capacity among diverse stakeholders — from young women and adolescents to educators and law enforcement. This work has positioned CSR as a leading voice in advocating for digital rights and gender-responsive technology policies in India.
+              </p>
+              <p className="font-semibold text-stone-800">
+                CSR, through its collective efforts, aims to create a future where all genders in India enjoy equal rights, opportunities, and the agency to drive positive change.
               </p>
             </article>
           </div>

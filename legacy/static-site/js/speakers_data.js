@@ -169,7 +169,7 @@
     },
     {
         "name":  "Dr. Ranjana Kumari",
-        "designation":  "Director, Centre for Social Research (CSR India)",
+        "designation":  "Director, Centre for Social Research (CSR)",
         "category":  "Civil Society",
         "photo":  "Dr. Ranjana Kumari.jpg",
         "bio":  "Dr. Ranjana Kumari has been a leading advocate for women’s rights in India for over four decades, combining activism, scholarship, and policy engagement. She has advised the Government of India through roles on the National Commission for Women, Ministry of Women and Child Development, NHRC, and Ministry of Labour, and has served as a Gender Expert at the ILO and United Nations in Geneva. Recognized with national and international awards, including the Lotus Leadership Award, she was named among Apolitical’s 100 Most Influential People in Gender Policy. She also serves on Meta’s Global Advisory Council, the Advertising Standards Council of India, and was previously member of the Trust and Safety Council of Teleperformance and Twitter advocating for safe, respectful online spaces."
@@ -288,7 +288,7 @@
     },
     {
         "name":  "Jyoti Vadehra",
-        "designation":  "Head, Online Safety and Wellbeing, CSR India",
+        "designation":  "Head, Online Safety and Wellbeing, CSR",
         "category":  "Civil Society",
         "photo":  "Jyoti Vadehra.jpg",
         "bio":  "Jyoti Vadehra is the Lead Digital Trust and Safety, CSR and founding secretariat of the Alliance for Cyber Trust and Safety (ACTS). A strategic expert in the field, she specializes in online safety and wellbeing, and the design and execution of large-scale online safety projects. Jyoti spearheaded the formation of the ACTS alliance and is dedicated to fostering a safer digital ecosystem at the nexus of Gen AI, child safety and wellbeing, gender equality, and sustainable development. Her experience includes significant contributions to policy advocacy, and she is the first Indian representative on Meta’s Board of Global Women’s Safety Expert Advisors."
@@ -319,7 +319,7 @@
         "designation":  "Founding Director, The Dialogue",
         "category":  "Civil Society",
         "photo":  "Kazim Rizvi.jpg",
-        "bio":  "Kazim Rizvi is the Founding Director of The Dialogue, a New Delhi-based public policy think-tank. A prominent voice in India’s tech policy landscape, he works at the intersection of technology, policy, and society, with expertise in AI, data protection, and cybersecurity among others. He champions evidence-based research and collaborative governance through key multi-stakeholder initiatives: the Coalition for Responsible Evolution of AI (CoRE-AI) on AI governance, Strategic Research, Innovation \u0026 Dialogue for EU-India Engagement (STRIDE-EUI) for India-EU cooperation, and the Alliance for Cyber Trust and Safety (ACTS), co-founded with CSR India to strengthen online safety, counter misinformation, and build digital trust."
+        "bio":  "Kazim Rizvi is the Founding Director of The Dialogue, a New Delhi-based public policy think-tank. A prominent voice in India’s tech policy landscape, he works at the intersection of technology, policy, and society, with expertise in AI, data protection, and cybersecurity among others. He champions evidence-based research and collaborative governance through key multi-stakeholder initiatives: the Coalition for Responsible Evolution of AI (CoRE-AI) on AI governance, Strategic Research, Innovation \u0026 Dialogue for EU-India Engagement (STRIDE-EUI) for India-EU cooperation, and the Alliance for Cyber Trust and Safety (ACTS), co-founded with CSR to strengthen online safety, counter misinformation, and build digital trust.",
     },
     {
         "name":  "Kriti Trehan",

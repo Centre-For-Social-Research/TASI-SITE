@@ -7,7 +7,7 @@ export const teamMembers = [
   },
   {
     name: "Jyoti Vadehra",
-    designation: "Head, Online Safety and Wellbeing, CSR India",
+    designation: "Head, Online Safety and Wellbeing, CSR",
     photo: "Jyoti Vadehra.jpg",
     bio: "Jyoti Vadehra is the Lead Digital Trust and Safety, CSR and founding secretariat of the Alliance for Cyber Trust and Safety (ACTS). A strategic expert in the field, she specializes in online safety and wellbeing, and the design and execution of large-scale online safety projects. Jyoti spearheaded the formation of the ACTS alliance and is dedicated to fostering a safer digital ecosystem at the nexus of Gen AI, child safety and wellbeing, gender equality, and sustainable development. Her experience includes significant contributions to policy advocacy, and she is the first Indian representative on Meta's Board of Global Women's Safety Expert Advisors.",
   },
@@ -39,7 +39,7 @@ export const teamMembers = [
     name: "Ketaki Ruchika Singh",
     designation: "Project Coordinator, Centre for Social Research",
     photo: "Ketaki Ruchika Singh.png",
-    bio: "Ketaki Ruchika Singh is an Online Digital Safety Researcher & Trainer and Project Coordinator in the Media Department at the Centre for Social Research, India. With experience across cyber trust and safety initiatives, editorial projects, and policy research, she brings a strong interdisciplinary perspective. She holds an M.A. in Psychology from Bangor University, UK, and has previously worked with WHO, Sangath, and INTACH. A former Behavioral Technician, Ketaki has also supported children on the autism spectrum. Outside of work, she trains in Shaolin Kung Fu, practices classical and semi-classical Indian music, and enjoys storytelling, reading, and creative arts.",
+    bio: "Ketaki Ruchika Singh is an Online Digital Safety Researcher & Trainer and Project Coordinator in the Media Department at the Centre for Social Research. With experience across cyber trust and safety initiatives, editorial projects, and policy research, she brings a strong interdisciplinary perspective. She holds an M.A. in Psychology from Bangor University, UK, and has previously worked with WHO, Sangath, and INTACH. A former Behavioral Technician, Ketaki has also supported children on the autism spectrum. Outside of work, she trains in Shaolin Kung Fu, practices classical and semi-classical Indian music, and enjoys storytelling, reading, and creative arts.",
   },
   {
     name: "Akankshya Acharya",

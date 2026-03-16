@@ -68,7 +68,7 @@ export default function HomeHero() {
             variants={fadeUp}
             custom={0.05}
           >
-            Centre for Social Research India · Trust and Safety Forum
+            Centre for Social Research · Trust and Safety Forum
           </motion.p>
           <motion.h1
             className="mb-4 text-5xl font-black leading-[0.94] tracking-tight text-stone-900 dark:text-white md:text-7xl"
