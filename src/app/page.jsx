@@ -3,6 +3,7 @@ import AudienceSection from "@/components/home/audience-section";
 import HomeFooter from "@/components/home/footer";
 import FormatGrid from "@/components/home/format-grid";
 import GlobalCta from "@/components/home/global-cta";
+import FestivalHighlightsSection from "@/components/home/festival-highlights-section";
 import HighlightsGallery from "@/components/home/highlights-gallery";
 import HomeHero from "@/components/home/hero";
 import HomeNavbar from "@/components/home/navbar";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <HomeNavbar />
       <main>
         <HomeHero />
+        <FestivalHighlightsSection />
         <AboutPreview />
         <FormatGrid />
         <StructureSection />

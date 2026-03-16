@@ -15,86 +15,66 @@ export default function TubesBackground({
   enableClickInteraction = true,
 }) {
   const canvasRef = useRef(null);
-  const tubesRef = useRef(null);
+  const paletteRef = useRef(["#f967fb", "#53bc28", "#6958d5", "#60aed5"]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
-    let cleanup;
     const canvas = canvasRef.current;
 
     if (!canvas) {
       return undefined;
     }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return undefined;
+    }
 
-    const initTubes = async () => {
-      try {
-        const importRuntime = new Function("u", "return import(u)");
-        const module = await importRuntime(
-          "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js"
-        );
+    let raf = 0;
+    let t = 0;
 
-        if (!mounted) {
-          return;
-        }
-
-        const TubesCursor = module.default;
-        const app = TubesCursor(canvas, {
-          tubes: {
-            colors: ["#f967fb", "#53bc28", "#6958d5"],
-            lights: {
-              intensity: 200,
-              colors: ["#83f36e", "#fe8a2e", "#ff008a", "#60aed5"],
-            },
-          },
-        });
-
-        tubesRef.current = app;
-        setIsLoaded(true);
-
-        const handleResize = () => {
-          if (app?.resize) {
-            app.resize();
-          }
-        };
-
-        window.addEventListener("resize", handleResize);
-        cleanup = () => {
-          window.removeEventListener("resize", handleResize);
-          if (app?.destroy) {
-            app.destroy();
-          }
-          tubesRef.current = null;
-        };
-      } catch (error) {
-        console.error("Failed to load TubesCursor:", error);
-      }
+    const resize = () => {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
     };
 
-    initTubes();
+    const draw = () => {
+      const { width, height } = canvas;
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < 3; i++) {
+        const color = paletteRef.current[i % paletteRef.current.length];
+        const x = width * (0.2 + i * 0.3) + Math.sin(t + i) * 40;
+        const y = height * (0.45 + Math.cos(t * 0.6 + i) * 0.2);
+        const radius = Math.max(width, height) * 0.35;
+        const g = ctx.createRadialGradient(x, y, radius * 0.2, x, y, radius);
+        g.addColorStop(0, `${color}55`);
+        g.addColorStop(1, "#00000000");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      t += 0.01;
+      raf = window.requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+    setIsLoaded(true);
+    window.addEventListener("resize", resize);
 
     return () => {
-      mounted = false;
-      if (cleanup) {
-        cleanup();
-      }
+      window.removeEventListener("resize", resize);
+      window.cancelAnimationFrame(raf);
     };
   }, []);
 
   const handleClick = () => {
-    if (!enableClickInteraction || !tubesRef.current) {
+    if (!enableClickInteraction) {
       return;
     }
-
-    const colors = randomColors(3);
-    const lightsColors = randomColors(4);
-
-    if (tubesRef.current.tubes?.setColors) {
-      tubesRef.current.tubes.setColors(colors);
-    }
-    if (tubesRef.current.tubes?.setLightsColors) {
-      tubesRef.current.tubes.setLightsColors(lightsColors);
-    }
+    paletteRef.current = randomColors(4);
   };
 
   return (

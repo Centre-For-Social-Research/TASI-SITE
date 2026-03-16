@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import logo from "./assets/logo svg.svg";
-import Accepted from "./Accepted";
-import { AcceptedTag, RefusedTag, AllreadyAcceptedTag } from "./Tags";
+import Accepted from "./Accepted.jsx";
+import { AcceptedTag, RefusedTag, AllreadyAcceptedTag } from "./Tags.jsx";
 
 const backendBaseUrl = import.meta.env.VITE_BACKEND_URL || "";
 const apiKey = import.meta.env.VITE_CHECKIN_API_KEY || "";

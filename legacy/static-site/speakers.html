@@ -113,6 +113,19 @@
             .slice(0, 2).map(w => w[0].toUpperCase()).join('');
     }
 
+    function escHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function safePhotoName(value) {
+        return /^[A-Za-z0-9._-]+$/.test(String(value || '')) ? value : '';
+    }
+
     /* ─── Render cards ──────────────────────────── */
     function renderSpeakers(filter = 'all') {
         const grid = document.getElementById('speakersGrid');
@@ -124,6 +137,11 @@
 
         filtered.forEach((s, i) => {
             const col = catColors[s.category] || { bg: '#f4f4f5', text: '#52525B' };
+            const safeName = escHtml(s.name);
+            const safeDesignation = escHtml(s.designation || '');
+            const safeCategory = escHtml(s.category || '');
+            const safeBio = escHtml(s.bio || '');
+            const photo = safePhotoName(s.photo);
             
             const card = document.createElement('div');
             // We remove reveal-up to prevent main.js from hiding filtered cards
@@ -136,25 +154,25 @@
                     <!-- FRONT -->
                     <div class="card-front">
                         <div class="speaker-photo-wrap">
-                            ${s.photo
-                                ? `<img src="img/speakers/${s.photo}" alt="${s.name}"
+                            ${photo
+                                ? `<img src="img/speakers/${photo}" alt="${safeName}"
                                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                   <div class="speaker-initials" style="display:none">${initials(s.name)}</div>`
-                                : `<div class="speaker-initials">${initials(s.name)}</div>`
+                                   <div class="speaker-initials" style="display:none">${escHtml(initials(s.name || ''))}</div>`
+                                : `<div class="speaker-initials">${escHtml(initials(s.name || ''))}</div>`
                             }
                         </div>
-                        <h3 class="speaker-name">${s.name}</h3>
-                        <p class="speaker-role">${s.designation || ''}</p>
-                        <span class="speaker-org" style="background:${col.bg}; color:${col.text};">${s.category}</span>
+                        <h3 class="speaker-name">${safeName}</h3>
+                        <p class="speaker-role">${safeDesignation}</p>
+                        <span class="speaker-org" style="background:${col.bg}; color:${col.text};">${safeCategory}</span>
                         <div class="card-hover-hint">
                             <i class="ph ph-arrow-clockwise"></i> Hover for bio
                         </div>
                     </div>
                     <!-- BACK -->
                     <div class="card-back">
-                        <div class="back-name">${s.name}</div>
-                        <div class="back-org">${s.designation || ''}</div>
-                        <div class="back-bio">${s.bio}</div>
+                        <div class="back-name">${safeName}</div>
+                        <div class="back-org">${safeDesignation}</div>
+                        <div class="back-bio">${safeBio}</div>
                     </div>
                 </div>`;
 

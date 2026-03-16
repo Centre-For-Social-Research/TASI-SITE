@@ -1,19 +1,23 @@
-import Chip from '@mui/material/Chip';
+const badgeStyle = (bg, fg = "#fff") => ({
+    display: "inline-block",
+    padding: "10px 16px",
+    borderRadius: "999px",
+    backgroundColor: bg,
+    color: fg,
+    fontWeight: 700,
+    margin: "10px",
+});
 
 function AcceptedTag() {
-    return (
-        <Chip style={{ zoom: "1.5", margin: "10px" }} label={"Welcome"} color={"success"} variant="contained" />
-    );
+    return <span style={badgeStyle("#2e7d32")}>Welcome</span>;
 }
+
 function RefusedTag() {
-    return (
-        <Chip style={{ zoom: "2" }} label={"Unvalid-token"} color={"error"} variant="contained" />
-    );
+    return <span style={badgeStyle("#d32f2f")}>Invalid token</span>;
 }
+
 function AllreadyAcceptedTag() {
-    return (
-        <Chip style={{ zoom: "2" }} label={"Allready-checked"} color={"warning"} variant="contained" />
-    );
+    return <span style={badgeStyle("#f57c00")}>Already checked</span>;
 }
 
 export { AcceptedTag, RefusedTag, AllreadyAcceptedTag }

@@ -9,10 +9,12 @@ const securityHeaders = [
       "img-src 'self' data: blob: https:",
       "font-src 'self' data: https:",
       "connect-src 'self' https: https://docs.google.com",
+      "media-src 'self' blob: https://stream.mux.com https://player.mux.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self' https://docs.google.com",
-      "frame-src https://docs.google.com",
+      "frame-src https://docs.google.com https://player.mux.com",
+      "child-src https://docs.google.com https://player.mux.com",
       "upgrade-insecure-requests"
     ].join("; "),
   },

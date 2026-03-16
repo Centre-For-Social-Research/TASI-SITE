@@ -655,7 +655,12 @@
             <div class="settings-row">
                 <span class="settings-label">Backend&nbsp;URL</span>
                 <input type="text" class="settings-input" id="backendUrl"
-                    value="http://localhost:5001" placeholder="http://localhost:5001">
+                    value="https://localhost:5001" placeholder="https://localhost:5001">
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">API&nbsp;Key</span>
+                <input type="password" class="settings-input" id="apiKey"
+                    value="" placeholder="CHECKIN_API_KEY">
             </div>
         </div>
 
@@ -754,6 +759,7 @@
     const logEmpty     = document.getElementById('logEmpty');
     const clearLogBtn  = document.getElementById('clearLogBtn');
     const backendInput = document.getElementById('backendUrl');
+    const apiKeyInput  = document.getElementById('apiKey');
 
     /* ── Camera ──────────────────────────────────────────── */
     startBtn.addEventListener('click', startCamera);
@@ -833,12 +839,16 @@
         fetchOverlay.classList.add('show');
 
         const backendBase = backendInput.value.replace(/\/$/, '');
+        const apiKey = apiKeyInput.value.trim();
         let status, data;
 
         try {
             const res = await fetch(`${backendBase}/api/v1/postData`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': apiKey
+                },
                 body: JSON.stringify({ id })
             });
             status = res.status;
@@ -866,7 +876,7 @@
             org  = data.teamName  || data.org   || '';
             cat  = data.tShirt    ? `T-Shirt: ${data.tShirt}` : (data.cat || '');
             counts.accepted++;
-        } else if (status === 300) {
+        } else if (status === 409) {
             type = 'duplicate';
             icon = '🟡';
             statusLabel = 'Already Checked In';

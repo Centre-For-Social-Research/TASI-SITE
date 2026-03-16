@@ -675,6 +675,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamGrid = document.getElementById('teamGrid');
     // Ensure teamMembers is defined (from team_data.js)
     if (teamGrid && typeof teamMembers !== 'undefined') {
+        const escHtml = value => String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        const safePhotoName = value => /^[A-Za-z0-9._-]+$/.test(String(value || '')) ? value : '';
+
         const initials = name => {
             const parts = name.replace(/^(Dr\.|Mr\.|Ms\.)\s*/i, '').trim().split(' ');
             if (parts.length === 1) return parts[0][0].toUpperCase();
@@ -687,6 +695,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         teamMembers.forEach((member, i) => {
             const col = catColors["Core Team"];
+            const safeName = escHtml(member.name);
+            const safeDesignation = escHtml(member.designation || '');
+            const safeBio = escHtml(member.bio || '');
+            const safeInitials = escHtml(initials(member.name || ''));
+            const photo = safePhotoName(member.photo);
             const card = document.createElement('div');
             card.className = 'speaker-card';
             card.style.animation = 'fadeIn 0.5s ease forwards';
@@ -698,15 +711,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!-- FRONT -->
                     <div class="card-front">
                         <div class="speaker-photo-wrap">
-                            ${member.photo
-                                ? `<img src="img/team/${member.photo}" alt="${member.name}"
+                            ${photo
+                                ? `<img src="img/team/${photo}" alt="${safeName}"
                                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                   <div class="speaker-initials" style="display:none">${initials(member.name)}</div>`
-                                : `<div class="speaker-initials">${initials(member.name)}</div>`
+                                   <div class="speaker-initials" style="display:none">${safeInitials}</div>`
+                                : `<div class="speaker-initials">${safeInitials}</div>`
                             }
                         </div>
-                        <h3 class="speaker-name">${member.name}</h3>
-                        <p class="speaker-role">${member.designation || ''}</p>
+                        <h3 class="speaker-name">${safeName}</h3>
+                        <p class="speaker-role">${safeDesignation}</p>
                         <span class="speaker-org" style="background:${col.bg}; color:${col.text};">Core Team</span>
                         <div class="card-hover-hint">
                             <i class="ph ph-arrow-clockwise"></i> Hover for bio
@@ -714,9 +727,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <!-- BACK -->
                     <div class="card-back">
-                        <div class="back-name">${member.name}</div>
-                        <div class="back-org">${member.designation || ''}</div>
-                        <div class="back-bio">${member.bio}</div>
+                        <div class="back-name">${safeName}</div>
+                        <div class="back-org">${safeDesignation}</div>
+                        <div class="back-bio">${safeBio}</div>
                     </div>
                 </div>`;
 
