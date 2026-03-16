@@ -10,10 +10,10 @@ export default function FestivalHighlightsSection() {
   return (
     <section className="bg-[#1f110d]">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8">
-        <div className="grid gap-5 rounded-[16px] border border-white/8 bg-[#0a0b14] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.35)] xl:grid-cols-[minmax(0,1.9fr)_minmax(300px,0.72fr)] xl:items-stretch">
+        <div className="grid gap-5 rounded-[16px] border border-white/8 bg-[#0a0b14] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.35)] md:grid-cols-[minmax(0,1.9fr)_minmax(300px,0.72fr)] md:items-stretch">
             <MotionReveal>
               <div className="relative overflow-hidden rounded-[12px] border border-white/6 bg-[#0e1015]">
-                <div className="relative aspect-[16/10] min-h-[280px] bg-[#0e1222] md:min-h-[420px] xl:min-h-[640px]">
+                <div className="relative aspect-video min-h-[200px] bg-[#0e1222] md:aspect-[16/10] md:min-h-[420px] xl:min-h-[640px]">
                   <iframe
                     src={MUX_EMBED_URL}
                     title="Trust and Safety India Festival 2025"
@@ -30,7 +30,7 @@ export default function FestivalHighlightsSection() {
 
             <MotionReveal delay={0.08} className="h-full">
               <aside className="flex h-full flex-col rounded-[12px] border border-white/6 bg-[#16101f] p-5 text-white">
-                <div className="relative overflow-hidden rounded-[10px]">
+                <div className="relative hidden overflow-hidden rounded-[10px] md:flex">
                   <img
                     src={PREVIEW_IMAGE}
                     alt="TASI 2025 audience preview"
