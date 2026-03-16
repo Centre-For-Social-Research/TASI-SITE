@@ -86,8 +86,16 @@ function Footerdemo() {
         setMessageEmail("");
         setMessageText("");
       }
-    } catch (error) {
-      setMessageStatus(error instanceof Error ? error.message : "Unable to send message.");
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error &&
+        typeof (error as { message?: unknown }).message === "string"
+          ? (error as { message: string }).message
+          : "Network error while sending message. Please try again.";
+
+      setMessageStatus(errorMessage);
     } finally {
       setIsMessageSubmitting(false);
     }
