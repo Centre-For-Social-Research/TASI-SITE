@@ -10,6 +10,12 @@ import HomeNavbar from "@/components/home/navbar";
 import StructureSection from "@/components/home/structure-section";
 import ThemesPreview from "@/components/home/themes-preview";
 
+export const metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
+
 export default function HomePage() {
   return (
     <>

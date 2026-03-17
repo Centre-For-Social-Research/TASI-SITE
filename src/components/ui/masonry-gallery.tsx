@@ -256,6 +256,17 @@ export default function MasonryGallery({
     }
   };
 
+  const activateItem = (item: MasonryItem, index: number) => {
+    if (onItemClick) {
+      onItemClick(item, index);
+      return;
+    }
+
+    if (item.url) {
+      window.open(item.url, "_blank", "noopener");
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -267,25 +278,27 @@ export default function MasonryGallery({
           key={item.id}
           data-key={item.id}
           className={cn(
-            "group absolute cursor-pointer overflow-hidden rounded-xl transition-shadow hover:shadow-2xl",
+            "group absolute cursor-pointer overflow-hidden rounded-xl transition-shadow hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2",
             itemClassName
           )}
+          role="button"
+          tabIndex={0}
+          aria-label={item.title ? `Open image: ${item.title}` : `Open gallery image ${index + 1}`}
           style={{
             willChange: "transform, width, height, opacity, filter",
             boxShadow: "0 10px 30px -10px rgba(0,0,0,0.15)",
           }}
-          onClick={() => {
-            if (onItemClick) {
-              onItemClick(item, index);
-              return;
-            }
-
-            if (item.url) {
-              window.open(item.url, "_blank", "noopener");
+          onClick={() => activateItem(item, index)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              activateItem(item, index);
             }
           }}
           onMouseEnter={(event) => onMouseEnter(event.currentTarget)}
           onMouseLeave={(event) => onMouseLeave(event.currentTarget)}
+          onFocus={(event) => onMouseEnter(event.currentTarget)}
+          onBlur={(event) => onMouseLeave(event.currentTarget)}
         >
           <img src={item.img} alt={item.title || "Gallery image"} className="h-full w-full object-cover" loading="lazy" />
 

@@ -91,7 +91,7 @@ export default function PastEditionsPage() {
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               <span className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100">October 7-8, 2025</span>
               <span className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100">The Ambassador Hotel, New Delhi</span>
-              <span className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100">350+ Participants</span>
+              <span className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100">500+ Participants</span>
             </div>
           </div>
         </section>
@@ -109,7 +109,7 @@ export default function PastEditionsPage() {
               <blockquote className="mb-4 text-stone-700">
                 "For the first time, voices from the Global South are shaping the future of digital trust with Indian insights and global relevance."
               </blockquote>
-              <p className="text-sm text-stone-500">Caroline Humer, Co-Founder, Trust and Safety Forum</p>
+              <p className="text-sm text-stone-500">Caroline Humer, Co-Founder, Trust and Safety Festival</p>
             </article>
           </div>
         </section>

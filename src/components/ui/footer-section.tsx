@@ -186,7 +186,7 @@ function Footerdemo() {
             <address className="space-y-2 text-sm not-italic">
               <p>Centre for Social Research</p>
               <p>New Delhi, India</p>
-              <p>Email: info@csrindia.org</p>
+              <p>Email: info1@csrindia.org</p>
             </address>
             <div className="mt-5 space-y-2 text-sm">
               <a
@@ -203,7 +203,7 @@ function Footerdemo() {
                 rel="noreferrer"
                 className="block transition-colors hover:text-primary"
               >
-                LinkedIn (Trust and Safety Forum)
+                LinkedIn (Trust and Safety Festival)
               </a>
             </div>
           </div>
@@ -345,6 +345,9 @@ function Footerdemo() {
             </Link>
             <Link href="/cookie-settings" className="transition-colors hover:text-primary">
               Cookie Settings
+            </Link>
+            <Link href="/sitemap.xml" className="transition-colors hover:text-primary">
+              Sitemap
             </Link>
           </nav>
         </div>

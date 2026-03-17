@@ -1,7 +1,6 @@
 import { MotionReveal } from "./motion-reveal";
 
 const ARCHIVE_LINK = "/past-editions";
-const REEL_DURATION_LABEL = "1:24";
 const MUX_EMBED_URL =
   "https://player.mux.com/WOZbrSwPSYqEFylGFgp5Z8qUGGvCRmJ3eVptCQZ1YSg?autoplay=true&muted=true&metadata-video-title=Trust+and+Safety+India+Festival+2025&video-title=Trust+and+Safety+India+Festival+2025";
 const PREVIEW_IMAGE = "/img/home-gallery/highlight-2.webp";
@@ -21,9 +20,6 @@ export default function FestivalHighlightsSection() {
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
                     allowFullScreen
                   />
-                  <div className="absolute right-4 top-4 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold tracking-[0.14em] text-white/90 backdrop-blur">
-                    {REEL_DURATION_LABEL}
-                  </div>
                 </div>
               </div>
             </MotionReveal>

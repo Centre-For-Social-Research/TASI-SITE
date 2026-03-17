@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
       <DocSection number="01" title="Introduction">
         <p>
           The Trust and Safety India Festival 2026 (TASI 2026) is co-organised by the Centre for Social
-          Research (CSR) and the Trust and Safety Forum. This Privacy Policy explains how we collect,
+          Research (CSR) and the Trust and Safety Festival. This Privacy Policy explains how we collect,
           use, disclose, and safeguard your personal information when you visit our website or register as
           a delegate, speaker, sponsor, or media partner.
         </p>
@@ -34,8 +34,8 @@ export default function PrivacyPolicyPage() {
         <Callout variant="teal">
           <strong className="text-orange-700 dark:text-orange-300">Data Controller:</strong> Centre for Social Research, 2 Nelson
           Mandela Marg, Vasant Kunj, New Delhi - 110070, India. {" "}
-          <a href="mailto:info@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
-            info@csrindia.org
+          <a href="mailto:info1@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
+            info1@csrindia.org
           </a>
         </Callout>
       </DocSection>
@@ -82,7 +82,7 @@ export default function PrivacyPolicyPage() {
         <p>We do not sell your personal data. We may share your information with:</p>
         <ul className="list-disc space-y-1 pl-5">
           <li>
-            <strong className="text-stone-900 dark:text-slate-100">Co-organiser:</strong> Trust and Safety Forum, for joint event
+            <strong className="text-stone-900 dark:text-slate-100">Co-organiser:</strong> Trust and Safety Festival, for joint event
             administration only
           </li>
           <li>
@@ -116,8 +116,8 @@ export default function PrivacyPolicyPage() {
         <ContactHighlight>
           <strong className="mb-1 block text-stone-900 dark:text-slate-100">Data Privacy Contact - Centre for Social Research</strong>
           Email: {" "}
-          <a href="mailto:info@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
-            info@csrindia.org
+          <a href="mailto:info1@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
+            info1@csrindia.org
           </a>
           <br />Phone: +91 98105 11540
           <br />Address: 2, Nelson Mandela Marg, Vasant Kunj, New Delhi - 110070, India

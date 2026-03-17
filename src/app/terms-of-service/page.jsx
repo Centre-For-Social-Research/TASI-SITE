@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
         <p>
           These Terms of Service govern your use of the TASI 2026 website and your participation in the
           Trust and Safety India Festival 2026, co-organised by the Centre for Social Research (CSR)
-          and the Trust and Safety Forum (together, the "Organisers").
+          and the Trust and Safety Festival (together, the "Organisers").
         </p>
         <p>
           By accessing our website, registering for the event, or attending in any capacity, you confirm
@@ -84,8 +84,8 @@ export default function TermsOfServicePage() {
         <ContactHighlight>
           <strong className="mb-1 block text-stone-900 dark:text-slate-100">TASI 2026 Secretariat - Centre for Social Research</strong>
           Email: {" "}
-          <a href="mailto:info@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
-            info@csrindia.org
+          <a href="mailto:info1@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
+            info1@csrindia.org
           </a>
           <br />Phone: +91 98105 11540
           <br />Address: 2, Nelson Mandela Marg, Vasant Kunj, New Delhi - 110070, India

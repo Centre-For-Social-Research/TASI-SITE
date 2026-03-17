@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, RefreshCw, X } from "lucide-react";
 import MasonryGallery from "@/components/ui/masonry-gallery";
 import { MotionReveal } from "./motion-reveal";
@@ -131,6 +131,9 @@ export default function HighlightsGallery() {
   const [items, setItems] = useState(INITIAL_ITEMS);
   const [galleryKey, setGalleryKey] = useState(0);
   const [activeIndex, setActiveIndex] = useState(null);
+  const closeButtonRef = useRef(null);
+  const dialogRef = useRef(null);
+  const previousFocusRef = useRef(null);
 
   const activeItem = activeIndex !== null ? items[activeIndex] : null;
 
@@ -181,6 +184,7 @@ export default function HighlightsGallery() {
       return;
     }
 
+    const dialogEl = dialogRef.current;
     const onKeyDown = (event) => {
       if (event.key === "Escape") {
         handleCloseLightbox();
@@ -193,11 +197,51 @@ export default function HighlightsGallery() {
       if (event.key === "ArrowLeft") {
         handlePrevious();
       }
+
+      if (event.key === "Tab" && dialogEl) {
+        const focusable = dialogEl.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+
+        if (!focusable.length) {
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeIndex, items.length]);
+
+  useEffect(() => {
+    if (activeIndex !== null) {
+      previousFocusRef.current = document.activeElement;
+      document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 0);
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+
+    document.body.style.overflow = "";
+    if (previousFocusRef.current && typeof previousFocusRef.current.focus === "function") {
+      previousFocusRef.current.focus();
+    }
+  }, [activeIndex]);
 
   return (
     <section className="relative bg-[linear-gradient(180deg,#fffdf7_0%,#f3ede3_100%)] py-16 md:py-20">
@@ -238,8 +282,15 @@ export default function HighlightsGallery() {
         </div>
 
         {activeItem ? (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4">
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="highlights-lightbox-title"
+            onClick={handleCloseLightbox}
+          >
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={handleCloseLightbox}
               className="absolute right-6 top-6 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
@@ -250,21 +301,33 @@ export default function HighlightsGallery() {
 
             <button
               type="button"
-              onClick={handlePrevious}
+              onClick={(event) => {
+                event.stopPropagation();
+                handlePrevious();
+              }}
               className="absolute left-4 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 md:left-8"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-7 w-7" />
             </button>
 
-            <div className="max-h-[88vh] max-w-[92vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-2 shadow-2xl">
+            <div
+              ref={dialogRef}
+              className="max-h-[88vh] max-w-[92vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-2 shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+            >
               <img src={activeItem.img} alt={activeItem.title || "Gallery image"} className="max-h-[82vh] max-w-[90vw] object-contain" />
-              <div className="px-3 pb-2 pt-3 text-center text-sm font-medium text-white">{activeItem.title || "Festival Highlight"}</div>
+              <div id="highlights-lightbox-title" className="px-3 pb-2 pt-3 text-center text-sm font-medium text-white">
+                {activeItem.title || "Festival Highlight"}
+              </div>
             </div>
 
             <button
               type="button"
-              onClick={handleNext}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleNext();
+              }}
               className="absolute right-4 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 md:right-8"
               aria-label="Next image"
             >

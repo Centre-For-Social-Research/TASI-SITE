@@ -25,7 +25,7 @@ export default function AboutPreview() {
             TASI creates a rare collaborative space for dialogue between government, industry, academia, and civil society with practical focus on safety outcomes.
           </p>
           <p className="mb-6 text-stone-700">
-            Convened by Centre for Social Research and Trust and Safety Forum, the event helps shape global conversations on digital governance, ethics, and AI safety.
+            Convened by Centre for Social Research and Trust and Safety Festival, the event helps shape global conversations on digital governance, ethics, and AI safety.
           </p>
           <Link href="/about" className="font-semibold text-orange-700 hover:text-orange-800">
             Read Full Vision

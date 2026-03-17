@@ -9,16 +9,17 @@ export function getSupabaseAdmin() {
 
   const url = process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const publishableKey =
-    process.env.SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  const key =
-    serviceRoleKey && serviceRoleKey !== "REPLACE_WITH_SERVICE_ROLE_SECRET_KEY"
-      ? serviceRoleKey
-      : publishableKey;
+  const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY;
 
-  if (!url || !key) {
+  if (!url) {
+    throw new Error("Missing SUPABASE_URL for server-side Supabase admin client.");
+  }
+
+  const key = serviceRoleKey || publishableKey;
+
+  if (!key) {
     throw new Error(
-      "Missing SUPABASE_URL and key. Set SUPABASE_SERVICE_ROLE_KEY or SUPABASE_PUBLISHABLE_KEY"
+      "Missing SUPABASE_SERVICE_ROLE_KEY or SUPABASE_PUBLISHABLE_KEY for Supabase client."
     );
   }
 

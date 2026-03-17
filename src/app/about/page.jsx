@@ -37,7 +37,7 @@ export default function AboutPage() {
                 The Trust and Safety India Festival (TASI) is India&apos;s first national convening focused on trust and safety, led by civil society.
               </p>
               <p className="mb-4 text-stone-700">
-                Convened by the Centre for Social Research (CSR) and Trust and Safety Forum, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.
+                Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.
               </p>
               <p className="text-stone-700">
                 The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.
