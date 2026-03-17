@@ -1,3 +1,4 @@
+import Image from "next/image";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
 import DarkHeroParticles from "@/components/ui/dark-hero-particles";
@@ -223,11 +224,14 @@ export default function SponsorPage() {
                   key={partner.name}
                   className="flex min-h-16 items-center justify-center rounded-lg border border-stone-200 bg-white px-2 py-2 sm:min-h-24 sm:rounded-xl sm:px-4 sm:py-3"
                 >
-                  <img
+                  <Image
                     src={partner.logo}
                     alt={partner.name}
                     loading="lazy"
+                    width={100}
+                    height={40}
                     className="h-9 w-full object-contain sm:h-12"
+                    quality={80}
                   />
                 </article>
               ))}

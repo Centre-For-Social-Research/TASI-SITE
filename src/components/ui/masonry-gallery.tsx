@@ -300,7 +300,14 @@ export default function MasonryGallery({
           onFocus={(event) => onMouseEnter(event.currentTarget)}
           onBlur={(event) => onMouseLeave(event.currentTarget)}
         >
-          <img src={item.img} alt={item.title || "Gallery image"} className="h-full w-full object-cover" loading="lazy" />
+          <img 
+            src={item.img} 
+            alt={item.title || "Gallery image"} 
+            className="h-full w-full object-cover" 
+            loading="lazy" 
+            decoding="async"
+            fetchPriority="low"
+          />
 
           {colorShiftOnHover ? (
             <div className="masonry-color-overlay pointer-events-none absolute inset-0 bg-gradient-to-tr from-orange-600/40 to-amber-400/40 opacity-0" />

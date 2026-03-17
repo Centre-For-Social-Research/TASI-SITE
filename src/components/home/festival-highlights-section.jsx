@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { MotionReveal } from "./motion-reveal";
 
 const ARCHIVE_LINK = "/past-editions";
@@ -27,10 +28,14 @@ export default function FestivalHighlightsSection() {
             <MotionReveal delay={0.08} className="h-full">
               <aside className="flex h-full flex-col rounded-[12px] border border-white/6 bg-[#16101f] p-5 text-white">
                 <div className="relative hidden overflow-hidden rounded-[10px] md:flex">
-                  <img
+                  <Image
                     src={PREVIEW_IMAGE}
                     alt="TASI 2025 audience preview"
+                    width={400}
+                    height={176}
                     className="h-36 w-full object-cover md:h-44"
+                    loading="lazy"
+                    quality={85}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.14)_100%)]" />
                 </div>
