@@ -20,6 +20,7 @@ export default function FestivalHighlightsSection() {
                     className="h-full w-full border-0"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
                     allowFullScreen
+                    loading="lazy"
                   />
                 </div>
               </div>
@@ -36,6 +37,7 @@ export default function FestivalHighlightsSection() {
                     className="h-36 w-full object-cover md:h-44"
                     loading="lazy"
                     quality={85}
+                    fetchPriority="high"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.14)_100%)]" />
                 </div>

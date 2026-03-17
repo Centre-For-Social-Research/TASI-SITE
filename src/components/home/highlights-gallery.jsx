@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, RefreshCw, X } from "lucide-react";
 import MasonryGallery from "@/components/ui/masonry-gallery";
 import { MotionReveal } from "./motion-reveal";
@@ -313,10 +314,19 @@ export default function HighlightsGallery() {
 
             <div
               ref={dialogRef}
-              className="max-h-[88vh] max-w-[92vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-2 shadow-2xl"
+              className="relative max-h-[88vh] max-w-[92vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-2 shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >
-              <img src={activeItem.img} alt={activeItem.title || "Gallery image"} className="max-h-[82vh] max-w-[90vw] object-contain" />
+              <div className="relative flex max-h-[82vh] max-w-[90vw] items-center justify-center bg-black/30">
+                <Image
+                  src={activeItem.img}
+                  alt={activeItem.title || "Gallery image"}
+                  fill
+                  quality={90}
+                  className="max-h-[82vh] max-w-[90vw] object-contain"
+                  sizes="(max-width: 768px) 90vw, 90vw"
+                />
+              </div>
               <div id="highlights-lightbox-title" className="px-3 pb-2 pt-3 text-center text-sm font-medium text-white">
                 {activeItem.title || "Festival Highlight"}
               </div>

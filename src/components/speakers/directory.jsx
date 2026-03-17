@@ -1,7 +1,8 @@
-"use client";
+\"use client\";
 
-import { useMemo, useState } from "react";
-import { speakers } from "@/data/speakers";
+import { useMemo, useState } from \"react\";
+import Image from \"next/image\";
+import { speakers } from \"@/data/speakers\";
 
 function initials(name) {
   const words = String(name || "").trim().split(/\s+/).filter(Boolean);
@@ -94,14 +95,14 @@ export default function SpeakersDirectory() {
             <article key={`${speaker.name}-${speaker.designation}`} className="flex h-[26rem] flex-col rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
               <div className="mb-3 flex justify-center">
                 {speaker.photo ? (
-                  <img
+                  <Image
                     src={`/img/speakers/${speaker.photo}`}
                     alt={speaker.name}
                     className="h-28 w-28 rounded-full border border-stone-300 object-cover"
+                    width={112}
+                    height={112}
                     loading="lazy"
-                    onError={(event) => {
-                      event.currentTarget.style.display = "none";
-                    }}
+                    quality={85}
                   />
                 ) : (
                   <div className="flex h-28 w-28 items-center justify-center rounded-full border border-stone-300 bg-stone-100 text-2xl font-black text-stone-500">
