@@ -24,14 +24,21 @@ export async function POST(request) {
 
     if (error) {
       // Treat existing subscribers as success to keep UX idempotent.
-      if (error.code === "23505") {
+      const isDuplicate =
+        error.code === "23505" ||
+        error.details?.toLowerCase().includes("already exists") ||
+        error.message?.toLowerCase().includes("duplicate");
+
+      if (isDuplicate) {
         return Response.json({ success: true, alreadySubscribed: true });
       }
       return Response.json({ error: error.message }, { status: 500 });
     }
 
     return Response.json({ success: true });
-  } catch {
-    return Response.json({ error: "Unable to process newsletter subscription." }, { status: 500 });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unable to process newsletter subscription.";
+    return Response.json({ error: message }, { status: 500 });
   }
 }

@@ -16,6 +16,10 @@ const outfit = Outfit({
 export const metadata = {
   title: "TASI 2026",
   description: "Next.js migration workspace for TASI 2026",
+  metadataBase: new URL("https://jamsaq.in"),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({ children }) {

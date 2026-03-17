@@ -2,6 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+const INITIAL_TIME = {
+  days: "00",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+};
+
 function formatRemaining(targetTime) {
   const now = Date.now();
   const delta = Math.max(0, targetTime - now);
@@ -21,9 +28,11 @@ function formatRemaining(targetTime) {
 
 export default function Countdown() {
   const target = useMemo(() => new Date("2026-10-13T09:00:00+05:30").getTime(), []);
-  const [time, setTime] = useState(() => formatRemaining(target));
+  const [time, setTime] = useState(INITIAL_TIME);
 
   useEffect(() => {
+    setTime(formatRemaining(target));
+
     const id = window.setInterval(() => {
       setTime(formatRemaining(target));
     }, 1000);
