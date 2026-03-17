@@ -13,11 +13,16 @@ const navLinks = [
 export default function LegalLayout({ title, kicker, updated, applies, children }) {
   const pathname = usePathname();
 
+  const handleLogoClick = (event) => {
+    event.preventDefault();
+    window.location.href = "/";
+  };
+
   return (
     <div className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-50 border-b border-orange-200/70 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" onClick={handleLogoClick}>
             <Image
               src="/img/tasi-csr-logo.png"
               alt="TASI 2026"

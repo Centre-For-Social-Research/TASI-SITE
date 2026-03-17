@@ -15,7 +15,8 @@ const outfit = Outfit({
 
 export const metadata = {
   title: "TASI 2026",
-  description: "Next.js migration workspace for TASI 2026",
+  description:
+    "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Forum, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society. The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.",
   metadataBase: new URL("https://jamsaq.in"),
   alternates: {
     canonical: "/",
@@ -23,7 +24,7 @@ export const metadata = {
   openGraph: {
     title: "TASI 2026",
     description:
-      "Trust and Safety India Festival 2026: leaders from policy, industry, and civil society shaping safer digital spaces.",
+      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Forum, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society. The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.",
     url: "https://jamsaq.in",
     siteName: "TASI 2026",
     type: "website",
@@ -40,7 +41,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "TASI 2026",
     description:
-      "Trust and Safety India Festival 2026: policy, AI, and digital safety dialogue in New Delhi.",
+      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Forum, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society. The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.",
     images: ["/twitter-image"],
   },
 };

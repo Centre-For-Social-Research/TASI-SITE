@@ -17,10 +17,15 @@ const navItems = [
 export default function HomeNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleLogoClick = (event) => {
+    event.preventDefault();
+    window.location.href = "/";
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-orange-200/70 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 md:px-6">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center" onClick={handleLogoClick}>
           <Image
             src="/img/tasi-csr-logo.png"
             alt="TASI 2026"
