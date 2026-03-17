@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { MenuVertical } from "@/components/ui/menu-vertical";
 
 const navItems = [
   { label: "About", href: "/about" },
@@ -17,12 +16,6 @@ const navItems = [
 
 export default function HomeNavbar() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const mobileItems = [
-    { label: "Home", href: "/" },
-    ...navItems,
-    { label: "Register", href: "/register" },
-  ];
 
   const handleLogoClick = (event) => {
     event.preventDefault();
@@ -97,12 +90,26 @@ export default function HomeNavbar() {
       {/* Mobile Navigation Menu */}
       {isOpen && (
         <nav className="border-t border-orange-200/70 bg-white/95 dark:border-zinc-800 dark:bg-zinc-900/95 lg:hidden">
-          <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6">
-            <MenuVertical
-              menuItems={mobileItems}
-              color="#c2410c"
-              onItemClick={() => setIsOpen(false)}
-            />
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 md:px-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="px-3 py-2 font-medium text-stone-700 transition hover:text-orange-700 dark:text-zinc-200 dark:hover:text-orange-400"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="pt-2">
+              <Link
+                href="/register"
+                className="inline-block w-full rounded-md bg-orange-700 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-orange-800"
+                onClick={() => setIsOpen(false)}
+              >
+                Register Now
+              </Link>
+            </div>
           </div>
         </nav>
       )}
