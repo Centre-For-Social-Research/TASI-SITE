@@ -1,8 +1,8 @@
-\"use client\";
+"use client";
 
-import { useMemo, useState } from \"react\";
-import Image from \"next/image\";
-import { speakers } from \"@/data/speakers\";
+import { useMemo, useState } from "react";
+import Image from "next/image";
+import { speakers } from "@/data/speakers";
 
 function initials(name) {
   const words = String(name || "").trim().split(/\s+/).filter(Boolean);

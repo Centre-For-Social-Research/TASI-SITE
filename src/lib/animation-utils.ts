@@ -44,6 +44,7 @@ export function scheduleAnimations(animations: Array<() => void>) {
  */
 export function shouldDeferAnimation(): boolean {
   if (typeof navigator === "undefined") return false;
+  const nav = navigator as Navigator & { deviceMemory?: number };
   // Defer if on slow connection or low-end device
-  return (navigator.deviceMemory || 8) < 4;
+  return (nav.deviceMemory || 8) < 4;
 }
