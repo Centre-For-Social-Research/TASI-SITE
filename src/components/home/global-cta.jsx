@@ -11,7 +11,7 @@ export default function GlobalCta() {
           Join 1,000+ delegates shaping the future of digital trust, safety and AI governance in India and beyond.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/register" className="rounded-md bg-white px-5 py-3 font-semibold text-stone-950 transition hover:bg-amber-200">
+          <Link href="/register" className="rounded-md bg-amber-100 px-5 py-3 font-semibold text-stone-950 transition hover:bg-amber-200">
             Register for TASI 2026
           </Link>
           <Link href="/sponsor" className="rounded-md border border-white/40 px-5 py-3 font-semibold text-white transition hover:border-amber-300 hover:text-amber-200">
