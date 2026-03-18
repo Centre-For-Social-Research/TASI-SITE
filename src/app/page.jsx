@@ -7,6 +7,7 @@ import FestivalHighlightsSection from "@/components/home/festival-highlights-sec
 import HighlightsGallery from "@/components/home/highlights-gallery";
 import HomeHero from "@/components/home/hero";
 import HomeNavbar from "@/components/home/navbar";
+import ImmersiveVideoShowcase from "@/components/past-editions/immersive-video-showcase";
 import StructureSection from "@/components/home/structure-section";
 import ThemesPreview from "@/components/home/themes-preview";
 
@@ -24,6 +25,7 @@ export default function HomePage() {
         <HomeHero />
         <FestivalHighlightsSection />
         <AboutPreview />
+        <ImmersiveVideoShowcase />
         <FormatGrid />
         <StructureSection />
         <ThemesPreview />

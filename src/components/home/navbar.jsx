@@ -31,7 +31,7 @@ export default function HomeNavbar() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-5 text-sm font-medium text-stone-700 dark:text-zinc-200 lg:flex">
+        <nav className="hidden items-center gap-5 text-sm font-medium text-stone-700 dark:text-zinc-200 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -49,7 +49,7 @@ export default function HomeNavbar() {
             Register Now
           </Link>
         </nav>
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex items-center gap-3 md:hidden">
           <ThemeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -84,7 +84,7 @@ export default function HomeNavbar() {
 
       {/* Mobile Navigation Menu */}
       {isOpen && (
-        <nav className="border-t border-orange-200/70 bg-white/95 dark:border-zinc-800 dark:bg-zinc-900/95 lg:hidden">
+        <nav className="border-t border-orange-200/70 bg-white/95 dark:border-zinc-800 dark:bg-zinc-900/95 md:hidden">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 md:px-6">
             {navItems.map((item) => (
               <Link

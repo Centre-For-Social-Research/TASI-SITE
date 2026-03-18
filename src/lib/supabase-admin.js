@@ -9,21 +9,16 @@ export function getSupabaseAdmin() {
 
   const url = process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!url) {
     throw new Error("Missing SUPABASE_URL for server-side Supabase admin client.");
   }
 
-  const key = serviceRoleKey || publishableKey;
-
-  if (!key) {
-    throw new Error(
-      "Missing SUPABASE_SERVICE_ROLE_KEY or SUPABASE_PUBLISHABLE_KEY for Supabase client."
-    );
+  if (!serviceRoleKey) {
+    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY for server-side Supabase admin client.");
   }
 
-  client = createClient(url, key, {
+  client = createClient(url, serviceRoleKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,

@@ -29,6 +29,9 @@ function Footerdemo() {
   const [messageStatus, setMessageStatus] = React.useState("");
   const [isMessageSubmitting, setIsMessageSubmitting] = React.useState(false);
 
+  const normalizeEmailInput = React.useCallback((value: string) => value.trim().toLowerCase(), []);
+  const normalizeMessageInput = React.useCallback((value: string) => value.replace(/\r\n?/g, "\n").trim(), []);
+
   async function handleNewsletterSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setNewsletterStatus("");
@@ -38,7 +41,7 @@ function Footerdemo() {
       const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newsletterEmail }),
+        body: JSON.stringify({ email: normalizeEmailInput(newsletterEmail) }),
       });
 
       const data = await response.json();
@@ -64,7 +67,10 @@ function Footerdemo() {
       const response = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: messageEmail, message: messageText }),
+        body: JSON.stringify({
+          email: normalizeEmailInput(messageEmail),
+          message: normalizeMessageInput(messageText),
+        }),
       });
 
       let data: { error?: string } | null = null;

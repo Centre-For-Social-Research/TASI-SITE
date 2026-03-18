@@ -1,19 +1,22 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { isValidEmail, sanitizeEmail, sanitizeMessage } from "@/lib/input-sanitizers";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
-    const message = typeof body?.message === "string" ? body.message.trim() : "";
+    const email = sanitizeEmail(body?.email);
+    const message = sanitizeMessage(body?.message);
 
-    if (!email || !EMAIL_REGEX.test(email)) {
+    if (!isValidEmail(email)) {
       return Response.json({ error: "Valid email is required." }, { status: 400 });
     }
 
     if (!message || message.length < 10) {
       return Response.json({ error: "Message must be at least 10 characters." }, { status: 400 });
+    }
+
+    if (message.length > 5000) {
+      return Response.json({ error: "Message must be 5000 characters or less." }, { status: 400 });
     }
 
     const supabase = getSupabaseAdmin();

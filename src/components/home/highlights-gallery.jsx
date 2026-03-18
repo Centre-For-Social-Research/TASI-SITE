@@ -321,10 +321,11 @@ export default function HighlightsGallery() {
                 <Image
                   src={activeItem.img}
                   alt={activeItem.title || "Gallery image"}
-                  fill
+                  width={1800}
+                  height={1200}
                   quality={90}
-                  className="max-h-[82vh] max-w-[90vw] object-contain"
-                  sizes="(max-width: 768px) 90vw, 90vw"
+                  className="h-auto max-h-[82vh] w-auto max-w-[90vw] object-contain"
+                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 85vw, 80vw"
                 />
               </div>
               <div id="highlights-lightbox-title" className="px-3 pb-2 pt-3 text-center text-sm font-medium text-white">

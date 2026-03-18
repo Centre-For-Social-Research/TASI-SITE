@@ -119,7 +119,7 @@ export default function PrivacyPolicyPage() {
           <a href="mailto:info1@csrindia.org" className="text-orange-700 underline dark:text-orange-300">
             info1@csrindia.org
           </a>
-          <br />Phone: +91 98105 11540
+          <br />Phone: +91 011 46131929
           <br />Address: 2, Nelson Mandela Marg, Vasant Kunj, New Delhi - 110070, India
         </ContactHighlight>
       </DocSection>

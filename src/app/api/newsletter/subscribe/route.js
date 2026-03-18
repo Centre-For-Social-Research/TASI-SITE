@@ -1,13 +1,12 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { isValidEmail, sanitizeEmail } from "@/lib/input-sanitizers";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+    const email = sanitizeEmail(body?.email);
 
-    if (!email || !EMAIL_REGEX.test(email)) {
+    if (!isValidEmail(email)) {
       return Response.json({ error: "Valid email is required." }, { status: 400 });
     }
 

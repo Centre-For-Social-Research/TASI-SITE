@@ -9,7 +9,7 @@ const securityHeaders = [
       "img-src 'self' data: blob: https:",
       "font-src 'self' data: https:",
       "connect-src 'self' https: https://docs.google.com",
-      "media-src 'self' blob: https://stream.mux.com https://player.mux.com",
+      "media-src 'self' blob: https://stream.mux.com https://player.mux.com https://storage.googleapis.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self' https://docs.google.com",
@@ -67,6 +67,16 @@ const nextConfig = {
     formats: ["image/webp", "image/avif"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "image.mux.com",
+      },
+    ],
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

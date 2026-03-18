@@ -48,7 +48,7 @@ export default function ContactPage() {
               To Discuss Participation Opportunities
             </h2>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-slate-700 dark:text-slate-200 sm:gap-5">
-              <span>+91 98105 11540</span>
+              <span>+91 011 46131929</span>
               <span className="text-slate-300 dark:text-slate-600">|</span>
               <a href="mailto:info1@csrindia.org" className="font-medium text-amber-700 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200">
                 info1@csrindia.org
