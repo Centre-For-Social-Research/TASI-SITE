@@ -7,9 +7,9 @@ import FestivalHighlightsSection from "@/components/home/festival-highlights-sec
 import HighlightsGallery from "@/components/home/highlights-gallery";
 import HomeHero from "@/components/home/hero";
 import HomeNavbar from "@/components/home/navbar";
-import ImmersiveVideoShowcase from "@/components/past-editions/immersive-video-showcase";
 import StructureSection from "@/components/home/structure-section";
 import ThemesPreview from "@/components/home/themes-preview";
+import VideoTestimonialsSection from "@/components/home/video-testimonials-section";
 
 export const metadata = {
   alternates: {
@@ -25,7 +25,7 @@ export default function HomePage() {
         <HomeHero />
         <FestivalHighlightsSection />
         <AboutPreview />
-        <ImmersiveVideoShowcase />
+        <VideoTestimonialsSection />
         <FormatGrid />
         <StructureSection />
         <ThemesPreview />

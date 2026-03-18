@@ -284,7 +284,7 @@ export default function HighlightsGallery() {
 
         {activeItem ? (
           <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-2 md:p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-1 md:p-2"
             role="dialog"
             aria-modal="true"
             aria-labelledby="highlights-lightbox-title"
@@ -314,21 +314,21 @@ export default function HighlightsGallery() {
 
             <div
               ref={dialogRef}
-              className="relative max-h-[96vh] max-w-[98vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-1 shadow-2xl md:max-h-[88vh] md:max-w-[92vw] md:p-2"
+              className="relative max-h-[96vh] w-[98vw] max-w-[1600px] overflow-hidden rounded-2xl border border-white/15 bg-black/35 p-0.5 shadow-2xl md:w-[96vw]"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="relative flex max-h-[90vh] max-w-[96vw] items-center justify-center bg-black/30 md:max-h-[82vh] md:max-w-[90vw]">
+              <div className="relative flex max-h-[90vh] w-full items-center justify-center bg-black/20 md:max-h-[86vh]">
                 <Image
                   src={activeItem.img}
                   alt={activeItem.title || "Gallery image"}
                   width={1800}
                   height={1200}
                   quality={90}
-                  className="h-auto max-h-[90vh] w-auto max-w-[96vw] object-contain md:max-h-[82vh] md:max-w-[90vw]"
-                  sizes="(max-width: 768px) 96vw, (max-width: 1200px) 85vw, 80vw"
+                  className="h-auto max-h-[90vh] w-auto max-w-[98vw] object-contain md:max-h-[86vh] md:max-w-[96vw]"
+                  sizes="(max-width: 768px) 98vw, (max-width: 1200px) 96vw, 90vw"
                 />
               </div>
-              <div id="highlights-lightbox-title" className="px-3 pb-2 pt-3 text-center text-sm font-medium text-white">
+              <div id="highlights-lightbox-title" className="px-2 pb-1.5 pt-2 text-center text-sm font-medium text-white md:px-3 md:pb-2 md:pt-3">
                 {activeItem.title || "Festival Highlight"}
               </div>
             </div>
