@@ -131,7 +131,7 @@ export default function ImmersiveVideoShowcase() {
   return (
     <section
       ref={sectionRef}
-      className={`relative left-1/2 right-1/2 h-[80vh] min-h-[420px] w-screen -translate-x-1/2 overflow-hidden transition-all duration-700 ease-out ${
+      className={`relative left-1/2 right-1/2 w-screen -translate-x-1/2 overflow-hidden aspect-video min-h-[260px] md:aspect-auto md:h-[80vh] md:min-h-[480px] transition-all duration-700 ease-out ${
         isInView ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
       }`}
     >
@@ -141,7 +141,7 @@ export default function ImmersiveVideoShowcase() {
             key={activeClip.id}
             src={getMutedEmbedSrc(activeClip.iframeSrc)}
             title={activeClip.title}
-            className="absolute left-1/2 top-1/2 h-[126vh] w-[126vw] max-w-none -translate-x-1/2 -translate-y-1/2 md:h-[120vh] md:w-[120vw]"
+            className="absolute inset-0 h-full w-full md:left-1/2 md:top-1/2 md:h-[120vh] md:w-[120vw] md:max-w-none md:-translate-x-1/2 md:-translate-y-1/2"
             loading="lazy"
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
             allowFullScreen

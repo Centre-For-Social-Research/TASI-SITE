@@ -284,7 +284,7 @@ export default function HighlightsGallery() {
 
         {activeItem ? (
           <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-2 md:p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="highlights-lightbox-title"
@@ -314,18 +314,18 @@ export default function HighlightsGallery() {
 
             <div
               ref={dialogRef}
-              className="relative max-h-[88vh] max-w-[92vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-2 shadow-2xl"
+              className="relative max-h-[96vh] max-w-[98vw] overflow-hidden rounded-2xl border border-white/20 bg-black/50 p-1 shadow-2xl md:max-h-[88vh] md:max-w-[92vw] md:p-2"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="relative flex max-h-[82vh] max-w-[90vw] items-center justify-center bg-black/30">
+              <div className="relative flex max-h-[90vh] max-w-[96vw] items-center justify-center bg-black/30 md:max-h-[82vh] md:max-w-[90vw]">
                 <Image
                   src={activeItem.img}
                   alt={activeItem.title || "Gallery image"}
                   width={1800}
                   height={1200}
                   quality={90}
-                  className="h-auto max-h-[82vh] w-auto max-w-[90vw] object-contain"
-                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 85vw, 80vw"
+                  className="h-auto max-h-[90vh] w-auto max-w-[96vw] object-contain md:max-h-[82vh] md:max-w-[90vw]"
+                  sizes="(max-width: 768px) 96vw, (max-width: 1200px) 85vw, 80vw"
                 />
               </div>
               <div id="highlights-lightbox-title" className="px-3 pb-2 pt-3 text-center text-sm font-medium text-white">
