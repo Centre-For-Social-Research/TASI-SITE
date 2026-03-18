@@ -131,7 +131,7 @@ export default function ImmersiveVideoShowcase() {
   return (
     <section
       ref={sectionRef}
-      className={`relative left-1/2 right-1/2 h-[80vh] min-h-[480px] w-screen -translate-x-1/2 overflow-hidden transition-all duration-700 ease-out ${
+      className={`relative left-1/2 right-1/2 h-[80vh] min-h-[420px] w-screen -translate-x-1/2 overflow-hidden transition-all duration-700 ease-out ${
         isInView ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
       }`}
     >
@@ -141,7 +141,7 @@ export default function ImmersiveVideoShowcase() {
             key={activeClip.id}
             src={getMutedEmbedSrc(activeClip.iframeSrc)}
             title={activeClip.title}
-            className="absolute left-1/2 top-1/2 h-[132vh] w-[132vw] max-w-none -translate-x-1/2 -translate-y-1/2 md:h-[122vh] md:w-[122vw]"
+            className="absolute left-1/2 top-1/2 h-[126vh] w-[126vw] max-w-none -translate-x-1/2 -translate-y-1/2 md:h-[120vh] md:w-[120vw]"
             loading="lazy"
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
@@ -171,6 +171,42 @@ export default function ImmersiveVideoShowcase() {
         >
           TASI 2025 · New Delhi
         </span>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 z-20 md:hidden">
+        <div className="overflow-x-auto px-2 pb-2">
+          <div className="flex min-w-max gap-2">
+            {clips.map((clip, index) => {
+              const isActive = index === activeIndex;
+
+              return (
+                <button
+                  key={clip.id}
+                  type="button"
+                  onClick={() => handleSelectClip(index)}
+                  aria-label={`Play ${clip.title}`}
+                  className="relative h-20 w-28 flex-none overflow-hidden rounded-md"
+                >
+                  <img
+                    src={clip.thumbnail}
+                    alt={clip.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/35" />
+                  <div
+                    className={`absolute inset-0 border ${
+                      isActive ? "border-[#ff6f61]" : "border-transparent"
+                    }`}
+                  />
+                  <div className="absolute left-1.5 top-1.5 rounded-sm bg-[#556b2f]/70 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#ffe5d6]">
+                    Clip {index + 1}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-20 hidden md:block">
