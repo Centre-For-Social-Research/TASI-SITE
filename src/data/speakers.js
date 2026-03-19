@@ -11,6 +11,7 @@ export const speakers = [
         "designation":  "Additional Secretary, MeitY, Govt. of India",
         "category":  "Government",
         "photo":  "Abhishek Singh.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/abhisheksinghias/",
         "bio":  "Abhishek Singh is an officer of the 1995 batch of IAS with diverse experience in administration, managing law and order, implementing development programs, and policy formulation at Central Government with regard to the use of Technology for improving Governance. He is presently posted as Additional Secretary, Ministry of Electronics and Information Technology, Government of India, with responsibilities of Artificial Intelligence \u0026 Emerging Technologies, Cyber Security and Digital Skilling. Abhishek is an IIT Kanpur alumnus and did his Masters in Public Administration from Harvard Kennedy School of Government as a Mason fellow in May 2013."
     },
     {
@@ -18,6 +19,7 @@ export const speakers = [
         "designation":  "Senior Market Engagement Manager, the GSMA",
         "category":  "Technology",
         "photo":  "Akansha Kasera.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/akansha-kasera/",
         "bio":  "Akansha is dedicated to building meaningful relationships and designing thoughtful solutions that create equity and welfare. With over a decade of experience in the international development space, she currently serves as Senior Market Engagement Manager at the GSMA, working on pathways that help bridge the gender digital divide. She is currently pursuing her MBA in Policy Analysis from the Indian School of Business and holds a Master’s in Public Policy from the Jindal School of Governance and Public Policy, and an undergraduate degree in Literature with a minor in Psychology from the Delhi University."
     },
     {
@@ -25,6 +27,7 @@ export const speakers = [
         "designation":  "Global Executive, TP",
         "category":  "Technology",
         "photo":  "Akash Pugalia.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/akashpug03/",
         "bio":  "Akash Pugalia is a global executive with 24+ years in the BPO industry, spearheading innovation in AI/ML Data Services and Trust \u0026 Safety. At TP, he partners with Fortune 500s to deliver scalable data pipelines, ethical AI governance, and platform safety solutions that fuel Generative AI and enterprise growth with trust. A recognized AI data expert and thought leader, Akash is renowned for transforming emerging AI into measurable business impact and advancing global best practices in Responsible AI."
     },
     {
@@ -32,6 +35,7 @@ export const speakers = [
         "designation":  "Legal Counsel for Human Rights, Booking.com",
         "category":  "Technology",
         "photo":  "Amelia Wierda.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/ameliawierda/",
         "bio":  "Amelia Wierda is an accomplished attorney and human rights specialist currently serving as Legal Counsel for Human Rights at Booking.com, where she focuses on integrating regulatory requirements and risk management into business practices. She is a primary point of contact for strategically significant human rights risk management, including escalations related to human trafficking and online safety, acting as a key liaison to business partners in the Trust \u0026 Safety and Content Integrity teams. Amelia brings a unique perspective from both the public and private sectors, including experience assisting with human trafficking and OSEC prosecutions in the U.S. and the Philippines, as well as work in UN and international tribunals. She has over 15 years experience actively engaging in anti-trafficking efforts as a speaker and advocate."
     },
     {
@@ -53,6 +57,7 @@ export const speakers = [
         "designation":  "Founder \u0026 CEO of Youth Ki Awaaz (YKA)",
         "category":  "Academia \u0026 Media",
         "photo":  "Anshul Tewari.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/anshultewari/",
         "bio":  "Anshul Tewari is the Founder \u0026 CEO of Youth Ki Awaaz (YKA) — India’s largest citizen-media and civic engagement platform, reaching over 20 million people every month. Through storytelling, data, and technology, YKA empowers a community of over 200,000 young people every month to shape conversations on issues like online safety, climate, and inclusion, while helping institutions tap into real-time youth insights. Anshul is a 2025 Skoll World Fellow, Ashoka Fellow, and Forbes 30 Under 30 Asia honoree. He also serves on the Global Safety Advisory Board of Snap Inc., is a founding trustee of the Misinformation Combat Alliance, and a Board Trustee at the Internet Freedom Foundation."
     },
     {
@@ -60,6 +65,7 @@ export const speakers = [
         "designation":  "Digital Influencer and Life Coach",
         "category":  "Academia \u0026 Media",
         "photo":  "Anupriya Kapur.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/anupriya-kapur-60a674180/",
         "bio":  "Anupriya Kapur is a digital influencer and life coach whose work spans fitness, travel, and lifestyle. A single parent, she uses her platform to share body-positive messages, fitness insights, and experiences from her personal journey. Through her content, she encourages self-care, authenticity, and resilience, inspiring audiences to navigate life’s challenges with confidence."
     },
     {
@@ -67,6 +73,7 @@ export const speakers = [
         "designation":  "Co-Founder of The Quantum Hub and YLAC",
         "category":  "Civil Society",
         "photo":  "Aparajita Bharti.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/aparajita-bharti-8650779/",
         "bio":  "Aparajita Bharti is the co-founder of The Quantum Hub (TQH), a leading public policy firm based out of Delhi and Young Leaders for Active Citizenship (YLAC) that works with young people to increase their participation in democratic processes. Her work in trust and safety has specifically focused on children\u0027s online safety and women\u0027s participation in the digital economy. She advises multiple tech platforms on privacy and youth wellbeing. She writes in leading publications around these topics."
     },
     {
@@ -74,6 +81,7 @@ export const speakers = [
         "designation":  "Senior Analyst, T\u0026S, Resolver",
         "category":  "Technology",
         "photo":  "Ayush Verma.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/ayush-verma-b98b9a57/",
         "bio":  "Ayush Verma is Senior Analyst, Trust \u0026 Safety, at Resolver, leading a team in India to identify, assess, and mitigate nuanced risks in hate speech, violent extremism, and graphic violence across Indic languages. With an MA in International Relations and over three years in trust and safety, he has authored policy-relevant research, including contributions to Combating Terrorism Center (CTC) Sentinel and the book The Islamic State in Afghanistan \u0026 Pakistan. Ayush’s expertise in geopolitical risk, threat intelligence, and policy shaping drives his mission to create safer online spaces, protecting global communities from emerging threats in the online ecosystem."
     },
     {
@@ -95,6 +103,7 @@ export const speakers = [
         "designation":  "Feminist Practitioner",
         "category":  "Civil Society",
         "photo":  "Barsha Chakraborty.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/barsha-chakraborty-a2423255/",
         "bio":  "Barsha Chakraborty is a feminist practitioner working at the intersection of gender, technology, and social change. Her work focuses on addressing tech-facilitated gender-based violence, gendered disinformation, and the impact of emerging technologies on women and marginalised communities. With over a decade of experience, Barsha brings deep expertise in shaping narratives through social and behaviour change communication, and in designing evidence-based programmes and impact strategies that challenge oppressive gender norms and advocate for digital rights and justice. She is passionate about reimagining technology as a space for inclusion, dignity, and equality."
     },
     {
@@ -116,6 +125,7 @@ export const speakers = [
         "designation":  "CEO and Co-founder, Space2Grow",
         "category":  "Civil Society",
         "photo":  "Chitra Iyer.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/chitraiyer3107/",
         "bio":  "Ms. Chitra Iyer, Co-founder and CEO of Space2Grow, is a visionary social impact leader with over two decades of experience in child protection, anti-human trafficking and skill development. In 2013, she co-founded Livelihood Initiatives for Empowerment (LIFE), designing a presidentially launched skilling program for trafficking survivors. Through Space2Grow, co-founded with Anuj Singhal, she bridges intent to action for non-profits, ensuring digital safety, inclusive livelihoods and child rights via advisory, training and donor mobilization. An advocate for ethical product management and perseverance, she inspires women in the sector to prioritize impact."
     },
     {
@@ -158,6 +168,7 @@ export const speakers = [
         "designation":  "Member of Parliament, Lok Sabha and Member of Parliamentary Standing Committee on",
         "category":  "Government",
         "photo":  "Dr. Rabindra Narayan Behera.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/dr-rabindra-narayan-behera-883b371ab/",
         "bio":  "Communications and Information Technology Dr. Rabindra Narayan Behera, is a Lok Sabha MP and a member of the Parliamentary Standing Committee on Communications and Information Technology. Dr Behera is a technocrat-turned politician as he served as the Senior Director at the National Informatics Centre (NIC). He also holds a PhD in Artificial Intelligence."
     },
     {
@@ -165,6 +176,7 @@ export const speakers = [
         "designation":  "Director, Centre for Social Research (CSR)",
         "category":  "Civil Society",
         "photo":  "Dr. Ranjana Kumari.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/rkumari/",
         "bio":  "Dr. Ranjana Kumari has been a leading advocate for women’s rights in India for over four decades, combining activism, scholarship, and policy engagement. She has advised the Government of India through roles on the National Commission for Women, Ministry of Women and Child Development, NHRC, and Ministry of Labour, and has served as a Gender Expert at the ILO and United Nations in Geneva. Recognized with national and international awards, including the Lotus Leadership Award, she was named among Apolitical’s 100 Most Influential People in Gender Policy. She also serves on Meta’s Global Advisory Council, the Advertising Standards Council of India, and was previously member of the Trust and Safety Council of Teleperformance and Twitter advocating for safe, respectful online spaces."
     },
     {
@@ -186,6 +198,7 @@ export const speakers = [
         "designation":  "Project Manager, GroSafe",
         "category":  "Civil Society",
         "photo":  "Dylan Schouten.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/dgmschouten/",
         "bio":  "Dr. Dylan Gerard Michel Schouten-Adavi is the research project manager for the GroSafe project. He has an interdisciplinary academic/commercial background in human-technology interaction, including a PhD in Interactive Intelligence from Delft University of Technology, combining human-centered research and analysis with technology understanding and design and programming skills. Dylan’s areas of expertise include game research and design, educational research and design, interdisciplinary knowledge transfer and outreach, and employing user-centered and user-driven research to develop and evaluate technological interventions to societal issues. He currently lives in Ireland with his wife and son. Children\u0027s Online Redress (COR) Sandbox: The First Regulatory Sandbox for Online Safety"
     },
     {
@@ -193,6 +206,7 @@ export const speakers = [
         "designation":  "Executive Director, Erasmus Centre for Entrepreneurship; CEO, ROOM",
         "category":  "Academia \u0026 Media",
         "photo":  "Farshida Zafar.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/farshida-zafar-aa938325/",
         "bio":  "Farshida Zafar LL.M. is Executive Director of the Erasmus Centre for Entrepreneurship, CEO of ROOM, leading strategic initiatives in emerging technology and inclusive entrepreneurship. Her visionary leadership has earned national and international recognition, including the Best Campus Development award (2021), Techionista Tech Leader Award (2018), and SURF innovation award (2016). Named to MT/Sprout’s Inclusive 30 in 2023, she’s recognized as one of the Netherlands’ most influential inclusive leaders. With expertise in law, technology, and change management, Farshida drives digital transformation and leads diverse teams to create innovative solutions with meaningful societal impact."
     },
     {
@@ -207,6 +221,7 @@ export const speakers = [
         "designation":  "Chief Executive Officer (CEO) of Asian School of Cyber Laws",
         "category":  "Academia \u0026 Media",
         "photo":  "Gokul Narayan.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/gok/",
         "bio":  "Gokul has trained over 100,000 participants, including law students, lawyers, judges, law enforcement officers, chartered accountants, and IT professionals. He has taught at more than 50 prestigious universities and organizations nationwide. Gokul is a respected figure in legal moot courts, mediations, and negotiation competitions, where his insights have shaped the next generation of legal minds. Gokul is currently the Chief Executive Officer (CEO) of Asian School of Cyber Laws."
     },
     {
@@ -221,6 +236,7 @@ export const speakers = [
         "designation":  "Editorial Consultant",
         "category":  "Academia \u0026 Media",
         "photo":  "Heena Goswami.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/heena-goswami-253a4424b/",
         "bio":  "Heena Goswami is a public policy professional focusing on impact of emerging technologies on democratic institutions, society and human development."
     },
     {
@@ -228,6 +244,7 @@ export const speakers = [
         "designation":  "Director, T\u0026S at Resolver",
         "category":  "Technology",
         "photo":  "Henry Adams.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/henry-h-adams/",
         "bio":  "Henry Adams is Director, Trust \u0026 Safety, at Resolver. He has spent the past decade mitigating risk in diverse, high-harm settings. Henry is a former Head of Intelligence with a background in counter terrorism, national policing operations and crisis negotiation. At Resolver, he initially led global intelligence operations before overseeing the development of predatory network disruption tools. Today, Henry is a member of Resolver\u0027s Trust \u0026 Safety Division leadership and their primary interface with industry, academia, governments and regulators. He is a passionate advocate for the protection of children; and a proponent of the power in taking proactive intelligence-led approaches to safety."
     },
     {
@@ -249,6 +266,7 @@ export const speakers = [
         "designation":  "Founder, CEO and Editor-in-Chief, Feminism in India",
         "category":  "Academia \u0026 Media",
         "photo":  "Japleen Pasricha.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/japleen-pasricha-8864b348/",
         "bio":  "Japleen Pasricha is the founder, CEO, and editor-in-chief of Feminism in India, an intersectional feminist media platform that explores the intricacies of culture, politics, society, and media through a feminist lens. She has previously worked with women’s rights NGOs, including Breakthrough India and Point of View, before founding FII in 2014. She is a public speaker and has represented FII on platforms such as the UNCSW, Rights Con, Amnesty International, and the UNHRC, among others. Japleen works to strategically shape FII into a space that presents intersectional feminist information in an accessible way to people of varied palettes and backgrounds, smashing the patriarchy with a vision that emboldens the modern Indian youth."
     },
     {
@@ -263,6 +281,7 @@ export const speakers = [
         "designation":  "Co- Founder and Chief Safety Officer, K-ID",
         "category":  "Technology",
         "photo":  "Jeff Wu.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/jeffwu/",
         "bio":  "Jeff Wu is a Co-Founder and Chief Safety Officer for k-ID, a new technology transforming how kids and teens access age-appropriate experiences. Jeff works with government agencies and safety organizations to support k-ID in providing age-appropriate and region-specific feature access in more than 200 markets around the world as well as building out the Family Platform product. Jeff brings almost two decades of experience in Trust \u0026 Safety, Government Outreach, and Investigations at top technology companies, including pre-IPO hyper growth stages at both Meta Platforms and Google Inc. He has been recognized for his ability to develop government relationships and drive impactful solutions to combat online abuse while delicately balancing community safety and user privacy on a global scale, including his team receiving the prestigious FBI Director’s Award for Excellence in International Operations in 2019."
     },
     {
@@ -277,6 +296,7 @@ export const speakers = [
         "designation":  "Second Secretary Political Affairs \u0026 Human Rights, Netherlands Embassy",
         "category":  "International",
         "photo":  "Josephine van Zanten.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/josephinevanzanten/",
         "bio":  "Josephine works as Second Secretary at the Political Department of the Embassy of the Kingdom of the Netherlands in India, where she is responsible for the Embassy’s human rights portfolio among other files. Prior to her posting in Delhi, she was desk officer for Suriname and Guyana at the Ministry of Foreign Affairs in The Hague. Before joining the Dutch diplomatic corps, she served as a Climate and Security Risk Expert with UNDP in Burkina Faso and worked with NGOs in Myanmar. She holds a Master of Social Sciences in Peace and Conflict Studies from Uppsala University, Sweden."
     },
     {
@@ -319,6 +339,7 @@ export const speakers = [
         "designation":  "Founder, Data \u0026 Co - Law \u0026 Policy Advisors",
         "category":  "Civil Society",
         "photo":  "Kriti Trehan.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/krititrehan/",
         "bio":  "Kriti Trehan is a seasoned tech policy advisor with over a decade of experience in shaping regulation across privacy, digital payments, platform governance, online safety, and AI. She has led tech policy and regulatory strategy at global tech giants like Netflix and Amazon, built and scaled tech law and policy practices at top-tier law firms, and now helms her own consultancy, Data \u0026 Co - Law \u0026 Policy Advisors. Based in New Delhi, Kriti advises companies, industry associations, and civil society around the world on emerging tech regulation, bridging commercial needs with responsible innovation and global trends. Outside of work, Kriti enjoys immersing herself in new cultures and cuisines, writing light-hearted poetry, and spending time with Data, the dog."
     },
     {
@@ -326,6 +347,7 @@ export const speakers = [
         "designation":  "Senior Program Officer, International Development Research Centre (IDRC)",
         "category":  "Civil Society",
         "photo":  "Kundan Mishra.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/kundan-mishra-04294117/",
         "bio":  "Kundan is a Senior Program Officer at IDRC in the Democratic and Inclusive Governance division. His work focuses on strengthening civic space, information integrity, forced migration, and climate crisis in Asia."
     },
     {
@@ -333,6 +355,7 @@ export const speakers = [
         "designation":  "Co-Producer, Khabar Lahariya",
         "category":  "Academia \u0026 Media",
         "photo":  "Laxmi.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/lakshmi-sharma-694010280/",
         "bio":  "A native of Madhopur Chhata village, from the Sheohar district of Bihar, Lakshmi joined Khabar Lahariya in 2010 as a reporter. She went on to run the Bihar edition of the Khabar Lahariya print newspaper before moving onto the production side of things in the Delhi newsroom, where she headed the production desk and became Senior Producer at KL in 2015. Since 2019, Lakshmi has moved up to the core leadership at Chambal Media, where she currently leads the production as senior producer of special features, including shorts, documentaries, podcasts, and animations."
     },
     {
@@ -340,6 +363,7 @@ export const speakers = [
         "designation":  "Programme Manager, Child Protection, Child in Need Institute (CINI)",
         "category":  "Civil Society",
         "photo":  "Lena Dasgupta Basu.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/lena-dasgupta-basu-666371180/",
         "bio":  "Lena is a dynamic development sector professional, leading the Child Protection Portfolio in Child in Need Institute (CINI) India. She has experience of 21 years. She served as Senior Programme Coordinator in Childline India Foundation (CIF) for sixteen years. Facilitating dialogue with the Government and CSOs, to consolidate the private public partnership and to deliver the service to children in the field was her main role in ChildLine. She did her Masters in Sociology from Calcutta University and worked with CSOs, implementing projects on Cross Border Trafficking, Child Marriage, Child Labour in rural and urban parts of West Bengal."
     },
     {
@@ -347,6 +371,7 @@ export const speakers = [
         "designation":  "CEO and Secretary-General, The Advertising Standards Council of India",
         "category":  "Civil Society",
         "photo":  "Manisha Kapoor.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/manisha-kapoor-04a5a81/",
         "bio":  "Manisha also serves as one of 4 global vice presidents on the executive committee of the International Council for Ad Self-Regulation (ICAS). Manisha brings with her more than 25 years of brand building and marketing experience, working in large organisations across sectors. Since taking over the helm at ASCI, Manisha has been at the forefront of transforming the organisation into a future ready entity that works collaboratively with different stakeholders to protect the rights of consumers. She has been instrumental in ensuring that advertising self-regulation keeps pace with the fast evolving landscape."
     },
     {
@@ -354,6 +379,7 @@ export const speakers = [
         "designation":  "Program Officer, British Asia Trust",
         "category":  "Civil Society",
         "photo":  "Mitthat Hora.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/mitthat-hora-b4a8a6138/",
         "bio":  "With a Master’s in Social Work specialising in Criminology and Justice from the Tata Institute of Social Sciences (TISS), Mumbai, Mitthat has over five years of experience in the development sector, focusing on gender and child rights. She has worked across themes including domestic violence, women undertrials, and child protection. She has worked with marginalised communities involved in inter-generational sex work, supporting community development through initiatives in education and livelihood. As a Child Rights Fellow with the Delhi Commission for Protection of Child Rights (DCPCR) and Ashoka University, she led key projects for the Delhi Government on child well-being and care for children in street situations. Currently, at the British Asian Trust, Mitthat works in the Child Protection team, focusing on strategy and communications."
     },
     {
@@ -375,6 +401,7 @@ export const speakers = [
         "designation":  "Director, Public Policy, Meta India",
         "category":  "Technology",
         "photo":  "Natasha Jog.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/natashajog/",
         "bio":  "Natasha Jog, is Director, Public Policy at Meta. In her role she leads public policy for Instagram and oversees all the programmatic initiatives and outreach for Meta. This covers sectors like AI, small businesses and ways we can empower them youth, safety and integrity etc. Prior to joining Meta, Natasha was with NDTV, where she anchored prime time analysis shows and reported extensively from across the country for a decade and a half. She has been a speaker at multiple events and industry summits on issues ranging from impact of new digital technologies on India to tech policies and more."
     },
     {
@@ -382,6 +409,7 @@ export const speakers = [
         "designation":  "Group Director Trust \u0026 Safety - Booking.com",
         "category":  "Technology",
         "photo":  "Neda Niazian.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/niazian/",
         "bio":  "“My mission is to inspire and empower people and organizations to turn bold visions into reality.” Strategic and transformational executive leader with over 15 years of global experience at the intersection of Technology, Innovation and Operational Excellence. Proven track record in shaping long-term strategy, leading complex cross-functional transformations, and aligning technology and data capabilities with business objectives, all while navigating regulatory, compliance, and reputational risk. Currently leading Global Trust \u0026 Safety for Booking.com and Booking Holdings, overseeing multidisciplinary teams across Security Operations, Product, AI \u0026 Machine Learning, Software Development, Data Science and Risk \u0026 Compliance."
     },
     {
@@ -389,6 +417,7 @@ export const speakers = [
         "designation":  "Founder, Mathematically Inclined",
         "category":  "Academia \u0026 Media",
         "photo":  "Neha Agrawal.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/nehaagrawalmath/",
         "bio":  "Neha Agrawal is one of India\u0027s celebrated Math educators for IIT-JEE and engineering entrances, with over 17 years of teaching experience. She is also the founder of Mathematically Inclined, her YouTube channel has empowered 5 million+ students, amassing 1.7M+ subscribers and 270M+ views - all built single-handedly. Further, she has been honored by India\u0027s HRD Minister and featured in The Hindu Business Line, ThePrint, and Oxford Economics. She is a recognized force in revolutionizing Math education, a 5X TEDx Speaker, and keynote speaker at top IITs/NITs/IIITs."
     },
     {
@@ -403,6 +432,7 @@ export const speakers = [
         "designation":  "Co-Founder/Chief, Yuvaa",
         "category":  "Academia \u0026 Media",
         "photo":  "Nikhil Taneja.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/tanejanikhil/",
         "bio":  "Nikhil Taneja is a multi-award winning writer, producer, podcaster, entrepreneur, mental health \u0026 gender equality advocate and most importantly, a girl dad. He’s the co-founder and Chief of Yuvaa, India’s first Gen Z-driven youth media, research and impact organization. He also serves on the Board of Directors of the girls’ education focused international non-profit, Girl Rising. Nikhil is also the creator and host of ‘Be A Man, Yaar!’, the viral Indian chat series on positive masculinity. Nikhil is a proud Special Jury Awardee of the Kamla Bhasin Award 2024 for enabling a gender-just ecosystem across South Asia. He also won the Laadli Foundation Media Award for Gender Sensitivity in 2024."
     },
     {
@@ -417,6 +447,7 @@ export const speakers = [
         "designation":  "Head, Trust \u0026 Safety Global Engagement, Google",
         "category":  "Technology",
         "photo":  "Norman Ng.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/ngnorman/",
         "bio":  "Norman is Google APAC’s Head of Trust \u0026 Safety Global Engagements. As a global affairs leader under Google’s trust and safety team, Norman leads a long term engagement strategy on online and content safety with policymakers, online safety experts, industry leaders and civil society experts. These encompass areas including AI responsibility and safety, youth \u0026 family online safety, content moderation, misinformation, elections integrity and online fraud and scams. Norman’s career spanned leadership roles in industries across technology, venture capital, startup and government. He currently serves as a board member in the Global Anti-Scam Alliance’s Singapore and Philippines chapter and as an advisor to the Intellectual Property Office of Singapore (IPOS) Society."
     },
     {
@@ -431,6 +462,7 @@ export const speakers = [
         "designation":  "Head of Core Government Affairs and Public Policy, Google India",
         "category":  "Technology",
         "photo":  "Rajesh Ranjan.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/rajesh-ranjan-646553a/",
         "bio":  "Rajesh leads Google’s strategic engagement with India\u0027s Central and State Governments. With over 20 years of experience spanning the public and private sectors, he has been instrumental in shaping major national policies. He has advised government leaders on critical areas like Data Privacy, Cloud, and Electronics Policy, while also managing large-scale IT implementation and public procurement projects. His previous roles at Microsoft, KPMG, and with the CAG of India provide him with deep insights into India’s civic, political, and economic landscape. Rajesh holds a Bachelor\u0027s in IT and a Master’s in International Business."
     },
     {
@@ -452,6 +484,7 @@ export const speakers = [
         "designation":  "Co Founder, That Sassy Thing",
         "category":  "Civil Society",
         "photo":  "Sachee Malhotra.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/sachee-malhotra-bb89a161/",
         "bio":  "Sachee (she/her) is the co-founder of That Sassy Thing, a feminist, new-age sexual wellness brand for women. Having worked across sexual wellness brands in India and the US, Sachee realised how the space was dominated by men, with products designed for men and conversations primarily aimed at them. That Sassy Thing is here to change that and revolutionise the sexual wellness space with a Sex-Ed first approach. She started the brand because of her personal struggles dealing with PCOS (Polycystic Ovarian Syndrome) for 15 years. When she couldn’t find products that were good for her body, she decided to create her own natural, body-safe sexual wellness products. She believes in bringing the much-needed equality and education for women in the bedroom, and making women’s pleasure shame-free and fun."
     },
     {
@@ -459,6 +492,7 @@ export const speakers = [
         "designation":  "Consultant, Niti Ayog",
         "category":  "Government",
         "photo":  "Sadhna Singh.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/sadhna-singh-a4776b1b8/",
         "bio":  "Sadhna Singh is a Consultant at NITI Aayog, bringing over a decade of cross-sector experience in policy research, strategic affairs, cybersecurity, and stakeholder engagement. Her work focuses on driving impactful policy initiatives aligned with India\u0027s development goals, particularly in the domains of ICT, national security, and governance.A former officer in the Indian Army’s Corps of Signals, Sadhna brings mission-driven discipline and deep expertise in network administration and secure communications. Her combined military and policy experience enables her to navigate complex challenges with strategic foresight and deliver actionable, system-level solutions.She has been recognized with several prestigious honours, including Security Professional of the Year 2024, Business World Security 40 Under 40, and the Lady Leadership Award by CAPSI. Passionate about fostering collaboration, driving innovation, and contributing to inclusive and resilient national growth, Sadhna continues to champion initiatives that strengthen India’s strategic and cybersecurity posture."
     },
     {
@@ -466,6 +500,7 @@ export const speakers = [
         "designation":  "Head of Public Affairs, Truecaller",
         "category":  "Technology",
         "photo":  "Seema Jindal.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/seema-jindal-b1998b7/",
         "bio":  "Seema Jindal is Head of Public Affairs at Tuecaller, where she leads engagement with policymakers, regulators, and industry bodies to strengthen the company’s role in shaping India’s digital ecosystem infusing trust and safety in the digital communications. With over 25 years of experience, she previously held leadership roles at Airtel, driving regulatory policy, strategy, interconnection, compliance, and audit across the telecom, satellite and broadcasting verticals. Most notably, she spearheaded the implementation of India’s pioneering regulatory framework to curb telecom spam using Digital Ledger Technology (DLT). At Truecaller, she champions innovation and transparency while fostering strong partnerships with government and industry stakeholders to build secure, trusted, and future-ready communications for millions of users. As India’s digital economy expands at an unprecedented pace, she advocates for close collaboration between industry and government to create a safe, inclusive, and trustworthy digital ecosystem. P K Singh Additional Secretary, TRAI"
     },
     {
@@ -487,6 +522,7 @@ export const speakers = [
         "designation":  "Gurgaon Moms",
         "category":  "Civil Society",
         "photo":  "Shilpi Singh.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/shilpisingh03/",
         "bio":  "Shilpi is a Leadership Coach who works extensively with women navigating their leadership journeys and aspirations. She is the Co-founder of Studio4, a leadership and communication agency that enables leaders and organizations to build authentic presence, influence, and sustainable impact. Shilpi is also the Co-founder of Unhotel Global, an experiential travel company curating unique, bespoke journeys rooted in sustainable and responsible travel. Unhotel goes beyond conventional itineraries to help travelers experience the true essence of a place, its people, culture, and stories while creating meaningful connections and ensuring positive impact on local communities."
     },
     {
@@ -494,6 +530,7 @@ export const speakers = [
         "designation":  "Child Rights Advocate",
         "category":  "Civil Society",
         "photo":  "Shireen Vakil.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/shireen-vakil-06b7406/",
         "bio":  "Shireen Vakil is a distinguished policy and advocacy leader with expertise in child protection, gender and education. She served as Head of Safety Policy for Asia Pacific at Meta, where she focused on online child protection, women’s safety, and youth mental well-being. Prior to that, she led the Policy and Advocacy unit at Tata Trusts, and played a pivotal role as the Director of Advocacy, Campaigns, and Communications at Save the Children India, including working with the MWCD and UNICEF on the first National level Child Abuse study (2007). Most recently, Shireen led the Child Opportunity Fund, a bold 10-year, multi-million-dollar joint initiative between the British Asian Trust and the Children’s Investment Fund Foundation focused on child protection. Ms Vakil comes with strong experience in building multi-stakeholder partnerships, addressing national and global issues with governments, donors, civil society and the media and has appeared and written on a spectrum of child rights and gender issues, in national and international media."
     },
     {
@@ -501,6 +538,7 @@ export const speakers = [
         "designation":  "Knowledge Specialist, Point of View",
         "category":  "Civil Society",
         "photo":  "Shohini Banerjee.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/shohini-banerjee/",
         "bio":  "Shohini has spent the last decade working on addressing gender-based violence through prevention and response programming. More recently, her work has been focused on the intersection of gender and technology, including efforts to prevent and respond to technology-facilitated gender based violence. She is currently the knowledge specialist at Point of View."
     },
     {
@@ -529,6 +567,7 @@ export const speakers = [
         "designation":  "Director and Global Head of Generative AI, Trust \u0026 Safety, Google",
         "category":  "Technology",
         "photo":  "Snigdha Bhardwaj.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/snigdha-bhardwaj-a911b28b/",
         "bio":  "A transformational leader with a 17+ years of experience and strong background in Trust and Safety, currently driving Generative AI testing and enforcement strategy for consumer products in Google. Snigdha has been instrumental in setting the framework and direction for key \u0026 novel Google launches, including Gemini, Search launches like AIO \u0026 AIM. Snigdha\u0027s expertise includes developing robust strategies for content and actor-based abuse in Generative AI, with a focus on trust \u0026 info quality. Also championing key strategic priorities including implementation \u0026 resource allocation for Generative AI launches, advocating for xT\u0026S resourcing to SVPs to ensure successful pre and post launch support."
     },
     {
@@ -557,6 +596,7 @@ export const speakers = [
         "designation":  "Public Policy Director, Data Economy and Emerging Tech, Meta, India",
         "category":  "Technology",
         "photo":  "Sunil Abraham.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/sunilaabraham/",
         "bio":  "Sunil Abraham is Director of Public Policy for Data and Emerging Tech at Meta India, where he leads engagement on privacy, consumer protection, and AI-driven innovation. He co-founded Mahiti Infotech and the Centre for Internet and Society and has been a vocal advocate for open-source software, digital inclusion, and the Wikimedia movement. Sunil has also taught globally, serving as an endowed professor at ArtEZ University of the Arts in the Netherlands."
     },
     {
@@ -564,6 +604,7 @@ export const speakers = [
         "designation":  "Director of Global Operational Wellness, TP",
         "category":  "Technology",
         "photo":  "Swati Chawla.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/swati-chawla-988a7614/",
         "bio":  "Swati Chawla is the Director of Global Operational Wellness at Teleperformance. She leads the implementation of wellness strategies that support trust and safety professionals globally. With over two decades of experience in organizational psychology and wellness, Swati has built scalable frameworks that strengthen resilience, improve employee wellness, and enable sustainable performance in high-intensity trust \u0026 safety environments. Her work focuses on establishing measurable outcomes, and fostering a culture of inclusion and psychological safety. Recognized for her contributions to workplace health, Swati has received multiple industry awards.She holds a Master’s in Psychology and Sociology."
     },
     {
@@ -578,6 +619,7 @@ export const speakers = [
         "designation":  "Head of Public Policy, India and South Asia, Snap Inc.",
         "category":  "Technology",
         "photo":  "Uthara Ganesh.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/uthara-ganesh-a0a35824/",
         "bio":  "Uthara Ganesh is Head of Public Policy, India and South Asia at Snap Inc. She focuses on developing Snap\u0027s relationships with key government agencies in South Asia and shaping regulatory outcomes in areas such as content regulation, data protection and privacy, emerging tech regulation, and competition. Prior to this role, Uthara led Amazon Web Services\u0027 (AWS) and Amazon\u0027s public policy efforts, supporting advocacy on content regulation, taxation, data governance, and competition issues across Prime Video, Kindle, Alexa, and Cloud businesses. She also served as Public Policy Lead to Rajeev Chandrasekhar from 2014 to 2017 and has worked at the Centre for Policy Research, UNAIDS, and GIZ. Uthara was a LAMP Fellow from 2010 to 2011."
     },
     {
@@ -585,6 +627,7 @@ export const speakers = [
         "designation":  "Founder, Vys",
         "category":  "Civil Society",
         "photo":  "Vaishnavi J.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/vaishnavij/",
         "bio":  "Vaishnavi is the founder and principal of Vyanams Strategies (Vys), helping companies, civil society, and governments build healthier online communities for young people. Vys leverages extensive industry experience at leading technology companies to develop tactical product and policy solutions for child safety and privacy. An expert in online child safety, privacy, and age-appropriate design, Vaishnavi was previously the head of youth policy at Meta, supporting age-appropriate design across Instagram, Facebook, VR, and messaging services. She previously led Twitter’s video content policies, was their first head of safety in APAC, and served as Google’s central child safety policy lead for APAC"
     },
     {
@@ -592,6 +635,7 @@ export const speakers = [
         "designation":  "Lead Architect, Frontier Tech Hub, Niti Ayog",
         "category":  "Government",
         "photo":  "Vidushi Chaturvedi.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/vidushi-chaturvedi-1a20ab306/",
         "bio":  "Vidushi Chaturvedi is Lead Architect at NITI Aayog’s Frontier Tech Hub, where she advances India’s readiness for frontier technologies including AI, quantum, and biotech. With over 25 years in the Indian Civil Service and public policy, she works across government, academia, and industry to build frameworks that harness emerging technologies for inclusive growth and resilience. She has published on Feminist Ethics and AI in the Handbook of Global Philosophies on AI Ethics: Towards Sustainable Futures and contributed invited entries on Gender and AI and India: Overview of Regulatory Regime for AI in the Edward Elgar Encyclopedia on AI. Vidushi has an LLM in Technology, Innovation and Entrepreneurship from Seattle University School of Law and a PhD in International Politics. FBI USA"
     },
     {
@@ -599,6 +643,7 @@ export const speakers = [
         "designation":  "Former Head, Love Matters India",
         "category":  "Civil Society",
         "photo":  "Vithika Yadav.jpg",
+        "linkedinUrl":  "https://www.linkedin.com/in/vithika-yadav-4829655/",
         "bio":  "Vithika Yadav is a social entrepreneur with over 20 years of experience in gender rights, sexual rights, and anti-slavery work. Vithika co-founded Love Matters, India’s first digital platform on sexual and reproductive health, and founded TeenBook, a life skills hub for adolescents. She chairs the Global Advisory Board on Sexual Health and Well-being. A recognized global leader, she has received multiple honors including the 120 Under 40 award by the Gates Institute and the Atlas Corps Fellowship. Vithika has worked with the UN, BBC, Free the Slaves, and MTV EXIT, and is featured in the documentary #FemalePleasure. She is an alumna of Lady Shri Ram College and THNK School of Creative Leadership. Currently, she is the Managing Director of Designathon Works, empowering children in 50+ countries to become changemakers, and serves as a Child Protection Expert with the Purple Foundation."
     },
     {
@@ -606,6 +651,7 @@ export const speakers = [
         "designation":  "Advocate, Supreme Court of India",
         "category":  "Civil Society",
         "photo":  "Vrinda Bhandari.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/vrinda-bhandari-a8b79586/",
         "bio":  "Vrinda is a Rhodes Scholar, who graduated from the University of Oxford with a double Masters in Law and Public Policy, and received her undergraduate law degree from NLSIU Bangalore. She is a litigating lawyer in Delhi and specialises in the field of criminal law, digital rights, technology, and privacy. She has been involved in litigation challenging the constitutionality of the Aadhaar Act, internet shutdowns, the surveillance framework in India and has argued multiple cases under POCSO. Vrinda has also worked with UN Women on the problems of technology facilitated gender-based violence and cyber-security."
     },
     {
@@ -613,6 +659,7 @@ export const speakers = [
         "designation":  "Technical Expert, Expertise France",
         "category":  "International",
         "photo":  "Yannick Ragonneau.png",
+        "linkedinUrl":  "https://www.linkedin.com/in/yragonneau/",
         "bio":  "Yannick Ragonneau is the Cybersecurity Thematic Coordinator for the EU-funded ESIWA+ project, enhancing the European Union’s cooperation with Asia and the Indo-Pacific on security and defence. With more than 30 years of experience, he has advised governments, international organisations, and the private sector. He is actively engaged in fostering international cooperation and multi-stakeholder dialogue to counter cyber threats, notably online fraud and scams."
     },
     {
