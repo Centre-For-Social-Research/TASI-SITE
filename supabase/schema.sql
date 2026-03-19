@@ -14,13 +14,23 @@ create table if not exists public.contact_messages (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.registration_confirmation_requests (
+  id bigint generated always as identity primary key,
+  email text not null,
+  source text,
+  requested_at timestamptz not null default now()
+);
+
 alter table public.newsletter_subscribers enable row level security;
 alter table public.contact_messages enable row level security;
+alter table public.registration_confirmation_requests enable row level security;
 
 drop policy if exists "Deny all newsletter anon" on public.newsletter_subscribers;
 drop policy if exists "Deny all contact anon" on public.contact_messages;
+drop policy if exists "Deny all registration confirmation anon" on public.registration_confirmation_requests;
 drop policy if exists "Allow newsletter insert" on public.newsletter_subscribers;
 drop policy if exists "Allow message insert" on public.contact_messages;
+drop policy if exists "Allow registration confirmation insert" on public.registration_confirmation_requests;
 
 create policy "Allow newsletter insert"
 on public.newsletter_subscribers
@@ -30,6 +40,12 @@ with check (true);
 
 create policy "Allow message insert"
 on public.contact_messages
+for insert
+to anon, authenticated
+with check (true);
+
+create policy "Allow registration confirmation insert"
+on public.registration_confirmation_requests
 for insert
 to anon, authenticated
 with check (true);

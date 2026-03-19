@@ -1,6 +1,5 @@
 import Link from "next/link";
 import TeamGrid from "@/components/about/team-grid";
-import AboutQuotes from "@/components/about/quotes";
 import DarkHeroParticles from "@/components/ui/dark-hero-particles";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
@@ -54,6 +53,53 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <section className="bg-stone-50 py-14 md:py-16">
+          <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+            <article className="rounded-2xl border border-stone-200 bg-white p-8">
+              <h2 className="mb-4 text-3xl font-black tracking-tight text-stone-900 md:text-4xl">Vision &amp; Mission</h2>
+              <p className="mb-4 text-stone-700">
+                The Trust and Safety India Festival (TASI) 2026 is guided by a single, unifying vision: building safer digital ecosystems through shared responsibility.
+              </p>
+              <p className="mb-4 text-stone-700">
+                We believe that no single actor, whether platform, policymaker, or community, can achieve digital safety alone. True progress lies in collective ownership: aligning approaches, learning from lived experience, and ensuring that the internet enables trust, empathy, and empowerment for all.
+              </p>
+              <p className="mb-4 text-stone-700">
+                TASI is India&apos;s first and only civil society-led national convening dedicated exclusively to trust and safety. Co-organized by the Centre for Social Research (CSR) and the Trust &amp; Safety Forum, it creates a rare, collaborative space where government, industry, academia, and civil society do not merely talk past one another, they build together.
+              </p>
+              <p className="mb-4 text-stone-700">
+                Our mission is threefold. First, to elevate the voices, priorities, and innovations of India and the Global South in conversations that have long been shaped by Global North frameworks. Second, to bridge the gap between policy ambition and operational reality, translating research into practice and commitments into action. Third, to build the relationships, frameworks, and shared accountability structures that make digital safety a continuous responsibility rather than a crisis response.
+              </p>
+              <p className="text-stone-700">
+                TASI is not merely an annual event. It is a sustained commitment to building resilient digital ecosystems that protect individuals, support those at risk, and ensure that technological progress serves the public good.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section className="bg-white py-14 md:py-16">
+          <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+            <article className="rounded-2xl border border-stone-200 bg-stone-50 p-8">
+              <h2 className="mb-4 text-3xl font-black tracking-tight text-stone-900 md:text-4xl">Why India, Why Now</h2>
+              <p className="mb-4 text-stone-700">
+                India stands at the centre of the global digital conversation, home to one of the largest and fastest-growing online populations on earth, a rapidly expanding technology ecosystem, and governance infrastructure that much of the developing world looks to for inspiration.
+              </p>
+              <p className="mb-4 text-stone-700">
+                Yet India also mirrors the world&apos;s most pressing digital safety challenges. Misinformation spreads at scale across hundreds of languages and dialects. Technology-facilitated gender-based violence affects millions of women navigating public and civic life online. Children face exposure to harmful content, grooming, and exploitation through platforms designed without their safety in mind. Content moderators and trust and safety professionals carry invisible occupational trauma while protecting everyone else. And AI systems, increasingly embedded across sectors, risk amplifying existing social inequalities rather than reducing them.
+              </p>
+              <p className="mb-4 text-stone-700">
+                The patterns of harm emerging online are not separate from the structural inequalities that civil society has addressed for decades offline. The same barriers that limit women&apos;s mobility offline reappear through online harassment. Risks faced by children in physical spaces resurface through unsafe digital interactions. Understanding this continuity, between the digital and the physical, between old inequalities and new technologies, is what makes TASI distinct.
+              </p>
+              <p className="mb-4 text-stone-700">
+                At the global level, a critical gap persists: international dialogues on trust and safety continue to expand, but the voices, priorities, and contextual realities of the Global South remain insufficiently represented. Countries like India, which host vast and diverse digital populations with unique socio-economic contexts, face challenges, and have developed innovations, that must inform the global policy landscape.
+              </p>
+              <p className="mb-4 text-stone-700">
+                The time has come for India to lead. Not only as a market, but as a thought partner, a convener, and an innovator in reimagining what a safer digital future can look like. With the India AI Impact Summit establishing trust and safety as foundational pillars of the country&apos;s AI governance agenda, and with civil society, government, and industry increasingly ready to move from dialogue to action, the conditions for meaningful change have never been more aligned.
+              </p>
+              <p className="text-stone-700">TASI 2026 is that platform.</p>
+            </article>
+          </div>
+        </section>
+
         <section className="bg-stone-100 py-14 md:py-16">
           <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 md:px-6">
             <article className="rounded-2xl border border-stone-200 bg-white p-8">
@@ -84,7 +130,37 @@ export default function AboutPage() {
         </section>
 
         <TeamGrid />
-        <AboutQuotes />
+
+        <section className="bg-stone-100 py-14 md:py-16">
+          <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+            <article className="rounded-2xl border border-stone-200 bg-white p-8">
+              <h2 className="mb-4 text-3xl font-black tracking-tight text-stone-900 md:text-4xl">Media &amp; Press Kit</h2>
+              <p className="mb-6 text-stone-700">
+                Journalists, editors, and media partners can request the latest TASI background materials, speaker highlights, and official brand assets through the links below.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href="mailto:india@trustandsafetyfestival.org?subject=TASI%202026%20Media%20Enquiry"
+                  className="rounded-md bg-orange-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-800"
+                >
+                  Media Enquiries
+                </a>
+                <a
+                  href="mailto:india@trustandsafetyfestival.org?subject=TASI%202026%20Press%20Kit%20Request"
+                  className="rounded-md border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-500"
+                >
+                  Request Press Kit
+                </a>
+                <Link
+                  href="/contact"
+                  className="rounded-md border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-500"
+                >
+                  Contact Media Team
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
 
         <section className="bg-white py-12">
           <div className="mx-auto w-full max-w-6xl px-4 text-center md:px-6">

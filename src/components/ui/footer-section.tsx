@@ -17,7 +17,6 @@ import {
   Linkedin,
   Send,
   Twitter,
-  Youtube,
 } from "lucide-react";
 
 function Footerdemo() {
@@ -305,30 +304,6 @@ function Footerdemo() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Connect on LinkedIn</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full"
-                    >
-                      <a
-                      href="https://www.youtube.com/@centresocialresearch"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                        <Youtube className="h-4 w-4" />
-                        <span className="sr-only">Youtube</span>
-                      </a>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Watch on YouTube</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

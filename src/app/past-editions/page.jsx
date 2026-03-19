@@ -1,5 +1,6 @@
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
+import AboutQuotes from "@/components/about/quotes";
 import ImmersiveVideoShowcase from "@/components/past-editions/immersive-video-showcase";
 import DarkHeroParticles from "@/components/ui/dark-hero-particles";
 
@@ -94,6 +95,16 @@ export default function PastEditionsPage() {
               <span className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100">The Ambassador Hotel, New Delhi</span>
               <span className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100">500+ Participants</span>
             </div>
+            <div className="mt-6">
+              <a
+                href="https://drive.google.com/file/d/1S9dHlHQg8pm0-HjsjkXK0dwOSUCYqhxn/view?usp=sharing"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded-md bg-orange-700 px-6 py-3 font-semibold text-white transition hover:bg-orange-800"
+              >
+                Read TASI 2025 Report
+              </a>
+            </div>
           </div>
         </section>
 
@@ -113,6 +124,7 @@ export default function PastEditionsPage() {
               <p className="text-sm text-stone-500">Caroline Humer, Co-Founder, Trust and Safety Festival</p>
             </article>
           </div>
+
         </section>
 
         <section className="bg-stone-100 py-14 md:py-16">
@@ -177,16 +189,6 @@ export default function PastEditionsPage() {
           </div>
         </section>
 
-        <section className="bg-white py-14 md:py-16">
-          <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">Workshops</p>
-            <h2 className="mb-8 text-3xl font-black tracking-tight text-stone-900 md:text-5xl">Immersive Sessions</h2>
-            <p className="max-w-4xl text-stone-700">
-              TASI 2025 workshops covered AI child-protection tooling, strategic foresight, intergenerational online safety dialogue, youth-led civic safety mapping, regulatory sandboxing, and responsible creator practices.
-            </p>
-          </div>
-        </section>
-
         <section className="bg-stone-100 py-14 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">Recommendations</p>
@@ -204,6 +206,8 @@ export default function PastEditionsPage() {
 
         <ImmersiveVideoShowcase />
 
+        <AboutQuotes />
+
         <section className="bg-white py-14 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">What Comes Next</p>
@@ -214,6 +218,22 @@ export default function PastEditionsPage() {
                   {item}
                 </article>
               ))}
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-stone-200 bg-stone-50 p-5 md:p-6">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">Media Coverage</p>
+              <h3 className="mb-4 text-2xl font-black tracking-tight text-stone-900">Coverage Highlights (Placeholders)</h3>
+              <div className="grid gap-3 md:grid-cols-3">
+                <a href="#" className="rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-400">
+                  Placeholder Coverage Link 01
+                </a>
+                <a href="#" className="rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-400">
+                  Placeholder Coverage Link 02
+                </a>
+                <a href="#" className="rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-800 transition hover:border-stone-400">
+                  Placeholder Coverage Link 03
+                </a>
+              </div>
             </div>
           </div>
         </section>

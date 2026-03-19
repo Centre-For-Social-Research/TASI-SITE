@@ -44,11 +44,7 @@ export default function AboutPreview() {
         </MotionStagger>
       </div>
 
-      <MotionReveal className="mx-auto mt-8 w-full max-w-6xl px-4 md:px-6" delay={0.12}>
-        <blockquote className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-5 text-stone-700 md:px-7">
-          India bears a special responsibility in shaping global conversations on technology. Platforms such as the Trust and Safety India Festival become vital spaces for advancing responsible and inclusive AI.
-        </blockquote>
-      </MotionReveal>
+
     </section>
   );
 }

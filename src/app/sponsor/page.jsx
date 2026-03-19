@@ -1,7 +1,7 @@
-import Image from "next/image";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
 import DarkHeroParticles from "@/components/ui/dark-hero-particles";
+import PartnersMarqueeStrip from "@/components/sponsor/partners-marquee-strip";
 
 const reasons = [
   "Direct engagement with 1,000+ policymakers, tech leaders, and civil society representatives.",
@@ -80,41 +80,6 @@ const additionalOpportunities = [
   "Access discounted options for women-led businesses supporting diverse leadership.",
 ];
 
-const partners = [
-  { name: "Booking.com", logo: "/img/Logo/Booking.com.png" },
-  { name: "Teleperformance", logo: "/img/Logo/TP.jpg" },
-  { name: "Meta", logo: "/img/Logo/Meta.png" },
-  { name: "Snapchat", logo: "/img/Logo/Snapchat.png" },
-  { name: "YouTube", logo: "/img/Logo/YouTube.png" },
-  { name: "Truecaller", logo: "/img/Logo/Truecaller.png" },
-  { name: "GSMA", logo: "/img/Logo/GSMA.png" },
-  { name: "Match Group", logo: "/img/Logo/Match Group.png" },
-  { name: "X", logo: "/img/Logo/X.png" },
-  { name: "Resolver", logo: "/img/Logo/Resolver.png" },
-  { name: "VYS", logo: "/img/Logo/VYS.png" },
-  { name: "GirlEffect", logo: "/img/Logo/GirlEffect.jpg" },
-  { name: "UN Women", logo: "/img/Logo/Un Women.png" },
-  { name: "French Embassy", logo: "/img/Logo/France in India.png" },
-  { name: "Swedish Embassy", logo: "/img/Logo/Sweden Embassy.png" },
-  { name: "Australian High Commission", logo: "/img/Logo/Australian High Commission.png" },
-  { name: "Netherlands Embassy", logo: "/img/Logo/kingdom-of-the-netherlands.png" },
-  { name: "Canadian High Commission", logo: "/img/Logo/Embassy of Canada.png" },
-  { name: "Obhan & Associates", logo: "/img/Logo/Obhan and Associates.png" },
-  { name: "ASCI", logo: "/img/Logo/ASCI.png" },
-  { name: "Dhirubhai Ambani University", logo: "/img/Logo/Dhirubhai Ambani University.jpg" },
-  { name: "The Asia Foundation", logo: "/img/Logo/The Asia Foundation.png" },
-  { name: "ACTS", logo: "/img/Logo/ACTS.png" },
-  { name: "Safetipin", logo: "/img/Logo/Safetipin.png" },
-  { name: "The Dialogue", logo: "/img/Logo/The Dialogue.png" },
-  { name: "IGPP", logo: "/img/Logo/IGPP.png" },
-  { name: "INHOPE", logo: "/img/Logo/Inhope.png" },
-  { name: "TQH", logo: "/img/Logo/TQH.png" },
-  { name: "COR Sandbox", logo: "/img/Logo/COR Sandbox.jpg" },
-  { name: "Roblox", logo: "/img/Logo/Roblox.png" },
-  { name: "GroSafe", logo: "/img/Logo/GroSafe.png" },
-  { name: "FRIDA Fund", logo: "/img/Logo/FRIDA Logo.png" },
-];
-
 export default function SponsorPage() {
   return (
     <>
@@ -130,6 +95,8 @@ export default function SponsorPage() {
             </p>
           </div>
         </section>
+
+        <PartnersMarqueeStrip />
 
         <section className="bg-stone-100 py-10 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
@@ -147,6 +114,20 @@ export default function SponsorPage() {
         <section className="bg-white py-10 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
             <h2 className="mb-6 text-center text-2xl font-black tracking-tight text-stone-900 md:mb-8 md:text-5xl">Sponsorship Tiers</h2>
+            <div className="mb-6 rounded-2xl border border-orange-200 bg-orange-50 p-4 md:mb-8 md:p-5">
+              <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
+                <p className="text-sm text-stone-700 md:text-base">
+                  Download the sponsorship prospectus for package details, benefits, and engagement options.
+                </p>
+                <a
+                  href="/downloads/tasi-2026-sponsorship-prospectus.txt"
+                  download
+                  className="rounded-md bg-orange-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-800"
+                >
+                  Download Prospectus
+                </a>
+              </div>
+            </div>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
               {tiers.map((tier) => (
                 <article
@@ -214,30 +195,6 @@ export default function SponsorPage() {
           </div>
         </section>
 
-        <section className="bg-stone-100 py-10 md:py-16">
-          <div className="mx-auto w-full max-w-6xl px-4 text-center md:px-6">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">Our Network</p>
-            <h2 className="mb-6 text-2xl font-black tracking-tight text-stone-900 md:mb-8 md:text-5xl">Partners from TASI 2025</h2>
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-              {partners.map((partner) => (
-                <article
-                  key={partner.name}
-                  className="flex min-h-16 items-center justify-center rounded-lg border border-stone-200 bg-white px-2 py-2 sm:min-h-24 sm:rounded-xl sm:px-4 sm:py-3"
-                >
-                  <Image
-                    src={partner.logo}
-                    alt={partner.name}
-                    loading="lazy"
-                    width={100}
-                    height={40}
-                    className="h-9 w-full object-contain sm:h-12"
-                    quality={80}
-                  />
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
       <HomeFooter />
     </>

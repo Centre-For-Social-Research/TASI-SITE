@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 const navItems = [
   { label: "About", href: "/about" },
   { label: "Past Editions", href: "/past-editions" },
-  { label: "Themes", href: "/themes" },
+  { label: "Programme", href: "/programme" },
   { label: "Speakers", href: "/speakers" },
   { label: "Sponsor", href: "/sponsor" },
   { label: "Contact", href: "/contact" },
@@ -41,7 +41,7 @@ export default function HomeNavbar() {
               {item.label}
             </Link>
           ))}
-          <ThemeToggle className="ml-1" />
+          <ThemeToggle />
           <Link
             href="/register"
             className="rounded-md bg-orange-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-800"
@@ -49,7 +49,7 @@ export default function HomeNavbar() {
             Register Now
           </Link>
         </nav>
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}

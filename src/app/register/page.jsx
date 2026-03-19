@@ -1,6 +1,7 @@
 import HomeNavbar from "@/components/home/navbar";
 import HomeFooter from "@/components/home/footer";
 import DarkHeroParticles from "@/components/ui/dark-hero-particles";
+import ConfirmationEmailFlow from "@/components/register/confirmation-email-flow";
 
 const steps = [
   {
@@ -14,6 +15,34 @@ const steps = [
   {
     title: "Attend TASI 2026",
     details: "Present your QR pass at venue entry; mobile check-in is accepted at all gates.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Who can register for TASI 2026?",
+    answer:
+      "Registration is open to policymakers, industry professionals, civil society organisations, researchers, media, and students aligned with trust and safety work.",
+  },
+  {
+    question: "Will I receive a confirmation email after registering?",
+    answer:
+      "Yes. A confirmation email is sent after registration. If you do not receive it, use the confirmation request form on this page.",
+  },
+  {
+    question: "When will I receive my QR entry pass?",
+    answer:
+      "Your QR-coded entry pass is issued to your registered email approximately 30 days before the event.",
+  },
+  {
+    question: "Can I transfer my registration to someone else?",
+    answer:
+      "Registrations are typically non-transferable unless approved by the organising team. Please contact support for special cases.",
+  },
+  {
+    question: "Who should I contact for registration help?",
+    answer:
+      "For support with registration, confirmation emails, or delegate categories, contact info1@csrindia.org.",
   },
 ];
 
@@ -79,6 +108,25 @@ export default function RegisterPage() {
           </a>
           .
         </p>
+
+        <ConfirmationEmailFlow />
+
+        <section className="mt-10 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/40">
+          <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-slate-100 md:text-2xl">FAQ</h2>
+          <div className="mt-5 space-y-3">
+            {faqs.map((item) => (
+              <details
+                key={item.question}
+                className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60"
+              >
+                <summary className="cursor-pointer list-none pr-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  {item.question}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </section>
     </main>
     <HomeFooter />
