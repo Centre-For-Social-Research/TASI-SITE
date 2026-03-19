@@ -31,7 +31,8 @@ export default function PartnersMarqueeStrip() {
           {partners.map((partner, index) => (
             <article
               key={partner.name}
-              className={`flex min-h-16 items-center justify-center rounded-lg border border-stone-200 bg-white px-2 py-2 dark:border-stone-200 dark:bg-white sm:min-h-20 sm:rounded-xl sm:px-3 sm:py-3 ${getPlacementClasses(index)}`}
+              className={`forced-color-adjust-none [color-scheme:light] flex min-h-16 items-center justify-center rounded-lg border border-stone-200 !bg-white px-2 py-2 dark:!border-stone-200 dark:!bg-white sm:min-h-20 sm:rounded-xl sm:px-3 sm:py-3 ${getPlacementClasses(index)}`}
+              style={{ backgroundColor: "#ffffff", colorScheme: "light" }}
             >
               <Image
                 src={partner.logo}

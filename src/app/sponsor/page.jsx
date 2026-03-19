@@ -96,8 +96,6 @@ export default function SponsorPage() {
           </div>
         </section>
 
-        <PartnersMarqueeStrip />
-
         <section className="bg-stone-100 py-10 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
             <h2 className="mb-6 text-center text-2xl font-black tracking-tight text-stone-900 md:mb-8 md:text-5xl">Why Sponsor TASI 2026?</h2>
@@ -194,6 +192,8 @@ export default function SponsorPage() {
             </p>
           </div>
         </section>
+
+        <PartnersMarqueeStrip />
 
       </main>
       <HomeFooter />
