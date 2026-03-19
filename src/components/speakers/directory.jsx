@@ -1,7 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
+import React, { useMemo, useState } from "react";
+import { Linkedin } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { speakers } from "@/data/speakers";
 
 function initials(name) {
@@ -10,6 +13,116 @@ function initials(name) {
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
   return `${words[0][0]}${words[words.length - 1][0]}`.toUpperCase();
 }
+
+function linkedInUrlForSpeaker(speaker) {
+  if (speaker.linkedinUrl) return speaker.linkedinUrl;
+  const query = encodeURIComponent(`${speaker.name || ""} ${speaker.designation || ""}`.trim());
+  return `https://www.linkedin.com/search/results/all/?keywords=${query}`;
+}
+
+const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
+  { speaker, className, ...props },
+  ref
+) {
+  const [isFlipped, setIsFlipped] = React.useState(false);
+  const avatarInitials = initials(speaker.name);
+  const linkedInUrl = linkedInUrlForSpeaker(speaker);
+
+  return (
+    <div
+      ref={ref}
+      className={cn("h-96 w-full max-w-[20rem]", className)}
+      style={{ perspective: "1000px" }}
+      {...props}
+    >
+      <div
+        className="relative h-full w-full cursor-pointer transition-transform duration-700"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        }}
+      >
+        <Card
+          className="absolute h-full w-full border-stone-200 bg-white p-6 shadow-lg"
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <div className="flex h-full w-full flex-col items-center justify-center space-y-4 text-center">
+            <button
+              type="button"
+              onClick={() => setIsFlipped(true)}
+              className="rounded-full transition-opacity hover:opacity-90"
+              aria-label={`View bio of ${speaker.name}`}
+            >
+              <Avatar className="h-32 w-32 ring-4 ring-orange-500/10">
+                <AvatarImage src={`/img/speakers/${speaker.photo}`} alt={speaker.name} className="object-cover" />
+                <AvatarFallback className="text-2xl">{avatarInitials}</AvatarFallback>
+              </Avatar>
+            </button>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-stone-900">{speaker.name}</h3>
+              <p className="text-sm text-stone-600">{speaker.designation}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-orange-700">{speaker.category}</p>
+              <div className="flex items-center justify-center gap-3 pt-1">
+                <a
+                  href={linkedInUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${speaker.name} LinkedIn`}
+                  className="rounded-full border border-stone-300 p-1.5 text-stone-600 transition-colors hover:border-orange-300 hover:text-orange-700"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+
+            <p className="mt-2 text-xs text-stone-500">Click photo to view bio</p>
+          </div>
+        </Card>
+
+        <Card
+          className="absolute h-full w-full border-stone-200 bg-white p-6 shadow-lg"
+          style={{
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+        >
+          <div className="flex h-full flex-col">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-stone-900">Bio</h3>
+              <button
+                type="button"
+                onClick={() => setIsFlipped(false)}
+                className="text-sm text-stone-600 transition-colors hover:text-stone-900"
+              >
+                Back
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <p className="text-sm leading-relaxed text-stone-700">{speaker.bio}</p>
+            </div>
+
+            <div className="mt-4 border-t border-stone-200 pt-4">
+              <div className="flex items-center space-x-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={`/img/speakers/${speaker.photo}`} alt={speaker.name} className="object-cover" />
+                  <AvatarFallback>{avatarInitials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-medium text-stone-900">{speaker.name}</p>
+                  <p className="text-xs text-stone-600">{speaker.designation}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+});
+
+SpeakerProfileCard.displayName = "SpeakerProfileCard";
 
 export default function SpeakersDirectory() {
   const categories = useMemo(() => {
@@ -90,33 +203,9 @@ export default function SpeakersDirectory() {
           </div>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid justify-items-center gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
           {filtered.map((speaker) => (
-            <article key={`${speaker.name}-${speaker.designation}`} className="flex h-[26rem] flex-col rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
-              <div className="mb-3 flex justify-center">
-                {speaker.photo ? (
-                  <Image
-                    src={`/img/speakers/${speaker.photo}`}
-                    alt={speaker.name}
-                    className="h-28 w-28 rounded-full border border-stone-300 object-cover"
-                    width={112}
-                    height={112}
-                    loading="lazy"
-                    quality={85}
-                  />
-                ) : (
-                  <div className="flex h-28 w-28 items-center justify-center rounded-full border border-stone-300 bg-stone-100 text-2xl font-black text-stone-500">
-                    {initials(speaker.name)}
-                  </div>
-                )}
-              </div>
-              <h3 className="mb-1 text-center text-lg font-bold text-stone-900">{speaker.name}</h3>
-              <p className="mb-2 text-center text-sm text-stone-600">{speaker.designation}</p>
-              <p className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.1em] text-orange-700">{speaker.category}</p>
-              <div className="flex-1 overflow-y-auto">
-                <p className="text-center text-sm text-stone-700">{speaker.bio}</p>
-              </div>
-            </article>
+            <SpeakerProfileCard key={`${speaker.name}-${speaker.designation}`} speaker={speaker} />
           ))}
         </div>
       </div>
