@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { Linkedin, Mail } from "lucide-react";
+import { Linkedin, Mail, Twitter } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { teamMembers } from "@/data/team-members";
 
 const ProfileCard = React.forwardRef(function ProfileCard(
-  { name, designation, bio, imageUrl, linkedinUrl, email, className, ...props },
+  { name, designation, bio, imageUrl, linkedinUrl, email, twitterUrl, className, ...props },
   ref
 ) {
   const [isFlipped, setIsFlipped] = React.useState(false);
@@ -64,6 +64,17 @@ const ProfileCard = React.forwardRef(function ProfileCard(
                 >
                   <Linkedin className="h-4 w-4" />
                 </a>
+                {twitterUrl && (
+                  <a
+                    href={twitterUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${name} Twitter/X`}
+                    className="rounded-full border border-stone-300 p-1.5 text-stone-600 transition-colors hover:border-orange-300 hover:text-orange-700"
+                  >
+                    <Twitter className="h-4 w-4" />
+                  </a>
+                )}
                 <a
                   href={`mailto:${email || "info1@csrindia.org"}`}
                   aria-label={`Email ${name}`}
@@ -136,6 +147,7 @@ export default function TeamGrid() {
               imageUrl={`/img/team/${member.photo}`}
               linkedinUrl={member.linkedinUrl}
               email={member.email}
+              twitterUrl={member.twitterUrl}
             />
           ))}
         </div>
