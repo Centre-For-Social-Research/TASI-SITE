@@ -474,7 +474,7 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
 
                     {session.speakersDetailed && session.speakersDetailed.length > 0 && (
                       <div className="speakers-section">
-                        <div className="speakers-label">Speakers & Panelists</div>
+                        <div className="speakers-label">Speakers</div>
                         <div className="speakers-list">
                           {session.speakersDetailed.map((speaker, idx) => (
                             <div key={idx} className="speaker-row">

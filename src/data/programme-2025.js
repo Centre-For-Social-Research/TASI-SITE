@@ -23,7 +23,7 @@ export const programmeSessions2025 = [
     "venue": "Dome",
     "format": "spotlight",
     "title": "Spotlight",
-    "description": "GroSafe: Designing Safer Pathways Through AI-Powered Child Protection",
+    "description": "",
     "speakers": [
       "Dylan Schouten",
       "Ioanna Noula",
