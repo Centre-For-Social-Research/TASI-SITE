@@ -27,6 +27,18 @@ function buildSpeakerDesignationMap() {
   };
 }
 
+function buildSpeakerPhotoMap() {
+  return Object.fromEntries(
+    speakers
+      .map((speaker) => {
+        const normalizedName = normalizePersonName(speaker.name);
+        if (!normalizedName || !speaker.photo) return null;
+        return [normalizedName, `/img/speakers/${speaker.photo}`];
+      })
+      .filter(Boolean),
+  );
+}
+
 const dayLabels = {
   oct6: "October 6 - Opening Reception",
   oct7: "October 7 - Conference Day 1",
@@ -61,6 +73,7 @@ function shouldShowSession(session) {
 
 export default function ProgrammePage() {
   const speakerDesignationMap = buildSpeakerDesignationMap();
+  const speakerPhotoMap = buildSpeakerPhotoMap();
   const visibleSessions = programmeSessions2025.filter(shouldShowSession);
 
   return (
@@ -83,6 +96,7 @@ export default function ProgrammePage() {
           sessions={visibleSessions}
           dayLabels={dayLabels}
           speakerDesignationMap={speakerDesignationMap}
+          speakerPhotoMap={speakerPhotoMap}
           receptionNotes={receptionNotes}
         />
       </main>

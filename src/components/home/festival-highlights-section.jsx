@@ -13,13 +13,18 @@ export default function FestivalHighlightsSection() {
 
         {/* Top Nav Pills */}
         <div className="-mt-7 md:-mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-16 md:mb-20">
-          {["News", "TASI Community", "Speakers", "Sponsors"].map((label) => (  
+          {[
+            { label: "News", href: "/blog" },
+            { label: "Testimonials", href: "#video-testimonials" },
+            { label: "Speakers", href: "#speakers" },
+            { label: "Sponsors", href: "/sponsor" }
+          ].map((item) => (
             <a
-              key={label}
-              href="#"
+              key={item.label}
+              href={item.href}
               className="rounded-full border-[1.5px] border-white px-5 py-1.5 md:px-6 md:py-2 text-[13px] md:text-sm font-bold text-white transition-all hover:bg-white hover:text-rc-primary"
             >
-              {label}
+              {item.label}
             </a>
           ))}
         </div>

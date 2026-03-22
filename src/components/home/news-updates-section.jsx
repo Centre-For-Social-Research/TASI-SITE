@@ -12,7 +12,7 @@ const newsItems = [
     title: "Call for Proposals Now Open",
     description: "Submit your proposals for sessions, panels, and workshops for TASI 2026. Join us in shaping the agenda for India's foremost trust and safety convening.",
     image: "/img/home-gallery/tasi-2026-brochure-3.png",
-    link: "/"
+    link: "/blog"
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const newsItems = [
     title: "Early Bird Registration",
     description: "Secure your spot at TASI 2026 with our early bird rates. Don't miss out on the opportunity to connect with industry leaders.",
     image: "/img/home-gallery/7T7A0181.webp",
-    link: "/"
+    link: "/blog"
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const newsItems = [
     title: "First Keynote Speakers Announced",
     description: "We are thrilled to announce our first lineup of keynote speakers featuring global experts in digital safety and policy.",
     image: "/img/home-gallery/7T7A0646.webp",
-    link: "/"
+    link: "/blog"
   },
   {
     id: 4,
@@ -39,7 +39,7 @@ const newsItems = [
     title: "TASI Community Mixer",
     description: "Join our pre-conference virtual networking event to meet fellow attendees and discuss pressing trust and safety issues.",
     image: "/img/home-gallery/tasi-community-mixer.webp",
-    link: "/"
+    link: "/blog"
   }
 ]
 

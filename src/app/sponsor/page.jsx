@@ -286,7 +286,7 @@ export default function SponsorPage() {
           </div>
         </section>
 
-        <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] py-12 md:py-20">
+        <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] pb-12 pt-0 md:pb-20 md:pt-0">
           <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 md:px-6 lg:grid-cols-2">
             <article className="rounded-[28px] border border-stone-200 bg-stone-50 p-6 md:p-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-stone-500">Flexible Partnerships</p>

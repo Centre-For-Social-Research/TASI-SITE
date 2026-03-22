@@ -18,6 +18,13 @@ const navItems = [
     ],
   },
   { label: "Sponsors", href: "/sponsor" },
+  {
+    label: "More",
+    href: "/media",
+    children: [
+      { label: "Media", href: "/media" },
+    ],
+  },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -27,10 +34,22 @@ export default function HomeNavbar() {
   const [openMobileMenu, setOpenMobileMenu] = useState(null);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (ticking) return;
+
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const nextScrolled = window.scrollY > 20;
+        setScrolled((current) => (current === nextScrolled ? current : nextScrolled));
+        ticking = false;
+      });
     };
-    window.addEventListener("scroll", handleScroll);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -68,10 +87,10 @@ export default function HomeNavbar() {
                   </svg>
                 </Link>
                 <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                  <div className="rounded-[10px] border border-white/50 bg-white/70 p-3 shadow-[0_18px_50px_rgba(15,23,42,0.18)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/80">
-                    <div className="mb-2 px-3 pt-1 text-[10px] font-black uppercase tracking-[0.22em] text-stone-500 dark:text-slate-400">
-                      Editions
-                    </div>
+                    <div className="rounded-[10px] border border-white/50 bg-white/70 p-3 shadow-[0_18px_50px_rgba(15,23,42,0.18)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/80">
+                      <div className="mb-2 px-3 pt-1 text-[10px] font-black uppercase tracking-[0.22em] text-stone-500 dark:text-slate-400">
+                      {item.label === "More" ? "Explore" : "Editions"}
+                      </div>
                     {item.children.map((child) => (
                       <Link
                         key={child.href}

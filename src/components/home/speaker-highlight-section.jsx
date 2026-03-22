@@ -38,7 +38,7 @@ export default function SpeakerHighlightSection() {
   });
 
   return (
-    <section className="pt-1 pb-section-md md:pt-2 md:pb-section-lg bg-white dark:bg-[#121212]">
+    <section id="speakers" className="pt-1 pb-section-md md:pt-2 md:pb-section-lg bg-white dark:bg-[#121212]">
       <div className="container mx-auto max-w-[1300px] px-4 md:px-6 flex flex-col items-center">
         <p className="mb-2 uppercase tracking-widest text-stone-500 dark:text-stone-400 text-body-xs font-semibold">
           Key Voices

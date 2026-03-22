@@ -14,11 +14,13 @@ const testimonialsData = testimonialVideos.map((video, index) => ({
 
 export default function VideoTestimonialsSection() {
   return (
-    <TestimonialSection
-      eyebrow="Testimonials"
-      title="Video Testimonials"
-      subtitle="Hear directly from trust and safety leaders across policy, platforms, civil society, and international partnerships."
-      testimonials={testimonialsData}
-    />
+    <div id="video-testimonials">
+      <TestimonialSection
+        eyebrow="Testimonials"
+        title="Video Testimonials"
+        subtitle="Hear directly from trust and safety leaders across policy, platforms, civil society, and international partnerships."
+        testimonials={testimonialsData}
+      />
+    </div>
   );
 }

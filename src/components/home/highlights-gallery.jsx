@@ -88,7 +88,7 @@ export default function HighlightsGallery() {
         sectionClassName="py-section-sm md:py-section-md bg-white dark:bg-[#121212]"
         containerClassName="mx-auto w-full max-w-7xl px-4 md:px-8"
         onReanimate={handleReanimate}
-        reanimateLabel="Re-animate Gallery"
+        reanimateLabel="Refresh Gallery"
         isReanimating={isReanimating}
       />
       <ImageModal src={modalImage} onClose={() => setModalImage(null)} />

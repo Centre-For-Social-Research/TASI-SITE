@@ -24,7 +24,7 @@ export default function HomeHero() {
     <section className="relative flex py-section-lg min-h-[auto] md:min-h-[60vh] items-center justify-center overflow-hidden bg-black text-white px-4">
       {/* Background Image */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 opacity-30"
         style={{
           backgroundImage: "url('/img/hero-bg-2.png')",
           backgroundSize: "cover",

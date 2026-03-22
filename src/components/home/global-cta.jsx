@@ -17,7 +17,7 @@ export default function GlobalCta() {
             href="/register" 
             className="flex w-full sm:min-w-[220px] sm:w-auto items-center justify-center rounded-3xl bg-gradient-to-r from-[#55089e] via-[#9f0099] to-[#ff0080] px-8 py-2.5 text-[16px] font-bold leading-6 text-white transition-transform hover:scale-[1.02] hover:opacity-90"
           >
-            Pre-register
+            Register
           </Link>
           
           {/* Secondary Button - Primary Purple */}

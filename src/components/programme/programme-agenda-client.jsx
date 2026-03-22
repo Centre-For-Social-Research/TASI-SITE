@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const FORMAT_LABELS = {
   opening: 'Opening',
@@ -14,6 +14,7 @@ const FORMAT_LABELS = {
 };
 
 const DAY_ORDER = { oct6: 0, oct7: 1, oct8: 2 };
+const SESSIONS_PER_PAGE = 8;
 
 function normalizePersonName(value) {
   return value
@@ -34,6 +35,15 @@ function resolveDesignation(name, designationMap) {
   return '';
 }
 
+function resolveSpeakerPhoto(name, photoMap) {
+  const normalized = normalizePersonName(name);
+  if (photoMap[normalized]) return photoMap[normalized];
+  const compressed = normalized.replace(/\s+/g, '');
+  const fallbackKey = Object.keys(photoMap).find((key) => key.replace(/\s+/g, '') === compressed);
+  if (fallbackKey) return photoMap[fallbackKey];
+  return '';
+}
+
 function timeSortValue(time) {
   const normalized = String(time).replace(/–/g, '-').trim();
   const firstPart = normalized.split('-')[0].trim();
@@ -45,11 +55,18 @@ function timeSortValue(time) {
   return h * 60 + m;
 }
 
-export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesignationMap, receptionNotes = [] }) {
+export default function ProgrammeAgendaClient({
+  sessions,
+  dayLabels,
+  speakerDesignationMap,
+  speakerPhotoMap = {},
+  receptionNotes = [],
+}) {
   const [activeDay, setActiveDay] = useState('all');
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState('');
   const [venue, setVenue] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const normalizedSessions = useMemo(
     () =>
@@ -64,18 +81,19 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
           speakersDetailed: session.speakers.map((speakerName) => ({
             name: speakerName,
             title: resolveDesignation(speakerName, speakerDesignationMap || {}),
+            photo: resolveSpeakerPhoto(speakerName, speakerPhotoMap || {}),
             mod: false,
           })),
         })),
-    [sessions, speakerDesignationMap],
+    [sessions, speakerDesignationMap, speakerPhotoMap],
   );
 
   const formats = useMemo(() => [...new Set(normalizedSessions.map((s) => s.format))], [normalizedSessions]);
   const venues = useMemo(() => [...new Set(normalizedSessions.map((s) => s.venue || s.track))].sort(), [normalizedSessions]);
   const labels = {
-    oct6: dayLabels?.oct6 || "Oct 6 - Opening Reception",
-    oct7: dayLabels?.oct7 || "Oct 7 - Day 1",
-    oct8: dayLabels?.oct8 || "Oct 8 - Day 2",
+    oct6: dayLabels?.oct6 || 'Oct 6 - Opening Reception',
+    oct7: dayLabels?.oct7 || 'Oct 7 - Day 1',
+    oct8: dayLabels?.oct8 || 'Oct 8 - Day 2',
   };
 
   const filteredSessions = useMemo(() => {
@@ -102,6 +120,22 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
       })
       .sort((a, b) => (DAY_ORDER[a.day] || 0) - (DAY_ORDER[b.day] || 0) || timeSortValue(a.time) - timeSortValue(b.time));
   }, [activeDay, format, normalizedSessions, query, venue]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredSessions.length / SESSIONS_PER_PAGE));
+  const paginatedSessions = useMemo(() => {
+    const startIndex = (currentPage - 1) * SESSIONS_PER_PAGE;
+    return filteredSessions.slice(startIndex, startIndex + SESSIONS_PER_PAGE);
+  }, [currentPage, filteredSessions]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeDay, format, query, venue]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <section className="agenda-root">
@@ -257,99 +291,220 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
         }
 
         .sessions-wrap { padding: 1.5rem 0 4rem; }
-        .sessions-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sessions-list { display: flex; flex-direction: column; gap: 1rem; }
         .no-results {
           text-align: center; padding: 4rem 2rem; color: var(--taupe); font-size: 0.92rem;
         }
 
         .session-card {
           background: var(--white);
-          border: 1px solid var(--border);
-          border-left: 5px solid var(--coral);
-          border-radius: 0.95rem;
+          border: 1px solid #ddd6cf;
+          border-radius: 0.5rem;
           transition: box-shadow 0.2s, border-color 0.15s, transform 0.15s;
         }
-        .session-card.format-workshop { border-left-color: var(--olive); }
-        .session-card.format-fireside { border-left-color: var(--gold); }
-        .session-card.format-keynote { border-left-color: var(--brown); }
-        .session-card.format-spotlight { border-left-color: #b94a8a; }
-        .session-card.format-roundtable { border-left-color: #6b5ea8; }
-        .session-card.format-opening { border-left-color: #1a3fa3; }
-        .session-card:hover { box-shadow: 0 8px 22px rgba(28, 25, 23, 0.08); transform: translateY(-1px); }
+        .session-card.format-workshop { box-shadow: inset 0 0 0 1px rgba(87, 83, 78, 0.08); }
+        .session-card.format-fireside { box-shadow: inset 0 0 0 1px rgba(161, 98, 7, 0.08); }
+        .session-card.format-keynote { box-shadow: inset 0 0 0 1px rgba(28, 25, 23, 0.08); }
+        .session-card.format-spotlight { box-shadow: inset 0 0 0 1px rgba(185, 74, 138, 0.08); }
+        .session-card.format-roundtable { box-shadow: inset 0 0 0 1px rgba(107, 94, 168, 0.08); }
+        .session-card.format-opening { box-shadow: inset 0 0 0 1px rgba(26, 63, 163, 0.08); }
+        .session-card:hover { box-shadow: 0 10px 28px rgba(28, 25, 23, 0.07); transform: translateY(-1px); }
 
-        .card-content { padding: 1.1rem 1.3rem; }
+        .card-content { padding: 1.6rem 1.6rem 1.45rem; }
 
         .card-top {
-          display: flex; align-items: center; justify-content: space-between;
-          gap: 1rem; margin-bottom: 0.55rem; flex-wrap: wrap;
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1rem;
+          margin-bottom: 0.9rem;
+          flex-wrap: wrap;
+        }
+
+        .venue-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.35rem 0.72rem;
+          border-radius: 999px;
+          background: #0f8b8d;
+          color: #fff;
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+          line-height: 1;
         }
 
         .card-meta {
-          display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+          align-items: center;
         }
         .meta-item {
-          display: flex; align-items: center; gap: 0.3rem;
-          font-family: inherit; font-size: 0.68rem;
-          color: var(--taupe); letter-spacing: 0.05em;
-          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-family: inherit;
+          font-size: 0.78rem;
+          color: var(--brown);
+          font-weight: 500;
         }
-        .meta-item svg { flex-shrink: 0; opacity: 0.65; }
-        .meta-sep { color: var(--border); font-size: 0.7rem; }
+        .meta-item svg { flex-shrink: 0; opacity: 0.7; width: 0.8rem; height: 0.8rem; }
+        .meta-sep { color: #a8a29e; font-size: 0.9rem; }
 
         .format-badge {
-          font-family: inherit; font-size: 0.62rem;
-          letter-spacing: 0.12em; text-transform: uppercase;
-          padding: 0.24rem 0.7rem; font-weight: 700; border-radius: 999px;
+          font-family: inherit;
+          font-size: 0.62rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 0.34rem 0.62rem;
+          font-weight: 700;
+          border-radius: 999px;
+          border: 1px solid transparent;
         }
-        .badge-panel { background: var(--coral-pale); color: var(--coral-deep); }
-        .badge-workshop { background: var(--olive-pale); color: var(--olive-dark); }
-        .badge-fireside { background: var(--gold-pale); color: #8a6010; }
-        .badge-keynote { background: #f0eee8; color: var(--brown); }
-        .badge-spotlight { background: #fceef7; color: #9a2070; }
-        .badge-roundtable { background: #f0eef8; color: #4a3a88; }
-        .badge-opening { background: #e8f0ff; color: #1a3fa3; }
-        .badge-special { background: #f0eee8; color: var(--brown); }
+        .badge-panel { background: var(--coral-pale); color: var(--coral-deep); border-color: rgba(194, 65, 12, 0.15); }
+        .badge-workshop { background: var(--olive-pale); color: var(--olive-dark); border-color: rgba(87, 83, 78, 0.12); }
+        .badge-fireside { background: var(--gold-pale); color: #8a6010; border-color: rgba(161, 98, 7, 0.14); }
+        .badge-keynote { background: #f0eee8; color: var(--brown); border-color: rgba(28, 25, 23, 0.1); }
+        .badge-spotlight { background: #fceef7; color: #9a2070; border-color: rgba(154, 32, 112, 0.12); }
+        .badge-roundtable { background: #f0eef8; color: #4a3a88; border-color: rgba(74, 58, 136, 0.12); }
+        .badge-opening { background: #e8f0ff; color: #1a3fa3; border-color: rgba(26, 63, 163, 0.12); }
+        .badge-special { background: #f0eee8; color: var(--brown); border-color: rgba(28, 25, 23, 0.1); }
 
         .session-title {
           font-family: inherit;
-          font-size: 1rem; font-weight: 700; color: var(--brown);
-          line-height: 1.3; margin-bottom: 0.3rem;
+          font-size: 1.65rem;
+          font-weight: 800;
+          color: #000;
+          line-height: 1.2;
+          margin-bottom: 0.7rem;
         }
         .session-topic {
-          font-size: 0.8rem; line-height: 1.65; color: var(--taupe);
-          font-weight: 300; margin-bottom: 0.6rem;
+          font-size: 0.92rem;
+          line-height: 1.7;
+          color: var(--taupe);
+          font-weight: 400;
+          margin-bottom: 0.8rem;
+          max-width: 70rem;
+        }
+
+        .session-venue-line {
+          font-size: 0.88rem;
+          font-weight: 500;
+          color: #111827;
+          margin-bottom: 0.9rem;
         }
 
         .speakers-section {
-          margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--border);
+          margin-top: 0.35rem;
+          padding-top: 0.35rem;
         }
 
         .speakers-label {
-          font-family: inherit;
-          font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-          color: var(--coral); margin-bottom: 0.5rem; font-weight: 500;
+          display: none;
         }
 
-        .speakers-list { display: flex; flex-direction: column; gap: 0.4rem; }
+        .speakers-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 1rem 1.2rem;
+        }
 
         .speaker-row {
-          display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.75rem;
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          min-width: 0;
         }
 
-        .speaker-dot {
-          width: 6px; height: 6px; border-radius: 50%;
-          background: var(--coral); margin-top: 3px; flex-shrink: 0;
+        .speaker-avatar {
+          width: 3.6rem;
+          height: 3.6rem;
+          border-radius: 999px;
+          border: 1px solid #d6d3d1;
+          background: linear-gradient(135deg, var(--coral-pale), var(--olive-pale));
+          overflow: hidden;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--coral-deep);
+          font-size: 1.05rem;
+          font-weight: 700;
+          box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
         }
 
-        .speaker-info { flex: 1; }
-        .speaker-name { font-weight: 600; color: var(--brown); }
-        .speaker-title { color: var(--taupe); font-size: 0.7rem; font-weight: 300; }
+        .speaker-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .speaker-info { flex: 1; min-width: 0; }
+        .speaker-name {
+          font-weight: 800;
+          color: #111827;
+          font-size: 0.8rem;
+          line-height: 1.35;
+        }
+        .speaker-title {
+          color: #6b7280;
+          font-size: 0.72rem;
+          font-weight: 400;
+          line-height: 1.45;
+          white-space: pre-line;
+        }
+
+        .pagination-wrap {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.55rem;
+          flex-wrap: wrap;
+          margin-top: 1.5rem;
+        }
+
+        .pagination-btn {
+          border: 1px solid var(--border);
+          background: var(--white);
+          color: var(--brown);
+          border-radius: 999px;
+          padding: 0.58rem 0.9rem;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: border-color 0.2s, background 0.2s, color 0.2s;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+          border-color: var(--coral);
+          color: var(--coral-deep);
+        }
+
+        .pagination-btn.active {
+          background: var(--coral);
+          border-color: var(--coral);
+          color: white;
+        }
+
+        .pagination-btn:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+        }
 
         @media (min-width: 768px) {
           .shell {
             padding-left: 1.5rem;
             padding-right: 1.5rem;
           }
+        }
+
+        @media (max-width: 767px) {
+          .card-content { padding: 1.15rem 1rem 1.05rem; }
+          .session-title { font-size: 1.2rem; }
+          .speakers-list { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -382,7 +537,7 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search sessions, speakers, topics…"
+              placeholder="Search sessions, speakers, topics..."
             />
           </div>
 
@@ -442,11 +597,16 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
           {filteredSessions.length === 0 ? (
             <div className="no-results">No sessions match your filters.</div>
           ) : (
-            <div className="sessions-list">
-              {filteredSessions.map((session) => (
-                <div key={session.id} className={`session-card format-${session.format}`}>
-                  <div className="card-content">
-                    <div className="card-top">
+            <>
+              <div className="sessions-list">
+                {paginatedSessions.map((session) => (
+                  <div key={session.id} className={`session-card format-${session.format}`}>
+                    <div className="card-content">
+                      <div className="card-top">
+                        <div className="venue-badge">{session.venue || session.track}</div>
+                        <span className={`format-badge badge-${session.format}`}>{FORMAT_LABELS[session.format]}</span>
+                      </div>
+
                       <div className="card-meta">
                         <div className="meta-item">
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -455,43 +615,75 @@ export default function ProgrammeAgendaClient({ sessions, dayLabels, speakerDesi
                           </svg>
                           <span>{session.time}</span>
                         </div>
-                        <span className="meta-sep">·</span>
+                        <span className="meta-sep">•</span>
                         <div className="meta-item">
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                            <circle cx="12" cy="10" r="3" />
-                          </svg>
-                          <span>{session.venue}</span>
+                          <span>{labels[session.day] || session.day}</span>
                         </div>
-                        <span className="meta-sep">·</span>
-                        <span className={`format-badge badge-${session.format}`}>{FORMAT_LABELS[session.format]}</span>
                       </div>
-                    </div>
 
-                    <div className="session-title">{session.title}</div>
+                      <div className="session-title">{session.title}</div>
 
-                    {session.topic && <div className="session-topic">{session.topic}</div>}
+                      {session.topic && <div className="session-topic">{session.topic}</div>}
 
-                    {session.speakersDetailed && session.speakersDetailed.length > 0 && (
-                      <div className="speakers-section">
-                        <div className="speakers-label">Speakers</div>
-                        <div className="speakers-list">
-                          {session.speakersDetailed.map((speaker, idx) => (
-                            <div key={idx} className="speaker-row">
-                              <div className="speaker-dot" />
-                              <div className="speaker-info">
-                                <div className="speaker-name">{speaker.name}</div>
-                                {speaker.title && <div className="speaker-title">{speaker.title}</div>}
+                      <div className="session-venue-line">{session.venue || session.track}</div>
+
+                      {session.speakersDetailed && session.speakersDetailed.length > 0 && (
+                        <div className="speakers-section">
+                          <div className="speakers-label">Speakers</div>
+                          <div className="speakers-list">
+                            {session.speakersDetailed.map((speaker, idx) => (
+                              <div key={idx} className="speaker-row">
+                                <div className="speaker-avatar" aria-hidden="true">
+                                  {speaker.photo ? (
+                                    <img src={speaker.photo} alt={speaker.name} />
+                                  ) : (
+                                    <span>{speaker.name.charAt(0)}</span>
+                                  )}
+                                </div>
+                                <div className="speaker-info">
+                                  <div className="speaker-name">{speaker.name}</div>
+                                  {speaker.title && <div className="speaker-title">{speaker.title}</div>}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="pagination-wrap">
+                  <button
+                    type="button"
+                    className="pagination-btn"
+                    onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                    <button
+                      key={page}
+                      type="button"
+                      className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className="pagination-btn"
+                    onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>
