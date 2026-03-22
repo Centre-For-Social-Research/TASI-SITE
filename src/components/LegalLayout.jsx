@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import BrandedPageHero from "@/components/ui/branded-page-hero";
 
 const navLinks = [
   { label: "Privacy Policy", href: "/privacy-policy" },
@@ -38,13 +39,15 @@ export default function LegalLayout({ title, kicker, updated, applies, children 
         </nav>
       </header>
 
-      <div className="border-b border-orange-200/70 bg-gradient-to-b from-stone-100 to-white px-6 py-12 text-center dark:border-zinc-800 dark:bg-[radial-gradient(circle_at_20%_0%,#1f2937_0%,#0b1220_45%,#05070e_100%)] md:py-14">
-        <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 dark:text-slate-300">
-          Legal &amp; Privacy
-        </span>
-        <h1 className="mb-3 text-4xl font-black tracking-tight text-stone-900 dark:text-slate-100 md:text-5xl">{title}</h1>
-        <p className="mx-auto max-w-2xl text-sm text-stone-600 dark:text-slate-300">{kicker}</p>
-      </div>
+      <BrandedPageHero className="py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <span className="mb-3 inline-block text-xs font-black uppercase tracking-[0.18em] text-white/75">
+            Legal &amp; Privacy
+          </span>
+          <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">{title}</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-white/85 md:text-base">{kicker}</p>
+        </div>
+      </BrandedPageHero>
 
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <div className="mt-0 flex gap-1 border-b border-stone-200 dark:border-zinc-800">

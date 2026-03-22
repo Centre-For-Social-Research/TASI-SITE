@@ -1,7 +1,7 @@
 import Link from "next/link";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
-import DarkHeroParticles from "@/components/ui/dark-hero-particles";
+import BrandedPageHero from "@/components/ui/branded-page-hero";
 
 const themeCards = [
   {
@@ -74,40 +74,38 @@ export default function ThemesPage() {
     <>
       <HomeNavbar />
       <main>
-        <section className="relative overflow-hidden bg-gradient-to-br from-stone-900 via-stone-800 to-orange-900 py-16 text-white md:py-24">
-          <DarkHeroParticles />
-          <div className="pointer-events-none absolute inset-0 opacity-70 [background:radial-gradient(circle_at_right,_rgba(34,197,94,0.2),_transparent_35%),radial-gradient(circle_at_left,_rgba(251,146,60,0.18),_transparent_35%)]" />
+        <BrandedPageHero>
           <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-8 px-4 md:grid-cols-2 md:px-6">
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-stone-300">Strategic Focus</p>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Strategic Focus</p>
               <h1 className="mb-4 text-5xl font-black tracking-tight md:text-7xl">
                 TASI 2026
-                <span className="block text-orange-300">Themes</span>
+                <span className="block text-rc-secondary">Themes</span>
               </h1>
-              <p className="text-stone-200">
+              <p className="text-white/90">
                 TASI 2026 convenes leaders across government, industry, civil society, and academia to examine urgent questions shaping AI governance and digital trust.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center">
+              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">9</p>
-                <p className="text-xs uppercase tracking-[0.12em] text-stone-300">Key Themes</p>
+                <p className="text-xs uppercase tracking-[0.12em] text-white/70">Key Themes</p>
               </article>
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center">
+              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">50+</p>
-                <p className="text-xs uppercase tracking-[0.12em] text-stone-300">Sessions</p>
+                <p className="text-xs uppercase tracking-[0.12em] text-white/70">Sessions</p>
               </article>
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center">
+              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">2</p>
-                <p className="text-xs uppercase tracking-[0.12em] text-stone-300">Days</p>
+                <p className="text-xs uppercase tracking-[0.12em] text-white/70">Days</p>
               </article>
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center">
+              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">500+</p>
-                <p className="text-xs uppercase tracking-[0.12em] text-stone-300">Participants</p>
+                <p className="text-xs uppercase tracking-[0.12em] text-white/70">Participants</p>
               </article>
             </div>
           </div>
-        </section>
+        </BrandedPageHero>
 
         <section className="bg-stone-100 py-14 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">

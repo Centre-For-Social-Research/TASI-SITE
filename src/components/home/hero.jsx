@@ -1,35 +1,8 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
-import Countdown from "./countdown";
-import TubesBackground from "./tubes-background";
-import CountUpNumber from "../ui/count-up-number";
-
-const pills = [
-  "13-14th October 2026",
-  "New Delhi, India",
-  "1,000+ Delegates",
-];
-
-const heroHighlights = [
-  {
-    value: 500,
-    suffix: "+",
-    description: "Participants from government, civil society, diplomatic missions, and academia.",
-  },
-  {
-    value: 100,
-    suffix: "+",
-    description: "Speakers and facilitators contributing practical expertise.",
-  },
-  {
-    value: 15,
-    description: "Countries represented in cross-border safety dialogue.",
-  },
-];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -41,99 +14,112 @@ const fadeUp = {
 };
 
 export default function HomeHero() {
-  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const isDark = mounted && resolvedTheme === "dark";
-
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(135deg,#f6efe3_0%,#fff9ef_35%,#f4f1eb_100%)] dark:bg-[radial-gradient(circle_at_15%_20%,#111827_0%,#0b1022_40%,#070910_100%)]">
-      {isDark ? (
-        <TubesBackground className="absolute inset-0" enableClickInteraction />
-      ) : null}
+    <section className="relative flex py-section-lg min-h-[auto] md:min-h-[60vh] items-center justify-center overflow-hidden bg-black text-white px-4">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('/img/hero-bg-2.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed"
+        }}
+      />
+      
+      {/* Vignette Overlay to darken edges more firmly */}
+      <div className="absolute inset-0 z-[5] pointer-events-none" style={{
+        background: "radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0.8) 100%)"
+      }} />
 
-      <div className="pointer-events-none absolute inset-0 opacity-90 dark:hidden [background:radial-gradient(circle_at_top_right,_rgba(180,83,9,0.22),_transparent_32%),radial-gradient(circle_at_20%_20%,_rgba(251,191,36,0.14),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(15,118,110,0.14),_transparent_28%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/60 to-transparent dark:hidden" />
+      {/* Hero photo color overlay */}
+      <div className="absolute inset-0 z-10 opacity-75" style={{
+        background: "linear-gradient(0deg, rgb(63, 10, 10) 0%, rgb(115, 11, 78) 33%, rgb(204, 35, 20) 79%, rgb(222, 100, 22) 100%)"
+      }} />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 md:px-6 md:py-24 xl:grid-cols-[minmax(0,1.15fr)_420px] xl:items-end">
-        <div className="max-w-3xl">
-          <motion.p
-            className="mb-5 inline-flex items-center rounded-full border border-orange-300 bg-white/90 px-4 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-orange-800 dark:border-fuchsia-400/50 dark:bg-slate-950/70 dark:text-fuchsia-200"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.05}
-          >
-            Centre for Social Research · Trust and Safety Festival
-          </motion.p>
-          <motion.h1
-            className="mb-4 text-5xl font-black leading-[0.94] tracking-tight text-stone-900 dark:text-white md:text-7xl"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.12}
-          >
-            Trust and Safety
-            <span className="block text-orange-700 dark:text-cyan-300">India Festival</span>
-          </motion.h1>
-          <motion.p
-            className="mb-3 max-w-2xl text-xl font-medium italic text-stone-600 dark:text-slate-200 md:text-2xl"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.18}
-          >
+      <div className="relative z-20 w-full max-w-6xl mx-auto flex flex-col items-center justify-center text-center mt-4 md:mt-8">
+        <motion.div
+          className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/85 md:mb-8"
+          initial="hidden"
+          animate={mounted ? "visible" : "hidden"}
+          variants={fadeUp}
+          custom={0}
+        >
+          <span>Centre for Social Research</span>
+          <span className="hidden h-1 w-1 rounded-full bg-white/70 md:block" />
+          <span>Trust &amp; Safety Forum</span>
+        </motion.div>
+
+        {/* Logo and Date Section */}
+        <motion.div
+          className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 w-full"
+          initial="hidden"
+          animate={mounted ? "visible" : "hidden"}
+          variants={fadeUp}
+          custom={0.1}
+        >
+          {/* Left Side: Logo equivalent */}
+          <div className="text-right flex-1 flex justify-end">
+            <h1 className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end">
+              <span className="leading-[0.8] mb-2">TASI</span>
+              <span className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary">2026</span>
+            </h1>
+          </div>
+
+          {/* Vertical Separator */}
+          <div className="hidden md:block w-[2px] h-24 bg-white"></div>
+          <div className="md:hidden h-[2px] w-24 bg-white my-2"></div>
+
+          {/* Right Side: Location and Info */}
+          <div className="text-left flex-1 flex justify-start">
+            <div className="flex flex-col text-center md:text-left">
+              <h2 className="text-[2.5rem] md:text-[4rem] font-black text-rc-secondary leading-none mb-3 tracking-tight drop-shadow-sm">
+                Delhi
+              </h2>
+              <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white mb-2">
+                IN PERSON & ONLINE
+              </p>
+              <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white">
+                OCT 13 - 14, 2026
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* CTA Section */}
+        <motion.div
+          className="mt-7 md:mt-8 flex flex-col items-center"
+          initial="hidden"
+          animate={mounted ? "visible" : "hidden"}
+          variants={fadeUp}
+          custom={0.3}
+        >
+          <p className="mb-3 text-base font-semibold italic text-white/95 [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] md:text-lg">
             People First. Safety Always.
-          </motion.p>
-          <motion.p
-            className="mb-6 max-w-2xl text-lg text-stone-700 dark:text-slate-100 md:text-xl"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.24}
-          >
-            From AI to digital rights, regulation, tech policy and algorithms, we bring together government, civil society, diplomatic missions, and industry to build safer digital spaces.
-          </motion.p>
+          </p>
+          <p className="mb-8 max-w-4xl text-sm leading-relaxed text-white/95 [text-shadow:0_2px_12px_rgba(0,0,0,0.45)] md:text-lg">
+            From AI to digital rights, regulations, tech policy and algorithms, we invite the best of the industry to
+            collaborate on emerging trends and create solutions in digital spaces.
+          </p>
 
-          <motion.div
-            className="mb-6 flex flex-wrap gap-3"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.3}
-          >
-            {pills.map((pill) => (
-              <span
-                key={pill}
-                className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 dark:border-slate-600 dark:bg-slate-950/65 dark:text-slate-100"
-              >
-                {pill}
-              </span>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="mb-8 flex flex-wrap gap-3"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.36}
-          >
-            <Link href="/register" className="rounded-md bg-orange-700 px-5 py-3 font-semibold text-white hover:bg-orange-800 dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400">
-              Register Now
-            </Link>
-            <Link href="/sponsor" className="rounded-md border border-stone-400 px-5 py-3 font-semibold text-stone-800 hover:border-stone-700 dark:border-fuchsia-300/60 dark:text-fuchsia-100 dark:hover:border-fuchsia-300">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/sponsor"
+              className="inline-flex rounded-full border border-white/60 px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-white transition-all hover:bg-white hover:text-black"
+            >
               Become a Sponsor
             </Link>
             <a
               href="https://drive.google.com/file/d/1oG8biMtiPTBxKnABevMPAOsqx2paykwS/view?usp=sharing"
               target="_blank"
               rel="noreferrer"
-              className="rounded-md border border-emerald-400 px-5 py-3 font-semibold text-emerald-800 hover:border-emerald-600 dark:border-emerald-300/70 dark:text-emerald-100 dark:hover:border-emerald-300"
+              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary transition-all hover:bg-rc-secondary hover:text-black"
             >
               Download Brochure
             </a>
@@ -141,36 +127,11 @@ export default function HomeHero() {
               href="https://drive.google.com/file/d/1S9dHlHQg8pm0-HjsjkXK0dwOSUCYqhxn/view?usp=sharing"
               target="_blank"
               rel="noreferrer"
-              className="rounded-md border border-sky-400 px-5 py-3 font-semibold text-sky-800 hover:border-sky-600 dark:border-cyan-300/70 dark:text-cyan-100 dark:hover:border-cyan-300"
+              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary transition-all hover:bg-rc-secondary hover:text-black"
             >
               Read TASI 2025 Report
             </a>
-          </motion.div>
-
-          <motion.div
-            className="grid max-w-3xl gap-4 rounded-[28px] border border-white/70 bg-white/70 p-5 shadow-[0_30px_80px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700/80 dark:bg-slate-950/55 dark:shadow-[0_30px_80px_rgba(8,8,18,0.7)] md:grid-cols-3"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0.42}
-          >
-            {heroHighlights.map((item) => (
-              <div key={item.description}>
-                <CountUpNumber end={item.value} suffix={item.suffix || ""} className="text-3xl font-black text-stone-900 dark:text-white" />
-                <p className="mt-1 text-sm text-stone-600 dark:text-slate-200">{item.description}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        <motion.div
-          className="relative"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="absolute -left-6 top-6 hidden h-24 w-24 rounded-full bg-amber-200/50 blur-2xl md:block" />
-          <Countdown />
+          </div>
         </motion.div>
       </div>
     </section>

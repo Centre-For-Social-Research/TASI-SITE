@@ -73,11 +73,11 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         <div
           className={cn(
             "flex justify-center items-center w-6 h-6 rounded-full transition-transform duration-300",
-            isDark ? "bg-transparent" : "transform -translate-x-8"
+            isDark ? "bg-zinc-900/70" : "transform -translate-x-8"
           )}
         >
           {isDark ? (
-            <Sun className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+            <Sun className="w-4 h-4 text-white/90" strokeWidth={1.75} />
           ) : (
             <Moon className="w-4 h-4 text-black" strokeWidth={1.5} />
           )}

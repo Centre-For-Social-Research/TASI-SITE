@@ -13,7 +13,7 @@ const testimonialVideos = [
     speaker: "Shanley Clemot McLaren",
     title: "Feminist Activist and Global Expert on Gender Digital Rights, United Nations Young Activist",
     iframeSrc:
-      "https://player.mux.com/jexDN2HQHJaA01hiMrVMPy3qFVh500XwwKzCuFGYctDuQ?metadata-video-title=Shanley+Clemot+McLaren%2C+Feminist+Activist+and+Global+Expert+on+Gender+Digital+Rights%2C+United+Nations+Young+Activist&video-title=Shanley+Clemot+McLaren%2C+Feminist+Activist+and+Global+Expert+on+Gender+Digital+Rights%2C+United+Nations+Young+Activist",
+      "https://player.mux.com/jexDN2HQHJaA01hiMrVMPy3qFVh500XwwKzCuFGYctDuQ?metadata-video-title=Shanley+Clemot+McLaren%2C+Feminist+Activist+and+Global+Expert+on+Gender+Digital+Rights%2C+United+Nations+Young+Activist&video-title=Shanley+Clemot+McLaren%2C+Feminist+Activist+and+Global+Expert+on+Gender+Digital+Rights%2C+United+Nations+Young+Activist&thumbnail-time=10&poster=https%3A%2F%2Fimage.mux.com%2FjexDN2HQHJaA01hiMrVMPy3qFVh500XwwKzCuFGYctDuQ%2Fthumbnail.jpg%3Ftime%3D10%26width%3D1280",
     quote:
       "The conversations moved beyond principles into implementation detail, which is exactly what this sector needs.",
   },
@@ -100,12 +100,12 @@ const testimonialVideos = [
   },
   {
     edition: "TASI 2025",
-    speaker: "Neda Niazian",
-    title: "Group Director Trust & Safety - Booking.com",
+    speaker: "Vaishnavi J",
+    title: "Founder, Vys",
     iframeSrc:
-      "https://player.mux.com/8NzFCG01Y5ipt2dbkNNyKtCZtMiJKhi001wDSt024eSdzs?metadata-video-title=Neda+Niazian%2C+Group+Director+Trust+%26+Safety+-+Booking.com&video-title=Neda+Niazian%2C+Group+Director+Trust+%26+Safety+-+Booking.com",
+      "https://player.mux.com/RORuDx4Jka8IefxJwkd8KF2YUP2uu01PV026CU02PwENSQ?metadata-video-title=Vaishnavi+J%2C+Founder%2C+Vys&video-title=Vaishnavi+J%2C+Founder%2C+Vys",
     quote:
-      "Trust and safety maturity grows when organizations treat risk reduction, user trust, and business integrity as one strategy.",
+      "Community-centered safety conversations become more impactful when lived experiences shape product, policy, and support decisions.",
   },
   {
     edition: "TASI 2025",
@@ -114,16 +114,16 @@ const testimonialVideos = [
     iframeSrc:
       "https://player.mux.com/BCVM8301H7Gy2WgR8AXuEzuIu500WSbjLJaZlXKgvKDwM?metadata-video-title=Anupriya+Kapur%2C+Digital+Influencer+and+Life+Coach&video-title=Anupriya+Kapur%2C+Digital+Influencer+and+Life+Coach",
     quote:
-      "Digital well-being starts with awareness, empathy, and everyday choices that make online spaces safer for everyone.",
+      "Trust and safety frameworks are strongest when creators, communities, and platforms all contribute to practical safeguards.",
   },
   {
     edition: "TASI 2025",
-    speaker: "Vaishnavi J",
-    title: "Founder, Vys",
+    speaker: "Neda Niazian",
+    title: "Group Director Trust & Safety - Booking.com",
     iframeSrc:
-      "https://player.mux.com/RORuDx4Jka8IefxJwkd8KF2YUP2uu01PV026CU02PwENSQ?metadata-video-title=Vaishnavi+J%2C+Founder%2C+Vys&video-title=Vaishnavi+J%2C+Founder%2C+Vys",
+      "https://player.mux.com/8NzFCG01Y5ipt2dbkNNyKtCZtMiJKhi001wDSt024eSdzs?metadata-video-title=Neda+Niazian%2C+Group+Director+Trust+%26+Safety+-+Booking.com&video-title=Neda+Niazian%2C+Group+Director+Trust+%26+Safety+-+Booking.com",
     quote:
-      "Founder-led innovation can shape safer digital products when responsibility and user trust are built in from day one.",
+      "Trust and safety maturity grows when organizations treat risk reduction, user trust, and business integrity as one strategy.",
   },
 ];
 

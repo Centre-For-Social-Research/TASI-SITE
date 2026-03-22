@@ -1,0 +1,367 @@
+﻿[
+    {
+        "Domain":  "deccanherald.com",
+        "Name":  "Deccan Herald",
+        "File":  "deccan-herald.png"
+    },
+    {
+        "Domain":  "thestatesman.com",
+        "Name":  "The Statesman",
+        "File":  "the-statesman.png"
+    },
+    {
+        "Domain":  "timesofindia.indiatimes.com",
+        "Name":  "The Times of India",
+        "File":  "the-times-of-india.png"
+    },
+    {
+        "Domain":  "economictimes.indiatimes.com",
+        "Name":  "The Economic Times",
+        "File":  "the-economic-times.png"
+    },
+    {
+        "Domain":  "business-standard.com",
+        "Name":  "Business Standard",
+        "File":  "business-standard.png"
+    },
+    {
+        "Domain":  "financialexpress.com",
+        "Name":  "Financial Express",
+        "File":  "financial-express.png"
+    },
+    {
+        "Domain":  "thehindu.com",
+        "Name":  "The Hindu",
+        "File":  "the-hindu.png"
+    },
+    {
+        "Domain":  "indianexpress.com",
+        "Name":  "The Indian Express",
+        "File":  "the-indian-express.png"
+    },
+    {
+        "Domain":  "theprint.in",
+        "Name":  "The Print",
+        "File":  "the-print.png"
+    },
+    {
+        "Domain":  "tribuneindia.com",
+        "Name":  "The Tribune",
+        "File":  "the-tribune.png"
+    },
+    {
+        "Domain":  "amarujala.com",
+        "Name":  "Amar Ujala",
+        "File":  "amar-ujala.png"
+    },
+    {
+        "Domain":  "bhaskar.com",
+        "Name":  "Dainik Bhaskar",
+        "File":  "dainik-bhaskar.png"
+    },
+    {
+        "Domain":  "lokmattimes.com",
+        "Name":  "Lokmat Times",
+        "File":  "lokmat-times.png"
+    },
+    {
+        "Domain":  "thedailyguardian.com",
+        "Name":  "The Daily Guardian",
+        "File":  "the-daily-guardian.png"
+    },
+    {
+        "Domain":  "shahtimesnews.com",
+        "Name":  "Shah Times",
+        "File":  "shah-times.png"
+    },
+    {
+        "Domain":  "amritindia.com",
+        "Name":  "Amrit India",
+        "File":  "amrit-india.png"
+    },
+    {
+        "Domain":  "aninews.in",
+        "Name":  "ANI",
+        "File":  "ani.png"
+    },
+    {
+        "Domain":  "ptinews.com",
+        "Name":  "PTI",
+        "File":  "pti.png"
+    },
+    {
+        "Domain":  "ians.in",
+        "Name":  "IANS",
+        "File":  "ians.png"
+    },
+    {
+        "Domain":  "www.uniindia.com",
+        "Name":  "UNI",
+        "File":  "uni.jpg"
+    },
+    {
+        "Domain":  "businessworld.in",
+        "Name":  "BW BusinessWorld",
+        "File":  "bw-businessworld.png"
+    },
+    {
+        "Domain":  "outlookbusiness.com",
+        "Name":  "Outlook Business",
+        "File":  "outlook-business.png"
+    },
+    {
+        "Domain":  "zeebiz.com",
+        "Name":  "Zee Business",
+        "File":  "zee-business.png"
+    },
+    {
+        "Domain":  "cxotoday.com",
+        "Name":  "CXO Today",
+        "File":  "cxo-today.png"
+    },
+    {
+        "Domain":  "startupnews.in",
+        "Name":  "Startup News",
+        "File":  "startup-news.png"
+    },
+    {
+        "Domain":  "www.indianeconomicobserver.com",
+        "Name":  "India Economic Observer",
+        "File":  "india-economic-observer.png"
+    },
+    {
+        "Domain":  "indiadefencenews.com",
+        "Name":  "India Defence News",
+        "File":  "india-defence-news.png"
+    },
+    {
+        "Domain":  "msn.com",
+        "Name":  "MSN",
+        "File":  "msn.png"
+    },
+    {
+        "Domain":  "latestly.com",
+        "Name":  "Latestly",
+        "File":  "latestly.png"
+    },
+    {
+        "Domain":  "awazthevoice.in",
+        "Name":  "Awaz the Voice",
+        "File":  "awaz-the-voice.png"
+    },
+    {
+        "Domain":  "ommcomnews.com",
+        "Name":  "OmmCom News",
+        "File":  "ommcom-news.png"
+    },
+    {
+        "Domain":  "socialnews.xyz",
+        "Name":  "Social News XYZ",
+        "File":  "social-news-xyz.png"
+    },
+    {
+        "Domain":  "assamtribune.com",
+        "Name":  "The Assam Tribune",
+        "File":  "the-assam-tribune.png"
+    },
+    {
+        "Domain":  "theshillongtimes.com",
+        "Name":  "The Shillong Times",
+        "File":  "the-shillong-times.png"
+    },
+    {
+        "Domain":  "thenewsmill.com",
+        "Name":  "The News Mill",
+        "File":  "the-news-mill.png"
+    },
+    {
+        "Domain":  "dailyexcelsior.com",
+        "Name":  "Daily Excelsior",
+        "File":  "daily-excelsior.png"
+    },
+    {
+        "Domain":  "jammulinksnews.com",
+        "Name":  "Jammu Links News",
+        "File":  "jammu-links-news.png"
+    },
+    {
+        "Domain":  "thebetterandhra.com",
+        "Name":  "The Better Andhra",
+        "File":  "the-better-andhra.png"
+    },
+    {
+        "Domain":  "suryaa.com",
+        "Name":  "Suryaa",
+        "File":  "suryaa.png"
+    },
+    {
+        "Domain":  "thehansindia.com",
+        "Name":  "The Hans India",
+        "File":  "the-hans-india.png"
+    },
+    {
+        "Domain":  "sakshi.com",
+        "Name":  "Sakshi",
+        "File":  "sakshi.png"
+    },
+    {
+        "Domain":  "sakshipost.com",
+        "Name":  "Sakshi Post",
+        "File":  "sakshi-post.png"
+    },
+    {
+        "Domain":  "punjabnewsexpress.com",
+        "Name":  "Punjab News Express",
+        "File":  "punjab-news-express.png"
+    },
+    {
+        "Domain":  "morungexpress.com",
+        "Name":  "Morung Express",
+        "File":  "morung-express.png"
+    },
+    {
+        "Domain":  "www.bignewsnetwork.com",
+        "Name":  "Big News Network",
+        "File":  "big-news-network.png"
+    },
+    {
+        "Domain":  "newkerala.com",
+        "Name":  "New Kerala",
+        "File":  "new-kerala.png"
+    },
+    {
+        "Domain":  "cityairnews.com",
+        "Name":  "City Air News",
+        "File":  "city-air-news.png"
+    },
+    {
+        "Domain":  "desitalkchicago.com",
+        "Name":  "Desi Talk in Chicago",
+        "File":  "desi-talk-in-chicago.png"
+    },
+    {
+        "Domain":  "indiapost.com",
+        "Name":  "India Post",
+        "File":  "india-post.png"
+    },
+    {
+        "Domain":  "indian.community",
+        "Name":  "Indian Community",
+        "File":  "indian-community.png"
+    },
+    {
+        "Domain":  "malaysiasun.com",
+        "Name":  "Malaysia Sun",
+        "File":  "malaysia-sun.png"
+    },
+    {
+        "Domain":  "webindia123.com",
+        "Name":  "Web India",
+        "File":  "web-india.png"
+    },
+    {
+        "Domain":  "chinimandi.com",
+        "Name":  "ChiniMandi",
+        "File":  "chini-mandi.png"
+    },
+    {
+        "Domain":  "newsgram.com",
+        "Name":  "Newsgram",
+        "File":  "newsgram.png"
+    },
+    {
+        "Domain":  "swadesi.com",
+        "Name":  "Swadesi",
+        "File":  "swadesi.png"
+    },
+    {
+        "Domain":  "newsnationnow.com",
+        "Name":  "News Nation",
+        "File":  "news-nation.png"
+    },
+    {
+        "Domain":  "newsmobile.in",
+        "Name":  "News Mobile",
+        "File":  "news-mobile.png"
+    },
+    {
+        "Domain":  "www.naveentimes.com",
+        "Name":  "Naveen Times",
+        "File":  "naveen-times.png"
+    },
+    {
+        "Domain":  "ap7am.com",
+        "Name":  "AP7AM",
+        "File":  "ap7am.png"
+    },
+    {
+        "Domain":  "thehawk.in",
+        "Name":  "The Hawk",
+        "File":  "the-hawk.png"
+    },
+    {
+        "Domain":  "tennews.in",
+        "Name":  "Ten News",
+        "File":  "ten-news.png"
+    },
+    {
+        "Domain":  "yugmarg.com",
+        "Name":  "Yugmarg",
+        "File":  "yugmarg.png"
+    },
+    {
+        "Domain":  "newdelhitimes.com",
+        "Name":  "New Delhi Times",
+        "File":  "new-delhi-times.png"
+    },
+    {
+        "Domain":  "wn.com",
+        "Name":  "WN",
+        "File":  "wn.png"
+    },
+    {
+        "Domain":  "ddnews.gov.in",
+        "Name":  "DD News",
+        "File":  "dd-news.png"
+    },
+    {
+        "Domain":  "ddindia.co.in",
+        "Name":  "DD India",
+        "File":  "dd-india.png"
+    },
+    {
+        "Domain":  "newsonair.gov.in",
+        "Name":  "News On Air",
+        "File":  "news-on-air.png"
+    },
+    {
+        "Domain":  "indiatoday.in",
+        "Name":  "India Today Global",
+        "File":  "india-today-global.png"
+    },
+    {
+        "Domain":  "abplive.com",
+        "Name":  "ABP News",
+        "File":  "abp-news.png"
+    },
+    {
+        "Domain":  "www.youtube.com/@mojostory",
+        "Name":  "The Mojo Story",
+        "File":  "the-mojo-story.jpg"
+    },
+    {
+        "Domain":  "jansatta.com",
+        "Name":  "Jansatta",
+        "File":  "jansatta.png"
+    },
+    {
+        "Domain":  "www.youtube.com/c/CVREnglishOfficial",
+        "Name":  "CVR English Official",
+        "File":  "cvr-english-official.jpg"
+    },
+    {
+        "Domain":  "mea.gov.in",
+        "Name":  "Ministry of External Affairs",
+        "File":  "ministry-of-external-affairs.png"
+    }
+]

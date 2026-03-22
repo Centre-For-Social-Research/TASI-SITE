@@ -54,15 +54,6 @@ export const teamMembers = [
     bio: "Saquib Jamil is Project Coordinator in the Media and Communication Department at the Centre for Social Research (CSR), New Delhi. He specializes in research, digital advocacy, and media engagement to advance CSR's mission of promoting gender equality and social justice. Saquib holds an MA in Development Studies from Dr. B.R. Ambedkar University and a BA (Hons) in Political Science from Jamia Millia Islamia. His experience includes research on socio-economic disparities, urban development, and gender-focused policies, as well as roles in community management and fieldwork on water conservation. Passionate about media, digital rights, and social impact, His expertise spans qualitative and quantitative research, social media marketing, and content creation.",
   },
   {
-    name: "Ketaki Ruchika Singh",
-    designation: "Project Coordinator, Centre for Social Research",
-    photo: "Ketaki Ruchika Singh.png",
-    linkedinUrl: "https://www.linkedin.com/in/ketaki-ruchika-singh-9a8a1b24/",
-    email: "ketaki@csrindia.org",
-    twitterUrl: "",
-    bio: "Ketaki Ruchika Singh is an Online Digital Safety Researcher & Trainer and Project Coordinator in the Media Department at the Centre for Social Research. With experience across cyber trust and safety initiatives, editorial projects, and policy research, she brings a strong interdisciplinary perspective. She holds an M.A. in Psychology from Bangor University, UK, and has previously worked with WHO, Sangath, and INTACH. A former Behavioral Technician, Ketaki has also supported children on the autism spectrum. Outside of work, she trains in Shaolin Kung Fu, practices classical and semi-classical Indian music, and enjoys storytelling, reading, and creative arts.",
-  },
-  {
     name: "Akankshya Acharya",
     designation: "Project Coordinator, Digital Safety and Online Wellbeing, Centre for Social Research",
     photo: "Akankshya.jpeg",

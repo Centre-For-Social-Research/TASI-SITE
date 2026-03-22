@@ -22,20 +22,17 @@ export default function PartnersStrip() {
   }
 
   return (
-    <section className="border-y border-stone-200 bg-stone-50 py-10 md:py-12">
-      <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
-        <p className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
-          Our Network
-        </p>
-        <h2 className="mb-6 text-center text-2xl font-black tracking-tight text-stone-900 md:mb-8 md:text-4xl">
-          Partners from TASI 2025
+    <section className="bg-white py-16 md:py-24" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
+        <h2 className="mb-12 text-center text-3xl font-black uppercase tracking-tight text-[#350265] md:mb-16 md:text-5xl">
+          PARTNERS FROM <span className="text-[#ff6900]">TASI 2025</span>
         </h2>
 
-        <div className="grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-4 lg:grid-cols-6">
+        <div className="grid grid-cols-3 gap-4 sm:gap-6 md:grid-cols-4 lg:grid-cols-6">
           {partners.map((partner, index) => (
             <article
               key={partner.name}
-              className={`forced-color-adjust-none [color-scheme:light] flex min-h-16 items-center justify-center rounded-lg border border-stone-200 !bg-white px-2 py-2 dark:!border-stone-200 dark:!bg-white sm:min-h-20 sm:rounded-xl sm:px-3 sm:py-3 ${getPlacementClasses(index)}`}
+              className={`forced-color-adjust-none [color-scheme:light] flex min-h-[5rem] items-center justify-center rounded-[10px] border-4 border-[#350265] !bg-white px-2 py-3 shadow-[4px_4px_0px_#350265] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_#350265] dark:!bg-white sm:min-h-[6rem] sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
               style={{ backgroundColor: "#ffffff", colorScheme: "light" }}
             >
               <Image
@@ -44,7 +41,7 @@ export default function PartnersStrip() {
                 loading="lazy"
                 width={120}
                 height={48}
-                className="h-9 w-full object-contain sm:h-10"
+                className="h-10 w-full object-contain grayscale transition duration-300 hover:grayscale-0 sm:h-12"
                 quality={80}
               />
             </article>

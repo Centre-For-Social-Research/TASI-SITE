@@ -36,35 +36,40 @@ const formats = [
 
 export default function StructureSection() {
   return (
-    <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-16 md:py-20">
-      <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <MotionReveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Structure</p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-900 md:text-5xl">Convening Format</h2>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-stone-600 md:text-lg">
+    <section className="bg-white py-section-sm md:py-section-lg">
+      <div className="mx-auto max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <MotionReveal className="mb-12 max-w-3xl md:mb-16">
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
+            Structure
+          </p>
+          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl lg:text-[3.2rem]">
+            Convening <span className="text-rc-primary">Format</span>
+          </h2>
+          <p className="mt-5 text-body-lg text-stone-700">
             TASI 2026 is designed as a multi-layered convening that moves from headline policy dialogue into practical,
-            implementation-focused exchange.
+            implementation-focused exchange, carrying delegates from vision into execution.
           </p>
         </MotionReveal>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <MotionStagger className="grid gap-4 rounded-[28px] border border-stone-200 bg-stone-900 p-5 text-white shadow-[0_30px_80px_rgba(15,23,42,0.16)]">
+        <div className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-10">
+          <MotionStagger className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:gap-5">
             {stats.map((stat) => (
               <MotionItem key={stat.label}>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                  <CountUpNumber end={stat.value} suffix={stat.suffix || ""} className="text-4xl font-black text-amber-300" />
-                  <p className="mt-2 text-sm leading-relaxed text-stone-200">{stat.label}</p>
+                <div className="flex h-full flex-col justify-center rounded-3xl bg-[linear-gradient(145deg,#350265_0%,#4a0c7f_100%)] p-6 text-left shadow-xl shadow-[#350265]/20 transition-transform duration-300 hover:-translate-y-1 md:p-8">
+                  <CountUpNumber end={stat.value} suffix={stat.suffix || ""} className="text-5xl font-black text-rc-secondary md:text-6xl" />
+                  <p className="mt-3 text-sm font-bold uppercase tracking-[0.16em] text-white/80">{stat.label}</p>
                 </div>
               </MotionItem>
             ))}
           </MotionStagger>
 
-          <MotionStagger className="grid gap-4 md:grid-cols-2">
+          <MotionStagger className="grid w-full gap-6 md:grid-cols-2">
             {formats.map((item) => (
               <MotionItem key={item.title}>
-                <article className="h-full rounded-[24px] border border-stone-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                  <h3 className="text-lg font-bold text-stone-900">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-stone-600">{item.text}</p>
+                <article className="h-full rounded-3xl border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl md:p-8">
+                  <h3 className="text-2xl font-bold tracking-tight text-stone-900">{item.title}</h3>
+                  <div className="mt-5 h-1 w-14 rounded-full bg-rc-accent"></div>
+                  <p className="mt-5 text-body-md leading-relaxed text-stone-600">{item.text}</p>
                 </article>
               </MotionItem>
             ))}

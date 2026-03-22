@@ -91,7 +91,6 @@ const nextConfig = {
     ];
   },
   compress: true,
-  swcMinify: true,
   productionBrowserSourceMaps: false,
 };
 

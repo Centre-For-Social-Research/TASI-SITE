@@ -43,26 +43,32 @@ export default function Countdown() {
   }, [target]);
 
   return (
-    <div className="w-full max-w-xl rounded-2xl border border-orange-200 bg-white/80 p-5 shadow-sm backdrop-blur md:p-6">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
-        Countdown to TASI 2026
+    <div className="w-full max-w-xl rounded-xl border-4 border-[#350265] bg-[#ffd919] p-6 shadow-[8px_8px_0px_#350265] md:p-8" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <p className="mb-6 text-sm font-bold uppercase tracking-widest text-[#ff6900]">
+        COUNTDOWN TO{" "}
+        <span
+          className="text-[15px] font-normal leading-[21px] text-white"
+          style={{ fontFamily: "Inter, Helvetica, Arial, sans-serif", fontStyle: "normal", fontWeight: 400 }}
+        >
+          TASI 2026
+        </span>
       </p>
-      <div className="grid grid-cols-4 gap-2 text-center md:gap-4">
-        <div>
-          <p className="text-3xl font-black text-stone-900">{time.days}</p>
-          <p className="text-xs uppercase tracking-wide text-stone-500">Days</p>
+      <div className="grid grid-cols-4 gap-4 text-center">
+        <div className="flex flex-col items-center">
+          <p className="text-4xl font-black text-[#350265] md:text-5xl">{time.days}</p>
+          <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#350265]/80">Days</p>
         </div>
-        <div>
-          <p className="text-3xl font-black text-stone-900">{time.hours}</p>
-          <p className="text-xs uppercase tracking-wide text-stone-500">Hours</p>
+        <div className="flex flex-col items-center">
+          <p className="text-4xl font-black text-[#350265] md:text-5xl">{time.hours}</p>
+          <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#350265]/80">Hours</p>
         </div>
-        <div>
-          <p className="text-3xl font-black text-stone-900">{time.minutes}</p>
-          <p className="text-xs uppercase tracking-wide text-stone-500">Mins</p>
+        <div className="flex flex-col items-center">
+          <p className="text-4xl font-black text-[#350265] md:text-5xl">{time.minutes}</p>
+          <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#350265]/80">Mins</p>
         </div>
-        <div>
-          <p className="text-3xl font-black text-stone-900">{time.seconds}</p>
-          <p className="text-xs uppercase tracking-wide text-stone-500">Secs</p>
+        <div className="flex flex-col items-center">
+          <p className="text-4xl font-black text-[#ff6900] md:text-5xl">{time.seconds}</p>
+          <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#ff6900]/80">Secs</p>
         </div>
       </div>
     </div>

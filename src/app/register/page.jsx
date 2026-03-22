@@ -1,6 +1,6 @@
 import HomeNavbar from "@/components/home/navbar";
 import HomeFooter from "@/components/home/footer";
-import DarkHeroParticles from "@/components/ui/dark-hero-particles";
+import BrandedPageHero from "@/components/ui/branded-page-hero";
 import ConfirmationEmailFlow from "@/components/register/confirmation-email-flow";
 
 const steps = [
@@ -51,15 +51,14 @@ export default function RegisterPage() {
     <>
       <HomeNavbar />
       <main className="bg-white pb-20 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-        <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 to-white py-14 dark:bg-[radial-gradient(circle_at_20%_0%,#1f2937_0%,#0b1220_45%,#05070e_100%)] md:py-20">
-          <DarkHeroParticles />
+        <BrandedPageHero className="py-14 md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 dark:text-slate-300">Join TASI 2026</p>
-            <h1 className="text-4xl font-black tracking-tight text-stone-900 dark:text-slate-100 md:text-6xl">
-              Secure Your<span className="block text-orange-700">Delegate Place</span>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Join TASI 2026</p>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+              Secure Your<span className="block text-rc-secondary">Delegate Place</span>
             </h1>
           </div>
-        </section>
+        </BrandedPageHero>
 
         <section className="mx-auto mt-12 max-w-6xl px-6 sm:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">

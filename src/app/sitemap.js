@@ -7,6 +7,8 @@ const routes = [
   "/sponsor",
   "/contact",
   "/past-editions",
+  "/tasi-2025",
+  "/tasi-2026",
   "/privacy-policy",
   "/terms-of-service",
   "/cookie-settings",

@@ -3,19 +3,37 @@ import { MotionReveal } from "./motion-reveal";
 
 export default function GlobalCta() {
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(135deg,#111827_0%,#1f2937_50%,#0f172a_100%)] py-16 text-white md:py-20">
-      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(circle_at_top,_rgba(251,191,36,0.24),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(56,189,248,0.16),_transparent_24%)]" />
-      <MotionReveal className="relative mx-auto max-w-4xl px-4 text-center md:px-6">
-        <h2 className="text-3xl font-black tracking-tight md:text-5xl">Be Part of the Conversation</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-stone-300 md:text-lg">
+    <section className="w-full bg-white dark:bg-gray-900 py-section-sm md:py-section-md px-4 border-t border-gray-100 dark:border-gray-800">
+      <MotionReveal className="mx-auto flex flex-col items-center justify-center max-w-[90rem]">
+        <h2 className="text-4xl font-semibold md:text-5xl lg:text-[4rem] tracking-tight bg-gradient-to-r from-[#350265] to-[#ffd919] bg-clip-text text-transparent pb-2 text-center">
+          Be Part of the Conversation
+        </h2>
+        <p className="mx-auto mt-4 max-w-3xl text-lg md:text-[22px] text-gray-800 dark:text-gray-200 font-normal leading-relaxed text-center">
           Join 1,000+ delegates shaping the future of digital trust, safety and AI governance in India and beyond.
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/register" className="rounded-md bg-amber-100 px-5 py-3 font-semibold text-stone-950 transition hover:bg-amber-200">
-            Register for TASI 2026
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row w-full sm:w-auto">
+          {/* Primary Button - Accent Orange */}
+          <Link 
+            href="/register" 
+            className="flex w-full sm:min-w-[220px] sm:w-auto items-center justify-center rounded-3xl bg-gradient-to-r from-[#55089e] via-[#9f0099] to-[#ff0080] px-8 py-2.5 text-[16px] font-bold leading-6 text-white transition-transform hover:scale-[1.02] hover:opacity-90"
+          >
+            Pre-register
           </Link>
-          <Link href="/sponsor" className="rounded-md border border-white/40 px-5 py-3 font-semibold text-white transition hover:border-amber-300 hover:text-amber-200">
-            Sponsorship Opportunities
+          
+          {/* Secondary Button - Primary Purple */}
+          <Link 
+            href="/about" 
+            className="flex w-full sm:min-w-[220px] sm:w-auto items-center justify-center rounded-3xl border border-rc-primary bg-rc-primary px-8 py-2.5 text-[16px] font-bold leading-6 text-rc-primary-foreground transition-transform hover:scale-[1.02] hover:opacity-90"
+          >
+            Join our network
+          </Link>
+
+          {/* Tertiary Button - Accent Alternative */}
+          <Link 
+            href="/sponsor" 
+            className="flex w-full sm:min-w-[220px] sm:w-auto items-center justify-center rounded-3xl bg-rc-primary px-8 py-2.5 text-[16px] font-bold leading-6 text-rc-primary-foreground transition-transform hover:scale-[1.02] hover:opacity-90"
+          >
+            Partner with us
           </Link>
         </div>
       </MotionReveal>
