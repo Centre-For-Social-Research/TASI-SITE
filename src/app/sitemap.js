@@ -9,6 +9,7 @@ const routes = [
   "/past-editions",
   "/tasi-2025",
   "/tasi-2026",
+  "/volunteer-application",
   "/privacy-policy",
   "/terms-of-service",
   "/cookie-settings",
