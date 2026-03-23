@@ -55,7 +55,7 @@ export default function FestivalHighlightsSection() {
               </div>
 
               <Link 
-                href="/about" 
+                href="/blog#tasi-2026-dates-announced" 
                 className="inline-block mt-10 text-[15px] font-bold text-rc-secondary underline decoration-[1.5px] underline-offset-4 hover:text-white transition-colors"
               >
                 Read our announcement &rarr;
@@ -67,7 +67,7 @@ export default function FestivalHighlightsSection() {
           <div className="flex-1 w-full relative">
             <MotionReveal delay={0.2} className="w-full">
               
-              <div className="w-full bg-[#1b0d36] rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+              <div className="w-full overflow-hidden rounded-[10px] border border-white/5 bg-[#1b0d36] shadow-2xl">
                 {/* Video container */}
                 <div className="relative w-full aspect-video bg-black">
                   <iframe

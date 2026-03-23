@@ -33,7 +33,7 @@ export default function AboutQuotes() {
           {quotes.map((quote) => (
             <blockquote
               key={quote.author}
-              className="flex h-full flex-col justify-between rounded-3xl border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 text-stone-700 shadow-lg shadow-stone-200/40 md:p-8"
+              className="flex h-full flex-col justify-between rounded-[10px] border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 text-stone-700 shadow-lg shadow-stone-200/40 md:p-8"
             >
               <div className="mb-6 flex items-center gap-4">
                 <div className="relative h-16 w-16 overflow-hidden rounded-full border border-stone-200 bg-white">

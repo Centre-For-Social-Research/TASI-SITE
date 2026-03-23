@@ -26,13 +26,13 @@ export default function Tasi2026EditionPage() {
               programme, and the leaders you&apos;ll meet across policy, industry, civil society, and global institutions.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
+              <span className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
                 13-14 October 2026
               </span>
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
+              <span className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
                 New Delhi
               </span>
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
+              <span className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
                 In person and online
               </span>
             </div>

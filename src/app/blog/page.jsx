@@ -5,55 +5,11 @@ import Link from "next/link";
 import { ArrowRight, Calendar, User } from "lucide-react";
 import HomeNavbar from "@/components/home/navbar";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
-
-const blogPosts = [
-  {
-    id: 1,
-    title: "Call for Proposals Now Open",
-    excerpt: "Submit your proposals for sessions, panels, and workshops for TASI 2026. Join us in shaping the agenda for India's foremost trust and safety convening.",
-    date: "Feb 15, 2026",
-    author: "TASI Team",
-    category: "ANNOUNCEMENT",
-    content: "Submit your proposals for sessions, panels, and workshops for TASI 2026. Join us in shaping the agenda for India's foremost trust and safety convening. We are looking for thought leaders, researchers, and practitioners to contribute to our diverse programming.",
-    image: "/img/home-gallery/tasi-2026-brochure-3.png",
-  },
-  {
-    id: 2,
-    title: "Early Bird Registration",
-    excerpt: "Secure your spot at TASI 2026 with our early bird rates. Don't miss out on the opportunity to connect with industry leaders.",
-    date: "Mar 01, 2026",
-    author: "TASI Team",
-    category: "REGISTRATION",
-    content: "Secure your spot at TASI 2026 with our early bird rates. Don't miss out on the opportunity to connect with industry leaders, policymakers, and civil society experts. Early bird registration closes on March 31st, 2026.",
-    image: "/img/home-gallery/7T7A0181.webp",
-  },
-  {
-    id: 3,
-    title: "First Keynote Speakers Announced",
-    excerpt: "We are thrilled to announce our first lineup of keynote speakers featuring global experts in digital safety and policy.",
-    date: "Mar 15, 2026",
-    author: "TASI Team",
-    category: "KEYNOTE",
-    content: "We are thrilled to announce our first lineup of keynote speakers featuring global experts in digital safety and policy. These leaders will share their insights on emerging challenges and solutions in the digital safety landscape.",
-    image: "/img/home-gallery/7T7A0646.webp",
-  },
-  {
-    id: 4,
-    title: "TASI Community Mixer",
-    excerpt: "Join our pre-conference virtual networking event to meet fellow attendees and discuss pressing trust and safety issues.",
-    date: "Apr 05, 2026",
-    author: "TASI Team",
-    category: "COMMUNITY",
-    content: "Join our pre-conference virtual networking event to meet fellow attendees and discuss pressing trust and safety issues. This is a great opportunity to build connections and explore collaboration opportunities.",
-    image: "/img/home-gallery/tasi-community-mixer.webp",
-  },
-];
+import { blogCategories, blogPosts } from "@/data/blog-posts";
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const categories = ["ANNOUNCEMENT", "REGISTRATION", "KEYNOTE", "COMMUNITY"];
-  
   const filteredPosts = selectedCategory 
     ? blogPosts.filter(post => post.category === selectedCategory)
     : blogPosts;
@@ -90,7 +46,7 @@ export default function BlogPage() {
               >
                 All Posts
               </button>
-              {categories.map((category) => (
+              {blogCategories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
@@ -114,6 +70,7 @@ export default function BlogPage() {
               {filteredPosts.map((post) => (
                 <article
                   key={post.id}
+                  id={post.slug}
                   className="flex flex-col md:flex-row gap-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   {/* Image */}
@@ -152,10 +109,12 @@ export default function BlogPage() {
                         {post.author}
                       </div>
                       <a
-                        href={`/blog/${post.id}`}
+                        href={post.sourceUrl || `#${post.slug}`}
+                        target={post.sourceUrl ? "_blank" : undefined}
+                        rel={post.sourceUrl ? "noreferrer" : undefined}
                         className="ml-auto inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold transition-colors"
                       >
-                        Read More
+                        {post.sourceUrl ? "Read Article" : "Jump to Post"}
                         <ArrowRight className="w-4 h-4" />
                       </a>
                     </div>

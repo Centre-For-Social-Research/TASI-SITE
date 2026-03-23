@@ -55,7 +55,7 @@ export default function StructureSection() {
           <MotionStagger className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:gap-5">
             {stats.map((stat) => (
               <MotionItem key={stat.label}>
-                <div className="flex h-full flex-col justify-center rounded-3xl bg-[linear-gradient(145deg,#350265_0%,#4a0c7f_100%)] p-6 text-left shadow-xl shadow-[#350265]/20 transition-transform duration-300 hover:-translate-y-1 md:p-8">
+                <div className="flex h-full flex-col justify-center rounded-[10px] bg-[linear-gradient(145deg,#350265_0%,#4a0c7f_100%)] p-6 text-left shadow-xl shadow-[#350265]/20 transition-transform duration-300 hover:-translate-y-1 md:p-8">
                   <CountUpNumber end={stat.value} suffix={stat.suffix || ""} className="text-5xl font-black text-rc-secondary md:text-6xl" />
                   <p className="mt-3 text-sm font-bold uppercase tracking-[0.16em] text-white/80">{stat.label}</p>
                 </div>
@@ -66,7 +66,7 @@ export default function StructureSection() {
           <MotionStagger className="grid w-full gap-6 md:grid-cols-2">
             {formats.map((item) => (
               <MotionItem key={item.title}>
-                <article className="h-full rounded-3xl border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl md:p-8">
+                <article className="h-full rounded-[10px] border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl md:p-8">
                   <h3 className="text-2xl font-bold tracking-tight text-stone-900">{item.title}</h3>
                   <div className="mt-5 h-1 w-14 rounded-full bg-rc-accent"></div>
                   <p className="mt-5 text-body-md leading-relaxed text-stone-600">{item.text}</p>

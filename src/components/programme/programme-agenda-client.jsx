@@ -1,5 +1,6 @@
 'use client';
 
+import { CalendarPlus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 const FORMAT_LABELS = {
@@ -15,6 +16,13 @@ const FORMAT_LABELS = {
 
 const DAY_ORDER = { oct6: 0, oct7: 1, oct8: 2 };
 const SESSIONS_PER_PAGE = 8;
+const DAY_DATE_MAP = {
+  oct6: '20251006',
+  oct7: '20251007',
+  oct8: '20251008',
+};
+const EVENT_TIMEZONE = 'Asia/Kolkata';
+const EVENT_LOCATION = 'New Delhi, India';
 
 function normalizePersonName(value) {
   return value
@@ -53,6 +61,107 @@ function timeSortValue(time) {
   const m = Number(parts[1]);
   if (Number.isNaN(h) || Number.isNaN(m)) return 0;
   return h * 60 + m;
+}
+
+function parseTimeParts(time) {
+  const normalized = String(time || '').replace(/â€“/g, '-').trim();
+  const firstPart = normalized.split('-')[0].trim();
+  const match = firstPart.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return null;
+
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
+
+  return { hours, minutes };
+}
+
+function addMinutes(timeParts, minutesToAdd) {
+  const totalMinutes = timeParts.hours * 60 + timeParts.minutes + minutesToAdd;
+  return {
+    hours: Math.floor(totalMinutes / 60),
+    minutes: totalMinutes % 60,
+  };
+}
+
+function formatCalendarDateTime(day, timeParts) {
+  const date = DAY_DATE_MAP[day];
+  if (!date || !timeParts) return '';
+
+  return `${date}T${String(timeParts.hours).padStart(2, '0')}${String(timeParts.minutes).padStart(2, '0')}00`;
+}
+
+function fallbackDurationMinutes(session) {
+  const title = String(session.title || '').toLowerCase();
+  if (title.includes('lunch')) return 60;
+  if (title.includes('coffee')) return 30;
+  if (session.format === 'opening' || session.format === 'spotlight' || session.format === 'keynote') return 30;
+  if (session.format === 'fireside') return 45;
+  return 60;
+}
+
+function slugifyFileName(value) {
+  const slug = String(value || 'session')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return slug || 'session';
+}
+
+function buildCalendarMetadata(session, allSessions, labels) {
+  const startParts = parseTimeParts(session.time);
+  if (!startParts || !DAY_DATE_MAP[session.day]) return null;
+
+  const nextSession = allSessions
+    .filter(
+      (item) =>
+        item.id !== session.id &&
+        item.day === session.day &&
+        (item.venue || item.track) === (session.venue || session.track) &&
+        timeSortValue(item.time) > timeSortValue(session.time),
+    )
+    .sort((a, b) => timeSortValue(a.time) - timeSortValue(b.time))[0];
+
+  const nextStartParts = nextSession ? parseTimeParts(nextSession.time) : null;
+  const endParts = nextStartParts || addMinutes(startParts, fallbackDurationMinutes(session));
+  const startDateTime = formatCalendarDateTime(session.day, startParts);
+  const endDateTime = formatCalendarDateTime(session.day, endParts);
+  const speakersLine = session.speakersDetailed?.length
+    ? `Speakers: ${session.speakersDetailed.map((speaker) => speaker.name).join(', ')}`
+    : '';
+  const description = [session.topic, speakersLine, `Day: ${labels[session.day] || session.day}`]
+    .filter(Boolean)
+    .join('\\n\\n');
+  const location = `${session.venue || session.track}, ${EVENT_LOCATION}`;
+
+  const icsLines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//TASI//Programme//EN',
+    'CALSCALE:GREGORIAN',
+    `X-WR-TIMEZONE:${EVENT_TIMEZONE}`,
+    'BEGIN:VEVENT',
+    `UID:${session.id}@tasi-2025`,
+    `SUMMARY:${String(session.title || '').replace(/\n/g, ' ')}`,
+    `DTSTART;TZID=${EVENT_TIMEZONE}:${startDateTime}`,
+    `DTEND;TZID=${EVENT_TIMEZONE}:${endDateTime}`,
+    `LOCATION:${location.replace(/\n/g, ' ')}`,
+    `DESCRIPTION:${description}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ];
+
+  return {
+    downloadName: `${slugifyFileName(session.title)}.ics`,
+    href: `data:text/calendar;charset=utf-8,${encodeURIComponent(icsLines.join('\r\n'))}`,
+    googleHref:
+      `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+      `&text=${encodeURIComponent(session.title || '')}` +
+      `&dates=${encodeURIComponent(`${startDateTime}/${endDateTime}`)}` +
+      `&details=${encodeURIComponent(description.replace(/\\n\\n/g, '\n\n'))}` +
+      `&location=${encodeURIComponent(location)}`,
+  };
 }
 
 export default function ProgrammeAgendaClient({
@@ -121,11 +230,20 @@ export default function ProgrammeAgendaClient({
       .sort((a, b) => (DAY_ORDER[a.day] || 0) - (DAY_ORDER[b.day] || 0) || timeSortValue(a.time) - timeSortValue(b.time));
   }, [activeDay, format, normalizedSessions, query, venue]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredSessions.length / SESSIONS_PER_PAGE));
+  const sessionsWithCalendar = useMemo(
+    () =>
+      filteredSessions.map((session) => ({
+        ...session,
+        calendar: buildCalendarMetadata(session, normalizedSessions, labels),
+      })),
+    [filteredSessions, labels, normalizedSessions],
+  );
+
+  const totalPages = Math.max(1, Math.ceil(sessionsWithCalendar.length / SESSIONS_PER_PAGE));
   const paginatedSessions = useMemo(() => {
     const startIndex = (currentPage - 1) * SESSIONS_PER_PAGE;
-    return filteredSessions.slice(startIndex, startIndex + SESSIONS_PER_PAGE);
-  }, [currentPage, filteredSessions]);
+    return sessionsWithCalendar.slice(startIndex, startIndex + SESSIONS_PER_PAGE);
+  }, [currentPage, sessionsWithCalendar]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -206,7 +324,7 @@ export default function ProgrammeAgendaClient({
         .search-wrap svg { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--taupe); pointer-events: none; }
         .search-input {
           width: 100%; padding: 0.58rem 0.9rem 0.58rem 2.4rem;
-          border: 1px solid var(--border); border-radius: 999px;
+          border: 1px solid var(--border); border-radius: 10px;
           font-family: inherit; font-size: 0.85rem; color: var(--brown);
           background: var(--peach); outline: none; transition: border-color 0.2s;
         }
@@ -215,7 +333,7 @@ export default function ProgrammeAgendaClient({
 
         .filter-select {
           padding: 0.58rem 2rem 0.58rem 0.85rem;
-          border: 1px solid var(--border); border-radius: 999px;
+          border: 1px solid var(--border); border-radius: 10px;
           font-family: inherit; font-size: 0.82rem; color: var(--brown);
           background: var(--peach); outline: none; cursor: pointer; appearance: none;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a6248' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -269,7 +387,7 @@ export default function ProgrammeAgendaClient({
         .reception-card {
           border: 1px solid var(--border);
           background: var(--white);
-          border-radius: 0.8rem;
+          border-radius: 10px;
           padding: 0.9rem 0.95rem;
         }
         .reception-day {
@@ -283,6 +401,14 @@ export default function ProgrammeAgendaClient({
           font-weight: 600;
           color: var(--coral);
           margin-bottom: 0.35rem;
+        }
+        .reception-access {
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--brown);
+          margin-bottom: 0.45rem;
         }
         .reception-copy {
           font-size: 0.78rem;
@@ -326,7 +452,7 @@ export default function ProgrammeAgendaClient({
           align-items: center;
           justify-content: center;
           padding: 0.35rem 0.72rem;
-          border-radius: 999px;
+          border-radius: 10px;
           background: #0f8b8d;
           color: #fff;
           font-size: 0.72rem;
@@ -360,7 +486,7 @@ export default function ProgrammeAgendaClient({
           text-transform: uppercase;
           padding: 0.34rem 0.62rem;
           font-weight: 700;
-          border-radius: 999px;
+          border-radius: 10px;
           border: 1px solid transparent;
         }
         .badge-panel { background: var(--coral-pale); color: var(--coral-deep); border-color: rgba(194, 65, 12, 0.15); }
@@ -394,6 +520,39 @@ export default function ProgrammeAgendaClient({
           font-weight: 500;
           color: #111827;
           margin-bottom: 0.9rem;
+        }
+
+        .session-actions {
+          display: flex;
+          gap: 0.65rem;
+          flex-wrap: wrap;
+          margin-bottom: 1rem;
+        }
+
+        .calendar-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          border-radius: 999px;
+          border: 1px solid rgba(194, 65, 12, 0.18);
+          background: var(--coral-pale);
+          color: var(--coral-deep);
+          padding: 0.55rem 0.9rem;
+          font-size: 0.78rem;
+          font-weight: 700;
+          line-height: 1;
+          text-decoration: none;
+          transition: transform 0.15s, border-color 0.2s, background 0.2s;
+        }
+
+        .calendar-btn:hover {
+          border-color: var(--coral);
+          transform: translateY(-1px);
+        }
+
+        .calendar-btn svg {
+          width: 0.9rem;
+          height: 0.9rem;
         }
 
         .speakers-section {
@@ -517,6 +676,7 @@ export default function ProgrammeAgendaClient({
                 <article key={item.day} className="reception-card">
                   <p className="reception-day">{item.day}</p>
                   <p className="reception-venue">{item.venue}</p>
+                  <p className="reception-access">{item.access}</p>
                   <p className="reception-copy">{item.description}</p>
                 </article>
               ))}
@@ -559,7 +719,7 @@ export default function ProgrammeAgendaClient({
             ))}
           </select>
 
-          <span className="results-info">{filteredSessions.length} session{filteredSessions.length !== 1 ? 's' : ''}</span>
+          <span className="results-info">{sessionsWithCalendar.length} session{sessionsWithCalendar.length !== 1 ? 's' : ''}</span>
         </div>
       </div>
 
@@ -594,7 +754,7 @@ export default function ProgrammeAgendaClient({
 
       <div className="sessions-wrap">
         <div className="shell">
-          {filteredSessions.length === 0 ? (
+          {sessionsWithCalendar.length === 0 ? (
             <div className="no-results">No sessions match your filters.</div>
           ) : (
             <>
@@ -626,6 +786,24 @@ export default function ProgrammeAgendaClient({
                       {session.topic && <div className="session-topic">{session.topic}</div>}
 
                       <div className="session-venue-line">{session.venue || session.track}</div>
+
+                      {session.calendar && (
+                        <div className="session-actions">
+                          <a className="calendar-btn" href={session.calendar.href} download={session.calendar.downloadName}>
+                            <CalendarPlus />
+                            <span>Add to Calendar</span>
+                          </a>
+                          <a
+                            className="calendar-btn"
+                            href={session.calendar.googleHref}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <CalendarPlus />
+                            <span>Google Calendar</span>
+                          </a>
+                        </div>
+                      )}
 
                       {session.speakersDetailed && session.speakersDetailed.length > 0 && (
                         <div className="speakers-section">

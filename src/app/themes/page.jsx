@@ -1,105 +1,73 @@
 import Link from "next/link";
+import {
+  Accessibility,
+  Baby,
+  BadgeAlert,
+  Bot,
+  BriefcaseBusiness,
+  Coins,
+  FileSearch,
+  Globe2,
+  HeartHandshake,
+  Plane,
+  Scale,
+  Shield,
+  ShieldAlert,
+  Users,
+} from "lucide-react";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
+import { themes2026 } from "@/data/themes-2026";
 
-const themeCards = [
-  {
-    num: "01",
-    title: "AI Governance and Regulatory Frameworks",
-    desc: "Building ethical, accountable, and inclusive AI frameworks rooted in transparency, multi-stakeholder input, and global cooperation.",
-    tag: "AI Policy",
-    color: "bg-orange-700",
-  },
-  {
-    num: "02",
-    title: "Safety by Design and Platform Accountability",
-    desc: "Embedding safety and accountability into technologies from the outset so platforms can prevent harm rather than only react to it.",
-    tag: "Platform Governance",
-    color: "bg-lime-700",
-  },
-  {
-    num: "03",
-    title: "Online Gender Based Violence and Digital Safety",
-    desc: "Addressing TFGBV, image-based abuse, and digital coercive harm with survivor-centered policy and product approaches.",
-    tag: "TFGBV",
-    color: "bg-fuchsia-700",
-  },
-  {
-    num: "04",
-    title: "Fraud, Scams and Financial Exploitation",
-    desc: "Combating digital fraud through cross-industry intelligence sharing, rapid response, and consumer-first protections.",
-    tag: "Consumer Safety",
-    color: "bg-red-700",
-  },
-  {
-    num: "05",
-    title: "Mental Health and Digital Wellbeing",
-    desc: "Recognising moderation workforce stress and designing digital spaces that support healthy participation.",
-    tag: "Wellbeing",
-    color: "bg-cyan-700",
-  },
-  {
-    num: "06",
-    title: "AI for Inclusive Development",
-    desc: "Contextualising AI for equitable access while reducing bias and exclusion across large-scale public systems.",
-    tag: "Inclusion",
-    color: "bg-amber-700",
-  },
-  {
-    num: "07",
-    title: "Global South Leadership in AI Governance",
-    desc: "Positioning India and peer countries as rule-makers shaping global AI governance principles and models.",
-    tag: "Global Policy",
-    color: "bg-emerald-700",
-  },
-  {
-    num: "08",
-    title: "Cross Border Digital Harms and Cooperation",
-    desc: "Tackling harms that cross borders with stronger legal coordination, data exchange, and operational partnerships.",
-    tag: "International",
-    color: "bg-pink-700",
-  },
-  {
-    num: "09",
-    title: "Transparency, Risk Assessment and Compliance",
-    desc: "Moving beyond checkbox compliance through audit regimes, risk assessment, and meaningful platform transparency.",
-    tag: "Compliance",
-    color: "bg-indigo-700",
-  },
-];
+const iconMap = {
+  accessibility: Accessibility,
+  baby: Baby,
+  badgeAlert: BadgeAlert,
+  bot: Bot,
+  briefcase: BriefcaseBusiness,
+  coins: Coins,
+  fileSearch: FileSearch,
+  globe: Globe2,
+  heartHandshake: HeartHandshake,
+  plane: Plane,
+  scale: Scale,
+  shield: Shield,
+  shieldAlert: ShieldAlert,
+  users: Users,
+};
 
 export default function ThemesPage() {
   return (
     <>
       <HomeNavbar />
       <main>
-        <BrandedPageHero>
-          <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-8 px-4 md:grid-cols-2 md:px-6">
-            <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Strategic Focus</p>
-              <h1 className="mb-4 text-5xl font-black tracking-tight md:text-7xl">
-                TASI 2026
-                <span className="block text-rc-secondary">Themes</span>
-              </h1>
-              <p className="text-white/90">
-                TASI 2026 convenes leaders across government, industry, civil society, and academia to examine urgent questions shaping AI governance and digital trust.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
-                <p className="text-4xl font-black">9</p>
+        <BrandedPageHero className="min-h-[320px] py-14 md:min-h-[380px] md:py-20">
+          <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Strategic Focus</p>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+              TASI 2026
+              <span className="block text-rc-secondary">Themes</span>
+            </h1>
+            <p className="mx-auto mt-4 max-w-3xl text-white/90">
+              TASI 2026 convenes leaders across government, industry, civil society, and academia to examine urgent
+              questions shaping AI governance, digital trust, platform accountability, and safety outcomes.
+            </p>
+
+            <div className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 md:grid-cols-4">
+              <article className="rounded-[10px] border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
+                <p className="text-4xl font-black">14</p>
                 <p className="text-xs uppercase tracking-[0.12em] text-white/70">Key Themes</p>
               </article>
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
+              <article className="rounded-[10px] border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">50+</p>
                 <p className="text-xs uppercase tracking-[0.12em] text-white/70">Sessions</p>
               </article>
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
+              <article className="rounded-[10px] border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">2</p>
                 <p className="text-xs uppercase tracking-[0.12em] text-white/70">Days</p>
               </article>
-              <article className="rounded-xl border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
+              <article className="rounded-[10px] border border-white/20 bg-white/10 p-4 text-center backdrop-blur-sm">
                 <p className="text-4xl font-black">500+</p>
                 <p className="text-xs uppercase tracking-[0.12em] text-white/70">Participants</p>
               </article>
@@ -112,21 +80,33 @@ export default function ThemesPage() {
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">All Themes</p>
             <h2 className="mb-3 text-3xl font-black tracking-tight text-stone-900 md:text-5xl">What We&apos;ll Examine</h2>
             <p className="mb-8 max-w-3xl text-stone-700">
-              Nine interconnected themes spanning policy, technology, and human impact, designed to move the conversation from dialogue to implementation.
+              Fourteen interconnected themes spanning governance, platform accountability, digital wellbeing, and human safety, designed to move the conversation from dialogue to implementation.
             </p>
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {themeCards.map((item) => (
-                <article key={item.num} className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className={`h-10 w-10 rounded-lg ${item.color}`} />
-                    <span className="text-4xl font-black text-stone-200">{item.num}</span>
-                  </div>
-                  <h3 className="mb-2 text-lg font-bold text-stone-900">{item.title}</h3>
-                  <p className="mb-4 text-sm text-stone-700">{item.desc}</p>
-                  <span className="rounded-full border border-orange-300 bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-800">{item.tag}</span>
-                </article>
-              ))}
+              {themes2026.map((item) => {
+                const Icon = iconMap[item.iconKey];
+
+                return (
+                  <article
+                    key={item.num}
+                    className="group relative overflow-hidden rounded-[10px] border border-stone-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <div className={`pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-br ${item.accent}`} />
+                    <div className="pointer-events-none absolute right-4 top-4 rounded-[10px] border border-stone-200/70 bg-white/90 p-3 shadow-sm backdrop-blur-sm">
+                      <Icon className="h-6 w-6 text-stone-500 transition duration-300 group-hover:scale-110 group-hover:text-stone-800" />
+                    </div>
+                    <div className="relative mb-5 flex items-center justify-between pr-16">
+                      <span className="text-4xl font-black text-stone-200">{item.num}</span>
+                    </div>
+                    <h3 className="relative mb-2 pr-16 text-lg font-bold text-stone-900">{item.title}</h3>
+                    <p className="relative mb-4 text-sm leading-6 text-stone-700">{item.desc}</p>
+                    <span className={`relative inline-flex rounded-full px-3 py-1 text-xs font-semibold ${item.chip}`}>
+                      {item.tag}
+                    </span>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>

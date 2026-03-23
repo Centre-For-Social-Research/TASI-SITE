@@ -22,9 +22,9 @@ const navItems = [
     label: "More",
     href: "/media",
     children: [
+      { label: "Get Involved", href: "/get-involved" },
       { label: "Media", href: "/media" },
-      { label: "Apply as a Volunteer", href: "/volunteer-application" },
-      { label: "Apply to Speak", href: "/speaker-application" },
+      { label: "News and Blogs", href: "/blog" },
     ],
   },
   { label: "Contact", href: "/contact" },

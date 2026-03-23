@@ -62,7 +62,7 @@ export default function AboutPage() {
               {pillars.map((pillar) => (
                 <article
                   key={pillar.title}
-                  className="rounded-2xl border border-white/10 bg-[#1b0d36] p-6 shadow-2xl"
+                  className="rounded-[10px] border border-white/10 bg-[#1b0d36] p-6 shadow-2xl"
                 >
                   <p className="mb-3 text-[11px] font-black uppercase tracking-[0.18em] text-white/55">
                     Core Focus
@@ -89,21 +89,21 @@ export default function AboutPage() {
 
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="grid gap-6 md:grid-cols-2">
-                <article className="rounded-3xl border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
+                <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent">01</p>
                   <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">Massive Digital Scale</h3>
                   <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
                     From multilingual communication to high-volume platform participation, India experiences trust and safety challenges at a scale that can inform global thinking.
                   </p>
                 </article>
-                <article className="rounded-3xl border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
+                <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent">02</p>
                   <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">Connected Harms</h3>
                   <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
                     Online abuse, misinformation, child safety risks, and AI-enabled harms are deeply connected to offline inequalities and deserve locally grounded responses.
                   </p>
                 </article>
-                <article className="rounded-3xl border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50 md:col-span-2">
+                <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50 md:col-span-2">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent">03</p>
                   <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">Global Influence</h3>
                   <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
@@ -112,7 +112,7 @@ export default function AboutPage() {
                 </article>
               </div>
 
-              <div className="rounded-[2rem] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10">
+              <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary">India&apos;s Role</p>
                 <h3 className="mt-4 text-3xl font-extrabold tracking-tight md:text-4xl">
                   A proving ground for trust, safety, and AI governance
@@ -131,7 +131,7 @@ export default function AboutPage() {
         <section className="relative overflow-hidden py-section-md text-white md:py-section-lg">
           <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(35,0,52,0.97)_6%,rgba(92,15,79,0.9)_34%,rgba(126,8,58,0.68)_52%,rgba(0,0,0,0.3)_100%)]" />
           <div className="relative mx-auto grid w-full max-w-[1300px] gap-6 px-4 md:px-6 lg:grid-cols-2">
-            <article className="rounded-3xl border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
+            <article className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
               <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary">Convening Partner</p>
               <h2 className="text-3xl font-black tracking-tight text-white">Trust and Safety Festival</h2>
               <p className="mt-5 text-base leading-relaxed text-white/85">
@@ -142,7 +142,7 @@ export default function AboutPage() {
               </p>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
+            <article className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
               <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary">Convening Partner</p>
               <h2 className="text-3xl font-black tracking-tight text-white">Centre for Social Research</h2>
               <p className="mt-5 text-base leading-relaxed text-white/85">

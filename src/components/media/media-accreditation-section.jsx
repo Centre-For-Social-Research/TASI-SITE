@@ -19,7 +19,10 @@ export default function MediaAccreditationSection() {
   }, [email]);
 
   return (
-    <section className="bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_52%,#141c56_100%)] text-white">
+    <section
+      id="media-accreditation"
+      className="bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_52%,#141c56_100%)] text-white"
+    >
       <div className="mx-auto grid w-full max-w-7xl overflow-hidden lg:grid-cols-[1.04fr_1.06fr]">
         <div className="flex flex-col justify-center px-6 py-8 md:px-10 md:py-10 lg:px-12">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-white/65">
@@ -61,7 +64,7 @@ export default function MediaAccreditationSection() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="user@example.com"
-              className="h-11 rounded-xl border-0 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-500 focus-visible:ring-2 focus-visible:ring-white"
+              className="h-11 rounded-[10px] border-0 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-500 focus-visible:ring-2 focus-visible:ring-white"
             />
           </div>
 

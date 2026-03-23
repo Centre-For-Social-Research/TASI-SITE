@@ -44,8 +44,10 @@ export default function ContactPage() {
         </BrandedPageHero>
 
         <section className="mx-auto mt-14 max-w-6xl px-6 sm:px-8">
-          <div className="rounded-[2rem] border border-stone-200/80 bg-white/80 px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/90 sm:px-10 sm:py-12">
-            <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">General Enquiries</p>
+          <div className="rounded-[10px] border border-stone-200/80 bg-white/80 px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/90 sm:px-10 sm:py-12">
+            <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">
+              General Enquiries
+            </p>
             <h2 className="mt-4 text-center text-3xl font-black tracking-tight text-stone-900 dark:text-white sm:text-4xl">
               To Discuss Participation Opportunities
             </h2>
@@ -53,12 +55,12 @@ export default function ContactPage() {
               Reach the team for registration, delegate participation, partnerships, and general festival-related coordination.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold text-stone-700 dark:text-slate-200 sm:gap-4">
-              <span className="rounded-full border border-stone-200 bg-stone-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-950">
+              <span className="rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-950">
                 +91 011 46131929
               </span>
               <a
                 href="mailto:info1@csrindia.org"
-                className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2.5 text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/15"
+                className="rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-2.5 text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/15"
               >
                 info1@csrindia.org
               </a>
@@ -66,7 +68,7 @@ export default function ContactPage() {
                 href="https://www.csrindia.org"
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-stone-200 bg-stone-50 px-4 py-2.5 transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900"
+                className="rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-2.5 transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900"
               >
                 www.csrindia.org
               </a>
@@ -88,7 +90,7 @@ export default function ContactPage() {
             {sponsorshipContacts.map((contact) => (
               <article
                 key={contact.email}
-                className="flex h-full flex-col rounded-[1.75rem] border border-stone-200/80 bg-white/85 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900/90"
+                className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white/85 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900/90"
               >
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">Sponsor Desk</p>
                 <h3 className="mt-3 text-xl font-black tracking-tight text-stone-900 dark:text-white">{contact.name}</h3>
@@ -107,7 +109,7 @@ export default function ContactPage() {
         </section>
 
         <section className="mx-auto mt-16 max-w-4xl px-6 sm:px-8">
-          <div className="rounded-[2rem] border border-stone-200/80 bg-gradient-to-br from-white via-stone-50 to-amber-50/70 px-6 py-10 text-center shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.98),rgba(30,41,59,0.92))] sm:px-10">
+          <div className="rounded-[10px] border border-stone-200/80 bg-gradient-to-br from-white via-stone-50 to-amber-50/70 px-6 py-10 text-center shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.98),rgba(30,41,59,0.92))] sm:px-10">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">Visit Our Office</p>
             <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-900 dark:text-white sm:text-4xl">Centre for Social Research</h2>
             <p className="mt-5 text-lg leading-relaxed text-stone-700 dark:text-slate-200">

@@ -49,18 +49,21 @@ const receptionNotes = [
   {
     day: "October 6",
     venue: "Embassy of France, New Delhi",
+    access: "Invite only",
     description:
       "Opening evening reception for delegates and partners, with welcome remarks and spotlight conversations to launch TASI 2025.",
   },
   {
     day: "October 7",
     venue: "Embassy of Netherlands, New Delhi",
+    access: "Invite only",
     description:
       "Networking reception and panel evening designed for cross-sector dialogue after the conference day at Taj Ambassador.",
   },
   {
     day: "October 8",
     venue: "Swedish Embassy, New Delhi",
+    access: "Invite only",
     description:
       "Closing reception with reflections from the two-day agenda, a forward-looking panel, and informal networking over dinner.",
   },

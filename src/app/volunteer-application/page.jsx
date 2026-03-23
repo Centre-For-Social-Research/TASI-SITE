@@ -37,26 +37,26 @@ const processSteps = [
 
 const volunteerGallery = [
   {
-    src: "/img/volunteers/volunteer-checkin.jpg",
+    src: "/img/volunteers/volunteer-checkin.webp",
     alt: "Volunteer team handling attendee check-in and badge handoff at TASI",
     eyebrow: "Check-In",
     title: "First impressions, handled well",
   },
   {
-    src: "/img/volunteers/volunteer-badges.jpg",
+    src: "/img/volunteers/volunteer-badges.webp",
     alt: "Volunteer handing event materials and badges to guests at TASI",
     eyebrow: "Guest Care",
     title: "Warm, quick, and organised",
   },
   {
-    src: "/img/volunteers/volunteer-partners.jpg",
+    src: "/img/volunteers/volunteer-partners.webp",
     alt: "Volunteer team members standing behind a TASI partner display",
     eyebrow: "Front Of House",
     title: "Visible, reliable support",
     imageClassName: "object-cover scale-[1.7] -rotate-90 origin-center",
   },
   {
-    src: "/img/volunteers/volunteer-lobby.jpg",
+    src: "/img/volunteers/volunteer-lobby.webp",
     alt: "Festival entrance lobby and wayfinding area at TASI",
     eyebrow: "Arrival",
     title: "A calm arrival experience",

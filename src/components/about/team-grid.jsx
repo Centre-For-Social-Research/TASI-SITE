@@ -36,7 +36,7 @@ const ProfileCard = React.forwardRef(function ProfileCard(
         }}
       >
         <Card
-          className="absolute h-full w-full border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
+          className="absolute h-full w-full rounded-[10px] border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
           style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex h-full w-full flex-col items-center justify-center space-y-4 text-center">
@@ -89,7 +89,7 @@ const ProfileCard = React.forwardRef(function ProfileCard(
         </Card>
 
         <Card
-          className="absolute h-full w-full border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
+          className="absolute h-full w-full rounded-[10px] border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
@@ -185,13 +185,13 @@ export default function TeamGrid() {
 
         <div
           ref={carouselRef}
-          className="flex gap-6 overflow-x-auto px-1 pb-2 touch-pan-y overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-6 overflow-x-auto px-1 pb-2 touch-pan-x snap-x snap-mandatory overscroll-x-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden"
         >
           {teamMembers.map((member) => (
             <div
               key={member.name}
               data-team-card
-              className="min-w-0 shrink-0 basis-[88%] sm:basis-[70%] lg:basis-[calc((100%-3rem)/4)]"
+              className="min-w-0 shrink-0 snap-start basis-[88%] sm:basis-[70%] lg:basis-[calc((100%-3rem)/4)]"
             >
               <ProfileCard
                 name={member.name}

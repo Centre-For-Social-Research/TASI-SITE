@@ -117,7 +117,7 @@ export default function Tasi2025Page() {
                 The festival established a serious, practice-oriented space where Indian realities and Global South
                 perspectives could shape the future of trust, safety, and AI governance.
               </p>
-              <div className="mt-8 rounded-3xl border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-7">
+              <div className="mt-8 rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-7">
                 <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-primary">Perspective</p>
                 <p className="text-lg leading-relaxed text-stone-800 md:text-xl">
                   "For the first time, voices from the Global South are shaping the future of digital trust with Indian
@@ -127,13 +127,13 @@ export default function Tasi2025Page() {
               </div>
             </div>
 
-            <article className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-xl shadow-stone-200/40">
+            <article className="group overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-xl shadow-stone-200/40">
               <div className="relative aspect-[4/5] md:aspect-[4/4.4]">
                 <Image
-                  src="/img/home-gallery/7T7A9837.webp"
-                  alt="Packed TASI 2025 room during a live session"
+                  src="/img/home-gallery/7T7A5102.webp"
+                  alt="TASI 2025 audience gathering during the festival in New Delhi"
                   fill
-                  className="object-cover"
+                  className="object-cover scale-[1.05] transition duration-500 group-hover:scale-[1.08]"
                   sizes="(min-width: 768px) 33vw, 100vw"
                 />
               </div>
@@ -155,7 +155,7 @@ export default function Tasi2025Page() {
               {tracks.map(([title, desc]) => (
                 <article
                   key={title}
-                  className="rounded-3xl border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl md:p-8"
+                  className="rounded-[10px] border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl md:p-8"
                 >
                   <h3 className="text-2xl font-bold tracking-tight text-stone-900">{title}</h3>
                   <div className="mt-5 h-1 w-14 rounded-full bg-rc-accent"></div>
@@ -168,7 +168,7 @@ export default function Tasi2025Page() {
 
         <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm md:py-section-lg">
           <div className="mx-auto grid w-full max-w-[1300px] items-center gap-10 px-4 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:px-16">
-            <article className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-lg shadow-orange-100/60">
+            <article className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-orange-100/60">
               <div className="relative aspect-[4/5] md:aspect-[4/4.5]">
                 <Image
                   src="/img/home-gallery/7T7A0651.webp"
@@ -189,7 +189,7 @@ export default function Tasi2025Page() {
                 Dr. S. Jaishankar framed trust and safety as a strategic policy priority and emphasized human-guided AI
                 governance with robust safeguards for digital citizens.
               </p>
-              <div className="mt-8 rounded-3xl border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-7">
+              <div className="mt-8 rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-7">
                 <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-primary">Key Message</p>
                 <p className="text-xl leading-relaxed text-stone-900 md:text-2xl">
                   &quot;Technology is a force for good, but only if humanity guides it.&quot;
@@ -213,7 +213,7 @@ export default function Tasi2025Page() {
               {impacts.map(([num, label]) => (
                 <article
                   key={label}
-                  className="rounded-3xl border border-white/10 bg-white/[0.08] p-7 shadow-xl shadow-black/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.14] md:p-8"
+                  className="rounded-[10px] border border-white/10 bg-white/[0.08] p-7 shadow-xl shadow-black/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.14] md:p-8"
                 >
                   <p className="text-5xl font-black text-rc-secondary">{num}</p>
                   <p className="mt-3 text-body-md leading-relaxed text-white/80">{label}</p>
@@ -230,7 +230,7 @@ export default function Tasi2025Page() {
               Key Recommendations for India&apos;s Digital Future
             </h2>
             <div className="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="rounded-[2rem] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10">
+              <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary">Strategic Direction</p>
                 <h3 className="mt-4 text-3xl font-extrabold tracking-tight md:text-4xl">From dialogue to implementation</h3>
                 <p className="mt-5 text-base leading-relaxed text-white/80">
@@ -243,7 +243,7 @@ export default function Tasi2025Page() {
                 {recommendations.map((item, index) => (
                   <article
                     key={item}
-                    className="rounded-3xl border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-6 shadow-lg shadow-stone-200/40 md:p-7"
+                    className="rounded-[10px] border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-6 shadow-lg shadow-stone-200/40 md:p-7"
                   >
                     <p className="mb-4 text-xs font-black uppercase tracking-[0.16em] text-rc-primary">
                       Priority {String(index + 1).padStart(2, "0")}
@@ -265,7 +265,7 @@ export default function Tasi2025Page() {
             <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl lg:text-[3.2rem]">
               Looking Ahead to TASI 2026
             </h2>
-            <div className="mt-12 overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-lg shadow-stone-200/40">
+            <div className="mt-12 overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/40">
               <div className="grid gap-0 md:grid-cols-2">
                 {future.map((item, index) => (
                   <article
@@ -279,27 +279,31 @@ export default function Tasi2025Page() {
               </div>
             </div>
 
-            <div className="mt-12 rounded-3xl border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-8">
+            <div className="mt-12 rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-8">
               <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">Media Coverage</p>
               <h3 className="text-3xl font-extrabold tracking-tight text-stone-900">Coverage Highlights</h3>
               <div className="mt-8 grid gap-4 md:grid-cols-3">
                 <a
-                  href="#"
-                  className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
+                  href="/downloads/tasi-2025-media-coverage-dossier.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-[10px] border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
                 >
-                  Placeholder Coverage Link 01
+                  Open Media Dossier
                 </a>
                 <a
-                  href="#"
-                  className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
+                  href="/downloads/tasi-2025-media-coverage-report.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-[10px] border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
                 >
-                  Placeholder Coverage Link 02
+                  Open Media Coverage Report
                 </a>
                 <a
-                  href="#"
-                  className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
+                  href="/media"
+                  className="rounded-[10px] border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
                 >
-                  Placeholder Coverage Link 03
+                  View Media Page
                 </a>
               </div>
             </div>

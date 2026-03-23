@@ -1,17 +1,39 @@
 import Link from "next/link";
+import {
+  Accessibility,
+  Baby,
+  BadgeAlert,
+  Bot,
+  BriefcaseBusiness,
+  Coins,
+  FileSearch,
+  Globe2,
+  HeartHandshake,
+  Plane,
+  Scale,
+  Shield,
+  ShieldAlert,
+  Users,
+} from "lucide-react";
 import { MotionItem, MotionReveal, MotionStagger } from "./motion-reveal";
+import { themes2026 } from "@/data/themes-2026";
 
-const themes = [
-  "AI Governance and Regulatory Frameworks",
-  "Safety by Design and Platform Accountability",
-  "Online Gender Based Violence and Digital Safety",
-  "Fraud, Scams and Financial Exploitation",
-  "Mental Health and Digital Wellbeing",
-  "AI for Inclusive Development",
-  "Global South Leadership in AI Governance",
-  "Cross Border Digital Harms and Cooperation",
-  "Transparency, Risk Assessment and Compliance",
-];
+const iconMap = {
+  accessibility: Accessibility,
+  baby: Baby,
+  badgeAlert: BadgeAlert,
+  bot: Bot,
+  briefcase: BriefcaseBusiness,
+  coins: Coins,
+  fileSearch: FileSearch,
+  globe: Globe2,
+  heartHandshake: HeartHandshake,
+  plane: Plane,
+  scale: Scale,
+  shield: Shield,
+  shieldAlert: ShieldAlert,
+  users: Users,
+};
 
 export default function ThemesPreview() {
   return (
@@ -26,25 +48,38 @@ export default function ThemesPreview() {
           </h2>
           <p className="mt-5 text-body-lg leading-relaxed text-white/80">
             The festival convenes leaders across government, industry, academia, and civil society to examine the
-            urgent questions shaping AI governance and digital trust.
+            urgent questions shaping AI governance, platform accountability, digital wellbeing, and trust online.
           </p>
         </MotionReveal>
 
-        <MotionStagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {themes.map((theme, index) => (
-            <MotionItem key={theme}>
-              <Link href="/themes" className="group block h-full">
-                <article className="flex h-full min-h-[220px] flex-col justify-between rounded-3xl border border-white/10 bg-white/[0.08] p-7 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.14] md:p-8">
-                  <p className="text-5xl font-black text-white/15 transition-colors duration-300 group-hover:text-rc-accent md:text-6xl">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className="mt-8 text-2xl font-bold leading-tight text-white">
-                    {theme}
-                  </h3>
-                </article>
-              </Link>
-            </MotionItem>
-          ))}
+        <MotionStagger className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {themes2026.map((theme) => {
+            const Icon = iconMap[theme.iconKey];
+
+            return (
+              <MotionItem key={theme.num}>
+                <Link href="/themes" className="group block h-full">
+                  <article className="relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-[10px] border border-white/10 bg-white/[0.08] p-7 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.14] md:p-8">
+                    <div className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br ${theme.accent}`} />
+                    <div className="pointer-events-none absolute right-5 top-5 rounded-[10px] border border-white/10 bg-white/10 p-3 text-white/65 backdrop-blur-sm transition duration-300 group-hover:scale-110 group-hover:text-rc-secondary">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div className="relative">
+                      <p className="text-5xl font-black text-white/15 transition-colors duration-300 group-hover:text-rc-accent md:text-6xl">
+                        {theme.num}
+                      </p>
+                      <span className={`mt-5 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${theme.chip}`}>
+                        {theme.tag}
+                      </span>
+                    </div>
+                    <h3 className="relative mt-8 max-w-[85%] text-2xl font-bold leading-tight text-white">
+                      {theme.title}
+                    </h3>
+                  </article>
+                </Link>
+              </MotionItem>
+            );
+          })}
         </MotionStagger>
 
         <MotionReveal className="mt-16 text-center md:mt-24" delay={0.12}>

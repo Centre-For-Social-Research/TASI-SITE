@@ -148,7 +148,7 @@ export default function SponsorPage() {
                 {sponsorMetrics.map((item) => (
                   <article
                     key={item.label}
-                    className="rounded-3xl border border-stone-200/80 bg-white/90 p-5 shadow-[0_22px_55px_-38px_rgba(15,23,42,0.4)]"
+                    className="rounded-[10px] border border-stone-200/80 bg-white/90 p-5 shadow-[0_22px_55px_-38px_rgba(15,23,42,0.4)]"
                   >
                     <p className="text-2xl font-black tracking-tight text-rc-primary md:text-3xl">{item.value}</p>
                     <p className="mt-3 text-sm leading-relaxed text-stone-600">{item.label}</p>
@@ -157,7 +157,7 @@ export default function SponsorPage() {
               </div>
             </div>
 
-            <article className="rounded-[2rem] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_48%,#15002b_100%)] p-7 text-white shadow-[0_30px_80px_-34px_rgba(53,2,101,0.55)] md:p-9">
+            <article className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_48%,#15002b_100%)] p-7 text-white shadow-[0_30px_80px_-34px_rgba(53,2,101,0.55)] md:p-9">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary">What sponsors get</p>
               <h3 className="mt-4 text-3xl font-black tracking-tight md:text-[2.15rem]">Presence that feels integrated, not decorative</h3>
               <p className="mt-5 text-base leading-relaxed text-white/82">
@@ -165,7 +165,7 @@ export default function SponsorPage() {
               </p>
               <div className="mt-8 space-y-3">
                 {sponsorshipPillars.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 backdrop-blur-sm">
+                  <div key={item} className="rounded-[10px] border border-white/10 bg-white/10 px-4 py-4 backdrop-blur-sm">
                     <p className="text-sm leading-relaxed text-white/88">{item}</p>
                   </div>
                 ))}
@@ -190,7 +190,7 @@ export default function SponsorPage() {
               {reasons.map((reason, index) => (
                 <article
                   key={reason.title}
-                  className="rounded-[2rem] border border-white/10 bg-white/10 p-6 shadow-2xl backdrop-blur-sm md:p-7"
+                  className="rounded-[10px] border border-white/10 bg-white/10 p-6 shadow-2xl backdrop-blur-sm md:p-7"
                 >
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary">
                     Benefit {String(index + 1).padStart(2, "0")}
@@ -213,7 +213,7 @@ export default function SponsorPage() {
               </p>
             </div>
 
-            <div className="mt-10 rounded-[28px] border border-orange-200 bg-[linear-gradient(135deg,#fff4e8_0%,#fffaf5_60%,#ffffff_100%)] p-6 md:p-8">
+            <div className="mt-10 rounded-[10px] border border-orange-200 bg-[linear-gradient(135deg,#fff4e8_0%,#fffaf5_60%,#ffffff_100%)] p-6 md:p-8">
               <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div className="max-w-2xl">
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">Prospectus</p>
@@ -236,7 +236,7 @@ export default function SponsorPage() {
                 <article
                   key={tier.name}
                   className={[
-                    "rounded-[28px] border p-6 shadow-[0_18px_50px_-32px_rgba(15,23,42,0.24)]",
+                    "rounded-[10px] border p-6 shadow-[0_18px_50px_-32px_rgba(15,23,42,0.24)]",
                     tier.emphasis
                       ? "border-orange-300 bg-[linear-gradient(135deg,#fff2e2_0%,#fff8f0_45%,#ffffff_100%)] md:col-span-2 xl:col-span-6"
                       : "border-stone-200 bg-[linear-gradient(180deg,#fcfbf8_0%,#ffffff_100%)] xl:col-span-3",
@@ -267,13 +267,13 @@ export default function SponsorPage() {
 
                   <ul className={`mt-6 grid gap-3 text-sm text-stone-700 ${tier.emphasis ? "md:grid-cols-2" : ""}`}>
                     {tier.features.map((feature) => (
-                      <li key={feature} className="rounded-2xl border border-stone-200/70 bg-white/90 px-4 py-4 leading-relaxed">
+                      <li key={feature} className="rounded-[10px] border border-stone-200/70 bg-white/90 px-4 py-4 leading-relaxed">
                         {feature}
                       </li>
                     ))}
                     <li
                       className={[
-                        "rounded-2xl px-4 py-4 font-semibold",
+                        "rounded-[10px] px-4 py-4 font-semibold",
                         tier.emphasis ? "bg-orange-100 text-orange-800" : "border border-dashed border-stone-300 bg-white text-stone-700",
                       ].join(" ")}
                     >
@@ -288,19 +288,19 @@ export default function SponsorPage() {
 
         <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] pb-12 pt-0 md:pb-20 md:pt-0">
           <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 md:px-6 lg:grid-cols-2">
-            <article className="rounded-[28px] border border-stone-200 bg-stone-50 p-6 md:p-8">
+            <article className="rounded-[10px] border border-stone-200 bg-stone-50 p-6 md:p-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-stone-500">Flexible Partnerships</p>
               <h3 className="mt-3 text-2xl font-black tracking-tight text-stone-900 md:text-3xl">Additional sponsorship opportunities</h3>
               <ul className="mt-6 space-y-3 text-sm leading-relaxed text-stone-700 md:text-base">
                 {additionalOpportunities.map((item) => (
-                  <li key={item} className="rounded-2xl border border-white bg-white px-4 py-4 shadow-sm">
+                  <li key={item} className="rounded-[10px] border border-white bg-white px-4 py-4 shadow-sm">
                     {item}
                   </li>
                 ))}
               </ul>
             </article>
 
-            <article className="flex h-full flex-col rounded-[28px] bg-[linear-gradient(135deg,#350265_0%,#6a115e_58%,#ef5700_100%)] p-6 text-white shadow-[0_28px_80px_-42px_rgba(53,2,101,0.58)] md:p-8">
+            <article className="flex h-full flex-col rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#6a115e_58%,#ef5700_100%)] p-6 text-white shadow-[0_28px_80px_-42px_rgba(53,2,101,0.58)] md:p-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary">Custom Partnership</p>
               <h3 className="mt-3 text-2xl font-black tracking-tight md:text-3xl">Need something more tailored?</h3>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/82 md:text-base">

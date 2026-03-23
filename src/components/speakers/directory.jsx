@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Linkedin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
@@ -15,6 +15,7 @@ const VIP_SPEAKERS = new Set([
 ]);
 
 const VIP_LABEL = "Keynote Speaker";
+const SPEAKERS_PER_PAGE = 9;
 
 function initials(name) {
   const words = String(name || "").trim().split(/\s+/).filter(Boolean);
@@ -54,7 +55,7 @@ const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
       >
         <Card
           className={cn(
-            "absolute h-full w-full p-6 shadow-lg",
+            "absolute h-full w-full rounded-[10px] p-6 shadow-lg",
             isVipSpeaker ? "border-[#9c3c46] bg-[#801b26]" : "border-stone-200 bg-white"
           )}
           style={{ backfaceVisibility: "hidden" }}
@@ -102,7 +103,7 @@ const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
 
         <Card
           className={cn(
-            "absolute h-full w-full p-6 shadow-lg",
+            "absolute h-full w-full rounded-[10px] p-6 shadow-lg",
             isVipSpeaker ? "border-[#9c3c46] bg-[#801b26]" : "border-stone-200 bg-white"
           )}
           style={{
@@ -160,6 +161,7 @@ export default function SpeakersDirectory() {
 
   const [active, setActive] = useState("All Speakers");
   const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -174,6 +176,22 @@ export default function SpeakersDirectory() {
       );
     });
   }, [active, query]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / SPEAKERS_PER_PAGE));
+  const paginatedSpeakers = useMemo(() => {
+    const startIndex = (currentPage - 1) * SPEAKERS_PER_PAGE;
+    return filtered.slice(startIndex, startIndex + SPEAKERS_PER_PAGE);
+  }, [currentPage, filtered]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [active, query]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <section className="bg-stone-100 py-12 md:py-16">
@@ -190,7 +208,7 @@ export default function SpeakersDirectory() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search speakers by name, role, or bio…"
-            className="w-full rounded-full border border-stone-300 bg-white py-3 pl-11 pr-5 text-sm text-stone-800 shadow-sm placeholder:text-stone-400 focus:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200"
+            className="w-full rounded-[10px] border border-stone-300 bg-white py-3 pl-11 pr-5 text-sm text-stone-800 shadow-sm placeholder:text-stone-400 focus:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200"
           />
           {query && (
             <button
@@ -232,10 +250,47 @@ export default function SpeakersDirectory() {
         )}
 
         <div className="grid justify-items-center gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((speaker) => (
+          {paginatedSpeakers.map((speaker) => (
             <SpeakerProfileCard key={`${speaker.name}-${speaker.designation}`} speaker={speaker} />
           ))}
         </div>
+
+        {filtered.length > 0 && totalPages > 1 && (
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              disabled={currentPage === 1}
+              className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-orange-500 hover:text-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                onClick={() => setCurrentPage(page)}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                  currentPage === page
+                    ? "border-orange-700 bg-orange-700 text-white"
+                    : "border-stone-300 bg-white text-stone-700 hover:border-orange-500 hover:text-orange-700"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              disabled={currentPage === totalPages}
+              className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-orange-500 hover:text-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

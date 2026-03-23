@@ -32,7 +32,7 @@ export default function HomeHero() {
           backgroundAttachment: "fixed"
         }}
       />
-      
+
       {/* Vignette Overlay to darken edges more firmly */}
       <div className="absolute inset-0 z-[5] pointer-events-none" style={{
         background: "radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0.8) 100%)"

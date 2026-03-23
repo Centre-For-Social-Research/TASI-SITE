@@ -3,45 +3,17 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import CountUpNumber from "../ui/count-up-number"
 import SponsorsStripCarousel from "./sponsors-strip-carousel"
+import { blogPosts } from "@/data/blog-posts"
 
-const newsItems = [
-  {
-    id: 1,
-    category: "ANNOUNCEMENT",
-    date: "Feb 15, 2026",
-    title: "Call for Proposals Now Open",
-    description: "Submit your proposals for sessions, panels, and workshops for TASI 2026. Join us in shaping the agenda for India's foremost trust and safety convening.",
-    image: "/img/home-gallery/tasi-2026-brochure-3.png",
-    link: "/blog"
-  },
-  {
-    id: 2,
-    category: "REGISTRATION",
-    date: "Mar 01, 2026",
-    title: "Early Bird Registration",
-    description: "Secure your spot at TASI 2026 with our early bird rates. Don't miss out on the opportunity to connect with industry leaders.",
-    image: "/img/home-gallery/7T7A0181.webp",
-    link: "/blog"
-  },
-  {
-    id: 3,
-    category: "KEYNOTE",
-    date: "Mar 15, 2026",
-    title: "First Keynote Speakers Announced",
-    description: "We are thrilled to announce our first lineup of keynote speakers featuring global experts in digital safety and policy.",
-    image: "/img/home-gallery/7T7A0646.webp",
-    link: "/blog"
-  },
-  {
-    id: 4,
-    category: "COMMUNITY",
-    date: "Apr 05, 2026",
-    title: "TASI Community Mixer",
-    description: "Join our pre-conference virtual networking event to meet fellow attendees and discuss pressing trust and safety issues.",
-    image: "/img/home-gallery/tasi-community-mixer.webp",
-    link: "/blog"
-  }
-]
+const newsItems = blogPosts.slice(0, 4).map((post) => ({
+  id: post.id,
+  category: post.category,
+  date: post.date,
+  title: post.title,
+  description: post.excerpt,
+  image: post.image,
+  link: `/blog#${post.slug}`,
+}))
 
 const tasiStats = [
   { value: 500, suffix: "+", label: "Participants Attended (2025)" },
@@ -61,14 +33,14 @@ export default function NewsUpdatesSection() {
             <h2 className="text-sm font-bold tracking-widest text-rc-primary dark:text-white uppercase mb-3">News & Updates</h2>
             <h3 className="text-3xl md:text-5xl font-bold tracking-tight">The Latest from TASI</h3>
           </div>
-          <Link href="/" className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background dark:bg-transparent h-11 px-8 rounded-full border-black dark:border-white text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
+          <Link href="/blog" className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background dark:bg-transparent h-11 px-8 rounded-full border-black dark:border-white text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
             SEE ALL HIGHLIGHTS
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {newsItems.map((item) => (
-            <Link key={item.id} href={item.link} className="group flex flex-col h-full border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow bg-gray-50/50 dark:bg-gray-900/50">
+            <Link key={item.id} href={item.link} className="group flex flex-col h-full overflow-hidden rounded-[10px] border border-gray-200 bg-gray-50/50 transition-shadow hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/50">
               <div className="relative h-48 w-full overflow-hidden bg-gray-200 dark:bg-gray-800">
                 <Image
                   src={item.image}
@@ -79,7 +51,7 @@ export default function NewsUpdatesSection() {
               </div>
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center gap-3 mb-4 text-xs font-semibold">
-                  <span className="px-3 py-1 rounded-full bg-rc-primary/10 dark:bg-white/15 text-rc-primary dark:text-white">{item.category}</span>
+                  <span className="rounded-[10px] bg-rc-primary/10 px-3 py-1 text-rc-primary dark:bg-white/15 dark:text-white">{item.category}</span>
                   <span className="text-gray-500 dark:text-gray-400">{item.date}</span>
                 </div>
                 <h4 className="text-xl font-bold mb-3 group-hover:text-rc-primary dark:group-hover:text-white transition-colors line-clamp-2">{item.title}</h4>
