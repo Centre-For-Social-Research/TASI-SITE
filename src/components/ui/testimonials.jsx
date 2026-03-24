@@ -1,16 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Quote, ChevronLeft, ChevronRight, Play } from "lucide-react";
-
-const getMuxThumbnailSrc = (iframeSrc) => {
-  const playbackIdMatch = iframeSrc.match(/player\.mux\.com\/([^?]+)/);
-  const playbackId = playbackIdMatch?.[1] ?? null;
-
-  return playbackId
-    ? `https://image.mux.com/${playbackId}/thumbnail.jpg?time=2&width=1280&fit_mode=preserve`
-    : null;
-};
+import { useRef } from "react";
+import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
 /**
  * A responsive section component to display customer testimonials.
@@ -23,11 +14,6 @@ export const TestimonialSection = ({
   testimonials,
 }) => {
   const carouselRef = useRef(null);
-  const [activeVideoId, setActiveVideoId] = useState(null);
-  const testimonialCards = testimonials.map((testimonial) => ({
-    ...testimonial,
-    thumbnailSrc: getMuxThumbnailSrc(testimonial.iframeSrc),
-  }));
 
   const scrollByCards = (direction = 1) => {
     if (!carouselRef.current) {
@@ -84,7 +70,7 @@ export const TestimonialSection = ({
             ref={carouselRef}
             className="flex gap-6 overflow-x-auto px-1 pb-2 touch-pan-y overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {testimonialCards.map((testimonial) => (
+            {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
                 data-testimonial-card
@@ -92,50 +78,13 @@ export const TestimonialSection = ({
               >
                 <article className="relative flex h-full flex-col overflow-hidden rounded-xl border border-rc-primary/12 bg-white shadow-[0_10px_30px_-18px_rgba(53,2,101,0.45)] transition-colors dark:border-white/15 dark:bg-zinc-900 dark:shadow-[0_12px_34px_-18px_rgba(0,0,0,0.8)]">
                   <div className="relative w-full pb-[56.25%] bg-black">
-                    {activeVideoId === testimonial.id ? (
-                      <iframe
-                        src={testimonial.iframeSrc}
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen
-                        loading="lazy"
-                        className="absolute top-0 left-0 h-full w-full object-cover"
-                      />
-                    ) : (
-                      <button
-                        type="button"
-                        className="absolute inset-0 block h-full w-full overflow-hidden text-left"
-                        onClick={() => setActiveVideoId(testimonial.id)}
-                        aria-label={`Play testimonial from ${testimonial.name}`}
-                      >
-                        {testimonial.thumbnailSrc ? (
-                          <img
-                            src={testimonial.thumbnailSrc}
-                            alt={`${testimonial.name} testimonial preview`}
-                            className="h-full w-full object-cover opacity-90 transition-transform duration-500 hover:scale-105"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-zinc-950 text-white/75">
-                            Video preview unavailable
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-black shadow-xl transition-transform duration-300 hover:scale-105">
-                            <Play className="ml-1 h-7 w-7 fill-current" />
-                          </span>
-                        </div>
-                        <div className="absolute bottom-4 left-4 right-4 text-white">
-                          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/70">
-                            Video Testimonial
-                          </p>
-                          <p className="mt-2 text-base font-semibold leading-snug">
-                            {testimonial.name}
-                          </p>
-                        </div>
-                      </button>
-                    )}
+                    <iframe
+                      src={testimonial.iframeSrc}
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                      loading="lazy"
+                      className="absolute top-0 left-0 h-full w-full object-cover"
+                    />
                   </div>
 
                   <div className="flex flex-1 flex-col justify-between bg-gradient-to-b from-white to-rc-primary/5 p-6 text-left text-rc-foreground dark:from-zinc-900 dark:to-zinc-800 dark:text-zinc-100">
