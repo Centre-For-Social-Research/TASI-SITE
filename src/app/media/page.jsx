@@ -87,13 +87,13 @@ export default function MediaPage() {
 
         <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] py-14 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-20">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
-            <div className="max-w-3xl">
+            <div className="mx-auto max-w-3xl text-center">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent">Coverage List</p>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-900 dark:text-white md:text-5xl">
-                Selected media houses from the report
+                Selected Report From Media House
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
-                These entries are drawn from both PDF files you shared and grouped here as easy-to-scan coverage cards.
+                Explore key highlights, articles, and insights directly published by leading media outlets detailing the impact and reach of TASI.
               </p>
             </div>
 

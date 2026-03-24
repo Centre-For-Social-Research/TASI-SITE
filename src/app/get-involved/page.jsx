@@ -7,6 +7,16 @@ import BrandedPageHero from "@/components/ui/branded-page-hero";
 
 const involvementOptions = [
   {
+    title: "Stakeholder Engagement Roundtable",
+    description:
+      "Join us as we kick off the preparation for TASI 2026 with an online stakeholder engagement roundtable.",
+    href: "/blog/tasi-2026-stakeholder-roundtable",
+    cta: "Read Important Update",
+    image: "/img/home-gallery/7T7A5237-new.webp",
+    imageAlt: "TASI Engagement Roundtable",
+    eyebrow: "Update",
+  },
+  {
     title: "Become a Sponsor",
     description:
       "Put your organisation in front of policymakers, platform teams, researchers, and civil society leaders through tailored TASI partnership opportunities.",

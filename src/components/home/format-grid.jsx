@@ -18,7 +18,7 @@ const formatItems = [
   {
     title: "Spotlights",
     desc: "Industry spotlight sessions showcasing emerging tools, research, and innovations addressing online harms, fraud detection, and algorithmic accountability.",
-    image: "/img/home-gallery/7T7A2027.webp",
+    image: "/img/home-gallery/7T7A3581.webp",
     imageAlt: "Spotlight presentation during TASI 2026 programming",
   },
   {

@@ -77,6 +77,12 @@ module.exports = {
         loose: "var(--line-height-loose)",
       },
 
+      /* Font Families */
+      fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
+        heading: ["var(--font-outfit)", "sans-serif"],
+      },
+
       /* Box Shadows */
       boxShadow: {
         sm: "var(--shadow-sm)",

@@ -2,6 +2,7 @@
 
 import { CalendarPlus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import BuildMyAgenda from './build-my-agenda';
 
 const FORMAT_LABELS = {
   opening: 'Opening',
@@ -171,6 +172,7 @@ export default function ProgrammeAgendaClient({
   speakerPhotoMap = {},
   receptionNotes = [],
 }) {
+  const [showAgendaBuilder, setShowAgendaBuilder] = useState(false);
   const [activeDay, setActiveDay] = useState('all');
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState('');
@@ -342,9 +344,28 @@ export default function ProgrammeAgendaClient({
         }
         .filter-select:focus { border-color: var(--coral); }
 
-        .results-info {
-          font-family: inherit; font-size: 0.72rem; color: var(--taupe);
-          letter-spacing: 0.07em; white-space: nowrap; margin-left: auto;
+.build-agenda-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.58rem 1rem;
+            background-color: var(--coral);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-left: auto;
+          }
+          .build-agenda-btn:hover { background-color: var(--coral-deep); }
+          .build-agenda-btn svg { margin-right: 0.5rem; }
+
+          .results-info {
+            font-family: inherit; font-size: 0.72rem; color: var(--taupe);
+            letter-spacing: 0.07em; white-space: nowrap; margin-left: 0.5rem;
           font-weight: 600;
         }
 
@@ -719,17 +740,25 @@ export default function ProgrammeAgendaClient({
             ))}
           </select>
 
-          <span className="results-info">{sessionsWithCalendar.length} session{sessionsWithCalendar.length !== 1 ? 's' : ''}</span>
-        </div>
-      </div>
+            <button 
+              className="build-agenda-btn"
+              onClick={() => setShowAgendaBuilder(true)}
+            >
+              <CalendarPlus className="h-4 w-4" />
+              Build My Agenda
+            </button>
 
-      <div className="day-tabs">
-        <div className="shell day-tabs-inner">
-          <button
-            className={`day-tab ${activeDay === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveDay('all')}
-          >
-            All Days
+            <span className="results-info hidden md:inline-block">{sessionsWithCalendar.length} session{sessionsWithCalendar.length !== 1 ? 's' : ''}</span>
+          </div>
+        </div>
+
+        <div className="day-tabs">
+          <div className="shell day-tabs-inner">
+            <button
+              className={`day-tab ${activeDay === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveDay('all')}
+            >
+              All Days
           </button>
           <button
             className={`day-tab ${activeDay === 'oct6' ? 'active' : ''}`}
@@ -865,6 +894,12 @@ export default function ProgrammeAgendaClient({
           )}
         </div>
       </div>
+
+      <BuildMyAgenda 
+        sessions={normalizedSessions} 
+        isOpen={showAgendaBuilder} 
+        onClose={() => setShowAgendaBuilder(false)} 
+      />
     </section>
   );
 }

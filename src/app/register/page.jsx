@@ -1,7 +1,6 @@
 import HomeNavbar from "@/components/home/navbar";
 import HomeFooter from "@/components/home/footer";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
-import ConfirmationEmailFlow from "@/components/register/confirmation-email-flow";
 
 const steps = [
   {
@@ -107,8 +106,6 @@ export default function RegisterPage() {
           </a>
           .
         </p>
-
-        <ConfirmationEmailFlow />
 
         <section className="mt-10 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/40">
           <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-slate-100 md:text-2xl">FAQ</h2>

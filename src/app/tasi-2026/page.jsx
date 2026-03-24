@@ -25,7 +25,7 @@ export default function Tasi2026EditionPage() {
               Explore what to expect at TASI 2026, how the convening is structured, the strategic themes shaping the
               programme, and the leaders you&apos;ll meet across policy, industry, civil society, and global institutions.
             </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <div className="mt-8 flex flex-wrap justify-center gap-3 pb-4">
               <span className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
                 13-14 October 2026
               </span>
@@ -35,14 +35,6 @@ export default function Tasi2026EditionPage() {
               <span className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
                 In person and online
               </span>
-            </div>
-            <div className="mt-7">
-              <a
-                href="/register"
-                className="inline-flex rounded-full bg-white px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#140f26] transition hover:scale-[1.02] hover:bg-white/90"
-              >
-                Explore TASI 2026
-              </a>
             </div>
           </div>
         </BrandedPageHero>

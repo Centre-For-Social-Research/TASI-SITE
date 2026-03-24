@@ -1,12 +1,6 @@
 "use client";
 
 import React from "react";
-import { DM_Mono } from "next/font/google";
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 type Clip = {
   id: string;
@@ -175,7 +169,7 @@ export default function ImmersiveVideoShowcase() {
 
             <div className="absolute bottom-4 left-4 z-20 md:bottom-6 md:left-6">
               <span
-                className={`${dmMono.className} rounded-full bg-black/35 px-3 py-1.5 text-[11px] tracking-[0.14em] text-[#ffd7c5] backdrop-blur-sm md:text-xs`}
+                className="rounded-full bg-black/35 px-3 py-1.5 font-mono text-[11px] tracking-[0.14em] text-[#ffd7c5] backdrop-blur-sm md:text-xs"
               >
                 TASI 2025 | New Delhi
               </span>

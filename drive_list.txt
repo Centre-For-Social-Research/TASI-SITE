@@ -1,0 +1,28 @@
+FOLDER	0	ROOT	1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	13. Closing Remarks + Misc.	1ZSgaoOyr_AId22WfkaReLnRk70YfaWrT	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	104EOS5D	1nO4NFCyYKXgEo4zkpIkiEMcEFri-vPCy	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Card -02	1xcvlkjpoEGPBzo2AY2U6EKDJeNO9N6-j	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Card 2	1bcnJN8DadEOaVuPZMIbGxZ8Ff0FsIOb-	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Day 1	1-gsH2VZADpricP0iN7S6pW7Eb4B5jYkk	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Day 2	1KXVVbEMdjG5giWG9nqD4YraMAW7BshUA	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	French Embassy	1YCh87KCqajoTnpsftOSDy7yWUwpy1qKK	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	French Embassy Updated 	1Az5LqGwkLm1S_oWq-XTiXRgESCLEF9tl	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Netherland Embassy Updated	1Yxo8tddirdC5i9wTsnPBORh2SU5Hi7Bz	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Netherlands Embassy	1UqSxuT3YyXFLuOHsU6GIjfV2zi_DV_mU	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Photo	1scc_oW_v6HhZLkxEp0-MfxSLDPa-KWPx	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Photos	10y3A4ItzpTkbKEywbWyh74-iwNLnMXFq	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Press Conference	1u-4Hz8QKOkekRB1GFOoEkbtt5QsJgwx0	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Receptions	1fdyPbZRVlmLPMoC6o5qvniNa0xMwztFz	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Swedish Embassy 	1ZwNvanNbvqQlFjkVdwiL1rxKBGBYFvvI	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	Swedish Embassy Updated	1KmpJwAi00y4yZnYgkUUuCeO1HeVYjvzC	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	TASI Photographs	1Yba-uftgxTKkLNb5cV1J1l9SnL_-F5ts	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/vnd.google-apps.folder	TASI Rough	1Pwb_WVTY3mbMnOhGoqMQdPuIU1p-sS_K	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	application\/octet-stream	._Card -01	1U-akvBoAL4DHwMl31m4Tku9ZtIYQbebe	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_6461.JPG	1bzkT07vnA1-LE-M2PYgguiho1XAVCO86	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_6462.JPG	159vGepE5lE_Vy9-sqbVnoj-EI9uCJ-1L	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_6463.JPG	1fguNMzWOnFQwL27u4n8kw7dlTboBeTK_	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_6464.JPG	1G0yyBrC47qt3fnFPyQqpPuKk_lOCS_AO	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_6465.JPG	1s6Pdac0H4FaJgBFyX37gnyYlGmn1sRRU	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_6570.JPG	1akCmwC3gmddxsDzlB5zT5o-C5cdTs8pp	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_7297.JPG	1SqkMcLdtPZ0MgjIMK8DsY5KCNCy5nCtv	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt
+ITEM	0	image\/jpeg	IMG_7298.JPG	1EhJzvrVSnOpllvCCekSNil82N_96kWrd	parent:1mbrq_mhqsb-8HG5Fqy0om7pKObOwIPjt

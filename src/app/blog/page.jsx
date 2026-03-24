@@ -94,7 +94,7 @@ export default function BlogPage() {
                         {post.title}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-4">
-                        {post.content}
+                        {post.excerpt || post.content.substring(0, 150) + "..."}
                       </p>
                     </div>
 
@@ -108,15 +108,23 @@ export default function BlogPage() {
                         <User className="w-4 h-4" />
                         {post.author}
                       </div>
-                      <a
-                        href={post.sourceUrl || `#${post.slug}`}
-                        target={post.sourceUrl ? "_blank" : undefined}
-                        rel={post.sourceUrl ? "noreferrer" : undefined}
-                        className="ml-auto inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold transition-colors"
-                      >
-                        {post.sourceUrl ? "Read Article" : "Jump to Post"}
-                        <ArrowRight className="w-4 h-4" />
-                      </a>
+                      {post.sourceUrl ? (
+                         <a
+                         href={post.sourceUrl}
+                         target="_blank"
+                         rel="noreferrer"
+                         className="ml-auto inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold transition-colors"
+                       >
+                         Read Article <ArrowRight className="w-4 h-4" />
+                       </a>
+                      ) : (
+                        <Link 
+                           href={`/blog/${post.slug}`}
+                           className="ml-auto inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold transition-colors"
+                        >
+                          Jump to Post <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </article>
