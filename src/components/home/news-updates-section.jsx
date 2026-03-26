@@ -112,7 +112,7 @@ export default function NewsUpdatesSection() {
                   suffix={stat.suffix}
                   className="text-5xl md:text-6xl font-black leading-none text-white"
                 />
-                <p className="mt-2 text-sm md:text-base font-semibold uppercase tracking-[0.08em] leading-snug text-rc-secondary">
+                <p className="mt-2 text-sm md:text-base font-semibold uppercase tracking-[0.08em] leading-snug text-rc-secondary dark:text-white">
                   {stat.label}
                 </p>
               </div>

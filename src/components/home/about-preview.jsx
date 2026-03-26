@@ -18,8 +18,8 @@ export default function AboutPreview() {
         <MotionReveal>
           <div className="flex flex-col h-full justify-center">
             <h2 className="mb-6 text-5xl font-black uppercase tracking-tight text-[#171717] dark:text-white md:text-6xl lg:text-[4rem]" style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1 }}>
-              INDIA'S FOREMOST
-              <span className="mt-2 block text-[#350265] dark:text-[#ffd919]">TRUST & SAFETY</span>
+              INDIA&apos;S FOREMOST
+              <span className="mt-2 block text-[#350265] dark:text-white">TRUST & SAFETY</span>
               CONVENING.
             </h2>
             <div className="w-24 h-2 bg-[#ff6900] mb-8"></div>

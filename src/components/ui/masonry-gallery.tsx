@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 
@@ -38,14 +38,14 @@ const mediaQueries = ["(min-width: 1500px)", "(min-width: 1000px)", "(min-width:
 const mediaValues = [4, 4, 3, 2];
 
 const useMedia = (queries: readonly string[], values: readonly number[], defaultValue: number): number => {
-  const getValue = () => {
+  const getValue = useCallback(() => {
     if (typeof window === "undefined") {
       return defaultValue;
     }
 
     const match = queries.findIndex((query) => window.matchMedia(query).matches);
     return values[match] ?? defaultValue;
-  };
+  }, [defaultValue, queries, values]);
 
   const [value, setValue] = useState<number>(getValue);
 
@@ -55,7 +55,7 @@ const useMedia = (queries: readonly string[], values: readonly number[], default
 
     listeners.forEach((listener) => listener.addEventListener("change", handler));
     return () => listeners.forEach((listener) => listener.removeEventListener("change", handler));
-  }, [queries, values]);
+  }, [getValue, queries]);
 
   return value;
 };
@@ -110,13 +110,25 @@ export default function MasonryGallery({
 }: MasonryGalleryProps) {
   const columns = useMedia(mediaQueries, mediaValues, 1);
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
-  const [imagesReady, setImagesReady] = useState(false);
+  const itemSignature = useMemo(() => items.map((item) => item.img).join("|"), [items]);
+  const [loadedSignature, setLoadedSignature] = useState("");
   const hasMounted = useRef(false);
 
   useEffect(() => {
-    setImagesReady(false);
-    preloadImages(items.map((item) => item.img)).then(() => setImagesReady(true));
-  }, [items]);
+    let cancelled = false;
+
+    preloadImages(items.map((item) => item.img)).then(() => {
+      if (!cancelled) {
+        setLoadedSignature(itemSignature);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [itemSignature, items]);
+
+  const imagesReady = loadedSignature === itemSignature;
 
   const { grid, containerHeight } = useMemo(() => {
     if (!width) {
@@ -144,7 +156,7 @@ export default function MasonryGallery({
     };
   }, [columns, items, width]);
 
-  const getInitialPosition = (item: GridItem) => {
+  const getInitialPosition = useCallback((item: GridItem) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
     if (!containerRect) {
       return { x: item.x, y: item.y };
@@ -173,7 +185,7 @@ export default function MasonryGallery({
       default:
         return { x: item.x, y: item.y + 100 };
     }
-  };
+  }, [animateFrom, containerRef]);
 
   useLayoutEffect(() => {
     if (!imagesReady || !grid.length) {
@@ -220,7 +232,7 @@ export default function MasonryGallery({
     });
 
     hasMounted.current = true;
-  }, [animateFrom, blurToFocus, duration, ease, grid, imagesReady, stagger]);
+  }, [blurToFocus, duration, ease, getInitialPosition, grid, imagesReady, stagger]);
 
   const onMouseEnter = (element: HTMLElement) => {
     if (scaleOnHover) {
@@ -300,6 +312,7 @@ export default function MasonryGallery({
           onFocus={(event) => onMouseEnter(event.currentTarget)}
           onBlur={(event) => onMouseLeave(event.currentTarget)}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
             src={item.img} 
             alt={item.title || "Gallery image"} 

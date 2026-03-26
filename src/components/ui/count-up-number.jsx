@@ -14,7 +14,6 @@ export default function CountUpNumber({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.45 });
   const [value, setValue] = useState(start);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (!isInView) return;
@@ -22,7 +21,6 @@ export default function CountUpNumber({
     let rafId = 0;
     let startTime = null;
     const totalDelta = end - start;
-    setIsAnimating(true);
 
     const tick = (time) => {
       if (startTime === null) {
@@ -37,7 +35,6 @@ export default function CountUpNumber({
         rafId = requestAnimationFrame(tick);
       } else {
         setValue(end);
-        setTimeout(() => setIsAnimating(false), 220);
       }
     };
 
@@ -52,15 +49,7 @@ export default function CountUpNumber({
     <motion.span
       ref={ref}
       className={className}
-      animate={
-        isAnimating
-          ? {
-              scale: [1, 1.16, 1],
-              filter: ["brightness(1)", "brightness(1.18)", "brightness(1)"],
-            }
-          : { scale: 1, filter: "brightness(1)" }
-      }
-      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+      animate={{ scale: 1, filter: "brightness(1)" }}
     >
       {prefix}
       {value.toLocaleString("en-IN")}

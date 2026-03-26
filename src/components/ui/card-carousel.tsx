@@ -200,7 +200,7 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({
                       </div>
 
                       <div className="space-y-2 p-4">
-                        <p className="line-clamp-3 text-sm italic leading-relaxed text-stone-700 dark:text-zinc-300">"{video.quote}"</p>
+                        <p className="line-clamp-3 text-sm italic leading-relaxed text-stone-700 dark:text-zinc-300">&quot;{video.quote}&quot;</p>
                         <div>
                           <h4 className="text-sm font-bold text-stone-900 dark:text-zinc-100">{video.speaker}</h4>
                           <p className="text-xs text-stone-500 dark:text-zinc-400">{video.title}</p>

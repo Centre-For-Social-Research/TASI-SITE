@@ -54,7 +54,7 @@ export default function RegisterPage() {
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Join TASI 2026</p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
-              Secure Your<span className="block text-rc-secondary">Delegate Place</span>
+              Secure Your<span className="block text-rc-secondary dark:text-white">Delegate Place</span>
             </h1>
           </div>
         </BrandedPageHero>
@@ -86,7 +86,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <iframe
               src="https://docs.google.com/forms/d/e/1FAIpQLSfqBWA1ILnAxbu2Dq-gEesIWB2sgFjhxqfhLJcerXXTIsuAkg/viewform?embedded=true"
               title="TASI 2026 Registration Form"
@@ -101,7 +101,7 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
           For participation enquiries, contact{" "}
-          <a href="mailto:info1@csrindia.org" className="font-medium text-amber-700 hover:text-amber-800">
+          <a href="mailto:info1@csrindia.org" className="font-medium text-amber-700 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200">
             info1@csrindia.org
           </a>
           .

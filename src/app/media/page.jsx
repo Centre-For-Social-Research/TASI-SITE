@@ -68,7 +68,7 @@ export default function MediaPage() {
                   href="/downloads/tasi-2025-media-coverage-report.pdf"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-full bg-white px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#140f26] transition hover:scale-[1.02] hover:bg-white/90"
+                  className="inline-flex rounded-full !bg-white px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] !text-[#140f26] transition hover:scale-[1.02] hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26]"
                 >
                   Open Coverage Report
                 </a>
@@ -76,7 +76,7 @@ export default function MediaPage() {
                   href="/downloads/tasi-2025-media-coverage-dossier.pdf"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-full border border-white/25 bg-white/10 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-white transition hover:bg-white/15"
+                  className="inline-flex rounded-full border border-white/25 bg-white/10 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-white transition hover:bg-white/15 dark:border-white/40 dark:hover:bg-white/20"
                 >
                   Open Coverage Dossier
                 </a>
@@ -88,7 +88,7 @@ export default function MediaPage() {
         <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] py-14 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-20">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent">Coverage List</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">Coverage List</p>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-900 dark:text-white md:text-5xl">
                 Selected Report From Media House
               </h2>
@@ -127,7 +127,7 @@ export default function MediaPage() {
                   </p>
                   <div className="mt-5 flex items-center justify-between gap-3">
                     <p className="text-sm font-medium text-stone-500 dark:text-slate-400">{item.publication}</p>
-                    <span className="text-xs font-black uppercase tracking-[0.14em] text-rc-primary">Open Source</span>
+                    <span className="text-xs font-black uppercase tracking-[0.14em] text-rc-primary dark:text-white">Open Source</span>
                   </div>
                 </a>
               ))}
@@ -138,7 +138,7 @@ export default function MediaPage() {
         <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
           <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent">Coverage Network</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">Coverage Network</p>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-5xl">
                 They attend and report
               </h2>

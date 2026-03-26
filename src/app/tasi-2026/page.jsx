@@ -17,7 +17,7 @@ export default function Tasi2026EditionPage() {
             <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/75">TASI Editions</p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
               TASI 2026
-              <span className="mt-2 block text-[1.15rem] font-extrabold text-rc-secondary md:text-[1.85rem]">
+              <span className="mt-2 block text-[1.15rem] font-extrabold text-rc-secondary dark:text-white md:text-[1.85rem]">
                 Trust and Safety India Festival
               </span>
             </h1>

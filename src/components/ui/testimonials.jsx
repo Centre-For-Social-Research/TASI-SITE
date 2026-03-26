@@ -89,9 +89,9 @@ export const TestimonialSection = ({
 
                   <div className="flex flex-1 flex-col justify-between bg-gradient-to-b from-white to-rc-primary/5 p-6 text-left text-rc-foreground dark:from-zinc-900 dark:to-zinc-800 dark:text-zinc-100">
                     <div>
-                      <Quote className="mb-4 h-8 w-8 text-rc-accent/70 dark:text-rc-secondary/85" aria-hidden="true" />
+                      <Quote className="mb-4 h-8 w-8 text-rc-accent/70 dark:text-white" aria-hidden="true" />
                       <blockquote className="mb-6 text-sm font-medium leading-relaxed md:text-base">
-                        "{testimonial.quote}"
+                        &quot;{testimonial.quote}&quot;
                       </blockquote>
                     </div>
                     <figcaption className="mt-auto">

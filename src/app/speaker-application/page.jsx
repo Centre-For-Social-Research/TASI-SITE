@@ -61,7 +61,7 @@ export default function SpeakerApplicationPage() {
   return (
     <>
       <HomeNavbar />
-      <main className="bg-[#fdf6ef] pb-20 text-stone-900">
+      <main className="bg-[#fdf6ef] pb-20 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <BrandedPageHero className="py-14 md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">TASI 2026</p>
@@ -77,12 +77,12 @@ export default function SpeakerApplicationPage() {
 
         <section className="mx-auto mt-12 max-w-6xl px-6 sm:mt-14 sm:px-8">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(420px,0.98fr)] lg:items-stretch">
-            <div className="flex h-full flex-col rounded-[2rem] border border-stone-200/80 bg-white p-7 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-9">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">Why Speak</p>
-              <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 sm:text-4xl">
+            <div className="flex h-full flex-col rounded-[2rem] border border-stone-200/80 bg-white p-7 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-9">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">Why Speak</p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 dark:text-white sm:text-4xl">
                 Join a stage built for substance
               </h2>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-stone-600">
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-stone-600 dark:text-slate-300">
                 TASI brings together policymakers, platforms, researchers, safety teams, educators, advocates, and
                 digital rights leaders. We are especially interested in proposals grounded in practice, evidence, and
                 lived experience.
@@ -92,7 +92,7 @@ export default function SpeakerApplicationPage() {
                 {proofPoints.map((item) => (
                   <div
                     key={item}
-                    className="rounded-[1.5rem] border border-stone-200 bg-stone-50 px-4 py-4 text-sm font-medium leading-relaxed text-stone-700"
+                    className="rounded-[1.5rem] border border-stone-200 bg-stone-50 px-4 py-4 text-sm font-medium leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                   >
                     {item}
                   </div>
@@ -119,8 +119,8 @@ export default function SpeakerApplicationPage() {
 
         <section className="mx-auto mt-20 max-w-6xl px-6 sm:px-8">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">They've Spoken at TASI</p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-950 sm:text-4xl">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">They&apos;ve Spoken at TASI</p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-950 dark:text-white sm:text-4xl">
               Voices that shaped the room
             </h2>
           </div>
@@ -129,15 +129,15 @@ export default function SpeakerApplicationPage() {
             {speakerHighlights.map((speaker) => (
               <article
                 key={speaker.name}
-                className="overflow-hidden rounded-[1.35rem] border border-stone-200 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
+                className="overflow-hidden rounded-[1.35rem] border border-stone-200 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900"
               >
                 <div className="relative aspect-[3/4] bg-stone-200">
                   <Image src={speaker.image} alt={speaker.name} fill className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 </div>
                 <div className="p-3.5">
-                  <h3 className="text-base font-black tracking-tight text-stone-950">{speaker.name}</h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-stone-600">{speaker.title}</p>
+                  <h3 className="text-base font-black tracking-tight text-stone-950 dark:text-white">{speaker.name}</h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-stone-600 dark:text-slate-300">{speaker.title}</p>
                 </div>
               </article>
             ))}
@@ -145,16 +145,16 @@ export default function SpeakerApplicationPage() {
         </section>
 
         <section className="mx-auto mt-20 max-w-6xl px-6 sm:px-8">
-          <div className="rounded-[2rem] border border-stone-200 bg-white px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] sm:px-10">
-            <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-orange-700">Media Reach</p>
-            <h2 className="mt-4 text-center text-3xl font-black tracking-tight text-stone-950 sm:text-4xl">
+          <div className="rounded-[2rem] border border-stone-200 bg-white px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-10">
+            <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">Media Reach</p>
+            <h2 className="mt-4 text-center text-3xl font-black tracking-tight text-stone-950 dark:text-white sm:text-4xl">
               A conversation that travels beyond the venue
             </h2>
             <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
               {mediaLogos.map((logo) => (
                 <div
                   key={logo.alt}
-                  className="flex h-24 items-center justify-center rounded-[1.5rem] border border-stone-200 bg-stone-50 p-4"
+                  className="flex h-24 items-center justify-center rounded-[1.5rem] border border-stone-200 bg-stone-50 p-4 dark:border-slate-700 dark:bg-slate-800"
                 >
                   <Image src={logo.src} alt={logo.alt} width={140} height={52} className="h-10 w-auto object-contain" />
                 </div>

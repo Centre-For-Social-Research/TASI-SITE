@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
 const PREFS_KEY = "tasi_cookie_prefs";
 
@@ -26,30 +26,34 @@ function persistCookiePrefs(prefs) {
 
 export default function CookieConsentBanner() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (pathname === "/cookie-settings") {
-      setVisible(false);
-      return;
+  const [dismissed, setDismissed] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+  const hasStoredPrefs = useMemo(() => {
+    if (!mounted || pathname === "/cookie-settings" || typeof window === "undefined") {
+      return false;
     }
 
     try {
-      const stored = localStorage.getItem(PREFS_KEY);
-      setVisible(!stored);
+      return Boolean(localStorage.getItem(PREFS_KEY));
     } catch {
-      setVisible(true);
+      return false;
     }
-  }, [pathname]);
+  }, [mounted, pathname]);
+
+  const visible = mounted && pathname !== "/cookie-settings" && !dismissed && !hasStoredPrefs;
 
   const acceptAll = () => {
     persistCookiePrefs(ACCEPT_ALL);
-    setVisible(false);
+    setDismissed(true);
   };
 
   const rejectOptional = () => {
     persistCookiePrefs(REJECT_OPTIONAL);
-    setVisible(false);
+    setDismissed(true);
   };
 
   if (!visible) {

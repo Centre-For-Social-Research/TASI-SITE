@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Calendar, User } from "lucide-react";
 import HomeNavbar from "@/components/home/navbar";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
@@ -75,9 +76,11 @@ export default function BlogPage() {
                 >
                   {/* Image */}
                   <div className="md:w-80 flex-shrink-0">
-                    <img
+                    <Image
                       src={post.image}
                       alt={post.title}
+                      width={640}
+                      height={768}
                       className="w-full h-64 md:h-96 object-cover"
                     />
                   </div>

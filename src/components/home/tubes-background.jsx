@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 function randomColors(count) {
@@ -16,7 +16,6 @@ export default function TubesBackground({
 }) {
   const canvasRef = useRef(null);
   const paletteRef = useRef(["#f967fb", "#53bc28", "#6958d5", "#60aed5"]);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -61,7 +60,6 @@ export default function TubesBackground({
 
     resize();
     draw();
-    setIsLoaded(true);
     window.addEventListener("resize", resize);
 
     return () => {
@@ -88,9 +86,6 @@ export default function TubesBackground({
         style={{ touchAction: "none" }}
         aria-hidden="true"
       />
-      {!isLoaded ? (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.35),transparent_45%),linear-gradient(180deg,#0b1022_0%,#070910_100%)]" />
-      ) : null}
       <div className="relative z-10 h-full w-full">{children}</div>
     </div>
   );

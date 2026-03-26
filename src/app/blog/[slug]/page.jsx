@@ -51,7 +51,7 @@ export default async function BlogPostPage({ params }) {
               <div className="mb-6">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center text-sm font-bold uppercase tracking-wider text-white hover:text-rc-secondary transition-colors"
+                  className="inline-flex items-center text-sm font-bold uppercase tracking-wider text-white hover:text-rc-secondary dark:hover:text-white transition-colors"
                 >
                   <ArrowLeft className="mr-2 w-4 h-4" />
                   Back to News
@@ -106,13 +106,13 @@ export default async function BlogPostPage({ params }) {
           <div className="mt-16 flex flex-col sm:flex-row items-center justify-between border-t border-stone-200 dark:border-stone-800 pt-8 pb-4">
             <h4 className="text-sm font-bold uppercase tracking-widest text-stone-500 mb-4 sm:mb-0">Share this article</h4>
             <div className="flex gap-4">
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-blue-500">
+              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white dark:hover:bg-stone-800 dark:hover:text-white">
                 <Facebook className="w-4 h-4" />
               </button>
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-sky-500 hover:bg-sky-50 hover:text-sky-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-sky-500">
+              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-sky-500 hover:bg-sky-50 hover:text-sky-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white dark:hover:bg-stone-800 dark:hover:text-white">
                 <Twitter className="w-4 h-4" />
               </button>
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-blue-700 hover:bg-blue-50 hover:text-blue-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-blue-600">
+              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-blue-700 hover:bg-blue-50 hover:text-blue-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white dark:hover:bg-stone-800 dark:hover:text-white">
                 <Linkedin className="w-4 h-4" />
               </button>
               <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Linkedin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
@@ -178,20 +178,11 @@ export default function SpeakersDirectory() {
   }, [active, query]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / SPEAKERS_PER_PAGE));
+  const currentPageSafe = Math.min(currentPage, totalPages);
   const paginatedSpeakers = useMemo(() => {
-    const startIndex = (currentPage - 1) * SPEAKERS_PER_PAGE;
+    const startIndex = (currentPageSafe - 1) * SPEAKERS_PER_PAGE;
     return filtered.slice(startIndex, startIndex + SPEAKERS_PER_PAGE);
-  }, [currentPage, filtered]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [active, query]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
+  }, [currentPageSafe, filtered]);
 
   return (
     <section className="bg-stone-100 py-12 md:py-16">
@@ -206,7 +197,10 @@ export default function SpeakersDirectory() {
           <input
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setCurrentPage(1);
+            }}
             placeholder="Search speakers by name, role, or bio…"
             className="w-full rounded-[10px] border border-stone-300 bg-white py-3 pl-11 pr-5 text-sm text-stone-800 shadow-sm placeholder:text-stone-400 focus:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200"
           />
@@ -230,7 +224,10 @@ export default function SpeakersDirectory() {
             <button
               key={category}
               type="button"
-              onClick={() => setActive(category)}
+              onClick={() => {
+                setActive(category);
+                setCurrentPage(1);
+              }}
               className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                 active === category
                   ? "border-orange-700 bg-orange-700 text-white"
@@ -260,7 +257,7 @@ export default function SpeakersDirectory() {
             <button
               type="button"
               onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-              disabled={currentPage === 1}
+              disabled={currentPageSafe === 1}
               className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-orange-500 hover:text-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Previous
@@ -272,7 +269,7 @@ export default function SpeakersDirectory() {
                 type="button"
                 onClick={() => setCurrentPage(page)}
                 className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                  currentPage === page
+                  currentPageSafe === page
                     ? "border-orange-700 bg-orange-700 text-white"
                     : "border-stone-300 bg-white text-stone-700 hover:border-orange-500 hover:text-orange-700"
                 }`}
@@ -284,7 +281,7 @@ export default function SpeakersDirectory() {
             <button
               type="button"
               onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-              disabled={currentPage === totalPages}
+              disabled={currentPageSafe === totalPages}
               className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-orange-500 hover:text-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Next

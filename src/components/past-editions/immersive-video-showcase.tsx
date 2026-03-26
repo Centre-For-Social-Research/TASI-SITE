@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 type Clip = {
   id: string;
@@ -126,7 +127,7 @@ export default function ImmersiveVideoShowcase() {
         }`}
       >
         <div className="mb-12 max-w-3xl md:mb-16">
-          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">Highlights</p>
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">Highlights</p>
           <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl lg:text-[3.2rem]">
             Immersive Video Showcase
           </h2>
@@ -176,7 +177,7 @@ export default function ImmersiveVideoShowcase() {
             </div>
 
             <div className="absolute bottom-4 right-4 z-20 max-w-[calc(100%-2rem)] rounded-2xl bg-black/35 px-4 py-3 text-white backdrop-blur-sm md:bottom-6 md:right-6 md:max-w-md md:px-5">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-secondary">Now Playing</p>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-secondary dark:text-white">Now Playing</p>
               <p className="mt-2 text-base font-semibold leading-snug md:text-lg">{activeClip.title}</p>
             </div>
           </div>
@@ -195,7 +196,7 @@ export default function ImmersiveVideoShowcase() {
                       aria-label={`Play ${clip.title}`}
                       className="relative h-24 w-32 flex-none overflow-hidden rounded-2xl"
                     >
-                      <img src={clip.thumbnail} alt={clip.title} loading="lazy" className="h-full w-full object-cover" />
+                      <Image src={clip.thumbnail} alt={clip.title} fill sizes="128px" className="object-cover" />
                       <div className="absolute inset-0 bg-black/35" />
                       <div className={`absolute inset-0 border-2 ${isActive ? "border-[#ff6f61]" : "border-transparent"}`} />
                       <div className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#ffe5d6]">
@@ -220,11 +221,12 @@ export default function ImmersiveVideoShowcase() {
                   aria-label={`Play ${clip.title}`}
                   className="group relative h-32 w-full overflow-hidden border-t border-white/10 lg:h-36"
                 >
-                  <img
+                  <Image
                     src={clip.thumbnail}
                     alt={clip.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/35 transition-colors duration-300 group-hover:bg-black/20" />
                   <div className={`absolute inset-0 border-2 ${isActive ? "border-[#ff6f61]" : "border-transparent"}`} />

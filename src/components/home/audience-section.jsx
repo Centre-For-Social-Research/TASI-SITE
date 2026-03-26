@@ -35,16 +35,16 @@ const audience = [
 
 export default function AudienceSection() {
   return (
-    <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm text-stone-900 md:py-section-lg">
+    <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm text-stone-900 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] dark:text-stone-100 md:py-section-lg">
       <div className="mx-auto max-w-[1300px] px-4 md:px-8 lg:px-16">
         <MotionReveal className="mb-12 max-w-3xl md:mb-16">
           <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
             Audience
           </p>
           <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-[3.2rem]">
-            Who Will You <span className="text-rc-primary">Meet?</span>
+            Who Will You <span className="text-rc-primary dark:text-white">Meet?</span>
           </h2>
-          <p className="mt-5 text-body-lg text-stone-700">
+          <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
             TASI brings together the cross-sector community shaping India&apos;s trust, safety, and AI governance agenda.
           </p>
         </MotionReveal>
@@ -52,7 +52,7 @@ export default function AudienceSection() {
         <MotionStagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {audience.map((item) => (
             <MotionItem key={item.title}>
-              <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40">
+              <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
                 <div className="relative aspect-[1.5/1] w-full">
                   <Image
                     src={item.image}
@@ -63,11 +63,11 @@ export default function AudienceSection() {
                   />
                 </div>
                 <div className="flex h-full flex-col p-5 md:p-6">
-                  <div className="inline-block rounded-[10px] bg-rc-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white">
+                  <div className="inline-block rounded-[10px] bg-rc-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white dark:bg-white dark:text-slate-950">
                     {item.tag}
                   </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 md:text-[1.35rem]">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-stone-600">
+                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
                     {item.text}
                   </p>
                 </div>

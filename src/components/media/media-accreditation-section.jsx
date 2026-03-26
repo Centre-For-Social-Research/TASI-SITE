@@ -1,22 +1,60 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function MediaAccreditationSection() {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const applyHref = useMemo(() => {
-    const subject = encodeURIComponent("TASI 2026 Media Accreditation Application");
-    const body = encodeURIComponent(
-      `Hello TASI team,\n\nI would like to apply for media accreditation for TASI 2026.\n\nBusiness email: ${email || "[please add your business email]"}\nPublication:\nName:\nRole:\n\nThank you.`
-    );
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setStatus("");
+    setIsSubmitting(true);
 
-    return `mailto:india@trustandsafetyfestival.org?subject=${subject}&body=${body}`;
-  }, [email]);
+    try {
+      const response = await fetch("/api/media-accreditation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      });
+
+      let data = null;
+      const contentType = response.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        if (text) {
+          data = { error: text };
+        }
+      }
+
+      if (!response.ok) {
+        setStatus(data?.error || `Request failed (${response.status}).`);
+      } else {
+        setStatus("Application received. The TASI team will review your accreditation request.");
+        setEmail("");
+      }
+    } catch (error) {
+      const errorMessage =
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error &&
+        typeof error.message === "string"
+          ? error.message
+          : "Network error while submitting your request. Please try again.";
+
+      setStatus(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <section
@@ -51,7 +89,7 @@ export default function MediaAccreditationSection() {
             .
           </p>
 
-          <div className="mt-6 max-w-xl">
+          <form className="mt-6 max-w-xl" onSubmit={handleSubmit}>
             <label
               htmlFor="media-business-email"
               className="mb-2 block text-xs font-black uppercase tracking-[0.12em] text-white"
@@ -65,17 +103,21 @@ export default function MediaAccreditationSection() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder="user@example.com"
               className="h-11 rounded-[10px] border-0 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-500 focus-visible:ring-2 focus-visible:ring-white"
+              required
             />
-          </div>
 
-          <div className="mt-6">
-            <Button
-              asChild
-              className="h-auto rounded-xl bg-white px-6 py-3.5 text-xs font-black uppercase tracking-[0.12em] text-stone-900 hover:bg-stone-100"
-            >
-              <a href={applyHref}>Apply for media accreditation</a>
-            </Button>
-          </div>
+            <div className="mt-6">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="h-auto rounded-xl bg-white px-6 py-3.5 text-xs font-black uppercase tracking-[0.12em] text-stone-900 hover:bg-stone-100"
+              >
+                {isSubmitting ? "Submitting..." : "Apply for media accreditation"}
+              </Button>
+            </div>
+
+            {status ? <p className="mt-3 text-sm leading-relaxed text-white/88">{status}</p> : null}
+          </form>
         </div>
 
         <div className="relative min-h-[220px] lg:min-h-[40vh]">

@@ -76,6 +76,7 @@ export function Gallery({
               className={`group relative cursor-pointer overflow-hidden rounded-lg transition-all duration-500 ${isReanimating ? "scale-[0.98] opacity-70 saturate-125" : "scale-100 opacity-100 hover:-translate-y-1 hover:shadow-xl"} ${img.span || "col-span-1"}`}
               onClick={() => onImageClick(img.src)}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img.src}
                 alt={img.alt}
@@ -105,6 +106,7 @@ export function ImageModal({ src, onClose }: ImageModalProps) {
       className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 opacity-100"
       onClick={onClose}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt="Enlarged view"

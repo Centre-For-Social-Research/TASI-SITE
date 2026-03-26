@@ -1,7 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { CalendarPlus } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import BuildMyAgenda from './build-my-agenda';
 
 const FORMAT_LABELS = {
@@ -201,11 +202,14 @@ export default function ProgrammeAgendaClient({
 
   const formats = useMemo(() => [...new Set(normalizedSessions.map((s) => s.format))], [normalizedSessions]);
   const venues = useMemo(() => [...new Set(normalizedSessions.map((s) => s.venue || s.track))].sort(), [normalizedSessions]);
-  const labels = {
-    oct6: dayLabels?.oct6 || 'Oct 6 - Opening Reception',
-    oct7: dayLabels?.oct7 || 'Oct 7 - Day 1',
-    oct8: dayLabels?.oct8 || 'Oct 8 - Day 2',
-  };
+  const labels = useMemo(
+    () => ({
+      oct6: dayLabels?.oct6 || 'Oct 6 - Opening Reception',
+      oct7: dayLabels?.oct7 || 'Oct 7 - Day 1',
+      oct8: dayLabels?.oct8 || 'Oct 8 - Day 2',
+    }),
+    [dayLabels],
+  );
 
   const filteredSessions = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -242,20 +246,11 @@ export default function ProgrammeAgendaClient({
   );
 
   const totalPages = Math.max(1, Math.ceil(sessionsWithCalendar.length / SESSIONS_PER_PAGE));
+  const currentPageSafe = Math.min(currentPage, totalPages);
   const paginatedSessions = useMemo(() => {
-    const startIndex = (currentPage - 1) * SESSIONS_PER_PAGE;
+    const startIndex = (currentPageSafe - 1) * SESSIONS_PER_PAGE;
     return sessionsWithCalendar.slice(startIndex, startIndex + SESSIONS_PER_PAGE);
-  }, [currentPage, sessionsWithCalendar]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeDay, format, query, venue]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
+  }, [currentPageSafe, sessionsWithCalendar]);
 
   return (
     <section className="agenda-root">
@@ -523,7 +518,7 @@ export default function ProgrammeAgendaClient({
           font-family: inherit;
           font-size: 1.65rem;
           font-weight: 800;
-          color: #000;
+          color: var(--brown);
           line-height: 1.2;
           margin-bottom: 0.7rem;
         }
@@ -539,7 +534,7 @@ export default function ProgrammeAgendaClient({
         .session-venue-line {
           font-size: 0.88rem;
           font-weight: 500;
-          color: #111827;
+          color: var(--brown);
           margin-bottom: 0.9rem;
         }
 
@@ -625,12 +620,12 @@ export default function ProgrammeAgendaClient({
         .speaker-info { flex: 1; min-width: 0; }
         .speaker-name {
           font-weight: 800;
-          color: #111827;
+          color: var(--brown);
           font-size: 0.8rem;
           line-height: 1.35;
         }
         .speaker-title {
-          color: #6b7280;
+          color: var(--taupe);
           font-size: 0.72rem;
           font-weight: 400;
           line-height: 1.45;
@@ -717,12 +712,18 @@ export default function ProgrammeAgendaClient({
               className="search-input"
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Search sessions, speakers, topics..."
             />
           </div>
 
-          <select className="filter-select" value={format} onChange={(e) => setFormat(e.target.value)}>
+          <select className="filter-select" value={format} onChange={(e) => {
+            setFormat(e.target.value);
+            setCurrentPage(1);
+          }}>
             <option value="">All Formats</option>
             {formats.map((fmt) => (
               <option key={fmt} value={fmt}>
@@ -731,7 +732,10 @@ export default function ProgrammeAgendaClient({
             ))}
           </select>
 
-          <select className="filter-select" value={venue} onChange={(e) => setVenue(e.target.value)}>
+          <select className="filter-select" value={venue} onChange={(e) => {
+            setVenue(e.target.value);
+            setCurrentPage(1);
+          }}>
             <option value="">All Venues</option>
             {venues.map((v) => (
               <option key={v} value={v}>
@@ -756,25 +760,37 @@ export default function ProgrammeAgendaClient({
           <div className="shell day-tabs-inner">
             <button
               className={`day-tab ${activeDay === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveDay('all')}
+              onClick={() => {
+                setActiveDay('all');
+                setCurrentPage(1);
+              }}
             >
               All Days
           </button>
           <button
             className={`day-tab ${activeDay === 'oct6' ? 'active' : ''}`}
-            onClick={() => setActiveDay('oct6')}
+            onClick={() => {
+              setActiveDay('oct6');
+              setCurrentPage(1);
+            }}
           >
             {labels.oct6}
           </button>
           <button
             className={`day-tab ${activeDay === 'oct7' ? 'active' : ''}`}
-            onClick={() => setActiveDay('oct7')}
+            onClick={() => {
+              setActiveDay('oct7');
+              setCurrentPage(1);
+            }}
           >
             {labels.oct7}
           </button>
           <button
             className={`day-tab ${activeDay === 'oct8' ? 'active' : ''}`}
-            onClick={() => setActiveDay('oct8')}
+            onClick={() => {
+              setActiveDay('oct8');
+              setCurrentPage(1);
+            }}
           >
             {labels.oct8}
           </button>
@@ -840,9 +856,9 @@ export default function ProgrammeAgendaClient({
                           <div className="speakers-list">
                             {session.speakersDetailed.map((speaker, idx) => (
                               <div key={idx} className="speaker-row">
-                                <div className="speaker-avatar" aria-hidden="true">
+                                <div className="speaker-avatar relative" aria-hidden="true">
                                   {speaker.photo ? (
-                                    <img src={speaker.photo} alt={speaker.name} />
+                                    <Image src={speaker.photo} alt={speaker.name} fill sizes="58px" />
                                   ) : (
                                     <span>{speaker.name.charAt(0)}</span>
                                   )}
@@ -866,7 +882,7 @@ export default function ProgrammeAgendaClient({
                     type="button"
                     className="pagination-btn"
                     onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                    disabled={currentPage === 1}
+                    disabled={currentPageSafe === 1}
                   >
                     Previous
                   </button>
@@ -874,7 +890,7 @@ export default function ProgrammeAgendaClient({
                     <button
                       key={page}
                       type="button"
-                      className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
+                      className={`pagination-btn ${currentPageSafe === page ? 'active' : ''}`}
                       onClick={() => setCurrentPage(page)}
                     >
                       {page}
@@ -884,7 +900,7 @@ export default function ProgrammeAgendaClient({
                     type="button"
                     className="pagination-btn"
                     onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-                    disabled={currentPage === totalPages}
+                    disabled={currentPageSafe === totalPages}
                   >
                     Next
                   </button>

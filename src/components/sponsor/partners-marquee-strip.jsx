@@ -26,7 +26,7 @@ export default function PartnersMarqueeStrip() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,217,25,0.14),transparent_40%)]" />
       <div className="relative mx-auto w-full max-w-6xl px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary">Our Network</p>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">Our Network</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-white md:text-4xl">Partners from TASI 2025</h2>
           <p className="mt-4 text-sm leading-relaxed text-white/75 md:text-base">
             A growing network of organizations already shaping the trust and safety conversation around TASI.
@@ -37,8 +37,8 @@ export default function PartnersMarqueeStrip() {
           {partners.map((partner, index) => (
             <article
               key={partner.name}
-              className={`forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] sm:min-h-24 sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
-              style={{ backgroundColor: "#ffffff", colorScheme: "light" }}
+              className={`forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 !bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] dark:!bg-white sm:min-h-24 sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
+              style={{ colorScheme: "light" }}
             >
               <Image
                 src={partner.logo}

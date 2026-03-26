@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
         <p>
           These Terms of Service govern your use of the TASI 2026 website and your participation in the
           Trust and Safety India Festival 2026, co-organised by the Centre for Social Research (CSR)
-          and the Trust and Safety Festival (together, the "Organisers").
+          and the Trust and Safety Festival (together, the &quot;Organisers&quot;).
         </p>
         <p>
           By accessing our website, registering for the event, or attending in any capacity, you confirm

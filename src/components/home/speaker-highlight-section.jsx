@@ -73,7 +73,7 @@ export default function SpeakerHighlightSection() {
         </div>
 
         <div className="mt-12 w-full max-w-2xl px-4">
-          <Link href="/speakers" className="flex items-center justify-center w-full py-4 border-2 border-rc-primary text-rc-primary rounded-full font-bold tracking-widest text-sm uppercase hover:bg-rc-primary hover:text-rc-primary-foreground transition-colors dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black">
+          <Link href="/speakers" className="flex items-center justify-center w-full py-4 border-2 border-rc-primary text-rc-primary rounded-full font-bold tracking-widest text-sm uppercase transition-colors hover:bg-rc-primary hover:text-rc-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-slate-950 dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#121212]">
             SEE MORE SPEAKERS
           </Link>
         </div>

@@ -1,7 +1,6 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -14,12 +13,6 @@ const fadeUp = {
 };
 
 export default function HomeHero() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <section className="relative flex py-section-lg min-h-[auto] md:min-h-[60vh] items-center justify-center overflow-hidden bg-black text-white px-4">
       {/* Background Image */}
@@ -47,7 +40,7 @@ export default function HomeHero() {
         <motion.div
           className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/85 md:mb-8"
           initial="hidden"
-          animate={mounted ? "visible" : "hidden"}
+          animate="visible"
           variants={fadeUp}
           custom={0}
         >
@@ -60,7 +53,7 @@ export default function HomeHero() {
         <motion.div
           className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 w-full"
           initial="hidden"
-          animate={mounted ? "visible" : "hidden"}
+          animate="visible"
           variants={fadeUp}
           custom={0.1}
         >
@@ -68,7 +61,7 @@ export default function HomeHero() {
           <div className="text-right flex-1 flex justify-end">
             <h1 className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end">
               <span className="leading-[0.8] mb-2">TASI</span>
-              <span className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary">2026</span>
+              <span className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">2026</span>
             </h1>
           </div>
 
@@ -79,7 +72,7 @@ export default function HomeHero() {
           {/* Right Side: Location and Info */}
           <div className="text-left flex-1 flex justify-start">
             <div className="flex flex-col text-center md:text-left">
-              <h2 className="text-[2.5rem] md:text-[4rem] font-black text-rc-secondary leading-none mb-3 tracking-tight drop-shadow-sm">
+              <h2 className="text-[2.5rem] md:text-[4rem] font-black text-rc-secondary dark:text-white leading-none mb-3 tracking-tight drop-shadow-sm">
                 Delhi
               </h2>
               <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white mb-2">
@@ -96,7 +89,7 @@ export default function HomeHero() {
         <motion.div
           className="mt-7 md:mt-8 flex flex-col items-center"
           initial="hidden"
-          animate={mounted ? "visible" : "hidden"}
+          animate="visible"
           variants={fadeUp}
           custom={0.3}
         >
@@ -111,7 +104,7 @@ export default function HomeHero() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/sponsor"
-              className="inline-flex rounded-full border border-white/60 px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-white transition-all hover:bg-white hover:text-black"
+              className="inline-flex rounded-full border border-white/60 px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-white transition-all hover:bg-white hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               Become a Sponsor
             </Link>
@@ -119,7 +112,7 @@ export default function HomeHero() {
               href="https://drive.google.com/file/d/1oG8biMtiPTBxKnABevMPAOsqx2paykwS/view?usp=sharing"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary transition-all hover:bg-rc-secondary hover:text-black"
+              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary dark:border-white/70 dark:text-white transition-all hover:bg-rc-secondary hover:text-slate-950 dark:hover:bg-white dark:hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               Download Brochure
             </a>
@@ -127,7 +120,7 @@ export default function HomeHero() {
               href="https://drive.google.com/file/d/1S9dHlHQg8pm0-HjsjkXK0dwOSUCYqhxn/view?usp=sharing"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary transition-all hover:bg-rc-secondary hover:text-black"
+              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary dark:border-white/70 dark:text-white transition-all hover:bg-rc-secondary hover:text-slate-950 dark:hover:bg-white dark:hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               Read TASI 2025 Report
             </a>

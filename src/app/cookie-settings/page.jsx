@@ -5,6 +5,11 @@ import LegalLayout from "@/components/LegalLayout";
 import { DocSection, DocTable, MetaBadge } from "@/components/LegalComponents";
 
 const PREFS_KEY = "tasi_cookie_prefs";
+const DEFAULT_PREFS = {
+  functional: true,
+  analytics: false,
+  marketing: false,
+};
 
 function Toggle({ checked, onChange, disabled }) {
   return (
@@ -46,23 +51,28 @@ function CookieCard({ title, badge, badgeVariant = "optional", description, chec
 }
 
 export default function CookieSettingsPage() {
-  const [prefs, setPrefs] = useState({
-    functional: true,
-    analytics: false,
-    marketing: false,
+  const [prefs, setPrefs] = useState(() => {
+    if (typeof window === "undefined") {
+      return DEFAULT_PREFS;
+    }
+
+    try {
+      const stored = localStorage.getItem(PREFS_KEY);
+      return stored ? { ...DEFAULT_PREFS, ...JSON.parse(stored) } : DEFAULT_PREFS;
+    } catch {
+      return DEFAULT_PREFS;
+    }
   });
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(PREFS_KEY);
-      if (stored) {
-        setPrefs(JSON.parse(stored));
-      }
-    } catch {
-      // Ignore parse/storage errors and keep defaults.
+    if (!saved) {
+      return undefined;
     }
-  }, []);
+
+    const timeoutId = window.setTimeout(() => setSaved(false), 3000);
+    return () => window.clearTimeout(timeoutId);
+  }, [saved]);
 
   const update = (key) => (value) => setPrefs((previous) => ({ ...previous, [key]: value }));
 
@@ -73,7 +83,6 @@ export default function CookieSettingsPage() {
       setPrefs(toSave);
     }
     setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
   };
 
   const acceptAll = () => {

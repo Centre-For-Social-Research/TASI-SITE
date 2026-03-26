@@ -31,16 +31,16 @@ const formatItems = [
 
 export default function FormatGrid() {
   return (
-    <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm md:py-section-lg">
+    <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
       <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
         <MotionReveal className="mb-12 max-w-3xl md:mb-16">
           <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
             Overview
           </p>
-          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl lg:text-[3.2rem]">
-            What to Expect at <span className="text-rc-primary">TASI 2026</span>
+          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
+            What to Expect at <span className="text-rc-primary dark:text-white">TASI 2026</span>
           </h2>
-          <p className="mt-5 text-body-lg text-stone-700">
+          <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
             TASI 2026 blends high-level dialogue with practical exchange so delegates leave with sharper insights,
             stronger networks, and clearer pathways to action.
           </p>
@@ -49,7 +49,7 @@ export default function FormatGrid() {
         <MotionStagger className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {formatItems.map((item, index) => (
             <MotionItem key={item.title}>
-              <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40">
+              <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
                 <div className="relative aspect-[1.5/1] w-full">
                   <Image
                     src={item.image}
@@ -61,13 +61,13 @@ export default function FormatGrid() {
                 </div>
                 <div className="flex h-full flex-col p-5 md:p-6">
                   <div className="flex items-center justify-between">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-rc-primary text-sm font-black text-white">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-rc-primary text-sm font-black text-white dark:bg-white dark:text-slate-950">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-stone-400">Experience</span>
+                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-stone-400 dark:text-slate-500">Experience</span>
                   </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 md:text-[1.35rem]">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-stone-600">{item.desc}</p>
+                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">{item.desc}</p>
                 </div>
               </article>
             </MotionItem>

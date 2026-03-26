@@ -28,11 +28,9 @@ function formatRemaining(targetTime) {
 
 export default function Countdown() {
   const target = useMemo(() => new Date("2026-10-13T09:00:00+05:30").getTime(), []);
-  const [time, setTime] = useState(INITIAL_TIME);
+  const [time, setTime] = useState(() => formatRemaining(target));
 
   useEffect(() => {
-    setTime(formatRemaining(target));
-
     const id = window.setInterval(() => {
       setTime(formatRemaining(target));
     }, 1000);

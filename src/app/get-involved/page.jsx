@@ -20,7 +20,7 @@ const involvementOptions = [
     title: "Become a Sponsor",
     description:
       "Put your organisation in front of policymakers, platform teams, researchers, and civil society leaders through tailored TASI partnership opportunities.",
-    href: "/sponsor",
+    href: "/sponsor#sponsorship-tiers",
     cta: "Explore Sponsorships",
     image: "/img/home-gallery/tasi-2026-brochure-3.png",
     imageAlt: "TASI sponsorship brochure material",
@@ -30,7 +30,7 @@ const involvementOptions = [
     title: "Showcase Your Organisation",
     description:
       "Present your trust and safety work, initiatives, or tools through brand visibility, partner activations, and aligned festival touchpoints.",
-    href: "/sponsor",
+    href: "/sponsor#partner-options",
     cta: "See Brand Opportunities",
     image: "/img/home-gallery/highlight-2.webp",
     imageAlt: "TASI event space and showcase area",
@@ -60,8 +60,8 @@ const involvementOptions = [
     title: "Become a Media or Association Partner",
     description:
       "Collaborate with TASI as a media platform, association, or ecosystem organisation to amplify key conversations and reach relevant communities.",
-    href: "/media",
-    cta: "View Media Page",
+    href: "/sponsor#partner-options",
+    cta: "Explore Partner Options",
     image: "/img/home-gallery/IMG_6646.webp",
     imageAlt: "Audience and conference engagement at TASI",
     eyebrow: "Amplification",
@@ -154,16 +154,16 @@ function InvolvementCard({ item }) {
       </div>
 
       <div className="flex flex-1 flex-col px-1 pb-1 pt-4 text-center">
-        <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-orange-700">{item.eyebrow}</p>
-        <h3 className="mt-2 text-[1.02rem] font-black tracking-tight text-stone-950">{item.title}</h3>
-        <p className="mt-3 text-[13px] leading-6 text-stone-600">{item.description}</p>
+        <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-orange-700 dark:text-white">{item.eyebrow}</p>
+        <h3 className="mt-2 text-[1.02rem] font-black tracking-tight text-stone-950 dark:text-white">{item.title}</h3>
+        <p className="mt-3 text-[13px] leading-6 text-stone-600 dark:text-slate-300">{item.description}</p>
         <div className="mt-4">
           {item.href ? (
-            <span className="inline-flex items-center rounded-[10px] border border-stone-300 bg-stone-50 px-3 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-stone-900 transition group-hover:border-stone-500 group-hover:bg-white">
+            <span className="inline-flex items-center rounded-[10px] border border-stone-300 bg-stone-50 px-3 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-stone-900 transition group-hover:border-stone-500 group-hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:group-hover:border-slate-500 dark:group-hover:bg-slate-700">
               {item.cta}
             </span>
           ) : (
-            <span className="inline-flex items-center rounded-[10px] border border-orange-200 bg-orange-50 px-3 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-orange-800">
+            <span className="inline-flex items-center rounded-[10px] border border-orange-200 bg-orange-50 px-3 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-orange-800 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
               {item.note}
             </span>
           )}
@@ -176,7 +176,7 @@ function InvolvementCard({ item }) {
     return (
       <Link
         href={item.href}
-        className="group flex h-full flex-col rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_14px_34px_-26px_rgba(15,23,42,0.22)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(15,23,42,0.26)]"
+        className="group flex h-full flex-col rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_14px_34px_-26px_rgba(15,23,42,0.22)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(15,23,42,0.26)] dark:border-slate-800 dark:bg-slate-900"
       >
         {content}
       </Link>
@@ -184,7 +184,7 @@ function InvolvementCard({ item }) {
   }
 
   return (
-    <article className="group flex h-full flex-col rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_14px_34px_-26px_rgba(15,23,42,0.22)]">
+    <article className="group flex h-full flex-col rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_14px_34px_-26px_rgba(15,23,42,0.22)] dark:border-slate-800 dark:bg-slate-900">
       {content}
     </article>
   );
@@ -194,7 +194,7 @@ export default function GetInvolvedPage() {
   return (
     <>
       <HomeNavbar />
-      <main className="bg-[#fdf6ef] pb-20 text-stone-900">
+      <main className="bg-[#fdf6ef] pb-20 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <BrandedPageHero className="py-14 md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Get Involved</p>
@@ -210,7 +210,7 @@ export default function GetInvolvedPage() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-white transition hover:bg-white/15"
+                  className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-white transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {item.label}
                 </Link>
@@ -221,11 +221,11 @@ export default function GetInvolvedPage() {
 
         <section className="mx-auto mt-10 max-w-7xl px-6 sm:px-8">
           <div className="px-2 py-4 text-center">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">Participation Paths</p>
-            <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 sm:text-4xl">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-white">Participation Paths</p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 dark:text-white sm:text-4xl">
               How will you shape your impact at TASI?
             </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-stone-600 md:text-base">
+            <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-stone-600 dark:text-slate-300 md:text-base">
               From speaking and sponsorship to media access, delegations, and partner-led moments, we&apos;ll help you
               find the format that best fits your goals.
             </p>
@@ -240,9 +240,9 @@ export default function GetInvolvedPage() {
 
         <section className="mx-auto mt-14 max-w-6xl px-6 sm:px-8">
           <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[10px] border border-stone-200 bg-white px-6 py-8 shadow-[0_20px_60px_rgba(15,23,42,0.06)] sm:px-8">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">Best Fits</p>
-              <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 sm:text-4xl">
+            <div className="rounded-[10px] border border-stone-200 bg-white px-6 py-8 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-8">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-white">Best Fits</p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 dark:text-white sm:text-4xl">
                 Built for cross-sector participation, not one narrow audience
               </h2>
               <div className="mt-6 grid gap-3">
@@ -254,7 +254,7 @@ export default function GetInvolvedPage() {
                 ].map((item) => (
                   <div
                     key={item}
-                    className="rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-4 text-sm leading-relaxed text-stone-700"
+                    className="rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-4 text-sm leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                   >
                     {item}
                   </div>
@@ -274,13 +274,13 @@ export default function GetInvolvedPage() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center rounded-[10px] bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.14em] text-stone-950 transition hover:bg-white/90"
+                  className="inline-flex items-center rounded-[10px] !bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.14em] !text-[#140f26] transition hover:!bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent dark:!bg-white dark:!text-[#140f26]"
                 >
                   Contact TASI
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center rounded-[10px] border border-white/20 bg-white/10 px-5 py-3 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:bg-white/15"
+                  className="inline-flex items-center rounded-[10px] border border-white/20 bg-white/10 px-5 py-3 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:!bg-white hover:!text-[#140f26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent dark:hover:!bg-white dark:hover:!text-[#140f26]"
                 >
                   Register as Delegate
                 </Link>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import logo from "./assets/logo svg.svg";
 import Accepted from "./Accepted";
 import { AcceptedTag, RefusedTag, AllreadyAcceptedTag } from "./Tags";
@@ -13,7 +13,7 @@ export default function App() {
   const [isfetching, setIsfetching] = useState(false);
   const [scanError, setScanError] = useState("");
   const [acceptedInfo, setAcceptedInfo] = useState(null);
-  const classNameStyles = ["accepted", "already-accepted", "not-accepted"];
+  const classNameStyles = useMemo(() => ["accepted", "already-accepted", "not-accepted"], []);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const detectorRef = useRef(null);
@@ -27,7 +27,7 @@ export default function App() {
     }
   }, [canScan]);
 
-  const handleScann = async (rawValue) => {
+  const handleScann = useCallback(async (rawValue) => {
     if (!rawValue) {
       return;
     }
@@ -52,10 +52,11 @@ export default function App() {
     } finally {
       setIsfetching(false);
     }
-  };
+  }, [classNameStyles]);
 
   useEffect(() => {
     let intervalId;
+    const videoElement = videoRef.current;
 
     const startCamera = async () => {
       if (!cameraOn || !canScan) {
@@ -69,19 +70,19 @@ export default function App() {
           audio: false,
         });
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = streamRef.current;
-          await videoRef.current.play();
+        if (videoElement) {
+          videoElement.srcObject = streamRef.current;
+          await videoElement.play();
         }
 
         intervalId = window.setInterval(async () => {
-          if (!detectorRef.current || !videoRef.current || isfetching || frameLockRef.current) {
+          if (!detectorRef.current || !videoElement || isfetching || frameLockRef.current) {
             return;
           }
 
           try {
             frameLockRef.current = true;
-            const results = await detectorRef.current.detect(videoRef.current);
+            const results = await detectorRef.current.detect(videoElement);
             const value = results[0]?.rawValue;
             if (value) {
               handleScann(value);
@@ -107,16 +108,17 @@ export default function App() {
         streamRef.current.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
       }
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      if (videoElement) {
+        videoElement.srcObject = null;
       }
       frameLockRef.current = false;
     };
-  }, [cameraOn, isfetching, canScan]);
+  }, [cameraOn, isfetching, canScan, handleScann]);
 
   return (
     <div style={{ padding: "1rem" }}>
       <center>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="logo" style={{ zoom: "0.6", margin: "20px", width: 300 }} src={logo} />
       </center>
 
@@ -181,7 +183,7 @@ export default function App() {
           ) : (
             <section className="content">
               <center>
-                <h1>SCAN THE PARTICIPANT'S QR-CODE</h1>
+                <h1>SCAN THE PARTICIPANT&apos;S QR-CODE</h1>
               </center>
             </section>
           )}
