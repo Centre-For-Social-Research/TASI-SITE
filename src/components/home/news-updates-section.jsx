@@ -56,8 +56,10 @@ export default async function NewsUpdatesSection() {
                     <Image
                       src={item.image}
                       alt={item.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      width={1600}
+                      height={900}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : null}
                 </div>
