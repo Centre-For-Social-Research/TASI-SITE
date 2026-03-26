@@ -42,23 +42,20 @@ const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
   return (
     <div
       ref={ref}
-      className={cn("h-96 w-full max-w-[20rem]", className)}
-      style={{ perspective: "1000px" }}
+      className={cn("tasi-flip-perspective h-96 w-full max-w-[20rem]", className)}
       {...props}
     >
       <div
-        className="relative h-full w-full cursor-pointer transition-transform duration-700"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        }}
+        className={cn(
+          "tasi-flip-card relative h-full w-full cursor-pointer transition-transform duration-700",
+          isFlipped ? "tasi-flip-card-rotated" : "tasi-flip-card-front"
+        )}
       >
         <Card
           className={cn(
-            "absolute h-full w-full rounded-[10px] p-6 shadow-lg",
+            "tasi-flip-face absolute h-full w-full rounded-[10px] p-6 shadow-lg",
             isVipSpeaker ? "border-[#9c3c46] bg-[#801b26]" : "border-stone-200 bg-white"
           )}
-          style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex h-full w-full flex-col items-center justify-center space-y-4 text-center">
             <button
@@ -103,13 +100,9 @@ const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
 
         <Card
           className={cn(
-            "absolute h-full w-full rounded-[10px] p-6 shadow-lg",
+            "tasi-flip-face tasi-flip-face-back absolute h-full w-full rounded-[10px] p-6 shadow-lg",
             isVipSpeaker ? "border-[#9c3c46] bg-[#801b26]" : "border-stone-200 bg-white"
           )}
-          style={{
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
         >
           <div className="flex h-full flex-col">
             <div className="mb-4 flex items-center justify-between">

@@ -17,7 +17,7 @@ export default function AboutPreview() {
       <div className="mx-auto grid w-full max-w-[1400px] gap-12 px-6 lg:grid-cols-2 lg:gap-20 lg:px-12">
         <MotionReveal>
           <div className="flex flex-col h-full justify-center">
-            <h2 className="mb-6 text-5xl font-black uppercase tracking-tight text-[#171717] dark:text-white md:text-6xl lg:text-[4rem]" style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1 }}>
+            <h2 className="mb-6 font-['Inter',sans-serif] text-5xl font-black uppercase tracking-tight leading-none text-[#171717] dark:text-white md:text-6xl lg:text-[4rem]">
               INDIA&apos;S FOREMOST
               <span className="mt-2 block text-[#350265] dark:text-white">TRUST & SAFETY</span>
               CONVENING.

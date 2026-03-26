@@ -16,25 +16,13 @@ export default function HomeHero() {
   return (
     <section className="relative flex py-section-lg min-h-[auto] md:min-h-[60vh] items-center justify-center overflow-hidden bg-black text-white px-4">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 z-0 opacity-30"
-        style={{
-          backgroundImage: "url('/img/hero-bg-2.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed"
-        }}
-      />
+      <div className="hero-bg-image absolute inset-0 z-0 opacity-30" />
 
       {/* Vignette Overlay to darken edges more firmly */}
-      <div className="absolute inset-0 z-[5] pointer-events-none" style={{
-        background: "radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0.8) 100%)"
-      }} />
+      <div className="hero-vignette absolute inset-0 z-[5] pointer-events-none" />
 
       {/* Hero photo color overlay */}
-      <div className="absolute inset-0 z-10 opacity-75" style={{
-        background: "linear-gradient(0deg, rgb(63, 10, 10) 0%, rgb(115, 11, 78) 33%, rgb(204, 35, 20) 79%, rgb(222, 100, 22) 100%)"
-      }} />
+      <div className="hero-color-overlay absolute inset-0 z-10 opacity-75" />
 
       <div className="relative z-20 w-full max-w-6xl mx-auto flex flex-col items-center justify-center text-center mt-4 md:mt-8">
         <motion.div

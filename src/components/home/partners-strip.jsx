@@ -22,7 +22,7 @@ export default function PartnersStrip() {
   }
 
   return (
-    <section className="bg-white py-16 md:py-24" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <section className="bg-white py-16 font-['Inter',sans-serif] md:py-24">
       <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
         <h2 className="mb-12 text-center text-3xl font-black uppercase tracking-tight text-[#350265] md:mb-16 md:text-5xl">
           PARTNERS FROM <span className="text-[#ff6900]">TASI 2025</span>
@@ -32,8 +32,7 @@ export default function PartnersStrip() {
           {partners.map((partner, index) => (
             <article
               key={partner.name}
-              className={`forced-color-adjust-none [color-scheme:light] flex min-h-[5rem] items-center justify-center rounded-[10px] border-4 border-[#350265] !bg-white px-2 py-3 shadow-[4px_4px_0px_#350265] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_#350265] dark:!bg-white sm:min-h-[6rem] sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
-              style={{ backgroundColor: "#ffffff", colorScheme: "light" }}
+              className={`forced-color-adjust-none [color-scheme:light] flex min-h-[5rem] items-center justify-center rounded-[10px] border-4 border-[#350265] bg-[#ffffff] px-2 py-3 shadow-[4px_4px_0px_#350265] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_#350265] dark:bg-[#ffffff] sm:min-h-[6rem] sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
             >
               <Image
                 src={partner.logo}

@@ -38,7 +38,6 @@ export default function PartnersMarqueeStrip() {
             <article
               key={partner.name}
               className={`forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 !bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] dark:!bg-white sm:min-h-24 sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
-              style={{ colorScheme: "light" }}
             >
               <Image
                 src={partner.logo}

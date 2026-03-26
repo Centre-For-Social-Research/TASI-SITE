@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "repository": {
     "type": "git",
@@ -20,11 +22,14 @@
   },
   "homepage": "https://github.com/saquibreja7-hash/tasi-2026#readme",
   "dependencies": {
+    "@portabletext/react": "^6.0.3",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.22.0",
     "@supabase/supabase-js": "^2.99.2",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
@@ -40,9 +45,12 @@
     "lucide-react": "^0.577.0",
     "motion": "^12.38.0",
     "next": "^16.1.7",
+    "next-sanity": "^11.6.12",
     "next-themes": "^0.4.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "sanity": "^4.22.0",
+    "styled-components": "^6.3.12",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.5.0",
     "three": "^0.181.1",
@@ -54,6 +62,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.1.6",
     "postcss": "^8.5.8",
+    "prettier": "^3.6.2",
     "tailwindcss": "^3.4.17"
   }
 }

@@ -41,12 +41,11 @@ export default function Countdown() {
   }, [target]);
 
   return (
-    <div className="w-full max-w-xl rounded-xl border-4 border-[#350265] bg-[#ffd919] p-6 shadow-[8px_8px_0px_#350265] md:p-8" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="w-full max-w-xl rounded-xl border-4 border-[#350265] bg-[#ffd919] p-6 font-['Inter',sans-serif] shadow-[8px_8px_0px_#350265] md:p-8">
       <p className="mb-6 text-sm font-bold uppercase tracking-widest text-[#ff6900]">
         COUNTDOWN TO{" "}
         <span
-          className="text-[15px] font-normal leading-[21px] text-white"
-          style={{ fontFamily: "Inter, Helvetica, Arial, sans-serif", fontStyle: "normal", fontWeight: 400 }}
+          className="font-[Inter,Helvetica,Arial,sans-serif] text-[15px] font-normal leading-[21px] text-white"
         >
           TASI 2026
         </span>

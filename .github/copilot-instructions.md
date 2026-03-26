@@ -9,6 +9,5 @@
 - [x] Ensure Documentation is Complete
 
 - Project migrated to Next.js and Tailwind in current workspace root.
-- Legacy static sources moved into legacy/static-site for incremental migration.
 - No extension installation was required by setup info.
 - Launch step is intentionally pending user confirmation for debug mode.

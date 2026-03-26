@@ -1,7 +1,17 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { protectPublicPostRoute } from "@/lib/api-security";
 import { isValidEmail, sanitizeEmail } from "@/lib/input-sanitizers";
 
 export async function POST(request) {
+  const protection = protectPublicPostRoute(request, "register-confirmation", {
+    windowMs: 10 * 60 * 1000,
+    maxRequests: 5,
+  });
+
+  if (!protection.ok) {
+    return protection.response;
+  }
+
   try {
     const body = await request.json();
     const email = sanitizeEmail(body?.email);
@@ -22,13 +32,13 @@ export async function POST(request) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
-    return Response.json({ success: true });
+    return Response.json({ success: true }, { headers: protection.headers });
   } catch (error) {
     const message =
       error instanceof Error
         ? error.message
         : "Unable to submit confirmation email request.";
 
-    return Response.json({ error: message }, { status: 500 });
+    return Response.json({ error: message }, { status: 500, headers: protection.headers });
   }
 }

@@ -103,11 +103,7 @@ export function PricingCard({
     >
       {plan.highlighted ? (
         <BorderTrail
-          className="bg-amber-300"
-          style={{
-            boxShadow:
-              "0px 0px 70px 34px rgb(254 243 199 / 90%), 0 0 120px 64px rgb(245 158 11 / 22%), 0 0 160px 90px rgb(120 53 15 / 14%)",
-          }}
+          className="bg-amber-300 [box-shadow:0px_0px_70px_34px_rgb(254_243_199_/_90%),0_0_120px_64px_rgb(245_158_11_/_22%),0_0_160px_90px_rgb(120_53_15_/_14%)]"
           size={100}
         />
       ) : null}
@@ -223,14 +219,14 @@ export function BorderTrail({
   return (
     <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-transparent [mask-clip:padding-box,border-box] [mask-composite:intersect] [mask-image:linear-gradient(transparent,transparent),linear-gradient(#000,#000)]">
       <motion.div
-        className={cn("absolute aspect-square", className)}
-        style={
-          {
-            width: size,
-            offsetPath: `rect(0 auto auto 0 round ${size}px)`,
-            ...style,
-          } as React.CSSProperties
-        }
+        className={cn(
+          "absolute aspect-square",
+          size === 100
+            ? "w-[100px] [offset-path:rect(0_auto_auto_0_round_100px)]"
+            : "w-[60px] [offset-path:rect(0_auto_auto_0_round_60px)]",
+          className
+        )}
+        style={style}
         animate={{
           offsetDistance: ["0%", "100%"],
         }}

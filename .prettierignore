@@ -1,0 +1,15 @@
+.git
+.next
+.venv
+.vercel
+node_modules
+legacy
+temp
+Media House
+coverage-report-extracted.txt
+drive_dome_recursive.txt
+drive_list.txt
+dev-server.log
+dev-server.err
+*.pdf
+public

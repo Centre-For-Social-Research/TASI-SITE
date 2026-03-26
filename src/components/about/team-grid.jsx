@@ -24,20 +24,17 @@ const ProfileCard = React.forwardRef(function ProfileCard(
   return (
     <div
       ref={ref}
-      className={cn("h-96 w-full max-w-[20rem]", className)}
-      style={{ perspective: "1000px" }}
+      className={cn("tasi-flip-perspective h-96 w-full max-w-[20rem]", className)}
       {...props}
     >
       <div
-        className="relative h-full w-full cursor-pointer transition-transform duration-700"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        }}
+        className={cn(
+          "tasi-flip-card relative h-full w-full cursor-pointer transition-transform duration-700",
+          isFlipped ? "tasi-flip-card-rotated" : "tasi-flip-card-front"
+        )}
       >
         <Card
-          className="absolute h-full w-full rounded-[10px] border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
-          style={{ backfaceVisibility: "hidden" }}
+          className="tasi-flip-face absolute h-full w-full rounded-[10px] border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
         >
           <div className="flex h-full w-full flex-col items-center justify-center space-y-4 text-center">
             <button
@@ -89,11 +86,7 @@ const ProfileCard = React.forwardRef(function ProfileCard(
         </Card>
 
         <Card
-          className="absolute h-full w-full rounded-[10px] border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
-          style={{
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
+          className="tasi-flip-face tasi-flip-face-back absolute h-full w-full rounded-[10px] border border-stone-200 bg-white p-6 text-stone-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-zinc-900 dark:text-white"
         >
           <div className="flex h-full flex-col">
             <div className="mb-4 flex items-center justify-between">
