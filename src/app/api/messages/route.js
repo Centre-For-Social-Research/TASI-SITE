@@ -1,7 +1,6 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { protectPublicPostRoute } from "@/lib/api-security";
 import { isValidEmail, sanitizeEmail, sanitizeMessage } from "@/lib/input-sanitizers";
-import { sendInboundNotificationEmail } from "@/lib/resend";
 
 export async function POST(request) {
   const protection = protectPublicPostRoute(request, "messages", {
@@ -41,23 +40,6 @@ export async function POST(request) {
 
     if (error) {
       return Response.json({ error: error.message }, { status: 500 });
-    }
-
-    try {
-      await sendInboundNotificationEmail({
-        subject: "New TASI contact message",
-        text: [
-          "A new contact message was submitted on the website.",
-          `Source: site-footer`,
-          `Email: ${email}`,
-          "",
-          "Message:",
-          message,
-        ].join("\n"),
-        replyTo: email,
-      });
-    } catch (emailError) {
-      console.error("Failed to send contact notification email.", emailError);
     }
 
     return Response.json({ success: true }, { headers: protection.headers });

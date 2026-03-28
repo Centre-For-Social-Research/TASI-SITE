@@ -1,7 +1,6 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { protectPublicPostRoute } from "@/lib/api-security";
 import { isValidEmail, sanitizeEmail, sanitizeMessage } from "@/lib/input-sanitizers";
-import { sendInboundNotificationEmail } from "@/lib/resend";
 
 function sanitizeShortText(value, maxLength, fieldName) {
   const sanitized = sanitizeMessage(value).replace(/\n+/g, " ").trim();
@@ -72,16 +71,6 @@ export async function POST(request) {
 
     if (error) {
       return Response.json({ error: error.message }, { status: 500 });
-    }
-
-    try {
-      await sendInboundNotificationEmail({
-        subject: "New speaker application",
-        text: message,
-        replyTo: email,
-      });
-    } catch (emailError) {
-      console.error("Failed to send speaker application notification email.", emailError);
     }
 
     return Response.json({ success: true }, { headers: protection.headers });

@@ -9,7 +9,6 @@ const navItems = [
   { label: "About Us", href: "/about" },
   { label: "Program", href: "/programme" },
   { label: "Speakers", href: "/speakers" },
-  { label: "Receptions", href: "/receptions" },
   {
     label: "TASI Editions",
     href: "/tasi-2025",

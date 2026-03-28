@@ -22,6 +22,3 @@ Thumbs.db
 # Local runtime logs
 *.log
 *.err
-
-# clerk configuration (can include secrets)
-/.clerk/

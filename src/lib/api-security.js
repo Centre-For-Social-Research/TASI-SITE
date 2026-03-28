@@ -111,15 +111,6 @@ export function rejectDisallowedOrigin(request) {
   );
 }
 
-export function protectPublicRoute(request, routeKey, options) {
-  const originResponse = rejectDisallowedOrigin(request);
-  if (originResponse) {
-    return { ok: false, response: originResponse };
-  }
-
-  return rateLimit(request, routeKey, options);
-}
-
 export function enforceJsonRequest(request) {
   const contentType = request.headers.get("content-type") || "";
   if (contentType.includes("application/json")) {
@@ -133,9 +124,9 @@ export function enforceJsonRequest(request) {
 }
 
 export function protectPublicPostRoute(request, routeKey, options) {
-  const protection = protectPublicRoute(request, routeKey, options);
-  if (!protection.ok) {
-    return protection;
+  const originResponse = rejectDisallowedOrigin(request);
+  if (originResponse) {
+    return { ok: false, response: originResponse };
   }
 
   const contentTypeResponse = enforceJsonRequest(request);
@@ -143,5 +134,6 @@ export function protectPublicPostRoute(request, routeKey, options) {
     return { ok: false, response: contentTypeResponse };
   }
 
-  return protection;
+  return rateLimit(request, routeKey, options);
 }
+

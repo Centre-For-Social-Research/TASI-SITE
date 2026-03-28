@@ -45,32 +45,3 @@ export function sanitizeMessage(value) {
 
   return normalized;
 }
-
-export function sanitizeShortText(value, { maxLength = 160, fieldName = "Field", required = true } = {}) {
-  const sanitized = sanitizeMessage(value).replace(/\n+/g, " ").trim();
-
-  if (!sanitized) {
-    if (required) {
-      throw new Error(`${fieldName} is required.`);
-    }
-
-    return "";
-  }
-
-  if (sanitized.length > maxLength) {
-    throw new Error(`${fieldName} must be ${maxLength} characters or less.`);
-  }
-
-  return sanitized;
-}
-
-export function sanitizePhone(value) {
-  return String(value ?? "")
-    .replace(/[^\d+\-\s().]/g, "")
-    .replace(MULTISPACE_REGEX, " ")
-    .trim();
-}
-
-export function sanitizeUrl(value) {
-  return normalizeText(value);
-}

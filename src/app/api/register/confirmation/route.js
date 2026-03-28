@@ -1,7 +1,6 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { protectPublicPostRoute } from "@/lib/api-security";
 import { isValidEmail, sanitizeEmail } from "@/lib/input-sanitizers";
-import { sendInboundNotificationEmail } from "@/lib/resend";
 
 export async function POST(request) {
   const protection = protectPublicPostRoute(request, "register-confirmation", {
@@ -31,20 +30,6 @@ export async function POST(request) {
 
     if (error) {
       return Response.json({ error: error.message }, { status: 500 });
-    }
-
-    try {
-      await sendInboundNotificationEmail({
-        subject: "Registration confirmation email requested",
-        text: [
-          "A visitor requested manual registration confirmation support.",
-          `Source: register-page`,
-          `Email: ${email}`,
-        ].join("\n"),
-        replyTo: email,
-      });
-    } catch (emailError) {
-      console.error("Failed to send registration confirmation notification email.", emailError);
     }
 
     return Response.json({ success: true }, { headers: protection.headers });

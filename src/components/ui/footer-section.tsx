@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,9 +139,6 @@ function Footerdemo() {
                 <span className="sr-only">Subscribe</span>
               </Button>
             </form>
-            <div className="mt-3">
-              <ThemeToggle />
-            </div>
             {newsletterStatus ? (
               <p className="mt-2 text-xs text-white/80">{newsletterStatus}</p>
             ) : null}
@@ -320,23 +316,9 @@ function Footerdemo() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Show when="signed-out">
-              <div className="mb-4 w-full max-w-[196px] rounded-[10px] border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30">
-                <p className="mb-3 text-sm text-white/85">Access your account</p>
-                <div className="flex flex-col gap-2">
-                  <SignInButton>
-                    <button className="w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90">
-                      Sign In
-                    </button>
-                  </SignInButton>
-                  <SignUpButton>
-                    <button className="w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
-                </div>
-              </div>
-            </Show>
+            <div className="mt-2">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/25 pt-5 text-center md:flex-row">
