@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { ClerkProvider, Show, UserButton } from '@clerk/nextjs';
 import { Inter, Outfit } from 'next/font/google';
 import AppShell from '@/components/app-shell';
 import './globals.css';
@@ -53,16 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body className="antialiased">
-        <ClerkProvider>
-          <header className="fixed right-4 top-4 z-[70] flex items-center gap-3">
-            <Show when="signed-in">
-              <div className="rounded-full border border-white/20 bg-black/55 p-1 backdrop-blur">
-                <UserButton />
-              </div>
-            </Show>
-          </header>
-          <AppShell>{children}</AppShell>
-        </ClerkProvider>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
