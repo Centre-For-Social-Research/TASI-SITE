@@ -17,6 +17,12 @@
 - `npm run format` - format files with Prettier
 - `npm run format:check` - verify formatting
 
+## Clerk Setup
+
+1. Add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from your Clerk dashboard to `.env.local` and your hosting provider.
+2. Set `CLERK_ACCESS_MODE`, `CLERK_ADMIN_EMAILS`, and `CLERK_REVIEWER_EMAILS` to control who can access the admin and check-in tools.
+3. Redeploy after adding the Clerk keys. If these are missing in production, the app can fail with a server error because Clerk now wraps the root layout.
+
 ## Resend Setup
 
 1. Add the Resend environment variables from `.env.example` to `.env.local` and your hosting provider.
