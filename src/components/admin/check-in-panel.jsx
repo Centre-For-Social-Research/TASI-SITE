@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import checkInUtils from "@/lib/check-in-panel-utils.cjs";
 
 const {
+  classifyCameraStartFailure,
   getCameraStateMessage,
   isCheckInConfigError,
   getCheckInFeedbackTone,
@@ -186,6 +187,11 @@ export default function CheckInPanel({ operator }) {
   }
 
   async function startCamera() {
+    if (!window.isSecureContext) {
+      setCameraState("insecure_or_blocked");
+      return;
+    }
+
     if (!navigator.mediaDevices?.getUserMedia) {
       setCameraState("unsupported");
       return;
@@ -210,12 +216,12 @@ export default function CheckInPanel({ operator }) {
 
       setCameraState("active");
     } catch (error) {
-      if (error instanceof DOMException && ["NotAllowedError", "SecurityError"].includes(error.name)) {
-        stopCamera("permission_denied");
-        return;
-      }
-
-      stopCamera("error");
+      stopCamera(
+        classifyCameraStartFailure({
+          isSecureContext: window.isSecureContext,
+          errorName: error instanceof DOMException ? error.name : "",
+        }),
+      );
     }
   }
 

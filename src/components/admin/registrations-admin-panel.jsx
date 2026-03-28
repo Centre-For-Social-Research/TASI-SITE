@@ -104,6 +104,46 @@ function RegistrationRow({ registration, onRefresh }) {
     }
   }
 
+  async function generateAndSendQr() {
+    if (status !== "confirmed") {
+      setMessage("Save a confirmed status before generating and sending a QR pass.");
+      return;
+    }
+
+    setIsSaving(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/admin/registrations/issue-pass", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          registrationId: registration.id,
+        }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(data.error || "Unable to generate and send the QR pass.");
+        return;
+      }
+
+      setResendType("qr_pass_issued");
+      setMessage(
+        data.emailResult?.sent
+          ? data.created
+            ? "QR pass generated and emailed."
+            : "Existing QR pass emailed again."
+          : data.emailResult?.error || "QR pass was prepared, but the email could not be sent.",
+      );
+      onRefresh();
+    } catch {
+      setMessage("Network error.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   return (
     <article className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900/70">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
@@ -198,6 +238,14 @@ function RegistrationRow({ registration, onRefresh }) {
               className="h-11 rounded-full bg-[#4c1d95] px-5 text-sm font-semibold text-white transition hover:bg-[#5b21b6] disabled:opacity-70"
             >
               {isSaving ? "Saving..." : "Save Review"}
+            </button>
+            <button
+              type="button"
+              onClick={generateAndSendQr}
+              disabled={isSaving}
+              className="h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200"
+            >
+              Generate + Send QR
             </button>
             <button
               type="button"

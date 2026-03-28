@@ -20,6 +20,14 @@ function getCameraStateMessage(cameraState) {
     return "Camera access was denied. Allow camera access in your browser settings, then try again.";
   }
 
+  if (cameraState === "insecure_or_blocked") {
+    return "Camera scanning needs a secure browsing context and an available camera device. Open the site directly over HTTPS and try again.";
+  }
+
+  if (cameraState === "camera_unavailable") {
+    return "No available camera was detected, or another app is already using it. Close other camera apps and try again.";
+  }
+
   if (cameraState === "error") {
     return "Camera access could not be started. Check browser permissions, HTTPS access, and whether another app is using the camera.";
   }
@@ -43,7 +51,30 @@ function getCheckInFeedbackTone(result) {
   return "danger";
 }
 
+function classifyCameraStartFailure({ isSecureContext = true, errorName = "" } = {}) {
+  if (!isSecureContext || errorName === "SecurityError") {
+    return "insecure_or_blocked";
+  }
+
+  if (errorName === "NotAllowedError" || errorName === "PermissionDeniedError") {
+    return "permission_denied";
+  }
+
+  if (
+    errorName === "NotFoundError" ||
+    errorName === "DevicesNotFoundError" ||
+    errorName === "NotReadableError" ||
+    errorName === "TrackStartError" ||
+    errorName === "AbortError"
+  ) {
+    return "camera_unavailable";
+  }
+
+  return "error";
+}
+
 module.exports = {
+  classifyCameraStartFailure,
   isCheckInConfigError,
   getCameraStateMessage,
   getCheckInFeedbackTone,

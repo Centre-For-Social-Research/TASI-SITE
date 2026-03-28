@@ -1,5 +1,8 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { buildPassToken, getBadgeColor, isAfterBadgeFreeze } from "@/lib/registration-utils";
+import passUtils from "@/lib/registration-pass-utils.cjs";
+
+const { normalizeRegistrationRecord, getIssuedEntryPass } = passUtils;
 
 function getSupabase() {
   return getSupabaseAdmin();
@@ -104,7 +107,7 @@ export async function createRegistration({
     });
   }
 
-  return data;
+  return normalizeRegistrationRecord(data);
 }
 
 export async function appendStatusHistory({
@@ -190,7 +193,7 @@ export async function getRegistrationById(id) {
     throw new Error(error.message);
   }
 
-  return data;
+  return normalizeRegistrationRecord(data);
 }
 
 export async function listRegistrations(filters = {}) {
@@ -252,7 +255,9 @@ export async function listRegistrations(filters = {}) {
     exceptionBadges: 0,
   };
 
-  for (const registration of data || []) {
+  const normalizedRegistrations = (data || []).map((registration) => normalizeRegistrationRecord(registration));
+
+  for (const registration of normalizedRegistrations) {
     if (registration.status === "pending") summary.pending += 1;
     if (registration.status === "confirmed") summary.confirmed += 1;
     if (registration.status === "waitlisted") summary.waitlisted += 1;
@@ -263,7 +268,7 @@ export async function listRegistrations(filters = {}) {
   }
 
   return {
-    registrations: data || [],
+    registrations: normalizedRegistrations,
     count: count || 0,
     summary,
   };
@@ -318,7 +323,7 @@ export async function updateRegistrationStatus({
     notes: reviewNotes || null,
   });
 
-  return data;
+  return normalizeRegistrationRecord(data);
 }
 
 export async function getConfirmedRegistrationsForPassIssue() {
@@ -333,7 +338,7 @@ export async function getConfirmedRegistrationsForPassIssue() {
     throw new Error(error.message);
   }
 
-  return data || [];
+  return (data || []).map((registration) => normalizeRegistrationRecord(registration));
 }
 
 export async function issuePassForRegistration({ registrationId, operator }) {
@@ -343,7 +348,7 @@ export async function issuePassForRegistration({ registrationId, operator }) {
     throw new Error("Only confirmed attendees can receive a QR pass.");
   }
 
-  const existingPass = registration.entry_passes?.find((item) => item.status === "issued");
+  const existingPass = getIssuedEntryPass(registration.entry_passes);
   const supabase = getSupabase();
 
   if (existingPass) {
@@ -401,7 +406,7 @@ export async function issuePassForRegistration({ registrationId, operator }) {
 
   return {
     registration: {
-      ...data,
+      ...normalizeRegistrationRecord(data),
       qr_token: token,
     },
     created: true,
@@ -422,10 +427,15 @@ export async function listBadgeExportRegistrations() {
     throw new Error(error.message);
   }
 
-  return (data || []).map((registration) => ({
-    ...registration,
-    qr_token: registration.entry_passes?.find((item) => item.status === "issued")?.token || "",
-  }));
+  return (data || []).map((registration) => {
+    const normalizedRegistration = normalizeRegistrationRecord(registration);
+    const issuedPass = getIssuedEntryPass(normalizedRegistration.entry_passes);
+
+    return {
+      ...normalizedRegistration,
+      qr_token: issuedPass?.token || "",
+    };
+  });
 }
 
 export async function recordBadgeExport({
@@ -494,7 +504,7 @@ export async function searchCheckInCandidates(query) {
     throw new Error(error.message);
   }
 
-  return data || [];
+  return (data || []).map((registration) => normalizeRegistrationRecord(registration));
 }
 
 export async function getRegistrationByToken(token) {
@@ -521,7 +531,7 @@ export async function getRegistrationByToken(token) {
   const registration = Array.isArray(data.registration) ? data.registration[0] : data.registration;
   return {
     pass: data,
-    registration,
+    registration: normalizeRegistrationRecord(registration),
   };
 }
 

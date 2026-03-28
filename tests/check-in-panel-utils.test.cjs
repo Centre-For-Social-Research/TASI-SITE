@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const {
+  classifyCameraStartFailure,
   getCameraStateMessage,
   isCheckInConfigError,
   getCheckInFeedbackTone,
@@ -22,10 +23,20 @@ test("flags missing Supabase admin configuration as a check-in blocker", () => {
 test("returns camera guidance for unsupported and permission-denied states", () => {
   assert.match(getCameraStateMessage("unsupported"), /camera scanning is not supported/i);
   assert.match(getCameraStateMessage("permission_denied"), /camera access was denied/i);
+  assert.match(getCameraStateMessage("insecure_or_blocked"), /secure browsing context/i);
+  assert.match(getCameraStateMessage("camera_unavailable"), /no available camera/i);
 });
 
 test("returns success tone only for valid attendee check-in", () => {
   assert.equal(getCheckInFeedbackTone("valid"), "success");
   assert.equal(getCheckInFeedbackTone("already_checked_in"), "warning");
   assert.equal(getCheckInFeedbackTone("rejected"), "danger");
+});
+
+test("classifies camera start failures into user-facing states", () => {
+  assert.equal(classifyCameraStartFailure({ isSecureContext: false, errorName: "SecurityError" }), "insecure_or_blocked");
+  assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "NotAllowedError" }), "permission_denied");
+  assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "NotFoundError" }), "camera_unavailable");
+  assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "AbortError" }), "camera_unavailable");
+  assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "UnknownError" }), "error");
 });
