@@ -1,4 +1,5 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { getClerkConfigDiagnostics } from "@/lib/clerk-config";
 
 function parseEmailList(value) {
   return new Set(
@@ -20,6 +21,16 @@ function getAccessMode() {
 }
 
 export async function getAuthorizedOperator() {
+  const clerkConfig = getClerkConfigDiagnostics();
+
+  if (!clerkConfig.fullyConfigured) {
+    return {
+      authorized: false,
+      reason: "clerk_unavailable",
+      clerkConfig,
+    };
+  }
+
   const session = await auth();
 
   if (!session?.userId) {
@@ -77,11 +88,23 @@ export async function requireAuthorizedOperator() {
   const operator = await getAuthorizedOperator();
 
   if (!operator.authorized) {
-    const status = operator.reason === "unauthenticated" ? 401 : 403;
+    const status =
+      operator.reason === "unauthenticated"
+        ? 401
+        : operator.reason === "clerk_unavailable"
+          ? 503
+          : 403;
     return {
       ok: false,
       response: Response.json(
-        { error: operator.reason === "unauthenticated" ? "Please sign in." : "You do not have access to this area." },
+        {
+          error:
+            operator.reason === "unauthenticated"
+              ? "Please sign in."
+              : operator.reason === "clerk_unavailable"
+                ? "Clerk is not configured for this environment."
+                : "You do not have access to this area.",
+        },
         { status }
       ),
     };
