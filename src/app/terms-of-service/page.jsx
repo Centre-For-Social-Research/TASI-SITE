@@ -36,14 +36,16 @@ export default function TermsOfServicePage() {
         <ul className="list-disc space-y-1 pl-5">
           <li>Registration is open to professionals, policymakers, academics, civil society representatives, journalists, and students.</li>
           <li>All registrants must be aged 18 or above.</li>
-          <li>Registration is personal and non-transferable unless agreed in writing with the Organisers.</li>
+          <li>Registration is personal and non-transferable and remains valid only for the applicant approved by the Organisers.</li>
           <li>The Organisers reserve the right to decline, verify, or cancel a registration where necessary for safety, capacity, or policy compliance.</li>
+          <li>Submission of a registration form does not guarantee confirmation. Participation is subject to manual review and capacity decisions.</li>
         </ul>
       </DocSection>
 
       <DocSection number="03" title="Attendance and Conduct">
         <p>All attendees are expected to maintain professional and respectful conduct throughout the event.</p>
         <ul className="list-disc space-y-1 pl-5">
+          <li>Approved attendees must present a valid QR entry pass and any government-issued photo ID at check-in.</li>
           <li>Harassment, intimidation, or discriminatory behaviour toward any person</li>
           <li>Disruptive conduct during sessions, workshops, or plenary events</li>
           <li>Recording sessions without prior written consent from the Organisers and speakers</li>
@@ -57,8 +59,9 @@ export default function TermsOfServicePage() {
 
       <DocSection number="04" title="Cancellation and Refund Policy">
         <p>
-          Registration fee, cancellation, and transfer terms may vary by pass category and are communicated
-          during registration. Where no paid fee applies, cancellation terms are operational only.
+          Registrations for TASI 2026 are managed through an approval-based process. If you are unable to attend after
+          confirmation, please notify the Organisers promptly so waitlisted applicants can be reviewed. Unless explicitly
+          stated for a paid category, registrations should be treated as non-refundable and non-transferable.
         </p>
         <DocTable
           headers={["Cancellation Notice", "Refund"]}

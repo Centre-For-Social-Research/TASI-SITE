@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { protectPublicPostRoute } from "@/lib/api-security";
 import { isValidEmail, sanitizeEmail } from "@/lib/input-sanitizers";
+import { sendInboundNotificationEmail } from "@/lib/resend";
 
 export async function POST(request) {
   const protection = protectPublicPostRoute(request, "newsletter-subscribe", {
@@ -45,6 +46,20 @@ export async function POST(request) {
         );
       }
       return Response.json({ error: error.message }, { status: 500, headers: protection.headers });
+    }
+
+    try {
+      await sendInboundNotificationEmail({
+        subject: "New TASI newsletter subscriber",
+        text: [
+          "A new newsletter subscriber joined through the website.",
+          `Source: site-footer`,
+          `Email: ${email}`,
+        ].join("\n"),
+        replyTo: email,
+      });
+    } catch (emailError) {
+      console.error("Failed to send newsletter notification email.", emailError);
     }
 
     return Response.json({ success: true }, { headers: protection.headers });

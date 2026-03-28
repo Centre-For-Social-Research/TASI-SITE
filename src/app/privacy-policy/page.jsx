@@ -47,7 +47,8 @@ export default function PrivacyPolicyPage() {
         <ul className="list-disc space-y-1 pl-5">
           <li>Full name, email address, and phone number</li>
           <li>Organisation name and job designation</li>
-          <li>Delegate category and any details submitted through registration forms</li>
+          <li>Delegate category, LinkedIn profile, city, country, and approval details submitted through registration forms</li>
+          <li>Profile photos uploaded for attendee review and future website attendee-list publishing workflows</li>
           <li>Messages or enquiries submitted through Contact and Footer forms</li>
           <li>Newsletter subscription email addresses</li>
         </ul>
@@ -69,7 +70,8 @@ export default function PrivacyPolicyPage() {
       <DocSection number="03" title="How We Use Your Information">
         <p>We use the information we collect for the following purposes:</p>
         <ul className="list-disc space-y-1 pl-5">
-          <li>Processing event registrations submitted through linked registration forms</li>
+          <li>Processing event registrations submitted through native TASI registration forms</li>
+          <li>Reviewing applications, assigning approval status, and issuing QR-based entry passes</li>
           <li>Sending event-related communication and updates</li>
           <li>Sharing event updates, programme changes, and post-event materials</li>
           <li>Improving website experience and performance</li>
@@ -87,7 +89,7 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>
             <strong className="text-stone-900 dark:text-slate-100">Operational partners:</strong> Technology and event service providers
-            who support registrations, communication, and logistics
+            who support registrations, QR pass issuance, badge production, communication, and logistics
           </li>
           <li>
             <strong className="text-stone-900 dark:text-slate-100">Service providers:</strong> Email tools, analytics platforms, and
