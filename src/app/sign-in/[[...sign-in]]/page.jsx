@@ -1,7 +1,13 @@
 import { ClerkProvider, SignIn } from "@clerk/nextjs";
 import { isClerkClientConfigured } from "@/lib/clerk-config";
+import operatorAuthUi from "@/lib/operator-auth-ui.cjs";
 
-export default function Page() {
+const { getOperatorRedirectTarget } = operatorAuthUi;
+
+export default async function Page({ searchParams }) {
+  const resolvedSearchParams = await searchParams;
+  const redirectTarget = getOperatorRedirectTarget(resolvedSearchParams?.redirect_url);
+
   if (!isClerkClientConfigured()) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#fbf6ee] px-6 py-24 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
@@ -19,7 +25,11 @@ export default function Page() {
   return (
     <ClerkProvider>
       <div className="flex min-h-screen items-center justify-center">
-        <SignIn />
+        <SignIn
+          forceRedirectUrl={redirectTarget}
+          fallbackRedirectUrl={redirectTarget}
+          withSignUp={false}
+        />
       </div>
     </ClerkProvider>
   );

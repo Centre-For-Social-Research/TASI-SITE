@@ -6,8 +6,8 @@ export const config = {
   matcher: [
     '/admin(.*)',
     '/sign-in(.*)',
-    '/sign-up(.*)',
     '/api/admin(.*)',
+    '/api/operator(.*)',
     '/api/check-in(.*)',
   ],
 };

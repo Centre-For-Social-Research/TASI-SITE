@@ -1,5 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { getClerkConfigDiagnostics } from "@/lib/clerk-config";
+import operatorAuthUi from "@/lib/operator-auth-ui.cjs";
+
+const { getOperatorNavbarState } = operatorAuthUi;
 
 function parseEmailList(value) {
   return new Set(
@@ -111,4 +114,47 @@ export async function requireAuthorizedOperator() {
   }
 
   return { ok: true, operator };
+}
+
+export async function getOperatorUiState() {
+  const clerkConfig = getClerkConfigDiagnostics();
+
+  if (!clerkConfig.fullyConfigured) {
+    return {
+      signedIn: false,
+      authorized: false,
+      dashboardHref: "/admin/registrations",
+      ...getOperatorNavbarState({ signedIn: false, authorized: false }),
+    };
+  }
+
+  const session = await auth();
+
+  if (!session?.userId) {
+    return {
+      signedIn: false,
+      authorized: false,
+      dashboardHref: "/admin/registrations",
+      ...getOperatorNavbarState({ signedIn: false, authorized: false }),
+    };
+  }
+
+  const operator = await getAuthorizedOperator();
+
+  if (!operator.authorized) {
+    return {
+      signedIn: true,
+      authorized: false,
+      dashboardHref: "/admin/registrations",
+      ...getOperatorNavbarState({ signedIn: true, authorized: false }),
+    };
+  }
+
+  return {
+    signedIn: true,
+    authorized: true,
+    role: operator.role,
+    dashboardHref: "/admin/registrations",
+    ...getOperatorNavbarState({ signedIn: true, authorized: true }),
+  };
 }
