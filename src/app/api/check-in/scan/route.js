@@ -2,7 +2,7 @@ import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { getRegistrationById, getRegistrationByToken, markCheckedIn, recordScan } from "@/lib/registration-db";
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator();
+  const authResult = await requireAuthorizedOperator({ route: "api.checkin.scan" });
   if (!authResult.ok) {
     return authResult.response;
   }

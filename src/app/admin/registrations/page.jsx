@@ -3,9 +3,13 @@ import HomeNavbar from "@/components/home/navbar";
 import HomeFooter from "@/components/home/footer";
 import RegistrationsAdminPanel from "@/components/admin/registrations-admin-panel";
 import { getAuthorizedOperator } from "@/lib/registration-auth";
+import operatorSession from "@/lib/operator-session.cjs";
+
+const { toOperatorSession, logOperatorEvent } = operatorSession;
 
 export default async function AdminRegistrationsPage() {
-  const operator = await getAuthorizedOperator();
+  const operator = await getAuthorizedOperator({ route: "admin.registrations.page" });
+  logOperatorEvent("admin.registrations.entry", "admin.registrations.page", operator);
 
   if (!operator.authorized) {
     if (operator.reason === "unauthenticated") {
@@ -38,7 +42,8 @@ export default async function AdminRegistrationsPage() {
       <HomeNavbar />
       <main className="bg-[#fbf6ee] px-6 py-14 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         <div className="mx-auto max-w-7xl">
-          <RegistrationsAdminPanel operator={operator} />
+          {logOperatorEvent("admin.registrations.shell", "admin.registrations.page", operator)}
+          <RegistrationsAdminPanel operator={toOperatorSession(operator)} />
         </div>
       </main>
       <HomeFooter />

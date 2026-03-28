@@ -26,7 +26,7 @@ function buildStatusPayload(registration, tokenValid = true) {
 }
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator();
+  const authResult = await requireAuthorizedOperator({ route: "api.checkin.validate" });
   if (!authResult.ok) {
     return authResult.response;
   }

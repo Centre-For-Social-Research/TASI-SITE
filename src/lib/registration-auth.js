@@ -1,8 +1,10 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { getClerkConfigDiagnostics } from "@/lib/clerk-config";
 import operatorAuthUi from "@/lib/operator-auth-ui.cjs";
+import operatorSession from "@/lib/operator-session.cjs";
 
 const { getOperatorNavbarState } = operatorAuthUi;
+const { toOperatorSession, logOperatorEvent } = operatorSession;
 
 function parseEmailList(value) {
   return new Set(
@@ -30,25 +32,40 @@ function isDynamicServerUsageError(error) {
   );
 }
 
-export async function getAuthorizedOperator() {
+export async function getAuthorizedOperator(context = {}) {
   const clerkConfig = getClerkConfigDiagnostics();
+  const route = context.route || "registration-auth";
 
   if (!clerkConfig.fullyConfigured) {
-    return {
+    const result = {
       authorized: false,
       reason: "clerk_unavailable",
       clerkConfig,
     };
+
+    logOperatorEvent("operator.resolved", route, result);
+    return result;
   }
 
   try {
     const session = await auth();
+    const sessionUserIdPresent = Boolean(session?.userId);
 
     if (!session?.userId) {
-      return { authorized: false, reason: "unauthenticated" };
+      const result = {
+        authorized: false,
+        reason: "unauthenticated",
+        clerkConfig,
+        sessionUserIdPresent,
+        currentUserResolved: false,
+      };
+
+      logOperatorEvent("operator.resolved", route, result);
+      return result;
     }
 
     const user = await currentUser();
+    const currentUserResolved = Boolean(user?.id);
     const emails = (user?.emailAddresses || []).map((entry) => entry.emailAddress.toLowerCase());
     const primaryEmail = emails[0] || "";
     const adminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
@@ -65,34 +82,61 @@ export async function getAuthorizedOperator() {
     const metadataRoleMatch = metadataRole === "admin" || metadataRole === "reviewer" ? metadataRole : null;
 
     let role = null;
+    let allowlistSource = null;
 
     if (accessMode === "email_allowlist" || accessMode === "both") {
       role = hasAdminEmail ? "admin" : hasReviewerEmail ? "reviewer" : role;
+      if (role) {
+        allowlistSource = "email_allowlist";
+      }
     }
 
     if (!role && (accessMode === "metadata_roles" || accessMode === "both")) {
       role = metadataRoleMatch;
+      if (role) {
+        allowlistSource = "metadata_roles";
+      }
     }
 
     if (!role) {
-      return {
+      const result = {
         authorized: false,
         reason: "unauthorized",
-        user,
         primaryEmail,
         accessMode,
+        clerkConfig,
+        sessionUserIdPresent,
+        currentUserResolved,
+        allowlistSource,
       };
+
+      logOperatorEvent("operator.resolved", route, result);
+      return result;
     }
 
-    return {
+    const result = {
       authorized: true,
       role,
-      user,
       userId: user?.id,
       primaryEmail,
       displayName: user?.fullName || primaryEmail || "TASI Operator",
       accessMode,
+      clerkConfig,
+      sessionUserIdPresent,
+      currentUserResolved,
+      allowlistSource,
+      operatorSession: toOperatorSession({
+        authorized: true,
+        role,
+        userId: user?.id,
+        primaryEmail,
+        displayName: user?.fullName || primaryEmail || "TASI Operator",
+        accessMode,
+      }),
     };
+
+    logOperatorEvent("operator.resolved", route, result);
+    return result;
   } catch (error) {
     if (isDynamicServerUsageError(error)) {
       throw error;
@@ -100,16 +144,21 @@ export async function getAuthorizedOperator() {
 
     console.error("Failed to resolve Clerk operator access.", error);
 
-    return {
+    const result = {
       authorized: false,
       reason: "auth_error",
       clerkConfig,
     };
+
+    logOperatorEvent("operator.resolved", route, result, {
+      errorMessage: error instanceof Error ? error.message : "unknown",
+    });
+    return result;
   }
 }
 
-export async function requireAuthorizedOperator() {
-  const operator = await getAuthorizedOperator();
+export async function requireAuthorizedOperator(context = {}) {
+  const operator = await getAuthorizedOperator(context);
 
   if (!operator.authorized) {
     const status =
@@ -165,7 +214,7 @@ export async function getOperatorUiState() {
       };
     }
 
-    const operator = await getAuthorizedOperator();
+    const operator = await getAuthorizedOperator({ route: "operator-ui-state" });
 
     if (!operator.authorized) {
       return {

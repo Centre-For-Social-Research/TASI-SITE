@@ -4,7 +4,7 @@ import { deliverRegistrationEmail } from "@/lib/registration-email";
 import { buildPassAttachment } from "@/lib/registration-pass";
 
 export async function POST() {
-  const authResult = await requireAuthorizedOperator();
+  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.issue-batch" });
   if (!authResult.ok) {
     return authResult.response;
   }

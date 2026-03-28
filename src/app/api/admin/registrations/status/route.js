@@ -4,7 +4,7 @@ import { deliverRegistrationEmail } from "@/lib/registration-email";
 import { normalizeRegistrationStatus } from "@/lib/registration-utils";
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator();
+  const authResult = await requireAuthorizedOperator({ route: "api.admin.registrations.status" });
   if (!authResult.ok) {
     return authResult.response;
   }

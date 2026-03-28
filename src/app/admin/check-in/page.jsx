@@ -3,9 +3,13 @@ import HomeNavbar from "@/components/home/navbar";
 import HomeFooter from "@/components/home/footer";
 import CheckInPanel from "@/components/admin/check-in-panel";
 import { getAuthorizedOperator } from "@/lib/registration-auth";
+import operatorSession from "@/lib/operator-session.cjs";
+
+const { toOperatorSession, logOperatorEvent } = operatorSession;
 
 export default async function AdminCheckInPage() {
-  const operator = await getAuthorizedOperator();
+  const operator = await getAuthorizedOperator({ route: "admin.checkin.page" });
+  logOperatorEvent("admin.checkin.entry", "admin.checkin.page", operator);
 
   if (!operator.authorized) {
     if (operator.reason === "unauthenticated") {
@@ -38,7 +42,8 @@ export default async function AdminCheckInPage() {
       <HomeNavbar />
       <main className="bg-[#fbf6ee] px-6 py-14 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         <div className="mx-auto max-w-7xl">
-          <CheckInPanel operator={operator} />
+          {logOperatorEvent("admin.checkin.shell", "admin.checkin.page", operator)}
+          <CheckInPanel operator={toOperatorSession(operator)} />
         </div>
       </main>
       <HomeFooter />

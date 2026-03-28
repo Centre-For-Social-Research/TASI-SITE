@@ -7,7 +7,7 @@ function contentDisposition(filename) {
 }
 
 export async function GET(request) {
-  const authResult = await requireAuthorizedOperator();
+  const authResult = await requireAuthorizedOperator({ route: "api.admin.badges.export" });
   if (!authResult.ok) {
     return authResult.response;
   }
