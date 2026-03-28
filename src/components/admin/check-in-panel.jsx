@@ -9,6 +9,7 @@ const {
   getCameraStateMessage,
   isCheckInConfigError,
   getCheckInFeedbackTone,
+  shouldRetryCameraRequest,
 } = checkInUtils;
 
 function ResultCard({ title, description, tone = "default" }) {
@@ -149,6 +150,78 @@ export default function CheckInPanel({ operator }) {
     });
   }, [cameraState, completeCheckIn, stopCamera]);
 
+  const bindStreamToVideo = useCallback(async (stream) => {
+    const video = videoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    video.srcObject = stream;
+
+    await new Promise((resolve) => {
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        resolve();
+        return;
+      }
+
+      const handleLoadedMetadata = () => {
+        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        resolve();
+      };
+
+      video.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
+      window.setTimeout(() => {
+        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        resolve();
+      }, 1000);
+    });
+
+    try {
+      await video.play();
+    } catch {
+      // Some browsers reject play() even after the camera stream is granted.
+      // We still continue so scanning can start once frames become available.
+    }
+  }, []);
+
+  const requestCameraStream = useCallback(async () => {
+    const requests = [
+      {
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
+      },
+      {
+        video: true,
+        audio: false,
+      },
+    ];
+
+    let lastError = null;
+
+    for (const constraints of requests) {
+      try {
+        return await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (error) {
+        lastError = error;
+        const errorName = error instanceof DOMException ? error.name : "";
+
+        if (!shouldRetryCameraRequest(errorName)) {
+          throw error;
+        }
+      }
+    }
+
+    throw lastError || new Error("Unable to access the camera.");
+  }, []);
+
   async function lookupAttendee() {
     setLookupLoading(true);
 
@@ -200,19 +273,10 @@ export default function CheckInPanel({ operator }) {
     stopCamera("requesting");
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: "environment" },
-        },
-        audio: false,
-      });
+      const stream = await requestCameraStream();
 
       streamRef.current = stream;
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      }
+      await bindStreamToVideo(stream);
 
       setCameraState("active");
     } catch (error) {

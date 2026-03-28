@@ -56,7 +56,11 @@ function classifyCameraStartFailure({ isSecureContext = true, errorName = "" } =
     return "insecure_or_blocked";
   }
 
-  if (errorName === "NotAllowedError" || errorName === "PermissionDeniedError") {
+  if (
+    errorName === "NotAllowedError" ||
+    errorName === "PermissionDeniedError" ||
+    errorName === "NotSupportedError"
+  ) {
     return "permission_denied";
   }
 
@@ -73,9 +77,19 @@ function classifyCameraStartFailure({ isSecureContext = true, errorName = "" } =
   return "error";
 }
 
+function shouldRetryCameraRequest(errorName = "") {
+  return (
+    errorName === "OverconstrainedError" ||
+    errorName === "ConstraintNotSatisfiedError" ||
+    errorName === "NotFoundError" ||
+    errorName === "DevicesNotFoundError"
+  );
+}
+
 module.exports = {
   classifyCameraStartFailure,
   isCheckInConfigError,
   getCameraStateMessage,
   getCheckInFeedbackTone,
+  shouldRetryCameraRequest,
 };

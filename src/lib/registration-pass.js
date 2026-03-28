@@ -124,7 +124,6 @@ function formatEventDateRange() {
 function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photoDataUrl, headerLabel) {
   const displayName = buildBadgeDisplayName(registration);
   const badgeLabel = registration.badge_color_label || "Delegate";
-  const eventDateRange = formatEventDateRange();
   const organizationLines = doc.splitTextToSize(registration.organization || "", 54);
   const attendeeLines = doc.splitTextToSize(displayName || "", 54);
   const categoryLabel = registration.attendee_category || "Delegate";
@@ -142,140 +141,144 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
   doc.setFillColor(201, 144, 44);
   doc.rect(0, 29.5, 101.6, 1.8, "F");
 
-  doc.addImage(logoDataUrl, "PNG", 7, 7, 25, 11, undefined, "FAST");
+  doc.addImage(logoDataUrl, "PNG", 7, 7, 25, 10.6, undefined, "FAST");
   doc.setDrawColor(78, 89, 130);
   doc.setLineWidth(0.5);
-  doc.line(35, 4, 35, 24.5);
+  doc.line(34.7, 4, 34.7, 24.5);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(10.5);
-  doc.text("Trust & Safety India Festival", 39, 11.5);
+  doc.setFontSize(10.8);
+  doc.text("Trust & Safety India Festival", 39, 11.2);
   doc.setTextColor(214, 171, 65);
-  doc.setFontSize(7.4);
-  doc.text("TASI 2026", 39, 17);
-  doc.text("12-13 October 2026", 58.5, 17);
+  doc.setFontSize(7.6);
+  doc.text("TASI 2026", 39, 16.9);
+  doc.text("13-14 October 2026", 58.3, 16.9);
   doc.setTextColor(235, 239, 247);
-  doc.setFontSize(7.2);
-  doc.text("New Delhi, India", 39, 22.2);
-  doc.setFillColor(217, 184, 78);
-  doc.roundedRect(71, 19.8, 26, 7, 3, 3, "F");
-  doc.setTextColor(15, 23, 42);
-  doc.setFontSize(6.4);
-  doc.text(headerLabel, 84, 24.4, { align: "center" });
+  doc.setFontSize(7.8);
+  doc.text("New Delhi, India", 39, 22.8);
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(73.2, 18.8, 20.6, 6.9, 1.8, 1.8, "F");
+  doc.setTextColor(24, 30, 58);
+  doc.setFontSize(5.9);
+  doc.text(headerLabel, 83.5, 23.2, { align: "center" });
 
   doc.setTextColor(101, 115, 138);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(6.8);
-  doc.text("ATTENDEE", 8, 38.8);
+  doc.setFontSize(7.2);
+  doc.text("ATTENDEE", 8, 39.5);
 
   doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(17.5);
-  doc.text(attendeeLines, 8, 48);
+  doc.setFontSize(17.8);
+  doc.text(attendeeLines, 8, 48.8);
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
+  doc.setFontSize(10.5);
   doc.setTextColor(51, 65, 85);
-  doc.text(organizationLines, 8, 57);
+  doc.text(organizationLines, 8, 57.8);
 
-  doc.setFillColor(248, 248, 246);
-  doc.setDrawColor(201, 144, 44);
-  doc.roundedRect(75.5, 35, 18.5, 18.5, 9.25, 9.25, "FD");
-  doc.setDrawColor(214, 220, 230);
-  doc.roundedRect(76.7, 36.2, 16.1, 16.1, 8.05, 8.05, "S");
+  doc.setFillColor(255, 255, 255);
+  doc.setDrawColor(15, 23, 42);
+  doc.rect(73.2, 36.3, 20.8, 20.8, "FD");
   if (photoDataUrl) {
-    doc.addImage(photoDataUrl, getImageFormatFromDataUrl(photoDataUrl, "JPEG"), 77.4, 36.9, 14.7, 14.7, undefined, "FAST");
+    doc.addImage(photoDataUrl, getImageFormatFromDataUrl(photoDataUrl, "JPEG"), 73.9, 37, 19.4, 19.4, undefined, "FAST");
   } else {
     doc.setFillColor(201, 144, 44);
-    doc.circle(84.75, 42.5, 3.2, "F");
+    doc.circle(83.6, 43.8, 3.4, "F");
     doc.setFillColor(38, 71, 130);
-    doc.circle(84.75, 49.2, 5.6, "F");
+    doc.circle(83.6, 50.4, 5.8, "F");
   }
 
   doc.setFillColor(34, 69, 126);
-  doc.roundedRect(8, 60.5, 85.6, 7.5, 2.2, 2.2, "F");
+  doc.roundedRect(8, 61, 84.2, 7.5, 2.4, 2.4, "F");
   doc.setFillColor(101, 177, 255);
-  doc.circle(12.5, 64.25, 1.35, "F");
+  doc.circle(12.4, 64.75, 1.35, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.4);
-  doc.text(`${badgeLabel.toUpperCase()} TIER`, 16, 65.2);
+  doc.setFontSize(7.1);
+  doc.text(`${badgeLabel.toUpperCase()} TIER`, 16, 65.5);
   doc.setFont("helvetica", "normal");
-  doc.text(`- ${categoryLabel}`, 45, 65.2);
+  doc.setFontSize(6.8);
+  doc.text(categoryLabel, 84.5, 65.5, { align: "right" });
 
   doc.setDrawColor(224, 228, 235);
   doc.setLineWidth(0.35);
-  doc.line(8, 72, 93.6, 72);
+  doc.line(8, 74, 93.6, 74);
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(6.8);
+  doc.setFontSize(7.2);
   doc.setTextColor(100, 116, 139);
-  doc.text("REG. ID", 8, 78);
-  doc.text("CATEGORY", 40, 78);
-  doc.text("DATES", 73, 78);
+  doc.text("REG. ID", 8, 81);
+  doc.text("CATEGORY", 40, 81);
+  doc.text("DATES", 69, 81);
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(9.6);
+  doc.setFontSize(10);
   doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
-  doc.text(registration.registration_code || "-", 8, 83);
-  doc.text(categoryLabel, 40, 83, { maxWidth: 24 });
-  doc.text("12-13 Oct 2026", 73, 83, { maxWidth: 20 });
+  doc.text(registration.registration_code || "-", 8, 86);
+  doc.text(categoryLabel, 40, 86, { maxWidth: 22 });
+  doc.text("13-14 Oct 2026", 69, 86, { maxWidth: 24 });
 
   doc.setDrawColor(224, 228, 235);
-  doc.line(8, 86.5, 93.6, 86.5);
+  doc.line(8, 90, 93.6, 90);
 
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(6.8);
-  doc.text("ENTRY PASS", 8, 92);
+  doc.setFontSize(7.2);
+  doc.text("ENTRY PASS", 8, 98);
 
   doc.setTextColor(15, 23, 42);
-  doc.setFontSize(11.5);
-  doc.text("Scan to", 8, 100);
-  doc.text("verify", 8, 105);
+  doc.setFontSize(11.8);
+  doc.text("Scan to verify", 8, 107);
   doc.setDrawColor(201, 144, 44);
-  doc.setLineWidth(0.55);
-  doc.line(8, 106.8, 19.5, 106.8);
+  doc.setLineWidth(0.7);
+  doc.line(8, 111.2, 32.8, 111.2);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100, 116, 139);
-  doc.setFontSize(7.2);
-  doc.text("Show this pass with", 8, 112);
-  doc.text("a valid photo ID at", 8, 117);
-  doc.text("the venue entrance.", 8, 122);
+  doc.setFontSize(6.9);
+  doc.text("Show this pass with", 8, 120);
+  doc.text("a valid photo ID at", 8, 126);
+  doc.text("the venue entrance.", 8, 132);
 
   doc.setTextColor(201, 144, 44);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.5);
-  doc.text("Policy rules", 8, 131);
+  doc.setFontSize(7.6);
+  doc.text("Policy rules", 8, 141);
   doc.setTextColor(88, 102, 122);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(6.2);
-  doc.text(`• ${policyRules[0]}`, 8, 136);
-  doc.text(`• ${policyRules[1]}`, 8, 140.5);
-  doc.text(`• ${policyRules[2]}`, 8, 145);
+  doc.setFontSize(5.8);
+  doc.text(`- ${policyRules[0]}`, 8, 146);
+  doc.text(`- ${policyRules[1]}`, 8, 150.2);
+  doc.text(`- ${policyRules[2]}`, 8, 154.4);
 
   doc.setFillColor(255, 255, 255);
-  doc.setDrawColor(226, 230, 238);
-  doc.roundedRect(58, 92.5, 34, 34, 2.4, 2.4, "FD");
+  doc.setDrawColor(220, 224, 232);
+  doc.setLineWidth(0.7);
+  doc.roundedRect(60, 97.5, 32.5, 32.5, 2.8, 2.8, "FD");
   if (qrDataUrl) {
-    doc.addImage(qrDataUrl, "PNG", 59.8, 94.3, 30.4, 30.4, undefined, "FAST");
+    doc.addImage(qrDataUrl, "PNG", 62, 99.5, 28.2, 28.2, undefined, "FAST");
   } else {
     doc.setTextColor(100, 116, 139);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
-    doc.text("QR pass not", 75, 108, { align: "center" });
-    doc.text("issued yet", 75, 113, { align: "center" });
+    doc.text("QR pass not", 76.5, 113, { align: "center" });
+    doc.text("issued yet", 76.5, 118, { align: "center" });
   }
 
+  doc.setTextColor(100, 116, 139);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.2);
+  doc.text(registration.registration_code || "-", 76.5, 133.8, { align: "center" });
+
   doc.setFillColor(24, 30, 58);
-  doc.rect(0, 146.6, 101.6, 5.8, "F");
+  doc.rect(0, 147.6, 101.6, 4.8, "F");
   doc.setFillColor(201, 144, 44);
-  doc.rect(0, 146.6, 2.6, 5.8, "F");
+  doc.rect(0, 147.6, 2.6, 4.8, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(5.8);
-  doc.text("Organised by Centre for Social Research  •  Alliance for Cyber Trust and Safety (ACTS)", 50.8, 150.15, {
+  doc.setFontSize(5.6);
+  doc.text("Organised by Centre for Social Research • Trust and Safety Festival", 50.8, 150.6, {
     align: "center",
   });
 }

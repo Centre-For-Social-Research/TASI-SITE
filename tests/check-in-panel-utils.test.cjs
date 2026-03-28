@@ -6,6 +6,7 @@ const {
   getCameraStateMessage,
   isCheckInConfigError,
   getCheckInFeedbackTone,
+  shouldRetryCameraRequest,
 } = require("../src/lib/check-in-panel-utils.cjs");
 
 test("flags missing Supabase admin configuration as a check-in blocker", () => {
@@ -36,7 +37,15 @@ test("returns success tone only for valid attendee check-in", () => {
 test("classifies camera start failures into user-facing states", () => {
   assert.equal(classifyCameraStartFailure({ isSecureContext: false, errorName: "SecurityError" }), "insecure_or_blocked");
   assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "NotAllowedError" }), "permission_denied");
+  assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "NotSupportedError" }), "permission_denied");
   assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "NotFoundError" }), "camera_unavailable");
   assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "AbortError" }), "camera_unavailable");
   assert.equal(classifyCameraStartFailure({ isSecureContext: true, errorName: "UnknownError" }), "error");
+});
+
+test("retries camera request for constraint and device selection failures", () => {
+  assert.equal(shouldRetryCameraRequest("OverconstrainedError"), true);
+  assert.equal(shouldRetryCameraRequest("ConstraintNotSatisfiedError"), true);
+  assert.equal(shouldRetryCameraRequest("NotFoundError"), true);
+  assert.equal(shouldRetryCameraRequest("NotAllowedError"), false);
 });
