@@ -19,9 +19,9 @@ test("rejects unsafe external-style redirect targets", () => {
   assert.equal(getOperatorRedirectTarget("https://evil.example"), "/admin");
 });
 
-test("shows login state for signed-out visitors", () => {
+test("keeps the navbar free of login CTA for signed-out visitors", () => {
   assert.deepEqual(getOperatorNavbarState({ signedIn: false, authorized: false }), {
-    showLogin: true,
+    showLogin: false,
     showAdminDashboard: false,
   });
 });

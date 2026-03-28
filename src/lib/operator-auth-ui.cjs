@@ -11,7 +11,7 @@ function getOperatorRedirectTarget(target) {
 function getOperatorNavbarState({ signedIn, authorized }) {
   if (!signedIn) {
     return {
-      showLogin: true,
+      showLogin: false,
       showAdminDashboard: false,
     };
   }
