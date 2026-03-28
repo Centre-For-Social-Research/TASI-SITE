@@ -39,10 +39,6 @@ export default function HomeNavbar({
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState(null);
-  const [operatorUiState, setOperatorUiState] = useState({
-    showAdminDashboard: false,
-    dashboardHref: "/admin/registrations",
-  });
 
   useEffect(() => {
     let ticking = false;
@@ -64,44 +60,7 @@ export default function HomeNavbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    let active = true;
-
-    async function loadOperatorUiState() {
-      try {
-        const response = await fetch("/api/operator/auth-state", { cache: "no-store" });
-
-        if (!response.ok) {
-          return;
-        }
-
-        const data = await response.json();
-
-        if (!active) {
-          return;
-        }
-
-        setOperatorUiState({
-          showAdminDashboard: Boolean(data?.showAdminDashboard),
-          dashboardHref: data?.dashboardHref || "/admin/registrations",
-        });
-      } catch {
-        // Keep the default signed-out navigation state if the request fails.
-      }
-    }
-
-    loadOperatorUiState();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
   const useSolidNavbar = forceSolid || scrolled;
-
-  const utilityButtonClass = useSolidNavbar
-    ? "rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-black uppercase tracking-widest text-slate-900 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-    : "rounded-full border border-white/45 bg-white/12 px-6 py-3 text-sm font-black uppercase tracking-widest text-white transition hover:bg-white/20";
 
   return (
     <header
@@ -170,11 +129,6 @@ export default function HomeNavbar({
 
         <div className="hidden items-center gap-3 lg:flex lg:justify-self-end">
           <ThemeToggle />
-          {operatorUiState.showAdminDashboard ? (
-            <Link href={operatorUiState.dashboardHref} className={utilityButtonClass}>
-              ADMIN DASHBOARD
-            </Link>
-          ) : null}
           <Link
             href={primaryCtaHref}
             className="rounded-full bg-rc-primary px-7 py-3 text-sm font-black uppercase tracking-widest text-rc-primary-foreground transition-transform hover:scale-105 hover:opacity-90"
@@ -271,18 +225,6 @@ export default function HomeNavbar({
             >
               {primaryCtaLabel}
             </Link>
-            {operatorUiState.showAdminDashboard ? (
-              <Link
-                href={operatorUiState.dashboardHref}
-                className="inline-flex w-full items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-center text-sm font-black uppercase tracking-widest text-white transition-opacity hover:bg-white/15"
-                onClick={() => {
-                  setIsOpen(false);
-                  setOpenMobileMenu(null);
-                }}
-              >
-                ADMIN DASHBOARD
-              </Link>
-            ) : null}
           </div>
         </div>
       )}

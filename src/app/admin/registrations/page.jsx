@@ -23,7 +23,7 @@ export default async function AdminRegistrationsPage() {
 
     return (
       <>
-        <HomeNavbar forceSolid primaryCtaHref="/admin/registrations" primaryCtaLabel="ADMIN DASHBOARD" />
+        <HomeNavbar forceSolid />
         <main className="min-h-[70vh] bg-[#fbf6ee] px-6 py-24 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
           <div className="mx-auto max-w-3xl rounded-[10px] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900/60">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600">Access Required</p>
@@ -40,10 +40,10 @@ export default async function AdminRegistrationsPage() {
 
   return (
     <>
-      <HomeNavbar forceSolid primaryCtaHref="/admin/registrations" primaryCtaLabel="ADMIN DASHBOARD" />
+      <HomeNavbar forceSolid />
       <main className="bg-[#fbf6ee] pb-16 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         <BrandedPageHero className="pt-32 pb-14 md:pt-36 md:pb-20">
-          <div className="relative z-10 mx-auto w-full max-w-6xl px-6 text-left">
+          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-white/75">Admin Console</p>
             <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
               Review registrations.

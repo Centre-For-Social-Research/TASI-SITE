@@ -22,20 +22,17 @@ test("rejects unsafe external-style redirect targets", () => {
 test("keeps the navbar free of login CTA for signed-out visitors", () => {
   assert.deepEqual(getOperatorNavbarState({ signedIn: false, authorized: false }), {
     showLogin: false,
-    showAdminDashboard: false,
   });
 });
 
-test("shows admin dashboard entry only for authorized signed-in operators", () => {
+test("keeps the navbar free of admin dashboard CTA for authorized signed-in operators", () => {
   assert.deepEqual(getOperatorNavbarState({ signedIn: true, authorized: true }), {
     showLogin: false,
-    showAdminDashboard: true,
   });
 });
 
-test("hides both login and admin dashboard for unauthorized signed-in users", () => {
+test("keeps the navbar free of auth CTAs for unauthorized signed-in users", () => {
   assert.deepEqual(getOperatorNavbarState({ signedIn: true, authorized: false }), {
     showLogin: false,
-    showAdminDashboard: false,
   });
 });
