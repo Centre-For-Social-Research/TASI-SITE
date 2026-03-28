@@ -39,50 +39,121 @@ export async function buildQrDataUrl(token) {
   });
 }
 
-export async function buildPassAttachment({ token, registration }) {
-  const qrDataUrl = await buildQrDataUrl(token);
+export async function buildQrPngBuffer(token) {
+  return QRCode.toBuffer(token, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 720,
+    color: {
+      dark: "#111827",
+      light: "#FFFFFF",
+    },
+  });
+}
+
+function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, headerLabel) {
+  const displayName = buildBadgeDisplayName(registration);
   const badgeColor = registration.badge_color_hex || "#173B7A";
   const badgeLabel = registration.badge_color_label || "Delegate";
+
+  doc.setFillColor(247, 242, 233);
+  doc.rect(0, 0, 101.6, 152.4, "F");
+
+  doc.setFillColor(38, 24, 88);
+  doc.rect(0, 0, 101.6, 24, "F");
+  doc.setFillColor(217, 119, 6);
+  doc.rect(0, 24, 101.6, 2.5, "F");
+
+  doc.addImage(logoDataUrl, "PNG", 8, 6, 28, 10, undefined, "FAST");
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(9.5);
+  doc.text("TRUST AND SAFETY INDIA FESTIVAL", 8, 19);
+  doc.setFontSize(8);
+  doc.text(EVENT_CONFIG.shortName, 79, 19, { align: "right" });
+
+  doc.setTextColor(38, 24, 88);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text(headerLabel, 8, 34);
+
+  doc.setDrawColor(224, 211, 187);
+  doc.setLineWidth(0.4);
+  doc.line(8, 38, 93.6, 38);
+
+  doc.setTextColor(15, 23, 42);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text(displayName, 8, 50, { maxWidth: 85 });
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text(registration.organization || "", 8, 61, { maxWidth: 85 });
+
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(8, 68, 85.6, 24, 3, 3, "F");
+  doc.setDrawColor(226, 232, 240);
+  doc.roundedRect(8, 68, 85.6, 24, 3, 3, "S");
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(71, 85, 105);
+  doc.setFontSize(7.5);
+  doc.text("CATEGORY", 12, 75);
+  doc.text("REGISTRATION ID", 12, 86);
+  doc.text("BADGE LABEL", 55, 75);
+  doc.text("EVENT DATE", 55, 86);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(9.5);
+  doc.text(registration.attendee_category || "", 12, 79.5, { maxWidth: 36 });
+  doc.text(registration.registration_code || "", 12, 90.5, { maxWidth: 36 });
+  doc.text(badgeLabel, 55, 79.5, { maxWidth: 34 });
+  doc.text(`${EVENT_CONFIG.startDate} to ${EVENT_CONFIG.endDate}`, 55, 90.5, { maxWidth: 34 });
+
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(8, 98, 85.6, 41, 4, 4, "F");
+  doc.setDrawColor(214, 211, 209);
+  doc.roundedRect(8, 98, 85.6, 41, 4, 4, "S");
+  if (qrDataUrl) {
+    doc.addImage(qrDataUrl, "PNG", 27.8, 103, 46, 46, undefined, "FAST");
+  } else {
+    doc.setTextColor(100, 116, 139);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("QR pass not issued yet", 50.8, 121, { align: "center" });
+  }
+
+  doc.setFillColor(240, 249, 255);
+  doc.roundedRect(8, 141, 85.6, 7.5, 3, 3, "F");
+  doc.setTextColor(51, 65, 85);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7);
+  doc.text("Present this badge with a valid government-issued ID", 50.8, 146, { align: "center" });
+
+  doc.setFillColor(217, 119, 6);
+  doc.rect(0, 149.9, 101.6, 2.5, "F");
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(71, 85, 105);
+  doc.setFontSize(8.5);
+  doc.text("Name-sorted registration desk", 8, 148.8);
+  doc.setTextColor(255, 255, 255);
+  doc.setFillColor(38, 24, 88);
+  doc.roundedRect(74.5, 28.5, 19.1, 8.5, 3, 3, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.text(badgeColor === "#173B7A" ? badgeLabel.toUpperCase() : badgeLabel.toUpperCase(), 84, 34, { align: "center" });
+}
+
+export async function buildPassAttachment({ token, registration }) {
+  const qrDataUrl = await buildQrDataUrl(token);
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
     format: [152.4, 101.6],
   });
   const logoDataUrl = await getBadgeLogoDataUrl();
-  const displayName = buildBadgeDisplayName(registration);
-
-  doc.setFillColor(248, 245, 239);
-  doc.rect(0, 0, 101.6, 152.4, "F");
-
-  doc.setFillColor(badgeColor);
-  doc.rect(0, 0, 101.6, 18, "F");
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(12);
-  doc.text(EVENT_CONFIG.shortName, 8, 11);
-  doc.setFontSize(9);
-  doc.text("Approved attendee badge", 8, 15);
-
-  doc.addImage(logoDataUrl, "PNG", 64, 6, 30, 10, undefined, "FAST");
-
-  doc.setTextColor(17, 24, 39);
-  doc.setFontSize(22);
-  doc.text(displayName, 8, 34, { maxWidth: 58 });
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
-  doc.text(registration.organization || "", 8, 49, { maxWidth: 58 });
-  doc.setFontSize(10);
-  doc.text(registration.attendee_category, 8, 58);
-  doc.setTextColor(75, 85, 99);
-  doc.text(`Registration ID: ${registration.registration_code}`, 8, 66);
-  doc.text(`Badge label: ${badgeLabel}`, 8, 72);
-
-  doc.addImage(qrDataUrl, "PNG", 58, 42, 34, 34, undefined, "FAST");
-  doc.setTextColor(55, 65, 81);
-  doc.setFontSize(9);
-  doc.text("Present this QR with a valid government-issued ID", 8, 84, { maxWidth: 84 });
-  doc.text("Name-sorted badge collection desk", 8, 90);
-  doc.text(`${EVENT_CONFIG.startDate} to ${EVENT_CONFIG.endDate}`, 8, 96);
+  drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, "OFFICIAL CONFERENCE CREDENTIAL");
 
   const pdfBuffer = Buffer.from(doc.output("arraybuffer"));
   return {
@@ -133,41 +204,12 @@ export async function buildPdfMergeExport(registrations) {
 
   for (let index = 0; index < registrations.length; index += 1) {
     const registration = registrations[index];
-    const displayName = buildBadgeDisplayName(registration);
     const qrDataUrl = registration.qr_token ? await buildQrDataUrl(registration.qr_token) : null;
 
     if (index > 0) {
       doc.addPage([152.4, 101.6], "portrait");
     }
-
-    doc.setFillColor(248, 245, 239);
-    doc.rect(0, 0, 101.6, 152.4, "F");
-    doc.setFillColor(registration.badge_color_hex || "#173B7A");
-    doc.rect(0, 0, 101.6, 18, "F");
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(12);
-    doc.text(EVENT_CONFIG.shortName, 8, 11);
-    doc.setFontSize(9);
-    doc.text("Badge export proof", 8, 15);
-    doc.addImage(logoDataUrl, "PNG", 64, 6, 30, 10, undefined, "FAST");
-
-    doc.setTextColor(17, 24, 39);
-    doc.setFontSize(22);
-    doc.text(displayName, 8, 34, { maxWidth: 58 });
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text(registration.organization || "", 8, 49, { maxWidth: 58 });
-    doc.setFontSize(10);
-    doc.text(registration.attendee_category, 8, 58);
-    doc.setTextColor(75, 85, 99);
-    doc.text(`Registration ID: ${registration.registration_code}`, 8, 66);
-    doc.text(`Badge label: ${registration.badge_color_label}`, 8, 72);
-    doc.text(registration.exception_badge_required ? "Exception badge required" : "Main print batch", 8, 78);
-
-    if (qrDataUrl) {
-      doc.addImage(qrDataUrl, "PNG", 58, 42, 34, 34, undefined, "FAST");
-    }
+    drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, "BADGE EXPORT PROOF");
   }
 
   return Buffer.from(doc.output("arraybuffer"));

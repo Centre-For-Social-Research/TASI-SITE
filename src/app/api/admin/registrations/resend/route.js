@@ -32,8 +32,9 @@ export async function POST(request) {
 
     let pdfAttachment = null;
     let qrDataUrl = null;
+    let issuedPass = null;
     if (templateType === "qr_pass_issued") {
-      const issuedPass = getIssuedEntryPass(registration.entry_passes);
+      issuedPass = getIssuedEntryPass(registration.entry_passes);
       if (!issuedPass) {
         return Response.json({ error: "This attendee does not have an issued QR pass yet." }, { status: 400 });
       }
@@ -59,6 +60,7 @@ export async function POST(request) {
       notificationId,
       db: { markNotificationDelivery },
       qrDataUrl,
+      qrPassId: templateType === "qr_pass_issued" ? issuedPass?.id : undefined,
       pdfAttachment,
     });
 

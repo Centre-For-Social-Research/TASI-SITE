@@ -41,6 +41,7 @@ export async function POST() {
         notificationId,
         db: { markNotificationDelivery },
         qrDataUrl: attachment.qrDataUrl,
+        qrPassId: issued.passId,
         pdfAttachment: {
           filename: attachment.filename,
           buffer: attachment.pdfBuffer,

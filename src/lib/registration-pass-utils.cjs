@@ -25,7 +25,19 @@ function normalizeRegistrationRecord(registration) {
   };
 }
 
+function buildPassImageUrl({ passId, siteUrl }) {
+  const normalizedPassId = String(passId || "").trim();
+  const normalizedSiteUrl = String(siteUrl || "").trim().replace(/\/+$/, "");
+
+  if (!normalizedPassId) {
+    return "";
+  }
+
+  return `${normalizedSiteUrl}/api/pass-images/${normalizedPassId}`;
+}
+
 module.exports = {
+  buildPassImageUrl,
   normalizeEntryPasses,
   getIssuedEntryPass,
   normalizeRegistrationRecord,

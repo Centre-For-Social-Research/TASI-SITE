@@ -1,5 +1,8 @@
 import { EVENT_CONFIG, REGISTRATION_EMAIL_COPY } from "@/lib/registration-constants";
 import { getResendClient, getResendFromEmail } from "@/lib/resend";
+import passUtils from "@/lib/registration-pass-utils.cjs";
+
+const { buildPassImageUrl } = passUtils;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -16,14 +19,20 @@ function getEmailLogoUrl() {
   return `${normalizedBase}/img/tasi-csr-logo.png`;
 }
 
-function renderEmailHtml(text, { qrDataUrl, registrationCode } = {}) {
+function getHostedPassImageUrl(passId) {
+  const siteUrl = process.env.SITE_URL?.trim() || process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://jamsaq.in";
+  return buildPassImageUrl({ passId, siteUrl });
+}
+
+function renderEmailHtml(text, { qrImageUrl, registrationCode } = {}) {
   const paragraphs = text.split("\n").filter(Boolean);
   const body = paragraphs.map((line) => `<p style="margin:0 0 14px;color:#111827;font-size:16px;line-height:1.6;">${escapeHtml(line)}</p>`).join("");
   const logoUrl = getEmailLogoUrl();
-  const qrBlock = qrDataUrl
+  const qrBlock = qrImageUrl
     ? `<div style="margin:24px 0 18px;padding:18px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;text-align:center;">
-        <img src="${qrDataUrl}" alt="TASI 2026 QR pass" width="220" height="220" style="display:block;margin:0 auto 12px;border-radius:10px;background:#ffffff;padding:8px;" />
+        <img src="${qrImageUrl}" alt="TASI 2026 QR pass" width="220" height="220" style="display:block;margin:0 auto 12px;border-radius:10px;background:#ffffff;padding:8px;border:1px solid #e5e7eb;" />
         <p style="margin:0;color:#475569;font-size:14px;line-height:1.5;">Registration ID: ${escapeHtml(registrationCode)}</p>
+        <p style="margin:10px 0 0;color:#64748b;font-size:12px;line-height:1.5;">If the QR preview does not render in your mail app, please use the attached PDF credential.</p>
       </div>`
     : "";
 
@@ -56,6 +65,7 @@ export async function deliverRegistrationEmail({
   notificationId,
   db,
   qrDataUrl,
+  qrPassId,
   pdfAttachment,
 }) {
   const templateFactory = REGISTRATION_EMAIL_COPY[templateType];
@@ -85,13 +95,14 @@ export async function deliverRegistrationEmail({
   }
 
   try {
+    const qrImageUrl = qrPassId ? getHostedPassImageUrl(qrPassId) : null;
     const { data, error } = await resend.emails.send({
       from: getResendFromEmail(),
       to: [registration.email],
       subject,
       text,
       html: renderEmailHtml(text, {
-        qrDataUrl,
+        qrImageUrl: qrImageUrl || qrDataUrl,
         registrationCode: registration.registration_code,
       }),
       attachments: pdfAttachment

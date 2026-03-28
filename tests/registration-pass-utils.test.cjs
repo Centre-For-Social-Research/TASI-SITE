@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const {
+  buildPassImageUrl,
   normalizeEntryPasses,
   getIssuedEntryPass,
   normalizeRegistrationRecord,
@@ -33,4 +34,11 @@ test("normalizeRegistrationRecord always exposes entry_passes as an array", () =
   });
 
   assert.deepEqual(result.entry_passes, [{ id: "pass_1", status: "issued" }]);
+});
+
+test("buildPassImageUrl returns a stable https route for hosted email QR images", () => {
+  assert.equal(
+    buildPassImageUrl({ passId: "pass_123", siteUrl: "https://jamsaq.in/" }),
+    "https://jamsaq.in/api/pass-images/pass_123",
+  );
 });

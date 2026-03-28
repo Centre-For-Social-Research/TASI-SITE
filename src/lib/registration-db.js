@@ -358,21 +358,26 @@ export async function issuePassForRegistration({ registrationId, operator }) {
         qr_token: existingPass.token,
       },
       created: false,
+      passId: existingPass.id,
       token: existingPass.token,
     };
   }
 
   const token = buildPassToken();
-  const { error: passError } = await supabase.from("entry_passes").insert({
-    registration_id: registrationId,
-    token,
-    status: "issued",
-    issued_at: new Date().toISOString(),
-    issued_by_clerk_id: operator.userId,
-    issued_by_email: operator.primaryEmail,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  });
+  const { data: createdPass, error: passError } = await supabase
+    .from("entry_passes")
+    .insert({
+      registration_id: registrationId,
+      token,
+      status: "issued",
+      issued_at: new Date().toISOString(),
+      issued_by_clerk_id: operator.userId,
+      issued_by_email: operator.primaryEmail,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .select("id")
+    .single();
 
   if (passError) {
     throw new Error(passError.message);
@@ -410,6 +415,7 @@ export async function issuePassForRegistration({ registrationId, operator }) {
       qr_token: token,
     },
     created: true,
+    passId: createdPass?.id || null,
     token,
   };
 }
@@ -515,6 +521,34 @@ export async function getRegistrationByToken(token) {
       `id, token, status, issued_at, revoked_at, registration:event_registrations(${baseRegistrationSelect()})`
     )
     .eq("token", token)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      return {
+        pass: null,
+        registration: null,
+      };
+    }
+
+    throw new Error(error.message);
+  }
+
+  const registration = Array.isArray(data.registration) ? data.registration[0] : data.registration;
+  return {
+    pass: data,
+    registration: normalizeRegistrationRecord(registration),
+  };
+}
+
+export async function getEntryPassById(id) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from("entry_passes")
+    .select(
+      `id, token, status, issued_at, revoked_at, registration:event_registrations(${baseRegistrationSelect()})`
+    )
+    .eq("id", id)
     .single();
 
   if (error) {
