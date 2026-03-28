@@ -3,6 +3,7 @@ import { sanitizeEmail, sanitizeMessage, sanitizePhone, sanitizeShortText, sanit
 import { ATTENDEE_CATEGORIES, BADGE_COLOR_MAP, EVENT_CONFIG, REGISTRATION_STATUSES } from "@/lib/registration-constants";
 
 export const PROFILE_BUCKET = "registration-profile-photos";
+export const PASS_IMAGE_BUCKET = "registration-pass-images";
 
 export function buildRegistrationCode() {
   return `TASI26-${randomBytes(4).toString("hex").toUpperCase()}`;

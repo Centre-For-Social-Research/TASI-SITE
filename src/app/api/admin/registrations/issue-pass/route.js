@@ -5,6 +5,7 @@ import {
   markNotificationDelivery,
 } from "@/lib/registration-db";
 import { deliverRegistrationEmail } from "@/lib/registration-email";
+import { uploadPassQrImage } from "@/lib/registration-pass-assets";
 import { buildPassAttachment } from "@/lib/registration-pass";
 
 export async function POST(request) {
@@ -41,14 +42,18 @@ export async function POST(request) {
         qr_token: issued.token,
       },
     });
+    const qrImage = await uploadPassQrImage({
+      passId: issued.passId,
+      registrationId: issued.registration.id,
+      token: issued.token,
+    });
 
     const emailResult = await deliverRegistrationEmail({
       registration: issued.registration,
       templateType: "qr_pass_issued",
       notificationId,
       db: { markNotificationDelivery },
-      qrDataUrl: attachment.qrDataUrl,
-      qrPassId: issued.passId,
+      qrImageUrl: qrImage.publicUrl,
       pdfAttachment: {
         filename: attachment.filename,
         buffer: attachment.pdfBuffer,

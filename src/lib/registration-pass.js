@@ -51,98 +51,122 @@ export async function buildQrPngBuffer(token) {
   });
 }
 
+function formatEventDateRange() {
+  const start = new Date(`${EVENT_CONFIG.startDate}T00:00:00+05:30`);
+  const end = new Date(`${EVENT_CONFIG.endDate}T00:00:00+05:30`);
+  const formatter = new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const startLabel = formatter.format(start);
+  const endLabel = formatter.format(end);
+
+  if (startLabel === endLabel) {
+    return startLabel;
+  }
+
+  return `${startLabel} - ${endLabel}`;
+}
+
 function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, headerLabel) {
   const displayName = buildBadgeDisplayName(registration);
-  const badgeColor = registration.badge_color_hex || "#173B7A";
   const badgeLabel = registration.badge_color_label || "Delegate";
+  const eventDateRange = formatEventDateRange();
+  const organizationLines = doc.splitTextToSize(registration.organization || "", 78);
+  const attendeeLines = doc.splitTextToSize(displayName || "", 78);
 
-  doc.setFillColor(247, 242, 233);
+  doc.setFillColor(249, 247, 241);
   doc.rect(0, 0, 101.6, 152.4, "F");
 
-  doc.setFillColor(38, 24, 88);
-  doc.rect(0, 0, 101.6, 24, "F");
-  doc.setFillColor(217, 119, 6);
-  doc.rect(0, 24, 101.6, 2.5, "F");
+  doc.setFillColor(24, 30, 58);
+  doc.rect(0, 0, 101.6, 31, "F");
+  doc.setFillColor(201, 144, 44);
+  doc.rect(0, 31, 101.6, 2.4, "F");
 
-  doc.addImage(logoDataUrl, "PNG", 8, 6, 28, 10, undefined, "FAST");
+  doc.addImage(logoDataUrl, "PNG", 8, 7.5, 30, 11, undefined, "FAST");
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(9.5);
-  doc.text("TRUST AND SAFETY INDIA FESTIVAL", 8, 19);
-  doc.setFontSize(8);
-  doc.text(EVENT_CONFIG.shortName, 79, 19, { align: "right" });
-
-  doc.setTextColor(38, 24, 88);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text(headerLabel, 8, 34);
-
-  doc.setDrawColor(224, 211, 187);
-  doc.setLineWidth(0.4);
-  doc.line(8, 38, 93.6, 38);
-
-  doc.setTextColor(15, 23, 42);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.text(displayName, 8, 50, { maxWidth: 85 });
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  doc.text(registration.organization || "", 8, 61, { maxWidth: 85 });
-
-  doc.setFillColor(255, 255, 255);
-  doc.roundedRect(8, 68, 85.6, 24, 3, 3, "F");
-  doc.setDrawColor(226, 232, 240);
-  doc.roundedRect(8, 68, 85.6, 24, 3, 3, "S");
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(71, 85, 105);
+  doc.setFontSize(8.5);
+  doc.text(EVENT_CONFIG.shortName, 8, 24);
   doc.setFontSize(7.5);
-  doc.text("CATEGORY", 12, 75);
-  doc.text("REGISTRATION ID", 12, 86);
-  doc.text("BADGE LABEL", 55, 75);
-  doc.text("EVENT DATE", 55, 86);
+  doc.text(eventDateRange, 93.6, 11.5, { align: "right" });
+  doc.setFontSize(11.5);
+  doc.text("Trust and Safety", 43, 13.5);
+  doc.text("India Festival 2026", 43, 20);
+  doc.setFontSize(6.8);
+  doc.setTextColor(223, 227, 239);
+  doc.text(headerLabel, 93.6, 27, { align: "right" });
+
+  doc.setTextColor(101, 115, 138);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(6.8);
+  doc.text("ATTENDEE", 8, 43);
+
+  doc.setTextColor(15, 23, 42);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text(attendeeLines, 8, 51);
 
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(15, 23, 42);
-  doc.setFontSize(9.5);
-  doc.text(registration.attendee_category || "", 12, 79.5, { maxWidth: 36 });
-  doc.text(registration.registration_code || "", 12, 90.5, { maxWidth: 36 });
-  doc.text(badgeLabel, 55, 79.5, { maxWidth: 34 });
-  doc.text(`${EVENT_CONFIG.startDate} to ${EVENT_CONFIG.endDate}`, 55, 90.5, { maxWidth: 34 });
+  doc.setFontSize(10);
+  doc.setTextColor(51, 65, 85);
+  doc.text(organizationLines, 8, 61);
 
   doc.setFillColor(255, 255, 255);
-  doc.roundedRect(8, 98, 85.6, 41, 4, 4, "F");
-  doc.setDrawColor(214, 211, 209);
-  doc.roundedRect(8, 98, 85.6, 41, 4, 4, "S");
+  doc.setDrawColor(220, 226, 237);
+  doc.roundedRect(8, 69, 85.6, 25.5, 3, 3, "FD");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(6.8);
+  doc.setTextColor(100, 116, 139);
+  doc.text("REGISTRATION ID", 12, 76.5);
+  doc.text("CATEGORY", 12, 87.5);
+  doc.text("ACCESS TIER", 54, 76.5);
+  doc.text("EVENT DATES", 54, 87.5);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.6);
+  doc.setTextColor(15, 23, 42);
+  doc.text(registration.registration_code || "-", 12, 81.5, { maxWidth: 34 });
+  doc.text(registration.attendee_category || "-", 12, 91, { maxWidth: 34 });
+  doc.text(badgeLabel, 54, 81.5, { maxWidth: 30 });
+  doc.text(eventDateRange, 54, 91, { maxWidth: 30 });
+
+  doc.setFillColor(255, 255, 255);
+  doc.setDrawColor(207, 214, 226);
+  doc.roundedRect(8, 99, 85.6, 39, 3.5, 3.5, "FD");
+  doc.setFillColor(249, 247, 241);
+  doc.roundedRect(34.3, 103, 33, 33, 2.8, 2.8, "F");
   if (qrDataUrl) {
-    doc.addImage(qrDataUrl, "PNG", 27.8, 103, 46, 46, undefined, "FAST");
+    doc.addImage(qrDataUrl, "PNG", 35.8, 104.5, 30, 30, undefined, "FAST");
   } else {
     doc.setTextColor(100, 116, 139);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("QR pass not issued yet", 50.8, 121, { align: "center" });
+    doc.text("QR pass not issued yet", 50.8, 120, { align: "center" });
   }
 
-  doc.setFillColor(240, 249, 255);
-  doc.roundedRect(8, 141, 85.6, 7.5, 3, 3, "F");
+  doc.setFillColor(237, 242, 247);
+  doc.roundedRect(8, 141.5, 85.6, 6.6, 2.5, 2.5, "F");
   doc.setTextColor(51, 65, 85);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(7);
-  doc.text("Present this badge with a valid government-issued ID", 50.8, 146, { align: "center" });
+  doc.setFontSize(6.5);
+  doc.text("Present this credential with a valid government-issued ID.", 50.8, 145.8, { align: "center" });
 
-  doc.setFillColor(217, 119, 6);
-  doc.rect(0, 149.9, 101.6, 2.5, "F");
-
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(8.5);
-  doc.text("Name-sorted registration desk", 8, 148.8);
-  doc.setTextColor(255, 255, 255);
-  doc.setFillColor(38, 24, 88);
-  doc.roundedRect(74.5, 28.5, 19.1, 8.5, 3, 3, "F");
+  doc.setFillColor(255, 255, 255);
+  doc.setDrawColor(217, 119, 6);
+  doc.roundedRect(72, 39.5, 21.6, 7.8, 2.2, 2.2, "FD");
+  doc.setFillColor(201, 144, 44);
+  doc.rect(72, 39.5, 3.2, 7.8, "F");
+  doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.5);
-  doc.text(badgeColor === "#173B7A" ? badgeLabel.toUpperCase() : badgeLabel.toUpperCase(), 84, 34, { align: "center" });
+  doc.setFontSize(7);
+  doc.text(badgeLabel.toUpperCase(), 83, 44.6, { align: "center" });
+
+  doc.setFillColor(24, 30, 58);
+  doc.rect(0, 149.6, 101.6, 2.8, "F");
+  doc.setFillColor(201, 144, 44);
+  doc.rect(0, 149.6, 18, 2.8, "F");
 }
 
 export async function buildPassAttachment({ token, registration }) {

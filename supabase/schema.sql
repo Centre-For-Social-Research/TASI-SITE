@@ -202,3 +202,7 @@ with check (true);
 insert into storage.buckets (id, name, public)
 values ('registration-profile-photos', 'registration-profile-photos', false)
 on conflict (id) do nothing;
+
+insert into storage.buckets (id, name, public)
+values ('registration-pass-images', 'registration-pass-images', true)
+on conflict (id) do nothing;

@@ -1,6 +1,7 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { createNotification, getRegistrationById, markNotificationDelivery } from "@/lib/registration-db";
 import { deliverRegistrationEmail } from "@/lib/registration-email";
+import { uploadPassQrImage } from "@/lib/registration-pass-assets";
 import passUtils from "@/lib/registration-pass-utils.cjs";
 
 const ALLOWED_TEMPLATES = new Set(["submission_received", "confirmed", "waitlisted", "rejected", "qr_pass_issued"]);
@@ -31,7 +32,7 @@ export async function POST(request) {
     });
 
     let pdfAttachment = null;
-    let qrDataUrl = null;
+    let qrImageUrl = null;
     let issuedPass = null;
     if (templateType === "qr_pass_issued") {
       issuedPass = getIssuedEntryPass(registration.entry_passes);
@@ -51,7 +52,12 @@ export async function POST(request) {
         filename: attachment.filename,
         buffer: attachment.pdfBuffer,
       };
-      qrDataUrl = attachment.qrDataUrl;
+      const qrImage = await uploadPassQrImage({
+        passId: issuedPass.id,
+        registrationId: registration.id,
+        token: issuedPass.token,
+      });
+      qrImageUrl = qrImage.publicUrl;
     }
 
     const result = await deliverRegistrationEmail({
@@ -59,8 +65,7 @@ export async function POST(request) {
       templateType,
       notificationId,
       db: { markNotificationDelivery },
-      qrDataUrl,
-      qrPassId: templateType === "qr_pass_issued" ? issuedPass?.id : undefined,
+      qrImageUrl,
       pdfAttachment,
     });
 
