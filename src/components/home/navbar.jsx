@@ -31,12 +31,15 @@ const navItems = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function HomeNavbar() {
+export default function HomeNavbar({
+  forceSolid = false,
+  primaryCtaHref = "/register",
+  primaryCtaLabel = "REGISTER NOW",
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState(null);
   const [operatorUiState, setOperatorUiState] = useState({
-    showLogin: true,
     showAdminDashboard: false,
     dashboardHref: "/admin/registrations",
   });
@@ -79,7 +82,6 @@ export default function HomeNavbar() {
         }
 
         setOperatorUiState({
-          showLogin: Boolean(data?.showLogin),
           showAdminDashboard: Boolean(data?.showAdminDashboard),
           dashboardHref: data?.dashboardHref || "/admin/registrations",
         });
@@ -95,14 +97,16 @@ export default function HomeNavbar() {
     };
   }, []);
 
-  const utilityButtonClass = scrolled
+  const useSolidNavbar = forceSolid || scrolled;
+
+  const utilityButtonClass = useSolidNavbar
     ? "rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-black uppercase tracking-widest text-slate-900 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
     : "rounded-full border border-white/45 bg-white/12 px-6 py-3 text-sm font-black uppercase tracking-widest text-white transition hover:bg-white/20";
 
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
+        useSolidNavbar
           ? "bg-white/95 text-black shadow-md backdrop-blur dark:bg-gray-950/95 dark:text-white"
           : "bg-transparent text-white"
       }`}
@@ -171,16 +175,11 @@ export default function HomeNavbar() {
               ADMIN DASHBOARD
             </Link>
           ) : null}
-          {operatorUiState.showLogin ? (
-            <Link href="/sign-in" className={utilityButtonClass}>
-              LOG IN
-            </Link>
-          ) : null}
           <Link
-            href="/register"
+            href={primaryCtaHref}
             className="rounded-full bg-rc-primary px-7 py-3 text-sm font-black uppercase tracking-widest text-rc-primary-foreground transition-transform hover:scale-105 hover:opacity-90"
           >
-            REGISTER NOW
+            {primaryCtaLabel}
           </Link>
         </div>
 
@@ -263,14 +262,14 @@ export default function HomeNavbar() {
               )
             ))}
             <Link
-              href="/register"
+              href={primaryCtaHref}
               className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-rc-primary px-6 py-3 text-center text-sm font-black uppercase tracking-widest text-rc-primary-foreground transition-opacity hover:opacity-90"
               onClick={() => {
                 setIsOpen(false);
                 setOpenMobileMenu(null);
               }}
             >
-              REGISTER NOW
+              {primaryCtaLabel}
             </Link>
             {operatorUiState.showAdminDashboard ? (
               <Link
@@ -282,18 +281,6 @@ export default function HomeNavbar() {
                 }}
               >
                 ADMIN DASHBOARD
-              </Link>
-            ) : null}
-            {operatorUiState.showLogin ? (
-              <Link
-                href="/sign-in"
-                className="inline-flex w-full items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-center text-sm font-black uppercase tracking-widest text-white transition-opacity hover:bg-white/15"
-                onClick={() => {
-                  setIsOpen(false);
-                  setOpenMobileMenu(null);
-                }}
-              >
-                LOG IN
               </Link>
             ) : null}
           </div>

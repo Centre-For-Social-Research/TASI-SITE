@@ -61,29 +61,31 @@ export default function CookieConsentBanner() {
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[120] border-t border-stone-300 bg-white/98 p-4 shadow-[0_-12px_30px_rgba(0,0,0,0.12)] backdrop-blur dark:border-zinc-700 dark:bg-zinc-950/98">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-5">
-        <p className="text-sm leading-relaxed text-stone-700 dark:text-slate-200">
-          We use essential cookies and optional cookies for analytics and personalization. Choose your preferences.
-          <Link href="/cookie-settings" className="ml-1 font-semibold text-orange-700 underline underline-offset-2 dark:text-orange-300">
+    <div className="fixed inset-x-0 bottom-4 z-[140] px-4">
+      <div className="mx-auto w-full max-w-5xl rounded-[10px] border border-slate-900/10 bg-slate-950 px-5 py-4 text-white shadow-[0_24px_60px_rgba(15,23,42,0.35)] ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-900">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-5">
+          <p className="text-sm leading-relaxed text-slate-100">
+            We use essential cookies and optional cookies for analytics and personalization. Choose your preferences.
+            <Link href="/cookie-settings" className="ml-1 font-semibold text-amber-300 underline underline-offset-2 transition hover:text-amber-200">
             Cookie Settings
-          </Link>
-        </p>
-        <div className="flex shrink-0 flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={rejectOptional}
-            className="rounded-full border border-stone-300 px-4 py-2 text-xs font-semibold text-stone-700 transition hover:bg-stone-100 dark:border-zinc-600 dark:text-slate-200 dark:hover:bg-zinc-900"
-          >
-            Reject Optional
-          </button>
-          <button
-            type="button"
-            onClick={acceptAll}
-            className="rounded-full bg-orange-700 px-4 py-2 text-xs font-semibold text-white transition hover:bg-orange-800"
-          >
-            Accept All
-          </button>
+            </Link>
+          </p>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={rejectOptional}
+              className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/15"
+            >
+              Reject Optional
+            </button>
+            <button
+              type="button"
+              onClick={acceptAll}
+              className="rounded-full bg-amber-400 px-4 py-2 text-xs font-semibold text-slate-950 transition hover:bg-amber-300"
+            >
+              Accept All
+            </button>
+          </div>
         </div>
       </div>
     </div>
