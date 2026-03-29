@@ -9,7 +9,7 @@ const { toOperatorSession, logOperatorEvent } = operatorSession;
 function parseEmailList(value) {
   return new Set(
     String(value || "")
-      .split(",")
+      .split(/[,\n]+/)
       .map((entry) => entry.trim().toLowerCase())
       .filter(Boolean)
   );
