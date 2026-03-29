@@ -320,7 +320,7 @@ function Footerdemo() {
               </TooltipProvider>
             </div>
             <div className="mb-4 w-full max-w-[196px] rounded-[10px] border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30">
-              <p className="mb-3 text-sm text-white/85">Operator access</p>
+              <p className="mb-3 text-sm text-white/85">Admin Access</p>
               <div className="flex flex-col gap-2">
                 <Link
                   href="/sign-in"

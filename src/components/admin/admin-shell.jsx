@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Moon, Sun, Users, Send, ScanLine, ChevronRight } from "lucide-react";
+import { Moon, Sun, Users, Send, ScanLine, ChevronRight, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useClerk } from "@clerk/nextjs";
 import { buildAdminNavigation, buildAdminStatPills } from "@/lib/admin-shell-utils.cjs";
 import { AdminStatusBadge } from "@/components/admin/admin-ui";
 
@@ -58,6 +59,12 @@ function ThemeToggle() {
 }
 
 export default function AdminShell({ operator, currentPath, children }) {
+  const { signOut } = useClerk();
+
+  async function handleSignOut() {
+    await signOut({ redirectUrl: "/" });
+  }
+
   const [shellState, setShellState] = useState({
     summary: { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
     jobs: [],
@@ -190,6 +197,15 @@ export default function AdminShell({ operator, currentPath, children }) {
                 <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">{operator.displayName}</p>
                 <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{operator.primaryEmail}</p>
               </div>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 dark:text-slate-500 dark:hover:bg-rose-950/40 dark:hover:text-rose-400"
+                aria-label="Log out"
+                title="Log out"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
             </div>
           </nav>
         </aside>
@@ -210,7 +226,7 @@ export default function AdminShell({ operator, currentPath, children }) {
                       : "Admin"}
               </p>
 
-              {/* Stat pills + theme toggle */}
+              {/* Stat pills + theme toggle + logout */}
               <div className="flex items-center gap-2">
                 <div className="hidden items-center gap-2 md:flex">
                   {statPills.map((pill) => (
@@ -218,6 +234,15 @@ export default function AdminShell({ operator, currentPath, children }) {
                   ))}
                 </div>
                 <ThemeToggle />
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 dark:text-slate-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-400"
+                  aria-label="Log out"
+                  title="Log out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
               </div>
             </div>
 
