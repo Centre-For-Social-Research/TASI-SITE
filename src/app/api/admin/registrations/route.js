@@ -1,5 +1,5 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { listRegistrations } from "@/lib/registration-db";
+import { listRegistrationQueue } from "@/lib/registration-ops-db";
 import operatorSession from "@/lib/operator-session.cjs";
 
 const { logOperatorEvent } = operatorSession;
@@ -13,7 +13,10 @@ export async function GET(request) {
   try {
     logOperatorEvent("admin.registrations.fetch", "api.admin.registrations", authResult.operator);
     const { searchParams } = new URL(request.url);
-    const data = await listRegistrations({
+    const data = await listRegistrationQueue({
+      page: searchParams.get("page") || "1",
+      pageSize: searchParams.get("pageSize") || "50",
+      filters: {
       search: searchParams.get("search") || "",
       status: searchParams.get("status") || "all",
       category: searchParams.get("category") || "all",
@@ -22,6 +25,7 @@ export async function GET(request) {
       organization: searchParams.get("organization") || "",
       speakerFlag: searchParams.get("speakerFlag") || "",
       lateConfirmation: searchParams.get("lateConfirmation") || "",
+      },
     });
 
     return Response.json({

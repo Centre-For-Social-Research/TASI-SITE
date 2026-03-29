@@ -1,12 +1,6 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import {
-  createNotification,
-  issuePassForRegistration,
-  markNotificationDelivery,
-} from "@/lib/registration-db";
-import { deliverRegistrationEmail } from "@/lib/registration-email";
-import { uploadPassQrImage } from "@/lib/registration-pass-assets";
-import { buildPassAttachment } from "@/lib/registration-pass";
+import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
+import { createPassIssueEmailJob } from "@/lib/pass-issue-job-service";
 
 export async function POST(request) {
   const authResult = await requireAuthorizedOperator({ route: "api.admin.registrations.issue-pass" });
@@ -22,49 +16,28 @@ export async function POST(request) {
       return Response.json({ error: "Registration ID is required." }, { status: 400 });
     }
 
-    const issued = await issuePassForRegistration({
-      registrationId,
+    const job = await createPassIssueEmailJob({
+      registrationIds: [registrationId],
       operator: authResult.operator,
-    });
-
-    const notificationId = await createNotification({
-      registrationId,
-      templateType: "qr_pass_issued",
-      recipientEmail: issued.registration.email,
-      actorClerkId: authResult.operator.userId,
-      actorEmail: authResult.operator.primaryEmail,
-    });
-
-    const attachment = await buildPassAttachment({
-      token: issued.token,
-      registration: {
-        ...issued.registration,
-        qr_token: issued.token,
-      },
-    });
-    const qrImage = await uploadPassQrImage({
-      passId: issued.passId,
-      registrationId: issued.registration.id,
-      token: issued.token,
-    });
-
-    const emailResult = await deliverRegistrationEmail({
-      registration: issued.registration,
-      templateType: "qr_pass_issued",
-      notificationId,
-      db: { markNotificationDelivery },
-      qrImageUrl: qrImage.publicUrl,
-      pdfAttachment: {
-        filename: attachment.filename,
-        buffer: attachment.pdfBuffer,
-      },
     });
 
     return Response.json({
       success: true,
-      registration: issued.registration,
-      created: issued.created,
-      emailResult,
+      job: {
+        ...job,
+        progress: deriveJobProgress({
+          status: job.status,
+          totals: {
+            total: job.total_items,
+            queued: job.queued_items,
+            processing: job.processing_items,
+            sent: job.sent_items + job.skipped_items,
+            failed: job.failed_items,
+            retrying: job.retrying_items,
+          },
+        }),
+      },
+      created: true,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to generate and send the QR pass.";

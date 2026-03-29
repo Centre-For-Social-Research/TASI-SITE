@@ -1,5 +1,5 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { getRegistrationById, getRegistrationByToken, markCheckedIn, recordScan } from "@/lib/registration-db";
+import { completeCheckIn, getCheckInRecordByToken, getCheckInRegistrationById, listRecentEntryScans, recordEntryScan } from "@/lib/check-in-operations";
 
 export async function POST(request) {
   const authResult = await requireAuthorizedOperator({ route: "api.checkin.scan" });
@@ -16,11 +16,11 @@ export async function POST(request) {
     let pass = null;
 
     if (token) {
-      const result = await getRegistrationByToken(token);
+      const result = await getCheckInRecordByToken(token);
       registration = result.registration;
       pass = result.pass;
     } else if (registrationId) {
-      registration = await getRegistrationById(registrationId);
+      registration = await getCheckInRegistrationById(registrationId);
     } else {
       return Response.json({ error: "Token or registration ID is required." }, { status: 400 });
     }
@@ -30,7 +30,7 @@ export async function POST(request) {
     }
 
     if (registration.status !== "confirmed") {
-      await recordScan({
+      await recordEntryScan({
         registrationId: registration.id,
         passId: pass?.id || null,
         token: token || null,
@@ -44,10 +44,11 @@ export async function POST(request) {
         success: false,
         result: registration.status === "waitlisted" ? "waitlisted" : registration.status === "rejected" ? "rejected" : "not_confirmed",
         registration,
+        recentScans: await listRecentEntryScans(),
       });
     }
 
-    const checkedIn = await markCheckedIn({
+    const checkedIn = await completeCheckIn({
       registrationId: registration.id,
       operator: authResult.operator,
       deskLabel,
@@ -59,6 +60,7 @@ export async function POST(request) {
       success: true,
       result: checkedIn.alreadyCheckedIn ? "already_checked_in" : "valid",
       registration: checkedIn.registration,
+      recentScans: await listRecentEntryScans(),
     });
   } catch (error) {
     return Response.json(

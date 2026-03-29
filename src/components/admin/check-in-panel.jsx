@@ -2,6 +2,7 @@
 
 import jsQR from "jsqr";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import scanSessionUtils from "@/lib/check-in-scan-session.cjs";
 import checkInUtils from "@/lib/check-in-panel-utils.cjs";
 
 const {
@@ -11,6 +12,7 @@ const {
   getCheckInFeedbackTone,
   shouldRetryCameraRequest,
 } = checkInUtils;
+const { createScanSession } = scanSessionUtils;
 
 function ResultCard({ title, description, tone = "default" }) {
   const toneMap = {
@@ -38,10 +40,12 @@ export default function CheckInPanel({ operator }) {
   const [lookupLoading, setLookupLoading] = useState(false);
   const [scanSubmitting, setScanSubmitting] = useState(false);
   const [configWarning, setConfigWarning] = useState("");
+  const [recentScans, setRecentScans] = useState([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const scanSessionRef = useRef(createScanSession());
 
   const cameraMessage = useMemo(() => getCameraStateMessage(cameraState), [cameraState]);
 
@@ -66,6 +70,7 @@ export default function CheckInPanel({ operator }) {
 
   const completeCheckIn = useCallback(
     async (payload) => {
+      scanSessionRef.current.markSubmitting();
       setScanSubmitting(true);
 
       try {
@@ -91,6 +96,7 @@ export default function CheckInPanel({ operator }) {
           return;
         }
 
+        setRecentScans(data.recentScans || []);
         setScanMessage({
           tone: getCheckInFeedbackTone(data.result),
           title:
@@ -110,6 +116,7 @@ export default function CheckInPanel({ operator }) {
           description: "Network error while validating the attendee.",
         });
       } finally {
+        scanSessionRef.current.resetSubmission();
         setScanSubmitting(false);
       }
     },
@@ -119,24 +126,33 @@ export default function CheckInPanel({ operator }) {
   const scanFrame = useCallback(async () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    const now = Date.now();
 
     if (!video || !canvas || cameraState !== "active") {
       return;
     }
 
-    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && video.videoWidth && video.videoHeight) {
+    if (
+      video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA &&
+      video.videoWidth &&
+      video.videoHeight &&
+      scanSessionRef.current.shouldDecode(now) &&
+      !scanSessionRef.current.isSubmitting()
+    ) {
       const context = canvas.getContext("2d", { willReadFrequently: true });
 
       if (context) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        const maxWidth = 720;
+        const scale = Math.min(1, maxWidth / video.videoWidth);
+        canvas.width = Math.max(Math.round(video.videoWidth * scale), 320);
+        canvas.height = Math.max(Math.round(video.videoHeight * scale), 180);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         const code = jsQR(imageData.data, imageData.width, imageData.height, {
           inversionAttempts: "dontInvert",
         });
 
-        if (code?.data) {
+        if (code?.data && scanSessionRef.current.shouldSubmitToken(code.data, now)) {
           stopCamera();
           setManualToken(code.data);
           await completeCheckIn({ token: code.data });
@@ -193,8 +209,8 @@ export default function CheckInPanel({ operator }) {
       {
         video: {
           facingMode: { ideal: "environment" },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
+          width: { ideal: 960 },
+          height: { ideal: 540 },
         },
         audio: false,
       },
@@ -271,6 +287,7 @@ export default function CheckInPanel({ operator }) {
     }
 
     stopCamera("requesting");
+    scanSessionRef.current = createScanSession();
 
     try {
       const stream = await requestCameraStream();
@@ -335,6 +352,31 @@ export default function CheckInPanel({ operator }) {
     }
 
     void loadConfigHealth();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadRecentScans() {
+      try {
+        const response = await fetch("/api/check-in/recent", { cache: "no-store" });
+        const data = await response.json();
+
+        if (!active || !response.ok) {
+          return;
+        }
+
+        setRecentScans(data.scans || []);
+      } catch {
+        // Keep check-in usable even if the recent scans widget cannot load.
+      }
+    }
+
+    void loadRecentScans();
 
     return () => {
       active = false;
@@ -459,6 +501,58 @@ export default function CheckInPanel({ operator }) {
               </p>
             ) : null}
           </div>
+        </div>
+      </section>
+
+      <section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-950/60">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600">Recent Activity</p>
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100">Last validated scans</h2>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              void (async () => {
+                try {
+                  const response = await fetch("/api/check-in/recent", { cache: "no-store" });
+                  const data = await response.json();
+                  if (response.ok) {
+                    setRecentScans(data.scans || []);
+                  }
+                } catch {
+                  // Keep refresh action silent when the network is unstable on-site.
+                }
+              })();
+            }}
+            className="h-10 rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200"
+          >
+            Refresh Activity
+          </button>
+        </div>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {recentScans.map((scan) => (
+            <div key={scan.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                {scan.registration?.first_name} {scan.registration?.last_name}
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.12em] text-slate-500 dark:text-slate-500">
+                {scan.scan_result.replaceAll("_", " ")}
+              </p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                {scan.registration?.registration_code} | {scan.registration?.organization}
+              </p>
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
+                {scan.desk_label || "Desk not set"} | {formatDate(scan.created_at)}
+              </p>
+            </div>
+          ))}
+          {!recentScans.length ? (
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Recent scan activity will appear here after the first successful validation.
+            </p>
+          ) : null}
         </div>
       </section>
 

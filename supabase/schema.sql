@@ -64,6 +64,9 @@ create index if not exists idx_event_registrations_status on public.event_regist
 create index if not exists idx_event_registrations_category on public.event_registrations(attendee_category);
 create index if not exists idx_event_registrations_priority on public.event_registrations(priority_tier);
 create index if not exists idx_event_registrations_created_at on public.event_registrations(created_at desc);
+create index if not exists idx_event_registrations_status_created on public.event_registrations(status, created_at desc);
+create index if not exists idx_event_registrations_qr_issued on public.event_registrations(qr_pass_issued_at desc);
+create index if not exists idx_event_registrations_checked_in on public.event_registrations(checked_in_at desc);
 
 create table if not exists public.registration_assets (
   id uuid primary key default gen_random_uuid(),
@@ -112,6 +115,7 @@ create table if not exists public.registration_notifications (
 
 create index if not exists idx_registration_notifications_registration on public.registration_notifications(registration_id, created_at desc);
 create index if not exists idx_registration_notifications_provider_message on public.registration_notifications(provider_message_id);
+create index if not exists idx_registration_notifications_status on public.registration_notifications(delivery_status, created_at desc);
 
 create table if not exists public.entry_passes (
   id uuid primary key default gen_random_uuid(),
@@ -127,6 +131,7 @@ create table if not exists public.entry_passes (
 );
 
 create index if not exists idx_entry_passes_token on public.entry_passes(token);
+create index if not exists idx_entry_passes_registration_status on public.entry_passes(registration_id, status);
 
 create table if not exists public.entry_scans (
   id uuid primary key default gen_random_uuid(),
@@ -142,6 +147,52 @@ create table if not exists public.entry_scans (
 );
 
 create index if not exists idx_entry_scans_registration on public.entry_scans(registration_id, created_at desc);
+create index if not exists idx_entry_scans_created_at on public.entry_scans(created_at desc);
+
+create table if not exists public.pass_issue_email_jobs (
+  id uuid primary key default gen_random_uuid(),
+  status text not null default 'queued' check (status in ('queued', 'processing', 'completed', 'failed')),
+  selection_mode text not null default 'filtered' check (selection_mode in ('filtered', 'selected')),
+  filters jsonb not null default '{}'::jsonb,
+  resend_existing boolean not null default false,
+  total_items integer not null default 0,
+  queued_items integer not null default 0,
+  processing_items integer not null default 0,
+  sent_items integer not null default 0,
+  skipped_items integer not null default 0,
+  failed_items integer not null default 0,
+  retrying_items integer not null default 0,
+  created_by_clerk_id text,
+  created_by_email text,
+  completed_at timestamptz,
+  last_processed_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_pass_issue_email_jobs_status on public.pass_issue_email_jobs(status, created_at desc);
+
+create table if not exists public.pass_issue_email_job_items (
+  id uuid primary key default gen_random_uuid(),
+  job_id uuid not null references public.pass_issue_email_jobs(id) on delete cascade,
+  registration_id uuid not null references public.event_registrations(id) on delete cascade,
+  status text not null default 'queued' check (status in ('queued', 'processing', 'sent', 'skipped', 'failed', 'retrying')),
+  attempt_count integer not null default 0,
+  max_attempts integer not null default 3,
+  failure_reason text,
+  notification_id uuid references public.registration_notifications(id) on delete set null,
+  pass_id uuid references public.entry_passes(id) on delete set null,
+  token text,
+  sent_at timestamptz,
+  last_attempt_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique(job_id, registration_id)
+);
+
+create index if not exists idx_pass_issue_email_job_items_job on public.pass_issue_email_job_items(job_id, status, created_at asc);
+create index if not exists idx_pass_issue_email_job_items_registration on public.pass_issue_email_job_items(registration_id, created_at desc);
+create index if not exists idx_pass_issue_email_job_items_status on public.pass_issue_email_job_items(status, updated_at desc);
 
 create table if not exists public.badge_exports (
   id uuid primary key default gen_random_uuid(),
@@ -171,6 +222,8 @@ alter table public.registration_status_history enable row level security;
 alter table public.registration_notifications enable row level security;
 alter table public.entry_passes enable row level security;
 alter table public.entry_scans enable row level security;
+alter table public.pass_issue_email_jobs enable row level security;
+alter table public.pass_issue_email_job_items enable row level security;
 alter table public.badge_exports enable row level security;
 alter table public.review_notes enable row level security;
 

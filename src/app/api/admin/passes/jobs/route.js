@@ -1,0 +1,69 @@
+import { requireAuthorizedOperator } from "@/lib/registration-auth";
+import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
+import { createPassIssueEmailJob } from "@/lib/pass-issue-job-service";
+import { listPassIssueEmailJobs } from "@/lib/registration-ops-db";
+
+function serializeJob(job) {
+  return {
+    ...job,
+    progress: deriveJobProgress({
+      status: job.status,
+      totals: {
+        total: job.total_items,
+        queued: job.queued_items,
+        processing: job.processing_items,
+        sent: job.sent_items + job.skipped_items,
+        failed: job.failed_items,
+        retrying: job.retrying_items,
+      },
+    }),
+  };
+}
+
+export async function GET() {
+  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.list" });
+  if (!authResult.ok) {
+    return authResult.response;
+  }
+
+  try {
+    const jobs = await listPassIssueEmailJobs({ limit: 8 });
+    return Response.json({
+      success: true,
+      jobs: jobs.map(serializeJob),
+    });
+  } catch (error) {
+    return Response.json(
+      { error: error instanceof Error ? error.message : "Unable to load QR delivery jobs." },
+      { status: 500 },
+    );
+  }
+}
+
+export async function POST(request) {
+  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.create" });
+  if (!authResult.ok) {
+    return authResult.response;
+  }
+
+  try {
+    const body = await request.json();
+    const job = await createPassIssueEmailJob({
+      filters: body?.filters || {},
+      registrationIds: Array.isArray(body?.registrationIds) ? body.registrationIds : [],
+      resendExisting: Boolean(body?.resendExisting),
+      operator: authResult.operator,
+    });
+
+    return Response.json({
+      success: true,
+      job: serializeJob(job),
+      message: `Job queued for ${job.total_items} attendees.`,
+    });
+  } catch (error) {
+    return Response.json(
+      { error: error instanceof Error ? error.message : "Unable to queue QR delivery job." },
+      { status: 500 },
+    );
+  }
+}

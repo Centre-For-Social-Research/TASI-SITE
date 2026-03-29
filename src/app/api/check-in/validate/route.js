@@ -1,5 +1,5 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { getRegistrationByToken, searchCheckInCandidates } from "@/lib/registration-db";
+import { getCheckInRecordByToken, searchCheckInCandidatesLight } from "@/lib/check-in-operations";
 
 function buildStatusPayload(registration, tokenValid = true) {
   if (!registration) {
@@ -37,7 +37,7 @@ export async function POST(request) {
     const query = String(body?.query || "").trim();
 
     if (token) {
-      const { registration } = await getRegistrationByToken(token);
+      const { registration } = await getCheckInRecordByToken(token);
       return Response.json({
         success: true,
         ...buildStatusPayload(registration, true),
@@ -45,7 +45,7 @@ export async function POST(request) {
     }
 
     if (query) {
-      const registrations = await searchCheckInCandidates(query);
+      const registrations = await searchCheckInCandidatesLight(query);
       return Response.json({
         success: true,
         result: "lookup",
