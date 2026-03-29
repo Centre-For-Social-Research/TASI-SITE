@@ -7,7 +7,7 @@ const siteSecurityHeaders = [
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com https://*.clerk.com https://*.clerk.accounts.dev https://d19ob9sqegt2wc.cloudfront.net",
+      "img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com https://*.clerk.com https://*.clerk.accounts.dev https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co",
       "connect-src 'self' https://*.supabase.co https://api.resend.com https://clerk.com https://*.clerk.accounts.dev https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com",
       "frame-src https://challenges.cloudflare.com https://clerk.com https://*.clerk.accounts.dev https://player.mux.com",
       "object-src 'none'",

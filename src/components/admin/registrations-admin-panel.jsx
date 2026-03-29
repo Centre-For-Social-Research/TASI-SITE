@@ -102,17 +102,6 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
         <p className="text-sm text-slate-500 dark:text-slate-400">Select a registrant row to see their details here.</p>
       ) : (
         <div className="space-y-5">
-          {/* Profile photo */}
-          {activeRegistration.profilePhotoUrl ? (
-            <div className="flex justify-center">
-              <img
-                src={activeRegistration.profilePhotoUrl}
-                alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
-                className="h-20 w-20 rounded-full object-cover ring-2 ring-slate-200 dark:ring-slate-700"
-              />
-            </div>
-          ) : null}
-
           {/* Badges */}
           <div className="flex flex-wrap gap-2">
             <AdminStatusBadge tone="default">{activeRegistration.registration_code}</AdminStatusBadge>
@@ -121,22 +110,37 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
           </div>
 
           {/* Core info */}
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Contact</p>
-            <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">{activeRegistration.first_name} {activeRegistration.last_name}</p>
-            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{activeRegistration.organization || "Independent attendee"}</p>
-            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{activeRegistration.email}</p>
-            {activeRegistration.linkedin_url ? (
-              <a
-                href={activeRegistration.linkedin_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 inline-flex items-center gap-1 text-xs text-sky-600 hover:underline"
-              >
-                <ExternalLink className="h-3 w-3" />
-                View LinkedIn Profile
-              </a>
-            ) : null}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_132px] sm:items-start">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Contact</p>
+              <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">{activeRegistration.first_name} {activeRegistration.last_name}</p>
+              <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{activeRegistration.organization || "Independent attendee"}</p>
+              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{activeRegistration.email}</p>
+              {activeRegistration.linkedin_url ? (
+                <a
+                  href={activeRegistration.linkedin_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 text-xs text-sky-600 hover:underline"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  View LinkedIn Profile
+                </a>
+              ) : null}
+            </div>
+            <div className="h-[132px] w-full overflow-hidden rounded-[10px] border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 sm:w-[132px]">
+              {activeRegistration.profilePhotoUrl ? (
+                <img
+                  src={activeRegistration.profilePhotoUrl}
+                  alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-center text-xs text-slate-500 dark:text-slate-400">
+                  No photo
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Key dates */}

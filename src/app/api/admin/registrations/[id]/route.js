@@ -15,7 +15,7 @@ export async function GET(_request, context) {
     const photoPath = detail.registration?.profile_photo_path;
     if (photoPath) {
       const supabase = getSupabaseAdmin();
-      const { data: signedData } = await supabase.storage.from(PROFILE_BUCKET).createSignedUrl(photoPath, 300);
+      const { data: signedData } = await supabase.storage.from(PROFILE_BUCKET).createSignedUrl(photoPath, 3600);
       if (signedData?.signedUrl) {
         detail.registration.profilePhotoUrl = signedData.signedUrl;
       }
