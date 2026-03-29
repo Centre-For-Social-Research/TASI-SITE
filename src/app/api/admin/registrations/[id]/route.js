@@ -1,5 +1,7 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { getRegistrationDetail, deleteRegistration } from "@/lib/registration-ops-db";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { PROFILE_BUCKET } from "@/lib/registration-utils";
 
 export async function GET(_request, context) {
   const authResult = await requireAuthorizedOperator({ route: "api.admin.registrations.detail" });
@@ -10,6 +12,14 @@ export async function GET(_request, context) {
   try {
     const params = await context.params;
     const detail = await getRegistrationDetail(params.id);
+    const photoPath = detail.registration?.profile_photo_path;
+    if (photoPath) {
+      const supabase = getSupabaseAdmin();
+      const { data: signedData } = await supabase.storage.from(PROFILE_BUCKET).createSignedUrl(photoPath, 300);
+      if (signedData?.signedUrl) {
+        detail.registration.profilePhotoUrl = signedData.signedUrl;
+      }
+    }
     return Response.json({
       success: true,
       ...detail,

@@ -1,3 +1,4 @@
+import DiginitaryEndorsementsSection from "@/components/home/dignitary-endorsements-section";
 import NewsUpdatesSection from "@/components/home/news-updates-section";
 import SpeakerHighlightSection from "@/components/home/speaker-highlight-section";
 import HomeFooter from "@/components/home/footer";
@@ -20,6 +21,7 @@ export default function HomePage() {
       <HomeNavbar />
       <main>
         <HomeHero />
+        <DiginitaryEndorsementsSection />
         <FestivalHighlightsSection />
         <NewsUpdatesSection />
         <SpeakerHighlightSection />

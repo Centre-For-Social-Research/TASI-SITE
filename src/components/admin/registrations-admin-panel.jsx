@@ -102,6 +102,17 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
         <p className="text-sm text-slate-500 dark:text-slate-400">Select a registrant row to see their details here.</p>
       ) : (
         <div className="space-y-5">
+          {/* Profile photo */}
+          {activeRegistration.profilePhotoUrl ? (
+            <div className="flex justify-center">
+              <img
+                src={activeRegistration.profilePhotoUrl}
+                alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
+                className="h-20 w-20 rounded-full object-cover ring-2 ring-slate-200 dark:ring-slate-700"
+              />
+            </div>
+          ) : null}
+
           {/* Badges */}
           <div className="flex flex-wrap gap-2">
             <AdminStatusBadge tone="default">{activeRegistration.registration_code}</AdminStatusBadge>

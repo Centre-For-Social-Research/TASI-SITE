@@ -1,5 +1,6 @@
 import Link from "next/link";
 import TeamGrid from "@/components/about/team-grid";
+import DiplomaticEndorsements from "@/components/about/diplomatic-endorsements";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
@@ -156,6 +157,7 @@ export default function AboutPage() {
         </section>
 
         <TeamGrid />
+        <DiplomaticEndorsements />
 
         <section className="w-full border-t border-gray-100 bg-white px-4 py-section-sm dark:border-gray-800 dark:bg-gray-900 md:py-section-md">
           <div className="mx-auto flex max-w-[90rem] flex-col items-center justify-center">

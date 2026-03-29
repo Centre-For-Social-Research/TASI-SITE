@@ -26,6 +26,7 @@ const navItems = [
       { label: "Get Involved", href: "/get-involved" },
       { label: "Media", href: "/media" },
       { label: "News and Blogs", href: "/blog" },
+      { label: "Plan Your Travel", href: "/plan-your-travel" },
     ],
   },
   { label: "Contact", href: "/contact" },
