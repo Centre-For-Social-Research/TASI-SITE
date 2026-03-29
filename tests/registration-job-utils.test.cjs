@@ -6,6 +6,7 @@ const {
   MAX_JOB_RETRIES,
   buildJobSelection,
   deriveJobProgress,
+  isQueueInfrastructureUnavailable,
   shouldSkipJobItem,
 } = require("../src/lib/registration-job-utils.cjs");
 
@@ -105,4 +106,12 @@ test("shouldSkipJobItem skips existing pass emails unless resend mode is enabled
 test("exports stable queue defaults for worker chunking and retries", () => {
   assert.equal(DEFAULT_JOB_CHUNK_SIZE > 0, true);
   assert.equal(MAX_JOB_RETRIES >= 2, true);
+});
+
+test("recognizes schema-cache queue table errors", () => {
+  assert.equal(
+    isQueueInfrastructureUnavailable("Could not find the table 'public.pass_issue_email_jobs' in the schema cache"),
+    true,
+  );
+  assert.equal(isQueueInfrastructureUnavailable("Network error"), false);
 });

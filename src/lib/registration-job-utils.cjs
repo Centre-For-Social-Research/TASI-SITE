@@ -75,10 +75,24 @@ function deriveJobProgress({ status = "queued", totals = {} } = {}) {
   };
 }
 
+function isQueueInfrastructureUnavailable(errorOrMessage) {
+  const message =
+    errorOrMessage instanceof Error
+      ? errorOrMessage.message
+      : String(errorOrMessage || "");
+
+  return (
+    message.includes("pass_issue_email_jobs") ||
+    message.includes("pass_issue_email_job_items") ||
+    message.includes("schema cache")
+  );
+}
+
 module.exports = {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
   buildJobSelection,
   deriveJobProgress,
+  isQueueInfrastructureUnavailable,
   shouldSkipJobItem,
 };

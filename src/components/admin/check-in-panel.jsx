@@ -30,6 +30,17 @@ function ResultCard({ title, description, tone = "default" }) {
   );
 }
 
+function formatDate(value) {
+  if (!value) {
+    return "Not yet";
+  }
+
+  return new Intl.DateTimeFormat("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
 export default function CheckInPanel({ operator }) {
   const [deskLabel, setDeskLabel] = useState("Main Desk");
   const [query, setQuery] = useState("");

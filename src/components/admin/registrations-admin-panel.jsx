@@ -79,7 +79,7 @@ export default function RegistrationsAdminPanel({ operator }) {
     pageSize: 50,
   });
   const [state, setState] = useState({ loading: true, registrations: [], summary: null, pagination: null, count: 0, error: "" });
-  const [jobsState, setJobsState] = useState({ loading: true, jobs: [], selectedJobId: "", selectedDetail: null, error: "" });
+  const [jobsState, setJobsState] = useState({ loading: true, jobs: [], selectedJobId: "", selectedDetail: null, error: "", queueUnavailable: false });
   const [selectedIds, setSelectedIds] = useState([]);
   const [activeRegistrationId, setActiveRegistrationId] = useState("");
   const [detailState, setDetailState] = useState({ loading: false, data: null, error: "" });
@@ -141,6 +141,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         loading: false,
         jobs: data.jobs || [],
         selectedJobId: current.selectedJobId || data.jobs?.[0]?.id || "",
+        queueUnavailable: Boolean(data.queueUnavailable),
         error: "",
       }));
     } catch {
@@ -386,7 +387,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           </div>
           <div className="flex flex-wrap gap-3">
             <button type="button" onClick={() => queueQrJob({ registrationIds: selectedIds })} disabled={state.loading || hasConfigError} className="h-11 rounded-full bg-[#4c1d95] px-5 text-sm font-semibold text-white transition hover:bg-[#5b21b6] disabled:cursor-not-allowed disabled:opacity-70">
-              Queue QR Email
+              {selectedIds.length ? "Send QR To Selected" : "Send QR To Filtered"}
             </button>
             <button type="button" onClick={() => queueQrJob({ registrationIds: selectedIds, resendExisting: true })} disabled={state.loading || hasConfigError} className="h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">
               Resend Issued QR
@@ -396,6 +397,12 @@ export default function RegistrationsAdminPanel({ operator }) {
             </a>
             <a href="/api/admin/badges/export?format=csv" className="inline-flex h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">
               Export CSV
+            </a>
+            <a href="/api/admin/badges/export?format=xlsx" className="inline-flex h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">
+              Export Excel
+            </a>
+            <a href="/api/admin/badges/export?format=pdf" className="inline-flex h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">
+              Export PDF Merge
             </a>
           </div>
         </div>
@@ -426,6 +433,14 @@ export default function RegistrationsAdminPanel({ operator }) {
                 <span>{selectionSummary.matchedLabel}</span>
                 <span>{selectionSummary.actionScopeLabel}</span>
               </div>
+            </div>
+            <div className="mb-5 rounded-[10px] border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+              Individual confirmation:
+              Use the right-side detail panel, set the status, then click `Save Review`. That updates the registrant and sends the matching status email.
+              Bulk confirmation:
+              Tick multiple rows, then use `Mark Confirmed`, `Mark Waitlisted`, or `Mark Rejected`. Each selected registrant is updated and emailed in sequence.
+              QR passes:
+              Leave nothing selected to send to the full filtered queue, or select specific rows to target only those registrants.
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -565,7 +580,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                   </div>
                 </button>
               ))}
-              {!jobsState.loading && jobsState.jobs.length === 0 ? <div className="rounded-[10px] border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400">No QR delivery jobs yet. Queue one from the selected attendees or current filters.</div> : null}
+              {!jobsState.loading && jobsState.jobs.length === 0 ? <div className="rounded-[10px] border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400">{jobsState.queueUnavailable ? "Background queue tables are not deployed in this environment yet. QR sends will run immediately instead of appearing as jobs." : "No QR delivery jobs yet. Queue one from the selected attendees or current filters."}</div> : null}
             </div>
 
             <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900/70">

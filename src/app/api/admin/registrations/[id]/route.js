@@ -1,13 +1,14 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { getRegistrationDetail } from "@/lib/registration-ops-db";
 
-export async function GET(_request, { params }) {
+export async function GET(_request, context) {
   const authResult = await requireAuthorizedOperator({ route: "api.admin.registrations.detail" });
   if (!authResult.ok) {
     return authResult.response;
   }
 
   try {
+    const params = await context.params;
     const detail = await getRegistrationDetail(params.id);
     return Response.json({
       success: true,

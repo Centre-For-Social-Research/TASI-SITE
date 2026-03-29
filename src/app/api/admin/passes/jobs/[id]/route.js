@@ -2,13 +2,14 @@ import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
 import { getPassIssueEmailJobDetail } from "@/lib/pass-issue-job-service";
 
-export async function GET(_request, { params }) {
+export async function GET(_request, context) {
   const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.detail" });
   if (!authResult.ok) {
     return authResult.response;
   }
 
   try {
+    const params = await context.params;
     const detail = await getPassIssueEmailJobDetail(params.id);
     return Response.json({
       success: true,

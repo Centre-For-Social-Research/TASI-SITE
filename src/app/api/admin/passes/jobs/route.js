@@ -1,5 +1,5 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
+import { deriveJobProgress, isQueueInfrastructureUnavailable } from "@/lib/registration-job-utils.cjs";
 import { createPassIssueEmailJob } from "@/lib/pass-issue-job-service";
 import { listPassIssueEmailJobs } from "@/lib/registration-ops-db";
 
@@ -33,6 +33,14 @@ export async function GET() {
       jobs: jobs.map(serializeJob),
     });
   } catch (error) {
+    if (isQueueInfrastructureUnavailable(error)) {
+      return Response.json({
+        success: true,
+        jobs: [],
+        queueUnavailable: true,
+      });
+    }
+
     return Response.json(
       { error: error instanceof Error ? error.message : "Unable to load QR delivery jobs." },
       { status: 500 },
@@ -58,7 +66,9 @@ export async function POST(request) {
     return Response.json({
       success: true,
       job: serializeJob(job),
-      message: `Job queued for ${job.total_items} attendees.`,
+      message: job.legacyDirect
+        ? `Queue tables are not deployed yet, so ${job.sent_items} attendees were processed immediately${job.failed_items ? ` and ${job.failed_items} failed` : ""}.`
+        : `Job queued for ${job.total_items} attendees.`,
     });
   } catch (error) {
     return Response.json(

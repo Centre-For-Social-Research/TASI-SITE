@@ -2,13 +2,14 @@ import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
 import { retryPassIssueEmailJob } from "@/lib/pass-issue-job-service";
 
-export async function POST(_request, { params }) {
+export async function POST(_request, context) {
   const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.retry" });
   if (!authResult.ok) {
     return authResult.response;
   }
 
   try {
+    const params = await context.params;
     const job = await retryPassIssueEmailJob(params.id);
     return Response.json({
       success: true,
