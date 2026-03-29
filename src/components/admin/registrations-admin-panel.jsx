@@ -63,10 +63,10 @@ function ReviewSummary({ summary }) {
 
 function QuickActionButton({ action, onClick, disabled = false }) {
   const toneClasses = {
-    success: "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100",
-    warning: "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100",
-    danger: "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100",
-    info: "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100",
+    success: "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950",
+    warning: "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950",
+    danger: "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300 dark:hover:bg-rose-950",
+    info: "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 dark:border-sky-800 dark:bg-sky-950/50 dark:text-sky-300 dark:hover:bg-sky-950",
   };
   return (
     <button
@@ -99,7 +99,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
       title={activeRegistration ? `${activeRegistration.first_name} ${activeRegistration.last_name}` : "Registrant Detail"}
     >
       {!activeRegistration ? (
-        <p className="text-sm text-slate-500">Select a registrant row to see their details here.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Select a registrant row to see their details here.</p>
       ) : (
         <div className="space-y-5">
           {/* Badges */}
@@ -112,9 +112,9 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
           {/* Core info */}
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Contact</p>
-            <p className="mt-1 text-base font-semibold text-slate-900">{activeRegistration.first_name} {activeRegistration.last_name}</p>
-            <p className="mt-0.5 text-sm text-slate-500">{activeRegistration.organization || "Independent attendee"}</p>
-            <p className="mt-0.5 text-xs text-slate-400">{activeRegistration.email}</p>
+            <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">{activeRegistration.first_name} {activeRegistration.last_name}</p>
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{activeRegistration.organization || "Independent attendee"}</p>
+            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{activeRegistration.email}</p>
             {activeRegistration.linkedin_url ? (
               <a
                 href={activeRegistration.linkedin_url}
@@ -130,42 +130,42 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
 
           {/* Key dates */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Category</p>
-              <p className="mt-1 text-sm text-slate-800">{activeRegistration.attendee_category || "Unspecified"}</p>
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Category</p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{activeRegistration.attendee_category || "Unspecified"}</p>
             </div>
-            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Priority</p>
-              <p className="mt-1 text-sm text-slate-800">{activeRegistration.priority_tier || "Standard"}</p>
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Priority</p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{activeRegistration.priority_tier || "Standard"}</p>
             </div>
-            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">QR Issued</p>
-              <p className="mt-1 text-sm text-slate-800">{formatDate(activeRegistration.qr_pass_issued_at)}</p>
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">QR Issued</p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{formatDate(activeRegistration.qr_pass_issued_at)}</p>
             </div>
-            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Checked In</p>
-              <p className="mt-1 text-sm text-slate-800">{formatDate(activeRegistration.checked_in_at)}</p>
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Checked In</p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{formatDate(activeRegistration.checked_in_at)}</p>
             </div>
           </div>
 
           {/* Status + notes */}
-          <div className="rounded-[10px] border border-slate-200 bg-white p-4">
+          <div className="rounded-[10px] border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800/50">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Status + Notes</p>
               <button
                 type="button"
                 onClick={resendDetailEmail}
-                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
+                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-600 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:text-slate-100"
               >
                 Resend Update
               </button>
             </div>
-            <p className="mt-2 text-xs text-slate-500">{statusHint(detailDraft.status)}</p>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{statusHint(detailDraft.status)}</p>
             <div className="mt-3 space-y-3">
               <select
                 value={detailDraft.status}
                 onChange={(event) => setDetailDraft((current) => ({ ...current, status: event.target.value }))}
-                className="h-9 w-full rounded-[10px] border border-slate-200 bg-white px-3 text-sm text-slate-900"
+                className="h-9 w-full rounded-[10px] border border-slate-200 bg-white px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
               >
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
@@ -173,11 +173,11 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                 <option value="rejected">Rejected</option>
               </select>
               <div className="grid grid-cols-2 gap-2">
-                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   <input type="checkbox" checked={detailDraft.speakerFlag} onChange={(event) => setDetailDraft((current) => ({ ...current, speakerFlag: event.target.checked }))} />
                   Speaker
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   <input type="checkbox" checked={detailDraft.vipFlag} onChange={(event) => setDetailDraft((current) => ({ ...current, vipFlag: event.target.checked }))} />
                   VIP
                 </label>
@@ -185,7 +185,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <textarea
                 value={detailDraft.reviewNotes}
                 onChange={(event) => setDetailDraft((current) => ({ ...current, reviewNotes: event.target.value }))}
-                className="min-h-24 w-full resize-none rounded-[10px] border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
+                className="min-h-24 w-full resize-none rounded-[10px] border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
                 placeholder="Operator notes for context, exceptions, or follow-up"
               />
               <button
@@ -214,13 +214,13 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Status History</p>
               <div className="mt-2 space-y-2">
                 {detailState.data.history.map((item) => (
-                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
+                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-slate-700">{item.action_type}</p>
+                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">{item.action_type}</p>
                       <AdminStatusBadge tone={getStatusTone(item.next_status)}>{item.next_status || "update"}</AdminStatusBadge>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500">{item.notes || "No notes captured."}</p>
-                    <p className="mt-1 text-[10px] text-slate-400">{formatDate(item.created_at)}</p>
+                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{item.notes || "No notes captured."}</p>
+                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">{formatDate(item.created_at)}</p>
                   </div>
                 ))}
               </div>
@@ -233,13 +233,13 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Email Timeline</p>
               <div className="mt-2 space-y-2">
                 {detailState.data.notifications.map((item) => (
-                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
+                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-slate-700">{item.template_type}</p>
+                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">{item.template_type}</p>
                       <AdminStatusBadge tone={getDeliveryTone(item.delivery_status)}>{item.delivery_status || "pending"}</AdminStatusBadge>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500">{item.failure_reason || item.recipient_email || "Awaiting delivery update."}</p>
-                    <p className="mt-1 text-[10px] text-slate-400">{formatDate(item.updated_at || item.created_at)}</p>
+                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{item.failure_reason || item.recipient_email || "Awaiting delivery update."}</p>
+                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">{formatDate(item.updated_at || item.created_at)}</p>
                   </div>
                 ))}
               </div>
@@ -446,7 +446,7 @@ export default function RegistrationsAdminPanel({ operator }) {
   return (
     <div className="space-y-5">
       {/* Page header */}
-      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <AdminSectionHeading
           eyebrow="Registrations"
           title="Review Queue"
@@ -459,7 +459,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                   type="button"
                   disabled={exportLoading[format] || hasConfigError}
                   onClick={() => handleExport(format)}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:bg-slate-700"
                 >
                   {exportLoading[format] ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
                   {format === "csv" ? "Export CSV" : format === "xlsx" ? "Export Excel" : "Export PDF"}
@@ -481,14 +481,14 @@ export default function RegistrationsAdminPanel({ operator }) {
             type="button"
             onClick={() => queueQrJob({ registrationIds: selectedIds, resendExisting: true })}
             disabled={state.loading || hasConfigError}
-            className="h-8 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:opacity-50"
+            className="h-8 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
           >
             Resend Issued QR
           </button>
-          <a href="/admin/delivery" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300">
+          <a href="/admin/delivery" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
             Delivery Jobs
           </a>
-          <a href="/admin/check-in" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300">
+          <a href="/admin/check-in" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
             Check-In Console
           </a>
         </div>
@@ -502,10 +502,10 @@ export default function RegistrationsAdminPanel({ operator }) {
       <ReviewSummary summary={state.summary} />
 
       {/* Filters */}
-      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-slate-700">Filters</p>
-          <div className="flex gap-3 text-xs text-slate-400">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Filters</p>
+          <div className="flex gap-3 text-xs text-slate-400 dark:text-slate-500">
             <span>{selectionSummary.selectedLabel}</span>
             <span>{selectionSummary.matchedLabel}</span>
           </div>
@@ -514,33 +514,33 @@ export default function RegistrationsAdminPanel({ operator }) {
           <input
             value={filters.search}
             onChange={(event) => setFilterValue("search", event.target.value)}
-            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 xl:col-span-2"
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 xl:col-span-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             placeholder="Search name, email, code, org…"
           />
-          <select value={filters.status} onChange={(event) => setFilterValue("status", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
+          <select value={filters.status} onChange={(event) => setFilterValue("status", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
             <option value="confirmed">Confirmed</option>
             <option value="waitlisted">Waitlisted</option>
             <option value="rejected">Rejected</option>
           </select>
-          <select value={filters.category} onChange={(event) => setFilterValue("category", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
+          <select value={filters.category} onChange={(event) => setFilterValue("category", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
             <option value="all">All categories</option>
             {ATTENDEE_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
           </select>
           <input
             value={filters.city}
             onChange={(event) => setFilterValue("city", event.target.value)}
-            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900"
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             placeholder="Filter by city"
           />
-          <button type="button" onClick={toggleVisibleSelection} className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300">
+          <button type="button" onClick={toggleVisibleSelection} className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
             {allVisibleSelected ? "Clear Visible" : "Select Visible"}
           </button>
         </div>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          <input value={filters.country} onChange={(event) => setFilterValue("country", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900" placeholder="Filter by country" />
-          <input value={filters.organization} onChange={(event) => setFilterValue("organization", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900" placeholder="Filter by organization" />
+          <input value={filters.country} onChange={(event) => setFilterValue("country", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" placeholder="Filter by country" />
+          <input value={filters.organization} onChange={(event) => setFilterValue("organization", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" placeholder="Filter by organization" />
         </div>
       </section>
 
@@ -548,17 +548,17 @@ export default function RegistrationsAdminPanel({ operator }) {
       {state.error && !hasConfigError ? <AdminAlert title="Dashboard Error" description={state.error} tone="danger" /> : null}
 
       {/* Review queue table */}
-      <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-200 px-5 py-3">
-          <p className="text-sm font-semibold text-slate-700">
+      <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <div className="border-b border-slate-200 px-5 py-3 dark:border-slate-700">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             Review Queue
-            {!state.loading && state.count > 0 ? <span className="ml-2 text-xs font-normal text-slate-400">{state.count} registrants</span> : null}
+            {!state.loading && state.count > 0 ? <span className="ml-2 text-xs font-normal text-slate-400 dark:text-slate-500">{state.count} registrants</span> : null}
           </p>
         </div>
         <div className="overflow-auto">
           <table className="min-w-full">
-            <thead className="sticky top-0 bg-slate-50">
-              <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+            <thead className="sticky top-0 bg-slate-50 dark:bg-slate-800/80">
+              <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:border-slate-700 dark:text-slate-500">
                 <th className="px-4 py-3 text-left">
                   <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} />
                 </th>
@@ -580,25 +580,25 @@ export default function RegistrationsAdminPanel({ operator }) {
                   return (
                     <tr
                       key={registration.id}
-                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 ${selected ? "bg-amber-50/40" : ""}`}
+                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 ${selected ? "bg-amber-50/40 dark:bg-amber-950/20" : ""}`}
                       onClick={() => openDrawerFor(registration.id)}
                     >
                       <td className="px-4 py-3.5" onClick={(event) => event.stopPropagation()}>
                         <input type="checkbox" checked={selected} onChange={() => toggleSelection(registration.id)} />
                       </td>
                       <td className="px-4 py-3.5">
-                        <p className="text-sm font-medium text-slate-900">{registration.first_name} {registration.last_name}</p>
-                        <p className="mt-0.5 text-xs text-slate-500">{registration.registration_code}</p>
-                        <p className="mt-0.5 text-xs text-slate-400">{registration.organization || "Independent"} … {registration.attendee_category || "Unspecified"}</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50">{registration.first_name} {registration.last_name}</p>
+                        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{registration.registration_code}</p>
+                        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{registration.organization || "Independent"} … {registration.attendee_category || "Unspecified"}</p>
                       </td>
                       <td className="px-4 py-3.5">
-                        <p className="text-xs text-slate-700">{registration.email}</p>
+                        <p className="text-xs text-slate-700 dark:text-slate-300">{registration.email}</p>
                       </td>
                       <td className="px-4 py-3.5">
                         <AdminStatusBadge tone={getStatusTone(registration.status)}>{registration.status}</AdminStatusBadge>
                       </td>
                       <td className="px-4 py-3.5">
-                        <p className="text-xs text-slate-600">{[registration.city, registration.country].filter(Boolean).join(", ") || "…"}</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">{[registration.city, registration.country].filter(Boolean).join(", ") || "…"}</p>
                       </td>
                       <td className="px-4 py-3.5">
                         <AdminStatusBadge tone={registration.qr_pass_issued_at ? "info" : "default"}>
@@ -621,16 +621,16 @@ export default function RegistrationsAdminPanel({ operator }) {
           </table>
         </div>
         {!state.loading && !state.error && orderedRegistrations.length === 0 ? (
-          <div className="p-8 text-center text-sm text-slate-400">No registrations match the current filters.</div>
+          <div className="p-8 text-center text-sm text-slate-400 dark:text-slate-500">No registrations match the current filters.</div>
         ) : null}
         {state.pagination ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3">
-            <p className="text-xs text-slate-400">Page {state.pagination.page} of {state.pagination.totalPages}</p>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3 dark:border-slate-700">
+            <p className="text-xs text-slate-400 dark:text-slate-500">Page {state.pagination.page} of {state.pagination.totalPages}</p>
             <div className="flex gap-2">
-              <button type="button" onClick={() => setFilters((current) => ({ ...current, page: Math.max(current.page - 1, 1) }))} disabled={state.pagination.page <= 1} className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40">
+              <button type="button" onClick={() => setFilters((current) => ({ ...current, page: Math.max(current.page - 1, 1) }))} disabled={state.pagination.page <= 1} className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
                 Previous
               </button>
-              <button type="button" onClick={() => setFilters((current) => ({ ...current, page: Math.min(current.page + 1, state.pagination.totalPages) }))} disabled={state.pagination.page >= state.pagination.totalPages} className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40">
+              <button type="button" onClick={() => setFilters((current) => ({ ...current, page: Math.min(current.page + 1, state.pagination.totalPages) }))} disabled={state.pagination.page >= state.pagination.totalPages} className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
                 Next
               </button>
             </div>
@@ -653,16 +653,16 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Sticky bulk actions bar */}
       {selectedIds.length > 0 ? (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-slate-700 dark:bg-slate-900/95">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-slate-700">{selectedIds.length} selected</span>
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{selectedIds.length} selected</span>
             <div className="flex flex-wrap gap-2">
               <QuickActionButton action={{ key: "confirm", label: "Mark Confirmed", kind: "success" }} onClick={() => bulkUpdateStatus("confirmed")} />
               <QuickActionButton action={{ key: "waitlist", label: "Mark Waitlisted", kind: "warning" }} onClick={() => bulkUpdateStatus("waitlisted")} />
               <QuickActionButton action={{ key: "reject", label: "Mark Rejected", kind: "danger" }} onClick={() => bulkUpdateStatus("rejected")} />
               <QuickActionButton action={{ key: "sendQr", label: "Send QR", kind: "info" }} onClick={() => queueQrJob({ registrationIds: selectedIds })} disabled={state.loading || hasConfigError} />
             </div>
-            <button type="button" onClick={() => setSelectedIds([])} className="ml-auto text-xs text-slate-400 transition hover:text-slate-600">
+            <button type="button" onClick={() => setSelectedIds([])} className="ml-auto text-xs text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
               Clear selection
             </button>
           </div>

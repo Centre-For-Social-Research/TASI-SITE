@@ -6,40 +6,40 @@ import { X } from "lucide-react";
 
 const toneMap = {
   default: {
-    badge: "border-slate-200 bg-white text-slate-600",
+    badge: "border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300",
     dot: "bg-slate-400",
-    panel: "border-slate-200 bg-slate-50 text-slate-700",
-    card: "border-slate-200 bg-white",
+    panel: "border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200",
+    card: "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900",
   },
   warning: {
-    badge: "border-amber-200 bg-amber-50 text-amber-800",
+    badge: "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
     dot: "bg-amber-500",
-    panel: "border-amber-200 bg-amber-50 text-amber-900",
-    card: "border-amber-200 bg-amber-50",
+    panel: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200",
+    card: "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30",
   },
   success: {
-    badge: "border-emerald-200 bg-emerald-50 text-emerald-800",
+    badge: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
     dot: "bg-emerald-500",
-    panel: "border-emerald-200 bg-emerald-50 text-emerald-900",
-    card: "border-emerald-200 bg-emerald-50",
+    panel: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200",
+    card: "border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30",
   },
   danger: {
-    badge: "border-rose-200 bg-rose-50 text-rose-700",
+    badge: "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
     dot: "bg-rose-500",
-    panel: "border-rose-200 bg-rose-50 text-rose-900",
-    card: "border-rose-200 bg-rose-50",
+    panel: "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200",
+    card: "border-rose-200 bg-rose-50 dark:border-rose-800 dark:bg-rose-950/30",
   },
   accent: {
-    badge: "border-violet-200 bg-violet-50 text-violet-800",
+    badge: "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-800 dark:bg-violet-950/60 dark:text-violet-300",
     dot: "bg-violet-500",
-    panel: "border-violet-200 bg-violet-50 text-violet-900",
-    card: "border-violet-200 bg-violet-50",
+    panel: "border-violet-200 bg-violet-50 text-violet-900 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-200",
+    card: "border-violet-200 bg-violet-50 dark:border-violet-800 dark:bg-violet-950/30",
   },
   info: {
-    badge: "border-sky-200 bg-sky-50 text-sky-700",
+    badge: "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300",
     dot: "bg-sky-500",
-    panel: "border-sky-200 bg-sky-50 text-sky-900",
-    card: "border-sky-200 bg-sky-50",
+    panel: "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-200",
+    card: "border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950/30",
   },
 };
 
@@ -70,11 +70,11 @@ export function AdminStatCard({ label, value, tone = "default", detail }) {
   return (
     <div className={clsx("rounded-[10px] border p-4 shadow-sm", classes.card)}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</p>
         <span className={clsx("h-2 w-2 rounded-full", classes.dot)} />
       </div>
-      <p className="mt-2.5 text-3xl font-bold tabular-nums text-slate-900">{value}</p>
-      {detail ? <p className="mt-1.5 text-xs text-slate-500">{detail}</p> : null}
+      <p className="mt-2.5 text-3xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{value}</p>
+      {detail ? <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{detail}</p> : null}
     </div>
   );
 }
@@ -100,8 +100,8 @@ export function AdminSectionHeading({ eyebrow, title, description, action }) {
     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
       <div className="min-w-0">
         {eyebrow ? <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-600">{eyebrow}</p> : null}
-        <h2 className="mt-1 text-2xl font-bold text-slate-900">{title}</h2>
-        {description ? <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500">{description}</p> : null}
+        <h2 className="mt-1 text-2xl font-bold text-slate-900 dark:text-slate-50">{title}</h2>
+        {description ? <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">{description}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
@@ -130,13 +130,13 @@ export function SlideOverDrawer({ open, onClose, title, children }) {
         aria-hidden="true"
       />
       {/* Panel */}
-      <div className="relative flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl">
-        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4">
-          <p className="text-sm font-semibold text-slate-900">{title}</p>
+      <div className="relative flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-700">
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">{title}</p>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
             aria-label="Close"
           >
             <X className="h-4 w-4" />
@@ -176,10 +176,10 @@ export function LoadingRows({ count = 6, cols = 7 }) {
   return (
     <>
       {Array.from({ length: count }, (_, rowIndex) => (
-        <tr key={rowIndex} className="border-b border-slate-100">
+        <tr key={rowIndex} className="border-b border-slate-100 dark:border-slate-800">
           {Array.from({ length: cols }, (_, colIndex) => (
             <td key={colIndex} className="px-4 py-4">
-              <div className="h-4 animate-pulse rounded bg-slate-100" style={{ width: `${55 + ((rowIndex * 3 + colIndex * 7) % 35)}%` }} />
+              <div className="h-4 animate-pulse rounded bg-slate-100 dark:bg-slate-800" style={{ width: `${55 + ((rowIndex * 3 + colIndex * 7) % 35)}%` }} />
             </td>
           ))}
         </tr>
