@@ -1,6 +1,20 @@
 /** @type {import('next').NextConfig} */
 const siteSecurityHeaders = [
   {
+    key: 'Content-Security-Policy',
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com https://*.clerk.com https://*.clerk.accounts.dev",
+      "connect-src 'self' https://*.supabase.co https://api.resend.com https://clerk.com https://*.clerk.accounts.dev https://*.sanity.io wss://*.sanity.io",
+      "frame-src https://challenges.cloudflare.com https://clerk.com https://*.clerk.accounts.dev",
+      "object-src 'none'",
+      "base-uri 'self'",
+    ].join('; '),
+  },
+  {
     key: 'Referrer-Policy',
     value: 'strict-origin-when-cross-origin',
   },

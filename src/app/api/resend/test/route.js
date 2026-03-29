@@ -1,6 +1,12 @@
+import { requireAuthorizedOperator } from "@/lib/registration-auth";
 import { Resend } from "resend";
 
-export async function POST() {
+export async function POST(request) {
+  const authResult = await requireAuthorizedOperator({ route: "api.resend.test" });
+  if (!authResult.ok) {
+    return authResult.response;
+  }
+
   const apiKey = process.env.RESEND_API_KEY?.trim();
 
   if (!apiKey) {
