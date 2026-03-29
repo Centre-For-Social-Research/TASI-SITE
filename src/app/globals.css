@@ -204,6 +204,34 @@ a {
   text-decoration: none;
 }
 
+.font-admin-display {
+  font-family: var(--font-admin-display), Georgia, serif;
+}
+
+.font-admin-sans {
+  font-family: var(--font-admin-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-admin-mono {
+  font-family: var(--font-admin-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(22, 24, 28, 0.5);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(122, 127, 142, 0.5);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
 /* Centralized dark-mode overrides for legacy light utility usage */
 .dark .bg-white {
   background-color: #111827 !important;
