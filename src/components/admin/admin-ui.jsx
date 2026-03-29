@@ -1,43 +1,45 @@
 "use client";
 
+import { useEffect } from "react";
 import clsx from "clsx";
+import { X } from "lucide-react";
 
 const toneMap = {
   default: {
-    badge: "border-stone-200 bg-white text-slate-700",
+    badge: "border-slate-200 bg-white text-slate-600",
     dot: "bg-slate-400",
-    panel: "border-stone-200 bg-white text-slate-700",
-    card: "border-stone-200 bg-white",
+    panel: "border-slate-200 bg-slate-50 text-slate-700",
+    card: "border-slate-200 bg-white",
   },
   warning: {
-    badge: "border-amber-200 bg-amber-50 text-amber-900",
+    badge: "border-amber-200 bg-amber-50 text-amber-800",
     dot: "bg-amber-500",
     panel: "border-amber-200 bg-amber-50 text-amber-900",
-    card: "border-amber-200 bg-[#fff8eb]",
+    card: "border-amber-200 bg-amber-50",
   },
   success: {
     badge: "border-emerald-200 bg-emerald-50 text-emerald-800",
     dot: "bg-emerald-500",
     panel: "border-emerald-200 bg-emerald-50 text-emerald-900",
-    card: "border-emerald-200 bg-[#f3fcf8]",
+    card: "border-emerald-200 bg-emerald-50",
   },
   danger: {
-    badge: "border-rose-200 bg-rose-50 text-rose-800",
+    badge: "border-rose-200 bg-rose-50 text-rose-700",
     dot: "bg-rose-500",
     panel: "border-rose-200 bg-rose-50 text-rose-900",
-    card: "border-rose-200 bg-[#fff5f5]",
+    card: "border-rose-200 bg-rose-50",
   },
   accent: {
     badge: "border-violet-200 bg-violet-50 text-violet-800",
     dot: "bg-violet-500",
     panel: "border-violet-200 bg-violet-50 text-violet-900",
-    card: "border-violet-200 bg-[#faf5ff]",
+    card: "border-violet-200 bg-violet-50",
   },
   info: {
-    badge: "border-sky-200 bg-sky-50 text-sky-800",
+    badge: "border-sky-200 bg-sky-50 text-sky-700",
     dot: "bg-sky-500",
     panel: "border-sky-200 bg-sky-50 text-sky-900",
-    card: "border-sky-200 bg-[#f4fbff]",
+    card: "border-sky-200 bg-sky-50",
   },
 };
 
@@ -51,7 +53,7 @@ export function AdminStatusBadge({ children, tone = "default", className = "" })
   return (
     <span
       className={clsx(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-admin-mono text-[10px] uppercase tracking-[0.12em]",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium",
         classes.badge,
         className,
       )}
@@ -66,13 +68,13 @@ export function AdminStatCard({ label, value, tone = "default", detail }) {
   const classes = getToneClasses(tone);
 
   return (
-    <div className={clsx("rounded-[24px] border p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)]", classes.card)}>
+    <div className={clsx("rounded-2xl border p-4 shadow-sm", classes.card)}>
       <div className="flex items-center justify-between gap-3">
-        <p className="font-admin-mono text-[10px] uppercase tracking-[0.22em] text-slate-500">{label}</p>
-        <span className={clsx("h-2.5 w-2.5 rounded-full", classes.dot)} />
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+        <span className={clsx("h-2 w-2 rounded-full", classes.dot)} />
       </div>
-      <p className="mt-3 font-admin-display text-3xl text-slate-900">{value}</p>
-      {detail ? <p className="mt-2 text-xs text-slate-500">{detail}</p> : null}
+      <p className="mt-2.5 text-3xl font-bold tabular-nums text-slate-900">{value}</p>
+      {detail ? <p className="mt-1.5 text-xs text-slate-500">{detail}</p> : null}
     </div>
   );
 }
@@ -81,11 +83,11 @@ export function AdminAlert({ title, description, tone = "default", actions = nul
   const classes = getToneClasses(tone);
 
   return (
-    <div className={clsx("rounded-[20px] border px-4 py-3 shadow-sm", classes.panel, className)}>
+    <div className={clsx("rounded-xl border px-4 py-3 shadow-sm", classes.panel, className)}>
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em]">{title}</p>
-          <p className="mt-2 text-sm leading-relaxed opacity-90">{description}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide">{title}</p>
+          <p className="mt-1.5 text-sm leading-relaxed opacity-90">{description}</p>
         </div>
         {actions}
       </div>
@@ -95,13 +97,93 @@ export function AdminAlert({ title, description, tone = "default", actions = nul
 
 export function AdminSectionHeading({ eyebrow, title, description, action }) {
   return (
-    <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-      <div>
-        {eyebrow ? <p className="font-admin-mono text-[10px] uppercase tracking-[0.24em] text-amber-700">{eyebrow}</p> : null}
-        <h2 className="mt-2 font-admin-display text-3xl leading-none text-slate-900">{title}</h2>
-        {description ? <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">{description}</p> : null}
+    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+      <div className="min-w-0">
+        {eyebrow ? <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-600">{eyebrow}</p> : null}
+        <h2 className="mt-1 text-2xl font-bold text-slate-900">{title}</h2>
+        {description ? <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500">{description}</p> : null}
       </div>
-      {action}
+      {action ? <div className="shrink-0">{action}</div> : null}
     </div>
+  );
+}
+
+/** Slide-over drawer that opens from the right */
+export function SlideOverDrawer({ open, onClose, title, children }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const handleKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      {/* Panel */}
+      <div className="relative flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4">
+          <p className="text-sm font-semibold text-slate-900">{title}</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+/** Dismissible in-page toast for transient status / error feedback */
+export function AdminToast({ message, tone = "default", onDismiss }) {
+  const classes = getToneClasses(tone);
+
+  if (!message) return null;
+
+  return (
+    <div className={clsx("flex items-start justify-between gap-3 rounded-xl border px-4 py-3 shadow-sm", classes.panel)}>
+      <p className="text-sm leading-relaxed">{message}</p>
+      {onDismiss ? (
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="mt-0.5 shrink-0 rounded p-0.5 opacity-60 transition hover:opacity-100"
+          aria-label="Dismiss"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+/** Animated shimmer skeleton rows for table loading states */
+export function LoadingRows({ count = 6, cols = 7 }) {
+  return (
+    <>
+      {Array.from({ length: count }, (_, rowIndex) => (
+        <tr key={rowIndex} className="border-b border-slate-100">
+          {Array.from({ length: cols }, (_, colIndex) => (
+            <td key={colIndex} className="px-4 py-4">
+              <div className="h-4 animate-pulse rounded bg-slate-100" style={{ width: `${55 + ((rowIndex * 3 + colIndex * 7) % 35)}%` }} />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
   );
 }

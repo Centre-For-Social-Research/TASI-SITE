@@ -8,7 +8,7 @@ import { EVENT_CONFIG } from "@/lib/registration-constants";
 import badgeLayoutUtils from "@/lib/registration-badge-layout.cjs";
 import { buildBadgeDisplayName, PROFILE_BUCKET } from "@/lib/registration-utils";
 
-const { getBadgeTierTheme, normalizeBadgeSingleLine } = badgeLayoutUtils;
+const { getBadgeLowerSectionLayout, getBadgeTierTheme, normalizeBadgeSingleLine } = badgeLayoutUtils;
 
 let cachedLogoDataUrl = null;
 
@@ -136,6 +136,7 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
   const categoryLabel = registration.attendee_category || "Delegate";
   const eventDatesLabel = "13-14 Oct 2026";
   const compactHeaderLabel = normalizeBadgeSingleLine(headerLabel, 24);
+  const lowerSectionLayout = getBadgeLowerSectionLayout();
   const policyRules = [
     "Carry a valid government-issued photo ID.",
     "Badge is valid only for the registered attendee.",
@@ -235,38 +236,42 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.2);
-  doc.text("ENTRY PASS", 8, 97.4);
-
-  doc.setTextColor(15, 23, 42);
-  doc.setFontSize(10.9);
-  doc.text("Scan to verify", 8, 105.3);
-  doc.setDrawColor(201, 144, 44);
-  doc.setLineWidth(0.7);
-  doc.line(8, 108.8, 30.2, 108.8);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(100, 116, 139);
-  doc.setFontSize(5.9);
-  doc.text("Show this pass with", 8, 114.7);
-  doc.text("a valid photo ID at", 8, 120.1);
-  doc.text("the venue entrance.", 8, 125.5);
+  doc.text("ENTRY PASS", 8, lowerSectionLayout.entryPassLabelY);
 
   doc.setTextColor(201, 144, 44);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.1);
-  doc.text("Policy rules", 8, 133.4);
+  doc.text("Policy rules", 8, lowerSectionLayout.policyTitleY);
   doc.setTextColor(88, 102, 122);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(4.7);
-  doc.text(`- ${policyRules[0]}`, 8, 138.1, { maxWidth: 42 });
-  doc.text(`- ${policyRules[1]}`, 8, 142.4, { maxWidth: 42 });
-  doc.text(`- ${policyRules[2]}`, 8, 146.7, { maxWidth: 42 });
+  doc.text(`- ${policyRules[0]}`, 8, lowerSectionLayout.policyRuleYs[0], { maxWidth: 42 });
+  doc.text(`- ${policyRules[1]}`, 8, lowerSectionLayout.policyRuleYs[1], { maxWidth: 42 });
+  doc.text(`- ${policyRules[2]}`, 8, lowerSectionLayout.policyRuleYs[2], { maxWidth: 42 });
 
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(220, 224, 232);
   doc.setLineWidth(0.7);
-  doc.roundedRect(60, 96.2, 32.5, 32.5, 2.8, 2.8, "FD");
+  doc.roundedRect(
+    lowerSectionLayout.qrBox.x,
+    lowerSectionLayout.qrBox.y,
+    lowerSectionLayout.qrBox.width,
+    lowerSectionLayout.qrBox.height,
+    2.8,
+    2.8,
+    "FD"
+  );
   if (qrDataUrl) {
-    doc.addImage(qrDataUrl, "PNG", 62, 98.2, 28.2, 28.2, undefined, "FAST");
+    doc.addImage(
+      qrDataUrl,
+      "PNG",
+      lowerSectionLayout.qrCode.x,
+      lowerSectionLayout.qrCode.y,
+      lowerSectionLayout.qrCode.width,
+      lowerSectionLayout.qrCode.height,
+      undefined,
+      "FAST"
+    );
   } else {
     doc.setTextColor(100, 116, 139);
     doc.setFont("helvetica", "normal");
@@ -278,7 +283,11 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(6.6);
-  doc.text(registration.registration_code || "-", 76.5, 131.6, { align: "center" });
+  doc.text(registration.registration_code || "-", 76.5, lowerSectionLayout.qrRegistrationCodeY, { align: "center" });
+  doc.setTextColor(15, 23, 42);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.text("Scan to verify", 76.5, lowerSectionLayout.scanLabelY, { align: "center" });
 
   doc.setFillColor(...tierTheme.fillColor);
   doc.rect(0, 147.6, 101.6, 4.8, "F");

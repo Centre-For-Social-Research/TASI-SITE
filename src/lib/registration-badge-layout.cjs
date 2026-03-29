@@ -23,7 +23,7 @@ function normalizeBadgeSingleLine(value, maxLength = 32) {
     return normalized;
   }
 
-  return `${normalized.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
+  return `${normalized.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
 function getBadgeTierTheme({ badgeColorHex, badgeColorLabel } = {}) {
@@ -37,7 +37,30 @@ function getBadgeTierTheme({ badgeColorHex, badgeColorLabel } = {}) {
   };
 }
 
+function getBadgeLowerSectionLayout() {
+  return {
+    entryPassLabelY: 97.4,
+    policyTitleY: 105.3,
+    policyRuleYs: [110, 114.3, 118.6],
+    qrBox: {
+      x: 60,
+      y: 96.2,
+      width: 32.5,
+      height: 32.5,
+    },
+    qrCode: {
+      x: 62,
+      y: 98.2,
+      width: 28.2,
+      height: 28.2,
+    },
+    qrRegistrationCodeY: 131.6,
+    scanLabelY: 137.2,
+  };
+}
+
 module.exports = {
+  getBadgeLowerSectionLayout,
   getBadgeTierTheme,
   normalizeBadgeSingleLine,
 };
