@@ -1,6 +1,6 @@
 export default function SignInLoading() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fbf6ee] px-6 dark:bg-slate-950">
+    <div className="flex min-h-screen items-start justify-center bg-[#fbf6ee] px-6 pt-24 dark:bg-slate-950">
       <div className="w-full max-w-[400px] animate-pulse rounded-[12px] border border-slate-200 bg-white p-8 shadow-lg dark:border-slate-800 dark:bg-slate-900">
         {/* Logo / header */}
         <div className="mb-6 flex flex-col items-center gap-3">

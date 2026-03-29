@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,6 +19,22 @@ import {
   Send,
   Twitter,
 } from "lucide-react";
+
+function AdminLoginButton() {
+  const router = useRouter();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        router.push("/sign-in?redirect_url=/admin/registrations");
+      }}
+      className="w-full rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90"
+    >
+      Log In
+    </button>
+  );
+}
 
 function Footerdemo() {
   const [newsletterEmail, setNewsletterEmail] = React.useState("");
@@ -322,12 +339,7 @@ function Footerdemo() {
             <div className="mb-4 w-full max-w-[196px] rounded-[10px] border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30">
               <p className="mb-3 text-sm text-white/85">Admin Access</p>
               <div className="flex flex-col gap-2">
-                <Link
-                  href="/sign-in"
-                  className="w-full rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90"
-                >
-                  Log In
-                </Link>
+                <AdminLoginButton />
               </div>
             </div>
           </div>
