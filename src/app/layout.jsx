@@ -1,5 +1,5 @@
-import { Inter, Outfit } from 'next/font/google';
-import { connection } from 'next/server';
+import type { Metadata } from 'next';
+import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
 import AppShell from '@/components/app-shell';
 import './globals.css';
 
@@ -8,21 +8,40 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 });
+
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
   display: 'swap',
 });
 
-export const metadata = {
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-admin-sans',
+  display: 'swap',
+});
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  variable: '--font-admin-mono',
+  weight: ['400', '500'],
+  display: 'swap',
+});
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-admin-display',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
   title: 'TASI 2026',
   description:
-    "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society. The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.",
-  metadataBase: new URL('https://jamsaq.in'),
+    "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
   openGraph: {
     title: 'TASI 2026',
     description:
-      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society. The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.",
+      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
     url: 'https://jamsaq.in',
     siteName: 'TASI 2026',
     type: 'website',
@@ -39,21 +58,19 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'TASI 2026',
     description:
-      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society. The festival advances innovation while centering safety and wellbeing, especially for women, children, and marginalised communities.",
+      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
     images: ['/twitter-image'],
   },
 };
 
-export default async function RootLayout({ children }) {
-  await connection();
-
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${inter.variable} ${outfit.variable}`}
-    >
-      <body className="font-sans antialiased">
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable} ${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}>
+      <body className="antialiased">
         <AppShell>{children}</AppShell>
       </body>
     </html>

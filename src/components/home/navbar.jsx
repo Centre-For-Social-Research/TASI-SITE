@@ -30,7 +30,11 @@ const navItems = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function HomeNavbar() {
+export default function HomeNavbar({
+  forceSolid = false,
+  primaryCtaHref = "/register",
+  primaryCtaLabel = "REGISTER NOW",
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState(null);
@@ -55,10 +59,12 @@ export default function HomeNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const useSolidNavbar = forceSolid || scrolled;
+
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
+        useSolidNavbar
           ? "bg-white/95 text-black shadow-md backdrop-blur dark:bg-gray-950/95 dark:text-white"
           : "bg-transparent text-white"
       }`}
@@ -123,10 +129,10 @@ export default function HomeNavbar() {
         <div className="hidden items-center gap-3 lg:flex lg:justify-self-end">
           <ThemeToggle />
           <Link
-            href="/register"
+            href={primaryCtaHref}
             className="rounded-full bg-rc-primary px-7 py-3 text-sm font-black uppercase tracking-widest text-rc-primary-foreground transition-transform hover:scale-105 hover:opacity-90"
           >
-            REGISTER NOW
+            {primaryCtaLabel}
           </Link>
         </div>
 
@@ -209,14 +215,14 @@ export default function HomeNavbar() {
               )
             ))}
             <Link
-              href="/register"
+              href={primaryCtaHref}
               className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-rc-primary px-6 py-3 text-center text-sm font-black uppercase tracking-widest text-rc-primary-foreground transition-opacity hover:opacity-90"
               onClick={() => {
                 setIsOpen(false);
                 setOpenMobileMenu(null);
               }}
             >
-              REGISTER NOW
+              {primaryCtaLabel}
             </Link>
           </div>
         </div>
