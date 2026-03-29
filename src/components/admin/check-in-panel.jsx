@@ -17,10 +17,10 @@ const { createScanSession } = scanSessionUtils;
 
 function ResultCard({ title, description, tone = "default" }) {
   const toneMap = {
-    default: "border-[#2a2d35] bg-[#14161b] text-[#dfe2ea]",
-    success: "border-[#21493d] bg-[#0e211a] text-[#9fdec9]",
-    danger: "border-[#6b2f2f] bg-[#231011] text-[#f4b0b0]",
-    warning: "border-[#6b5224] bg-[#221a0b] text-[#f4d191]",
+    default: "border-stone-200 bg-white text-slate-700",
+    success: "border-emerald-200 bg-emerald-50 text-emerald-900",
+    danger: "border-rose-200 bg-rose-50 text-rose-900",
+    warning: "border-amber-200 bg-amber-50 text-amber-900",
   };
 
   return (
@@ -411,21 +411,21 @@ export default function CheckInPanel({ operator }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[28px] border border-[#23262d] bg-[#111318] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+      <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
         <AdminSectionHeading
           eyebrow="Check-In"
           title="Scanner-first entry validation"
           description="Keep the camera running during live operations, fall back to manual token lookup when needed, and keep the latest scan outcomes visible for the entire desk team."
         />
-        <p className="mt-4 text-sm text-[#8d93a5]">
+        <p className="mt-4 text-sm text-slate-600">
           Signed in as {operator.displayName} ({operator.primaryEmail}).
         </p>
-        <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-[#f5f6f8]">
+        <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-slate-900">
           Desk Label
           <input
             value={deskLabel}
             onChange={(event) => setDeskLabel(event.target.value)}
-            className="h-11 rounded-xl border border-[#2c3038] bg-[#181b21] px-4 text-sm text-[#f5f6f8]"
+            className="h-11 rounded-xl border border-stone-200 bg-[#faf7f2] px-4 text-sm text-slate-900"
           />
         </label>
       </section>
@@ -443,9 +443,9 @@ export default function CheckInPanel({ operator }) {
             <ResultCard title="Supabase Admin Configuration Required" description={configWarning} tone="danger" />
           </div>
         ) : null}
-        <div className="rounded-[28px] border border-[#23262d] bg-[#111318] p-6">
-          <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#798093]">Scanner Frame</p>
-          <div className="mt-4 overflow-hidden rounded-[24px] border border-[#23262d] bg-[#050608]">
+        <div className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-amber-700">Scanner Frame</p>
+          <div className="mt-4 overflow-hidden rounded-[24px] border border-stone-200 bg-slate-950">
             <video ref={videoRef} className="aspect-video w-full object-cover" muted playsInline />
             <canvas ref={canvasRef} className="hidden" />
           </div>
@@ -453,51 +453,51 @@ export default function CheckInPanel({ operator }) {
             <button
               type="button"
               onClick={startCamera}
-              className="h-11 rounded-full bg-[#c8a96e] px-5 text-sm font-medium text-[#171107] transition hover:opacity-90"
+              className="h-11 rounded-full bg-amber-600 px-5 text-sm font-medium text-white transition hover:bg-amber-700"
             >
               {cameraState === "active" ? "Restart Camera Scan" : "Start Camera Scan"}
             </button>
             <button
               type="button"
               onClick={() => stopCamera()}
-              className="h-11 rounded-full border border-[#30343d] bg-[#17191f] px-5 text-sm text-[#dfe2ea] transition hover:border-[#4a4f5a]"
+              className="h-11 rounded-full border border-stone-200 bg-white px-5 text-sm text-slate-700 transition hover:border-stone-300"
             >
               Stop Camera
             </button>
           </div>
-          <p className="mt-3 text-sm text-[#8d93a5]">{cameraMessage}</p>
+          <p className="mt-3 text-sm text-slate-500">{cameraMessage}</p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
             <input
               value={manualToken}
               onChange={(event) => setManualToken(event.target.value)}
               placeholder="Paste QR token manually"
-              className="h-11 flex-1 rounded-xl border border-[#2c3038] bg-[#181b21] px-4 text-sm text-[#f5f6f8]"
+              className="h-11 flex-1 rounded-xl border border-stone-200 bg-[#faf7f2] px-4 text-sm text-slate-900"
             />
             <button
               type="button"
               onClick={() => completeCheckIn({ token: manualToken })}
               disabled={!manualToken.trim() || scanSubmitting}
-              className="h-11 rounded-full border border-[#30343d] bg-[#17191f] px-5 text-sm text-[#dfe2ea] transition hover:border-[#4a4f5a] disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-11 rounded-full border border-stone-200 bg-white px-5 text-sm text-slate-700 transition hover:border-stone-300 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {scanSubmitting ? "Validating..." : "Validate Token"}
             </button>
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-[#23262d] bg-[#111318] p-6">
-          <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#798093]">Manual Lookup</p>
+        <div className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-amber-700">Manual Lookup</p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search by name, email, or registration ID"
-              className="h-11 flex-1 rounded-xl border border-[#2c3038] bg-[#181b21] px-4 text-sm text-[#f5f6f8]"
+              className="h-11 flex-1 rounded-xl border border-stone-200 bg-[#faf7f2] px-4 text-sm text-slate-900"
             />
             <button
               type="button"
               onClick={lookupAttendee}
               disabled={!query.trim() || lookupLoading}
-              className="h-11 rounded-full bg-[#c8a96e] px-5 text-sm font-medium text-[#171107] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-11 rounded-full bg-amber-600 px-5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {lookupLoading ? "Searching..." : "Search"}
             </button>
@@ -507,12 +507,12 @@ export default function CheckInPanel({ operator }) {
             {lookupResults.map((registration) => (
               <div
                 key={registration.id}
-                className="rounded-2xl border border-[#23262d] bg-[#17191f] p-4"
+                className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-4"
               >
-                <p className="text-sm font-semibold text-[#f5f6f8]">
+                <p className="text-sm font-semibold text-slate-900">
                   {registration.first_name} {registration.last_name}
                 </p>
-                <p className="mt-1 text-sm text-[#9ca3b5]">
+                <p className="mt-1 text-sm text-slate-600">
                   {registration.organization} | {registration.registration_code}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -523,14 +523,14 @@ export default function CheckInPanel({ operator }) {
                   type="button"
                   onClick={() => completeCheckIn({ registrationId: registration.id })}
                   disabled={scanSubmitting}
-                  className="mt-3 h-10 rounded-full border border-[#30343d] bg-[#17191f] px-4 text-sm text-[#dfe2ea] transition hover:border-[#4a4f5a] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-3 h-10 rounded-full border border-stone-200 bg-white px-4 text-sm text-slate-700 transition hover:border-stone-300 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Check In This Attendee
                 </button>
               </div>
             ))}
             {!lookupLoading && !lookupResults.length ? (
-              <p className="text-sm text-[#8d93a5]">
+              <p className="text-sm text-slate-500">
                 Search results will appear here for manual fallback check-in.
               </p>
             ) : null}
@@ -538,11 +538,11 @@ export default function CheckInPanel({ operator }) {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-[#23262d] bg-[#111318] p-6">
+      <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#798093]">Recent Activity</p>
-            <h2 className="mt-2 font-admin-display text-3xl text-[#f5f6f8]">Last validated scans</h2>
+            <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-amber-700">Recent Activity</p>
+            <h2 className="mt-2 font-admin-display text-3xl text-slate-900">Last validated scans</h2>
           </div>
           <button
             type="button"
@@ -559,7 +559,7 @@ export default function CheckInPanel({ operator }) {
                 }
               })();
             }}
-            className="h-10 rounded-full border border-[#30343d] bg-[#17191f] px-4 text-sm text-[#dfe2ea] transition hover:border-[#4a4f5a]"
+            className="h-10 rounded-full border border-stone-200 bg-white px-4 text-sm text-slate-700 transition hover:border-stone-300"
           >
             Refresh Activity
           </button>
@@ -567,23 +567,23 @@ export default function CheckInPanel({ operator }) {
 
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {recentScans.map((scan) => (
-            <div key={scan.id} className="rounded-2xl border border-[#23262d] bg-[#17191f] p-4">
-              <p className="text-sm font-semibold text-[#f5f6f8]">
+            <div key={scan.id} className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-4">
+              <p className="text-sm font-semibold text-slate-900">
                 {scan.registration?.first_name} {scan.registration?.last_name}
               </p>
               <div className="mt-2">
                 <AdminStatusBadge tone={getCheckInFeedbackTone(scan.scan_result)}>{scan.scan_result.replaceAll("_", " ")}</AdminStatusBadge>
               </div>
-              <p className="mt-2 text-sm text-[#9ca3b5]">
+              <p className="mt-2 text-sm text-slate-600">
                 {scan.registration?.registration_code} | {scan.registration?.organization}
               </p>
-              <p className="mt-2 text-xs text-[#6f778a]">
+              <p className="mt-2 text-xs text-stone-500">
                 {scan.desk_label || "Desk not set"} | {formatDate(scan.created_at)}
               </p>
             </div>
           ))}
           {!recentScans.length ? (
-            <p className="text-sm text-[#8d93a5]">
+            <p className="text-sm text-slate-500">
               Recent scan activity will appear here after the first successful validation.
             </p>
           ) : null}

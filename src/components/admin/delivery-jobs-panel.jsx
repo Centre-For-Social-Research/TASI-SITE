@@ -184,13 +184,13 @@ export default function DeliveryJobsPanel({ operator }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[28px] border border-[#23262d] bg-[#111318] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+      <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
         <AdminSectionHeading
           eyebrow="Delivery Jobs"
           title="Monitor QR mailings and retry failures"
           description="This screen is dedicated to outbound QR delivery. Keep review work in the registrations queue, and use this page to watch throughput, process background chunks, and recover failed sends."
         />
-        <p className="mt-4 text-sm text-[#8d93a5]">Operator: {operator.displayName} · {operator.primaryEmail}</p>
+        <p className="mt-4 text-sm text-slate-600">Operator: {operator.displayName} · {operator.primaryEmail}</p>
       </section>
 
       {jobsState.error ? <AdminAlert title="Delivery Error" description={jobsState.error} tone="danger" /> : null}
@@ -210,18 +210,18 @@ export default function DeliveryJobsPanel({ operator }) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="overflow-hidden rounded-[28px] border border-[#23262d] bg-[#111318]">
-          <div className="border-b border-[#23262d] px-5 py-4">
-            <p className="font-admin-mono text-[10px] uppercase tracking-[0.22em] text-[#798093]">Recent Jobs</p>
-            <p className="mt-2 text-sm text-[#8d93a5]">Select a job to inspect item-level failures and retry actions.</p>
+        <section className="overflow-hidden rounded-[24px] border border-stone-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <div className="border-b border-stone-200 px-5 py-4">
+            <p className="font-admin-mono text-[10px] uppercase tracking-[0.22em] text-amber-700">Recent Jobs</p>
+            <p className="mt-2 text-sm text-slate-600">Select a job to inspect item-level failures and retry actions.</p>
           </div>
 
           {jobsState.loading ? <div className="p-5"><AdminAlert title="Loading Delivery Queue" description="Fetching recent QR delivery jobs." /></div> : null}
 
           <div className="overflow-auto">
             <table className="min-w-full">
-              <thead className="bg-[#15181d]">
-                <tr className="border-b border-[#23262d] font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#6f778a]">
+              <thead className="bg-[#faf7f2]">
+                <tr className="border-b border-stone-200 font-admin-mono text-[10px] uppercase tracking-[0.18em] text-stone-500">
                   <th className="px-4 py-3 text-left">Job</th>
                   <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-left">Progress</th>
@@ -232,29 +232,29 @@ export default function DeliveryJobsPanel({ operator }) {
               </thead>
               <tbody>
                 {jobsState.jobs.map((job) => (
-                  <tr key={job.id} className={`border-b border-[#1f232a] transition hover:bg-[#161a20] ${jobsState.selectedJobId === job.id ? "bg-[#1a1e24]" : ""}`} onClick={() => setJobsState((current) => ({ ...current, selectedJobId: job.id }))}>
+                  <tr key={job.id} className={`border-b border-stone-100 transition hover:bg-stone-50 ${jobsState.selectedJobId === job.id ? "bg-amber-50/70" : ""}`} onClick={() => setJobsState((current) => ({ ...current, selectedJobId: job.id }))}>
                     <td className="px-4 py-4">
-                      <p className="text-sm font-medium text-[#f5f6f8]">{job.id === "legacy-direct-send" ? "Direct Send" : `${job.id.slice(0, 8)}...`}</p>
-                      <p className="mt-1 text-xs text-[#8d93a5]">{job.selection_mode} · {job.total_items} items</p>
+                      <p className="text-sm font-medium text-slate-900">{job.id === "legacy-direct-send" ? "Direct Send" : `${job.id.slice(0, 8)}...`}</p>
+                      <p className="mt-1 text-xs text-slate-500">{job.selection_mode} · {job.total_items} items</p>
                     </td>
                     <td className="px-4 py-4"><AdminStatusBadge tone={getJobTone(job)}>{job.status}</AdminStatusBadge></td>
                     <td className="px-4 py-4">
-                      <div className="h-2 w-40 overflow-hidden rounded-full bg-[#242933]">
-                        <div className="h-full rounded-full bg-[#c8a96e]" style={{ width: progressWidth(job.progress) }} />
+                      <div className="h-2 w-40 overflow-hidden rounded-full bg-stone-200">
+                        <div className="h-full rounded-full bg-amber-600" style={{ width: progressWidth(job.progress) }} />
                       </div>
-                      <p className="mt-2 text-xs text-[#8d93a5]">{job.progress?.completed || 0} completed · {job.progress?.remaining || 0} remaining</p>
+                      <p className="mt-2 text-xs text-slate-500">{job.progress?.completed || 0} completed · {job.progress?.remaining || 0} remaining</p>
                     </td>
-                    <td className="px-4 py-4 text-sm text-[#cfd3dd]">{job.sent_items || 0} sent · {job.failed_items || 0} failed</td>
-                    <td className="px-4 py-4 text-sm text-[#8d93a5]">{formatDate(job.updated_at || job.created_at)}</td>
+                    <td className="px-4 py-4 text-sm text-slate-700">{job.sent_items || 0} sent · {job.failed_items || 0} failed</td>
+                    <td className="px-4 py-4 text-sm text-slate-500">{formatDate(job.updated_at || job.created_at)}</td>
                     <td className="px-4 py-4">
                       <div className="flex flex-wrap gap-2">
                         {["queued", "processing"].includes(job.status) ? (
-                          <button type="button" onClick={(event) => { event.stopPropagation(); void processJob(job.id); }} className="rounded-full border border-[#5f5337] bg-[#211c12] px-3 py-1.5 text-xs text-[#e4cc98]">
+                          <button type="button" onClick={(event) => { event.stopPropagation(); void processJob(job.id); }} className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs text-amber-900">
                             Process
                           </button>
                         ) : null}
                         {job.failed_items > 0 ? (
-                          <button type="button" onClick={(event) => { event.stopPropagation(); void retryJob(job.id); }} className="rounded-full border border-[#5a2929] bg-[#221213] px-3 py-1.5 text-xs text-[#f29191]">
+                          <button type="button" onClick={(event) => { event.stopPropagation(); void retryJob(job.id); }} className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs text-rose-800">
                             Retry Failed
                           </button>
                         ) : null}
@@ -267,17 +267,17 @@ export default function DeliveryJobsPanel({ operator }) {
           </div>
 
           {!jobsState.loading && jobsState.jobs.length === 0 ? (
-            <div className="p-8 text-center text-sm text-[#8d93a5]">
+            <div className="p-8 text-center text-sm text-slate-500">
               {jobsState.queueUnavailable ? "Queue-backed jobs are unavailable in this environment, so there is nothing to inspect here yet." : "No QR delivery jobs yet. Queue one from the review page to see it here."}
             </div>
           ) : null}
         </section>
 
-        <section className="rounded-[28px] border border-[#23262d] bg-[#111318] p-5 xl:sticky xl:top-28 xl:self-start">
+        <section className="rounded-[24px] border border-stone-200 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] xl:sticky xl:top-28 xl:self-start">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#798093]">Selected Job</p>
-              <h3 className="mt-2 font-admin-display text-2xl text-[#f5f6f8]">{jobsState.selectedDetail?.job?.id || "Pick a job"}</h3>
+              <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-amber-700">Selected Job</p>
+              <h3 className="mt-2 font-admin-display text-2xl text-slate-900">{jobsState.selectedDetail?.job?.id || "Pick a job"}</h3>
             </div>
             {jobsState.selectedDetail?.job ? <AdminStatusBadge tone={getJobTone(jobsState.selectedDetail.job)}>{jobsState.selectedDetail.job.status}</AdminStatusBadge> : null}
           </div>
@@ -285,32 +285,32 @@ export default function DeliveryJobsPanel({ operator }) {
           {jobsState.selectedDetail?.job ? (
             <>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-[#23262d] bg-[#17191f] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-[#6f778a]">Total</p><p className="mt-1 text-sm text-[#f0f2f6]">{jobsState.selectedDetail.job.total_items}</p></div>
-                <div className="rounded-2xl border border-[#23262d] bg-[#17191f] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-[#6f778a]">Sent</p><p className="mt-1 text-sm text-[#f0f2f6]">{jobsState.selectedDetail.job.sent_items}</p></div>
-                <div className="rounded-2xl border border-[#23262d] bg-[#17191f] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-[#6f778a]">Skipped</p><p className="mt-1 text-sm text-[#f0f2f6]">{jobsState.selectedDetail.job.skipped_items}</p></div>
-                <div className="rounded-2xl border border-[#23262d] bg-[#17191f] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-[#6f778a]">Failed</p><p className="mt-1 text-sm text-[#f0f2f6]">{jobsState.selectedDetail.job.failed_items}</p></div>
+                <div className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-stone-500">Total</p><p className="mt-1 text-sm text-slate-900">{jobsState.selectedDetail.job.total_items}</p></div>
+                <div className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-stone-500">Sent</p><p className="mt-1 text-sm text-slate-900">{jobsState.selectedDetail.job.sent_items}</p></div>
+                <div className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-stone-500">Skipped</p><p className="mt-1 text-sm text-slate-900">{jobsState.selectedDetail.job.skipped_items}</p></div>
+                <div className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-stone-500">Failed</p><p className="mt-1 text-sm text-slate-900">{jobsState.selectedDetail.job.failed_items}</p></div>
               </div>
 
               <div className="mt-5 space-y-3">
                 {(jobsState.selectedDetail.items || []).map((item) => (
-                  <div key={item.id} className="rounded-2xl border border-[#23262d] bg-[#17191f] p-3">
+                  <div key={item.id} className="rounded-2xl border border-stone-200 bg-[#faf7f2] p-3">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-medium text-[#f5f6f8]">{item.registration?.first_name} {item.registration?.last_name}</p>
-                        <p className="mt-1 text-xs text-[#8d93a5]">{item.registration?.registration_code} · {item.registration?.email}</p>
+                        <p className="text-sm font-medium text-slate-900">{item.registration?.first_name} {item.registration?.last_name}</p>
+                        <p className="mt-1 text-xs text-slate-500">{item.registration?.registration_code} · {item.registration?.email}</p>
                       </div>
                       <AdminStatusBadge tone={item.status === "sent" ? "success" : item.status === "failed" ? "danger" : "warning"}>{item.status}</AdminStatusBadge>
                     </div>
-                    <p className="mt-2 text-sm text-[#9ca3b5]">{item.failure_reason || item.registration?.organization || "No failure reason recorded."}</p>
-                    <p className="mt-2 text-xs text-[#6f778a]">Attempts: {item.attempt_count}/{item.max_attempts} · Last attempt: {formatDate(item.last_attempt_at || item.updated_at)}</p>
+                    <p className="mt-2 text-sm text-slate-600">{item.failure_reason || item.registration?.organization || "No failure reason recorded."}</p>
+                    <p className="mt-2 text-xs text-stone-500">Attempts: {item.attempt_count}/{item.max_attempts} · Last attempt: {formatDate(item.last_attempt_at || item.updated_at)}</p>
                   </div>
                 ))}
 
-                {!(jobsState.selectedDetail.items || []).length ? <p className="text-sm text-[#8d93a5]">This job has no item-level attempts recorded yet.</p> : null}
+                {!(jobsState.selectedDetail.items || []).length ? <p className="text-sm text-slate-500">This job has no item-level attempts recorded yet.</p> : null}
               </div>
             </>
           ) : (
-            <p className="mt-5 text-sm text-[#8d93a5]">Select a delivery job to inspect its item timeline and retry failures.</p>
+            <p className="mt-5 text-sm text-slate-500">Select a delivery job to inspect its item timeline and retry failures.</p>
           )}
         </section>
       </section>

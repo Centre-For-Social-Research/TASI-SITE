@@ -7,11 +7,11 @@ import { AdminStatusBadge } from "@/components/admin/admin-ui";
 
 function TopStatPill({ label, value, tone = "default" }) {
   const toneClasses = {
-    default: "border-[#343841] bg-[#17191f] text-[#d7dae2]",
-    warning: "border-[#5f4b21] bg-[#2f2410] text-[#f1c36a]",
-    success: "border-[#21493d] bg-[#112920] text-[#74d1b5]",
-    danger: "border-[#5a2929] bg-[#281314] text-[#f29191]",
-    accent: "border-[#5f5337] bg-[#211c12] text-[#d9bf84]",
+    default: "border-stone-200 bg-white text-slate-700",
+    warning: "border-amber-200 bg-amber-50 text-amber-900",
+    success: "border-emerald-200 bg-emerald-50 text-emerald-800",
+    danger: "border-rose-200 bg-rose-50 text-rose-800",
+    accent: "border-violet-200 bg-violet-50 text-violet-800",
   };
 
   return (
@@ -52,9 +52,7 @@ export default function AdminShell({ operator, currentPath, children }) {
           jobsResponse.json().catch(() => ({})),
         ]);
 
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return;
 
         setShellState({
           summary: registrationsResponse.ok
@@ -92,6 +90,7 @@ export default function AdminShell({ operator, currentPath, children }) {
       }),
     [currentPath, shellState.jobs, shellState.summary],
   );
+
   const statPills = useMemo(
     () =>
       buildAdminStatPills({
@@ -102,27 +101,29 @@ export default function AdminShell({ operator, currentPath, children }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#0b0c0f] text-[#edf0f6]">
-      <div className="lg:grid lg:min-h-screen lg:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="hidden border-r border-[#23262d] bg-[#111318] lg:flex lg:flex-col">
-          <div className="border-b border-[#23262d] px-6 py-6">
-            <p className="font-admin-display text-3xl leading-none text-[#f7f3e8]">TASI <span className="text-[#c8a96e]">2026</span></p>
-            <p className="mt-2 text-sm text-[#8d93a5]">Admin Console</p>
+    <div className="min-h-screen bg-[linear-gradient(180deg,#f7f4ef_0%,#fffdf9_100%)] text-slate-900">
+      <div className="lg:grid lg:min-h-screen lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="hidden border-r border-stone-200 bg-[#fcfaf6] lg:flex lg:flex-col">
+          <div className="border-b border-stone-200 px-6 py-6">
+            <p className="font-admin-display text-3xl leading-none text-slate-900">
+              TASI <span className="text-amber-600">2026</span>
+            </p>
+            <p className="mt-2 text-sm text-slate-500">Admin Console</p>
           </div>
 
           <nav className="flex flex-1 flex-col gap-8 px-4 py-6">
             {navSections.map((section) => (
               <div key={section.key} className="space-y-2">
-                <p className="px-3 font-admin-mono text-[10px] uppercase tracking-[0.22em] text-[#6f778a]">{section.label}</p>
+                <p className="px-3 font-admin-mono text-[10px] uppercase tracking-[0.22em] text-stone-500">{section.label}</p>
                 <div className="space-y-1">
                   {section.items.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center justify-between rounded-xl border px-3 py-2.5 text-sm transition ${
+                      className={`flex items-center justify-between rounded-2xl border px-3 py-2.5 text-sm transition ${
                         item.active
-                          ? "border-[#4b4435] bg-[#1b1e24] text-[#f5f6f8]"
-                          : "border-transparent text-[#9ca3b5] hover:border-[#2f333c] hover:bg-[#17191f] hover:text-[#f5f6f8]"
+                          ? "border-amber-200 bg-amber-50 text-slate-900 shadow-sm"
+                          : "border-transparent text-slate-600 hover:border-stone-200 hover:bg-white hover:text-slate-900"
                       }`}
                     >
                       <span>{item.label}</span>
@@ -133,31 +134,31 @@ export default function AdminShell({ operator, currentPath, children }) {
               </div>
             ))}
 
-            <div className="mt-auto rounded-2xl border border-[#262a31] bg-[#14171d] p-4">
-              <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#6f778a]">Event</p>
-              <p className="mt-3 font-admin-display text-xl text-[#f4f1e8]">Trust & Safety India Festival</p>
-              <p className="mt-2 text-sm text-[#8d93a5]">13-14 October 2026</p>
+            <div className="mt-auto rounded-[24px] border border-stone-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+              <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-stone-500">Event</p>
+              <p className="mt-3 font-admin-display text-xl text-slate-900">Trust & Safety India Festival</p>
+              <p className="mt-2 text-sm text-slate-500">13-14 October 2026</p>
             </div>
           </nav>
         </aside>
 
         <div className="min-w-0">
-          <header className="sticky top-0 z-40 border-b border-[#23262d] bg-[#0f1115]/95 backdrop-blur">
+          <header className="sticky top-0 z-40 border-b border-stone-200 bg-[rgba(255,253,249,0.94)] backdrop-blur">
             <div className="flex flex-col gap-4 px-4 py-4 lg:px-8">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-full border border-[#3a3020] bg-[#1f1b14] text-center font-admin-display text-lg leading-[42px] text-[#d4b57b]">
+                  <div className="h-11 w-11 rounded-full border border-amber-200 bg-amber-50 text-center font-admin-display text-lg leading-[42px] text-amber-700">
                     {getInitials(operator.displayName)}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[#f5f6f8]">{operator.displayName}</p>
-                    <p className="text-xs text-[#8d93a5]">
+                    <p className="text-sm font-medium text-slate-900">{operator.displayName}</p>
+                    <p className="text-xs text-slate-500">
                       {operator.primaryEmail} · {operator.role}
                     </p>
                   </div>
                 </div>
 
-                <div className="hidden items-center gap-2 border-l border-[#262a31] pl-4 md:flex">
+                <div className="hidden items-center gap-2 border-l border-stone-200 pl-4 md:flex">
                   {statPills.map((pill) => (
                     <TopStatPill key={pill.key} label={pill.label} value={pill.value} tone={pill.tone} />
                   ))}
@@ -172,8 +173,8 @@ export default function AdminShell({ operator, currentPath, children }) {
                       href={item.href}
                       className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm whitespace-nowrap ${
                         item.active
-                          ? "border-[#4b4435] bg-[#1b1e24] text-[#f5f6f8]"
-                          : "border-[#262a31] bg-[#13161b] text-[#9ca3b5]"
+                          ? "border-amber-200 bg-amber-50 text-slate-900"
+                          : "border-stone-200 bg-white text-slate-600"
                       }`}
                     >
                       {item.label}

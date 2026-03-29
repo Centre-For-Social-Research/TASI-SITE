@@ -52,9 +52,69 @@ function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
   };
 }
 
+function getStatusRank(status) {
+  if (status === "pending") return 0;
+  if (status === "confirmed") return 1;
+  if (status === "waitlisted") return 2;
+  if (status === "rejected") return 3;
+  return 4;
+}
+
+function getPriorityRank(priorityTier) {
+  const value = String(priorityTier || "").toLowerCase();
+  if (value.includes("purple")) return 0;
+  if (value.includes("gold")) return 1;
+  if (value.includes("blue")) return 2;
+  return 3;
+}
+
+function prioritizeRegistrationQueue(registrations = []) {
+  return [...registrations].sort((left, right) => {
+    const statusDelta = getStatusRank(left.status) - getStatusRank(right.status);
+    if (statusDelta !== 0) return statusDelta;
+
+    const priorityDelta = getPriorityRank(left.priority_tier) - getPriorityRank(right.priority_tier);
+    if (priorityDelta !== 0) return priorityDelta;
+
+    const qrDelta = Number(Boolean(left.qr_pass_issued_at)) - Number(Boolean(right.qr_pass_issued_at));
+    if (qrDelta !== 0) return qrDelta;
+
+    return new Date(right.created_at || 0).getTime() - new Date(left.created_at || 0).getTime();
+  });
+}
+
+function getQuickActionOptions(registration = {}) {
+  if (registration.status === "pending") {
+    return [
+      { key: "confirm", label: "Confirm", kind: "success" },
+      { key: "waitlist", label: "Waitlist", kind: "warning" },
+      { key: "reject", label: "Reject", kind: "danger" },
+    ];
+  }
+
+  if (registration.status === "confirmed") {
+    return [
+      {
+        key: registration.qr_pass_issued_at ? "resendQr" : "sendQr",
+        label: registration.qr_pass_issued_at ? "Resend QR" : "Send QR",
+        kind: "info",
+      },
+      { key: "waitlist", label: "Waitlist", kind: "warning" },
+      { key: "reject", label: "Reject", kind: "danger" },
+    ];
+  }
+
+  return [
+    { key: "confirm", label: "Confirm", kind: "success" },
+    { key: "reject", label: "Reject", kind: "danger" },
+  ];
+}
+
 module.exports = {
   buildDashboardQueryString,
   summarizeSelection,
   isSupabaseAdminConfigError,
   getBatchStatusTone,
+  prioritizeRegistrationQueue,
+  getQuickActionOptions,
 };
