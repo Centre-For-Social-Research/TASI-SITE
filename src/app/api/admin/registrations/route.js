@@ -22,6 +22,7 @@ export async function GET(request) {
       category: searchParams.get("category") || "all",
       priorityTier: searchParams.get("priorityTier") || "all",
       country: searchParams.get("country") || "",
+      city: searchParams.get("city") || "",
       organization: searchParams.get("organization") || "",
       speakerFlag: searchParams.get("speakerFlag") || "",
       lateConfirmation: searchParams.get("lateConfirmation") || "",

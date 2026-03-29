@@ -68,7 +68,7 @@ export function AdminStatCard({ label, value, tone = "default", detail }) {
   const classes = getToneClasses(tone);
 
   return (
-    <div className={clsx("rounded-2xl border p-4 shadow-sm", classes.card)}>
+    <div className={clsx("rounded-[10px] border p-4 shadow-sm", classes.card)}>
       <div className="flex items-center justify-between gap-3">
         <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{label}</p>
         <span className={clsx("h-2 w-2 rounded-full", classes.dot)} />
@@ -83,7 +83,7 @@ export function AdminAlert({ title, description, tone = "default", actions = nul
   const classes = getToneClasses(tone);
 
   return (
-    <div className={clsx("rounded-xl border px-4 py-3 shadow-sm", classes.panel, className)}>
+    <div className={clsx("rounded-[10px] border px-4 py-3 shadow-sm", classes.panel, className)}>
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wide">{title}</p>
@@ -155,7 +155,7 @@ export function AdminToast({ message, tone = "default", onDismiss }) {
   if (!message) return null;
 
   return (
-    <div className={clsx("flex items-start justify-between gap-3 rounded-xl border px-4 py-3 shadow-sm", classes.panel)}>
+    <div className={clsx("flex items-start justify-between gap-3 rounded-[10px] border px-4 py-3 shadow-sm", classes.panel)}>
       <p className="text-sm leading-relaxed">{message}</p>
       {onDismiss ? (
         <button

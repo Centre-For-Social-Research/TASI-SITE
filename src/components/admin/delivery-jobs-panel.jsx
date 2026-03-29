@@ -184,7 +184,7 @@ export default function DeliveryJobsPanel({ operator }) {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
         <AdminSectionHeading
           eyebrow="Delivery Jobs"
           title="Monitor QR mailings and retry failures"
@@ -210,7 +210,7 @@ export default function DeliveryJobsPanel({ operator }) {
       </section>
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-200 px-5 py-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Recent Jobs</p>
             <p className="mt-1 text-sm text-slate-500">Select a job to inspect item-level failures and retry actions.</p>
@@ -272,7 +272,7 @@ export default function DeliveryJobsPanel({ operator }) {
           ) : null}
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start">
+        <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Selected Job</p>
@@ -284,15 +284,15 @@ export default function DeliveryJobsPanel({ operator }) {
           {jobsState.selectedDetail?.job ? (
             <>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Total</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.total_items}</p></div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Sent</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.sent_items}</p></div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Skipped</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.skipped_items}</p></div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Failed</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.failed_items}</p></div>
+                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Total</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.total_items}</p></div>
+                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Sent</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.sent_items}</p></div>
+                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Skipped</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.skipped_items}</p></div>
+                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3"><p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Failed</p><p className="mt-1 text-sm text-slate-800">{jobsState.selectedDetail.job.failed_items}</p></div>
               </div>
 
               <div className="mt-5 space-y-3">
                 {(jobsState.selectedDetail.items || []).map((item) => (
-                  <div key={item.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-slate-900">{item.registration?.first_name} {item.registration?.last_name}</p>

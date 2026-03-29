@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
-import { Download, Loader2 } from "lucide-react";
-import { ATTENDEE_CATEGORIES, PRIORITY_TIERS } from "@/lib/registration-constants";
+import { Download, ExternalLink, Loader2, Trash2 } from "lucide-react";
+import { ATTENDEE_CATEGORIES } from "@/lib/registration-constants";
 import dashboardUtils from "@/lib/admin-dashboard-utils.cjs";
 import {
   AdminAlert,
@@ -90,7 +90,7 @@ function RowActions({ registration, onQuickAction, disabled = false }) {
   );
 }
 
-function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetailStatus, resendDetailEmail, savingDetail, open, onClose }) {
+function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetailStatus, resendDetailEmail, savingDetail, onDelete, open, onClose }) {
   const activeRegistration = detailState.data?.registration;
   return (
     <SlideOverDrawer
@@ -115,30 +115,41 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
             <p className="mt-1 text-base font-semibold text-slate-900">{activeRegistration.first_name} {activeRegistration.last_name}</p>
             <p className="mt-0.5 text-sm text-slate-500">{activeRegistration.organization || "Independent attendee"}</p>
             <p className="mt-0.5 text-xs text-slate-400">{activeRegistration.email}</p>
+            {activeRegistration.linkedin_url ? (
+              <a
+                href={activeRegistration.linkedin_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex items-center gap-1 text-xs text-sky-600 hover:underline"
+              >
+                <ExternalLink className="h-3 w-3" />
+                View LinkedIn Profile
+              </a>
+            ) : null}
           </div>
 
           {/* Key dates */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Category</p>
               <p className="mt-1 text-sm text-slate-800">{activeRegistration.attendee_category || "Unspecified"}</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Priority</p>
               <p className="mt-1 text-sm text-slate-800">{activeRegistration.priority_tier || "Standard"}</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">QR Issued</p>
               <p className="mt-1 text-sm text-slate-800">{formatDate(activeRegistration.qr_pass_issued_at)}</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Checked In</p>
               <p className="mt-1 text-sm text-slate-800">{formatDate(activeRegistration.checked_in_at)}</p>
             </div>
           </div>
 
           {/* Status + notes */}
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="rounded-[10px] border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Status + Notes</p>
               <button
@@ -154,7 +165,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <select
                 value={detailDraft.status}
                 onChange={(event) => setDetailDraft((current) => ({ ...current, status: event.target.value }))}
-                className="h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900"
+                className="h-9 w-full rounded-[10px] border border-slate-200 bg-white px-3 text-sm text-slate-900"
               >
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
@@ -162,11 +173,11 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                 <option value="rejected">Rejected</option>
               </select>
               <div className="grid grid-cols-2 gap-2">
-                <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
                   <input type="checkbox" checked={detailDraft.speakerFlag} onChange={(event) => setDetailDraft((current) => ({ ...current, speakerFlag: event.target.checked }))} />
                   Speaker
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
                   <input type="checkbox" checked={detailDraft.vipFlag} onChange={(event) => setDetailDraft((current) => ({ ...current, vipFlag: event.target.checked }))} />
                   VIP
                 </label>
@@ -174,7 +185,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <textarea
                 value={detailDraft.reviewNotes}
                 onChange={(event) => setDetailDraft((current) => ({ ...current, reviewNotes: event.target.value }))}
-                className="min-h-24 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
+                className="min-h-24 w-full resize-none rounded-[10px] border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                 placeholder="Operator notes for context, exceptions, or follow-up"
               />
               <button
@@ -184,9 +195,17 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                 className="flex h-9 items-center gap-2 rounded-full bg-amber-600 px-4 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
               >
                 {savingDetail ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-                {savingDetail ? "Savingâ€¦" : "Save Notes + Status"}
-              </button>
-            </div>
+                {savingDetail ? "Saving…" : "Save Notes + Status"}
+              </button>              {onDelete ? (
+                <button
+                  type="button"
+                  onClick={onDelete}
+                  className="flex h-9 items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 text-sm font-medium text-rose-700 transition hover:bg-rose-100"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete Registration
+                </button>
+              ) : null}            </div>
           </div>
 
           {/* Status history */}
@@ -195,7 +214,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Status History</p>
               <div className="mt-2 space-y-2">
                 {detailState.data.history.map((item) => (
-                  <div key={item.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs font-medium text-slate-700">{item.action_type}</p>
                       <AdminStatusBadge tone={getStatusTone(item.next_status)}>{item.next_status || "update"}</AdminStatusBadge>
@@ -214,7 +233,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Email Timeline</p>
               <div className="mt-2 space-y-2">
                 {detailState.data.notifications.map((item) => (
-                  <div key={item.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs font-medium text-slate-700">{item.template_type}</p>
                       <AdminStatusBadge tone={getDeliveryTone(item.delivery_status)}>{item.delivery_status || "pending"}</AdminStatusBadge>
@@ -233,7 +252,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
 }
 
 export default function RegistrationsAdminPanel({ operator }) {
-  const [filters, setFilters] = useState({ search: "", status: "all", category: "all", priorityTier: "all", country: "", organization: "", page: 1, pageSize: 50 });
+  const [filters, setFilters] = useState({ search: "", status: "all", category: "all", city: "", country: "", organization: "", page: 1, pageSize: 50 });
   const [state, setState] = useState({ loading: true, registrations: [], summary: null, pagination: null, count: 0, error: "" });
   const [selectedIds, setSelectedIds] = useState([]);
   const [activeRegistrationId, setActiveRegistrationId] = useState("");
@@ -405,12 +424,29 @@ export default function RegistrationsAdminPanel({ operator }) {
     }
   };
 
+  const handleDelete = async () => {
+    const registrationId = detailState.data?.registration?.id;
+    if (!registrationId) return;
+    if (!window.confirm("Delete this registration? This cannot be undone.")) return;
+    try {
+      const response = await fetch(`/api/admin/registrations/${registrationId}`, { method: "DELETE" });
+      const data = await response.json();
+      if (!response.ok) return showToast(data.error || "Unable to delete registration.", "danger");
+      setDrawerOpen(false);
+      setActiveRegistrationId("");
+      showToast("Registration deleted.", "success");
+      void loadRegistrations();
+    } catch {
+      showToast("Network error while deleting registration.", "danger");
+    }
+  };
+
   const allVisibleSelected = orderedRegistrations.length > 0 && orderedRegistrations.every((r) => selectedIds.includes(r.id));
 
   return (
     <div className="space-y-5">
       {/* Page header */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
         <AdminSectionHeading
           eyebrow="Registrations"
           title="Review Queue"
@@ -466,7 +502,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       <ReviewSummary summary={state.summary} />
 
       {/* Filters */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-sm font-semibold text-slate-700">Filters</p>
           <div className="flex gap-3 text-xs text-slate-400">
@@ -478,31 +514,33 @@ export default function RegistrationsAdminPanel({ operator }) {
           <input
             value={filters.search}
             onChange={(event) => setFilterValue("search", event.target.value)}
-            className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 xl:col-span-2"
-            placeholder="Search name, email, code, orgâ€¦"
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 xl:col-span-2"
+            placeholder="Search name, email, code, org…"
           />
-          <select value={filters.status} onChange={(event) => setFilterValue("status", event.target.value)} className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
+          <select value={filters.status} onChange={(event) => setFilterValue("status", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
             <option value="confirmed">Confirmed</option>
             <option value="waitlisted">Waitlisted</option>
             <option value="rejected">Rejected</option>
           </select>
-          <select value={filters.category} onChange={(event) => setFilterValue("category", event.target.value)} className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
+          <select value={filters.category} onChange={(event) => setFilterValue("category", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
             <option value="all">All categories</option>
             {ATTENDEE_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
           </select>
-          <select value={filters.priorityTier} onChange={(event) => setFilterValue("priorityTier", event.target.value)} className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900">
-            <option value="all">All tiers</option>
-            {PRIORITY_TIERS.map((tier) => <option key={tier} value={tier}>{tier}</option>)}
-          </select>
+          <input
+            value={filters.city}
+            onChange={(event) => setFilterValue("city", event.target.value)}
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900"
+            placeholder="Filter by city"
+          />
           <button type="button" onClick={toggleVisibleSelection} className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300">
             {allVisibleSelected ? "Clear Visible" : "Select Visible"}
           </button>
         </div>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          <input value={filters.country} onChange={(event) => setFilterValue("country", event.target.value)} className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900" placeholder="Filter by country" />
-          <input value={filters.organization} onChange={(event) => setFilterValue("organization", event.target.value)} className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900" placeholder="Filter by organization" />
+          <input value={filters.country} onChange={(event) => setFilterValue("country", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900" placeholder="Filter by country" />
+          <input value={filters.organization} onChange={(event) => setFilterValue("organization", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900" placeholder="Filter by organization" />
         </div>
       </section>
 
@@ -510,7 +548,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       {state.error && !hasConfigError ? <AdminAlert title="Dashboard Error" description={state.error} tone="danger" /> : null}
 
       {/* Review queue table */}
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-200 px-5 py-3">
           <p className="text-sm font-semibold text-slate-700">
             Review Queue
@@ -525,8 +563,9 @@ export default function RegistrationsAdminPanel({ operator }) {
                   <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} />
                 </th>
                 <th className="px-4 py-3 text-left">Registrant</th>
+                <th className="px-4 py-3 text-left">Email</th>
                 <th className="px-4 py-3 text-left">Status</th>
-                <th className="px-4 py-3 text-left">Priority</th>
+                <th className="px-4 py-3 text-left">Location</th>
                 <th className="px-4 py-3 text-left">QR</th>
                 <th className="px-4 py-3 text-left">Check-In</th>
                 <th className="px-4 py-3 text-left">Actions</th>
@@ -534,7 +573,7 @@ export default function RegistrationsAdminPanel({ operator }) {
             </thead>
             <tbody>
               {state.loading ? (
-                <LoadingRows count={8} cols={7} />
+                <LoadingRows count={8} cols={8} />
               ) : (
                 orderedRegistrations.map((registration) => {
                   const selected = selectedIds.includes(registration.id);
@@ -550,13 +589,16 @@ export default function RegistrationsAdminPanel({ operator }) {
                       <td className="px-4 py-3.5">
                         <p className="text-sm font-medium text-slate-900">{registration.first_name} {registration.last_name}</p>
                         <p className="mt-0.5 text-xs text-slate-500">{registration.registration_code}</p>
-                        <p className="mt-0.5 text-xs text-slate-400">{registration.organization || "Independent"} Â· {registration.attendee_category || "Unspecified"}</p>
+                        <p className="mt-0.5 text-xs text-slate-400">{registration.organization || "Independent"} … {registration.attendee_category || "Unspecified"}</p>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <p className="text-xs text-slate-700">{registration.email}</p>
                       </td>
                       <td className="px-4 py-3.5">
                         <AdminStatusBadge tone={getStatusTone(registration.status)}>{registration.status}</AdminStatusBadge>
                       </td>
                       <td className="px-4 py-3.5">
-                        <AdminStatusBadge tone={getPriorityTone(registration.priority_tier)}>{registration.priority_tier || "Standard"}</AdminStatusBadge>
+                        <p className="text-xs text-slate-600">{[registration.city, registration.country].filter(Boolean).join(", ") || "…"}</p>
                       </td>
                       <td className="px-4 py-3.5">
                         <AdminStatusBadge tone={registration.qr_pass_issued_at ? "info" : "default"}>
@@ -604,6 +646,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         saveDetailStatus={saveDetailStatus}
         resendDetailEmail={resendDetailEmail}
         savingDetail={savingDetail}
+        onDelete={handleDelete}
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />

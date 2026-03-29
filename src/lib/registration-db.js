@@ -425,7 +425,6 @@ export async function listBadgeExportRegistrations() {
   const { data, error } = await supabase
     .from("event_registrations")
     .select(baseRegistrationSelect())
-    .eq("status", "confirmed")
     .order("last_name", { ascending: true })
     .order("first_name", { ascending: true });
 

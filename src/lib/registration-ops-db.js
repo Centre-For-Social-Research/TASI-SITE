@@ -36,6 +36,11 @@ function applyRegistrationFilters(query, filters = {}) {
     nextQuery = nextQuery.ilike("country", `%${country}%`);
   }
 
+  const city = normalizeString(filters.city);
+  if (city) {
+    nextQuery = nextQuery.ilike("city", `%${city}%`);
+  }
+
   if (organization) {
     nextQuery = nextQuery.ilike("organization", `%${organization}%`);
   }
@@ -82,6 +87,9 @@ export async function listRegistrationQueue({ filters = {}, page = 1, pageSize =
     organization,
     designation,
     attendee_category,
+    city,
+    country,
+    linkedin_url,
     priority_tier,
     status,
     speaker_flag,
@@ -519,4 +527,12 @@ export async function retryFailedPassIssueEmailJobItems(jobId) {
     .eq("id", jobId);
 
   return data || [];
+}
+
+export async function deleteRegistration(id) {
+  const supabase = getSupabase();
+  const { error } = await supabase.from("event_registrations").delete().eq("id", id);
+  if (error) {
+    throw new Error(error.message);
+  }
 }

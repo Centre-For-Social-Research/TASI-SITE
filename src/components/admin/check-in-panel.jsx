@@ -24,7 +24,7 @@ function ResultCard({ title, description, tone = "default" }) {
   };
 
   return (
-    <div className={`rounded-xl border p-4 ${toneMap[tone]}`}>
+    <div className={`rounded-[10px] border p-4 ${toneMap[tone]}`}>
       <p className="text-sm font-semibold">{title}</p>
       <p className="mt-1 text-sm leading-relaxed opacity-90">{description}</p>
     </div>
@@ -411,7 +411,7 @@ export default function CheckInPanel({ operator }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
         <AdminSectionHeading
           eyebrow="Check-In"
           title="Scanner-first entry validation"
@@ -425,7 +425,7 @@ export default function CheckInPanel({ operator }) {
           <input
             value={deskLabel}
             onChange={(event) => setDeskLabel(event.target.value)}
-            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900"
+            className="h-11 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900"
           />
         </label>
       </section>
@@ -443,9 +443,9 @@ export default function CheckInPanel({ operator }) {
             <ResultCard title="Supabase Admin Configuration Required" description={configWarning} tone="danger" />
           </div>
         ) : null}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Scanner Frame</p>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-slate-950">
+          <div className="mt-4 overflow-hidden rounded-[10px] border border-slate-200 bg-slate-950">
             <video ref={videoRef} className="aspect-video w-full object-cover" muted playsInline />
             <canvas ref={canvasRef} className="hidden" />
           </div>
@@ -471,7 +471,7 @@ export default function CheckInPanel({ operator }) {
               value={manualToken}
               onChange={(event) => setManualToken(event.target.value)}
               placeholder="Paste QR token manually"
-              className="h-11 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900"
+              className="h-11 flex-1 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900"
             />
             <button
               type="button"
@@ -484,14 +484,14 @@ export default function CheckInPanel({ operator }) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Manual Lookup</p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search by name, email, or registration ID"
-              className="h-11 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900"
+              className="h-11 flex-1 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900"
             />
             <button
               type="button"
@@ -507,7 +507,7 @@ export default function CheckInPanel({ operator }) {
             {lookupResults.map((registration) => (
               <div
                 key={registration.id}
-                className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+                className="rounded-[10px] border border-slate-200 bg-slate-50 p-4"
               >
                 <p className="text-sm font-semibold text-slate-900">
                   {registration.first_name} {registration.last_name}
@@ -538,7 +538,7 @@ export default function CheckInPanel({ operator }) {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Recent Activity</p>
@@ -567,7 +567,7 @@ export default function CheckInPanel({ operator }) {
 
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {recentScans.map((scan) => (
-            <div key={scan.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <div key={scan.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-4">
               <p className="text-sm font-semibold text-slate-900">
                 {scan.registration?.first_name} {scan.registration?.last_name}
               </p>

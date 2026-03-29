@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Users, Send, ScanLine, ChevronRight } from "lucide-react";
@@ -115,10 +116,7 @@ export default function AdminShell({ operator, currentPath, children }) {
         <aside className="hidden border-r border-slate-200 bg-white lg:flex lg:flex-col">
           {/* Logo */}
           <div className="border-b border-slate-200 px-5 py-5">
-            <p className="text-xl font-bold tracking-tight text-slate-900">
-              TASI <span className="text-amber-600">2026</span>
-            </p>
-            <p className="mt-0.5 text-xs text-slate-400">Admin Console</p>
+            <Image src="/img/tasi-csr-logo.png" alt="TASI" width={120} height={36} className="object-contain" />
           </div>
 
           {/* Nav */}
@@ -159,7 +157,7 @@ export default function AdminShell({ operator, currentPath, children }) {
             <div className="flex-1" />
 
             {/* Event info */}
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <div className="rounded-[10px] border border-slate-200 bg-slate-50 px-4 py-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Event</p>
               <p className="mt-1.5 text-sm font-semibold text-slate-800">Trust & Safety India Festival</p>
               <p className="mt-0.5 text-xs text-slate-500">13–14 October 2026</p>
