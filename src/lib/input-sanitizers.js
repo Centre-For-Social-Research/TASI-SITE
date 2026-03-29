@@ -45,3 +45,26 @@ export function sanitizeMessage(value) {
 
   return normalized;
 }
+
+export function sanitizeShortText(value, { maxLength = 255, fieldName = "Field", required = true } = {}) {
+  const normalized = normalizeText(value).replace(HTML_TAG_REGEX, "").replace(MULTISPACE_REGEX, " ");
+
+  if (required && !normalized) {
+    throw new Error(`${fieldName} is required.`);
+  }
+
+  if (normalized.length > maxLength) {
+    throw new Error(`${fieldName} must be ${maxLength} characters or fewer.`);
+  }
+
+  return normalized;
+}
+
+export function sanitizePhone(value) {
+  const normalized = normalizeText(value);
+  return normalized.replace(/[^\d\s\+\-\(\)\.ext]/gi, "").replace(MULTISPACE_REGEX, " ").trim();
+}
+
+export function sanitizeUrl(value) {
+  return normalizeText(value).replace(MULTISPACE_REGEX, "");
+}
