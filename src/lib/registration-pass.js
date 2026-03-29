@@ -5,7 +5,10 @@ import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { EVENT_CONFIG } from "@/lib/registration-constants";
+import badgeLayoutUtils from "@/lib/registration-badge-layout.cjs";
 import { buildBadgeDisplayName, PROFILE_BUCKET } from "@/lib/registration-utils";
+
+const { getBadgeTierTheme, normalizeBadgeSingleLine } = badgeLayoutUtils;
 
 let cachedLogoDataUrl = null;
 
@@ -124,9 +127,15 @@ function formatEventDateRange() {
 function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photoDataUrl, headerLabel) {
   const displayName = buildBadgeDisplayName(registration);
   const badgeLabel = registration.badge_color_label || "Delegate";
-  const organizationLines = doc.splitTextToSize(registration.organization || "", 54);
+  const tierTheme = getBadgeTierTheme({
+    badgeColorHex: registration.badge_color_hex,
+    badgeColorLabel: badgeLabel,
+  });
+  const organizationLine = normalizeBadgeSingleLine(registration.organization || "", 30);
   const attendeeLines = doc.splitTextToSize(displayName || "", 54);
   const categoryLabel = registration.attendee_category || "Delegate";
+  const eventDatesLabel = "13-14 Oct 2026";
+  const compactHeaderLabel = normalizeBadgeSingleLine(headerLabel, 24);
   const policyRules = [
     "Carry a valid government-issued photo ID.",
     "Badge is valid only for the registered attendee.",
@@ -157,10 +166,10 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
   doc.setFontSize(7.8);
   doc.text("New Delhi, India", 39, 22.8);
   doc.setFillColor(255, 255, 255);
-  doc.roundedRect(73.2, 18.8, 20.6, 6.9, 1.8, 1.8, "F");
-  doc.setTextColor(24, 30, 58);
-  doc.setFontSize(5.9);
-  doc.text(headerLabel, 83.5, 23.2, { align: "center" });
+  doc.roundedRect(71.5, 18.4, 25.4, 7.6, 2.2, 2.2, "F");
+  doc.setTextColor(...tierTheme.fillColor);
+  doc.setFontSize(4.95);
+  doc.text(compactHeaderLabel, 84.2, 23.15, { align: "center", maxWidth: 23 });
 
   doc.setTextColor(101, 115, 138);
   doc.setFont("helvetica", "bold");
@@ -175,7 +184,7 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10.5);
   doc.setTextColor(51, 65, 85);
-  doc.text(organizationLines, 8, 57.8);
+  doc.text(organizationLine || "-", 8, 57.6, { maxWidth: 60 });
 
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(15, 23, 42);
@@ -189,89 +198,89 @@ function drawInstitutionalBadge(doc, registration, qrDataUrl, logoDataUrl, photo
     doc.circle(83.6, 50.4, 5.8, "F");
   }
 
-  doc.setFillColor(34, 69, 126);
-  doc.roundedRect(8, 61, 84.2, 7.5, 2.4, 2.4, "F");
-  doc.setFillColor(101, 177, 255);
-  doc.circle(12.4, 64.75, 1.35, "F");
-  doc.setTextColor(255, 255, 255);
+  doc.setFillColor(...tierTheme.fillColor);
+  doc.roundedRect(8, 64.2, 84.2, 7.5, 2.4, 2.4, "F");
+  doc.setFillColor(...tierTheme.dotColor);
+  doc.circle(12.4, 67.95, 1.35, "F");
+  doc.setTextColor(...tierTheme.textColor);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.1);
-  doc.text(`${badgeLabel.toUpperCase()} TIER`, 16, 65.5);
+  doc.text(tierTheme.label, 16, 68.7);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(6.8);
-  doc.text(categoryLabel, 84.5, 65.5, { align: "right" });
+  doc.text(categoryLabel, 84.5, 68.7, { align: "right" });
 
   doc.setDrawColor(224, 228, 235);
   doc.setLineWidth(0.35);
-  doc.line(8, 74, 93.6, 74);
+  doc.line(8, 76.8, 93.6, 76.8);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.2);
   doc.setTextColor(100, 116, 139);
-  doc.text("REG. ID", 8, 81);
-  doc.text("CATEGORY", 40, 81);
-  doc.text("DATES", 69, 81);
+  doc.text("REG. ID", 8, 82.8);
+  doc.text("CATEGORY", 41.5, 82.8);
+  doc.text("DATES", 78.5, 82.8, { align: "center" });
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
+  doc.setFontSize(9.2);
   doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
-  doc.text(registration.registration_code || "-", 8, 86);
-  doc.text(categoryLabel, 40, 86, { maxWidth: 22 });
-  doc.text("13-14 Oct 2026", 69, 86, { maxWidth: 24 });
+  doc.text(registration.registration_code || "-", 8, 87.8, { maxWidth: 33 });
+  doc.text(categoryLabel, 41.5, 87.8, { maxWidth: 18 });
+  doc.text(eventDatesLabel, 78.5, 87.8, { align: "center", maxWidth: 24 });
 
   doc.setDrawColor(224, 228, 235);
-  doc.line(8, 90, 93.6, 90);
+  doc.line(8, 91.3, 93.6, 91.3);
 
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.2);
-  doc.text("ENTRY PASS", 8, 98);
+  doc.text("ENTRY PASS", 8, 97.4);
 
   doc.setTextColor(15, 23, 42);
-  doc.setFontSize(11.8);
-  doc.text("Scan to verify", 8, 107);
+  doc.setFontSize(10.9);
+  doc.text("Scan to verify", 8, 105.3);
   doc.setDrawColor(201, 144, 44);
   doc.setLineWidth(0.7);
-  doc.line(8, 111.2, 32.8, 111.2);
+  doc.line(8, 108.8, 30.2, 108.8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100, 116, 139);
-  doc.setFontSize(6.9);
-  doc.text("Show this pass with", 8, 120);
-  doc.text("a valid photo ID at", 8, 126);
-  doc.text("the venue entrance.", 8, 132);
+  doc.setFontSize(5.9);
+  doc.text("Show this pass with", 8, 114.7);
+  doc.text("a valid photo ID at", 8, 120.1);
+  doc.text("the venue entrance.", 8, 125.5);
 
   doc.setTextColor(201, 144, 44);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.6);
-  doc.text("Policy rules", 8, 141);
+  doc.setFontSize(7.1);
+  doc.text("Policy rules", 8, 133.4);
   doc.setTextColor(88, 102, 122);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(5.8);
-  doc.text(`- ${policyRules[0]}`, 8, 146);
-  doc.text(`- ${policyRules[1]}`, 8, 150.2);
-  doc.text(`- ${policyRules[2]}`, 8, 154.4);
+  doc.setFontSize(4.7);
+  doc.text(`- ${policyRules[0]}`, 8, 138.1, { maxWidth: 42 });
+  doc.text(`- ${policyRules[1]}`, 8, 142.4, { maxWidth: 42 });
+  doc.text(`- ${policyRules[2]}`, 8, 146.7, { maxWidth: 42 });
 
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(220, 224, 232);
   doc.setLineWidth(0.7);
-  doc.roundedRect(60, 97.5, 32.5, 32.5, 2.8, 2.8, "FD");
+  doc.roundedRect(60, 96.2, 32.5, 32.5, 2.8, 2.8, "FD");
   if (qrDataUrl) {
-    doc.addImage(qrDataUrl, "PNG", 62, 99.5, 28.2, 28.2, undefined, "FAST");
+    doc.addImage(qrDataUrl, "PNG", 62, 98.2, 28.2, 28.2, undefined, "FAST");
   } else {
     doc.setTextColor(100, 116, 139);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
-    doc.text("QR pass not", 76.5, 113, { align: "center" });
-    doc.text("issued yet", 76.5, 118, { align: "center" });
+    doc.text("QR pass not", 76.5, 111.7, { align: "center" });
+    doc.text("issued yet", 76.5, 116.7, { align: "center" });
   }
 
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.2);
-  doc.text(registration.registration_code || "-", 76.5, 133.8, { align: "center" });
+  doc.setFontSize(6.6);
+  doc.text(registration.registration_code || "-", 76.5, 131.6, { align: "center" });
 
-  doc.setFillColor(24, 30, 58);
+  doc.setFillColor(...tierTheme.fillColor);
   doc.rect(0, 147.6, 101.6, 4.8, "F");
   doc.setFillColor(201, 144, 44);
   doc.rect(0, 147.6, 2.6, 4.8, "F");
