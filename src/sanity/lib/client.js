@@ -12,5 +12,9 @@ export const client = isSanityConfigured
       dataset,
       apiVersion,
       useCdn: false,
+      stega: false,
     })
   : null;
+
+/** Next.js fetch cache options – revalidate every 60 s */
+export const sanityFetchOptions = { next: { revalidate: 60 } };

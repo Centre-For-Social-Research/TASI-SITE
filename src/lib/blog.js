@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { blogCategories, blogPosts } from '@/data/blog-posts';
-import { client } from '@/sanity/lib/client';
+import { client, sanityFetchOptions } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import { POSTS_QUERY, POST_BY_SLUG_QUERY } from '@/sanity/lib/queries';
 import { isSanityConfigured } from '@/sanity/env';
@@ -52,7 +52,7 @@ async function fetchSanityPosts() {
     return [];
   }
 
-  const posts = await client.fetch(POSTS_QUERY);
+  const posts = await client.fetch(POSTS_QUERY, {}, sanityFetchOptions);
   return posts.map(normalizeSanityPost);
 }
 
@@ -61,7 +61,7 @@ async function fetchSanityPostBySlug(slug) {
     return null;
   }
 
-  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug });
+  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug }, sanityFetchOptions);
   return post ? normalizeSanityPost(post) : null;
 }
 

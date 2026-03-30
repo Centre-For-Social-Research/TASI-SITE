@@ -8,6 +8,8 @@ import HomeHero from "@/components/home/hero";
 import HomeNavbar from "@/components/home/navbar";
 import VideoTestimonialsSection from "@/components/home/video-testimonials-section";
 
+export const revalidate = 60; // re-fetch Sanity data every 60 seconds
+
 export const metadata = {
   alternates: {
     canonical: "/",
