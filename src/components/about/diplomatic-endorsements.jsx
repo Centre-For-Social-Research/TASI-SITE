@@ -36,7 +36,7 @@ const endorsements = [
     title: "Ambassador of the Kingdom of the Netherlands to India",
     quote:
       "Conversations on trust and safety are more important than ever. Technology is moving incredibly fast on the digital highway, and if we do not begin with values as our starting point, we risk entering troubled waters. Convenings like this provide the space to reflect together, to align across sectors and to ensure that technology remains anchored in shared values.",
-    imageSrc: "/img/endorsements/Marisa Gerards.png",
+    imageSrc: "/img/endorsements/Marisa Gerards-2026.png",
     imageAlt: "Marisa Gerards",
     imagePosition: "right",
     imageZoom: 1.35,
@@ -93,8 +93,8 @@ function EndorsementCard({ name, title, quote, imageSrc, imageAlt, imagePosition
       <div
         className={`relative flex min-h-[220px] items-center py-10 ${
           photoLeft
-            ? "pl-10 pr-10 md:pl-[280px] md:pr-14 lg:pl-[320px]"
-            : "pl-10 pr-10 md:pl-14 md:pr-[280px] lg:pr-[320px]"
+            ? "px-8 md:pl-[280px] md:pr-14 lg:pl-[320px]"
+            : "px-8 md:pl-14 md:pr-[280px] lg:pr-[320px]"
         }`}
       >
         {/* Text */}
@@ -126,12 +126,25 @@ function EndorsementCard({ name, title, quote, imageSrc, imageAlt, imagePosition
               &rdquo;
             </span>
           </div>
+
+          {/* Mobile-only portrait — shown inline below quote, hidden on desktop */}
+          <div className="mt-6 flex justify-center md:hidden">
+            <div className="relative h-[200px] w-[160px]">
+              <Image
+                src={imageSrc}
+                alt={imageAlt}
+                fill
+                className="object-contain object-bottom"
+                sizes="160px"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Portrait */}
+        {/* Portrait — desktop only, absolutely positioned on the side */}
         <div
-          className={`pointer-events-none absolute bottom-0 h-[110%] w-[220px] md:w-[260px] ${
-            photoLeft ? "left-6 md:left-10" : "right-6 md:right-10"
+          className={`pointer-events-none absolute bottom-0 hidden h-[110%] w-[260px] md:block ${
+            photoLeft ? "left-10" : "right-10"
           }`}
         >
           <Image
@@ -140,7 +153,7 @@ function EndorsementCard({ name, title, quote, imageSrc, imageAlt, imagePosition
             fill
             className="object-contain object-bottom"
             style={{ transform: `scale(${imageZoom})`, transformOrigin: "bottom center" }}
-            sizes="(max-width: 768px) 180px, 260px"
+            sizes="260px"
           />
         </div>
       </div>
