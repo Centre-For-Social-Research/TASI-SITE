@@ -72,6 +72,13 @@ export const postType = defineType({
       },
     }),
     defineField({
+      name: 'coverImageUrl',
+      title: 'Cover image URL',
+      type: 'url',
+      description:
+        'Optional. Use a direct image URL when no uploaded cover image is set (e.g. /img/home-gallery/photo.webp).',
+    }),
+    defineField({
       name: 'body',
       title: 'Body',
       type: 'array',

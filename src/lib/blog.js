@@ -42,7 +42,7 @@ function normalizeSanityPost(post) {
     body: post.body || [],
     image: post.image
       ? urlForImage(post.image)?.width(1600).height(900).url()
-      : null,
+      : post.coverImageUrl || null,
     sourceUrl: post.sourceUrl || null,
   };
 }

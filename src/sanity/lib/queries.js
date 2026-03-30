@@ -11,6 +11,7 @@ export const POSTS_QUERY = defineQuery(`
     category,
     sourceUrl,
     image,
+    coverImageUrl,
     body
   }
 `);
@@ -26,6 +27,7 @@ export const POST_BY_SLUG_QUERY = defineQuery(`
     category,
     sourceUrl,
     image,
+    coverImageUrl,
     body
   }
 `);
