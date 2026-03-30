@@ -61,7 +61,7 @@ function ReviewSummary({ summary }) {
   );
 }
 
-function QuickActionButton({ action, onClick, disabled = false }) {
+function QuickActionButton({ action, onClick, disabled = false, loading = false }) {
   const toneClasses = {
     success: "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950",
     warning: "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950",
@@ -72,20 +72,24 @@ function QuickActionButton({ action, onClick, disabled = false }) {
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
-      className={`rounded-full border px-3 py-1 text-xs font-medium transition ${toneClasses[action.kind] || toneClasses.info} disabled:cursor-not-allowed disabled:opacity-50`}
+      disabled={disabled || loading}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition ${toneClasses[action.kind] || toneClasses.info} disabled:cursor-not-allowed disabled:opacity-50`}
     >
+      {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
       {action.label}
     </button>
   );
 }
 
-function RowActions({ registration, onQuickAction, disabled = false }) {
+function RowActions({ registration, onQuickAction, pendingActions, disabled = false }) {
   return (
     <div className="flex flex-wrap gap-1.5">
-      {getQuickActionOptions(registration).map((action) => (
-        <QuickActionButton key={action.key} action={action} onClick={() => onQuickAction(registration, action.key)} disabled={disabled} />
-      ))}
+      {getQuickActionOptions(registration).map((action) => {
+        const isLoading = pendingActions?.has(`${registration.id}:${action.key}`);
+        return (
+          <QuickActionButton key={action.key} action={action} onClick={() => onQuickAction(registration, action.key)} disabled={disabled} loading={isLoading} />
+        );
+      })}
     </div>
   );
 }
@@ -292,6 +296,9 @@ export default function RegistrationsAdminPanel({ operator }) {
   const [toast, setToast] = useState({ message: "", tone: "default" });
   const [savingDetail, setSavingDetail] = useState(false);
   const [exportLoading, setExportLoading] = useState({ csv: false, xlsx: false, pdf: false });
+  const [pendingActions, setPendingActions] = useState(new Set());
+  const [pendingBulk, setPendingBulk] = useState({ confirm: false, waitlist: false, reject: false, sendQr: false });
+  const [qrLoading, setQrLoading] = useState({ send: false, resend: false });
   const deferredSearch = useDeferredValue(filters.search);
   const queryString = useMemo(() => buildDashboardQueryString({ ...filters, search: deferredSearch }), [deferredSearch, filters]);
   const hasConfigError = isSupabaseAdminConfigError(state.error);
@@ -394,6 +401,8 @@ export default function RegistrationsAdminPanel({ operator }) {
 
   const bulkUpdateStatus = async (nextStatus) => {
     if (!selectedIds.length) return showToast("Select at least one registrant before running a bulk status update.", "warning");
+    const bulkKey = nextStatus === "confirmed" ? "confirm" : nextStatus === "waitlisted" ? "waitlist" : "reject";
+    setPendingBulk((p) => ({ ...p, [bulkKey]: true }));
     try {
       await Promise.all(selectedIds.map((registrationId) => updateRegistrationStatus({ registrationId, status: nextStatus })));
       showToast(`Updated ${selectedIds.length} registrants to ${nextStatus}.`, "success");
@@ -401,10 +410,32 @@ export default function RegistrationsAdminPanel({ operator }) {
       if (activeRegistrationId) void loadDetail(activeRegistrationId);
     } catch {
       showToast("Network error during bulk status update.", "danger");
+    } finally {
+      setPendingBulk((p) => ({ ...p, [bulkKey]: false }));
     }
   };
 
+  const handleSendQr = async () => {
+    setQrLoading((p) => ({ ...p, send: true }));
+    await queueQrJob({ registrationIds: selectedIds });
+    setQrLoading((p) => ({ ...p, send: false }));
+  };
+
+  const handleResendQr = async () => {
+    setQrLoading((p) => ({ ...p, resend: true }));
+    await queueQrJob({ registrationIds: selectedIds, resendExisting: true });
+    setQrLoading((p) => ({ ...p, resend: false }));
+  };
+
+  const bulkSendQrQueue = async () => {
+    setPendingBulk((p) => ({ ...p, sendQr: true }));
+    await queueQrJob({ registrationIds: selectedIds });
+    setPendingBulk((p) => ({ ...p, sendQr: false }));
+  };
+
   const handleQuickAction = async (registration, actionKey) => {
+    const pendingKey = `${registration.id}:${actionKey}`;
+    setPendingActions((current) => new Set([...current, pendingKey]));
     try {
       if (actionKey === "sendQr") {
         if (registration.status !== "confirmed") await updateRegistrationStatus({ registrationId: registration.id, status: "confirmed" });
@@ -420,6 +451,8 @@ export default function RegistrationsAdminPanel({ operator }) {
       if (activeRegistrationId === registration.id) void loadDetail(registration.id);
     } catch (error) {
       showToast(error instanceof Error ? error.message : "Unable to complete the quick action.", "danger");
+    } finally {
+      setPendingActions((current) => { const next = new Set(current); next.delete(pendingKey); return next; });
     }
   };
 
@@ -501,18 +534,20 @@ export default function RegistrationsAdminPanel({ operator }) {
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => queueQrJob({ registrationIds: selectedIds })}
-            disabled={state.loading || hasConfigError}
-            className="h-8 rounded-full bg-amber-600 px-4 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
+            onClick={handleSendQr}
+            disabled={state.loading || hasConfigError || qrLoading.send}
+            className="inline-flex h-8 items-center gap-1.5 rounded-full bg-amber-600 px-4 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
           >
+            {qrLoading.send ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
             {selectedIds.length ? "Send QR To Selected" : "Send QR To Filtered"}
           </button>
           <button
             type="button"
-            onClick={() => queueQrJob({ registrationIds: selectedIds, resendExisting: true })}
-            disabled={state.loading || hasConfigError}
-            className="h-8 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
+            onClick={handleResendQr}
+            disabled={state.loading || hasConfigError || qrLoading.resend}
+            className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
           >
+            {qrLoading.resend ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
             Resend Issued QR
           </button>
           <a href="/admin/delivery" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
@@ -641,7 +676,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                         </AdminStatusBadge>
                       </td>
                       <td className="px-4 py-3.5" onClick={(event) => event.stopPropagation()}>
-                        <RowActions registration={registration} onQuickAction={handleQuickAction} disabled={state.loading || hasConfigError} />
+                        <RowActions registration={registration} onQuickAction={handleQuickAction} pendingActions={pendingActions} disabled={state.loading || hasConfigError} />
                       </td>
                     </tr>
                   );
@@ -687,10 +722,10 @@ export default function RegistrationsAdminPanel({ operator }) {
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{selectedIds.length} selected</span>
             <div className="flex flex-wrap gap-2">
-              <QuickActionButton action={{ key: "confirm", label: "Mark Confirmed", kind: "success" }} onClick={() => bulkUpdateStatus("confirmed")} />
-              <QuickActionButton action={{ key: "waitlist", label: "Mark Waitlisted", kind: "warning" }} onClick={() => bulkUpdateStatus("waitlisted")} />
-              <QuickActionButton action={{ key: "reject", label: "Mark Rejected", kind: "danger" }} onClick={() => bulkUpdateStatus("rejected")} />
-              <QuickActionButton action={{ key: "sendQr", label: "Send QR", kind: "info" }} onClick={() => queueQrJob({ registrationIds: selectedIds })} disabled={state.loading || hasConfigError} />
+              <QuickActionButton action={{ key: "confirm", label: "Mark Confirmed", kind: "success" }} onClick={() => bulkUpdateStatus("confirmed")} loading={pendingBulk.confirm} />
+              <QuickActionButton action={{ key: "waitlist", label: "Mark Waitlisted", kind: "warning" }} onClick={() => bulkUpdateStatus("waitlisted")} loading={pendingBulk.waitlist} />
+              <QuickActionButton action={{ key: "reject", label: "Mark Rejected", kind: "danger" }} onClick={() => bulkUpdateStatus("rejected")} loading={pendingBulk.reject} />
+              <QuickActionButton action={{ key: "sendQr", label: "Send QR", kind: "info" }} onClick={bulkSendQrQueue} disabled={state.loading || hasConfigError} loading={pendingBulk.sendQr} />
             </div>
             <button type="button" onClick={() => setSelectedIds([])} className="ml-auto text-xs text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
               Clear selection
