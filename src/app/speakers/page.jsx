@@ -3,6 +3,8 @@ import HomeNavbar from "@/components/home/navbar";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
 import SpeakersDirectory from "@/components/speakers/directory";
 
+export const revalidate = 3600;
+
 export default function SpeakersPage() {
   return (
     <>

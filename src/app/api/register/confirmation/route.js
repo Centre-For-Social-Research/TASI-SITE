@@ -4,7 +4,7 @@ import { isValidEmail, sanitizeEmail } from "@/lib/input-sanitizers";
 import { sendInboundNotificationEmail } from "@/lib/resend";
 
 export async function POST(request) {
-  const protection = protectPublicPostRoute(request, "register-confirmation", {
+  const protection = await protectPublicPostRoute(request, "register-confirmation", {
     windowMs: 10 * 60 * 1000,
     maxRequests: 5,
   });

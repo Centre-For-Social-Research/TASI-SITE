@@ -23,7 +23,7 @@ function getFileExtension(file) {
 }
 
 export async function POST(request) {
-  const protection = protectPublicRoute(request, "registrations-create", {
+  const protection = await protectPublicRoute(request, "registrations-create", {
     windowMs: 15 * 60 * 1000,
     maxRequests: 3,
   });

@@ -6,8 +6,23 @@ import {
   getResendWebhookSecret,
 } from "@/lib/resend";
 import { isSanityConfigured, projectId, dataset, apiVersion, studioPreviewUrl } from "@/sanity/env";
+import { getAuthorizedOperator } from "@/lib/registration-auth";
 
-export async function GET() {
+export async function GET(request) {
+  // Public callers only get a simple status response
+  let isAuthorized = false;
+  try {
+    const operator = await getAuthorizedOperator();
+    isAuthorized = operator?.authorized === true;
+  } catch {
+    // Not authorized — return minimal response
+  }
+
+  if (!isAuthorized) {
+    return Response.json({ status: "ok", timestamp: new Date().toISOString() });
+  }
+
+  // Authorized operators get full diagnostics
   const clerkPublishableKeyConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim());
   const clerkSecretKeyConfigured = Boolean(process.env.CLERK_SECRET_KEY?.trim());
   const clerkAccessMode = String(process.env.CLERK_ACCESS_MODE || "both").trim().toLowerCase();

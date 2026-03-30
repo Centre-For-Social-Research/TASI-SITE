@@ -5,6 +5,8 @@ import BrandedPageHero from "@/components/ui/branded-page-hero";
 import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
 
+export const revalidate = 86400;
+
 const pillars = [
   {
     title: "India-Led, Globally Relevant",

@@ -22,7 +22,7 @@ function sanitizeShortText(value, maxLength, fieldName, { required = true } = {}
 }
 
 export async function POST(request) {
-  const protection = protectPublicPostRoute(request, "volunteer-application", {
+  const protection = await protectPublicPostRoute(request, "volunteer-application", {
     windowMs: 15 * 60 * 1000,
     maxRequests: 3,
   });

@@ -1,7 +1,51 @@
-const rateLimitStore = new Map();
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 const DEFAULT_WINDOW_MS = 10 * 60 * 1000;
 const DEFAULT_MAX_REQUESTS = 5;
+
+/* ------------------------------------------------------------------ */
+/*  Upstash Redis rate limiter (shared across serverless instances)    */
+/*  Falls back to in-memory Map if UPSTASH env vars are not set.      */
+/* ------------------------------------------------------------------ */
+
+const useRedis = Boolean(
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+);
+
+let redis;
+if (useRedis) {
+  redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+}
+
+// Cache of Ratelimit instances keyed by "windowMs:maxRequests"
+const ratelimiters = new Map();
+
+function getUpstashLimiter(windowMs, maxRequests) {
+  const cacheKey = `${windowMs}:${maxRequests}`;
+  if (ratelimiters.has(cacheKey)) {
+    return ratelimiters.get(cacheKey);
+  }
+
+  const windowSec = Math.max(1, Math.ceil(windowMs / 1000));
+  const limiter = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(maxRequests, `${windowSec} s`),
+    analytics: false,
+    prefix: "tasi-rl",
+  });
+  ratelimiters.set(cacheKey, limiter);
+  return limiter;
+}
+
+/* ------------------------------------------------------------------ */
+/*  In-memory fallback (used when Redis is unavailable)               */
+/* ------------------------------------------------------------------ */
+
+const rateLimitStore = new Map();
 
 function cleanupExpiredEntries(now) {
   for (const [key, entry] of rateLimitStore.entries()) {
@@ -10,6 +54,10 @@ function cleanupExpiredEntries(now) {
     }
   }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                           */
+/* ------------------------------------------------------------------ */
 
 function getClientIp(request) {
   const forwardedFor = request.headers.get("x-forwarded-for");
@@ -55,20 +103,55 @@ function buildRateLimitHeaders(limit, remaining, resetAt) {
   };
 }
 
-function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxRequests = DEFAULT_MAX_REQUESTS } = {}) {
+async function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxRequests = DEFAULT_MAX_REQUESTS } = {}) {
+  const ip = getClientIp(request);
+  const identifier = `${routeKey}:${ip}`;
+
+  /* ---------- Upstash Redis path ---------- */
+  if (useRedis) {
+    try {
+      const limiter = getUpstashLimiter(windowMs, maxRequests);
+      const result = await limiter.limit(identifier);
+
+      const headers = buildRateLimitHeaders(
+        result.limit,
+        result.remaining,
+        result.reset
+      );
+
+      if (!result.success) {
+        const retryAfter = Math.max(1, Math.ceil((result.reset - Date.now()) / 1000));
+        return {
+          ok: false,
+          response: Response.json(
+            { error: "Too many requests. Please try again later." },
+            {
+              status: 429,
+              headers: { ...headers, "Retry-After": String(retryAfter) },
+            }
+          ),
+        };
+      }
+
+      return { ok: true, headers };
+    } catch (_redisError) {
+      // Fall through to in-memory if Redis is unreachable
+    }
+  }
+
+  /* ---------- In-memory fallback ---------- */
   const now = Date.now();
   cleanupExpiredEntries(now);
 
-  const ip = getClientIp(request);
-  const key = `${routeKey}:${ip}`;
-  const existing = rateLimitStore.get(key);
+  const fallbackKey = identifier;
+  const existing = rateLimitStore.get(fallbackKey);
 
   if (!existing || existing.resetAt <= now) {
     const freshEntry = {
       count: 1,
       resetAt: now + windowMs,
     };
-    rateLimitStore.set(key, freshEntry);
+    rateLimitStore.set(fallbackKey, freshEntry);
 
     return {
       ok: true,
@@ -111,7 +194,7 @@ export function rejectDisallowedOrigin(request) {
   );
 }
 
-export function protectPublicRoute(request, routeKey, options) {
+export async function protectPublicRoute(request, routeKey, options) {
   const originResponse = rejectDisallowedOrigin(request);
   if (originResponse) {
     return { ok: false, response: originResponse };
@@ -132,8 +215,8 @@ export function enforceJsonRequest(request) {
   );
 }
 
-export function protectPublicPostRoute(request, routeKey, options) {
-  const protection = protectPublicRoute(request, routeKey, options);
+export async function protectPublicPostRoute(request, routeKey, options) {
+  const protection = await protectPublicRoute(request, routeKey, options);
   if (!protection.ok) {
     return protection;
   }
