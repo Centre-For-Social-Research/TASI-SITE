@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
 import './globals.css';
 
@@ -72,6 +74,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable} ${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}>
       <body className="antialiased">
         <AppShell>{children}</AppShell>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { isValidEmail, sanitizeEmail } from "@/lib/input-sanitizers";
 import { sendInboundNotificationEmail } from "@/lib/resend";
 
 export async function POST(request) {
-  const protection = protectPublicPostRoute(request, "media-accreditation", {
+  const protection = await protectPublicPostRoute(request, "media-accreditation", {
     windowMs: 10 * 60 * 1000,
     maxRequests: 5,
   });

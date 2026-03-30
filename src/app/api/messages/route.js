@@ -4,7 +4,7 @@ import { isValidEmail, sanitizeEmail, sanitizeMessage } from "@/lib/input-saniti
 import { sendInboundNotificationEmail } from "@/lib/resend";
 
 export async function POST(request) {
-  const protection = protectPublicPostRoute(request, "messages", {
+  const protection = await protectPublicPostRoute(request, "messages", {
     windowMs: 10 * 60 * 1000,
     maxRequests: 5,
   });

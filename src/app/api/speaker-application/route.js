@@ -18,7 +18,7 @@ function sanitizeShortText(value, maxLength, fieldName) {
 }
 
 export async function POST(request) {
-  const protection = protectPublicPostRoute(request, "speaker-application", {
+  const protection = await protectPublicPostRoute(request, "speaker-application", {
     windowMs: 15 * 60 * 1000,
     maxRequests: 3,
   });

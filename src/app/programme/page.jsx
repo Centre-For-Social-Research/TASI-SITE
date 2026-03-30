@@ -2,6 +2,8 @@ import HomeFooter from "@/components/home/footer";
 import HomeNavbar from "@/components/home/navbar";
 import ProgrammeAgendaClient from "@/components/programme/programme-agenda-client";
 import BrandedPageHero from "@/components/ui/branded-page-hero";
+
+export const revalidate = 3600;
 import { speakers } from "@/data/speakers";
 import { agendaSpeakerFallbackTitles2025, programmeSessions2025 } from "@/data/programme-2025";
 
