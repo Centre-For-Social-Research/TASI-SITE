@@ -92,13 +92,20 @@ function RowActions({ registration, onQuickAction, disabled = false }) {
 
 function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetailStatus, resendDetailEmail, savingDetail, onDelete, open, onClose }) {
   const activeRegistration = detailState.data?.registration;
+  const [photoLoaded, setPhotoLoaded] = useState(false);
+  useEffect(() => { setPhotoLoaded(false); }, [activeRegistration?.id]);
   return (
     <SlideOverDrawer
       open={open}
       onClose={onClose}
       title={activeRegistration ? `${activeRegistration.first_name} ${activeRegistration.last_name}` : "Registrant Detail"}
     >
-      {!activeRegistration ? (
+      {detailState.loading ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">Loading details…</p>
+        </div>
+      ) : !activeRegistration ? (
         <p className="text-sm text-slate-500 dark:text-slate-400">Select a registrant row to see their details here.</p>
       ) : (
         <div className="space-y-5">
@@ -130,11 +137,19 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
             </div>
             <div className="h-[132px] w-full overflow-hidden rounded-[10px] border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 sm:w-[132px]">
               {activeRegistration.profilePhotoUrl ? (
-                <img
-                  src={activeRegistration.profilePhotoUrl}
-                  alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
-                  className="h-full w-full object-cover"
-                />
+                <div className="relative h-full w-full">
+                  {!photoLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                    </div>
+                  )}
+                  <img
+                    src={activeRegistration.profilePhotoUrl}
+                    alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
+                    className={`h-full w-full object-cover transition-opacity duration-300 ${photoLoaded ? "opacity-100" : "opacity-0"}`}
+                    onLoad={() => setPhotoLoaded(true)}
+                  />
+                </div>
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-center text-xs text-slate-500 dark:text-slate-400">
                   No photo
