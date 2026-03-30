@@ -102,7 +102,33 @@ export default async function BlogPostPage({ params }) {
           {/* Main Content */}
           <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-stone-700 dark:prose-p:text-stone-300">
             {post.body?.length ? (
-              <PortableText value={post.body} />
+              <PortableText
+                value={post.body}
+                components={{
+                  block: {
+                    normal: ({ children }) => (
+                      <p className="mb-6 text-lg leading-[1.8] text-stone-800 dark:text-stone-300">
+                        {children}
+                      </p>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="mt-10 mb-4 text-2xl font-bold text-stone-900 dark:text-stone-100">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="mt-8 mb-3 text-xl font-bold text-stone-900 dark:text-stone-100">
+                        {children}
+                      </h3>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="my-6 border-l-4 border-rc-accent pl-6 text-stone-600 dark:text-stone-400 italic">
+                        {children}
+                      </blockquote>
+                    ),
+                  },
+                }}
+              />
             ) : post.content ? (
               post.content.split('\n').map((paragraph, idx) => {
                 if (paragraph.trim() === '') {
@@ -112,7 +138,7 @@ export default async function BlogPostPage({ params }) {
                 return (
                   <p
                     key={idx}
-                    className="mb-6 text-xl tracking-tight leading-[1.8] text-stone-800 dark:text-stone-300"
+                    className="mb-6 text-lg leading-[1.8] text-stone-800 dark:text-stone-300"
                   >
                     {paragraph}
                   </p>
