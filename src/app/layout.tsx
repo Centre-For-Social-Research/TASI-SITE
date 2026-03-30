@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
 import './globals.css';
