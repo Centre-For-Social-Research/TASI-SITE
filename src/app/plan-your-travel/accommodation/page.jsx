@@ -126,7 +126,7 @@ export default function AccommodationPage() {
 
           {/* Disclaimer */}
           <p className="mt-10 text-center text-xs text-stone-400 dark:text-stone-500">
-            Hotel listings are provided for convenience. Rates, availability, and booking terms are subject to each property's policies.
+            Hotel listings are provided for convenience. Rates, availability, and booking terms are subject to each property&apos;s policies.
             TASI has no affiliation with any of the hotels listed.
           </p>
         </div>

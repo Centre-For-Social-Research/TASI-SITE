@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Download, ExternalLink, Loader2, Trash2 } from "lucide-react";
 import { ATTENDEE_CATEGORIES } from "@/lib/registration-constants";
@@ -97,6 +98,7 @@ function RowActions({ registration, onQuickAction, pendingActions, disabled = fa
 function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetailStatus, resendDetailEmail, savingDetail, onDelete, open, onClose }) {
   const activeRegistration = detailState.data?.registration;
   const [photoLoaded, setPhotoLoaded] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setPhotoLoaded(false); }, [activeRegistration?.id]);
   return (
     <SlideOverDrawer
@@ -147,11 +149,13 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                       <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
                     </div>
                   )}
-                  <img
+                  <Image
                     src={activeRegistration.profilePhotoUrl}
                     alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
-                    className={`h-full w-full object-cover transition-opacity duration-300 ${photoLoaded ? "opacity-100" : "opacity-0"}`}
+                    fill
+                    className={`object-cover transition-opacity duration-300 ${photoLoaded ? "opacity-100" : "opacity-0"}`}
                     onLoad={() => setPhotoLoaded(true)}
+                    unoptimized
                   />
                 </div>
               ) : (

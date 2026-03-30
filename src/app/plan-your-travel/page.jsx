@@ -165,7 +165,7 @@ export default function PlanYourTravelPage() {
           <div>
             <p className="text-lg font-bold text-stone-900 dark:text-white">Ready to join us in New Delhi?</p>
             <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-              Register for TASI 2026 and secure your place at India's foremost trust and safety convening.
+              Register for TASI 2026 and secure your place at India&apos;s foremost trust and safety convening.
             </p>
           </div>
           <div className="flex flex-shrink-0 gap-3">

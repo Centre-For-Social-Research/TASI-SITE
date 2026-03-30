@@ -99,7 +99,7 @@ export default function HowToReachPage() {
           <div>
             <p className="font-bold text-stone-900 dark:text-white">Getting to the Summit Venue</p>
             <p className="text-sm text-stone-600 dark:text-stone-400">
-              New Delhi is one of the world's best-connected cities. TASI 2026 will be held at a premier venue in central Delhi, easily accessible by air, rail, and road.
+              New Delhi is one of the world&apos;s best-connected cities. TASI 2026 will be held at a premier venue in central Delhi, easily accessible by air, rail, and road.
             </p>
           </div>
         </div>

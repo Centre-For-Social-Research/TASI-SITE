@@ -44,6 +44,7 @@ function getInitials(name) {
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
   if (!mounted) return <div className="h-8 w-8" />;
   return (
@@ -141,7 +142,9 @@ export default function AdminShell({ operator, currentPath, children }) {
         <aside className="hidden border-r border-slate-200 bg-white lg:flex lg:flex-col dark:border-slate-800 dark:bg-slate-900">
           {/* Logo */}
           <div className="border-b border-slate-200 px-5 py-5 dark:border-slate-800">
-            <Image src="/img/tasi-csr-logo.png" alt="TASI" width={120} height={36} className="object-contain dark:brightness-90" />
+            <Link href="/">
+              <Image src="/img/tasi-csr-logo.png" alt="TASI" width={120} height={36} className="object-contain dark:brightness-90" />
+            </Link>
           </div>
 
           {/* Nav */}
