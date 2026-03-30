@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { partners } from "@/data/partners";
+import Image from 'next/image';
+import { partners } from '@/data/partners';
 
 export default function SponsorsStripCarousel() {
   // We duplicate the partners list to create a seamless infinite loop.

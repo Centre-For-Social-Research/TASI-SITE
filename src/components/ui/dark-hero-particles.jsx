@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { SparklesCore } from "@/components/ui/sparkles-core";
+import { SparklesCore } from '@/components/ui/sparkles-core';
 
 export default function DarkHeroParticles() {
   return (

@@ -1,31 +1,37 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { listRegistrationQueue } from "@/lib/registration-ops-db";
-import operatorSession from "@/lib/operator-session.cjs";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { listRegistrationQueue } from '@/lib/registration-ops-db';
+import operatorSession from '@/lib/operator-session.cjs';
 
 const { logOperatorEvent } = operatorSession;
 
 export async function GET(request) {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.registrations" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.registrations',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
 
   try {
-    logOperatorEvent("admin.registrations.fetch", "api.admin.registrations", authResult.operator);
+    logOperatorEvent(
+      'admin.registrations.fetch',
+      'api.admin.registrations',
+      authResult.operator
+    );
     const { searchParams } = new URL(request.url);
     const data = await listRegistrationQueue({
-      page: searchParams.get("page") || "1",
-      pageSize: searchParams.get("pageSize") || "50",
+      page: searchParams.get('page') || '1',
+      pageSize: searchParams.get('pageSize') || '50',
       filters: {
-      search: searchParams.get("search") || "",
-      status: searchParams.get("status") || "all",
-      category: searchParams.get("category") || "all",
-      priorityTier: searchParams.get("priorityTier") || "all",
-      country: searchParams.get("country") || "",
-      city: searchParams.get("city") || "",
-      organization: searchParams.get("organization") || "",
-      speakerFlag: searchParams.get("speakerFlag") || "",
-      lateConfirmation: searchParams.get("lateConfirmation") || "",
+        search: searchParams.get('search') || '',
+        status: searchParams.get('status') || 'all',
+        category: searchParams.get('category') || 'all',
+        priorityTier: searchParams.get('priorityTier') || 'all',
+        country: searchParams.get('country') || '',
+        city: searchParams.get('city') || '',
+        organization: searchParams.get('organization') || '',
+        speakerFlag: searchParams.get('speakerFlag') || '',
+        lateConfirmation: searchParams.get('lateConfirmation') || '',
       },
     });
 
@@ -38,9 +44,14 @@ export async function GET(request) {
       },
     });
   } catch (error) {
-    console.error("[admin.registrations.fetch.error]", error);
+    console.error('[admin.registrations.fetch.error]', error);
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to fetch registrations." },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to fetch registrations.',
+      },
       { status: 500 }
     );
   }

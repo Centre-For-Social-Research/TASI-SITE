@@ -1,35 +1,35 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import { MotionItem, MotionReveal, MotionStagger } from "./motion-reveal";
+import { MotionItem, MotionReveal, MotionStagger } from './motion-reveal';
 
 const audience = [
   {
-    tag: "Policy",
-    title: "Government & Regulators",
-    text: "Senior officials and regulatory authorities shaping AI governance, digital policy, cybersecurity strategy and platform compliance.",
-    image: "/img/home-gallery/7T7A5002.JPG",
-    imageAlt: "Government and regulatory delegates at TASI",
+    tag: 'Policy',
+    title: 'Government & Regulators',
+    text: 'Senior officials and regulatory authorities shaping AI governance, digital policy, cybersecurity strategy and platform compliance.',
+    image: '/img/home-gallery/7T7A5002.JPG',
+    imageAlt: 'Government and regulatory delegates at TASI',
   },
   {
-    tag: "Industry",
-    title: "Industry Leaders",
-    text: "Delegations from global technology companies, AI developers, platforms and startups working on safety by design and transparency.",
-    image: "/img/home-gallery/7T7A5636.JPG",
-    imageAlt: "Industry leaders and participants at TASI",
+    tag: 'Industry',
+    title: 'Industry Leaders',
+    text: 'Delegations from global technology companies, AI developers, platforms and startups working on safety by design and transparency.',
+    image: '/img/home-gallery/7T7A5636.JPG',
+    imageAlt: 'Industry leaders and participants at TASI',
   },
   {
-    tag: "Research",
-    title: "Civil Society Organisations",
-    text: "Digital rights advocates, academic institutions and independent researchers specialising in AI ethics and platform governance.",
-    image: "/img/home-gallery/7T7A9942.webp",
-    imageAlt: "Civil society and research participants at TASI",
+    tag: 'Research',
+    title: 'Civil Society Organisations',
+    text: 'Digital rights advocates, academic institutions and independent researchers specialising in AI ethics and platform governance.',
+    image: '/img/home-gallery/7T7A9942.webp',
+    imageAlt: 'Civil society and research participants at TASI',
   },
   {
-    tag: "Global",
-    title: "International Delegations",
-    text: "Representatives from embassies, multilaterals and development agencies strengthening cross-border cooperation on digital harms.",
-    image: "/img/home-gallery/7T7A9973.webp",
-    imageAlt: "International delegations and diplomatic guests at TASI",
+    tag: 'Global',
+    title: 'International Delegations',
+    text: 'Representatives from embassies, multilaterals and development agencies strengthening cross-border cooperation on digital harms.',
+    image: '/img/home-gallery/7T7A9973.webp',
+    imageAlt: 'International delegations and diplomatic guests at TASI',
   },
 ];
 
@@ -42,10 +42,12 @@ export default function AudienceSection() {
             Audience
           </p>
           <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-[3.2rem]">
-            Who Will You <span className="text-rc-primary dark:text-white">Meet?</span>
+            Who Will You{' '}
+            <span className="text-rc-primary dark:text-white">Meet?</span>
           </h2>
           <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
-            TASI brings together the cross-sector community shaping India&apos;s trust, safety, and AI governance agenda.
+            TASI brings together the cross-sector community shaping India&apos;s
+            trust, safety, and AI governance agenda.
           </p>
         </MotionReveal>
 
@@ -66,7 +68,9 @@ export default function AudienceSection() {
                   <div className="inline-block rounded-[10px] bg-rc-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white dark:bg-white dark:text-slate-950">
                     {item.tag}
                   </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">{item.title}</h3>
+                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">
+                    {item.title}
+                  </h3>
                   <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
                     {item.text}
                   </p>

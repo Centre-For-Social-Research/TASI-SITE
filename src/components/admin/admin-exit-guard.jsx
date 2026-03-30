@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { ClerkProvider, useClerk } from "@clerk/nextjs";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import adminExitUtils from "@/lib/admin-exit-utils.cjs";
+import { ClerkProvider, useClerk } from '@clerk/nextjs';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import adminExitUtils from '@/lib/admin-exit-utils.cjs';
 
-const { normalizeAdminExitTarget, shouldAutoSignOutAdminNavigation } = adminExitUtils;
+const { normalizeAdminExitTarget, shouldAutoSignOutAdminNavigation } =
+  adminExitUtils;
 
 function AdminExitGuardInner({ children }) {
   const pathname = usePathname();
@@ -18,7 +19,7 @@ function AdminExitGuardInner({ children }) {
         return null;
       }
 
-      return target.closest("a[href]");
+      return target.closest('a[href]');
     }
 
     async function handleDocumentClick(event) {
@@ -39,9 +40,14 @@ function AdminExitGuardInner({ children }) {
         return;
       }
 
-      const href = anchor.getAttribute("href");
+      const href = anchor.getAttribute('href');
 
-      if (!href || href.startsWith("#") || anchor.target === "_blank" || anchor.hasAttribute("download")) {
+      if (
+        !href ||
+        href.startsWith('#') ||
+        anchor.target === '_blank' ||
+        anchor.hasAttribute('download')
+      ) {
         return;
       }
 
@@ -52,7 +58,7 @@ function AdminExitGuardInner({ children }) {
       }
 
       const destination = normalizeAdminExitTarget(
-        `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`,
+        `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
       );
 
       if (!shouldAutoSignOutAdminNavigation(pathname, destination)) {
@@ -68,10 +74,10 @@ function AdminExitGuardInner({ children }) {
       }
     }
 
-    document.addEventListener("click", handleDocumentClick);
+    document.addEventListener('click', handleDocumentClick);
 
     return () => {
-      document.removeEventListener("click", handleDocumentClick);
+      document.removeEventListener('click', handleDocumentClick);
     };
   }, [pathname, router, signOut]);
 

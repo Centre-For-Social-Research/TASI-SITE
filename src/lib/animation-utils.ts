@@ -4,7 +4,7 @@
  */
 
 export function deferAnimation(callback: () => void, delay: number = 0) {
-  if (typeof requestIdleCallback !== "undefined") {
+  if (typeof requestIdleCallback !== 'undefined') {
     requestIdleCallback(() => {
       setTimeout(callback, delay);
     });
@@ -43,7 +43,7 @@ export function scheduleAnimations(animations: Array<() => void>) {
  * Detect if animation is safe to run (not during critical path)
  */
 export function shouldDeferAnimation(): boolean {
-  if (typeof navigator === "undefined") return false;
+  if (typeof navigator === 'undefined') return false;
   const nav = navigator as Navigator & { deviceMemory?: number };
   // Defer if on slow connection or low-end device
   return (nav.deviceMemory || 8) < 4;

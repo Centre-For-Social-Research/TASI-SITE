@@ -1,10 +1,20 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { createNotification, getRegistrationById, markNotificationDelivery } from "@/lib/registration-db";
-import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
-import { deliverRegistrationEmail } from "@/lib/registration-email";
-import { createPassIssueEmailJob } from "@/lib/pass-issue-job-service";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import {
+  createNotification,
+  getRegistrationById,
+  markNotificationDelivery,
+} from '@/lib/registration-db';
+import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
+import { deliverRegistrationEmail } from '@/lib/registration-email';
+import { createPassIssueEmailJob } from '@/lib/pass-issue-job-service';
 
-const ALLOWED_TEMPLATES = new Set(["submission_received", "confirmed", "waitlisted", "rejected", "qr_pass_issued"]);
+const ALLOWED_TEMPLATES = new Set([
+  'submission_received',
+  'confirmed',
+  'waitlisted',
+  'rejected',
+  'qr_pass_issued',
+]);
 
 export async function POST(request) {
   const authResult = await requireAuthorizedOperator();
@@ -14,14 +24,17 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const registrationId = String(body?.registrationId || "").trim();
-    const templateType = String(body?.templateType || "").trim();
+    const registrationId = String(body?.registrationId || '').trim();
+    const templateType = String(body?.templateType || '').trim();
 
     if (!registrationId || !ALLOWED_TEMPLATES.has(templateType)) {
-      return Response.json({ error: "Registration ID and valid template type are required." }, { status: 400 });
+      return Response.json(
+        { error: 'Registration ID and valid template type are required.' },
+        { status: 400 }
+      );
     }
 
-    if (templateType === "qr_pass_issued") {
+    if (templateType === 'qr_pass_issued') {
       const job = await createPassIssueEmailJob({
         registrationIds: [registrationId],
         resendExisting: true,
@@ -67,13 +80,18 @@ export async function POST(request) {
     });
 
     if (result.sent) {
-      await markNotificationDelivery(notificationId, { delivery_status: "resent" });
+      await markNotificationDelivery(notificationId, {
+        delivery_status: 'resent',
+      });
     }
 
     return Response.json({ success: true, result });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to resend email." },
+      {
+        error:
+          error instanceof Error ? error.message : 'Unable to resend email.',
+      },
       { status: 500 }
     );
   }

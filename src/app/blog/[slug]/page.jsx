@@ -2,12 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
-import {
-  Calendar,
-  User,
-  ArrowLeft,
-  Tag,
-} from 'lucide-react';
+import { Calendar, User, ArrowLeft, Tag } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import HomeFooter from '@/components/home/footer';
 import ShareButtons from '@/components/blog/share-buttons';

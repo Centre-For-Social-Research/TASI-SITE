@@ -2,13 +2,13 @@ const DEFAULT_JOB_CHUNK_SIZE = 20;
 const MAX_JOB_RETRIES = 3;
 
 function normalizeString(value) {
-  return String(value || "").trim();
+  return String(value || '').trim();
 }
 
 function normalizeFilters(filters = {}) {
   return {
     search: normalizeString(filters.search),
-    status: "confirmed",
+    status: 'confirmed',
     category: normalizeString(filters.category),
     priorityTier: normalizeString(filters.priorityTier),
     country: normalizeString(filters.country),
@@ -31,7 +31,7 @@ function buildJobSelection({
 
   return {
     filters: normalizeFilters(filters),
-    selectionMode: normalizedIds.length ? "selected" : "filtered",
+    selectionMode: normalizedIds.length ? 'selected' : 'filtered',
     registrationIds: normalizedIds,
     resendExisting: Boolean(resendExisting),
   };
@@ -41,7 +41,7 @@ function shouldSkipJobItem({ resendExisting = false, registration } = {}) {
   return !resendExisting && Boolean(registration?.qr_pass_issued_at);
 }
 
-function deriveJobProgress({ status = "queued", totals = {} } = {}) {
+function deriveJobProgress({ status = 'queued', totals = {} } = {}) {
   const total = Number(totals.total || 0);
   const queued = Number(totals.queued || 0);
   const processing = Number(totals.processing || 0);
@@ -52,13 +52,13 @@ function deriveJobProgress({ status = "queued", totals = {} } = {}) {
   const remaining = Math.max(total - completed, 0);
   const percentComplete = total ? Math.round((completed / total) * 100) : 0;
 
-  let tone = "default";
+  let tone = 'default';
   if (queued > 0 || processing > 0 || retrying > 0) {
-    tone = "warning";
-  } else if (status === "failed" || failed > 0) {
-    tone = "danger";
-  } else if (status === "completed" || (total > 0 && sent === total)) {
-    tone = "success";
+    tone = 'warning';
+  } else if (status === 'failed' || failed > 0) {
+    tone = 'danger';
+  } else if (status === 'completed' || (total > 0 && sent === total)) {
+    tone = 'success';
   }
 
   return {
@@ -79,12 +79,12 @@ function isQueueInfrastructureUnavailable(errorOrMessage) {
   const message =
     errorOrMessage instanceof Error
       ? errorOrMessage.message
-      : String(errorOrMessage || "");
+      : String(errorOrMessage || '');
 
   return (
-    message.includes("pass_issue_email_jobs") ||
-    message.includes("pass_issue_email_job_items") ||
-    message.includes("schema cache")
+    message.includes('pass_issue_email_jobs') ||
+    message.includes('pass_issue_email_job_items') ||
+    message.includes('schema cache')
   );
 }
 

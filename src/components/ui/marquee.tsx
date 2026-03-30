@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;
   pauseOnHover?: boolean;
-  direction?: "left" | "right" | "up" | "down";
+  direction?: 'left' | 'right' | 'up' | 'down';
   fade?: boolean;
   fadeAmount?: number;
 }
@@ -16,7 +16,7 @@ export function Marquee({
   className,
   duration = 20,
   pauseOnHover = false,
-  direction = "left",
+  direction = 'left',
   fade = true,
   fadeAmount = 10,
   ...props
@@ -25,7 +25,7 @@ export function Marquee({
   const [isPaused, setIsPaused] = React.useState(false);
 
   const items = React.Children.toArray(children);
-  const isVertical = direction === "up" || direction === "down";
+  const isVertical = direction === 'up' || direction === 'down';
 
   return (
     <>
@@ -71,12 +71,12 @@ export function Marquee({
           display: flex;
           animation: ${
             isVertical
-              ? direction === "up"
-                ? "scroll-y"
-                : "scroll-y-reverse"
-              : direction === "left"
-                ? "scroll"
-                : "scroll-reverse"
+              ? direction === 'up'
+                ? 'scroll-y'
+                : 'scroll-y-reverse'
+              : direction === 'left'
+                ? 'scroll'
+                : 'scroll-reverse'
           } ${duration}s linear infinite;
         }
 
@@ -87,7 +87,11 @@ export function Marquee({
       </style>
       <div
         ref={containerRef}
-        className={cn("flex w-full overflow-hidden", isVertical && "flex-col", className)}
+        className={cn(
+          'flex w-full overflow-hidden',
+          isVertical && 'flex-col',
+          className
+        )}
         style={{
           ...(fade && {
             maskImage: isVertical
@@ -110,14 +114,26 @@ export function Marquee({
         onMouseLeave={() => pauseOnHover && setIsPaused(false)}
         {...props}
       >
-        <div className={cn("marquee-scroller flex shrink-0", isVertical && "flex-col", isPaused && "paused")}>
+        <div
+          className={cn(
+            'marquee-scroller flex shrink-0',
+            isVertical && 'flex-col',
+            isPaused && 'paused'
+          )}
+        >
           {items.map((item, index) => (
-            <div key={`first-${index}`} className={cn("flex shrink-0", isVertical && "w-full")}>
+            <div
+              key={`first-${index}`}
+              className={cn('flex shrink-0', isVertical && 'w-full')}
+            >
               {item}
             </div>
           ))}
           {items.map((item, index) => (
-            <div key={`second-${index}`} className={cn("flex shrink-0", isVertical && "w-full")}>
+            <div
+              key={`second-${index}`}
+              className={cn('flex shrink-0', isVertical && 'w-full')}
+            >
               {item}
             </div>
           ))}

@@ -1,7 +1,7 @@
-﻿"use client";
+﻿'use client';
 
-import Link from "next/link";
-import { motion } from "framer-motion";
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -49,7 +49,9 @@ export default function HomeHero() {
           <div className="text-right flex-1 flex justify-end">
             <h1 className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end">
               <span className="leading-[0.8] mb-2">TASI</span>
-              <span className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">2026</span>
+              <span className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">
+                2026
+              </span>
             </h1>
           </div>
 
@@ -85,8 +87,9 @@ export default function HomeHero() {
             People First. Safety Always.
           </p>
           <p className="mb-8 max-w-4xl text-sm leading-relaxed text-white/95 [text-shadow:0_2px_12px_rgba(0,0,0,0.45)] md:text-lg">
-            From AI to digital rights, regulations, tech policy and algorithms, we invite the best of the industry to
-            collaborate on emerging trends and create solutions in digital spaces.
+            From AI to digital rights, regulations, tech policy and algorithms,
+            we invite the best of the industry to collaborate on emerging trends
+            and create solutions in digital spaces.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">

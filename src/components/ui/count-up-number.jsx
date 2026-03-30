@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 export default function CountUpNumber({
   end,
   start = 0,
   duration = 1.7,
-  suffix = "",
-  prefix = "",
-  className = "",
+  suffix = '',
+  prefix = '',
+  className = '',
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.45 });
@@ -49,10 +49,10 @@ export default function CountUpNumber({
     <motion.span
       ref={ref}
       className={className}
-      animate={{ scale: 1, filter: "brightness(1)" }}
+      animate={{ scale: 1, filter: 'brightness(1)' }}
     >
       {prefix}
-      {value.toLocaleString("en-IN")}
+      {value.toLocaleString('en-IN')}
       {suffix}
     </motion.span>
   );

@@ -1,12 +1,12 @@
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { getRegistrationById } from "@/lib/registration-db";
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { getRegistrationById } from '@/lib/registration-db';
 
 function getSupabase() {
   return getSupabaseAdmin();
 }
 
 function normalizeString(value) {
-  return String(value || "").trim();
+  return String(value || '').trim();
 }
 
 function applyRegistrationFilters(query, filters = {}) {
@@ -20,42 +20,42 @@ function applyRegistrationFilters(query, filters = {}) {
   const speakerFlag = normalizeString(filters.speakerFlag);
   const lateConfirmation = normalizeString(filters.lateConfirmation);
 
-  if (status && status !== "all") {
-    nextQuery = nextQuery.eq("status", status);
+  if (status && status !== 'all') {
+    nextQuery = nextQuery.eq('status', status);
   }
 
-  if (category && category !== "all") {
-    nextQuery = nextQuery.eq("attendee_category", category);
+  if (category && category !== 'all') {
+    nextQuery = nextQuery.eq('attendee_category', category);
   }
 
-  if (priorityTier && priorityTier !== "all") {
-    nextQuery = nextQuery.eq("priority_tier", priorityTier);
+  if (priorityTier && priorityTier !== 'all') {
+    nextQuery = nextQuery.eq('priority_tier', priorityTier);
   }
 
   if (country) {
-    nextQuery = nextQuery.ilike("country", `%${country}%`);
+    nextQuery = nextQuery.ilike('country', `%${country}%`);
   }
 
   const city = normalizeString(filters.city);
   if (city) {
-    nextQuery = nextQuery.ilike("city", `%${city}%`);
+    nextQuery = nextQuery.ilike('city', `%${city}%`);
   }
 
   if (organization) {
-    nextQuery = nextQuery.ilike("organization", `%${organization}%`);
+    nextQuery = nextQuery.ilike('organization', `%${organization}%`);
   }
 
-  if (speakerFlag === "yes") {
-    nextQuery = nextQuery.eq("speaker_flag", true);
+  if (speakerFlag === 'yes') {
+    nextQuery = nextQuery.eq('speaker_flag', true);
   }
 
-  if (lateConfirmation === "yes") {
-    nextQuery = nextQuery.eq("exception_badge_required", true);
+  if (lateConfirmation === 'yes') {
+    nextQuery = nextQuery.eq('exception_badge_required', true);
   }
 
   if (search) {
     nextQuery = nextQuery.or(
-      `first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%,registration_code.ilike.%${search}%,organization.ilike.%${search}%`,
+      `first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%,registration_code.ilike.%${search}%,organization.ilike.%${search}%`
     );
   }
 
@@ -65,16 +65,23 @@ function applyRegistrationFilters(query, filters = {}) {
 function buildQueueBaseQuery(selectStatement, options = {}) {
   const supabase = getSupabase();
   let query = supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .select(selectStatement, options)
-    .order("created_at", { ascending: false });
+    .order('created_at', { ascending: false });
 
   return query;
 }
 
-export async function listRegistrationQueue({ filters = {}, page = 1, pageSize = 50 } = {}) {
+export async function listRegistrationQueue({
+  filters = {},
+  page = 1,
+  pageSize = 50,
+} = {}) {
   const normalizedPage = Math.max(Number(page || 1), 1);
-  const normalizedPageSize = Math.min(Math.max(Number(pageSize || 50), 10), 100);
+  const normalizedPageSize = Math.min(
+    Math.max(Number(pageSize || 50), 10),
+    100
+  );
   const from = (normalizedPage - 1) * normalizedPageSize;
   const to = from + normalizedPageSize - 1;
 
@@ -104,35 +111,35 @@ export async function listRegistrationQueue({ filters = {}, page = 1, pageSize =
   `;
 
   const dataQuery = applyRegistrationFilters(
-    buildQueueBaseQuery(queueFields, { count: "exact" }),
-    filters,
+    buildQueueBaseQuery(queueFields, { count: 'exact' }),
+    filters
   ).range(from, to);
 
   const countQuery = applyRegistrationFilters(
-    buildQueueBaseQuery("id", { count: "exact", head: true }),
-    filters,
+    buildQueueBaseQuery('id', { count: 'exact', head: true }),
+    filters
   );
 
   const makeCountQuery = (status) =>
     applyRegistrationFilters(
-      buildQueueBaseQuery("id", { count: "exact", head: true }),
-      { ...filters, status },
+      buildQueueBaseQuery('id', { count: 'exact', head: true }),
+      { ...filters, status }
     );
 
   const qrIssuedQuery = applyRegistrationFilters(
-    buildQueueBaseQuery("id", { count: "exact", head: true }),
-    filters,
-  ).not("qr_pass_issued_at", "is", null);
+    buildQueueBaseQuery('id', { count: 'exact', head: true }),
+    filters
+  ).not('qr_pass_issued_at', 'is', null);
 
   const exceptionQuery = applyRegistrationFilters(
-    buildQueueBaseQuery("id", { count: "exact", head: true }),
-    filters,
-  ).eq("exception_badge_required", true);
+    buildQueueBaseQuery('id', { count: 'exact', head: true }),
+    filters
+  ).eq('exception_badge_required', true);
 
   const checkedInQuery = applyRegistrationFilters(
-    buildQueueBaseQuery("id", { count: "exact", head: true }),
-    filters,
-  ).not("checked_in_at", "is", null);
+    buildQueueBaseQuery('id', { count: 'exact', head: true }),
+    filters
+  ).not('checked_in_at', 'is', null);
 
   const [
     dataResult,
@@ -147,10 +154,10 @@ export async function listRegistrationQueue({ filters = {}, page = 1, pageSize =
   ] = await Promise.all([
     dataQuery,
     countQuery,
-    makeCountQuery("pending"),
-    makeCountQuery("confirmed"),
-    makeCountQuery("waitlisted"),
-    makeCountQuery("rejected"),
+    makeCountQuery('pending'),
+    makeCountQuery('confirmed'),
+    makeCountQuery('waitlisted'),
+    makeCountQuery('rejected'),
     qrIssuedQuery,
     exceptionQuery,
     checkedInQuery,
@@ -178,7 +185,12 @@ export async function listRegistrationQueue({ filters = {}, page = 1, pageSize =
     pagination: {
       page: normalizedPage,
       pageSize: normalizedPageSize,
-      totalPages: Math.max(Math.ceil((countResult.count || dataResult.count || 0) / normalizedPageSize), 1),
+      totalPages: Math.max(
+        Math.ceil(
+          (countResult.count || dataResult.count || 0) / normalizedPageSize
+        ),
+        1
+      ),
     },
     summary: {
       total: countResult.count || dataResult.count || 0,
@@ -198,16 +210,20 @@ export async function getRegistrationDetail(registrationId) {
   const supabase = getSupabase();
   const [historyResult, notificationsResult] = await Promise.all([
     supabase
-      .from("registration_status_history")
-      .select("id, previous_status, next_status, action_type, notes, actor_email, created_at")
-      .eq("registration_id", registrationId)
-      .order("created_at", { ascending: false })
+      .from('registration_status_history')
+      .select(
+        'id, previous_status, next_status, action_type, notes, actor_email, created_at'
+      )
+      .eq('registration_id', registrationId)
+      .order('created_at', { ascending: false })
       .limit(12),
     supabase
-      .from("registration_notifications")
-      .select("id, template_type, delivery_status, failure_reason, recipient_email, created_at, updated_at")
-      .eq("registration_id", registrationId)
-      .order("created_at", { ascending: false })
+      .from('registration_notifications')
+      .select(
+        'id, template_type, delivery_status, failure_reason, recipient_email, created_at, updated_at'
+      )
+      .eq('registration_id', registrationId)
+      .order('created_at', { ascending: false })
       .limit(12),
   ]);
 
@@ -226,7 +242,10 @@ export async function getRegistrationDetail(registrationId) {
   };
 }
 
-export async function listRegistrationsForPassJob({ filters = {}, registrationIds = [] } = {}) {
+export async function listRegistrationsForPassJob({
+  filters = {},
+  registrationIds = [],
+} = {}) {
   const supabase = getSupabase();
   const selectStatement = `
     id,
@@ -240,12 +259,12 @@ export async function listRegistrationsForPassJob({ filters = {}, registrationId
   let query = buildQueueBaseQuery(selectStatement);
 
   if (registrationIds.length) {
-    query = query.in("id", registrationIds);
+    query = query.in('id', registrationIds);
   } else {
     query = applyRegistrationFilters(query, filters);
   }
 
-  query = query.eq("status", "confirmed");
+  query = query.eq('status', 'confirmed');
 
   const { data, error } = await query.limit(2000);
 
@@ -259,9 +278,9 @@ export async function listRegistrationsForPassJob({ filters = {}, registrationId
 export async function createPassIssueEmailJobRecord({ selection, operator }) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("pass_issue_email_jobs")
+    .from('pass_issue_email_jobs')
     .insert({
-      status: "queued",
+      status: 'queued',
       selection_mode: selection.selectionMode,
       filters: selection.filters,
       resend_existing: selection.resendExisting,
@@ -269,7 +288,7 @@ export async function createPassIssueEmailJobRecord({ selection, operator }) {
       created_by_email: operator.primaryEmail,
       updated_at: new Date().toISOString(),
     })
-    .select("*")
+    .select('*')
     .single();
 
   if (error) {
@@ -279,7 +298,11 @@ export async function createPassIssueEmailJobRecord({ selection, operator }) {
   return data;
 }
 
-export async function insertPassIssueEmailJobItems({ jobId, registrations = [], maxAttempts = 3 }) {
+export async function insertPassIssueEmailJobItems({
+  jobId,
+  registrations = [],
+  maxAttempts = 3,
+}) {
   if (!registrations.length) {
     return [];
   }
@@ -288,16 +311,16 @@ export async function insertPassIssueEmailJobItems({ jobId, registrations = [], 
   const payload = registrations.map((registration) => ({
     job_id: jobId,
     registration_id: registration.id,
-    status: "queued",
+    status: 'queued',
     max_attempts: maxAttempts,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   }));
 
   const { data, error } = await supabase
-    .from("pass_issue_email_job_items")
+    .from('pass_issue_email_job_items')
     .insert(payload)
-    .select("id, registration_id, status, attempt_count, max_attempts");
+    .select('id, registration_id, status, attempt_count, max_attempts');
 
   if (error) {
     throw new Error(error.message);
@@ -309,9 +332,9 @@ export async function insertPassIssueEmailJobItems({ jobId, registrations = [], 
 export async function refreshPassIssueEmailJob(jobId) {
   const supabase = getSupabase();
   const { data: items, error } = await supabase
-    .from("pass_issue_email_job_items")
-    .select("status")
-    .eq("job_id", jobId);
+    .from('pass_issue_email_job_items')
+    .select('status')
+    .eq('job_id', jobId);
 
   if (error) {
     throw new Error(error.message);
@@ -328,30 +351,30 @@ export async function refreshPassIssueEmailJob(jobId) {
   };
 
   for (const item of items) {
-    if (item.status === "queued") counters.queued_items += 1;
-    if (item.status === "processing") counters.processing_items += 1;
-    if (item.status === "sent") counters.sent_items += 1;
-    if (item.status === "skipped") counters.skipped_items += 1;
-    if (item.status === "failed") counters.failed_items += 1;
-    if (item.status === "retrying") counters.retrying_items += 1;
+    if (item.status === 'queued') counters.queued_items += 1;
+    if (item.status === 'processing') counters.processing_items += 1;
+    if (item.status === 'sent') counters.sent_items += 1;
+    if (item.status === 'skipped') counters.skipped_items += 1;
+    if (item.status === 'failed') counters.failed_items += 1;
+    if (item.status === 'retrying') counters.retrying_items += 1;
   }
 
-  let status = "queued";
+  let status = 'queued';
   let completedAt = null;
   if (counters.processing_items > 0 || counters.retrying_items > 0) {
-    status = "processing";
+    status = 'processing';
   } else if (counters.queued_items > 0) {
-    status = "queued";
+    status = 'queued';
   } else if (counters.failed_items > 0) {
-    status = "failed";
+    status = 'failed';
     completedAt = new Date().toISOString();
   } else {
-    status = "completed";
+    status = 'completed';
     completedAt = new Date().toISOString();
   }
 
   const { data, error: updateError } = await supabase
-    .from("pass_issue_email_jobs")
+    .from('pass_issue_email_jobs')
     .update({
       ...counters,
       status,
@@ -359,8 +382,8 @@ export async function refreshPassIssueEmailJob(jobId) {
       last_processed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
-    .eq("id", jobId)
-    .select("*")
+    .eq('id', jobId)
+    .select('*')
     .single();
 
   if (updateError) {
@@ -373,9 +396,9 @@ export async function refreshPassIssueEmailJob(jobId) {
 export async function listPassIssueEmailJobs({ limit = 8 } = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("pass_issue_email_jobs")
-    .select("*")
-    .order("created_at", { ascending: false })
+    .from('pass_issue_email_jobs')
+    .select('*')
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {
@@ -388,9 +411,9 @@ export async function listPassIssueEmailJobs({ limit = 8 } = {}) {
 export async function getPassIssueEmailJob(jobId) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("pass_issue_email_jobs")
-    .select("*")
-    .eq("id", jobId)
+    .from('pass_issue_email_jobs')
+    .select('*')
+    .eq('id', jobId)
     .single();
 
   if (error) {
@@ -403,8 +426,9 @@ export async function getPassIssueEmailJob(jobId) {
 export async function listPassIssueEmailJobItems({ jobId, limit = 50 } = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("pass_issue_email_job_items")
-    .select(`
+    .from('pass_issue_email_job_items')
+    .select(
+      `
       id,
       job_id,
       registration_id,
@@ -426,9 +450,10 @@ export async function listPassIssueEmailJobItems({ jobId, limit = 50 } = {}) {
         email,
         organization
       )
-    `)
-    .eq("job_id", jobId)
-    .order("created_at", { ascending: true })
+    `
+    )
+    .eq('job_id', jobId)
+    .order('created_at', { ascending: true })
     .limit(limit);
 
   if (error) {
@@ -441,11 +466,11 @@ export async function listPassIssueEmailJobItems({ jobId, limit = 50 } = {}) {
 export async function claimPassIssueEmailJobItems({ jobId, limit = 20 } = {}) {
   const supabase = getSupabase();
   const { data: items, error } = await supabase
-    .from("pass_issue_email_job_items")
-    .select("id, job_id, registration_id, status, attempt_count, max_attempts")
-    .eq("job_id", jobId)
-    .in("status", ["queued", "retrying"])
-    .order("created_at", { ascending: true })
+    .from('pass_issue_email_job_items')
+    .select('id, job_id, registration_id, status, attempt_count, max_attempts')
+    .eq('job_id', jobId)
+    .in('status', ['queued', 'retrying'])
+    .order('created_at', { ascending: true })
     .limit(limit);
 
   if (error) {
@@ -457,16 +482,18 @@ export async function claimPassIssueEmailJobItems({ jobId, limit = 20 } = {}) {
   for (const item of items || []) {
     const nextAttemptCount = Number(item.attempt_count || 0) + 1;
     const { data: updatedItem, error: updateError } = await supabase
-      .from("pass_issue_email_job_items")
+      .from('pass_issue_email_job_items')
       .update({
-        status: "processing",
+        status: 'processing',
         attempt_count: nextAttemptCount,
         last_attempt_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq("id", item.id)
-      .eq("status", item.status)
-      .select("id, job_id, registration_id, status, attempt_count, max_attempts")
+      .eq('id', item.id)
+      .eq('status', item.status)
+      .select(
+        'id, job_id, registration_id, status, attempt_count, max_attempts'
+      )
       .maybeSingle();
 
     if (updateError) {
@@ -484,13 +511,13 @@ export async function claimPassIssueEmailJobItems({ jobId, limit = 20 } = {}) {
 export async function updatePassIssueEmailJobItem(itemId, fields) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("pass_issue_email_job_items")
+    .from('pass_issue_email_job_items')
     .update({
       ...fields,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", itemId)
-    .select("*")
+    .eq('id', itemId)
+    .select('*')
     .single();
 
   if (error) {
@@ -503,35 +530,38 @@ export async function updatePassIssueEmailJobItem(itemId, fields) {
 export async function retryFailedPassIssueEmailJobItems(jobId) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("pass_issue_email_job_items")
+    .from('pass_issue_email_job_items')
     .update({
-      status: "queued",
+      status: 'queued',
       failure_reason: null,
       updated_at: new Date().toISOString(),
     })
-    .eq("job_id", jobId)
-    .eq("status", "failed")
-    .select("id");
+    .eq('job_id', jobId)
+    .eq('status', 'failed')
+    .select('id');
 
   if (error) {
     throw new Error(error.message);
   }
 
   await supabase
-    .from("pass_issue_email_jobs")
+    .from('pass_issue_email_jobs')
     .update({
-      status: "queued",
+      status: 'queued',
       completed_at: null,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", jobId);
+    .eq('id', jobId);
 
   return data || [];
 }
 
 export async function deleteRegistration(id) {
   const supabase = getSupabase();
-  const { error } = await supabase.from("event_registrations").delete().eq("id", id);
+  const { error } = await supabase
+    .from('event_registrations')
+    .delete()
+    .eq('id', id);
   if (error) {
     throw new Error(error.message);
   }

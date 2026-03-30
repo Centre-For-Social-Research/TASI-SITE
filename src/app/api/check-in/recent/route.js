@@ -1,8 +1,10 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { listRecentEntryScans } from "@/lib/check-in-operations";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { listRecentEntryScans } from '@/lib/check-in-operations';
 
 export async function GET() {
-  const authResult = await requireAuthorizedOperator({ route: "api.checkin.recent" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.checkin.recent',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
@@ -15,8 +17,13 @@ export async function GET() {
     });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to load recent scans." },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to load recent scans.',
+      },
+      { status: 500 }
     );
   }
 }

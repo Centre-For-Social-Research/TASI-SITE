@@ -1,10 +1,14 @@
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { protectPublicPostRoute } from "@/lib/api-security";
-import { isValidEmail, sanitizeEmail, sanitizeMessage } from "@/lib/input-sanitizers";
-import { sendInboundNotificationEmail } from "@/lib/resend";
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { protectPublicPostRoute } from '@/lib/api-security';
+import {
+  isValidEmail,
+  sanitizeEmail,
+  sanitizeMessage,
+} from '@/lib/input-sanitizers';
+import { sendInboundNotificationEmail } from '@/lib/resend';
 
 export async function POST(request) {
-  const protection = await protectPublicPostRoute(request, "messages", {
+  const protection = await protectPublicPostRoute(request, 'messages', {
     windowMs: 10 * 60 * 1000,
     maxRequests: 5,
   });
@@ -19,23 +23,32 @@ export async function POST(request) {
     const message = sanitizeMessage(body?.message);
 
     if (!isValidEmail(email)) {
-      return Response.json({ error: "Valid email is required." }, { status: 400 });
+      return Response.json(
+        { error: 'Valid email is required.' },
+        { status: 400 }
+      );
     }
 
     if (!message || message.length < 10) {
-      return Response.json({ error: "Message must be at least 10 characters." }, { status: 400 });
+      return Response.json(
+        { error: 'Message must be at least 10 characters.' },
+        { status: 400 }
+      );
     }
 
     if (message.length > 5000) {
-      return Response.json({ error: "Message must be 5000 characters or less." }, { status: 400 });
+      return Response.json(
+        { error: 'Message must be 5000 characters or less.' },
+        { status: 400 }
+      );
     }
 
     const supabase = getSupabaseAdmin();
 
-    const { error } = await supabase.from("contact_messages").insert({
+    const { error } = await supabase.from('contact_messages').insert({
       email,
       message,
-      source: "site-footer",
+      source: 'site-footer',
       created_at: new Date().toISOString(),
     });
 
@@ -45,24 +58,28 @@ export async function POST(request) {
 
     try {
       await sendInboundNotificationEmail({
-        subject: "New TASI contact message",
+        subject: 'New TASI contact message',
         text: [
-          "A new contact message was submitted on the website.",
+          'A new contact message was submitted on the website.',
           `Source: site-footer`,
           `Email: ${email}`,
-          "",
-          "Message:",
+          '',
+          'Message:',
           message,
-        ].join("\n"),
+        ].join('\n'),
         replyTo: email,
       });
     } catch (emailError) {
-      console.error("Failed to send contact notification email.", emailError);
+      console.error('Failed to send contact notification email.', emailError);
     }
 
     return Response.json({ success: true }, { headers: protection.headers });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unable to submit message.";
-    return Response.json({ error: message }, { status: 500, headers: protection.headers });
+    const message =
+      error instanceof Error ? error.message : 'Unable to submit message.';
+    return Response.json(
+      { error: message },
+      { status: 500, headers: protection.headers }
+    );
   }
 }

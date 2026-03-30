@@ -1,19 +1,21 @@
-import HomeFooter from "@/components/home/footer";
-import HomeNavbar from "@/components/home/navbar";
-import BrandedPageHero from "@/components/ui/branded-page-hero";
+import HomeFooter from '@/components/home/footer';
+import HomeNavbar from '@/components/home/navbar';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
 
 const pressKitFiles = [
   {
-    title: "Organisation Profile",
-    description: "Background profile document for organisational context and media reference.",
-    href: "/downloads/tasi-organisation-profile.pdf",
-    type: "PDF",
+    title: 'Organisation Profile',
+    description:
+      'Background profile document for organisational context and media reference.',
+    href: '/downloads/tasi-organisation-profile.pdf',
+    type: 'PDF',
   },
   {
-    title: "Speaker Profiles - Press Conference",
-    description: "Speaker reference profiles prepared for the TASI press conference cycle.",
-    href: "/downloads/tasi-speaker-profiles-press-con.pdf",
-    type: "PDF",
+    title: 'Speaker Profiles - Press Conference',
+    description:
+      'Speaker reference profiles prepared for the TASI press conference cycle.',
+    href: '/downloads/tasi-speaker-profiles-press-con.pdf',
+    type: 'PDF',
   },
 ];
 
@@ -24,10 +26,15 @@ export default function MediaPressKitPage() {
       <main className="bg-[#fdf6ef] dark:bg-stone-950">
         <BrandedPageHero className="py-14 md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Media Resources</p>
-            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">Press Kit</h1>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+              Media Resources
+            </p>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+              Press Kit
+            </h1>
             <p className="mx-auto mt-4 max-w-3xl text-white/90">
-              Core reference documents for journalists, editors, partners, and researchers covering TASI 2025.
+              Core reference documents for journalists, editors, partners, and
+              researchers covering TASI 2025.
             </p>
           </div>
         </BrandedPageHero>
@@ -51,7 +58,9 @@ export default function MediaPressKitPage() {
                   <h2 className="mt-5 font-serif text-[1.2rem] font-medium leading-relaxed text-stone-950 dark:text-white md:text-[1.35rem]">
                     {file.title}
                   </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">{file.description}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                    {file.description}
+                  </p>
                   <div className="mt-6">
                     <a
                       href={file.href}

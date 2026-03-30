@@ -1,26 +1,34 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { createNotification, updateRegistrationStatus } from "@/lib/registration-db";
-import { deliverRegistrationEmail } from "@/lib/registration-email";
-import { normalizeRegistrationStatus } from "@/lib/registration-utils";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import {
+  createNotification,
+  updateRegistrationStatus,
+} from '@/lib/registration-db';
+import { deliverRegistrationEmail } from '@/lib/registration-email';
+import { normalizeRegistrationStatus } from '@/lib/registration-utils';
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.registrations.status" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.registrations.status',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
 
   try {
     const body = await request.json();
-    const registrationId = String(body?.registrationId || "").trim();
+    const registrationId = String(body?.registrationId || '').trim();
 
     if (!registrationId) {
-      return Response.json({ error: "Registration ID is required." }, { status: 400 });
+      return Response.json(
+        { error: 'Registration ID is required.' },
+        { status: 400 }
+      );
     }
 
     const updatedRegistration = await updateRegistrationStatus({
       registrationId,
       status: normalizeRegistrationStatus(body?.status),
-      reviewNotes: String(body?.reviewNotes || "").trim(),
+      reviewNotes: String(body?.reviewNotes || '').trim(),
       speakerFlag: Boolean(body?.speakerFlag),
       vipFlag: Boolean(body?.vipFlag),
       operator: authResult.operator,
@@ -35,7 +43,7 @@ export async function POST(request) {
       actorEmail: authResult.operator.primaryEmail,
     });
 
-    const { markNotificationDelivery } = await import("@/lib/registration-db");
+    const { markNotificationDelivery } = await import('@/lib/registration-db');
     const emailResult = await deliverRegistrationEmail({
       registration: updatedRegistration,
       templateType,
@@ -50,7 +58,12 @@ export async function POST(request) {
     });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to update registration." },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to update registration.',
+      },
       { status: 500 }
     );
   }

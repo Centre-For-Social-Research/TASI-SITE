@@ -1,29 +1,23 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Next.js: dev",
-			"type": "shell",
-			"command": "npm",
-			"args": [
-				"run",
-				"dev"
-			],
-			"isBackground": true,
-			"problemMatcher": [],
-			"group": "build"
-		},
-		{
-			"label": "Next.js: dev (cmd)",
-			"type": "shell",
-			"command": "cmd",
-			"args": [
-				"/c",
-				"npm run dev"
-			],
-			"isBackground": true,
-			"problemMatcher": [],
-			"group": "build"
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Next.js: dev",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Next.js: dev (cmd)",
+      "type": "shell",
+      "command": "cmd",
+      "args": ["/c", "npm run dev"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
 }

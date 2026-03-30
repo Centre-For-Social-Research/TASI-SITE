@@ -1,24 +1,24 @@
-import Link from "next/link";
-import TeamGrid from "@/components/about/team-grid";
-import DiplomaticEndorsements from "@/components/about/diplomatic-endorsements";
-import BrandedPageHero from "@/components/ui/branded-page-hero";
-import HomeFooter from "@/components/home/footer";
-import HomeNavbar from "@/components/home/navbar";
+import Link from 'next/link';
+import TeamGrid from '@/components/about/team-grid';
+import DiplomaticEndorsements from '@/components/about/diplomatic-endorsements';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
+import HomeFooter from '@/components/home/footer';
+import HomeNavbar from '@/components/home/navbar';
 
 export const revalidate = 86400;
 
 const pillars = [
   {
-    title: "India-Led, Globally Relevant",
-    body: "TASI centers Indian realities and Global South perspectives in conversations on trust, safety, platform governance, and AI.",
+    title: 'India-Led, Globally Relevant',
+    body: 'TASI centers Indian realities and Global South perspectives in conversations on trust, safety, platform governance, and AI.',
   },
   {
-    title: "Policy Meets Practice",
-    body: "We connect public policy, platform operations, civil society expertise, and lived experience so ideas can move into implementation.",
+    title: 'Policy Meets Practice',
+    body: 'We connect public policy, platform operations, civil society expertise, and lived experience so ideas can move into implementation.',
   },
   {
-    title: "Safety With Equity",
-    body: "Women, children, youth, marginalized communities, and trust and safety workers remain central to how we frame digital well-being.",
+    title: 'Safety With Equity',
+    body: 'Women, children, youth, marginalized communities, and trust and safety workers remain central to how we frame digital well-being.',
   },
 ];
 
@@ -29,12 +29,15 @@ export default function AboutPage() {
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <BrandedPageHero className="min-h-[300px] py-14 md:min-h-[360px] md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">About TASI</p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+              About TASI
+            </p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
               India&apos;s Foremost Trust and Safety Convening
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-white/90">
-              Learn more about the vision, partners, and purpose behind TASI 2026 and the work shaping safer digital futures in India.
+              Learn more about the vision, partners, and purpose behind TASI
+              2026 and the work shaping safer digital futures in India.
             </p>
           </div>
         </BrandedPageHero>
@@ -46,17 +49,29 @@ export default function AboutPage() {
                 Why TASI Exists
               </span>
               <h2 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-white md:text-5xl lg:text-[3.2rem]">
-                India needs a <span className="text-rc-secondary dark:text-white">trust and safety</span> platform built for action.
+                India needs a{' '}
+                <span className="text-rc-secondary dark:text-white">
+                  trust and safety
+                </span>{' '}
+                platform built for action.
               </h2>
               <div className="mt-8 space-y-6 text-base leading-[1.65] text-white/90 md:text-[17px]">
                 <p>
-                  India stands at the center of global digital transformation, with one of the world&apos;s largest online populations, rapidly evolving platform ecosystems, and rising public debate around safety, AI, and accountability.
+                  India stands at the center of global digital transformation,
+                  with one of the world&apos;s largest online populations,
+                  rapidly evolving platform ecosystems, and rising public debate
+                  around safety, AI, and accountability.
                 </p>
                 <p>
-                  Yet many of the most consequential trust and safety frameworks are still shaped without enough grounding in Indian realities and Global South contexts. TASI helps close that gap by bringing the right stakeholders into one shared space.
+                  Yet many of the most consequential trust and safety frameworks
+                  are still shaped without enough grounding in Indian realities
+                  and Global South contexts. TASI helps close that gap by
+                  bringing the right stakeholders into one shared space.
                 </p>
                 <p>
-                  The goal is simple: move beyond parallel conversations and toward sustained collaboration that can improve systems, policy, and outcomes for people most affected by online harm.
+                  The goal is simple: move beyond parallel conversations and
+                  toward sustained collaboration that can improve systems,
+                  policy, and outcomes for people most affected by online harm.
                 </p>
               </div>
             </div>
@@ -70,8 +85,12 @@ export default function AboutPage() {
                   <p className="mb-3 text-[11px] font-black uppercase tracking-[0.18em] text-white/55">
                     Core Focus
                   </p>
-                  <h3 className="text-2xl font-bold tracking-tight text-white">{pillar.title}</h3>
-                  <p className="mt-4 text-base leading-relaxed text-white/80">{pillar.body}</p>
+                  <h3 className="text-2xl font-bold tracking-tight text-white">
+                    {pillar.title}
+                  </h3>
+                  <p className="mt-4 text-base leading-relaxed text-white/80">
+                    {pillar.body}
+                  </p>
                 </article>
               ))}
             </div>
@@ -87,44 +106,70 @@ export default function AboutPage() {
               Building Safer Digital Futures From India
             </h2>
             <p className="mb-10 max-w-3xl text-body-md leading-relaxed text-stone-700 dark:text-stone-300">
-              India&apos;s scale, diversity, and digital momentum make it one of the most important places in the world to rethink how trust and safety is built, governed, and implemented.
+              India&apos;s scale, diversity, and digital momentum make it one of
+              the most important places in the world to rethink how trust and
+              safety is built, governed, and implemented.
             </p>
 
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="grid gap-6 md:grid-cols-2">
                 <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">01</p>
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">Massive Digital Scale</h3>
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
+                    01
+                  </p>
+                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                    Massive Digital Scale
+                  </h3>
                   <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                    From multilingual communication to high-volume platform participation, India experiences trust and safety challenges at a scale that can inform global thinking.
+                    From multilingual communication to high-volume platform
+                    participation, India experiences trust and safety challenges
+                    at a scale that can inform global thinking.
                   </p>
                 </article>
                 <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">02</p>
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">Connected Harms</h3>
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
+                    02
+                  </p>
+                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                    Connected Harms
+                  </h3>
                   <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                    Online abuse, misinformation, child safety risks, and AI-enabled harms are deeply connected to offline inequalities and deserve locally grounded responses.
+                    Online abuse, misinformation, child safety risks, and
+                    AI-enabled harms are deeply connected to offline
+                    inequalities and deserve locally grounded responses.
                   </p>
                 </article>
                 <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50 md:col-span-2">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">03</p>
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">Global Influence</h3>
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
+                    03
+                  </p>
+                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                    Global Influence
+                  </h3>
                   <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                    What is designed, regulated, and tested in India increasingly shapes digital governance conversations far beyond its borders, especially across the Global South.
+                    What is designed, regulated, and tested in India
+                    increasingly shapes digital governance conversations far
+                    beyond its borders, especially across the Global South.
                   </p>
                 </article>
               </div>
 
               <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">India&apos;s Role</p>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">
+                  India&apos;s Role
+                </p>
                 <h3 className="mt-4 text-3xl font-extrabold tracking-tight md:text-4xl">
                   A proving ground for trust, safety, and AI governance
                 </h3>
                 <p className="mt-5 text-base leading-relaxed text-white/85">
-                  From multilingual communication to high-volume platform participation, India experiences trust and safety challenges at a scale that can inform global thinking.
+                  From multilingual communication to high-volume platform
+                  participation, India experiences trust and safety challenges
+                  at a scale that can inform global thinking.
                 </p>
                 <p className="mt-4 text-base leading-relaxed text-white/75">
-                  TASI creates the connective space for policymakers, platforms, researchers, and civil society to respond to that reality together.
+                  TASI creates the connective space for policymakers, platforms,
+                  researchers, and civil society to respond to that reality
+                  together.
                 </p>
               </div>
             </div>
@@ -135,24 +180,42 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(35,0,52,0.97)_6%,rgba(92,15,79,0.9)_34%,rgba(126,8,58,0.68)_52%,rgba(0,0,0,0.3)_100%)]" />
           <div className="relative mx-auto grid w-full max-w-[1300px] gap-6 px-4 md:px-6 lg:grid-cols-2">
             <article className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
-              <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">Convening Partner</p>
-              <h2 className="text-3xl font-black tracking-tight text-white">Trust and Safety Festival</h2>
+              <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">
+                Convening Partner
+              </p>
+              <h2 className="text-3xl font-black tracking-tight text-white">
+                Trust and Safety Festival
+              </h2>
               <p className="mt-5 text-base leading-relaxed text-white/85">
-                The Trust and Safety Festival is a global platform bringing together technology companies, policymakers, researchers, and civil society to advance safer digital ecosystems through collaboration.
+                The Trust and Safety Festival is a global platform bringing
+                together technology companies, policymakers, researchers, and
+                civil society to advance safer digital ecosystems through
+                collaboration.
               </p>
               <p className="mt-4 text-base leading-relaxed text-white/85">
-                Its partnership with TASI helps connect Indian priorities with international dialogue while keeping the work grounded in implementation and public interest.
+                Its partnership with TASI helps connect Indian priorities with
+                international dialogue while keeping the work grounded in
+                implementation and public interest.
               </p>
             </article>
 
             <article className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
-              <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">Convening Partner</p>
-              <h2 className="text-3xl font-black tracking-tight text-white">Centre for Social Research</h2>
+              <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">
+                Convening Partner
+              </p>
+              <h2 className="text-3xl font-black tracking-tight text-white">
+                Centre for Social Research
+              </h2>
               <p className="mt-5 text-base leading-relaxed text-white/85">
-                CSR has spent over four decades advancing gender justice, research, advocacy, and social change in India. Its digital safety work extends that mission into today&apos;s online realities.
+                CSR has spent over four decades advancing gender justice,
+                research, advocacy, and social change in India. Its digital
+                safety work extends that mission into today&apos;s online
+                realities.
               </p>
               <p className="mt-4 text-base leading-relaxed text-white/85">
-                Through programs on online safety and well-being, CSR brings deep field knowledge, policy insight, and community-centered practice to the TASI platform.
+                Through programs on online safety and well-being, CSR brings
+                deep field knowledge, policy insight, and community-centered
+                practice to the TASI platform.
               </p>
             </article>
           </div>
@@ -167,7 +230,8 @@ export default function AboutPage() {
               Be Part of the Conversation
             </h2>
             <p className="mx-auto mt-4 max-w-3xl text-center text-lg font-normal leading-relaxed text-gray-800 dark:text-gray-200 md:text-[22px]">
-              Join delegates, experts, and institutions shaping the future of digital trust, safety, and AI governance in India and beyond.
+              Join delegates, experts, and institutions shaping the future of
+              digital trust, safety, and AI governance in India and beyond.
             </p>
             <div className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
               <Link

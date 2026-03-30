@@ -1,24 +1,18 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import * as React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  Send,
-  Twitter,
-} from "lucide-react";
+} from '@/components/ui/tooltip';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { Facebook, Instagram, Linkedin, Send, Twitter } from 'lucide-react';
 
 function AdminLoginButton() {
   const router = useRouter();
@@ -26,8 +20,8 @@ function AdminLoginButton() {
     <button
       type="button"
       onClick={() => {
-        window.scrollTo({ top: 0, behavior: "instant" });
-        router.push("/sign-in?redirect_url=/admin/registrations");
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        router.push('/sign-in?redirect_url=/admin/registrations');
       }}
       className="w-full rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90"
     >
@@ -37,38 +31,47 @@ function AdminLoginButton() {
 }
 
 function Footerdemo() {
-  const [newsletterEmail, setNewsletterEmail] = React.useState("");
-  const [newsletterStatus, setNewsletterStatus] = React.useState("");
-  const [isNewsletterSubmitting, setIsNewsletterSubmitting] = React.useState(false);
-  const [messageEmail, setMessageEmail] = React.useState("");
-  const [messageText, setMessageText] = React.useState("");
-  const [messageStatus, setMessageStatus] = React.useState("");
+  const [newsletterEmail, setNewsletterEmail] = React.useState('');
+  const [newsletterStatus, setNewsletterStatus] = React.useState('');
+  const [isNewsletterSubmitting, setIsNewsletterSubmitting] =
+    React.useState(false);
+  const [messageEmail, setMessageEmail] = React.useState('');
+  const [messageText, setMessageText] = React.useState('');
+  const [messageStatus, setMessageStatus] = React.useState('');
   const [isMessageSubmitting, setIsMessageSubmitting] = React.useState(false);
 
-  const normalizeEmailInput = React.useCallback((value: string) => value.trim().toLowerCase(), []);
-  const normalizeMessageInput = React.useCallback((value: string) => value.replace(/\r\n?/g, "\n").trim(), []);
+  const normalizeEmailInput = React.useCallback(
+    (value: string) => value.trim().toLowerCase(),
+    []
+  );
+  const normalizeMessageInput = React.useCallback(
+    (value: string) => value.replace(/\r\n?/g, '\n').trim(),
+    []
+  );
 
-  async function handleNewsletterSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleNewsletterSubmit(
+    event: React.FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
-    setNewsletterStatus("");
+    setNewsletterStatus('');
     setIsNewsletterSubmitting(true);
 
     try {
-      const response = await fetch("/api/newsletter/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: normalizeEmailInput(newsletterEmail) }),
       });
 
       const data = await response.json();
       if (!response.ok) {
-        setNewsletterStatus(data.error || "Subscription failed.");
+        setNewsletterStatus(data.error || 'Subscription failed.');
       } else {
-        setNewsletterStatus("Subscribed successfully.");
-        setNewsletterEmail("");
+        setNewsletterStatus('Subscribed successfully.');
+        setNewsletterEmail('');
       }
     } catch {
-      setNewsletterStatus("Subscription failed.");
+      setNewsletterStatus('Subscription failed.');
     } finally {
       setIsNewsletterSubmitting(false);
     }
@@ -76,13 +79,13 @@ function Footerdemo() {
 
   async function handleMessageSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setMessageStatus("");
+    setMessageStatus('');
     setIsMessageSubmitting(true);
 
     try {
-      const response = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: normalizeEmailInput(messageEmail),
           message: normalizeMessageInput(messageText),
@@ -90,9 +93,9 @@ function Footerdemo() {
       });
 
       let data: { error?: string } | null = null;
-      const contentType = response.headers.get("content-type") || "";
+      const contentType = response.headers.get('content-type') || '';
 
-      if (contentType.includes("application/json")) {
+      if (contentType.includes('application/json')) {
         data = await response.json();
       } else {
         const text = await response.text();
@@ -104,18 +107,18 @@ function Footerdemo() {
       if (!response.ok) {
         setMessageStatus(data?.error || `Request failed (${response.status}).`);
       } else {
-        setMessageStatus("Message sent.");
-        setMessageEmail("");
-        setMessageText("");
+        setMessageStatus('Message sent.');
+        setMessageEmail('');
+        setMessageText('');
       }
     } catch (error: unknown) {
       const errorMessage =
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "message" in error &&
-        typeof (error as { message?: unknown }).message === "string"
+        'message' in error &&
+        typeof (error as { message?: unknown }).message === 'string'
           ? (error as { message: string }).message
-          : "Network error while sending message. Please try again.";
+          : 'Network error while sending message. Please try again.';
 
       setMessageStatus(errorMessage);
     } finally {
@@ -167,29 +170,50 @@ function Footerdemo() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
             <nav className="space-y-2 text-sm text-white/90">
-              <Link href="/about" className="block transition-colors hover:text-white">
+              <Link
+                href="/about"
+                className="block transition-colors hover:text-white"
+              >
                 About Us
               </Link>
-              <Link href="/programme" className="block transition-colors hover:text-white">
+              <Link
+                href="/programme"
+                className="block transition-colors hover:text-white"
+              >
                 Program
               </Link>
-              <Link href="/speakers" className="block transition-colors hover:text-white">
+              <Link
+                href="/speakers"
+                className="block transition-colors hover:text-white"
+              >
                 Speakers
               </Link>
-              <Link href="/tasi-2025" className="block transition-colors hover:text-white">
+              <Link
+                href="/tasi-2025"
+                className="block transition-colors hover:text-white"
+              >
                 TASI Editions
               </Link>
-              <Link href="/sponsor" className="block transition-colors hover:text-white">
+              <Link
+                href="/sponsor"
+                className="block transition-colors hover:text-white"
+              >
                 Sponsors
               </Link>
-              <Link href="/contact" className="block transition-colors hover:text-white">
+              <Link
+                href="/contact"
+                className="block transition-colors hover:text-white"
+              >
                 Contact
               </Link>
             </nav>
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Quick Message</h3>
-            <form className="rounded-md border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30" onSubmit={handleMessageSubmit}>
+            <form
+              className="rounded-md border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30"
+              onSubmit={handleMessageSubmit}
+            >
               <div className="space-y-2">
                 <Input
                   type="email"
@@ -207,12 +231,19 @@ function Footerdemo() {
                   minLength={10}
                   required
                 />
-                <Button type="submit" size="sm" className="h-8 w-full !bg-white !text-[#140f26] text-xs hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26] dark:hover:!bg-white/90" disabled={isMessageSubmitting}>
-                  {isMessageSubmitting ? "Sending..." : "Send"}
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="h-8 w-full !bg-white !text-[#140f26] text-xs hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26] dark:hover:!bg-white/90"
+                  disabled={isMessageSubmitting}
+                >
+                  {isMessageSubmitting ? 'Sending...' : 'Send'}
                 </Button>
               </div>
             </form>
-            {messageStatus ? <p className="mt-2 text-xs text-white/80">{messageStatus}</p> : null}
+            {messageStatus ? (
+              <p className="mt-2 text-xs text-white/80">{messageStatus}</p>
+            ) : null}
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
@@ -253,10 +284,10 @@ function Footerdemo() {
                       className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
                     >
                       <a
-                      href="https://www.facebook.com/csrindia.org"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                        href="https://www.facebook.com/csrindia.org"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <Facebook className="h-4 w-4" />
                         <span className="sr-only">Facebook</span>
                       </a>
@@ -276,7 +307,11 @@ function Footerdemo() {
                       size="icon"
                       className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
                     >
-                      <a href="https://x.com/CSR_India" target="_blank" rel="noreferrer">
+                      <a
+                        href="https://x.com/CSR_India"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <Twitter className="h-4 w-4" />
                         <span className="sr-only">Twitter</span>
                       </a>
@@ -297,10 +332,10 @@ function Footerdemo() {
                       className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
                     >
                       <a
-                      href="https://www.instagram.com/csr_india/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                        href="https://www.instagram.com/csr_india/"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <Instagram className="h-4 w-4" />
                         <span className="sr-only">Instagram</span>
                       </a>
@@ -321,10 +356,10 @@ function Footerdemo() {
                       className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
                     >
                       <a
-                      href="https://www.linkedin.com/company/centre-for-social-research-india/?viewAsMember=trueL"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                        href="https://www.linkedin.com/company/centre-for-social-research-india/?viewAsMember=trueL"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <Linkedin className="h-4 w-4" />
                         <span className="sr-only">LinkedIn</span>
                       </a>
@@ -349,16 +384,28 @@ function Footerdemo() {
             Copyright 2026 Centre for Social Research. All rights reserved.
           </p>
           <nav className="flex gap-4 text-sm text-white/90">
-            <Link href="/privacy-policy" className="transition-colors hover:text-white">
+            <Link
+              href="/privacy-policy"
+              className="transition-colors hover:text-white"
+            >
               Privacy Policy
             </Link>
-            <Link href="/terms-of-service" className="transition-colors hover:text-white">
+            <Link
+              href="/terms-of-service"
+              className="transition-colors hover:text-white"
+            >
               Terms of Service
             </Link>
-            <Link href="/cookie-settings" className="transition-colors hover:text-white">
+            <Link
+              href="/cookie-settings"
+              className="transition-colors hover:text-white"
+            >
               Cookie Settings
             </Link>
-            <Link href="/sitemap.xml" className="transition-colors hover:text-white">
+            <Link
+              href="/sitemap.xml"
+              className="transition-colors hover:text-white"
+            >
               Sitemap
             </Link>
           </nav>

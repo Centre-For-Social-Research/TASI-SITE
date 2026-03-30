@@ -1,36 +1,36 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function ConfirmationEmailFlow() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("");
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setStatus("");
+    setStatus('');
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/register/confirmation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/register/confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim().toLowerCase() }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setStatus(data.error || "Unable to submit confirmation request.");
+        setStatus(data.error || 'Unable to submit confirmation request.');
       } else {
         setStatus(
-          "Confirmation request received. Our team will send your registration confirmation email shortly."
+          'Confirmation request received. Our team will send your registration confirmation email shortly.'
         );
-        setEmail("");
+        setEmail('');
       }
     } catch {
-      setStatus("Network error. Please try again in a moment.");
+      setStatus('Network error. Please try again in a moment.');
     } finally {
       setIsSubmitting(false);
     }
@@ -42,11 +42,15 @@ export default function ConfirmationEmailFlow() {
         Confirmation Email Flow
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-        After you submit the registration form, a confirmation email should arrive shortly. If you do not receive
-        it, submit your email below and we will resend confirmation support.
+        After you submit the registration form, a confirmation email should
+        arrive shortly. If you do not receive it, submit your email below and we
+        will resend confirmation support.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center"
+      >
         <label htmlFor="confirmation-email" className="sr-only">
           Email address
         </label>
@@ -64,11 +68,15 @@ export default function ConfirmationEmailFlow() {
           disabled={isSubmitting}
           className="h-11 rounded-md bg-orange-700 px-5 text-sm font-semibold text-white transition hover:bg-orange-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isSubmitting ? "Submitting..." : "Request Confirmation"}
+          {isSubmitting ? 'Submitting...' : 'Request Confirmation'}
         </button>
       </form>
 
-      {status ? <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">{status}</p> : null}
+      {status ? (
+        <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
+          {status}
+        </p>
+      ) : null}
     </section>
   );
 }

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import LegalLayout from "@/components/LegalLayout";
-import { DocSection, DocTable, MetaBadge } from "@/components/LegalComponents";
+import { useEffect, useState } from 'react';
+import LegalLayout from '@/components/LegalLayout';
+import { DocSection, DocTable, MetaBadge } from '@/components/LegalComponents';
 
-const PREFS_KEY = "tasi_cookie_prefs";
+const PREFS_KEY = 'tasi_cookie_prefs';
 const DEFAULT_PREFS = {
   functional: true,
   analytics: false,
@@ -19,18 +19,26 @@ function Toggle({ checked, onChange, disabled }) {
       onClick={() => !disabled && onChange(!checked)}
       disabled={disabled}
       className={`relative flex h-6 w-11 flex-shrink-0 rounded-full border transition-all focus:outline-none focus:ring-2 focus:ring-orange-300/50 dark:focus:ring-orange-700/40
-        ${checked ? "border-orange-700 bg-orange-700 dark:border-orange-300 dark:bg-orange-300" : "border-stone-300 bg-stone-200 dark:border-zinc-700 dark:bg-zinc-800"}
-        ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
+        ${checked ? 'border-orange-700 bg-orange-700 dark:border-orange-300 dark:bg-orange-300' : 'border-stone-300 bg-stone-200 dark:border-zinc-700 dark:bg-zinc-800'}
+        ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
     >
       <span
         className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-all
-          ${checked ? "left-[calc(100%-22px)]" : "left-0.5"}`}
+          ${checked ? 'left-[calc(100%-22px)]' : 'left-0.5'}`}
       />
     </button>
   );
 }
 
-function CookieCard({ title, badge, badgeVariant = "optional", description, checked, onChange, disabled }) {
+function CookieCard({
+  title,
+  badge,
+  badgeVariant = 'optional',
+  description,
+  checked,
+  onChange,
+  disabled,
+}) {
   return (
     <div className="mb-3 flex items-start justify-between gap-4 rounded-xl border border-stone-300 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
       <div className="min-w-0 flex-1">
@@ -38,12 +46,14 @@ function CookieCard({ title, badge, badgeVariant = "optional", description, chec
           {title}
           <span
             className={`rounded px-2 py-0.5 text-[0.65rem] font-sans font-semibold uppercase tracking-wide
-            ${badgeVariant === "required" ? "bg-orange-50 text-orange-700 dark:bg-zinc-800 dark:text-orange-300" : "bg-stone-100 text-stone-600 dark:bg-zinc-800 dark:text-slate-300"}`}
+            ${badgeVariant === 'required' ? 'bg-orange-50 text-orange-700 dark:bg-zinc-800 dark:text-orange-300' : 'bg-stone-100 text-stone-600 dark:bg-zinc-800 dark:text-slate-300'}`}
           >
             {badge}
           </span>
         </h3>
-        <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{description}</p>
+        <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          {description}
+        </p>
       </div>
       <Toggle checked={checked} onChange={onChange} disabled={disabled} />
     </div>
@@ -52,13 +62,15 @@ function CookieCard({ title, badge, badgeVariant = "optional", description, chec
 
 export default function CookieSettingsPage() {
   const [prefs, setPrefs] = useState(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return DEFAULT_PREFS;
     }
 
     try {
       const stored = localStorage.getItem(PREFS_KEY);
-      return stored ? { ...DEFAULT_PREFS, ...JSON.parse(stored) } : DEFAULT_PREFS;
+      return stored
+        ? { ...DEFAULT_PREFS, ...JSON.parse(stored) }
+        : DEFAULT_PREFS;
     } catch {
       return DEFAULT_PREFS;
     }
@@ -74,7 +86,8 @@ export default function CookieSettingsPage() {
     return () => window.clearTimeout(timeoutId);
   }, [saved]);
 
-  const update = (key) => (value) => setPrefs((previous) => ({ ...previous, [key]: value }));
+  const update = (key) => (value) =>
+    setPrefs((previous) => ({ ...previous, [key]: value }));
 
   const save = (overridePrefs) => {
     const toSave = overridePrefs || prefs;
@@ -111,13 +124,15 @@ export default function CookieSettingsPage() {
 
       <DocSection number="01" title="About Cookies">
         <p>
-          Cookies are small text files stored on your device when you visit a website. The TASI 2026
-          website uses cookies to ensure core functionality, understand how visitors use the site, and
-          improve your experience.
+          Cookies are small text files stored on your device when you visit a
+          website. The TASI 2026 website uses cookies to ensure core
+          functionality, understand how visitors use the site, and improve your
+          experience.
         </p>
         <p>
-          Some preferences on this site are stored using browser storage technologies (for example, theme and
-          cookie preference settings). We refer to these collectively as cookies/preferences on this page.
+          Some preferences on this site are stored using browser storage
+          technologies (for example, theme and cookie preference settings). We
+          refer to these collectively as cookies/preferences on this page.
         </p>
       </DocSection>
 
@@ -136,21 +151,21 @@ export default function CookieSettingsPage() {
           badge="Optional"
           description="Remember user preferences such as theme mode and convenience settings to improve return visits."
           checked={prefs.functional}
-          onChange={update("functional")}
+          onChange={update('functional')}
         />
         <CookieCard
           title="Analytics Cookies"
           badge="Optional"
           description="Help us understand how visitors interact with the site using anonymised and aggregated usage data."
           checked={prefs.analytics}
-          onChange={update("analytics")}
+          onChange={update('analytics')}
         />
         <CookieCard
           title="Marketing Cookies"
           badge="Optional"
           description="Used only if campaign integrations are enabled for outreach and event communications."
           checked={prefs.marketing}
-          onChange={update("marketing")}
+          onChange={update('marketing')}
         />
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -172,7 +187,11 @@ export default function CookieSettingsPage() {
           >
             Reject All Optional
           </button>
-          {saved ? <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Preferences saved</span> : null}
+          {saved ? (
+            <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
+              Preferences saved
+            </span>
+          ) : null}
         </div>
       </DocSection>
 
@@ -180,13 +199,38 @@ export default function CookieSettingsPage() {
 
       <DocSection number="03" title="Cookies We Use">
         <DocTable
-          headers={["Name", "Category", "Purpose", "Duration"]}
+          headers={['Name', 'Category', 'Purpose', 'Duration']}
           rows={[
-            ["tasi_cookie_prefs", "Essential", "Stores your cookie consent preferences", "12 months"],
-            ["theme", "Functional", "Remembers your light/dark theme preference", "Until changed"],
-            ["session/security tokens", "Essential", "Protects form submissions and session integrity", "Session"],
-            ["analytics identifiers", "Analytics", "Measures page usage in aggregated form", "Varies by provider"],
-            ["campaign tags", "Marketing", "Supports campaign attribution where enabled", "Varies"],
+            [
+              'tasi_cookie_prefs',
+              'Essential',
+              'Stores your cookie consent preferences',
+              '12 months',
+            ],
+            [
+              'theme',
+              'Functional',
+              'Remembers your light/dark theme preference',
+              'Until changed',
+            ],
+            [
+              'session/security tokens',
+              'Essential',
+              'Protects form submissions and session integrity',
+              'Session',
+            ],
+            [
+              'analytics identifiers',
+              'Analytics',
+              'Measures page usage in aggregated form',
+              'Varies by provider',
+            ],
+            [
+              'campaign tags',
+              'Marketing',
+              'Supports campaign attribution where enabled',
+              'Varies',
+            ],
           ]}
         />
       </DocSection>

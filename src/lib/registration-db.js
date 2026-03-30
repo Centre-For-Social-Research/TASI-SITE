@@ -1,6 +1,10 @@
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { buildPassToken, getBadgeColor, isAfterBadgeFreeze } from "@/lib/registration-utils";
-import passUtils from "@/lib/registration-pass-utils.cjs";
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import {
+  buildPassToken,
+  getBadgeColor,
+  isAfterBadgeFreeze,
+} from '@/lib/registration-utils';
+import passUtils from '@/lib/registration-pass-utils.cjs';
 
 const { normalizeRegistrationRecord, getIssuedEntryPass } = passUtils;
 
@@ -68,7 +72,7 @@ export async function createRegistration({
 
   const row = {
     ...registration,
-    status: "pending",
+    status: 'pending',
     badge_color_label: badgeColor.label,
     badge_color_hex: badgeColor.hex,
     source: registration.source,
@@ -76,7 +80,11 @@ export async function createRegistration({
     updated_at: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase.from("event_registrations").insert(row).select(baseRegistrationSelect()).single();
+  const { data, error } = await supabase
+    .from('event_registrations')
+    .insert(row)
+    .select(baseRegistrationSelect())
+    .single();
 
   if (error) {
     throw new Error(error.message);
@@ -85,17 +93,17 @@ export async function createRegistration({
   await appendStatusHistory({
     registrationId: data.id,
     previousStatus: null,
-    nextStatus: "pending",
+    nextStatus: 'pending',
     actorClerkId: operator?.userId || null,
     actorEmail: operator?.primaryEmail || null,
-    actionType: "registration_submitted",
-    notes: "Registration created from public form.",
+    actionType: 'registration_submitted',
+    notes: 'Registration created from public form.',
   });
 
   if (profilePhoto) {
-    await supabase.from("registration_assets").insert({
+    await supabase.from('registration_assets').insert({
       registration_id: data.id,
-      asset_type: "profile_photo",
+      asset_type: 'profile_photo',
       storage_bucket: profilePhoto.bucket,
       storage_path: profilePhoto.path,
       original_filename: profilePhoto.originalFilename,
@@ -120,7 +128,7 @@ export async function appendStatusHistory({
   notes,
 }) {
   const supabase = getSupabase();
-  const { error } = await supabase.from("registration_status_history").insert({
+  const { error } = await supabase.from('registration_status_history').insert({
     registration_id: registrationId,
     previous_status: previousStatus,
     next_status: nextStatus,
@@ -145,18 +153,18 @@ export async function createNotification({
 }) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("registration_notifications")
+    .from('registration_notifications')
     .insert({
       registration_id: registrationId,
       template_type: templateType,
       recipient_email: recipientEmail,
-      delivery_status: "queued",
+      delivery_status: 'queued',
       actor_clerk_id: actorClerkId,
       actor_email: actorEmail,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
-    .select("id")
+    .select('id')
     .single();
 
   if (error) {
@@ -169,12 +177,12 @@ export async function createNotification({
 export async function markNotificationDelivery(notificationId, fields) {
   const supabase = getSupabase();
   const { error } = await supabase
-    .from("registration_notifications")
+    .from('registration_notifications')
     .update({
       ...fields,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", notificationId);
+    .eq('id', notificationId);
 
   if (error) {
     throw new Error(error.message);
@@ -184,9 +192,9 @@ export async function markNotificationDelivery(notificationId, fields) {
 export async function getRegistrationById(id) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .select(baseRegistrationSelect())
-    .eq("id", id)
+    .eq('id', id)
     .single();
 
   if (error) {
@@ -199,36 +207,36 @@ export async function getRegistrationById(id) {
 export async function listRegistrations(filters = {}) {
   const supabase = getSupabase();
   let query = supabase
-    .from("event_registrations")
-    .select(baseRegistrationSelect(), { count: "exact" })
-    .order("created_at", { ascending: false });
+    .from('event_registrations')
+    .select(baseRegistrationSelect(), { count: 'exact' })
+    .order('created_at', { ascending: false });
 
-  if (filters.status && filters.status !== "all") {
-    query = query.eq("status", filters.status);
+  if (filters.status && filters.status !== 'all') {
+    query = query.eq('status', filters.status);
   }
 
-  if (filters.category && filters.category !== "all") {
-    query = query.eq("attendee_category", filters.category);
+  if (filters.category && filters.category !== 'all') {
+    query = query.eq('attendee_category', filters.category);
   }
 
-  if (filters.priorityTier && filters.priorityTier !== "all") {
-    query = query.eq("priority_tier", filters.priorityTier);
+  if (filters.priorityTier && filters.priorityTier !== 'all') {
+    query = query.eq('priority_tier', filters.priorityTier);
   }
 
   if (filters.country) {
-    query = query.ilike("country", `%${filters.country}%`);
+    query = query.ilike('country', `%${filters.country}%`);
   }
 
   if (filters.organization) {
-    query = query.ilike("organization", `%${filters.organization}%`);
+    query = query.ilike('organization', `%${filters.organization}%`);
   }
 
-  if (filters.lateConfirmation === "yes") {
-    query = query.eq("exception_badge_required", true);
+  if (filters.lateConfirmation === 'yes') {
+    query = query.eq('exception_badge_required', true);
   }
 
-  if (filters.speakerFlag === "yes") {
-    query = query.eq("speaker_flag", true);
+  if (filters.speakerFlag === 'yes') {
+    query = query.eq('speaker_flag', true);
   }
 
   if (filters.search) {
@@ -255,13 +263,15 @@ export async function listRegistrations(filters = {}) {
     exceptionBadges: 0,
   };
 
-  const normalizedRegistrations = (data || []).map((registration) => normalizeRegistrationRecord(registration));
+  const normalizedRegistrations = (data || []).map((registration) =>
+    normalizeRegistrationRecord(registration)
+  );
 
   for (const registration of normalizedRegistrations) {
-    if (registration.status === "pending") summary.pending += 1;
-    if (registration.status === "confirmed") summary.confirmed += 1;
-    if (registration.status === "waitlisted") summary.waitlisted += 1;
-    if (registration.status === "rejected") summary.rejected += 1;
+    if (registration.status === 'pending') summary.pending += 1;
+    if (registration.status === 'confirmed') summary.confirmed += 1;
+    if (registration.status === 'waitlisted') summary.waitlisted += 1;
+    if (registration.status === 'rejected') summary.rejected += 1;
     if (registration.qr_pass_issued_at) summary.qrIssued += 1;
     if (registration.checked_in_at) summary.checkedIn += 1;
     if (registration.exception_badge_required) summary.exceptionBadges += 1;
@@ -288,10 +298,10 @@ export async function updateRegistrationStatus({
     speakerFlag,
     vipFlag,
   });
-  const exceptionBadgeRequired = status === "confirmed" && isAfterBadgeFreeze();
+  const exceptionBadgeRequired = status === 'confirmed' && isAfterBadgeFreeze();
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .update({
       status,
       review_notes: reviewNotes || null,
@@ -305,7 +315,7 @@ export async function updateRegistrationStatus({
       exception_badge_required: exceptionBadgeRequired,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", registrationId)
+    .eq('id', registrationId)
     .select(baseRegistrationSelect())
     .single();
 
@@ -319,7 +329,7 @@ export async function updateRegistrationStatus({
     nextStatus: status,
     actorClerkId: operator.userId,
     actorEmail: operator.primaryEmail,
-    actionType: "status_updated",
+    actionType: 'status_updated',
     notes: reviewNotes || null,
   });
 
@@ -329,23 +339,25 @@ export async function updateRegistrationStatus({
 export async function getConfirmedRegistrationsForPassIssue() {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .select(baseRegistrationSelect())
-    .eq("status", "confirmed")
-    .order("created_at", { ascending: true });
+    .eq('status', 'confirmed')
+    .order('created_at', { ascending: true });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return (data || []).map((registration) => normalizeRegistrationRecord(registration));
+  return (data || []).map((registration) =>
+    normalizeRegistrationRecord(registration)
+  );
 }
 
 export async function issuePassForRegistration({ registrationId, operator }) {
   const registration = await getRegistrationById(registrationId);
 
-  if (registration.status !== "confirmed") {
-    throw new Error("Only confirmed attendees can receive a QR pass.");
+  if (registration.status !== 'confirmed') {
+    throw new Error('Only confirmed attendees can receive a QR pass.');
   }
 
   const existingPass = getIssuedEntryPass(registration.entry_passes);
@@ -365,18 +377,18 @@ export async function issuePassForRegistration({ registrationId, operator }) {
 
   const token = buildPassToken();
   const { data: createdPass, error: passError } = await supabase
-    .from("entry_passes")
+    .from('entry_passes')
     .insert({
       registration_id: registrationId,
       token,
-      status: "issued",
+      status: 'issued',
       issued_at: new Date().toISOString(),
       issued_by_clerk_id: operator.userId,
       issued_by_email: operator.primaryEmail,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
-    .select("id")
+    .select('id')
     .single();
 
   if (passError) {
@@ -385,13 +397,14 @@ export async function issuePassForRegistration({ registrationId, operator }) {
 
   const exceptionBadgeRequired = isAfterBadgeFreeze();
   const { data, error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .update({
       qr_pass_issued_at: new Date().toISOString(),
-      exception_badge_required: registration.exception_badge_required || exceptionBadgeRequired,
+      exception_badge_required:
+        registration.exception_badge_required || exceptionBadgeRequired,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", registrationId)
+    .eq('id', registrationId)
     .select(baseRegistrationSelect())
     .single();
 
@@ -405,8 +418,8 @@ export async function issuePassForRegistration({ registrationId, operator }) {
     nextStatus: registration.status,
     actorClerkId: operator.userId,
     actorEmail: operator.primaryEmail,
-    actionType: "qr_pass_issued",
-    notes: "QR pass issued.",
+    actionType: 'qr_pass_issued',
+    notes: 'QR pass issued.',
   });
 
   return {
@@ -423,10 +436,10 @@ export async function issuePassForRegistration({ registrationId, operator }) {
 export async function listBadgeExportRegistrations() {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .select(baseRegistrationSelect())
-    .order("last_name", { ascending: true })
-    .order("first_name", { ascending: true });
+    .order('last_name', { ascending: true })
+    .order('first_name', { ascending: true });
 
   if (error) {
     throw new Error(error.message);
@@ -438,7 +451,7 @@ export async function listBadgeExportRegistrations() {
 
     return {
       ...normalizedRegistration,
-      qr_token: issuedPass?.token || "",
+      qr_token: issuedPass?.token || '',
     };
   });
 }
@@ -451,7 +464,7 @@ export async function recordBadgeExport({
 }) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("badge_exports")
+    .from('badge_exports')
     .insert({
       export_format: format,
       total_registrations: totalRegistrations,
@@ -460,7 +473,7 @@ export async function recordBadgeExport({
       created_by_email: operator.primaryEmail,
       created_at: new Date().toISOString(),
     })
-    .select("id")
+    .select('id')
     .single();
 
   if (error) {
@@ -477,12 +490,12 @@ export async function setLastBadgeExportBatch(batchId, registrationIds) {
 
   const supabase = getSupabase();
   const { error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .update({
       last_badge_export_batch_id: batchId,
       updated_at: new Date().toISOString(),
     })
-    .in("id", registrationIds);
+    .in('id', registrationIds);
 
   if (error) {
     throw new Error(error.message);
@@ -491,14 +504,14 @@ export async function setLastBadgeExportBatch(batchId, registrationIds) {
 
 export async function searchCheckInCandidates(query) {
   const supabase = getSupabase();
-  const sanitized = String(query || "").trim();
+  const sanitized = String(query || '').trim();
 
   if (!sanitized) {
     return [];
   }
 
   const { data, error } = await supabase
-    .from("event_registrations")
+    .from('event_registrations')
     .select(baseRegistrationSelect())
     .or(
       `first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,registration_code.ilike.%${sanitized}%`
@@ -509,21 +522,23 @@ export async function searchCheckInCandidates(query) {
     throw new Error(error.message);
   }
 
-  return (data || []).map((registration) => normalizeRegistrationRecord(registration));
+  return (data || []).map((registration) =>
+    normalizeRegistrationRecord(registration)
+  );
 }
 
 export async function getRegistrationByToken(token) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("entry_passes")
+    .from('entry_passes')
     .select(
       `id, token, status, issued_at, revoked_at, registration:event_registrations(${baseRegistrationSelect()})`
     )
-    .eq("token", token)
+    .eq('token', token)
     .single();
 
   if (error) {
-    if (error.code === "PGRST116") {
+    if (error.code === 'PGRST116') {
       return {
         pass: null,
         registration: null,
@@ -533,7 +548,9 @@ export async function getRegistrationByToken(token) {
     throw new Error(error.message);
   }
 
-  const registration = Array.isArray(data.registration) ? data.registration[0] : data.registration;
+  const registration = Array.isArray(data.registration)
+    ? data.registration[0]
+    : data.registration;
   return {
     pass: data,
     registration: normalizeRegistrationRecord(registration),
@@ -543,15 +560,15 @@ export async function getRegistrationByToken(token) {
 export async function getEntryPassById(id) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("entry_passes")
+    .from('entry_passes')
     .select(
       `id, token, status, issued_at, revoked_at, registration:event_registrations(${baseRegistrationSelect()})`
     )
-    .eq("id", id)
+    .eq('id', id)
     .single();
 
   if (error) {
-    if (error.code === "PGRST116") {
+    if (error.code === 'PGRST116') {
       return {
         pass: null,
         registration: null,
@@ -561,7 +578,9 @@ export async function getEntryPassById(id) {
     throw new Error(error.message);
   }
 
-  const registration = Array.isArray(data.registration) ? data.registration[0] : data.registration;
+  const registration = Array.isArray(data.registration)
+    ? data.registration[0]
+    : data.registration;
   return {
     pass: data,
     registration: normalizeRegistrationRecord(registration),
@@ -578,7 +597,7 @@ export async function recordScan({
   notes,
 }) {
   const supabase = getSupabase();
-  const { error } = await supabase.from("entry_scans").insert({
+  const { error } = await supabase.from('entry_scans').insert({
     registration_id: registrationId,
     entry_pass_id: passId,
     token,
@@ -595,19 +614,25 @@ export async function recordScan({
   }
 }
 
-export async function markCheckedIn({ registrationId, operator, deskLabel, passId = null, token = null }) {
+export async function markCheckedIn({
+  registrationId,
+  operator,
+  deskLabel,
+  passId = null,
+  token = null,
+}) {
   const registration = await getRegistrationById(registrationId);
   const supabase = getSupabase();
   const alreadyCheckedIn = Boolean(registration.checked_in_at);
 
   if (!alreadyCheckedIn) {
     const { error } = await supabase
-      .from("event_registrations")
+      .from('event_registrations')
       .update({
         checked_in_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq("id", registrationId);
+      .eq('id', registrationId);
 
     if (error) {
       throw new Error(error.message);
@@ -618,10 +643,12 @@ export async function markCheckedIn({ registrationId, operator, deskLabel, passI
     registrationId,
     passId,
     token,
-    result: alreadyCheckedIn ? "already_checked_in" : "valid",
+    result: alreadyCheckedIn ? 'already_checked_in' : 'valid',
     operator,
     deskLabel,
-    notes: alreadyCheckedIn ? "Duplicate check-in attempt." : "Checked in successfully.",
+    notes: alreadyCheckedIn
+      ? 'Duplicate check-in attempt.'
+      : 'Checked in successfully.',
   });
 
   return {
@@ -638,14 +665,14 @@ export async function updateNotificationFromWebhook({
 }) {
   const supabase = getSupabase();
   const { error } = await supabase
-    .from("registration_notifications")
+    .from('registration_notifications')
     .update({
       delivery_status: deliveryStatus,
       failure_reason: failureReason,
       provider_payload: providerPayload,
       updated_at: new Date().toISOString(),
     })
-    .eq("provider_message_id", providerMessageId);
+    .eq('provider_message_id', providerMessageId);
 
   if (error) {
     throw new Error(error.message);

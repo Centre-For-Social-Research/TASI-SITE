@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { TestimonialSection } from "@/components/ui/testimonials";
-import testimonialVideos from "@/data/testimonial-videos";
+import { TestimonialSection } from '@/components/ui/testimonials';
+import testimonialVideos from '@/data/testimonial-videos';
 
 // We map precisely to the format that the new UI component expects
 const testimonialsData = testimonialVideos.map((video, index) => ({

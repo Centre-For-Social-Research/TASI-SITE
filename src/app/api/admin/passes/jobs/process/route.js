@@ -1,6 +1,9 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
-import { processNextAvailablePassIssueEmailJob, processPassIssueEmailJob } from "@/lib/pass-issue-job-service";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
+import {
+  processNextAvailablePassIssueEmailJob,
+  processPassIssueEmailJob,
+} from '@/lib/pass-issue-job-service';
 
 function serializeJob(job) {
   if (!job) {
@@ -24,17 +27,21 @@ function serializeJob(job) {
 }
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.process" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.passes.jobs.process',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
 
   try {
     const body = await request.json().catch(() => ({}));
-    const jobId = String(body?.jobId || "").trim();
+    const jobId = String(body?.jobId || '').trim();
     const processedJob = jobId
       ? await processPassIssueEmailJob({ jobId, operator: authResult.operator })
-      : await processNextAvailablePassIssueEmailJob({ operator: authResult.operator });
+      : await processNextAvailablePassIssueEmailJob({
+          operator: authResult.operator,
+        });
 
     return Response.json({
       success: true,
@@ -42,8 +49,13 @@ export async function POST(request) {
     });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to process QR delivery jobs." },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to process QR delivery jobs.',
+      },
+      { status: 500 }
     );
   }
 }

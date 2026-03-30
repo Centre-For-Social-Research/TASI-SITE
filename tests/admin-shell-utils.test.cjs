@@ -1,9 +1,12 @@
-const test = require("node:test");
-const assert = require("node:assert/strict");
+const test = require('node:test');
+const assert = require('node:assert/strict');
 
-const { buildAdminStatPills, buildAdminNavigation } = require("../src/lib/admin-shell-utils.cjs");
+const {
+  buildAdminStatPills,
+  buildAdminNavigation,
+} = require('../src/lib/admin-shell-utils.cjs');
 
-test("buildAdminStatPills derives qr queue and failed delivery counts", () => {
+test('buildAdminStatPills derives qr queue and failed delivery counts', () => {
   const pills = buildAdminStatPills({
     summary: {
       pending: 18,
@@ -11,23 +14,20 @@ test("buildAdminStatPills derives qr queue and failed delivery counts", () => {
       qrIssued: 52,
       checkedIn: 27,
     },
-    jobs: [
-      { failed_items: 2 },
-      { failed_items: 1 },
-    ],
+    jobs: [{ failed_items: 2 }, { failed_items: 1 }],
   });
 
   assert.deepEqual(pills, [
-    { key: "pending", label: "Pending", value: 18, tone: "warning" },
-    { key: "qrQueue", label: "QR Queue", value: 12, tone: "accent" },
-    { key: "checkedIn", label: "Checked In", value: 27, tone: "success" },
-    { key: "failed", label: "Failed", value: 3, tone: "danger" },
+    { key: 'pending', label: 'Pending', value: 18, tone: 'warning' },
+    { key: 'qrQueue', label: 'QR Queue', value: 12, tone: 'accent' },
+    { key: 'checkedIn', label: 'Checked In', value: 27, tone: 'success' },
+    { key: 'failed', label: 'Failed', value: 3, tone: 'danger' },
   ]);
 });
 
-test("buildAdminNavigation marks the active route and hides zero-value delivery badge", () => {
+test('buildAdminNavigation marks the active route and hides zero-value delivery badge', () => {
   const sections = buildAdminNavigation({
-    pathname: "/admin/check-in",
+    pathname: '/admin/check-in',
     summary: { pending: 9 },
     jobs: [{ failed_items: 0 }],
   });

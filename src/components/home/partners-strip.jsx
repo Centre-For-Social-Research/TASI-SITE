@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { partners } from "@/data/partners";
+import Image from 'next/image';
+import { partners } from '@/data/partners';
 
 export default function PartnersStrip() {
   const remainderMd = partners.length % 4;
@@ -9,16 +9,16 @@ export default function PartnersStrip() {
     const classes = [];
 
     if (remainderMd === 2) {
-      if (index === partners.length - 2) classes.push("md:col-start-2");
-      if (index === partners.length - 1) classes.push("md:col-start-3");
+      if (index === partners.length - 2) classes.push('md:col-start-2');
+      if (index === partners.length - 1) classes.push('md:col-start-3');
     }
 
     if (remainderLg === 2) {
-      if (index === partners.length - 2) classes.push("lg:col-start-3");
-      if (index === partners.length - 1) classes.push("lg:col-start-4");
+      if (index === partners.length - 2) classes.push('lg:col-start-3');
+      if (index === partners.length - 1) classes.push('lg:col-start-4');
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   return (

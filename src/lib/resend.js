@@ -1,13 +1,13 @@
-import { Resend } from "resend";
-import { EVENT_CONFIG } from "@/lib/registration-constants";
+import { Resend } from 'resend';
+import { EVENT_CONFIG } from '@/lib/registration-constants';
 
 let resendClient = null;
 
 function parseEmailList(value) {
   return Array.from(
     new Set(
-      String(value || "")
-        .split(",")
+      String(value || '')
+        .split(',')
         .map((entry) => entry.trim())
         .filter(Boolean)
     )
@@ -15,7 +15,7 @@ function parseEmailList(value) {
 }
 
 export function getResendApiKey() {
-  return process.env.RESEND_API_KEY?.trim() || "";
+  return process.env.RESEND_API_KEY?.trim() || '';
 }
 
 export function getResendFromEmail() {
@@ -25,15 +25,15 @@ export function getResendFromEmail() {
 export function getResendSenderDiagnostics() {
   const fromEmail = getResendFromEmail();
   const normalizedFromEmail = fromEmail.toLowerCase();
-  const domain = normalizedFromEmail.split("@")[1] || "";
+  const domain = normalizedFromEmail.split('@')[1] || '';
   const warnings = [];
-  let senderMode = "custom";
+  let senderMode = 'custom';
 
   if (!normalizedFromEmail) {
-    senderMode = "missing";
-    warnings.push("RESEND_FROM_EMAIL is not configured.");
-  } else if (domain === "resend.dev") {
-    senderMode = "test";
+    senderMode = 'missing';
+    warnings.push('RESEND_FROM_EMAIL is not configured.');
+  } else if (domain === 'resend.dev') {
+    senderMode = 'test';
     warnings.push(
       "Using a Resend test sender. This only delivers to the Resend account owner's email address. Verify the jamsaq.in domain in Resend and switch RESEND_FROM_EMAIL to noreply@jamsaq.in for registration emails."
     );
@@ -48,7 +48,7 @@ export function getResendSenderDiagnostics() {
 }
 
 export function getResendWebhookSecret() {
-  return process.env.RESEND_WEBHOOK_SECRET?.trim() || "";
+  return process.env.RESEND_WEBHOOK_SECRET?.trim() || '';
 }
 
 export function getInboundNotificationRecipients() {
@@ -70,23 +70,23 @@ export function getResendClient() {
 }
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 export function renderBasicEmailHtml(title, text) {
-  const paragraphs = String(text || "")
-    .split("\n")
+  const paragraphs = String(text || '')
+    .split('\n')
     .filter(Boolean)
     .map(
       (line) =>
         `<p style="margin:0 0 14px;color:#111827;font-size:15px;line-height:1.6;">${escapeHtml(line)}</p>`
     )
-    .join("");
+    .join('');
 
   return `<!doctype html>
 <html>
@@ -112,7 +112,9 @@ export async function sendInboundNotificationEmail({ subject, text, replyTo }) {
     return {
       sent: false,
       skipped: true,
-      error: !resend ? "Missing RESEND_API_KEY." : "Missing notification recipients.",
+      error: !resend
+        ? 'Missing RESEND_API_KEY.'
+        : 'Missing notification recipients.',
     };
   }
 
@@ -126,7 +128,7 @@ export async function sendInboundNotificationEmail({ subject, text, replyTo }) {
   });
 
   if (error) {
-    throw new Error(error.message || "Failed to send email.");
+    throw new Error(error.message || 'Failed to send email.');
   }
 
   return {

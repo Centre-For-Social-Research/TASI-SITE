@@ -1,29 +1,39 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import BrandedPageHero from "@/components/ui/branded-page-hero";
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
 
 const navLinks = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Terms of Service", href: "/terms-of-service" },
-  { label: "Cookie Settings", href: "/cookie-settings" },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms of Service', href: '/terms-of-service' },
+  { label: 'Cookie Settings', href: '/cookie-settings' },
 ];
 
-export default function LegalLayout({ title, kicker, updated, applies, children }) {
+export default function LegalLayout({
+  title,
+  kicker,
+  updated,
+  applies,
+  children,
+}) {
   const pathname = usePathname();
 
   const handleLogoClick = (event) => {
     event.preventDefault();
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   return (
     <div className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-50 border-b border-orange-200/70 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center" onClick={handleLogoClick}>
+          <Link
+            href="/"
+            className="flex items-center"
+            onClick={handleLogoClick}
+          >
             <Image
               src="/img/tasi-csr-logo.png"
               alt="TASI 2026"
@@ -33,7 +43,10 @@ export default function LegalLayout({ title, kicker, updated, applies, children 
               priority
             />
           </Link>
-          <Link href="/" className="text-sm font-semibold text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+          <Link
+            href="/"
+            className="text-sm font-semibold text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200"
+          >
             Back to Site
           </Link>
         </nav>
@@ -44,8 +57,12 @@ export default function LegalLayout({ title, kicker, updated, applies, children 
           <span className="mb-3 inline-block text-xs font-black uppercase tracking-[0.18em] text-white/75">
             Legal &amp; Privacy
           </span>
-          <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">{title}</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-white/85 md:text-base">{kicker}</p>
+          <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">
+            {title}
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-white/85 md:text-base">
+            {kicker}
+          </p>
         </div>
       </BrandedPageHero>
 
@@ -56,9 +73,10 @@ export default function LegalLayout({ title, kicker, updated, applies, children 
               key={link.href}
               href={link.href}
               className={`relative bottom-[-1px] rounded-t-md border border-b-0 px-4 py-3 text-sm font-medium no-underline transition-all
-                ${pathname === link.href
-                  ? "border-stone-200 bg-stone-50 text-orange-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-orange-300"
-                  : "border-transparent text-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:text-slate-400 dark:hover:bg-zinc-900 dark:hover:text-slate-100"
+                ${
+                  pathname === link.href
+                    ? 'border-stone-200 bg-stone-50 text-orange-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-orange-300'
+                    : 'border-transparent text-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:text-slate-400 dark:hover:bg-zinc-900 dark:hover:text-slate-100'
                 }`}
             >
               {link.label}
@@ -69,10 +87,15 @@ export default function LegalLayout({ title, kicker, updated, applies, children 
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-8 px-4 pb-14 md:grid-cols-[220px_1fr] md:px-6">
         <aside className="sticky top-24 hidden pt-8 md:block">
-          <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">Details</p>
+          <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+            Details
+          </p>
           {updated ? (
             <div className="mb-1.5 border-l-2 border-orange-300 pl-3 text-xs text-slate-700 dark:border-orange-700 dark:text-slate-300">
-              <span className="font-medium text-orange-700 dark:text-orange-300">Updated:</span> {updated}
+              <span className="font-medium text-orange-700 dark:text-orange-300">
+                Updated:
+              </span>{' '}
+              {updated}
             </div>
           ) : null}
           {applies ? (
@@ -84,7 +107,6 @@ export default function LegalLayout({ title, kicker, updated, applies, children 
 
         <main className="pt-8">{children}</main>
       </div>
-
     </div>
   );
 }

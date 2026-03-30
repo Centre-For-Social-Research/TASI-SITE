@@ -1,9 +1,11 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
-import { retryPassIssueEmailJob } from "@/lib/pass-issue-job-service";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
+import { retryPassIssueEmailJob } from '@/lib/pass-issue-job-service';
 
 export async function POST(_request, context) {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.retry" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.passes.jobs.retry',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
@@ -30,8 +32,13 @@ export async function POST(_request, context) {
     });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to retry failed QR delivery items." },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to retry failed QR delivery items.',
+      },
+      { status: 500 }
     );
   }
 }

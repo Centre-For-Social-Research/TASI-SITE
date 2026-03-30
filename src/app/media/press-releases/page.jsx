@@ -1,31 +1,33 @@
-import HomeFooter from "@/components/home/footer";
-import HomeNavbar from "@/components/home/navbar";
-import BrandedPageHero from "@/components/ui/branded-page-hero";
+import HomeFooter from '@/components/home/footer';
+import HomeNavbar from '@/components/home/navbar';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
 
 const pressReleaseFiles = [
   {
-    title: "Trust & Safety India Festival 2025 Launches in New Delhi, Showcasing India's Global Leadership in Digital Trust",
-    description: "Launch-day press release in PDF format.",
-    href: "/downloads/tasi-2025-launch-press-release.pdf",
-    type: "PDF",
+    title:
+      "Trust & Safety India Festival 2025 Launches in New Delhi, Showcasing India's Global Leadership in Digital Trust",
+    description: 'Launch-day press release in PDF format.',
+    href: '/downloads/tasi-2025-launch-press-release.pdf',
+    type: 'PDF',
   },
   {
-    title: "Media Invite - Trust and Safety India Festival 2025",
-    description: "Media invitation shared for TASI 2025 coverage planning.",
-    href: "/downloads/media-invite-tasi-2025.pdf",
-    type: "PDF",
+    title: 'Media Invite - Trust and Safety India Festival 2025',
+    description: 'Media invitation shared for TASI 2025 coverage planning.',
+    href: '/downloads/media-invite-tasi-2025.pdf',
+    type: 'PDF',
   },
   {
-    title: "Press Conference - Flow of Events",
-    description: "Run-of-show document for press conference coordination.",
-    href: "/downloads/press-conference-flow-of-events.pdf",
-    type: "PDF",
+    title: 'Press Conference - Flow of Events',
+    description: 'Run-of-show document for press conference coordination.',
+    href: '/downloads/press-conference-flow-of-events.pdf',
+    type: 'PDF',
   },
   {
-    title: "Trust & Safety India Festival 2025 Spotlights Digital Leadership and Collaborative Innovation on Day 2",
-    description: "Day 2 festival press release in PDF format.",
-    href: "/downloads/tasi-2025-day-2-press-release.pdf",
-    type: "PDF",
+    title:
+      'Trust & Safety India Festival 2025 Spotlights Digital Leadership and Collaborative Innovation on Day 2',
+    description: 'Day 2 festival press release in PDF format.',
+    href: '/downloads/tasi-2025-day-2-press-release.pdf',
+    type: 'PDF',
   },
 ];
 
@@ -36,10 +38,15 @@ export default function MediaPressReleasesPage() {
       <main className="bg-[#fdf6ef] dark:bg-stone-950">
         <BrandedPageHero className="py-14 md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">Media Resources</p>
-            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">Press Releases</h1>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+              Media Resources
+            </p>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+              Press Releases
+            </h1>
             <p className="mx-auto mt-4 max-w-3xl text-white/90">
-              Official release documents, media invites, and press coordination material from the TASI 2025 cycle.
+              Official release documents, media invites, and press coordination
+              material from the TASI 2025 cycle.
             </p>
           </div>
         </BrandedPageHero>
@@ -63,7 +70,9 @@ export default function MediaPressReleasesPage() {
                   <h2 className="mt-5 font-serif text-[1.14rem] font-medium leading-relaxed text-stone-950 dark:text-white md:text-[1.25rem]">
                     {file.title}
                   </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">{file.description}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                    {file.description}
+                  </p>
                   <div className="mt-6">
                     <a
                       href={file.href}

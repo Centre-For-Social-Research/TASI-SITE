@@ -1,8 +1,8 @@
 function getOperatorRedirectTarget(target) {
-  const value = String(target || "").trim();
+  const value = String(target || '').trim();
 
-  if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return "/admin";
+  if (!value || !value.startsWith('/') || value.startsWith('//')) {
+    return '/admin';
   }
 
   return value;

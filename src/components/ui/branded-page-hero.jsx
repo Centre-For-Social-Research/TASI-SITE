@@ -1,6 +1,6 @@
-import DarkHeroParticles from "@/components/ui/dark-hero-particles";
+import DarkHeroParticles from '@/components/ui/dark-hero-particles';
 
-export default function BrandedPageHero({ children, className = "" }) {
+export default function BrandedPageHero({ children, className = '' }) {
   return (
     <section
       className={`relative overflow-hidden bg-[linear-gradient(120deg,#55089e_-7.06%,#9f0099_16.19%,#ff0080_39.45%,#ef5700_85.96%,#ffff00_109.21%)] py-16 text-white md:py-24 ${className}`.trim()}

@@ -1,7 +1,10 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { deriveJobProgress, isQueueInfrastructureUnavailable } from "@/lib/registration-job-utils.cjs";
-import { createPassIssueEmailJob } from "@/lib/pass-issue-job-service";
-import { listPassIssueEmailJobs } from "@/lib/registration-ops-db";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import {
+  deriveJobProgress,
+  isQueueInfrastructureUnavailable,
+} from '@/lib/registration-job-utils.cjs';
+import { createPassIssueEmailJob } from '@/lib/pass-issue-job-service';
+import { listPassIssueEmailJobs } from '@/lib/registration-ops-db';
 
 function serializeJob(job) {
   return {
@@ -21,7 +24,9 @@ function serializeJob(job) {
 }
 
 export async function GET() {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.list" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.passes.jobs.list',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
@@ -42,14 +47,21 @@ export async function GET() {
     }
 
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to load QR delivery jobs." },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to load QR delivery jobs.',
+      },
+      { status: 500 }
     );
   }
 }
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.create" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.passes.jobs.create',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
@@ -58,7 +70,9 @@ export async function POST(request) {
     const body = await request.json();
     const job = await createPassIssueEmailJob({
       filters: body?.filters || {},
-      registrationIds: Array.isArray(body?.registrationIds) ? body.registrationIds : [],
+      registrationIds: Array.isArray(body?.registrationIds)
+        ? body.registrationIds
+        : [],
       resendExisting: Boolean(body?.resendExisting),
       operator: authResult.operator,
     });
@@ -67,13 +81,18 @@ export async function POST(request) {
       success: true,
       job: serializeJob(job),
       message: job.legacyDirect
-        ? `Queue tables are not deployed yet, so ${job.sent_items} attendees were processed immediately${job.failed_items ? ` and ${job.failed_items} failed` : ""}.`
+        ? `Queue tables are not deployed yet, so ${job.sent_items} attendees were processed immediately${job.failed_items ? ` and ${job.failed_items} failed` : ''}.`
         : `Job queued for ${job.total_items} attendees.`,
     });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to queue QR delivery job." },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to queue QR delivery job.',
+      },
+      { status: 500 }
     );
   }
 }

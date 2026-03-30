@@ -1,8 +1,15 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { cn } from "@/lib/utils";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { gsap } from 'gsap';
+import { cn } from '@/lib/utils';
 
 export interface MasonryItem {
   id: string;
@@ -24,7 +31,7 @@ export interface MasonryGalleryProps {
   ease?: string;
   duration?: number;
   stagger?: number;
-  animateFrom?: "bottom" | "top" | "left" | "right" | "center" | "random";
+  animateFrom?: 'bottom' | 'top' | 'left' | 'right' | 'center' | 'random';
   scaleOnHover?: boolean;
   hoverScale?: number;
   blurToFocus?: boolean;
@@ -34,16 +41,27 @@ export interface MasonryGalleryProps {
   onItemClick?: (item: MasonryItem, index: number) => void;
 }
 
-const mediaQueries = ["(min-width: 1500px)", "(min-width: 1000px)", "(min-width: 600px)", "(min-width: 400px)"];
+const mediaQueries = [
+  '(min-width: 1500px)',
+  '(min-width: 1000px)',
+  '(min-width: 600px)',
+  '(min-width: 400px)',
+];
 const mediaValues = [4, 4, 3, 2];
 
-const useMedia = (queries: readonly string[], values: readonly number[], defaultValue: number): number => {
+const useMedia = (
+  queries: readonly string[],
+  values: readonly number[],
+  defaultValue: number
+): number => {
   const getValue = useCallback(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return defaultValue;
     }
 
-    const match = queries.findIndex((query) => window.matchMedia(query).matches);
+    const match = queries.findIndex(
+      (query) => window.matchMedia(query).matches
+    );
     return values[match] ?? defaultValue;
   }, [defaultValue, queries, values]);
 
@@ -53,8 +71,13 @@ const useMedia = (queries: readonly string[], values: readonly number[], default
     const listeners = queries.map((query) => window.matchMedia(query));
     const handler = () => setValue(getValue());
 
-    listeners.forEach((listener) => listener.addEventListener("change", handler));
-    return () => listeners.forEach((listener) => listener.removeEventListener("change", handler));
+    listeners.forEach((listener) =>
+      listener.addEventListener('change', handler)
+    );
+    return () =>
+      listeners.forEach((listener) =>
+        listener.removeEventListener('change', handler)
+      );
   }, [getValue, queries]);
 
   return value;
@@ -96,10 +119,10 @@ const preloadImages = async (urls: string[]): Promise<void> => {
 
 export default function MasonryGallery({
   items,
-  ease = "power3.out",
+  ease = 'power3.out',
   duration = 0.6,
   stagger = 0.05,
-  animateFrom = "bottom",
+  animateFrom = 'bottom',
   scaleOnHover = true,
   hoverScale = 0.95,
   blurToFocus = true,
@@ -110,8 +133,11 @@ export default function MasonryGallery({
 }: MasonryGalleryProps) {
   const columns = useMedia(mediaQueries, mediaValues, 1);
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
-  const itemSignature = useMemo(() => items.map((item) => item.img).join("|"), [items]);
-  const [loadedSignature, setLoadedSignature] = useState("");
+  const itemSignature = useMemo(
+    () => items.map((item) => item.img).join('|'),
+    [items]
+  );
+  const [loadedSignature, setLoadedSignature] = useState('');
   const hasMounted = useRef(false);
 
   useEffect(() => {
@@ -156,36 +182,45 @@ export default function MasonryGallery({
     };
   }, [columns, items, width]);
 
-  const getInitialPosition = useCallback((item: GridItem) => {
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    if (!containerRect) {
-      return { x: item.x, y: item.y };
-    }
+  const getInitialPosition = useCallback(
+    (item: GridItem) => {
+      const containerRect = containerRef.current?.getBoundingClientRect();
+      if (!containerRect) {
+        return { x: item.x, y: item.y };
+      }
 
-    let direction = animateFrom;
-    if (animateFrom === "random") {
-      const randomDirections: Array<"top" | "bottom" | "left" | "right"> = ["top", "bottom", "left", "right"];
-      direction = randomDirections[Math.floor(Math.random() * randomDirections.length)];
-    }
+      let direction = animateFrom;
+      if (animateFrom === 'random') {
+        const randomDirections: Array<'top' | 'bottom' | 'left' | 'right'> = [
+          'top',
+          'bottom',
+          'left',
+          'right',
+        ];
+        direction =
+          randomDirections[Math.floor(Math.random() * randomDirections.length)];
+      }
 
-    switch (direction) {
-      case "top":
-        return { x: item.x, y: -220 };
-      case "bottom":
-        return { x: item.x, y: window.innerHeight + 220 };
-      case "left":
-        return { x: -220, y: item.y };
-      case "right":
-        return { x: window.innerWidth + 220, y: item.y };
-      case "center":
-        return {
-          x: containerRect.width / 2 - item.w / 2,
-          y: containerRect.height / 2 - item.h / 2,
-        };
-      default:
-        return { x: item.x, y: item.y + 100 };
-    }
-  }, [animateFrom, containerRef]);
+      switch (direction) {
+        case 'top':
+          return { x: item.x, y: -220 };
+        case 'bottom':
+          return { x: item.x, y: window.innerHeight + 220 };
+        case 'left':
+          return { x: -220, y: item.y };
+        case 'right':
+          return { x: window.innerWidth + 220, y: item.y };
+        case 'center':
+          return {
+            x: containerRect.width / 2 - item.w / 2,
+            y: containerRect.height / 2 - item.h / 2,
+          };
+        default:
+          return { x: item.x, y: item.y + 100 };
+      }
+    },
+    [animateFrom, containerRef]
+  );
 
   useLayoutEffect(() => {
     if (!imagesReady || !grid.length) {
@@ -193,12 +228,19 @@ export default function MasonryGallery({
     }
 
     grid.forEach((item, index) => {
-      const element = document.querySelector<HTMLElement>(`[data-key=\"${item.id}\"]`);
+      const element = document.querySelector<HTMLElement>(
+        `[data-key=\"${item.id}\"]`
+      );
       if (!element) {
         return;
       }
 
-      const animationTarget = { x: item.x, y: item.y, width: item.w, height: item.h };
+      const animationTarget = {
+        x: item.x,
+        y: item.y,
+        width: item.w,
+        height: item.h,
+      };
 
       if (!hasMounted.current) {
         const start = getInitialPosition(item);
@@ -210,14 +252,14 @@ export default function MasonryGallery({
             y: start.y,
             width: item.w,
             height: item.h,
-            ...(blurToFocus ? { filter: "blur(20px)" } : {}),
+            ...(blurToFocus ? { filter: 'blur(20px)' } : {}),
           },
           {
             opacity: 1,
             ...animationTarget,
-            ...(blurToFocus ? { filter: "blur(0px)" } : {}),
+            ...(blurToFocus ? { filter: 'blur(0px)' } : {}),
             duration: 1.2,
-            ease: "power3.out",
+            ease: 'power3.out',
             delay: index * stagger,
           }
         );
@@ -226,25 +268,35 @@ export default function MasonryGallery({
           ...animationTarget,
           duration,
           ease,
-          overwrite: "auto",
+          overwrite: 'auto',
         });
       }
     });
 
     hasMounted.current = true;
-  }, [blurToFocus, duration, ease, getInitialPosition, grid, imagesReady, stagger]);
+  }, [
+    blurToFocus,
+    duration,
+    ease,
+    getInitialPosition,
+    grid,
+    imagesReady,
+    stagger,
+  ]);
 
   const onMouseEnter = (element: HTMLElement) => {
     if (scaleOnHover) {
       gsap.to(element, {
         scale: hoverScale,
         duration: 0.4,
-        ease: "power2.out",
+        ease: 'power2.out',
       });
     }
 
     if (colorShiftOnHover) {
-      const overlay = element.querySelector<HTMLElement>(".masonry-color-overlay");
+      const overlay = element.querySelector<HTMLElement>(
+        '.masonry-color-overlay'
+      );
       if (overlay) {
         gsap.to(overlay, { opacity: 0.3, duration: 0.4 });
       }
@@ -256,12 +308,14 @@ export default function MasonryGallery({
       gsap.to(element, {
         scale: 1,
         duration: 0.4,
-        ease: "power2.out",
+        ease: 'power2.out',
       });
     }
 
     if (colorShiftOnHover) {
-      const overlay = element.querySelector<HTMLElement>(".masonry-color-overlay");
+      const overlay = element.querySelector<HTMLElement>(
+        '.masonry-color-overlay'
+      );
       if (overlay) {
         gsap.to(overlay, { opacity: 0, duration: 0.4 });
       }
@@ -275,34 +329,38 @@ export default function MasonryGallery({
     }
 
     if (item.url) {
-      window.open(item.url, "_blank", "noopener");
+      window.open(item.url, '_blank', 'noopener');
     }
   };
 
   return (
     <div
       ref={containerRef}
-      className={cn("relative w-full", className)}
-      style={{ height: containerHeight, minHeight: "400px" }}
+      className={cn('relative w-full', className)}
+      style={{ height: containerHeight, minHeight: '400px' }}
     >
       {grid.map((item, index) => (
         <div
           key={item.id}
           data-key={item.id}
           className={cn(
-            "group absolute cursor-pointer overflow-hidden rounded-xl transition-shadow hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2",
+            'group absolute cursor-pointer overflow-hidden rounded-xl transition-shadow hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2',
             itemClassName
           )}
           role="button"
           tabIndex={0}
-          aria-label={item.title ? `Open image: ${item.title}` : `Open gallery image ${index + 1}`}
+          aria-label={
+            item.title
+              ? `Open image: ${item.title}`
+              : `Open gallery image ${index + 1}`
+          }
           style={{
-            willChange: "transform, width, height, opacity, filter",
-            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.15)",
+            willChange: 'transform, width, height, opacity, filter',
+            boxShadow: '0 10px 30px -10px rgba(0,0,0,0.15)',
           }}
           onClick={() => activateItem(item, index)}
           onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
+            if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
               activateItem(item, index);
             }
@@ -313,11 +371,11 @@ export default function MasonryGallery({
           onBlur={(event) => onMouseLeave(event.currentTarget)}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src={item.img} 
-            alt={item.title || "Gallery image"} 
-            className="h-full w-full object-cover" 
-            loading="lazy" 
+          <img
+            src={item.img}
+            alt={item.title || 'Gallery image'}
+            className="h-full w-full object-cover"
+            loading="lazy"
             decoding="async"
             fetchPriority="low"
           />
@@ -328,7 +386,9 @@ export default function MasonryGallery({
 
           {item.title ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent p-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 translate-y-2">
-              <p className="text-xs font-medium uppercase tracking-wider text-white">{item.title}</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-white">
+                {item.title}
+              </p>
             </div>
           ) : null}
         </div>

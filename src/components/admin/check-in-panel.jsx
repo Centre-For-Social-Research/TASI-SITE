@@ -1,10 +1,14 @@
-"use client";
+'use client';
 
-import jsQR from "jsqr";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import scanSessionUtils from "@/lib/check-in-scan-session.cjs";
-import checkInUtils from "@/lib/check-in-panel-utils.cjs";
-import { AdminSectionHeading, AdminStatCard, AdminStatusBadge } from "@/components/admin/admin-ui";
+import jsQR from 'jsqr';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
+import checkInUtils from '@/lib/check-in-panel-utils.cjs';
+import {
+  AdminSectionHeading,
+  AdminStatCard,
+  AdminStatusBadge,
+} from '@/components/admin/admin-ui';
 
 const {
   classifyCameraStartFailure,
@@ -15,12 +19,16 @@ const {
 } = checkInUtils;
 const { createScanSession } = scanSessionUtils;
 
-function ResultCard({ title, description, tone = "default" }) {
+function ResultCard({ title, description, tone = 'default' }) {
   const toneMap = {
-    default: "border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200",
-    success: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200",
-    danger: "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-200",
-    warning: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200",
+    default:
+      'border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200',
+    success:
+      'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200',
+    danger:
+      'border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-200',
+    warning:
+      'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200',
   };
 
   return (
@@ -33,25 +41,25 @@ function ResultCard({ title, description, tone = "default" }) {
 
 function formatDate(value) {
   if (!value) {
-    return "Not yet";
+    return 'Not yet';
   }
 
-  return new Intl.DateTimeFormat("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
+  return new Intl.DateTimeFormat('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
   }).format(new Date(value));
 }
 
 export default function CheckInPanel({ operator }) {
-  const [deskLabel, setDeskLabel] = useState("Main Desk");
-  const [query, setQuery] = useState("");
+  const [deskLabel, setDeskLabel] = useState('Main Desk');
+  const [query, setQuery] = useState('');
   const [lookupResults, setLookupResults] = useState([]);
   const [scanMessage, setScanMessage] = useState(null);
-  const [cameraState, setCameraState] = useState("idle");
-  const [manualToken, setManualToken] = useState("");
+  const [cameraState, setCameraState] = useState('idle');
+  const [manualToken, setManualToken] = useState('');
   const [lookupLoading, setLookupLoading] = useState(false);
   const [scanSubmitting, setScanSubmitting] = useState(false);
-  const [configWarning, setConfigWarning] = useState("");
+  const [configWarning, setConfigWarning] = useState('');
   const [recentScans, setRecentScans] = useState([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -59,11 +67,20 @@ export default function CheckInPanel({ operator }) {
   const animationFrameRef = useRef(null);
   const scanSessionRef = useRef(createScanSession());
 
-  const cameraMessage = useMemo(() => getCameraStateMessage(cameraState), [cameraState]);
+  const cameraMessage = useMemo(
+    () => getCameraStateMessage(cameraState),
+    [cameraState]
+  );
   const activityStats = useMemo(() => {
-    const valid = recentScans.filter((scan) => scan.scan_result === "valid").length;
-    const duplicates = recentScans.filter((scan) => scan.scan_result === "already_checked_in").length;
-    const blocked = recentScans.filter((scan) => !["valid", "already_checked_in"].includes(scan.scan_result)).length;
+    const valid = recentScans.filter(
+      (scan) => scan.scan_result === 'valid'
+    ).length;
+    const duplicates = recentScans.filter(
+      (scan) => scan.scan_result === 'already_checked_in'
+    ).length;
+    const blocked = recentScans.filter(
+      (scan) => !['valid', 'already_checked_in'].includes(scan.scan_result)
+    ).length;
 
     return {
       valid,
@@ -73,7 +90,7 @@ export default function CheckInPanel({ operator }) {
     };
   }, [recentScans]);
 
-  const stopCamera = useCallback((nextState = "idle") => {
+  const stopCamera = useCallback((nextState = 'idle') => {
     if (animationFrameRef.current) {
       window.cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
@@ -98,9 +115,9 @@ export default function CheckInPanel({ operator }) {
       setScanSubmitting(true);
 
       try {
-        const response = await fetch("/api/check-in/scan", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('/api/check-in/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             deskLabel,
             ...payload,
@@ -109,12 +126,14 @@ export default function CheckInPanel({ operator }) {
         const data = await response.json();
 
         if (!response.ok) {
-          const errorMessage = data.error || "Unable to complete check-in.";
+          const errorMessage = data.error || 'Unable to complete check-in.';
           setScanMessage({
-            tone: "danger",
-            title: isCheckInConfigError(errorMessage) ? "Supabase Admin Configuration Required" : "Check-in failed",
+            tone: 'danger',
+            title: isCheckInConfigError(errorMessage)
+              ? 'Supabase Admin Configuration Required'
+              : 'Check-in failed',
             description: isCheckInConfigError(errorMessage)
-              ? "Check-in tools need SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the deployment environment before scans and lookups can reach registrant data."
+              ? 'Check-in tools need SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the deployment environment before scans and lookups can reach registrant data.'
               : errorMessage,
           });
           return;
@@ -124,27 +143,27 @@ export default function CheckInPanel({ operator }) {
         setScanMessage({
           tone: getCheckInFeedbackTone(data.result),
           title:
-            data.result === "valid"
-              ? "Attendee approved"
-              : data.result === "already_checked_in"
-                ? "Already checked in"
-                : data.result === "waitlisted"
-                  ? "Attendee waitlisted"
-                  : "Entry blocked",
+            data.result === 'valid'
+              ? 'Attendee approved'
+              : data.result === 'already_checked_in'
+                ? 'Already checked in'
+                : data.result === 'waitlisted'
+                  ? 'Attendee waitlisted'
+                  : 'Entry blocked',
           description: `${data.registration.first_name} ${data.registration.last_name} | ${data.registration.organization} | ${data.registration.registration_code}`,
         });
       } catch {
         setScanMessage({
-          tone: "danger",
-          title: "Check-in failed",
-          description: "Network error while validating the attendee.",
+          tone: 'danger',
+          title: 'Check-in failed',
+          description: 'Network error while validating the attendee.',
         });
       } finally {
         scanSessionRef.current.resetSubmission();
         setScanSubmitting(false);
       }
     },
-    [deskLabel],
+    [deskLabel]
   );
 
   const scanFrame = useCallback(async () => {
@@ -152,7 +171,7 @@ export default function CheckInPanel({ operator }) {
     const canvas = canvasRef.current;
     const now = Date.now();
 
-    if (!video || !canvas || cameraState !== "active") {
+    if (!video || !canvas || cameraState !== 'active') {
       return;
     }
 
@@ -163,7 +182,7 @@ export default function CheckInPanel({ operator }) {
       scanSessionRef.current.shouldDecode(now) &&
       !scanSessionRef.current.isSubmitting()
     ) {
-      const context = canvas.getContext("2d", { willReadFrequently: true });
+      const context = canvas.getContext('2d', { willReadFrequently: true });
 
       if (context) {
         const maxWidth = 720;
@@ -171,12 +190,20 @@ export default function CheckInPanel({ operator }) {
         canvas.width = Math.max(Math.round(video.videoWidth * scale), 320);
         canvas.height = Math.max(Math.round(video.videoHeight * scale), 180);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const imageData = context.getImageData(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
         const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: "dontInvert",
+          inversionAttempts: 'dontInvert',
         });
 
-        if (code?.data && scanSessionRef.current.shouldSubmitToken(code.data, now)) {
+        if (
+          code?.data &&
+          scanSessionRef.current.shouldSubmitToken(code.data, now)
+        ) {
           stopCamera();
           setManualToken(code.data);
           await completeCheckIn({ token: code.data });
@@ -199,7 +226,7 @@ export default function CheckInPanel({ operator }) {
 
     video.muted = true;
     video.playsInline = true;
-    video.setAttribute("playsinline", "true");
+    video.setAttribute('playsinline', 'true');
     video.srcObject = stream;
 
     await new Promise((resolve) => {
@@ -209,13 +236,15 @@ export default function CheckInPanel({ operator }) {
       }
 
       const handleLoadedMetadata = () => {
-        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
         resolve();
       };
 
-      video.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
+      video.addEventListener('loadedmetadata', handleLoadedMetadata, {
+        once: true,
+      });
       window.setTimeout(() => {
-        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
         resolve();
       }, 1000);
     });
@@ -232,7 +261,7 @@ export default function CheckInPanel({ operator }) {
     const requests = [
       {
         video: {
-          facingMode: { ideal: "environment" },
+          facingMode: { ideal: 'environment' },
           width: { ideal: 960 },
           height: { ideal: 540 },
         },
@@ -251,7 +280,7 @@ export default function CheckInPanel({ operator }) {
         return await navigator.mediaDevices.getUserMedia(constraints);
       } catch (error) {
         lastError = error;
-        const errorName = error instanceof DOMException ? error.name : "";
+        const errorName = error instanceof DOMException ? error.name : '';
 
         if (!shouldRetryCameraRequest(errorName)) {
           throw error;
@@ -259,27 +288,29 @@ export default function CheckInPanel({ operator }) {
       }
     }
 
-    throw lastError || new Error("Unable to access the camera.");
+    throw lastError || new Error('Unable to access the camera.');
   }, []);
 
   async function lookupAttendee() {
     setLookupLoading(true);
 
     try {
-      const response = await fetch("/api/check-in/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/check-in/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query }),
       });
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMessage = data.error || "Unable to search attendees.";
+        const errorMessage = data.error || 'Unable to search attendees.';
         setScanMessage({
-          tone: "danger",
-          title: isCheckInConfigError(errorMessage) ? "Supabase Admin Configuration Required" : "Lookup failed",
+          tone: 'danger',
+          title: isCheckInConfigError(errorMessage)
+            ? 'Supabase Admin Configuration Required'
+            : 'Lookup failed',
           description: isCheckInConfigError(errorMessage)
-            ? "Attendee lookup needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the deployment environment before it can load registrants."
+            ? 'Attendee lookup needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the deployment environment before it can load registrants.'
             : errorMessage,
         });
         setLookupResults([]);
@@ -289,9 +320,9 @@ export default function CheckInPanel({ operator }) {
       setLookupResults(data.registrations || []);
     } catch {
       setScanMessage({
-        tone: "danger",
-        title: "Lookup failed",
-        description: "Network error while searching attendees.",
+        tone: 'danger',
+        title: 'Lookup failed',
+        description: 'Network error while searching attendees.',
       });
       setLookupResults([]);
     } finally {
@@ -301,16 +332,16 @@ export default function CheckInPanel({ operator }) {
 
   async function startCamera() {
     if (!window.isSecureContext) {
-      setCameraState("insecure_or_blocked");
+      setCameraState('insecure_or_blocked');
       return;
     }
 
     if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraState("unsupported");
+      setCameraState('unsupported');
       return;
     }
 
-    stopCamera("requesting");
+    stopCamera('requesting');
     scanSessionRef.current = createScanSession();
 
     try {
@@ -319,19 +350,19 @@ export default function CheckInPanel({ operator }) {
       streamRef.current = stream;
       await bindStreamToVideo(stream);
 
-      setCameraState("active");
+      setCameraState('active');
     } catch (error) {
       stopCamera(
         classifyCameraStartFailure({
           isSecureContext: window.isSecureContext,
-          errorName: error instanceof DOMException ? error.name : "",
-        }),
+          errorName: error instanceof DOMException ? error.name : '',
+        })
       );
     }
   }
 
   useEffect(() => {
-    if (cameraState !== "active") {
+    if (cameraState !== 'active') {
       return undefined;
     }
 
@@ -352,7 +383,7 @@ export default function CheckInPanel({ operator }) {
 
     async function loadConfigHealth() {
       try {
-        const response = await fetch("/api/health", { cache: "no-store" });
+        const response = await fetch('/api/health', { cache: 'no-store' });
 
         if (!response.ok) {
           return;
@@ -365,9 +396,12 @@ export default function CheckInPanel({ operator }) {
           return;
         }
 
-        if (!supabaseServices.urlConfigured || !supabaseServices.serviceRoleConfigured) {
+        if (
+          !supabaseServices.urlConfigured ||
+          !supabaseServices.serviceRoleConfigured
+        ) {
           setConfigWarning(
-            "Supabase admin access is not configured in this deployment. Camera scans, attendee lookup, and check-in validation will stay unavailable until SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are added."
+            'Supabase admin access is not configured in this deployment. Camera scans, attendee lookup, and check-in validation will stay unavailable until SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are added.'
           );
         }
       } catch {
@@ -387,7 +421,9 @@ export default function CheckInPanel({ operator }) {
 
     async function loadRecentScans() {
       try {
-        const response = await fetch("/api/check-in/recent", { cache: "no-store" });
+        const response = await fetch('/api/check-in/recent', {
+          cache: 'no-store',
+        });
         const data = await response.json();
 
         if (!active || !response.ok) {
@@ -431,22 +467,53 @@ export default function CheckInPanel({ operator }) {
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <AdminStatCard label="Recent Valid" value={activityStats.valid} tone="success" detail="Fresh successful entry approvals" />
-        <AdminStatCard label="Duplicates" value={activityStats.duplicates} tone="warning" detail="Already checked in attendees" />
-        <AdminStatCard label="Blocked" value={activityStats.blocked} tone="danger" detail="Rejected or waitlisted entries" />
-        <AdminStatCard label="Recent Total" value={activityStats.total} tone="info" detail="Rows shown in recent desk activity" />
+        <AdminStatCard
+          label="Recent Valid"
+          value={activityStats.valid}
+          tone="success"
+          detail="Fresh successful entry approvals"
+        />
+        <AdminStatCard
+          label="Duplicates"
+          value={activityStats.duplicates}
+          tone="warning"
+          detail="Already checked in attendees"
+        />
+        <AdminStatCard
+          label="Blocked"
+          value={activityStats.blocked}
+          tone="danger"
+          detail="Rejected or waitlisted entries"
+        />
+        <AdminStatCard
+          label="Recent Total"
+          value={activityStats.total}
+          tone="info"
+          detail="Rows shown in recent desk activity"
+        />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         {configWarning ? (
           <div className="xl:col-span-2">
-            <ResultCard title="Supabase Admin Configuration Required" description={configWarning} tone="danger" />
+            <ResultCard
+              title="Supabase Admin Configuration Required"
+              description={configWarning}
+              tone="danger"
+            />
           </div>
         ) : null}
         <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Scanner Frame</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+            Scanner Frame
+          </p>
           <div className="mt-4 overflow-hidden rounded-[10px] border border-slate-200 bg-slate-950 dark:border-slate-700">
-            <video ref={videoRef} className="aspect-video w-full object-cover" muted playsInline />
+            <video
+              ref={videoRef}
+              className="aspect-video w-full object-cover"
+              muted
+              playsInline
+            />
             <canvas ref={canvasRef} className="hidden" />
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
@@ -455,7 +522,9 @@ export default function CheckInPanel({ operator }) {
               onClick={startCamera}
               className="h-11 rounded-full bg-amber-600 px-5 text-sm font-medium text-white transition hover:bg-amber-700"
             >
-              {cameraState === "active" ? "Restart Camera Scan" : "Start Camera Scan"}
+              {cameraState === 'active'
+                ? 'Restart Camera Scan'
+                : 'Start Camera Scan'}
             </button>
             <button
               type="button"
@@ -465,7 +534,9 @@ export default function CheckInPanel({ operator }) {
               Stop Camera
             </button>
           </div>
-          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{cameraMessage}</p>
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+            {cameraMessage}
+          </p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
             <input
               value={manualToken}
@@ -479,13 +550,15 @@ export default function CheckInPanel({ operator }) {
               disabled={!manualToken.trim() || scanSubmitting}
               className="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm text-slate-700 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
             >
-              {scanSubmitting ? "Validating..." : "Validate Token"}
+              {scanSubmitting ? 'Validating...' : 'Validate Token'}
             </button>
           </div>
         </div>
 
         <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Manual Lookup</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+            Manual Lookup
+          </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
               value={query}
@@ -499,7 +572,7 @@ export default function CheckInPanel({ operator }) {
               disabled={!query.trim() || lookupLoading}
               className="h-11 rounded-full bg-amber-600 px-5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {lookupLoading ? "Searching..." : "Search"}
+              {lookupLoading ? 'Searching...' : 'Search'}
             </button>
           </div>
 
@@ -516,12 +589,28 @@ export default function CheckInPanel({ operator }) {
                   {registration.organization} | {registration.registration_code}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <AdminStatusBadge tone={registration.status === "confirmed" ? "success" : registration.status === "pending" ? "warning" : "danger"}>{registration.status}</AdminStatusBadge>
-                  {registration.checked_in_at ? <AdminStatusBadge tone="warning">already checked in</AdminStatusBadge> : null}
+                  <AdminStatusBadge
+                    tone={
+                      registration.status === 'confirmed'
+                        ? 'success'
+                        : registration.status === 'pending'
+                          ? 'warning'
+                          : 'danger'
+                    }
+                  >
+                    {registration.status}
+                  </AdminStatusBadge>
+                  {registration.checked_in_at ? (
+                    <AdminStatusBadge tone="warning">
+                      already checked in
+                    </AdminStatusBadge>
+                  ) : null}
                 </div>
                 <button
                   type="button"
-                  onClick={() => completeCheckIn({ registrationId: registration.id })}
+                  onClick={() =>
+                    completeCheckIn({ registrationId: registration.id })
+                  }
                   disabled={scanSubmitting}
                   className="mt-3 h-10 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
                 >
@@ -541,15 +630,21 @@ export default function CheckInPanel({ operator }) {
       <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Recent Activity</p>
-            <h2 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">Last validated scans</h2>
+            <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+              Recent Activity
+            </p>
+            <h2 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">
+              Last validated scans
+            </h2>
           </div>
           <button
             type="button"
             onClick={() => {
               void (async () => {
                 try {
-                  const response = await fetch("/api/check-in/recent", { cache: "no-store" });
+                  const response = await fetch('/api/check-in/recent', {
+                    cache: 'no-store',
+                  });
                   const data = await response.json();
                   if (response.ok) {
                     setRecentScans(data.scans || []);
@@ -567,30 +662,46 @@ export default function CheckInPanel({ operator }) {
 
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {recentScans.map((scan) => (
-            <div key={scan.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
+            <div
+              key={scan.id}
+              className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50"
+            >
               <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">
                 {scan.registration?.first_name} {scan.registration?.last_name}
               </p>
               <div className="mt-2">
-                <AdminStatusBadge tone={getCheckInFeedbackTone(scan.scan_result)}>{scan.scan_result.replaceAll("_", " ")}</AdminStatusBadge>
+                <AdminStatusBadge
+                  tone={getCheckInFeedbackTone(scan.scan_result)}
+                >
+                  {scan.scan_result.replaceAll('_', ' ')}
+                </AdminStatusBadge>
               </div>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                {scan.registration?.registration_code} | {scan.registration?.organization}
+                {scan.registration?.registration_code} |{' '}
+                {scan.registration?.organization}
               </p>
               <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-                {scan.desk_label || "Desk not set"} | {formatDate(scan.created_at)}
+                {scan.desk_label || 'Desk not set'} |{' '}
+                {formatDate(scan.created_at)}
               </p>
             </div>
           ))}
           {!recentScans.length ? (
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Recent scan activity will appear here after the first successful validation.
+              Recent scan activity will appear here after the first successful
+              validation.
             </p>
           ) : null}
         </div>
       </section>
 
-      {scanMessage ? <ResultCard title={scanMessage.title} description={scanMessage.description} tone={scanMessage.tone} /> : null}
+      {scanMessage ? (
+        <ResultCard
+          title={scanMessage.title}
+          description={scanMessage.description}
+          tone={scanMessage.tone}
+        />
+      ) : null}
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import HomeNavbar from "@/components/home/navbar";
-import HomeFooter from "@/components/home/footer";
-import BrandedPageHero from "@/components/ui/branded-page-hero";
-import TravelTabNav from "./travel-tab-nav";
+import HomeNavbar from '@/components/home/navbar';
+import HomeFooter from '@/components/home/footer';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
+import TravelTabNav from './travel-tab-nav';
 
 export default function TravelShell({ children }) {
   return (
@@ -17,7 +17,8 @@ export default function TravelShell({ children }) {
               Plan Your Travel
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-white/90">
-              Everything you need to prepare for your trip to New Delhi for TASI 2026 — from visas and accommodation to getting around the city.
+              Everything you need to prepare for your trip to New Delhi for TASI
+              2026 — from visas and accommodation to getting around the city.
             </p>
           </div>
         </BrandedPageHero>

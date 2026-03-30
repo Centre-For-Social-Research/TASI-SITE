@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useId, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
-import { motion, useAnimation } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { useEffect, useId, useState } from 'react';
+import Particles, { initParticlesEngine } from '@tsparticles/react';
+import { loadSlim } from '@tsparticles/slim';
+import { motion, useAnimation } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export function SparklesCore({
   id,
@@ -38,7 +38,7 @@ export function SparklesCore({
   };
 
   return (
-    <motion.div animate={controls} className={cn("opacity-0", className)}>
+    <motion.div animate={controls} className={cn('opacity-0', className)}>
       {init ? (
         <Particles
           id={id || generatedId}
@@ -47,7 +47,7 @@ export function SparklesCore({
           options={{
             background: {
               color: {
-                value: background || "transparent",
+                value: background || 'transparent',
               },
             },
             fullScreen: {
@@ -59,11 +59,11 @@ export function SparklesCore({
               events: {
                 onClick: {
                   enable: true,
-                  mode: "push",
+                  mode: 'push',
                 },
                 onHover: {
                   enable: false,
-                  mode: "repulse",
+                  mode: 'repulse',
                 },
                 resize: true,
               },
@@ -90,20 +90,20 @@ export function SparklesCore({
                 },
                 enable: false,
                 maxSpeed: 50,
-                mode: "bounce",
+                mode: 'bounce',
                 overlap: {
                   enable: true,
                   retries: 0,
                 },
               },
               color: {
-                value: particleColor || "#ffffff",
+                value: particleColor || '#ffffff',
               },
               move: {
-                direction: "none",
+                direction: 'none',
                 enable: true,
                 outModes: {
-                  default: "out",
+                  default: 'out',
                 },
                 random: false,
                 speed: {
@@ -126,12 +126,12 @@ export function SparklesCore({
                   enable: true,
                   speed: speed || 4,
                   sync: false,
-                  mode: "auto",
-                  startValue: "random",
+                  mode: 'auto',
+                  startValue: 'random',
                 },
               },
               shape: {
-                type: "circle",
+                type: 'circle',
               },
               size: {
                 value: {

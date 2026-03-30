@@ -1,17 +1,27 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight, PlayCircle, SparklesIcon } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import React from 'react';
+import Image from 'next/image';
+import {
+  ChevronLeft,
+  ChevronRight,
+  PlayCircle,
+  SparklesIcon,
+} from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import {
+  Autoplay,
+  EffectCoverflow,
+  Navigation,
+  Pagination,
+} from 'swiper/modules';
 
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 
 export interface VideoCarouselItem {
   title: string;
@@ -95,7 +105,9 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({
               Voices from TASI 2025
             </h3>
             <p className="mt-2 max-w-2xl text-sm text-stone-600 dark:text-zinc-300 md:text-base">
-              Explore real perspectives from global trust and safety leaders. Use the left and right controls to choose and play each testimonial.
+              Explore real perspectives from global trust and safety leaders.
+              Use the left and right controls to choose and play each
+              testimonial.
             </p>
           </div>
 
@@ -147,8 +159,8 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({
                 navigation={
                   showNavigation
                     ? {
-                        nextEl: ".tasi-carousel-next",
-                        prevEl: ".tasi-carousel-prev",
+                        nextEl: '.tasi-carousel-next',
+                        prevEl: '.tasi-carousel-prev',
                       }
                     : undefined
                 }
@@ -159,55 +171,63 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({
                   const muxThumbnail = getMuxThumbnail(video.iframeSrc);
 
                   return (
-                  <SwiperSlide key={`${video.edition}-${video.title}-${video.speaker}`}>
-                    <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
-                      <div className="relative aspect-[16/9] w-full bg-black">
-                        {video.iframeSrc && isActive ? (
-                          <iframe
-                            src={video.iframeSrc}
-                            title={`${video.title} by ${video.speaker}`}
-                            className="h-full w-full"
-                            loading="lazy"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          />
-                        ) : muxThumbnail ? (
-                          <>
-                            <Image
-                              src={muxThumbnail}
-                              alt={`Video placeholder for ${video.title}`}
-                              fill
-                              className="object-cover opacity-85"
-                              sizes="(max-width: 768px) 88vw, 320px"
+                    <SwiperSlide
+                      key={`${video.edition}-${video.title}-${video.speaker}`}
+                    >
+                      <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
+                        <div className="relative aspect-[16/9] w-full bg-black">
+                          {video.iframeSrc && isActive ? (
+                            <iframe
+                              src={video.iframeSrc}
+                              title={`${video.title} by ${video.speaker}`}
+                              className="h-full w-full"
+                              loading="lazy"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
-                          </>
-                        ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-orange-700 via-orange-600 to-stone-900" />
-                        )}
+                          ) : muxThumbnail ? (
+                            <>
+                              <Image
+                                src={muxThumbnail}
+                                alt={`Video placeholder for ${video.title}`}
+                                fill
+                                className="object-cover opacity-85"
+                                sizes="(max-width: 768px) 88vw, 320px"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
+                            </>
+                          ) : (
+                            <div className="absolute inset-0 bg-gradient-to-br from-orange-700 via-orange-600 to-stone-900" />
+                          )}
 
-                        {!video.iframeSrc || !isActive ? (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="rounded-full bg-white/90 p-2 shadow-lg dark:bg-zinc-900/90">
-                              <PlayCircle className="h-9 w-9 text-orange-700" />
+                          {!video.iframeSrc || !isActive ? (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="rounded-full bg-white/90 p-2 shadow-lg dark:bg-zinc-900/90">
+                                <PlayCircle className="h-9 w-9 text-orange-700" />
+                              </div>
                             </div>
-                          </div>
-                        ) : null}
+                          ) : null}
 
-                        <span className="absolute left-3 top-3 rounded-full bg-black/65 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
-                          {video.edition}
-                        </span>
-                      </div>
-
-                      <div className="space-y-2 p-4">
-                        <p className="line-clamp-3 text-sm italic leading-relaxed text-stone-700 dark:text-zinc-300">&quot;{video.quote}&quot;</p>
-                        <div>
-                          <h4 className="text-sm font-bold text-stone-900 dark:text-zinc-100">{video.speaker}</h4>
-                          <p className="text-xs text-stone-500 dark:text-zinc-400">{video.title}</p>
+                          <span className="absolute left-3 top-3 rounded-full bg-black/65 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
+                            {video.edition}
+                          </span>
                         </div>
-                      </div>
-                    </article>
-                  </SwiperSlide>
+
+                        <div className="space-y-2 p-4">
+                          <p className="line-clamp-3 text-sm italic leading-relaxed text-stone-700 dark:text-zinc-300">
+                            &quot;{video.quote}&quot;
+                          </p>
+                          <div>
+                            <h4 className="text-sm font-bold text-stone-900 dark:text-zinc-100">
+                              {video.speaker}
+                            </h4>
+                            <p className="text-xs text-stone-500 dark:text-zinc-400">
+                              {video.title}
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+                    </SwiperSlide>
                   );
                 })}
               </Swiper>

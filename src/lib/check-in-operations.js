@@ -1,4 +1,4 @@
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 function getSupabase() {
   return getSupabaseAdmin();
@@ -25,8 +25,9 @@ function normalizeRegistration(row) {
 export async function getCheckInRecordByToken(token) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("entry_passes")
-    .select(`
+    .from('entry_passes')
+    .select(
+      `
       id,
       token,
       status,
@@ -41,18 +42,21 @@ export async function getCheckInRecordByToken(token) {
         status,
         checked_in_at
       )
-    `)
-    .eq("token", token)
+    `
+    )
+    .eq('token', token)
     .single();
 
   if (error) {
-    if (error.code === "PGRST116") {
+    if (error.code === 'PGRST116') {
       return { pass: null, registration: null };
     }
     throw new Error(error.message);
   }
 
-  const registration = Array.isArray(data.registration) ? data.registration[0] : data.registration;
+  const registration = Array.isArray(data.registration)
+    ? data.registration[0]
+    : data.registration;
   return {
     pass: data,
     registration: normalizeRegistration(registration),
@@ -62,9 +66,11 @@ export async function getCheckInRecordByToken(token) {
 export async function getCheckInRegistrationById(id) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("event_registrations")
-    .select("id, registration_code, first_name, last_name, email, organization, attendee_category, status, checked_in_at")
-    .eq("id", id)
+    .from('event_registrations')
+    .select(
+      'id, registration_code, first_name, last_name, email, organization, attendee_category, status, checked_in_at'
+    )
+    .eq('id', id)
     .single();
 
   if (error) {
@@ -76,19 +82,21 @@ export async function getCheckInRegistrationById(id) {
 
 export async function searchCheckInCandidatesLight(query) {
   const supabase = getSupabase();
-  const sanitized = String(query || "").trim();
+  const sanitized = String(query || '').trim();
 
   if (!sanitized) {
     return [];
   }
 
   const { data, error } = await supabase
-    .from("event_registrations")
-    .select("id, registration_code, first_name, last_name, email, organization, attendee_category, status, checked_in_at")
-    .or(
-      `first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,registration_code.ilike.%${sanitized}%`,
+    .from('event_registrations')
+    .select(
+      'id, registration_code, first_name, last_name, email, organization, attendee_category, status, checked_in_at'
     )
-    .order("created_at", { ascending: false })
+    .or(
+      `first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,registration_code.ilike.%${sanitized}%`
+    )
+    .order('created_at', { ascending: false })
     .limit(20);
 
   if (error) {
@@ -108,7 +116,7 @@ export async function recordEntryScan({
   notes,
 }) {
   const supabase = getSupabase();
-  const { error } = await supabase.from("entry_scans").insert({
+  const { error } = await supabase.from('entry_scans').insert({
     registration_id: registrationId,
     entry_pass_id: passId,
     token,
@@ -125,7 +133,13 @@ export async function recordEntryScan({
   }
 }
 
-export async function completeCheckIn({ registrationId, passId = null, token = null, operator, deskLabel }) {
+export async function completeCheckIn({
+  registrationId,
+  passId = null,
+  token = null,
+  operator,
+  deskLabel,
+}) {
   const registration = await getCheckInRegistrationById(registrationId);
   const alreadyCheckedIn = Boolean(registration.checked_in_at);
   const supabase = getSupabase();
@@ -133,12 +147,12 @@ export async function completeCheckIn({ registrationId, passId = null, token = n
   if (!alreadyCheckedIn) {
     const checkedInAt = new Date().toISOString();
     const { error } = await supabase
-      .from("event_registrations")
+      .from('event_registrations')
       .update({
         checked_in_at: checkedInAt,
         updated_at: checkedInAt,
       })
-      .eq("id", registrationId);
+      .eq('id', registrationId);
 
     if (error) {
       throw new Error(error.message);
@@ -151,10 +165,12 @@ export async function completeCheckIn({ registrationId, passId = null, token = n
     registrationId,
     passId,
     token,
-    result: alreadyCheckedIn ? "already_checked_in" : "valid",
+    result: alreadyCheckedIn ? 'already_checked_in' : 'valid',
     operator,
     deskLabel,
-    notes: alreadyCheckedIn ? "Duplicate check-in attempt." : "Checked in successfully.",
+    notes: alreadyCheckedIn
+      ? 'Duplicate check-in attempt.'
+      : 'Checked in successfully.',
   });
 
   return {
@@ -166,8 +182,9 @@ export async function completeCheckIn({ registrationId, passId = null, token = n
 export async function listRecentEntryScans(limit = 8) {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("entry_scans")
-    .select(`
+    .from('entry_scans')
+    .select(
+      `
       id,
       scan_result,
       desk_label,
@@ -178,8 +195,9 @@ export async function listRecentEntryScans(limit = 8) {
         last_name,
         organization
       )
-    `)
-    .order("created_at", { ascending: false })
+    `
+    )
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {

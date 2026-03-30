@@ -1,31 +1,31 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import { MotionItem, MotionReveal, MotionStagger } from "./motion-reveal";
+import { MotionItem, MotionReveal, MotionStagger } from './motion-reveal';
 
 const formatItems = [
   {
-    title: "Conversations",
-    desc: "Fireside chats, keynote addresses, and curated panels bringing together policymakers, tech leaders, and civil society experts on AI governance and platform accountability.",
-    image: "/img/home-gallery/7T7A5237-new.webp",
-    imageAlt: "TASI conversation session with speakers on stage",
+    title: 'Conversations',
+    desc: 'Fireside chats, keynote addresses, and curated panels bringing together policymakers, tech leaders, and civil society experts on AI governance and platform accountability.',
+    image: '/img/home-gallery/7T7A5237-new.webp',
+    imageAlt: 'TASI conversation session with speakers on stage',
   },
   {
-    title: "Workshops",
-    desc: "Focused workshops and deep-dive sessions exploring real-world case studies, risk mitigation tools, and implementation frameworks.",
-    image: "/img/home-gallery/IMG_6768.webp",
-    imageAlt: "Workshop participants engaging in a TASI session",
+    title: 'Workshops',
+    desc: 'Focused workshops and deep-dive sessions exploring real-world case studies, risk mitigation tools, and implementation frameworks.',
+    image: '/img/home-gallery/IMG_6768.webp',
+    imageAlt: 'Workshop participants engaging in a TASI session',
   },
   {
-    title: "Spotlights",
-    desc: "Industry spotlight sessions showcasing emerging tools, research, and innovations addressing online harms, fraud detection, and algorithmic accountability.",
-    image: "/img/home-gallery/7T7A3581.webp",
-    imageAlt: "Spotlight presentation during TASI 2026 programming",
+    title: 'Spotlights',
+    desc: 'Industry spotlight sessions showcasing emerging tools, research, and innovations addressing online harms, fraud detection, and algorithmic accountability.',
+    image: '/img/home-gallery/7T7A3581.webp',
+    imageAlt: 'Spotlight presentation during TASI 2026 programming',
   },
   {
-    title: "Receptions",
-    desc: "Leadership receptions and networking moments designed to foster meaningful engagement and sustained cross-sector collaboration.",
-    image: "/img/home-gallery/7T7A3087.webp",
-    imageAlt: "Reception and networking moment at TASI",
+    title: 'Receptions',
+    desc: 'Leadership receptions and networking moments designed to foster meaningful engagement and sustained cross-sector collaboration.',
+    image: '/img/home-gallery/7T7A3087.webp',
+    imageAlt: 'Reception and networking moment at TASI',
   },
 ];
 
@@ -38,11 +38,13 @@ export default function FormatGrid() {
             Overview
           </p>
           <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
-            What to Expect at <span className="text-rc-primary dark:text-white">TASI 2026</span>
+            What to Expect at{' '}
+            <span className="text-rc-primary dark:text-white">TASI 2026</span>
           </h2>
           <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
-            TASI 2026 blends high-level dialogue with practical exchange so delegates leave with sharper insights,
-            stronger networks, and clearer pathways to action.
+            TASI 2026 blends high-level dialogue with practical exchange so
+            delegates leave with sharper insights, stronger networks, and
+            clearer pathways to action.
           </p>
         </MotionReveal>
 
@@ -55,19 +57,25 @@ export default function FormatGrid() {
                     src={item.image}
                     alt={item.imageAlt}
                     fill
-                    className={`object-cover transition-transform duration-500 ${item.title === "Spotlights" ? "scale-110" : ""}`}
+                    className={`object-cover transition-transform duration-500 ${item.title === 'Spotlights' ? 'scale-110' : ''}`}
                     sizes="(min-width: 1280px) 23vw, (min-width: 768px) 50vw, 100vw"
                   />
                 </div>
                 <div className="flex h-full flex-col p-5 md:p-6">
                   <div className="flex items-center justify-between">
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-rc-primary text-sm font-black text-white dark:bg-white dark:text-slate-950">
-                      {String(index + 1).padStart(2, "0")}
+                      {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-stone-400 dark:text-slate-500">Experience</span>
+                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-stone-400 dark:text-slate-500">
+                      Experience
+                    </span>
                   </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">{item.desc}</p>
+                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                    {item.desc}
+                  </p>
                 </div>
               </article>
             </MotionItem>

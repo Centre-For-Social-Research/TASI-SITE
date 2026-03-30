@@ -1,10 +1,16 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
-import { Download, ExternalLink, Loader2, Trash2 } from "lucide-react";
-import { ATTENDEE_CATEGORIES } from "@/lib/registration-constants";
-import dashboardUtils from "@/lib/admin-dashboard-utils.cjs";
+import Image from 'next/image';
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Download, ExternalLink, Loader2, Trash2 } from 'lucide-react';
+import { ATTENDEE_CATEGORIES } from '@/lib/registration-constants';
+import dashboardUtils from '@/lib/admin-dashboard-utils.cjs';
 import {
   AdminAlert,
   AdminSectionHeading,
@@ -13,61 +19,102 @@ import {
   AdminToast,
   LoadingRows,
   SlideOverDrawer,
-} from "@/components/admin/admin-ui";
+} from '@/components/admin/admin-ui';
 
-const { buildDashboardQueryString, getBatchStatusTone, getQuickActionOptions, isSupabaseAdminConfigError, prioritizeRegistrationQueue, summarizeSelection } = dashboardUtils;
+const {
+  buildDashboardQueryString,
+  getBatchStatusTone,
+  getQuickActionOptions,
+  isSupabaseAdminConfigError,
+  prioritizeRegistrationQueue,
+  summarizeSelection,
+} = dashboardUtils;
 
 function formatDate(value) {
-  if (!value) return "Not yet";
-  return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+  if (!value) return 'Not yet';
+  return new Intl.DateTimeFormat('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value));
 }
 
 function getStatusTone(status) {
-  if (status === "confirmed") return "success";
-  if (status === "pending" || status === "waitlisted") return "warning";
-  if (status === "rejected") return "danger";
-  return "default";
+  if (status === 'confirmed') return 'success';
+  if (status === 'pending' || status === 'waitlisted') return 'warning';
+  if (status === 'rejected') return 'danger';
+  return 'default';
 }
 
 function getDeliveryTone(status) {
-  if (status === "sent" || status === "delivered") return "success";
-  if (status === "failed" || status === "bounced") return "danger";
-  if (status === "queued" || status === "processing") return "warning";
-  return "default";
+  if (status === 'sent' || status === 'delivered') return 'success';
+  if (status === 'failed' || status === 'bounced') return 'danger';
+  if (status === 'queued' || status === 'processing') return 'warning';
+  return 'default';
 }
 
 function getPriorityTone(priorityTier) {
-  if (/purple/i.test(priorityTier || "")) return "accent";
-  if (/gold/i.test(priorityTier || "")) return "warning";
-  if (/blue/i.test(priorityTier || "")) return "info";
-  return "default";
+  if (/purple/i.test(priorityTier || '')) return 'accent';
+  if (/gold/i.test(priorityTier || '')) return 'warning';
+  if (/blue/i.test(priorityTier || '')) return 'info';
+  return 'default';
 }
 
 function statusHint(status) {
-  if (status === "confirmed") return "Confirmation email is sent on save. QR pass stays available from row actions.";
-  if (status === "waitlisted") return "Waitlisted registrants are held out of the QR queue until re-confirmed.";
-  if (status === "rejected") return "Rejected registrants are blocked from entry and removed from QR delivery.";
-  return "Pending keeps the record open for operator review without sending a decision email.";
+  if (status === 'confirmed')
+    return 'Confirmation email is sent on save. QR pass stays available from row actions.';
+  if (status === 'waitlisted')
+    return 'Waitlisted registrants are held out of the QR queue until re-confirmed.';
+  if (status === 'rejected')
+    return 'Rejected registrants are blocked from entry and removed from QR delivery.';
+  return 'Pending keeps the record open for operator review without sending a decision email.';
 }
 
 function ReviewSummary({ summary }) {
   if (!summary) return null;
   return (
     <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <AdminStatCard label="Pending Review" value={summary.pending} tone="warning" detail="Needs operator decision" />
-      <AdminStatCard label="Confirmed" value={summary.confirmed} tone="success" detail="Eligible for QR issuance" />
-      <AdminStatCard label="QR Issued" value={summary.qrIssued} tone="accent" detail="Already mailed or queued" />
-      <AdminStatCard label="Checked In" value={summary.checkedIn} tone="info" detail="Validated on-site" />
+      <AdminStatCard
+        label="Pending Review"
+        value={summary.pending}
+        tone="warning"
+        detail="Needs operator decision"
+      />
+      <AdminStatCard
+        label="Confirmed"
+        value={summary.confirmed}
+        tone="success"
+        detail="Eligible for QR issuance"
+      />
+      <AdminStatCard
+        label="QR Issued"
+        value={summary.qrIssued}
+        tone="accent"
+        detail="Already mailed or queued"
+      />
+      <AdminStatCard
+        label="Checked In"
+        value={summary.checkedIn}
+        tone="info"
+        detail="Validated on-site"
+      />
     </section>
   );
 }
 
-function QuickActionButton({ action, onClick, disabled = false, loading = false }) {
+function QuickActionButton({
+  action,
+  onClick,
+  disabled = false,
+  loading = false,
+}) {
   const toneClasses = {
-    success: "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950",
-    warning: "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950",
-    danger: "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300 dark:hover:bg-rose-950",
-    info: "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 dark:border-sky-800 dark:bg-sky-950/50 dark:text-sky-300 dark:hover:bg-sky-950",
+    success:
+      'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950',
+    warning:
+      'border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950',
+    danger:
+      'border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300 dark:hover:bg-rose-950',
+    info: 'border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 dark:border-sky-800 dark:bg-sky-950/50 dark:text-sky-300 dark:hover:bg-sky-950',
   };
   return (
     <button
@@ -82,53 +129,100 @@ function QuickActionButton({ action, onClick, disabled = false, loading = false 
   );
 }
 
-function RowActions({ registration, onQuickAction, pendingActions, disabled = false }) {
+function RowActions({
+  registration,
+  onQuickAction,
+  pendingActions,
+  disabled = false,
+}) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {getQuickActionOptions(registration).map((action) => {
-        const isLoading = pendingActions?.has(`${registration.id}:${action.key}`);
+        const isLoading = pendingActions?.has(
+          `${registration.id}:${action.key}`
+        );
         return (
-          <QuickActionButton key={action.key} action={action} onClick={() => onQuickAction(registration, action.key)} disabled={disabled} loading={isLoading} />
+          <QuickActionButton
+            key={action.key}
+            action={action}
+            onClick={() => onQuickAction(registration, action.key)}
+            disabled={disabled}
+            loading={isLoading}
+          />
         );
       })}
     </div>
   );
 }
 
-function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetailStatus, resendDetailEmail, savingDetail, onDelete, open, onClose }) {
+function RegistrantDrawer({
+  detailState,
+  detailDraft,
+  setDetailDraft,
+  saveDetailStatus,
+  resendDetailEmail,
+  savingDetail,
+  onDelete,
+  open,
+  onClose,
+}) {
   const activeRegistration = detailState.data?.registration;
   const [photoLoaded, setPhotoLoaded] = useState(false);
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { setPhotoLoaded(false); }, [activeRegistration?.id]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPhotoLoaded(false);
+  }, [activeRegistration?.id]);
   return (
     <SlideOverDrawer
       open={open}
       onClose={onClose}
-      title={activeRegistration ? `${activeRegistration.first_name} ${activeRegistration.last_name}` : "Registrant Detail"}
+      title={
+        activeRegistration
+          ? `${activeRegistration.first_name} ${activeRegistration.last_name}`
+          : 'Registrant Detail'
+      }
     >
       {detailState.loading ? (
         <div className="flex flex-col items-center justify-center gap-3 py-16">
           <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Loading details…</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Loading details…
+          </p>
         </div>
       ) : !activeRegistration ? (
-        <p className="text-sm text-slate-500 dark:text-slate-400">Select a registrant row to see their details here.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Select a registrant row to see their details here.
+        </p>
       ) : (
         <div className="space-y-5">
           {/* Badges */}
           <div className="flex flex-wrap gap-2">
-            <AdminStatusBadge tone="default">{activeRegistration.registration_code}</AdminStatusBadge>
-            <AdminStatusBadge tone={getStatusTone(activeRegistration.status)}>{activeRegistration.status}</AdminStatusBadge>
-            {activeRegistration.qr_pass_issued_at ? <AdminStatusBadge tone="info">QR issued</AdminStatusBadge> : null}
+            <AdminStatusBadge tone="default">
+              {activeRegistration.registration_code}
+            </AdminStatusBadge>
+            <AdminStatusBadge tone={getStatusTone(activeRegistration.status)}>
+              {activeRegistration.status}
+            </AdminStatusBadge>
+            {activeRegistration.qr_pass_issued_at ? (
+              <AdminStatusBadge tone="info">QR issued</AdminStatusBadge>
+            ) : null}
           </div>
 
           {/* Core info */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_132px] sm:items-start">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Contact</p>
-              <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">{activeRegistration.first_name} {activeRegistration.last_name}</p>
-              <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{activeRegistration.organization || "Independent attendee"}</p>
-              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{activeRegistration.email}</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+                Contact
+              </p>
+              <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">
+                {activeRegistration.first_name} {activeRegistration.last_name}
+              </p>
+              <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                {activeRegistration.organization || 'Independent attendee'}
+              </p>
+              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+                {activeRegistration.email}
+              </p>
               {activeRegistration.linkedin_url ? (
                 <a
                   href={activeRegistration.linkedin_url}
@@ -153,7 +247,7 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                     src={activeRegistration.profilePhotoUrl}
                     alt={`${activeRegistration.first_name} ${activeRegistration.last_name}`}
                     fill
-                    className={`object-cover transition-opacity duration-300 ${photoLoaded ? "opacity-100" : "opacity-0"}`}
+                    className={`object-cover transition-opacity duration-300 ${photoLoaded ? 'opacity-100' : 'opacity-0'}`}
                     onLoad={() => setPhotoLoaded(true)}
                     unoptimized
                   />
@@ -169,27 +263,45 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
           {/* Key dates */}
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Category</p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{activeRegistration.attendee_category || "Unspecified"}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                Category
+              </p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                {activeRegistration.attendee_category || 'Unspecified'}
+              </p>
             </div>
             <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Priority</p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{activeRegistration.priority_tier || "Standard"}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                Priority
+              </p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                {activeRegistration.priority_tier || 'Standard'}
+              </p>
             </div>
             <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">QR Issued</p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{formatDate(activeRegistration.qr_pass_issued_at)}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                QR Issued
+              </p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                {formatDate(activeRegistration.qr_pass_issued_at)}
+              </p>
             </div>
             <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Checked In</p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{formatDate(activeRegistration.checked_in_at)}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                Checked In
+              </p>
+              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                {formatDate(activeRegistration.checked_in_at)}
+              </p>
             </div>
           </div>
 
           {/* Status + notes */}
           <div className="rounded-[10px] border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800/50">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Status + Notes</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+                Status + Notes
+              </p>
               <button
                 type="button"
                 onClick={resendDetailEmail}
@@ -198,11 +310,18 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                 Resend Update
               </button>
             </div>
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{statusHint(detailDraft.status)}</p>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              {statusHint(detailDraft.status)}
+            </p>
             <div className="mt-3 space-y-3">
               <select
                 value={detailDraft.status}
-                onChange={(event) => setDetailDraft((current) => ({ ...current, status: event.target.value }))}
+                onChange={(event) =>
+                  setDetailDraft((current) => ({
+                    ...current,
+                    status: event.target.value,
+                  }))
+                }
                 className="h-9 w-full rounded-[10px] border border-slate-200 bg-white px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
               >
                 <option value="pending">Pending</option>
@@ -212,17 +331,40 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
               </select>
               <div className="grid grid-cols-2 gap-2">
                 <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                  <input type="checkbox" checked={detailDraft.speakerFlag} onChange={(event) => setDetailDraft((current) => ({ ...current, speakerFlag: event.target.checked }))} />
+                  <input
+                    type="checkbox"
+                    checked={detailDraft.speakerFlag}
+                    onChange={(event) =>
+                      setDetailDraft((current) => ({
+                        ...current,
+                        speakerFlag: event.target.checked,
+                      }))
+                    }
+                  />
                   Speaker
                 </label>
                 <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                  <input type="checkbox" checked={detailDraft.vipFlag} onChange={(event) => setDetailDraft((current) => ({ ...current, vipFlag: event.target.checked }))} />
+                  <input
+                    type="checkbox"
+                    checked={detailDraft.vipFlag}
+                    onChange={(event) =>
+                      setDetailDraft((current) => ({
+                        ...current,
+                        vipFlag: event.target.checked,
+                      }))
+                    }
+                  />
                   VIP
                 </label>
               </div>
               <textarea
                 value={detailDraft.reviewNotes}
-                onChange={(event) => setDetailDraft((current) => ({ ...current, reviewNotes: event.target.value }))}
+                onChange={(event) =>
+                  setDetailDraft((current) => ({
+                    ...current,
+                    reviewNotes: event.target.value,
+                  }))
+                }
                 className="min-h-24 w-full resize-none rounded-[10px] border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
                 placeholder="Operator notes for context, exceptions, or follow-up"
               />
@@ -232,9 +374,12 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                 disabled={savingDetail}
                 className="flex h-9 items-center gap-2 rounded-full bg-amber-600 px-4 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
               >
-                {savingDetail ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-                {savingDetail ? "Saving…" : "Save Notes + Status"}
-              </button>              {onDelete ? (
+                {savingDetail ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : null}
+                {savingDetail ? 'Saving…' : 'Save Notes + Status'}
+              </button>{' '}
+              {onDelete ? (
                 <button
                   type="button"
                   onClick={onDelete}
@@ -243,22 +388,36 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
                   <Trash2 className="h-3.5 w-3.5" />
                   Delete Registration
                 </button>
-              ) : null}            </div>
+              ) : null}{' '}
+            </div>
           </div>
 
           {/* Status history */}
           {(detailState.data?.history || []).length > 0 && (
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Status History</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+                Status History
+              </p>
               <div className="mt-2 space-y-2">
                 {detailState.data.history.map((item) => (
-                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+                  <div
+                    key={item.id}
+                    className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50"
+                  >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">{item.action_type}</p>
-                      <AdminStatusBadge tone={getStatusTone(item.next_status)}>{item.next_status || "update"}</AdminStatusBadge>
+                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                        {item.action_type}
+                      </p>
+                      <AdminStatusBadge tone={getStatusTone(item.next_status)}>
+                        {item.next_status || 'update'}
+                      </AdminStatusBadge>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{item.notes || "No notes captured."}</p>
-                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">{formatDate(item.created_at)}</p>
+                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      {item.notes || 'No notes captured.'}
+                    </p>
+                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
+                      {formatDate(item.created_at)}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -268,16 +427,33 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
           {/* Email timeline */}
           {(detailState.data?.notifications || []).length > 0 && (
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">Email Timeline</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+                Email Timeline
+              </p>
               <div className="mt-2 space-y-2">
                 {detailState.data.notifications.map((item) => (
-                  <div key={item.id} className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+                  <div
+                    key={item.id}
+                    className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/50"
+                  >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">{item.template_type}</p>
-                      <AdminStatusBadge tone={getDeliveryTone(item.delivery_status)}>{item.delivery_status || "pending"}</AdminStatusBadge>
+                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                        {item.template_type}
+                      </p>
+                      <AdminStatusBadge
+                        tone={getDeliveryTone(item.delivery_status)}
+                      >
+                        {item.delivery_status || 'pending'}
+                      </AdminStatusBadge>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{item.failure_reason || item.recipient_email || "Awaiting delivery update."}</p>
-                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">{formatDate(item.updated_at || item.created_at)}</p>
+                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      {item.failure_reason ||
+                        item.recipient_email ||
+                        'Awaiting delivery update.'}
+                    </p>
+                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
+                      {formatDate(item.updated_at || item.created_at)}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -290,64 +466,172 @@ function RegistrantDrawer({ detailState, detailDraft, setDetailDraft, saveDetail
 }
 
 export default function RegistrationsAdminPanel({ operator }) {
-  const [filters, setFilters] = useState({ search: "", status: "all", category: "all", city: "", country: "", organization: "", page: 1, pageSize: 50 });
-  const [state, setState] = useState({ loading: true, registrations: [], summary: null, pagination: null, count: 0, error: "" });
+  const [filters, setFilters] = useState({
+    search: '',
+    status: 'all',
+    category: 'all',
+    city: '',
+    country: '',
+    organization: '',
+    page: 1,
+    pageSize: 50,
+  });
+  const [state, setState] = useState({
+    loading: true,
+    registrations: [],
+    summary: null,
+    pagination: null,
+    count: 0,
+    error: '',
+  });
   const [selectedIds, setSelectedIds] = useState([]);
-  const [activeRegistrationId, setActiveRegistrationId] = useState("");
+  const [activeRegistrationId, setActiveRegistrationId] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [detailState, setDetailState] = useState({ loading: false, data: null, error: "" });
-  const [detailDraft, setDetailDraft] = useState({ status: "pending", speakerFlag: false, vipFlag: false, reviewNotes: "" });
-  const [toast, setToast] = useState({ message: "", tone: "default" });
+  const [detailState, setDetailState] = useState({
+    loading: false,
+    data: null,
+    error: '',
+  });
+  const [detailDraft, setDetailDraft] = useState({
+    status: 'pending',
+    speakerFlag: false,
+    vipFlag: false,
+    reviewNotes: '',
+  });
+  const [toast, setToast] = useState({ message: '', tone: 'default' });
   const [savingDetail, setSavingDetail] = useState(false);
-  const [exportLoading, setExportLoading] = useState({ csv: false, xlsx: false, pdf: false });
+  const [exportLoading, setExportLoading] = useState({
+    csv: false,
+    xlsx: false,
+    pdf: false,
+  });
   const [pendingActions, setPendingActions] = useState(new Set());
-  const [pendingBulk, setPendingBulk] = useState({ confirm: false, waitlist: false, reject: false, sendQr: false });
+  const [pendingBulk, setPendingBulk] = useState({
+    confirm: false,
+    waitlist: false,
+    reject: false,
+    sendQr: false,
+  });
   const [qrLoading, setQrLoading] = useState({ send: false, resend: false });
   const deferredSearch = useDeferredValue(filters.search);
-  const queryString = useMemo(() => buildDashboardQueryString({ ...filters, search: deferredSearch }), [deferredSearch, filters]);
+  const queryString = useMemo(
+    () => buildDashboardQueryString({ ...filters, search: deferredSearch }),
+    [deferredSearch, filters]
+  );
   const hasConfigError = isSupabaseAdminConfigError(state.error);
-  const selectionSummary = summarizeSelection({ selectedCount: selectedIds.length, matchedCount: state.count });
-  const orderedRegistrations = useMemo(() => prioritizeRegistrationQueue(state.registrations || []), [state.registrations]);
+  const selectionSummary = summarizeSelection({
+    selectedCount: selectedIds.length,
+    matchedCount: state.count,
+  });
+  const orderedRegistrations = useMemo(
+    () => prioritizeRegistrationQueue(state.registrations || []),
+    [state.registrations]
+  );
 
-  const showToast = (message, tone = "default") => setToast({ message, tone });
-  const clearToast = () => setToast({ message: "", tone: "default" });
+  const showToast = (message, tone = 'default') => setToast({ message, tone });
+  const clearToast = () => setToast({ message: '', tone: 'default' });
 
   const loadRegistrations = useCallback(async () => {
-    setState((current) => ({ ...current, loading: true, error: "" }));
+    setState((current) => ({ ...current, loading: true, error: '' }));
     try {
-      const response = await fetch(`/api/admin/registrations?${queryString}`, { cache: "no-store" });
+      const response = await fetch(`/api/admin/registrations?${queryString}`, {
+        cache: 'no-store',
+      });
       const data = await response.json();
-      if (!response.ok) return setState({ loading: false, registrations: [], summary: null, pagination: null, count: 0, error: data.error || "Unable to load registrations." });
-      setState({ loading: false, registrations: data.registrations || [], summary: data.summary, pagination: data.pagination, count: data.count || 0, error: "" });
-      setSelectedIds((current) => current.filter((id) => (data.registrations || []).some((registration) => registration.id === id)));
+      if (!response.ok)
+        return setState({
+          loading: false,
+          registrations: [],
+          summary: null,
+          pagination: null,
+          count: 0,
+          error: data.error || 'Unable to load registrations.',
+        });
+      setState({
+        loading: false,
+        registrations: data.registrations || [],
+        summary: data.summary,
+        pagination: data.pagination,
+        count: data.count || 0,
+        error: '',
+      });
+      setSelectedIds((current) =>
+        current.filter((id) =>
+          (data.registrations || []).some(
+            (registration) => registration.id === id
+          )
+        )
+      );
     } catch {
-      setState({ loading: false, registrations: [], summary: null, pagination: null, count: 0, error: "Network error." });
+      setState({
+        loading: false,
+        registrations: [],
+        summary: null,
+        pagination: null,
+        count: 0,
+        error: 'Network error.',
+      });
     }
   }, [queryString]);
 
   const loadDetail = useCallback(async (registrationId) => {
     if (!registrationId) return;
-    setDetailState((current) => ({ ...current, loading: true, error: "" }));
+    setDetailState((current) => ({ ...current, loading: true, error: '' }));
     try {
-      const response = await fetch(`/api/admin/registrations/${registrationId}`, { cache: "no-store" });
+      const response = await fetch(
+        `/api/admin/registrations/${registrationId}`,
+        { cache: 'no-store' }
+      );
       const data = await response.json();
-      if (!response.ok) return setDetailState({ loading: false, data: null, error: data.error || "Unable to load registration detail." });
-      setDetailState({ loading: false, data, error: "" });
-      setDetailDraft({ status: data.registration.status, speakerFlag: Boolean(data.registration.speaker_flag), vipFlag: Boolean(data.registration.vip_flag), reviewNotes: data.registration.review_notes || "" });
+      if (!response.ok)
+        return setDetailState({
+          loading: false,
+          data: null,
+          error: data.error || 'Unable to load registration detail.',
+        });
+      setDetailState({ loading: false, data, error: '' });
+      setDetailDraft({
+        status: data.registration.status,
+        speakerFlag: Boolean(data.registration.speaker_flag),
+        vipFlag: Boolean(data.registration.vip_flag),
+        reviewNotes: data.registration.review_notes || '',
+      });
     } catch {
-      setDetailState({ loading: false, data: null, error: "Network error while loading registration detail." });
+      setDetailState({
+        loading: false,
+        data: null,
+        error: 'Network error while loading registration detail.',
+      });
     }
   }, []);
 
-  useEffect(() => { void loadRegistrations(); }, [loadRegistrations]);
-  useEffect(() => { if (activeRegistrationId) void loadDetail(activeRegistrationId); }, [activeRegistrationId, loadDetail]);
+  useEffect(() => {
+    void loadRegistrations();
+  }, [loadRegistrations]);
+  useEffect(() => {
+    if (activeRegistrationId) void loadDetail(activeRegistrationId);
+  }, [activeRegistrationId, loadDetail]);
 
-  const setFilterValue = (key, value) => setFilters((current) => ({ ...current, [key]: value, page: 1 }));
-  const toggleSelection = (registrationId) => setSelectedIds((current) => (current.includes(registrationId) ? current.filter((id) => id !== registrationId) : [...current, registrationId]));
+  const setFilterValue = (key, value) =>
+    setFilters((current) => ({ ...current, [key]: value, page: 1 }));
+  const toggleSelection = (registrationId) =>
+    setSelectedIds((current) =>
+      current.includes(registrationId)
+        ? current.filter((id) => id !== registrationId)
+        : [...current, registrationId]
+    );
   const toggleVisibleSelection = () => {
-    const visibleIds = orderedRegistrations.map((registration) => registration.id);
-    const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.includes(id));
-    setSelectedIds((current) => (allSelected ? current.filter((id) => !visibleIds.includes(id)) : [...new Set([...current, ...visibleIds])]));
+    const visibleIds = orderedRegistrations.map(
+      (registration) => registration.id
+    );
+    const allSelected =
+      visibleIds.length > 0 &&
+      visibleIds.every((id) => selectedIds.includes(id));
+    setSelectedIds((current) =>
+      allSelected
+        ? current.filter((id) => !visibleIds.includes(id))
+        : [...new Set([...current, ...visibleIds])]
+    );
   };
 
   const openDrawerFor = (registrationId) => {
@@ -359,61 +643,115 @@ export default function RegistrationsAdminPanel({ operator }) {
     setExportLoading((prev) => ({ ...prev, [format]: true }));
     clearToast();
     try {
-      const response = await fetch(`/api/admin/badges/export?format=${format}`, { cache: "no-store" });
+      const response = await fetch(
+        `/api/admin/badges/export?format=${format}`,
+        { cache: 'no-store' }
+      );
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        showToast(errorData.error || `Export failed (${response.status}). Check your Supabase configuration.`, "danger");
+        showToast(
+          errorData.error ||
+            `Export failed (${response.status}). Check your Supabase configuration.`,
+          'danger'
+        );
         return;
       }
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = `tasi-2026-registrations.${format === "xlsx" ? "xlsx" : format === "pdf" ? "pdf" : "csv"}`;
+      a.download = `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : format === 'pdf' ? 'pdf' : 'csv'}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast(`${format.toUpperCase()} export downloaded successfully.`, "success");
+      showToast(
+        `${format.toUpperCase()} export downloaded successfully.`,
+        'success'
+      );
     } catch {
-      showToast("Network error during export. Please try again.", "danger");
+      showToast('Network error during export. Please try again.', 'danger');
     } finally {
       setExportLoading((prev) => ({ ...prev, [format]: false }));
     }
   };
 
-  const updateRegistrationStatus = async ({ registrationId, status, speakerFlag = false, vipFlag = false, reviewNotes = "" }) => {
-    const response = await fetch("/api/admin/registrations/status", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ registrationId, status, speakerFlag, vipFlag, reviewNotes }) });
+  const updateRegistrationStatus = async ({
+    registrationId,
+    status,
+    speakerFlag = false,
+    vipFlag = false,
+    reviewNotes = '',
+  }) => {
+    const response = await fetch('/api/admin/registrations/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        registrationId,
+        status,
+        speakerFlag,
+        vipFlag,
+        reviewNotes,
+      }),
+    });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Unable to update registration.");
+    if (!response.ok)
+      throw new Error(data.error || 'Unable to update registration.');
     return data;
   };
 
-  const queueQrJob = async ({ resendExisting = false, registrationIds = [] } = {}) => {
+  const queueQrJob = async ({
+    resendExisting = false,
+    registrationIds = [],
+  } = {}) => {
     clearToast();
     try {
-      const response = await fetch("/api/admin/passes/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ filters, registrationIds, resendExisting }) });
+      const response = await fetch('/api/admin/passes/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filters, registrationIds, resendExisting }),
+      });
       const data = await response.json();
-      if (!response.ok) return showToast(data.error || "Unable to queue QR email job.", "danger");
-      showToast(data.message || "QR email job queued.", "success");
+      if (!response.ok)
+        return showToast(
+          data.error || 'Unable to queue QR email job.',
+          'danger'
+        );
+      showToast(data.message || 'QR email job queued.', 'success');
       void loadRegistrations();
       if (activeRegistrationId) void loadDetail(activeRegistrationId);
     } catch {
-      showToast("Network error while queueing QR email job.", "danger");
+      showToast('Network error while queueing QR email job.', 'danger');
     }
   };
 
   const bulkUpdateStatus = async (nextStatus) => {
-    if (!selectedIds.length) return showToast("Select at least one registrant before running a bulk status update.", "warning");
-    const bulkKey = nextStatus === "confirmed" ? "confirm" : nextStatus === "waitlisted" ? "waitlist" : "reject";
+    if (!selectedIds.length)
+      return showToast(
+        'Select at least one registrant before running a bulk status update.',
+        'warning'
+      );
+    const bulkKey =
+      nextStatus === 'confirmed'
+        ? 'confirm'
+        : nextStatus === 'waitlisted'
+          ? 'waitlist'
+          : 'reject';
     setPendingBulk((p) => ({ ...p, [bulkKey]: true }));
     try {
-      await Promise.all(selectedIds.map((registrationId) => updateRegistrationStatus({ registrationId, status: nextStatus })));
-      showToast(`Updated ${selectedIds.length} registrants to ${nextStatus}.`, "success");
+      await Promise.all(
+        selectedIds.map((registrationId) =>
+          updateRegistrationStatus({ registrationId, status: nextStatus })
+        )
+      );
+      showToast(
+        `Updated ${selectedIds.length} registrants to ${nextStatus}.`,
+        'success'
+      );
       void loadRegistrations();
       if (activeRegistrationId) void loadDetail(activeRegistrationId);
     } catch {
-      showToast("Network error during bulk status update.", "danger");
+      showToast('Network error during bulk status update.', 'danger');
     } finally {
       setPendingBulk((p) => ({ ...p, [bulkKey]: false }));
     }
@@ -441,22 +779,55 @@ export default function RegistrationsAdminPanel({ operator }) {
     const pendingKey = `${registration.id}:${actionKey}`;
     setPendingActions((current) => new Set([...current, pendingKey]));
     try {
-      if (actionKey === "sendQr") {
-        if (registration.status !== "confirmed") await updateRegistrationStatus({ registrationId: registration.id, status: "confirmed" });
+      if (actionKey === 'sendQr') {
+        if (registration.status !== 'confirmed')
+          await updateRegistrationStatus({
+            registrationId: registration.id,
+            status: 'confirmed',
+          });
         await queueQrJob({ registrationIds: [registration.id] });
         return;
       }
-      if (actionKey === "resendQr") return void (await queueQrJob({ registrationIds: [registration.id], resendExisting: true }));
-      if (actionKey === "confirm") await updateRegistrationStatus({ registrationId: registration.id, status: "confirmed" });
-      if (actionKey === "waitlist") await updateRegistrationStatus({ registrationId: registration.id, status: "waitlisted" });
-      if (actionKey === "reject") await updateRegistrationStatus({ registrationId: registration.id, status: "rejected" });
-      showToast(`${actionKey} completed for ${registration.first_name} ${registration.last_name}.`, "success");
+      if (actionKey === 'resendQr')
+        return void (await queueQrJob({
+          registrationIds: [registration.id],
+          resendExisting: true,
+        }));
+      if (actionKey === 'confirm')
+        await updateRegistrationStatus({
+          registrationId: registration.id,
+          status: 'confirmed',
+        });
+      if (actionKey === 'waitlist')
+        await updateRegistrationStatus({
+          registrationId: registration.id,
+          status: 'waitlisted',
+        });
+      if (actionKey === 'reject')
+        await updateRegistrationStatus({
+          registrationId: registration.id,
+          status: 'rejected',
+        });
+      showToast(
+        `${actionKey} completed for ${registration.first_name} ${registration.last_name}.`,
+        'success'
+      );
       void loadRegistrations();
-      if (activeRegistrationId === registration.id) void loadDetail(registration.id);
+      if (activeRegistrationId === registration.id)
+        void loadDetail(registration.id);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : "Unable to complete the quick action.", "danger");
+      showToast(
+        error instanceof Error
+          ? error.message
+          : 'Unable to complete the quick action.',
+        'danger'
+      );
     } finally {
-      setPendingActions((current) => { const next = new Set(current); next.delete(pendingKey); return next; });
+      setPendingActions((current) => {
+        const next = new Set(current);
+        next.delete(pendingKey);
+        return next;
+      });
     }
   };
 
@@ -465,12 +836,28 @@ export default function RegistrationsAdminPanel({ operator }) {
     if (!registrationId) return;
     setSavingDetail(true);
     try {
-      const data = await updateRegistrationStatus({ registrationId, status: detailDraft.status, speakerFlag: detailDraft.speakerFlag, vipFlag: detailDraft.vipFlag, reviewNotes: detailDraft.reviewNotes });
-      showToast(data.emailResult?.sent ? "Notes saved and attendee email sent." : "Notes saved.", "success");
+      const data = await updateRegistrationStatus({
+        registrationId,
+        status: detailDraft.status,
+        speakerFlag: detailDraft.speakerFlag,
+        vipFlag: detailDraft.vipFlag,
+        reviewNotes: detailDraft.reviewNotes,
+      });
+      showToast(
+        data.emailResult?.sent
+          ? 'Notes saved and attendee email sent.'
+          : 'Notes saved.',
+        'success'
+      );
       void loadRegistrations();
       void loadDetail(registrationId);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : "Unable to save registration review.", "danger");
+      showToast(
+        error instanceof Error
+          ? error.message
+          : 'Unable to save registration review.',
+        'danger'
+      );
     } finally {
       setSavingDetail(false);
     }
@@ -480,35 +867,62 @@ export default function RegistrationsAdminPanel({ operator }) {
     const registrationId = detailState.data?.registration?.id;
     if (!registrationId) return;
     try {
-      const templateType = detailState.data.registration.qr_pass_issued_at ? "qr_pass_issued" : detailDraft.status;
-      const response = await fetch("/api/admin/registrations/resend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ registrationId, templateType }) });
+      const templateType = detailState.data.registration.qr_pass_issued_at
+        ? 'qr_pass_issued'
+        : detailDraft.status;
+      const response = await fetch('/api/admin/registrations/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registrationId, templateType }),
+      });
       const data = await response.json();
-      if (!response.ok) return showToast(data.error || "Unable to resend attendee email.", "danger");
-      showToast(data.result?.queued ? "QR resend queued in the background." : data.result?.sent ? "Attendee email resent." : "Attendee email action completed.", "success");
+      if (!response.ok)
+        return showToast(
+          data.error || 'Unable to resend attendee email.',
+          'danger'
+        );
+      showToast(
+        data.result?.queued
+          ? 'QR resend queued in the background.'
+          : data.result?.sent
+            ? 'Attendee email resent.'
+            : 'Attendee email action completed.',
+        'success'
+      );
       void loadDetail(registrationId);
     } catch {
-      showToast("Network error while resending attendee email.", "danger");
+      showToast('Network error while resending attendee email.', 'danger');
     }
   };
 
   const handleDelete = async () => {
     const registrationId = detailState.data?.registration?.id;
     if (!registrationId) return;
-    if (!window.confirm("Delete this registration? This cannot be undone.")) return;
+    if (!window.confirm('Delete this registration? This cannot be undone.'))
+      return;
     try {
-      const response = await fetch(`/api/admin/registrations/${registrationId}`, { method: "DELETE" });
+      const response = await fetch(
+        `/api/admin/registrations/${registrationId}`,
+        { method: 'DELETE' }
+      );
       const data = await response.json();
-      if (!response.ok) return showToast(data.error || "Unable to delete registration.", "danger");
+      if (!response.ok)
+        return showToast(
+          data.error || 'Unable to delete registration.',
+          'danger'
+        );
       setDrawerOpen(false);
-      setActiveRegistrationId("");
-      showToast("Registration deleted.", "success");
+      setActiveRegistrationId('');
+      showToast('Registration deleted.', 'success');
       void loadRegistrations();
     } catch {
-      showToast("Network error while deleting registration.", "danger");
+      showToast('Network error while deleting registration.', 'danger');
     }
   };
 
-  const allVisibleSelected = orderedRegistrations.length > 0 && orderedRegistrations.every((r) => selectedIds.includes(r.id));
+  const allVisibleSelected =
+    orderedRegistrations.length > 0 &&
+    orderedRegistrations.every((r) => selectedIds.includes(r.id));
 
   return (
     <div className="space-y-5">
@@ -520,7 +934,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           description="Sort the most urgent records to the top, act inline for speed, and click a row to open the detail drawer."
           action={
             <div className="flex flex-wrap gap-2">
-              {(["csv", "xlsx", "pdf"] ).map((format) => (
+              {['csv', 'xlsx', 'pdf'].map((format) => (
                 <button
                   key={format}
                   type="button"
@@ -528,8 +942,16 @@ export default function RegistrationsAdminPanel({ operator }) {
                   onClick={() => handleExport(format)}
                   className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:bg-slate-700"
                 >
-                  {exportLoading[format] ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
-                  {format === "csv" ? "Export CSV" : format === "xlsx" ? "Export Excel" : "Export PDF"}
+                  {exportLoading[format] ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <Download className="h-3 w-3" />
+                  )}
+                  {format === 'csv'
+                    ? 'Export CSV'
+                    : format === 'xlsx'
+                      ? 'Export Excel'
+                      : 'Export PDF'}
                 </button>
               ))}
             </div>
@@ -542,8 +964,10 @@ export default function RegistrationsAdminPanel({ operator }) {
             disabled={state.loading || hasConfigError || qrLoading.send}
             className="inline-flex h-8 items-center gap-1.5 rounded-full bg-amber-600 px-4 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
           >
-            {qrLoading.send ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-            {selectedIds.length ? "Send QR To Selected" : "Send QR To Filtered"}
+            {qrLoading.send ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : null}
+            {selectedIds.length ? 'Send QR To Selected' : 'Send QR To Filtered'}
           </button>
           <button
             type="button"
@@ -551,21 +975,45 @@ export default function RegistrationsAdminPanel({ operator }) {
             disabled={state.loading || hasConfigError || qrLoading.resend}
             className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
           >
-            {qrLoading.resend ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+            {qrLoading.resend ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : null}
             Resend Issued QR
           </button>
-          <a href="/admin/delivery" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
+          <a
+            href="/admin/delivery"
+            className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
+          >
             Delivery Jobs
           </a>
-          <a href="/admin/check-in" className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
+          <a
+            href="/admin/check-in"
+            className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
+          >
             Check-In Console
           </a>
         </div>
       </section>
 
       {/* Toast */}
-      {toast.message ? <AdminToast message={toast.message} tone={getBatchStatusTone(toast.message) !== "default" ? getBatchStatusTone(toast.message) : toast.tone} onDismiss={clearToast} /> : null}
-      {hasConfigError ? <AdminAlert title="Supabase Configuration Required" description="This dashboard cannot load registrants or issue QR passes until SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are configured." tone="danger" /> : null}
+      {toast.message ? (
+        <AdminToast
+          message={toast.message}
+          tone={
+            getBatchStatusTone(toast.message) !== 'default'
+              ? getBatchStatusTone(toast.message)
+              : toast.tone
+          }
+          onDismiss={clearToast}
+        />
+      ) : null}
+      {hasConfigError ? (
+        <AdminAlert
+          title="Supabase Configuration Required"
+          description="This dashboard cannot load registrants or issue QR passes until SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are configured."
+          tone="danger"
+        />
+      ) : null}
 
       {/* Summary stats */}
       <ReviewSummary summary={state.summary} />
@@ -573,7 +1021,9 @@ export default function RegistrationsAdminPanel({ operator }) {
       {/* Filters */}
       <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Filters</p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            Filters
+          </p>
           <div className="flex gap-3 text-xs text-slate-400 dark:text-slate-500">
             <span>{selectionSummary.selectedLabel}</span>
             <span>{selectionSummary.matchedLabel}</span>
@@ -582,46 +1032,84 @@ export default function RegistrationsAdminPanel({ operator }) {
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <input
             value={filters.search}
-            onChange={(event) => setFilterValue("search", event.target.value)}
+            onChange={(event) => setFilterValue('search', event.target.value)}
             className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 xl:col-span-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             placeholder="Search name, email, code, org…"
           />
-          <select value={filters.status} onChange={(event) => setFilterValue("status", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
+          <select
+            value={filters.status}
+            onChange={(event) => setFilterValue('status', event.target.value)}
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+          >
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
             <option value="confirmed">Confirmed</option>
             <option value="waitlisted">Waitlisted</option>
             <option value="rejected">Rejected</option>
           </select>
-          <select value={filters.category} onChange={(event) => setFilterValue("category", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
+          <select
+            value={filters.category}
+            onChange={(event) => setFilterValue('category', event.target.value)}
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+          >
             <option value="all">All categories</option>
-            {ATTENDEE_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
+            {ATTENDEE_CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
           <input
             value={filters.city}
-            onChange={(event) => setFilterValue("city", event.target.value)}
+            onChange={(event) => setFilterValue('city', event.target.value)}
             className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             placeholder="Filter by city"
           />
-          <button type="button" onClick={toggleVisibleSelection} className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500">
-            {allVisibleSelected ? "Clear Visible" : "Select Visible"}
+          <button
+            type="button"
+            onClick={toggleVisibleSelection}
+            className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
+          >
+            {allVisibleSelected ? 'Clear Visible' : 'Select Visible'}
           </button>
         </div>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          <input value={filters.country} onChange={(event) => setFilterValue("country", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" placeholder="Filter by country" />
-          <input value={filters.organization} onChange={(event) => setFilterValue("organization", event.target.value)} className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" placeholder="Filter by organization" />
+          <input
+            value={filters.country}
+            onChange={(event) => setFilterValue('country', event.target.value)}
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+            placeholder="Filter by country"
+          />
+          <input
+            value={filters.organization}
+            onChange={(event) =>
+              setFilterValue('organization', event.target.value)
+            }
+            className="h-9 rounded-[10px] border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+            placeholder="Filter by organization"
+          />
         </div>
       </section>
 
       {/* Error state */}
-      {state.error && !hasConfigError ? <AdminAlert title="Dashboard Error" description={state.error} tone="danger" /> : null}
+      {state.error && !hasConfigError ? (
+        <AdminAlert
+          title="Dashboard Error"
+          description={state.error}
+          tone="danger"
+        />
+      ) : null}
 
       {/* Review queue table */}
       <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="border-b border-slate-200 px-5 py-3 dark:border-slate-700">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             Review Queue
-            {!state.loading && state.count > 0 ? <span className="ml-2 text-xs font-normal text-slate-400 dark:text-slate-500">{state.count} registrants</span> : null}
+            {!state.loading && state.count > 0 ? (
+              <span className="ml-2 text-xs font-normal text-slate-400 dark:text-slate-500">
+                {state.count} registrants
+              </span>
+            ) : null}
           </p>
         </div>
         <div className="overflow-auto">
@@ -629,7 +1117,11 @@ export default function RegistrationsAdminPanel({ operator }) {
             <thead className="sticky top-0 bg-slate-50 dark:bg-slate-800/80">
               <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:border-slate-700 dark:text-slate-500">
                 <th className="px-4 py-3 text-left">
-                  <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} />
+                  <input
+                    type="checkbox"
+                    checked={allVisibleSelected}
+                    onChange={toggleVisibleSelection}
+                  />
                 </th>
                 <th className="px-4 py-3 text-left">Registrant</th>
                 <th className="px-4 py-3 text-left">Email</th>
@@ -649,38 +1141,82 @@ export default function RegistrationsAdminPanel({ operator }) {
                   return (
                     <tr
                       key={registration.id}
-                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 ${selected ? "bg-amber-50/40 dark:bg-amber-950/20" : ""}`}
+                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 ${selected ? 'bg-amber-50/40 dark:bg-amber-950/20' : ''}`}
                       onClick={() => openDrawerFor(registration.id)}
                     >
-                      <td className="px-4 py-3.5" onClick={(event) => event.stopPropagation()}>
-                        <input type="checkbox" checked={selected} onChange={() => toggleSelection(registration.id)} />
+                      <td
+                        className="px-4 py-3.5"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          onChange={() => toggleSelection(registration.id)}
+                        />
                       </td>
                       <td className="px-4 py-3.5">
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50">{registration.first_name} {registration.last_name}</p>
-                        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{registration.registration_code}</p>
-                        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{registration.organization || "Independent"} … {registration.attendee_category || "Unspecified"}</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
+                          {registration.first_name} {registration.last_name}
+                        </p>
+                        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                          {registration.registration_code}
+                        </p>
+                        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+                          {registration.organization || 'Independent'} …{' '}
+                          {registration.attendee_category || 'Unspecified'}
+                        </p>
                       </td>
                       <td className="px-4 py-3.5">
-                        <p className="text-xs text-slate-700 dark:text-slate-300">{registration.email}</p>
+                        <p className="text-xs text-slate-700 dark:text-slate-300">
+                          {registration.email}
+                        </p>
                       </td>
                       <td className="px-4 py-3.5">
-                        <AdminStatusBadge tone={getStatusTone(registration.status)}>{registration.status}</AdminStatusBadge>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <p className="text-xs text-slate-600 dark:text-slate-400">{[registration.city, registration.country].filter(Boolean).join(", ") || "…"}</p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <AdminStatusBadge tone={registration.qr_pass_issued_at ? "info" : "default"}>
-                          {registration.qr_pass_issued_at ? "Issued" : "Pending"}
+                        <AdminStatusBadge
+                          tone={getStatusTone(registration.status)}
+                        >
+                          {registration.status}
                         </AdminStatusBadge>
                       </td>
                       <td className="px-4 py-3.5">
-                        <AdminStatusBadge tone={registration.checked_in_at ? "success" : "default"}>
-                          {registration.checked_in_at ? "Checked In" : "Pending"}
+                        <p className="text-xs text-slate-600 dark:text-slate-400">
+                          {[registration.city, registration.country]
+                            .filter(Boolean)
+                            .join(', ') || '…'}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <AdminStatusBadge
+                          tone={
+                            registration.qr_pass_issued_at ? 'info' : 'default'
+                          }
+                        >
+                          {registration.qr_pass_issued_at
+                            ? 'Issued'
+                            : 'Pending'}
                         </AdminStatusBadge>
                       </td>
-                      <td className="px-4 py-3.5" onClick={(event) => event.stopPropagation()}>
-                        <RowActions registration={registration} onQuickAction={handleQuickAction} pendingActions={pendingActions} disabled={state.loading || hasConfigError} />
+                      <td className="px-4 py-3.5">
+                        <AdminStatusBadge
+                          tone={
+                            registration.checked_in_at ? 'success' : 'default'
+                          }
+                        >
+                          {registration.checked_in_at
+                            ? 'Checked In'
+                            : 'Pending'}
+                        </AdminStatusBadge>
+                      </td>
+                      <td
+                        className="px-4 py-3.5"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <RowActions
+                          registration={registration}
+                          onQuickAction={handleQuickAction}
+                          pendingActions={pendingActions}
+                          disabled={state.loading || hasConfigError}
+                        />
                       </td>
                     </tr>
                   );
@@ -690,16 +1226,43 @@ export default function RegistrationsAdminPanel({ operator }) {
           </table>
         </div>
         {!state.loading && !state.error && orderedRegistrations.length === 0 ? (
-          <div className="p-8 text-center text-sm text-slate-400 dark:text-slate-500">No registrations match the current filters.</div>
+          <div className="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
+            No registrations match the current filters.
+          </div>
         ) : null}
         {state.pagination ? (
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3 dark:border-slate-700">
-            <p className="text-xs text-slate-400 dark:text-slate-500">Page {state.pagination.page} of {state.pagination.totalPages}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">
+              Page {state.pagination.page} of {state.pagination.totalPages}
+            </p>
             <div className="flex gap-2">
-              <button type="button" onClick={() => setFilters((current) => ({ ...current, page: Math.max(current.page - 1, 1) }))} disabled={state.pagination.page <= 1} className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((current) => ({
+                    ...current,
+                    page: Math.max(current.page - 1, 1),
+                  }))
+                }
+                disabled={state.pagination.page <= 1}
+                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              >
                 Previous
               </button>
-              <button type="button" onClick={() => setFilters((current) => ({ ...current, page: Math.min(current.page + 1, state.pagination.totalPages) }))} disabled={state.pagination.page >= state.pagination.totalPages} className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((current) => ({
+                    ...current,
+                    page: Math.min(
+                      current.page + 1,
+                      state.pagination.totalPages
+                    ),
+                  }))
+                }
+                disabled={state.pagination.page >= state.pagination.totalPages}
+                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              >
                 Next
               </button>
             </div>
@@ -724,14 +1287,49 @@ export default function RegistrationsAdminPanel({ operator }) {
       {selectedIds.length > 0 ? (
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-slate-700 dark:bg-slate-900/95">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{selectedIds.length} selected</span>
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              {selectedIds.length} selected
+            </span>
             <div className="flex flex-wrap gap-2">
-              <QuickActionButton action={{ key: "confirm", label: "Mark Confirmed", kind: "success" }} onClick={() => bulkUpdateStatus("confirmed")} loading={pendingBulk.confirm} />
-              <QuickActionButton action={{ key: "waitlist", label: "Mark Waitlisted", kind: "warning" }} onClick={() => bulkUpdateStatus("waitlisted")} loading={pendingBulk.waitlist} />
-              <QuickActionButton action={{ key: "reject", label: "Mark Rejected", kind: "danger" }} onClick={() => bulkUpdateStatus("rejected")} loading={pendingBulk.reject} />
-              <QuickActionButton action={{ key: "sendQr", label: "Send QR", kind: "info" }} onClick={bulkSendQrQueue} disabled={state.loading || hasConfigError} loading={pendingBulk.sendQr} />
+              <QuickActionButton
+                action={{
+                  key: 'confirm',
+                  label: 'Mark Confirmed',
+                  kind: 'success',
+                }}
+                onClick={() => bulkUpdateStatus('confirmed')}
+                loading={pendingBulk.confirm}
+              />
+              <QuickActionButton
+                action={{
+                  key: 'waitlist',
+                  label: 'Mark Waitlisted',
+                  kind: 'warning',
+                }}
+                onClick={() => bulkUpdateStatus('waitlisted')}
+                loading={pendingBulk.waitlist}
+              />
+              <QuickActionButton
+                action={{
+                  key: 'reject',
+                  label: 'Mark Rejected',
+                  kind: 'danger',
+                }}
+                onClick={() => bulkUpdateStatus('rejected')}
+                loading={pendingBulk.reject}
+              />
+              <QuickActionButton
+                action={{ key: 'sendQr', label: 'Send QR', kind: 'info' }}
+                onClick={bulkSendQrQueue}
+                disabled={state.loading || hasConfigError}
+                loading={pendingBulk.sendQr}
+              />
             </div>
-            <button type="button" onClick={() => setSelectedIds([])} className="ml-auto text-xs text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="ml-auto text-xs text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+            >
               Clear selection
             </button>
           </div>

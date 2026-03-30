@@ -1,37 +1,40 @@
 function isSupabaseAdminConfigError(message) {
-  const value = String(message || "");
+  const value = String(message || '');
 
   return (
-    value.includes("Missing SUPABASE_URL") ||
-    value.includes("Missing SUPABASE_SERVICE_ROLE_KEY")
+    value.includes('Missing SUPABASE_URL') ||
+    value.includes('Missing SUPABASE_SERVICE_ROLE_KEY')
   );
 }
 
 function getBatchStatusTone(message) {
   if (!message) {
-    return "default";
+    return 'default';
   }
 
   if (/queued|processing|retrying|in progress/i.test(message)) {
-    return "warning";
+    return 'warning';
   }
 
-  if (isSupabaseAdminConfigError(message) || /unable|error|failed/i.test(message)) {
-    return "danger";
+  if (
+    isSupabaseAdminConfigError(message) ||
+    /unable|error|failed/i.test(message)
+  ) {
+    return 'danger';
   }
 
   if (/processed|sent|issued|saved|success/i.test(message)) {
-    return "success";
+    return 'success';
   }
 
-  return "default";
+  return 'default';
 }
 
 function buildDashboardQueryString(filters = {}) {
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, rawValue]) => {
-    const value = String(rawValue || "").trim();
+    const value = String(rawValue || '').trim();
     if (value) {
       params.set(key, value);
     }
@@ -48,65 +51,75 @@ function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
     selectedLabel: `${normalizedSelected} selected`,
     matchedLabel: `${normalizedMatched} matched`,
     actionScopeLabel:
-      normalizedSelected > 0 ? "Send to selected attendees" : "Send to all matched attendees",
+      normalizedSelected > 0
+        ? 'Send to selected attendees'
+        : 'Send to all matched attendees',
   };
 }
 
 function getStatusRank(status) {
-  if (status === "pending") return 0;
-  if (status === "confirmed") return 1;
-  if (status === "waitlisted") return 2;
-  if (status === "rejected") return 3;
+  if (status === 'pending') return 0;
+  if (status === 'confirmed') return 1;
+  if (status === 'waitlisted') return 2;
+  if (status === 'rejected') return 3;
   return 4;
 }
 
 function getPriorityRank(priorityTier) {
-  const value = String(priorityTier || "").toLowerCase();
-  if (value.includes("purple")) return 0;
-  if (value.includes("gold")) return 1;
-  if (value.includes("blue")) return 2;
+  const value = String(priorityTier || '').toLowerCase();
+  if (value.includes('purple')) return 0;
+  if (value.includes('gold')) return 1;
+  if (value.includes('blue')) return 2;
   return 3;
 }
 
 function prioritizeRegistrationQueue(registrations = []) {
   return [...registrations].sort((left, right) => {
-    const statusDelta = getStatusRank(left.status) - getStatusRank(right.status);
+    const statusDelta =
+      getStatusRank(left.status) - getStatusRank(right.status);
     if (statusDelta !== 0) return statusDelta;
 
-    const priorityDelta = getPriorityRank(left.priority_tier) - getPriorityRank(right.priority_tier);
+    const priorityDelta =
+      getPriorityRank(left.priority_tier) -
+      getPriorityRank(right.priority_tier);
     if (priorityDelta !== 0) return priorityDelta;
 
-    const qrDelta = Number(Boolean(left.qr_pass_issued_at)) - Number(Boolean(right.qr_pass_issued_at));
+    const qrDelta =
+      Number(Boolean(left.qr_pass_issued_at)) -
+      Number(Boolean(right.qr_pass_issued_at));
     if (qrDelta !== 0) return qrDelta;
 
-    return new Date(right.created_at || 0).getTime() - new Date(left.created_at || 0).getTime();
+    return (
+      new Date(right.created_at || 0).getTime() -
+      new Date(left.created_at || 0).getTime()
+    );
   });
 }
 
 function getQuickActionOptions(registration = {}) {
-  if (registration.status === "pending") {
+  if (registration.status === 'pending') {
     return [
-      { key: "confirm", label: "Confirm", kind: "success" },
-      { key: "waitlist", label: "Waitlist", kind: "warning" },
-      { key: "reject", label: "Reject", kind: "danger" },
+      { key: 'confirm', label: 'Confirm', kind: 'success' },
+      { key: 'waitlist', label: 'Waitlist', kind: 'warning' },
+      { key: 'reject', label: 'Reject', kind: 'danger' },
     ];
   }
 
-  if (registration.status === "confirmed") {
+  if (registration.status === 'confirmed') {
     return [
       {
-        key: registration.qr_pass_issued_at ? "resendQr" : "sendQr",
-        label: registration.qr_pass_issued_at ? "Resend QR" : "Send QR",
-        kind: "info",
+        key: registration.qr_pass_issued_at ? 'resendQr' : 'sendQr',
+        label: registration.qr_pass_issued_at ? 'Resend QR' : 'Send QR',
+        kind: 'info',
       },
-      { key: "waitlist", label: "Waitlist", kind: "warning" },
-      { key: "reject", label: "Reject", kind: "danger" },
+      { key: 'waitlist', label: 'Waitlist', kind: 'warning' },
+      { key: 'reject', label: 'Reject', kind: 'danger' },
     ];
   }
 
   return [
-    { key: "confirm", label: "Confirm", kind: "success" },
-    { key: "reject", label: "Reject", kind: "danger" },
+    { key: 'confirm', label: 'Confirm', kind: 'success' },
+    { key: 'reject', label: 'Reject', kind: 'danger' },
   ];
 }
 

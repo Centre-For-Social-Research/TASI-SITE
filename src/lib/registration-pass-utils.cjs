@@ -11,11 +11,15 @@ function normalizeEntryPasses(entryPasses) {
 }
 
 function getIssuedEntryPass(entryPasses) {
-  return normalizeEntryPasses(entryPasses).find((item) => item?.status === "issued") || null;
+  return (
+    normalizeEntryPasses(entryPasses).find(
+      (item) => item?.status === 'issued'
+    ) || null
+  );
 }
 
 function normalizeRegistrationRecord(registration) {
-  if (!registration || typeof registration !== "object") {
+  if (!registration || typeof registration !== 'object') {
     return registration;
   }
 
@@ -26,11 +30,11 @@ function normalizeRegistrationRecord(registration) {
 }
 
 function buildPassImageStoragePath({ passId, registrationId }) {
-  const normalizedPassId = String(passId || "").trim();
-  const normalizedRegistrationId = String(registrationId || "").trim();
+  const normalizedPassId = String(passId || '').trim();
+  const normalizedRegistrationId = String(registrationId || '').trim();
 
   if (!normalizedPassId || !normalizedRegistrationId) {
-    return "";
+    return '';
   }
 
   return `${normalizedRegistrationId}/pass-${normalizedPassId}.png`;

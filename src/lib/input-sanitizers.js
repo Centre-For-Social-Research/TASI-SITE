@@ -5,15 +5,15 @@ const HTML_TAG_REGEX = /<[^>]*>/g;
 const BASIC_EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function normalizeText(value) {
-  return String(value ?? "")
-    .normalize("NFKC")
-    .replace(CONTROL_CHARS_REGEX, " ")
+  return String(value ?? '')
+    .normalize('NFKC')
+    .replace(CONTROL_CHARS_REGEX, ' ')
     .trim();
 }
 
 export function sanitizeEmail(value) {
   const normalized = normalizeText(value).toLowerCase();
-  return normalized.replace(MULTISPACE_REGEX, "");
+  return normalized.replace(MULTISPACE_REGEX, '');
 }
 
 export function isValidEmail(email) {
@@ -21,7 +21,7 @@ export function isValidEmail(email) {
     return false;
   }
 
-  const [localPart, domainPart] = email.split("@");
+  const [localPart, domainPart] = email.split('@');
   if (!localPart || !domainPart) {
     return false;
   }
@@ -30,7 +30,7 @@ export function isValidEmail(email) {
     return false;
   }
 
-  if (domainPart.startsWith(".") || domainPart.endsWith(".")) {
+  if (domainPart.startsWith('.') || domainPart.endsWith('.')) {
     return false;
   }
 
@@ -39,15 +39,20 @@ export function isValidEmail(email) {
 
 export function sanitizeMessage(value) {
   const normalized = normalizeText(value)
-    .replace(/\r\n?/g, "\n")
-    .replace(HTML_TAG_REGEX, "")
-    .replace(/\n{3,}/g, "\n\n");
+    .replace(/\r\n?/g, '\n')
+    .replace(HTML_TAG_REGEX, '')
+    .replace(/\n{3,}/g, '\n\n');
 
   return normalized;
 }
 
-export function sanitizeShortText(value, { maxLength = 255, fieldName = "Field", required = true } = {}) {
-  const normalized = normalizeText(value).replace(HTML_TAG_REGEX, "").replace(MULTISPACE_REGEX, " ");
+export function sanitizeShortText(
+  value,
+  { maxLength = 255, fieldName = 'Field', required = true } = {}
+) {
+  const normalized = normalizeText(value)
+    .replace(HTML_TAG_REGEX, '')
+    .replace(MULTISPACE_REGEX, ' ');
 
   if (required && !normalized) {
     throw new Error(`${fieldName} is required.`);
@@ -62,9 +67,12 @@ export function sanitizeShortText(value, { maxLength = 255, fieldName = "Field",
 
 export function sanitizePhone(value) {
   const normalized = normalizeText(value);
-  return normalized.replace(/[^\d\s\+\-\(\)\.ext]/gi, "").replace(MULTISPACE_REGEX, " ").trim();
+  return normalized
+    .replace(/[^\d\s\+\-\(\)\.ext]/gi, '')
+    .replace(MULTISPACE_REGEX, ' ')
+    .trim();
 }
 
 export function sanitizeUrl(value) {
-  return normalizeText(value).replace(MULTISPACE_REGEX, "");
+  return normalizeText(value).replace(MULTISPACE_REGEX, '');
 }

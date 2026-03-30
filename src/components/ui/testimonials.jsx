@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from 'react';
+import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
  * A responsive section component to display customer testimonials.
@@ -21,12 +21,12 @@ export const TestimonialSection = ({
     }
 
     const track = carouselRef.current;
-    const card = track.querySelector("[data-testimonial-card]");
+    const card = track.querySelector('[data-testimonial-card]');
     const step = card ? card.clientWidth + 24 : track.clientWidth * 0.8;
 
     track.scrollBy({
       left: direction * step,
-      behavior: "auto",
+      behavior: 'auto',
     });
   };
 
@@ -58,7 +58,7 @@ export const TestimonialSection = ({
 
         {/* Testimonials Carousel */}
         <div className="relative mt-16">
-          <button 
+          <button
             onClick={handlePrev}
             className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 md:left-0 dark:border-white/40 dark:bg-black/35 dark:text-white"
             aria-label="Previous testimonials"
@@ -89,7 +89,10 @@ export const TestimonialSection = ({
 
                   <div className="flex flex-1 flex-col justify-between bg-gradient-to-b from-white to-rc-primary/5 p-6 text-left text-rc-foreground dark:from-zinc-900 dark:to-zinc-800 dark:text-zinc-100">
                     <div>
-                      <Quote className="mb-4 h-8 w-8 text-rc-accent/70 dark:text-white" aria-hidden="true" />
+                      <Quote
+                        className="mb-4 h-8 w-8 text-rc-accent/70 dark:text-white"
+                        aria-hidden="true"
+                      />
                       <blockquote className="mb-6 text-sm font-medium leading-relaxed md:text-base">
                         &quot;{testimonial.quote}&quot;
                       </blockquote>
@@ -108,7 +111,7 @@ export const TestimonialSection = ({
             ))}
           </div>
 
-          <button 
+          <button
             onClick={handleNext}
             className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 md:right-0 dark:border-white/40 dark:bg-black/35 dark:text-white"
             aria-label="Next testimonials"

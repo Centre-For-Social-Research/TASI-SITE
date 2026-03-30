@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 export interface GalleryItem {
   id: number | string;
@@ -32,12 +32,12 @@ export function Gallery({
   data,
   onImageClick,
   eyebrow,
-  title = "Event Highlights",
+  title = 'Event Highlights',
   subtitle,
-  sectionClassName = "py-10",
-  containerClassName = "mx-auto w-full max-w-7xl px-4 md:px-8",
+  sectionClassName = 'py-10',
+  containerClassName = 'mx-auto w-full max-w-7xl px-4 md:px-8',
   onReanimate,
-  reanimateLabel = "Re-animate Gallery",
+  reanimateLabel = 'Re-animate Gallery',
   isReanimating = false,
 }: GalleryProps) {
   return (
@@ -73,7 +73,7 @@ export function Gallery({
           {data.map((img) => (
             <div
               key={img.id}
-              className={`group relative cursor-pointer overflow-hidden rounded-lg transition-all duration-500 ${isReanimating ? "scale-[0.98] opacity-70 saturate-125" : "scale-100 opacity-100 hover:-translate-y-1 hover:shadow-xl"} ${img.span || "col-span-1"}`}
+              className={`group relative cursor-pointer overflow-hidden rounded-lg transition-all duration-500 ${isReanimating ? 'scale-[0.98] opacity-70 saturate-125' : 'scale-100 opacity-100 hover:-translate-y-1 hover:shadow-xl'} ${img.span || 'col-span-1'}`}
               onClick={() => onImageClick(img.src)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

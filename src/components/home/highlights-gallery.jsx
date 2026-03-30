@@ -1,36 +1,39 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Gallery, ImageModal } from "@/components/ui/react-tailwind-image-gallery";
+import { useEffect, useState } from 'react';
+import {
+  Gallery,
+  ImageModal,
+} from '@/components/ui/react-tailwind-image-gallery';
 
 const LOCAL_GALLERY_FILES = [
-  "7T7A0181.webp",
-  "7T7A0215.webp",
-  "7T7A0259.webp",
-  "7T7A0527.webp",
-  "7T7A0573.webp",
-  "7T7A0646.webp",
-  "7T7A1512.webp",
-  "7T7A2715.webp",
-  "7T7A2996.webp",
-  "7T7A3314 (1).webp",
-  "7T7A3544.webp",
-  "7T7A3637.webp",
-  "7T7A4136.webp",
-  "7T7A4166.webp",
-  "7T7A4504.webp",
-  "7T7A4633.webp",
+  '7T7A0181.webp',
+  '7T7A0215.webp',
+  '7T7A0259.webp',
+  '7T7A0527.webp',
+  '7T7A0573.webp',
+  '7T7A0646.webp',
+  '7T7A1512.webp',
+  '7T7A2715.webp',
+  '7T7A2996.webp',
+  '7T7A3314 (1).webp',
+  '7T7A3544.webp',
+  '7T7A3637.webp',
+  '7T7A4136.webp',
+  '7T7A4166.webp',
+  '7T7A4504.webp',
+  '7T7A4633.webp',
 ];
 
 const spanPattern = [
-  "col-span-1",
-  "sm:col-span-2",
-  "col-span-1",
-  "col-span-1",
-  "sm:col-span-2",
-  "col-span-1",
-  "col-span-1",
-  "col-span-1",
+  'col-span-1',
+  'sm:col-span-2',
+  'col-span-1',
+  'col-span-1',
+  'sm:col-span-2',
+  'col-span-1',
+  'col-span-1',
+  'col-span-1',
 ];
 
 const galleryData = [
@@ -38,8 +41,8 @@ const galleryData = [
     id: index + 1,
     src: `/img/home-gallery/${encodeURI(fileName)}`,
     alt: `TASI highlight ${index + 1}`,
-    title: "Festival Highlight",
-    span: "col-span-1",
+    title: 'Festival Highlight',
+    span: 'col-span-1',
   })),
 ];
 
@@ -59,13 +62,13 @@ export default function HighlightsGallery() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         setModalImage(null);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleReanimate = () => {

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Facebook, Twitter, Linkedin, Share2 } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Share2 } from 'lucide-react';
 
 export default function ShareButtons({ url, title }) {
   const encoded = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
 
   const handleNativeShare = async () => {
-    if (typeof navigator !== "undefined" && navigator.share) {
+    if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({ title, url });
       } catch {

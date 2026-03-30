@@ -1,12 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
 
 function randomColors(count) {
-  return new Array(count)
-    .fill(0)
-    .map(() => `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`);
+  return new Array(count).fill(0).map(
+    () =>
+      `#${Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')}`
+  );
 }
 
 export default function TubesBackground({
@@ -15,7 +18,7 @@ export default function TubesBackground({
   enableClickInteraction = true,
 }) {
   const canvasRef = useRef(null);
-  const paletteRef = useRef(["#f967fb", "#53bc28", "#6958d5", "#60aed5"]);
+  const paletteRef = useRef(['#f967fb', '#53bc28', '#6958d5', '#60aed5']);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,7 +26,7 @@ export default function TubesBackground({
     if (!canvas) {
       return undefined;
     }
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) {
       return undefined;
     }
@@ -47,7 +50,7 @@ export default function TubesBackground({
         const radius = Math.max(width, height) * 0.35;
         const g = ctx.createRadialGradient(x, y, radius * 0.2, x, y, radius);
         g.addColorStop(0, `${color}55`);
-        g.addColorStop(1, "#00000000");
+        g.addColorStop(1, '#00000000');
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -60,10 +63,10 @@ export default function TubesBackground({
 
     resize();
     draw();
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener('resize', resize);
       window.cancelAnimationFrame(raf);
     };
   }, []);
@@ -77,7 +80,10 @@ export default function TubesBackground({
 
   return (
     <div
-      className={cn("relative h-full w-full min-h-[400px] overflow-hidden", className)}
+      className={cn(
+        'relative h-full w-full min-h-[400px] overflow-hidden',
+        className
+      )}
       onClick={handleClick}
     >
       <canvas

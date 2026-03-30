@@ -1,10 +1,10 @@
 export default function robots() {
   return {
     rules: {
-      userAgent: "*",
-      allow: "/",
+      userAgent: '*',
+      allow: '/',
     },
-    sitemap: "https://jamsaq.in/sitemap.xml",
-    host: "https://jamsaq.in",
+    sitemap: 'https://jamsaq.in/sitemap.xml',
+    host: 'https://jamsaq.in',
   };
 }

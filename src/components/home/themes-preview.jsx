@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   Accessibility,
   Baby,
@@ -14,9 +14,9 @@ import {
   Shield,
   ShieldAlert,
   Users,
-} from "lucide-react";
-import { MotionItem, MotionReveal, MotionStagger } from "./motion-reveal";
-import { themes2026 } from "@/data/themes-2026";
+} from 'lucide-react';
+import { MotionItem, MotionReveal, MotionStagger } from './motion-reveal';
+import { themes2026 } from '@/data/themes-2026';
 
 const iconMap = {
   accessibility: Accessibility,
@@ -44,11 +44,14 @@ export default function ThemesPreview() {
             Strategic Focus
           </p>
           <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-[3.2rem]">
-            TASI 2026 <span className="text-rc-secondary dark:text-white">Themes</span>
+            TASI 2026{' '}
+            <span className="text-rc-secondary dark:text-white">Themes</span>
           </h2>
           <p className="mt-5 text-body-lg leading-relaxed text-white/80">
-            The festival convenes leaders across government, industry, academia, and civil society to examine the
-            urgent questions shaping AI governance, platform accountability, digital wellbeing, and trust online.
+            The festival convenes leaders across government, industry, academia,
+            and civil society to examine the urgent questions shaping AI
+            governance, platform accountability, digital wellbeing, and trust
+            online.
           </p>
         </MotionReveal>
 
@@ -60,7 +63,9 @@ export default function ThemesPreview() {
               <MotionItem key={theme.num}>
                 <Link href="/themes" className="group block h-full">
                   <article className="relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-[10px] border border-white/10 bg-white/[0.08] p-7 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.14] md:p-8">
-                    <div className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br ${theme.accent}`} />
+                    <div
+                      className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br ${theme.accent}`}
+                    />
                     <div className="pointer-events-none absolute right-5 top-5 rounded-[10px] border border-white/10 bg-white/10 p-3 text-white/65 backdrop-blur-sm transition duration-300 group-hover:scale-110 group-hover:text-rc-secondary dark:group-hover:text-white">
                       <Icon className="h-6 w-6" />
                     </div>
@@ -68,7 +73,9 @@ export default function ThemesPreview() {
                       <p className="text-5xl font-black text-white/15 transition-colors duration-300 group-hover:text-rc-accent dark:group-hover:text-white md:text-6xl">
                         {theme.num}
                       </p>
-                      <span className={`mt-5 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${theme.chip}`}>
+                      <span
+                        className={`mt-5 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${theme.chip}`}
+                      >
                         {theme.tag}
                       </span>
                     </div>

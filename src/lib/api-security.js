@@ -1,5 +1,5 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
 
 const DEFAULT_WINDOW_MS = 10 * 60 * 1000;
 const DEFAULT_MAX_REQUESTS = 5;
@@ -35,7 +35,7 @@ function getUpstashLimiter(windowMs, maxRequests) {
     redis,
     limiter: Ratelimit.slidingWindow(maxRequests, `${windowSec} s`),
     analytics: false,
-    prefix: "tasi-rl",
+    prefix: 'tasi-rl',
   });
   ratelimiters.set(cacheKey, limiter);
   return limiter;
@@ -60,15 +60,15 @@ function cleanupExpiredEntries(now) {
 /* ------------------------------------------------------------------ */
 
 function getClientIp(request) {
-  const forwardedFor = request.headers.get("x-forwarded-for");
+  const forwardedFor = request.headers.get('x-forwarded-for');
   if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
+    return forwardedFor.split(',')[0].trim();
   }
 
   return (
-    request.headers.get("x-real-ip") ||
-    request.headers.get("cf-connecting-ip") ||
-    "unknown"
+    request.headers.get('x-real-ip') ||
+    request.headers.get('cf-connecting-ip') ||
+    'unknown'
   );
 }
 
@@ -77,17 +77,17 @@ function getAllowedOrigins(request) {
   const configuredOrigins = [
     process.env.NEXT_PUBLIC_SITE_URL,
     process.env.SITE_URL,
-    "https://jamsaq.in",
-    "https://www.jamsaq.in",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    'https://jamsaq.in',
+    'https://www.jamsaq.in',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
   ].filter(Boolean);
 
   return new Set([requestOrigin, ...configuredOrigins].filter(Boolean));
 }
 
 function isAllowedOrigin(request) {
-  const origin = request.headers.get("origin");
+  const origin = request.headers.get('origin');
   if (!origin) {
     return true;
   }
@@ -97,13 +97,17 @@ function isAllowedOrigin(request) {
 
 function buildRateLimitHeaders(limit, remaining, resetAt) {
   return {
-    "X-RateLimit-Limit": String(limit),
-    "X-RateLimit-Remaining": String(Math.max(0, remaining)),
-    "X-RateLimit-Reset": String(Math.ceil(resetAt / 1000)),
+    'X-RateLimit-Limit': String(limit),
+    'X-RateLimit-Remaining': String(Math.max(0, remaining)),
+    'X-RateLimit-Reset': String(Math.ceil(resetAt / 1000)),
   };
 }
 
-async function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxRequests = DEFAULT_MAX_REQUESTS } = {}) {
+async function rateLimit(
+  request,
+  routeKey,
+  { windowMs = DEFAULT_WINDOW_MS, maxRequests = DEFAULT_MAX_REQUESTS } = {}
+) {
   const ip = getClientIp(request);
   const identifier = `${routeKey}:${ip}`;
 
@@ -120,14 +124,17 @@ async function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxR
       );
 
       if (!result.success) {
-        const retryAfter = Math.max(1, Math.ceil((result.reset - Date.now()) / 1000));
+        const retryAfter = Math.max(
+          1,
+          Math.ceil((result.reset - Date.now()) / 1000)
+        );
         return {
           ok: false,
           response: Response.json(
-            { error: "Too many requests. Please try again later." },
+            { error: 'Too many requests. Please try again later.' },
             {
               status: 429,
-              headers: { ...headers, "Retry-After": String(retryAfter) },
+              headers: { ...headers, 'Retry-After': String(retryAfter) },
             }
           ),
         };
@@ -155,7 +162,11 @@ async function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxR
 
     return {
       ok: true,
-      headers: buildRateLimitHeaders(maxRequests, maxRequests - 1, freshEntry.resetAt),
+      headers: buildRateLimitHeaders(
+        maxRequests,
+        maxRequests - 1,
+        freshEntry.resetAt
+      ),
     };
   }
 
@@ -165,12 +176,14 @@ async function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxR
     return {
       ok: false,
       response: Response.json(
-        { error: "Too many requests. Please try again later." },
+        { error: 'Too many requests. Please try again later.' },
         {
           status: 429,
           headers: {
             ...buildRateLimitHeaders(maxRequests, 0, existing.resetAt),
-            "Retry-After": String(Math.max(1, Math.ceil((existing.resetAt - now) / 1000))),
+            'Retry-After': String(
+              Math.max(1, Math.ceil((existing.resetAt - now) / 1000))
+            ),
           },
         }
       ),
@@ -179,7 +192,11 @@ async function rateLimit(request, routeKey, { windowMs = DEFAULT_WINDOW_MS, maxR
 
   return {
     ok: true,
-    headers: buildRateLimitHeaders(maxRequests, maxRequests - existing.count, existing.resetAt),
+    headers: buildRateLimitHeaders(
+      maxRequests,
+      maxRequests - existing.count,
+      existing.resetAt
+    ),
   };
 }
 
@@ -189,7 +206,7 @@ export function rejectDisallowedOrigin(request) {
   }
 
   return Response.json(
-    { error: "Requests from this origin are not allowed." },
+    { error: 'Requests from this origin are not allowed.' },
     { status: 403 }
   );
 }
@@ -204,13 +221,13 @@ export async function protectPublicRoute(request, routeKey, options) {
 }
 
 export function enforceJsonRequest(request) {
-  const contentType = request.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
+  const contentType = request.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
     return null;
   }
 
   return Response.json(
-    { error: "Content-Type must be application/json." },
+    { error: 'Content-Type must be application/json.' },
     { status: 415 }
   );
 }

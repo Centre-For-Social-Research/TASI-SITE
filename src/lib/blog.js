@@ -61,7 +61,11 @@ async function fetchSanityPostBySlug(slug) {
     return null;
   }
 
-  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug }, sanityFetchOptions);
+  const post = await client.fetch(
+    POST_BY_SLUG_QUERY,
+    { slug },
+    sanityFetchOptions
+  );
   return post ? normalizeSanityPost(post) : null;
 }
 

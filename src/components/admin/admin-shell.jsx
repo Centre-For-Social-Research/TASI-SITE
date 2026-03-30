@@ -1,31 +1,49 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { Moon, Sun, Users, Send, ScanLine, ChevronRight, LogOut } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useClerk } from "@clerk/nextjs";
-import { buildAdminNavigation, buildAdminStatPills } from "@/lib/admin-shell-utils.cjs";
-import { AdminStatusBadge } from "@/components/admin/admin-ui";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  Moon,
+  Sun,
+  Users,
+  Send,
+  ScanLine,
+  ChevronRight,
+  LogOut,
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useClerk } from '@clerk/nextjs';
+import {
+  buildAdminNavigation,
+  buildAdminStatPills,
+} from '@/lib/admin-shell-utils.cjs';
+import { AdminStatusBadge } from '@/components/admin/admin-ui';
 
 const NAV_ICONS = {
-  "/admin/registrations": Users,
-  "/admin/delivery": Send,
-  "/admin/check-in": ScanLine,
+  '/admin/registrations': Users,
+  '/admin/delivery': Send,
+  '/admin/check-in': ScanLine,
 };
 
-function TopStatPill({ label, value, tone = "default" }) {
+function TopStatPill({ label, value, tone = 'default' }) {
   const toneClasses = {
-    default: "border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300",
-    warning: "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
-    success: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
-    danger: "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
-    accent: "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-800 dark:bg-violet-950/60 dark:text-violet-300",
+    default:
+      'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300',
+    warning:
+      'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300',
+    success:
+      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300',
+    danger:
+      'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300',
+    accent:
+      'border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-800 dark:bg-violet-950/60 dark:text-violet-300',
   };
 
   return (
-    <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs ${toneClasses[tone] || toneClasses.default}`}>
+    <div
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs ${toneClasses[tone] || toneClasses.default}`}
+    >
       <span className="font-medium opacity-70">{label}</span>
       <span className="font-bold tabular-nums">{value}</span>
     </div>
@@ -33,12 +51,12 @@ function TopStatPill({ label, value, tone = "default" }) {
 }
 
 function getInitials(name) {
-  return String(name || "Operator")
+  return String(name || 'Operator')
     .trim()
     .split(/\s+/)
     .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || "")
-    .join("");
+    .map((part) => part[0]?.toUpperCase() || '')
+    .join('');
 }
 
 function ThemeToggle() {
@@ -50,11 +68,15 @@ function ThemeToggle() {
   return (
     <button
       type="button"
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
       className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
       aria-label="Toggle theme"
     >
-      {resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {resolvedTheme === 'dark' ? (
+        <Sun className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4" />
+      )}
     </button>
   );
 }
@@ -63,7 +85,7 @@ export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
 
   async function handleSignOut() {
-    await signOut({ redirectUrl: "/" });
+    await signOut({ redirectUrl: '/' });
   }
 
   const [shellState, setShellState] = useState({
@@ -78,8 +100,8 @@ export default function AdminShell({ operator, currentPath, children }) {
       if (document.hidden) return;
       try {
         const [registrationsResponse, jobsResponse] = await Promise.all([
-          fetch("/api/admin/registrations?pageSize=1", { cache: "no-store" }),
-          fetch("/api/admin/passes/jobs", { cache: "no-store" }),
+          fetch('/api/admin/registrations?pageSize=1', { cache: 'no-store' }),
+          fetch('/api/admin/passes/jobs', { cache: 'no-store' }),
         ]);
 
         const [registrationsData, jobsData] = await Promise.all([
@@ -91,7 +113,12 @@ export default function AdminShell({ operator, currentPath, children }) {
 
         setShellState({
           summary: registrationsResponse.ok
-            ? registrationsData.summary || { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 }
+            ? registrationsData.summary || {
+                pending: 0,
+                confirmed: 0,
+                qrIssued: 0,
+                checkedIn: 0,
+              }
             : { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
           jobs: jobsResponse.ok ? jobsData.jobs || [] : [],
         });
@@ -123,7 +150,7 @@ export default function AdminShell({ operator, currentPath, children }) {
         summary: shellState.summary,
         jobs: shellState.jobs,
       }),
-    [currentPath, shellState.jobs, shellState.summary],
+    [currentPath, shellState.jobs, shellState.summary]
   );
 
   const statPills = useMemo(
@@ -132,7 +159,7 @@ export default function AdminShell({ operator, currentPath, children }) {
         summary: shellState.summary,
         jobs: shellState.jobs,
       }),
-    [shellState.jobs, shellState.summary],
+    [shellState.jobs, shellState.summary]
   );
 
   return (
@@ -143,7 +170,13 @@ export default function AdminShell({ operator, currentPath, children }) {
           {/* Logo */}
           <div className="border-b border-slate-200 px-5 py-5 dark:border-slate-800">
             <Link href="/">
-              <Image src="/img/tasi-csr-logo.png" alt="TASI" width={120} height={36} className="object-contain dark:brightness-90" />
+              <Image
+                src="/img/tasi-csr-logo.png"
+                alt="TASI"
+                width={120}
+                height={36}
+                className="object-contain dark:brightness-90"
+              />
             </Link>
           </div>
 
@@ -151,7 +184,9 @@ export default function AdminShell({ operator, currentPath, children }) {
           <nav className="flex flex-1 flex-col gap-6 px-3 py-4">
             {navSections.map((section) => (
               <div key={section.key}>
-                <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">{section.label}</p>
+                <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {section.label}
+                </p>
                 <div className="space-y-0.5">
                   {section.items.map((item) => {
                     const Icon = NAV_ICONS[item.href];
@@ -161,16 +196,22 @@ export default function AdminShell({ operator, currentPath, children }) {
                         href={item.href}
                         className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
                           item.active
-                            ? "bg-amber-50 font-semibold text-amber-700 dark:bg-amber-950/40 dark:text-amber-400"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                            ? 'bg-amber-50 font-semibold text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100'
                         }`}
                       >
                         <span className="flex items-center gap-2.5">
-                          {Icon ? <Icon className={`h-4 w-4 shrink-0 ${item.active ? "text-amber-600" : "text-slate-400"}`} /> : null}
+                          {Icon ? (
+                            <Icon
+                              className={`h-4 w-4 shrink-0 ${item.active ? 'text-amber-600' : 'text-slate-400'}`}
+                            />
+                          ) : null}
                           {item.label}
                         </span>
                         {item.showBadge ? (
-                          <AdminStatusBadge tone={item.badgeTone}>{item.badgeCount}</AdminStatusBadge>
+                          <AdminStatusBadge tone={item.badgeTone}>
+                            {item.badgeCount}
+                          </AdminStatusBadge>
                         ) : item.active ? (
                           <ChevronRight className="h-3.5 w-3.5 text-amber-500" />
                         ) : null}
@@ -186,9 +227,15 @@ export default function AdminShell({ operator, currentPath, children }) {
 
             {/* Event info */}
             <div className="rounded-[10px] border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Event</p>
-              <p className="mt-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100">Trust &amp; Safety India Festival</p>
-              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">13–14 October 2026</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                Event
+              </p>
+              <p className="mt-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                Trust &amp; Safety India Festival
+              </p>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                13–14 October 2026
+              </p>
             </div>
 
             {/* Operator info */}
@@ -197,8 +244,12 @@ export default function AdminShell({ operator, currentPath, children }) {
                 {getInitials(operator.displayName)}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">{operator.displayName}</p>
-                <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{operator.primaryEmail}</p>
+                <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                  {operator.displayName}
+                </p>
+                <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">
+                  {operator.primaryEmail}
+                </p>
               </div>
               <button
                 type="button"
@@ -220,20 +271,26 @@ export default function AdminShell({ operator, currentPath, children }) {
             <div className="flex items-center justify-between gap-4 px-4 py-3 lg:px-6">
               {/* Page title derived from currentPath */}
               <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                {currentPath === "/admin/registrations" || currentPath === "/admin"
-                  ? "Review Queue"
-                  : currentPath === "/admin/delivery"
-                    ? "Delivery Jobs"
-                    : currentPath === "/admin/check-in"
-                      ? "Check-In Console"
-                      : "Admin"}
+                {currentPath === '/admin/registrations' ||
+                currentPath === '/admin'
+                  ? 'Review Queue'
+                  : currentPath === '/admin/delivery'
+                    ? 'Delivery Jobs'
+                    : currentPath === '/admin/check-in'
+                      ? 'Check-In Console'
+                      : 'Admin'}
               </p>
 
               {/* Stat pills + theme toggle + logout */}
               <div className="flex items-center gap-2">
                 <div className="hidden items-center gap-2 md:flex">
                   {statPills.map((pill) => (
-                    <TopStatPill key={pill.key} label={pill.label} value={pill.value} tone={pill.tone} />
+                    <TopStatPill
+                      key={pill.key}
+                      label={pill.label}
+                      value={pill.value}
+                      tone={pill.tone}
+                    />
                   ))}
                 </div>
                 <ThemeToggle />
@@ -260,23 +317,27 @@ export default function AdminShell({ operator, currentPath, children }) {
                       href={item.href}
                       className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm whitespace-nowrap ${
                         item.active
-                          ? "border-amber-200 bg-amber-50 font-semibold text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-400"
-                          : "border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                          ? 'border-amber-200 bg-amber-50 font-semibold text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-400'
+                          : 'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       }`}
                     >
                       {Icon ? <Icon className="h-3.5 w-3.5 shrink-0" /> : null}
                       {item.label}
                       {item.showBadge ? (
-                        <AdminStatusBadge tone={item.badgeTone}>{item.badgeCount}</AdminStatusBadge>
+                        <AdminStatusBadge tone={item.badgeTone}>
+                          {item.badgeCount}
+                        </AdminStatusBadge>
                       ) : null}
                     </Link>
                   );
-                }),
+                })
               )}
             </div>
           </header>
 
-          <main className="px-4 py-6 lg:px-6 lg:py-8 dark:bg-slate-950">{children}</main>
+          <main className="px-4 py-6 lg:px-6 lg:py-8 dark:bg-slate-950">
+            {children}
+          </main>
         </div>
       </div>
     </div>

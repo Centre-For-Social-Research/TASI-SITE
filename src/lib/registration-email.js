@@ -1,24 +1,35 @@
-import { EVENT_CONFIG, REGISTRATION_EMAIL_COPY } from "@/lib/registration-constants";
-import { getResendClient, getResendFromEmail } from "@/lib/resend";
+import {
+  EVENT_CONFIG,
+  REGISTRATION_EMAIL_COPY,
+} from '@/lib/registration-constants';
+import { getResendClient, getResendFromEmail } from '@/lib/resend';
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 function getEmailLogoUrl() {
-  const siteUrl = process.env.SITE_URL?.trim() || process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://jamsaq.in";
-  const normalizedBase = siteUrl.replace(/\/+$/, "");
+  const siteUrl =
+    process.env.SITE_URL?.trim() ||
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+    'https://jamsaq.in';
+  const normalizedBase = siteUrl.replace(/\/+$/, '');
   return `${normalizedBase}/img/tasi-csr-logo.png`;
 }
 
 function renderEmailHtml(text, { qrImageUrl, registrationCode } = {}) {
-  const paragraphs = text.split("\n").filter(Boolean);
-  const body = paragraphs.map((line) => `<p style="margin:0 0 14px;color:#111827;font-size:16px;line-height:1.6;">${escapeHtml(line)}</p>`).join("");
+  const paragraphs = text.split('\n').filter(Boolean);
+  const body = paragraphs
+    .map(
+      (line) =>
+        `<p style="margin:0 0 14px;color:#111827;font-size:16px;line-height:1.6;">${escapeHtml(line)}</p>`
+    )
+    .join('');
   const logoUrl = getEmailLogoUrl();
   const qrBlock = qrImageUrl
     ? `<div style="margin:24px 0 18px;padding:18px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;text-align:center;">
@@ -26,7 +37,7 @@ function renderEmailHtml(text, { qrImageUrl, registrationCode } = {}) {
         <p style="margin:0;color:#475569;font-size:14px;line-height:1.5;">Registration ID: ${escapeHtml(registrationCode)}</p>
         <p style="margin:10px 0 0;color:#64748b;font-size:12px;line-height:1.5;">If the QR preview does not render in your mail app, please use the attached PDF credential.</p>
       </div>`
-    : "";
+    : '';
 
   return `<!doctype html>
 <html>
@@ -73,15 +84,15 @@ export async function deliverRegistrationEmail({
   if (!resend) {
     if (notificationId && db?.markNotificationDelivery) {
       await db.markNotificationDelivery(notificationId, {
-        delivery_status: "failed",
-        failure_reason: "Missing RESEND_API_KEY.",
+        delivery_status: 'failed',
+        failure_reason: 'Missing RESEND_API_KEY.',
       });
     }
 
     return {
       sent: false,
       skipped: true,
-      error: "Missing RESEND_API_KEY.",
+      error: 'Missing RESEND_API_KEY.',
     };
   }
 
@@ -106,12 +117,12 @@ export async function deliverRegistrationEmail({
     });
 
     if (error) {
-      throw new Error(error.message || "Failed to send email.");
+      throw new Error(error.message || 'Failed to send email.');
     }
 
     if (notificationId && db?.markNotificationDelivery) {
       await db.markNotificationDelivery(notificationId, {
-        delivery_status: "sent",
+        delivery_status: 'sent',
         provider_message_id: data?.id || null,
       });
     }
@@ -120,14 +131,15 @@ export async function deliverRegistrationEmail({
   } catch (error) {
     if (notificationId && db?.markNotificationDelivery) {
       await db.markNotificationDelivery(notificationId, {
-        delivery_status: "failed",
-        failure_reason: error instanceof Error ? error.message : "Failed to send email.",
+        delivery_status: 'failed',
+        failure_reason:
+          error instanceof Error ? error.message : 'Failed to send email.',
       });
     }
 
     return {
       sent: false,
-      error: error instanceof Error ? error.message : "Failed to send email.",
+      error: error instanceof Error ? error.message : 'Failed to send email.',
     };
   }
 }

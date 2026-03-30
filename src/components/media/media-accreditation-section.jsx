@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
+import Image from 'next/image';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function MediaAccreditationSection() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("");
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setStatus("");
+    setStatus('');
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/media-accreditation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/media-accreditation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim().toLowerCase() }),
       });
 
       let data = null;
-      const contentType = response.headers.get("content-type") || "";
+      const contentType = response.headers.get('content-type') || '';
 
-      if (contentType.includes("application/json")) {
+      if (contentType.includes('application/json')) {
         data = await response.json();
       } else {
         const text = await response.text();
@@ -38,17 +38,19 @@ export default function MediaAccreditationSection() {
       if (!response.ok) {
         setStatus(data?.error || `Request failed (${response.status}).`);
       } else {
-        setStatus("Application received. The TASI team will review your accreditation request.");
-        setEmail("");
+        setStatus(
+          'Application received. The TASI team will review your accreditation request.'
+        );
+        setEmail('');
       }
     } catch (error) {
       const errorMessage =
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "message" in error &&
-        typeof error.message === "string"
+        'message' in error &&
+        typeof error.message === 'string'
           ? error.message
-          : "Network error while submitting your request. Please try again.";
+          : 'Network error while submitting your request. Please try again.';
 
       setStatus(errorMessage);
     } finally {
@@ -70,20 +72,28 @@ export default function MediaAccreditationSection() {
             Media accreditation
           </h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-white md:text-[1.05rem] md:leading-[1.55]">
-            Journalists, editors, and industry reporters covering digital trust, safety, public policy, and emerging
-            technology are invited to apply for TASI 2026 media access.
+            Journalists, editors, and industry reporters covering digital trust,
+            safety, public policy, and emerging technology are invited to apply
+            for TASI 2026 media access.
           </p>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/82 md:text-[15px]">
-            Applications for accreditation are reviewed by the TASI team. Please make sure you apply with a valid
-            business email address linked to your publication or newsroom.
+            Applications for accreditation are reviewed by the TASI team. Please
+            make sure you apply with a valid business email address linked to
+            your publication or newsroom.
           </p>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/82 md:text-[15px]">
-            Your personal data will be processed in line with our{" "}
-            <a className="font-semibold underline underline-offset-4" href="/privacy-policy">
+            Your personal data will be processed in line with our{' '}
+            <a
+              className="font-semibold underline underline-offset-4"
+              href="/privacy-policy"
+            >
               Privacy Policy
-            </a>{" "}
-            and{" "}
-            <a className="font-semibold underline underline-offset-4" href="/terms-of-service">
+            </a>{' '}
+            and{' '}
+            <a
+              className="font-semibold underline underline-offset-4"
+              href="/terms-of-service"
+            >
               T&amp;Cs
             </a>
             .
@@ -112,11 +122,17 @@ export default function MediaAccreditationSection() {
                 disabled={isSubmitting}
                 className="h-auto rounded-xl bg-white px-6 py-3.5 text-xs font-black uppercase tracking-[0.12em] text-stone-900 hover:bg-stone-100"
               >
-                {isSubmitting ? "Submitting..." : "Apply for media accreditation"}
+                {isSubmitting
+                  ? 'Submitting...'
+                  : 'Apply for media accreditation'}
               </Button>
             </div>
 
-            {status ? <p className="mt-3 text-sm leading-relaxed text-white/88">{status}</p> : null}
+            {status ? (
+              <p className="mt-3 text-sm leading-relaxed text-white/88">
+                {status}
+              </p>
+            ) : null}
           </form>
         </div>
 

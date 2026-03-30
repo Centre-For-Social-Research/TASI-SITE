@@ -21,7 +21,10 @@ function loadEnv(filePath) {
     const eqIdx = trimmed.indexOf('=');
     if (eqIdx === -1) continue;
     const key = trimmed.slice(0, eqIdx).trim();
-    const val = trimmed.slice(eqIdx + 1).trim().replace(/\r$/, '');
+    const val = trimmed
+      .slice(eqIdx + 1)
+      .trim()
+      .replace(/\r$/, '');
     env[key] = val;
   }
   return env;
@@ -31,11 +34,13 @@ const envPath = path.resolve(__dirname, '../.env.local');
 const env = loadEnv(envPath);
 
 const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-const dataset   = env.NEXT_PUBLIC_SANITY_DATASET || 'production';
-const token     = env.SANITY_API_TOKEN;
+const dataset = env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+const token = env.SANITY_API_TOKEN;
 
 if (!projectId || !token) {
-  console.error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID or SANITY_API_TOKEN in .env.local');
+  console.error(
+    'Missing NEXT_PUBLIC_SANITY_PROJECT_ID or SANITY_API_TOKEN in .env.local'
+  );
   process.exit(1);
 }
 
@@ -68,9 +73,9 @@ function textToPortableText(text) {
   if (!text) return [];
   return text
     .split(/\n\n+/)
-    .map(para => para.trim())
+    .map((para) => para.trim())
     .filter(Boolean)
-    .map(para => ({
+    .map((para) => ({
       _type: 'block',
       _key: key(),
       style: 'normal',
@@ -108,12 +113,12 @@ const posts = [
     slug: 'early-bird-registration',
     title: 'Early Bird Registration',
     excerpt:
-      'Secure your spot at TASI 2026 with our early bird rates. Don\'t miss out on the opportunity to connect with industry leaders.',
+      "Secure your spot at TASI 2026 with our early bird rates. Don't miss out on the opportunity to connect with industry leaders.",
     date: 'Mar 01, 2026',
     author: 'TASI Team',
     category: 'REGISTRATION',
     content:
-      'Secure your spot at TASI 2026 with our early bird rates. Don\'t miss out on the opportunity to connect with industry leaders, policymakers, and civil society experts. Early bird registration closes on March 31st, 2026.',
+      "Secure your spot at TASI 2026 with our early bird rates. Don't miss out on the opportunity to connect with industry leaders, policymakers, and civil society experts. Early bird registration closes on March 31st, 2026.",
   },
   {
     slug: 'tasi-2026-dates-announced',
@@ -168,7 +173,9 @@ const posts = [
 // ── Migration ─────────────────────────────────────────────────────────────────
 
 async function migrate() {
-  console.log(`Connecting to Sanity project "${projectId}" / dataset "${dataset}"...\n`);
+  console.log(
+    `Connecting to Sanity project "${projectId}" / dataset "${dataset}"...\n`
+  );
 
   let created = 0;
   let skipped = 0;
@@ -203,14 +210,18 @@ async function migrate() {
     created++;
   }
 
-  console.log(`\nDone. Created: ${created}, Skipped (already exist): ${skipped}`);
+  console.log(
+    `\nDone. Created: ${created}, Skipped (already exist): ${skipped}`
+  );
   if (created > 0) {
-    console.log('\nPosts are saved as drafts. Open Sanity Studio (/studio) to publish them,');
+    console.log(
+      '\nPosts are saved as drafts. Open Sanity Studio (/studio) to publish them,'
+    );
     console.log('or run: node scripts/publish-blog-posts.mjs');
   }
 }
 
-migrate().catch(err => {
+migrate().catch((err) => {
   console.error('Migration failed:', err.message);
   process.exit(1);
 });

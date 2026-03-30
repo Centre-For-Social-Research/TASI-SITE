@@ -1,9 +1,11 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { deriveJobProgress } from "@/lib/registration-job-utils.cjs";
-import { getPassIssueEmailJobDetail } from "@/lib/pass-issue-job-service";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
+import { getPassIssueEmailJobDetail } from '@/lib/pass-issue-job-service';
 
 export async function GET(_request, context) {
-  const authResult = await requireAuthorizedOperator({ route: "api.admin.passes.jobs.detail" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.passes.jobs.detail',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
@@ -31,8 +33,13 @@ export async function GET(_request, context) {
     });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to load QR delivery job." },
-      { status: 500 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to load QR delivery job.',
+      },
+      { status: 500 }
     );
   }
 }

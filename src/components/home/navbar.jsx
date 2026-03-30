@@ -1,41 +1,41 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const navItems = [
-  { label: "About Us", href: "/about" },
-  { label: "Program", href: "/programme" },
-  { label: "Speakers", href: "/speakers" },
-  { label: "Receptions", href: "/receptions" },
+  { label: 'About Us', href: '/about' },
+  { label: 'Program', href: '/programme' },
+  { label: 'Speakers', href: '/speakers' },
+  { label: 'Receptions', href: '/receptions' },
   {
-    label: "TASI Editions",
-    href: "/tasi-2025",
+    label: 'TASI Editions',
+    href: '/tasi-2025',
     children: [
-      { label: "TASI 2025", href: "/tasi-2025" },
-      { label: "TASI 2026", href: "/tasi-2026" },
+      { label: 'TASI 2025', href: '/tasi-2025' },
+      { label: 'TASI 2026', href: '/tasi-2026' },
     ],
   },
-  { label: "Sponsors", href: "/sponsor" },
+  { label: 'Sponsors', href: '/sponsor' },
   {
-    label: "More",
-    href: "/media",
+    label: 'More',
+    href: '/media',
     children: [
-      { label: "Get Involved", href: "/get-involved" },
-      { label: "Media", href: "/media" },
-      { label: "News and Blogs", href: "/blog" },
-      { label: "Plan Your Travel", href: "/plan-your-travel" },
+      { label: 'Get Involved', href: '/get-involved' },
+      { label: 'Media', href: '/media' },
+      { label: 'News and Blogs', href: '/blog' },
+      { label: 'Plan Your Travel', href: '/plan-your-travel' },
     ],
   },
-  { label: "Contact", href: "/contact" },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export default function HomeNavbar({
   forceSolid = false,
-  primaryCtaHref = "/register",
-  primaryCtaLabel = "REGISTER NOW",
+  primaryCtaHref = '/register',
+  primaryCtaLabel = 'REGISTER NOW',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -50,15 +50,17 @@ export default function HomeNavbar({
       ticking = true;
       window.requestAnimationFrame(() => {
         const nextScrolled = window.scrollY > 20;
-        setScrolled((current) => (current === nextScrolled ? current : nextScrolled));
+        setScrolled((current) =>
+          current === nextScrolled ? current : nextScrolled
+        );
         ticking = false;
       });
     };
 
     handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const useSolidNavbar = forceSolid || scrolled;
@@ -67,8 +69,8 @@ export default function HomeNavbar({
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
         useSolidNavbar
-          ? "bg-white/95 text-black shadow-md backdrop-blur dark:bg-gray-950/95 dark:text-white"
-          : "bg-transparent text-white"
+          ? 'bg-white/95 text-black shadow-md backdrop-blur dark:bg-gray-950/95 dark:text-white'
+          : 'bg-transparent text-white'
       }`}
     >
       <nav className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 py-3 md:px-8 md:py-3.5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-12">
@@ -84,7 +86,7 @@ export default function HomeNavbar({
         </Link>
 
         <div className="hidden items-center justify-center gap-8 text-base font-bold lg:flex lg:justify-self-center">
-          {navItems.map((item) => (
+          {navItems.map((item) =>
             item.children ? (
               <div key={item.label} className="group relative">
                 <Link
@@ -92,15 +94,25 @@ export default function HomeNavbar({
                   className="flex items-center gap-2 transition-opacity hover:opacity-75 dark:text-white"
                 >
                   {item.label}
-                  <svg className="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m6 9 6 6 6-6"
+                    />
                   </svg>
                 </Link>
                 <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                    <div className="rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_18px_50px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-950">
-                      <div className="mb-2 px-3 pt-1 text-[10px] font-black uppercase tracking-[0.22em] text-stone-500 dark:text-slate-400">
-                      {item.label === "More" ? "Explore" : "Editions"}
-                      </div>
+                  <div className="rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_18px_50px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-950">
+                    <div className="mb-2 px-3 pt-1 text-[10px] font-black uppercase tracking-[0.22em] text-stone-500 dark:text-slate-400">
+                      {item.label === 'More' ? 'Explore' : 'Editions'}
+                    </div>
                     {item.children.map((child) => (
                       <Link
                         key={child.href}
@@ -125,7 +137,7 @@ export default function HomeNavbar({
                 {item.label}
               </Link>
             )
-          ))}
+          )}
         </div>
 
         <div className="hidden items-center gap-3 lg:flex lg:justify-self-end">
@@ -153,9 +165,17 @@ export default function HomeNavbar({
               viewBox="0 0 24 24"
             >
               {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 7h16M4 12h16M4 17h16"
+                />
               )}
             </svg>
           </button>
@@ -168,23 +188,31 @@ export default function HomeNavbar({
             <div className="flex items-center justify-end">
               <ThemeToggle />
             </div>
-            {navItems.map((item) => (
+            {navItems.map((item) =>
               item.children ? (
                 <div key={item.label} className="space-y-3">
                   <button
                     type="button"
                     className="flex w-full items-center justify-between text-left text-lg font-bold tracking-wide transition-opacity hover:opacity-80"
-                    onClick={() => setOpenMobileMenu((current) => (current === item.label ? null : item.label))}
+                    onClick={() =>
+                      setOpenMobileMenu((current) =>
+                        current === item.label ? null : item.label
+                      )
+                    }
                   >
                     <span>{item.label}</span>
                     <svg
-                      className={`h-5 w-5 transition-transform ${openMobileMenu === item.label ? "rotate-180" : ""}`}
+                      className={`h-5 w-5 transition-transform ${openMobileMenu === item.label ? 'rotate-180' : ''}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth={2}
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m6 9 6 6 6-6"
+                      />
                     </svg>
                   </button>
                   {openMobileMenu === item.label && (
@@ -215,7 +243,7 @@ export default function HomeNavbar({
                   {item.label}
                 </Link>
               )
-            ))}
+            )}
             <Link
               href={primaryCtaHref}
               className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-rc-primary px-6 py-3 text-center text-sm font-black uppercase tracking-widest text-rc-primary-foreground transition-opacity hover:opacity-90"

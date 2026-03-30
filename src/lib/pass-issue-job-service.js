@@ -3,17 +3,17 @@ import {
   getRegistrationById,
   issuePassForRegistration,
   markNotificationDelivery,
-} from "@/lib/registration-db";
-import { buildPassAttachment } from "@/lib/registration-pass";
-import { uploadPassQrImage } from "@/lib/registration-pass-assets";
-import { deliverRegistrationEmail } from "@/lib/registration-email";
+} from '@/lib/registration-db';
+import { buildPassAttachment } from '@/lib/registration-pass';
+import { uploadPassQrImage } from '@/lib/registration-pass-assets';
+import { deliverRegistrationEmail } from '@/lib/registration-email';
 import {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
   buildJobSelection,
   isQueueInfrastructureUnavailable,
   shouldSkipJobItem,
-} from "@/lib/registration-job-utils.cjs";
+} from '@/lib/registration-job-utils.cjs';
 import {
   claimPassIssueEmailJobItems,
   createPassIssueEmailJobRecord,
@@ -25,20 +25,20 @@ import {
   refreshPassIssueEmailJob,
   retryFailedPassIssueEmailJobItems,
   updatePassIssueEmailJobItem,
-} from "@/lib/registration-ops-db";
+} from '@/lib/registration-ops-db';
 
 async function sendPassEmail({ item, registration, operator, resendExisting }) {
-  if (registration.status !== "confirmed") {
+  if (registration.status !== 'confirmed') {
     return updatePassIssueEmailJobItem(item.id, {
-      status: "skipped",
-      failure_reason: "Registration is no longer confirmed.",
+      status: 'skipped',
+      failure_reason: 'Registration is no longer confirmed.',
     });
   }
 
   if (shouldSkipJobItem({ resendExisting, registration })) {
     return updatePassIssueEmailJobItem(item.id, {
-      status: "skipped",
-      failure_reason: "QR pass already issued and resend mode is disabled.",
+      status: 'skipped',
+      failure_reason: 'QR pass already issued and resend mode is disabled.',
     });
   }
 
@@ -49,7 +49,7 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
 
   const notificationId = await createNotification({
     registrationId: registration.id,
-    templateType: "qr_pass_issued",
+    templateType: 'qr_pass_issued',
     recipientEmail: registration.email,
     actorClerkId: operator.userId,
     actorEmail: operator.primaryEmail,
@@ -71,7 +71,7 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
 
   const emailResult = await deliverRegistrationEmail({
     registration: issued.registration,
-    templateType: "qr_pass_issued",
+    templateType: 'qr_pass_issued',
     notificationId,
     db: { markNotificationDelivery },
     qrImageUrl: qrImage.publicUrl,
@@ -82,11 +82,11 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
   });
 
   if (!emailResult.sent) {
-    throw new Error(emailResult.error || "Unable to deliver QR pass email.");
+    throw new Error(emailResult.error || 'Unable to deliver QR pass email.');
   }
 
   return updatePassIssueEmailJobItem(item.id, {
-    status: "sent",
+    status: 'sent',
     notification_id: notificationId,
     pass_id: issued.passId,
     token: issued.token,
@@ -95,18 +95,22 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
   });
 }
 
-async function deliverPassEmailDirect({ registration, operator, resendExisting }) {
-  if (registration.status !== "confirmed") {
+async function deliverPassEmailDirect({
+  registration,
+  operator,
+  resendExisting,
+}) {
+  if (registration.status !== 'confirmed') {
     return {
       skipped: true,
-      reason: "Registration is no longer confirmed.",
+      reason: 'Registration is no longer confirmed.',
     };
   }
 
   if (shouldSkipJobItem({ resendExisting, registration })) {
     return {
       skipped: true,
-      reason: "QR pass already issued and resend mode is disabled.",
+      reason: 'QR pass already issued and resend mode is disabled.',
     };
   }
 
@@ -117,7 +121,7 @@ async function deliverPassEmailDirect({ registration, operator, resendExisting }
 
   const notificationId = await createNotification({
     registrationId: registration.id,
-    templateType: "qr_pass_issued",
+    templateType: 'qr_pass_issued',
     recipientEmail: registration.email,
     actorClerkId: operator.userId,
     actorEmail: operator.primaryEmail,
@@ -139,7 +143,7 @@ async function deliverPassEmailDirect({ registration, operator, resendExisting }
 
   const emailResult = await deliverRegistrationEmail({
     registration: issued.registration,
-    templateType: "qr_pass_issued",
+    templateType: 'qr_pass_issued',
     notificationId,
     db: { markNotificationDelivery },
     qrImageUrl: qrImage.publicUrl,
@@ -150,7 +154,7 @@ async function deliverPassEmailDirect({ registration, operator, resendExisting }
   });
 
   if (!emailResult.sent) {
-    throw new Error(emailResult.error || "Unable to deliver QR pass email.");
+    throw new Error(emailResult.error || 'Unable to deliver QR pass email.');
   }
 
   return {
@@ -206,25 +210,34 @@ export async function createPassIssueEmailJob({
 
         results.push({
           registrationId: registration.id,
-          status: directResult.skipped ? "skipped" : "sent",
+          status: directResult.skipped ? 'skipped' : 'sent',
           failure_reason: directResult.skipped ? directResult.reason : null,
         });
       } catch (directError) {
         results.push({
           registrationId: registration.id,
-          status: "failed",
-          failure_reason: directError instanceof Error ? directError.message : "Unable to deliver QR pass email.",
+          status: 'failed',
+          failure_reason:
+            directError instanceof Error
+              ? directError.message
+              : 'Unable to deliver QR pass email.',
         });
       }
     }
 
-    const sentCount = results.filter((result) => result.status === "sent").length;
-    const skippedCount = results.filter((result) => result.status === "skipped").length;
-    const failedCount = results.filter((result) => result.status === "failed").length;
+    const sentCount = results.filter(
+      (result) => result.status === 'sent'
+    ).length;
+    const skippedCount = results.filter(
+      (result) => result.status === 'skipped'
+    ).length;
+    const failedCount = results.filter(
+      (result) => result.status === 'failed'
+    ).length;
 
     return {
-      id: "legacy-direct-send",
-      status: failedCount > 0 ? "failed" : "completed",
+      id: 'legacy-direct-send',
+      status: failedCount > 0 ? 'failed' : 'completed',
       selection_mode: selection.selectionMode,
       filters: selection.filters,
       resend_existing: selection.resendExisting,
@@ -268,12 +281,17 @@ export async function processPassIssueEmailJob({
         resendExisting: job.resend_existing,
       });
     } catch (error) {
-      const attemptsRemaining = Number(item.max_attempts || MAX_JOB_RETRIES) - Number(item.attempt_count || 0);
-      const nextStatus = attemptsRemaining > 0 ? "retrying" : "failed";
+      const attemptsRemaining =
+        Number(item.max_attempts || MAX_JOB_RETRIES) -
+        Number(item.attempt_count || 0);
+      const nextStatus = attemptsRemaining > 0 ? 'retrying' : 'failed';
 
       await updatePassIssueEmailJobItem(item.id, {
         status: nextStatus,
-        failure_reason: error instanceof Error ? error.message : "Unable to send QR pass email.",
+        failure_reason:
+          error instanceof Error
+            ? error.message
+            : 'Unable to send QR pass email.',
       });
     }
   }
@@ -281,9 +299,14 @@ export async function processPassIssueEmailJob({
   return refreshPassIssueEmailJob(jobId);
 }
 
-export async function processNextAvailablePassIssueEmailJob({ operator, chunkSize } = {}) {
+export async function processNextAvailablePassIssueEmailJob({
+  operator,
+  chunkSize,
+} = {}) {
   const jobs = await listPassIssueEmailJobs({ limit: 20 });
-  const activeJob = jobs.find((job) => ["queued", "processing"].includes(job.status));
+  const activeJob = jobs.find((job) =>
+    ['queued', 'processing'].includes(job.status)
+  );
 
   if (!activeJob) {
     return null;

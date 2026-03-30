@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const tabs = [
-  { label: "Overview", href: "/plan-your-travel" },
-  { label: "General Info", href: "/plan-your-travel/general-info" },
-  { label: "How to Reach", href: "/plan-your-travel/how-to-reach" },
-  { label: "Visa Information", href: "/plan-your-travel/visa-information" },
-  { label: "Accommodation", href: "/plan-your-travel/accommodation" },
+  { label: 'Overview', href: '/plan-your-travel' },
+  { label: 'General Info', href: '/plan-your-travel/general-info' },
+  { label: 'How to Reach', href: '/plan-your-travel/how-to-reach' },
+  { label: 'Visa Information', href: '/plan-your-travel/visa-information' },
+  { label: 'Accommodation', href: '/plan-your-travel/accommodation' },
 ];
 
 export default function TravelTabNav() {
@@ -25,8 +25,8 @@ export default function TravelTabNav() {
                 href={tab.href}
                 className={`flex-shrink-0 whitespace-nowrap border-b-2 px-4 py-4 text-sm font-semibold transition ${
                   isActive
-                    ? "border-amber-500 text-amber-600 dark:text-amber-400"
-                    : "border-transparent text-stone-500 hover:border-amber-300 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white"
+                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+                    : 'border-transparent text-stone-500 hover:border-amber-300 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white'
                 }`}
               >
                 {tab.label}

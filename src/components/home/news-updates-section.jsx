@@ -115,7 +115,10 @@ export default async function NewsUpdatesSection() {
           aria-label="About TASI"
           className="relative left-1/2 right-1/2 mt-10 -ml-[50vw] -mr-[50vw] h-[420px] w-screen overflow-hidden text-white md:mt-14 md:h-[560px]"
         >
-          <div className="news-updates-image absolute inset-0" aria-hidden="true" />
+          <div
+            className="news-updates-image absolute inset-0"
+            aria-hidden="true"
+          />
           <div className="news-updates-overlay pointer-events-none absolute inset-0" />
 
           <div className="absolute inset-0 z-10 flex items-center">
@@ -127,14 +130,13 @@ export default async function NewsUpdatesSection() {
                 <div className="max-w-lg text-sm leading-relaxed text-white/95 md:text-base">
                   <p>
                     The Trust and Safety India Festival (TASI) is India&apos;s
-                    first national convening focused on trust and safety, led
-                    by civil society. Convened by the Centre for Social
-                    Research (CSR) and Trust and Safety Festival, TASI creates
-                    a collaborative space for dialogue across government,
-                    industry, academia, and civil society. The festival
-                    advances innovation while centering safety and wellbeing,
-                    especially for women, children, and marginalised
-                    communities.
+                    first national convening focused on trust and safety, led by
+                    civil society. Convened by the Centre for Social Research
+                    (CSR) and Trust and Safety Festival, TASI creates a
+                    collaborative space for dialogue across government,
+                    industry, academia, and civil society. The festival advances
+                    innovation while centering safety and wellbeing, especially
+                    for women, children, and marginalised communities.
                   </p>
                 </div>
               </div>

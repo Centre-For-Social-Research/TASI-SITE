@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from 'framer-motion';
 
 export function MotionReveal({
   children,
@@ -14,7 +14,9 @@ export function MotionReveal({
   return (
     <motion.div
       className={className}
-      initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: distance }}
+      initial={
+        prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: distance }
+      }
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
@@ -36,7 +38,9 @@ export function MotionStagger({ children, className, stagger = 0.1 }) {
       variants={{
         hidden: {},
         visible: {
-          transition: prefersReducedMotion ? undefined : { staggerChildren: stagger },
+          transition: prefersReducedMotion
+            ? undefined
+            : { staggerChildren: stagger },
         },
       }}
     >
@@ -52,7 +56,9 @@ export function MotionItem({ children, className, distance = 20 }) {
     <motion.div
       className={className}
       variants={{
-        hidden: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: distance },
+        hidden: prefersReducedMotion
+          ? { opacity: 1 }
+          : { opacity: 0, y: distance },
         visible: {
           opacity: 1,
           y: 0,

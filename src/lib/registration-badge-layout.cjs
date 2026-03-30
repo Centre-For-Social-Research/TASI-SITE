@@ -1,5 +1,7 @@
 function hexToRgb(hex, fallback = [34, 69, 126]) {
-  const value = String(hex || "").trim().replace(/^#/, "");
+  const value = String(hex || '')
+    .trim()
+    .replace(/^#/, '');
 
   if (!/^[0-9a-fA-F]{6}$/.test(value)) {
     return fallback;
@@ -13,10 +15,12 @@ function hexToRgb(hex, fallback = [34, 69, 126]) {
 }
 
 function normalizeBadgeSingleLine(value, maxLength = 32) {
-  const normalized = String(value || "").replace(/\s+/g, " ").trim();
+  const normalized = String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
   if (!normalized) {
-    return "";
+    return '';
   }
 
   if (normalized.length <= maxLength) {
@@ -30,7 +34,7 @@ function getBadgeTierTheme({ badgeColorHex, badgeColorLabel } = {}) {
   const fillColor = hexToRgb(badgeColorHex);
 
   return {
-    label: `${String(badgeColorLabel || "Delegate").toUpperCase()} TIER`,
+    label: `${String(badgeColorLabel || 'Delegate').toUpperCase()} TIER`,
     fillColor,
     dotColor: fillColor,
     textColor: [255, 255, 255],
