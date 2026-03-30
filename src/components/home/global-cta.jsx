@@ -20,14 +20,6 @@ export default function GlobalCta() {
             Register
           </Link>
           
-          {/* Secondary Button - Primary Purple */}
-          <Link 
-            href="/about" 
-            className="flex w-full sm:min-w-[220px] sm:w-auto items-center justify-center rounded-3xl border border-rc-primary bg-rc-primary px-8 py-2.5 text-[16px] font-bold leading-6 text-rc-primary-foreground transition-transform hover:scale-[1.02] hover:opacity-90 dark:border-white dark:bg-white dark:text-slate-950"
-          >
-            Join our network
-          </Link>
-
           {/* Tertiary Button - Accent Alternative */}
           <Link 
             href="/sponsor" 

@@ -7,13 +7,10 @@ import {
   User,
   ArrowLeft,
   Tag,
-  Share2,
-  Facebook,
-  Twitter,
-  Linkedin,
 } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import HomeFooter from '@/components/home/footer';
+import ShareButtons from '@/components/blog/share-buttons';
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/blog';
 
 export default async function BlogPostPage({ params }) {
@@ -24,6 +21,8 @@ export default async function BlogPostPage({ params }) {
     notFound();
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jamsaq.in';
+  const postUrl = `${siteUrl}/blog/${slug}`;
   return (
     <>
       <HomeNavbar />
@@ -101,7 +100,7 @@ export default async function BlogPostPage({ params }) {
           )}
 
           {/* Main Content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none prose-p:font-serif prose-p:text-stone-700 dark:prose-p:text-stone-300">
+          <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-stone-700 dark:prose-p:text-stone-300">
             {post.body?.length ? (
               <PortableText value={post.body} />
             ) : post.content ? (
@@ -113,7 +112,7 @@ export default async function BlogPostPage({ params }) {
                 return (
                   <p
                     key={idx}
-                    className="mb-6 text-xl font-serif tracking-tight leading-[1.8] text-stone-800 dark:text-stone-300"
+                    className="mb-6 text-xl tracking-tight leading-[1.8] text-stone-800 dark:text-stone-300"
                   >
                     {paragraph}
                   </p>
@@ -132,20 +131,7 @@ export default async function BlogPostPage({ params }) {
             <h4 className="text-sm font-bold uppercase tracking-widest text-stone-500 mb-4 sm:mb-0">
               Share this article
             </h4>
-            <div className="flex gap-4">
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white dark:hover:bg-stone-800 dark:hover:text-white">
-                <Facebook className="w-4 h-4" />
-              </button>
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-sky-500 hover:bg-sky-50 hover:text-sky-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white dark:hover:bg-stone-800 dark:hover:text-white">
-                <Twitter className="w-4 h-4" />
-              </button>
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-blue-700 hover:bg-blue-50 hover:text-blue-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white dark:hover:bg-stone-800 dark:hover:text-white">
-                <Linkedin className="w-4 h-4" />
-              </button>
-              <button className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-600 transition-colors hover:border-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:border-white">
-                <Share2 className="w-4 h-4" />
-              </button>
-            </div>
+            <ShareButtons url={postUrl} title={post.title} />
           </div>
         </article>
       </main>

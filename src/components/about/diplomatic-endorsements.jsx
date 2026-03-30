@@ -91,29 +91,29 @@ function EndorsementCard({ name, title, quote, imageSrc, imageAlt, imagePosition
       />
 
       <div
-        className={`relative flex min-h-[220px] items-center py-10 ${
+        className={`relative flex min-h-[200px] items-center py-8 md:py-10 ${
           photoLeft
-            ? "px-8 md:pl-[280px] md:pr-14 lg:pl-[320px]"
-            : "px-8 md:pl-14 md:pr-[280px] lg:pr-[320px]"
+            ? "pl-[148px] pr-5 sm:pl-[168px] sm:pr-8 md:pl-[280px] md:pr-14 lg:pl-[320px]"
+            : "pl-5 pr-[148px] sm:pl-8 sm:pr-[168px] md:pl-14 md:pr-[280px] lg:pr-[320px]"
         }`}
       >
         {/* Text */}
         <div className="w-full max-w-[640px]">
           <div>
-            <h3 className="text-[1.35rem] font-bold leading-tight text-white md:text-[1.6rem]">
+            <h3 className="text-[1.05rem] font-bold leading-tight text-white sm:text-[1.2rem] md:text-[1.6rem]">
               {name}
             </h3>
-            <p className="mt-0.5 text-[13px] italic text-blue-200/75">{title}</p>
+            <p className="mt-0.5 text-[11px] italic text-blue-200/75 sm:text-[12px] md:text-[13px]">{title}</p>
           </div>
 
-          <div className="mt-6 flex items-start gap-3">
+          <div className="mt-4 flex items-start gap-2 md:mt-6 md:gap-3">
             <span
               aria-hidden="true"
-              className="mt-[-6px] flex-shrink-0 select-none font-serif text-[3rem] leading-none text-white/40"
+              className="mt-[-4px] flex-shrink-0 select-none font-serif text-[2rem] leading-none text-white/40 md:text-[3rem]"
             >
               &ldquo;
             </span>
-            <p className="text-[14px] leading-[1.75] text-white/90 md:text-[15px]">
+            <p className="text-[11px] leading-[1.7] text-white/90 sm:text-[12px] md:text-[15px]">
               {quote}
             </p>
           </div>
@@ -121,30 +121,17 @@ function EndorsementCard({ name, title, quote, imageSrc, imageAlt, imagePosition
           <div className="mt-1 flex justify-end">
             <span
               aria-hidden="true"
-              className="select-none font-serif text-[3rem] leading-none text-white/40"
+              className="select-none font-serif text-[2rem] leading-none text-white/40 md:text-[3rem]"
             >
               &rdquo;
             </span>
           </div>
-
-          {/* Mobile-only portrait — shown inline below quote, hidden on desktop */}
-          <div className="mt-6 flex justify-center md:hidden">
-            <div className="relative h-[200px] w-[160px]">
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                className="object-contain object-bottom"
-                sizes="160px"
-              />
-            </div>
-          </div>
         </div>
 
-        {/* Portrait — desktop only, absolutely positioned on the side */}
+        {/* Portrait — absolutely positioned on the side at all sizes */}
         <div
-          className={`pointer-events-none absolute bottom-0 hidden h-[110%] w-[260px] md:block ${
-            photoLeft ? "left-10" : "right-10"
+          className={`pointer-events-none absolute bottom-0 h-[110%] w-[130px] sm:w-[155px] md:w-[260px] ${
+            photoLeft ? "left-2 sm:left-4 md:left-10" : "right-2 sm:right-4 md:right-10"
           }`}
         >
           <Image
@@ -153,7 +140,7 @@ function EndorsementCard({ name, title, quote, imageSrc, imageAlt, imagePosition
             fill
             className="object-contain object-bottom"
             style={{ transform: `scale(${imageZoom})`, transformOrigin: "bottom center" }}
-            sizes="260px"
+            sizes="(max-width: 640px) 130px, (max-width: 768px) 155px, 260px"
           />
         </div>
       </div>
