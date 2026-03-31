@@ -55,258 +55,311 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
     } catch (_) {}
 
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const pw = doc.internal.pageSize.getWidth();
-    const ph = doc.internal.pageSize.getHeight();
-    const m = 14;
-    const W = pw - 2 * m;
+    const pw = doc.internal.pageSize.getWidth(); // 210
+    const ph = doc.internal.pageSize.getHeight(); // 297
+    const ml = 15;     // left/right margin
+    const W = pw - 2 * ml; // 180 usable width
 
-    // Colour palette – matching reference neutral modern style
-    const beige = [242, 240, 235];
-    const charcoal = [55, 50, 45];
-    const cardBg = [250, 248, 244];
-    const brown = [120, 80, 50];
-    const dark = [40, 36, 32];
-    const mid = [100, 95, 88];
-    const lineCl = [215, 210, 205];
+    // ── Design System ─────────────────────────────────────
+    // Palette
+    const navy   = [22, 36, 71];        // deep navy – table header, authority
+    const orange = [194, 65, 12];       // TASI brand orange – accents
+    const stone  = [238, 235, 229];     // header / info card bg
+    const rowBg  = [251, 249, 246];     // table row card bg
+    const white  = [255, 255, 255];
+    const dark   = [22, 20, 18];        // body text near-black
+    const mid    = [95, 89, 82];        // secondary text warm gray
+    const light  = [165, 160, 153];     // light text / meta
+    const rule   = [215, 211, 205];     // divider lines
 
-    // Helpers
-    const setF = (size, bold) => {
-      doc.setFont('helvetica', bold ? 'bold' : 'normal');
-      doc.setFontSize(size);
+    // Typography helpers
+    const T = {
+      bold:   (sz) => { doc.setFont('helvetica', 'bold');   doc.setFontSize(sz); },
+      normal: (sz) => { doc.setFont('helvetica', 'normal'); doc.setFontSize(sz); },
+      italic: (sz) => { doc.setFont('helvetica', 'italic'); doc.setFontSize(sz); },
     };
-    const setC = (c) => doc.setTextColor(c[0], c[1], c[2]);
-    const drawIcon = (x, y, type) => {
-      doc.setFillColor(brown[0], brown[1], brown[2]);
-      if (type === 'sq') doc.roundedRect(x, y, 5, 5, 1, 1, 'F');
-      else doc.circle(x + 2.5, y + 2.5, 2.5, 'F');
-    };
+    const C = (c) => doc.setTextColor(c[0], c[1], c[2]);
+
+    // Layout consts
+    const STRIPE_H    = 9;    // top accent stripe height
+    const HEADER_H    = 50;   // logo + event meta card
+    const INFO_H      = 38;   // attendee info card
+    const GAP         = 4;    // vertical gap between sections
+    const TBL_HDR_H   = 11;   // table column header row height
+    const ROW_GAP     = 2.5;  // gap between row cards
+    const CP          = 5;    // cell padding
+    const LINE_H      = 5.0;  // line height per text line (mm) at 9pt
+    const FOOT_H      = 14;   // footer reserved height from bottom
+
+    // Table column widths (total = 180)
+    const COL = [44, 80, 32, 24]; // Agenda, Topic, Presenter, Time
 
     // ════════════════════════════════════════════════════
-    // HEADER (single beige block with logo + meta + info)
+    // SECTION 1 — Top accent stripe
     // ════════════════════════════════════════════════════
-    const headerH = 82;
-    doc.setFillColor(...beige);
-    doc.roundedRect(m, 10, W, headerH, 4, 4, 'F');
+    doc.setFillColor(...orange);
+    doc.rect(0, 0, pw, STRIPE_H, 'F');
 
-    // Logo (directly on beige, no white box)
+    T.bold(8.5); doc.setTextColor(...white);
+    doc.text('TRUST & SAFETY INDIA FESTIVAL 2026  ·  PERSONALIZED AGENDA', pw / 2, STRIPE_H - 3, { align: 'center' });
+
+    // ════════════════════════════════════════════════════
+    // SECTION 2 — Event header card (stone bg)
+    // ════════════════════════════════════════════════════
+    const hdrY = STRIPE_H + 4;
+    doc.setFillColor(...stone);
+    doc.roundedRect(ml, hdrY, W, HEADER_H, 3, 3, 'F');
+
+    // Logo (left panel, vertically centred)
     if (logoDataUrl) {
-      doc.addImage(logoDataUrl, 'PNG', m + 6, 14, 50, 18);
+      // Logo ~2.8:1 ratio; render at 58×21mm
+      doc.addImage(logoDataUrl, 'PNG', ml + 6, hdrY + (HEADER_H - 21) / 2, 58, 21);
     } else {
-      setF(14, true);
-      doc.setTextColor(194, 65, 12);
-      doc.text('TRUST & SAFETY', m + 6, 24);
-      doc.text('FESTIVAL', m + 6, 32);
+      T.bold(13); C(orange);
+      doc.text('TASI 2026', ml + 8, hdrY + 20);
     }
 
-    // Date (calendar icon)
-    const ix = m + 64;
-    drawIcon(ix, 16, 'sq');
-    setF(8.5, true); setC(dark);
-    doc.text('Date:', ix + 7, 19.5);
-    setF(8.5, false); setC(mid);
-    doc.text('13 – 14 October 2026', ix + 7, 24.5);
+    // Vertical separator between logo and meta
+    const sepX = ml + 70;
+    doc.setDrawColor(...rule);
+    doc.setLineWidth(0.35);
+    doc.line(sepX, hdrY + 6, sepX, hdrY + HEADER_H - 6);
 
-    // Time (clock icon)
-    const tx = ix + 56;
-    drawIcon(tx, 16, 'circle');
-    setF(8.5, true); setC(dark);
-    doc.text('Time:', tx + 7, 19.5);
-    setF(8.5, false); setC(mid);
-    doc.text('9:00 am – 6:00 pm', tx + 7, 24.5);
+    // Meta grid: 2×2 (Date | Time / Location | Website)
+    const metaX1 = sepX + 8;
+    const metaX2 = metaX1 + 55;
+    const metaY1 = hdrY + 12;
+    const metaY2 = hdrY + 32;
 
-    // Thin line under date/time
-    doc.setDrawColor(...lineCl);
-    doc.setLineWidth(0.3);
-    doc.line(ix, 28, pw - m - 6, 28);
-
-    // Location (pin icon)
-    drawIcon(ix, 31, 'circle');
-    setF(8.5, true); setC(dark);
-    doc.text('Location:', ix + 7, 34.5);
-    setF(8.5, false); setC(mid);
-    doc.text('India Habitat Centre, Lodhi Road, New Delhi', ix + 7, 39.5);
-
-    // ─── Divider across full header width ───
-    const divY = 44;
-    doc.setDrawColor(...lineCl);
-    doc.setLineWidth(0.3);
-    doc.line(m + 6, divY, m + W - 6, divY);
-
-    // ─── Name / Email (left half) ───
-    const by = 49;
-    drawIcon(m + 6, by, 'circle');
-    setF(9, true); setC(dark);
-    doc.text('Name:', m + 14, by + 4);
-    setF(9, false); setC(mid);
-    const nameStr = doc.splitTextToSize(userName, W / 2 - 30);
-    doc.text(nameStr[0] || '', m + 14, by + 10);
-
-    // Underline under name
-    doc.setDrawColor(...lineCl);
-    doc.line(m + 14, by + 12, m + W / 2 - 4, by + 12);
-
-    setF(9, true); setC(dark);
-    doc.text('Email:', m + 14, by + 18);
-    setF(9, false); setC(mid);
-    const emailStr = doc.splitTextToSize(userEmail, W / 2 - 30);
-    doc.text(emailStr[0] || '', m + 14, by + 24);
-
-    // ─── Vertical divider ───
-    const midX = m + W / 2;
-    doc.setDrawColor(...lineCl);
-    doc.line(midX, by - 2, midX, by + 38);
-
-    // ─── Title / Topic (right half) ───
-    const rx = midX + 6;
-    setF(9, true); setC(dark);
-    doc.text('Title:', rx, by + 4);
-    setF(9, false); setC(mid);
-    doc.text('Trust And Safety India Festival', rx, by + 10);
-
-    // Underline under title
-    doc.setDrawColor(...lineCl);
-    doc.line(rx, by + 12, m + W - 6, by + 12);
-
-    const daysSelected = [...new Set(selectedSessions.map((s) => s.day))];
-    const topicLabel = daysSelected
-      .map((d) => effectiveDayLabels[d] || d)
-      .join(' / ');
-
-    setF(9, true); setC(dark);
-    doc.text('Topic:', rx, by + 18);
-    setF(9, true); setC(dark);
-    const topicFit = doc.splitTextToSize(topicLabel, W / 2 - 16);
-    doc.text(topicFit, rx, by + 24);
-
-    // ════════════════════════════════════════════════════
-    // TABLE – manually drawn card-style rows
-    // ════════════════════════════════════════════════════
-    const colW = [38, 78, 38, 28]; // Agenda, Topic, Presenter, Time
-    const cellPad = 5;
-    const rowGap = 3;
-    const lineH = 4.5;
-    let curY = 10 + headerH + 8;
-
-    // ─── Table header (dark charcoal with white text) ───
-    doc.setFillColor(...charcoal);
-    doc.roundedRect(m, curY, W, 12, 2, 2, 'F');
-    setF(11, true);
-    doc.setTextColor(255, 255, 255);
-    const headers = ['Agenda', 'Topic', 'Presenter', 'Time'];
-    let cx = m + cellPad;
-    headers.forEach((h, i) => {
-      doc.text(h, cx + 1, curY + 8);
-      cx += colW[i];
-    });
-    curY += 12 + rowGap;
-
-    // ─── Table body (card rows with gaps) ───
-    const drawFooter = () => {
-      const footY = ph - 12;
-      doc.setDrawColor(...lineCl);
-      doc.setLineWidth(0.3);
-      doc.line(m, footY - 4, pw - m, footY - 4);
-
-      doc.setFillColor(...brown);
-      doc.roundedRect(m, footY - 1.5, 4, 3, 0.5, 0.5, 'F');
-      setF(8, false); setC(mid);
-      doc.text('info@csrindia.org', m + 6, footY + 1);
-
-      doc.setFillColor(...brown);
-      doc.circle(pw / 2 - 10, footY, 2, 'F');
-      doc.text('+91 11 2468 2556', pw / 2 - 6, footY + 1);
-
-      doc.setFillColor(...brown);
-      doc.circle(pw - m - 26, footY, 2, 'F');
-      doc.text('jamsaq.in', pw - m - 22, footY + 1);
+    const drawMeta = (x, y, label, value, valueBold) => {
+      T.bold(7.5); C(light);
+      doc.text(label.toUpperCase(), x, y);
+      if (valueBold) { T.bold(9); } else { T.normal(9); }
+      C(dark);
+      doc.text(value, x, y + 5.5);
     };
 
+    drawMeta(metaX1, metaY1, 'Date', '13 – 14 October 2026', true);
+    drawMeta(metaX2, metaY1, 'Time', '9:00 am – 5:30 pm', false);
+
+    // Thin rule between rows
+    doc.setDrawColor(...rule);
+    doc.setLineWidth(0.25);
+    doc.line(metaX1, metaY1 + 9, ml + W - 6, metaY1 + 9);
+
+    drawMeta(metaX1, metaY2, 'Location', 'India Habitat Centre, New Delhi', false);
+    drawMeta(metaX2, metaY2, 'Website', 'jamsaq.in', false);
+
+    // ════════════════════════════════════════════════════
+    // SECTION 3 — Attendee info card
+    // ════════════════════════════════════════════════════
+    const infoY = hdrY + HEADER_H + GAP;
+    doc.setFillColor(...stone);
+    doc.roundedRect(ml, infoY, W, INFO_H, 3, 3, 'F');
+
+    // Orange left accent bar on info card
+    doc.setFillColor(...orange);
+    doc.roundedRect(ml, infoY, 3, INFO_H, 1.5, 1.5, 'F');
+
+    const halfW = (W - 6) / 2;
+    const lx = ml + 10;   // left col x
+    const rx2 = ml + 10 + halfW + 4; // right col x
+
+    // Left: Name + Email
+    T.bold(7.5); C(light);
+    doc.text('ATTENDEE', lx, infoY + 8);
+    doc.text('NAME', lx, infoY + 19.5);
+    T.normal(9.5); C(dark);
+    doc.text(doc.splitTextToSize(userName, halfW - 6)[0] || '', lx, infoY + 25.5);
+    doc.setDrawColor(...rule); doc.setLineWidth(0.25);
+    doc.line(lx, infoY + 27.5, ml + halfW + 6, infoY + 27.5);
+
+    T.bold(7.5); C(light);
+    doc.text('EMAIL', lx + 46, infoY + 19.5);
+    T.normal(9); C(mid);
+    doc.text(doc.splitTextToSize(userEmail, halfW - 6)[0] || '', lx + 46, infoY + 25.5);
+    doc.setDrawColor(...rule);
+    doc.line(lx + 46, infoY + 27.5, ml + halfW + 6 + halfW - 6, infoY + 27.5);
+
+    // Vertical divider in info card
+    doc.setDrawColor(...rule);
+    doc.line(ml + halfW + 6, infoY + 6, ml + halfW + 6, infoY + INFO_H - 6);
+
+    // Right: Title + Days
+    const daysSelected = [...new Set(selectedSessions.map((s) => s.day))];
+    const topicLabel = daysSelected.map((d) => effectiveDayLabels[d] || d).join(' / ');
+
+    T.bold(7.5); C(light);
+    doc.text('EVENT', rx2, infoY + 8);
+    T.bold(9.5); C(dark);
+    doc.text('Trust And Safety India Festival 2026', rx2, infoY + 15);
+    doc.setDrawColor(...rule); doc.setLineWidth(0.25);
+    doc.line(rx2, infoY + 17.5, ml + W - 6, infoY + 17.5);
+
+    T.bold(7.5); C(light);
+    doc.text('YOUR SELECTED DAYS', rx2, infoY + 22);
+    T.bold(9.5); C(orange);
+    const topicLines = doc.splitTextToSize(topicLabel, halfW - 6);
+    doc.text(topicLines.slice(0, 2), rx2, infoY + 28);
+
+    // ════════════════════════════════════════════════════
+    // SECTION 4 — Session table
+    // ════════════════════════════════════════════════════
+    let curY = infoY + INFO_H + GAP;
+
+    // Column header labels
+    const COL_LABELS = ['Agenda', 'Topic', 'Presenter', 'Time'];
+
+    const drawTableHeader = (y) => {
+      doc.setFillColor(...navy);
+      doc.roundedRect(ml, y, W, TBL_HDR_H, 2, 2, 'F');
+      T.bold(9.5); doc.setTextColor(...white);
+      let cx2 = ml + CP;
+      COL_LABELS.forEach((lbl, i) => {
+        doc.text(lbl, cx2, y + 7.5);
+        cx2 += COL[i];
+      });
+      return y + TBL_HDR_H + ROW_GAP;
+    };
+
+    curY = drawTableHeader(curY);
+
+    // Footer renderer (called for each page)
+    const drawFooter = (pageNum, totalPages) => {
+      const fy = ph - FOOT_H + 2;
+      doc.setDrawColor(...orange);
+      doc.setLineWidth(0.5);
+      doc.line(ml, fy, pw - ml, fy);
+
+      // Left: email
+      T.normal(7.5); C(light);
+      doc.text('info@csrindia.org', ml, fy + 5);
+
+      // Centre: phone
+      doc.text('+91 11 2468 2556', pw / 2, fy + 5, { align: 'center' });
+
+      // Right: website
+      doc.text('jamsaq.in', pw - ml, fy + 5, { align: 'right' });
+
+      // Page number
+      T.bold(7.5); C(light);
+      doc.text(`Page ${pageNum} of ${totalPages}`, pw / 2, fy + 10, { align: 'center' });
+    };
+
+    // ─── Draw session rows ────────────────────────────────
     selectedSessions.forEach((s) => {
       const title = s.title || '';
       const speakersArr = Array.isArray(s.speakers)
         ? s.speakers
-        : s.speakers
-          ? [s.speakers]
-          : [];
+        : s.speakers ? [s.speakers] : [];
       const desc = s.description || '';
-
-      // Build bullet-point topic text
-      const bullets = [];
-      if (desc) {
-        const sentences = desc
-          .split(/[.!?]+/)
-          .map((t) => t.trim())
-          .filter(Boolean);
-        sentences.slice(0, 3).forEach((sent) => bullets.push('\u2022 ' + sent));
-      }
-      if (bullets.length === 0) {
-        speakersArr.forEach((sp) => bullets.push('\u2022 ' + sp));
-      }
-
-      const presenter = speakersArr.join(', ') || s.venue || s.track || '\u2013';
+      const venue = s.venue || s.track || '';
       const time = s.time || 'TBD';
 
-      // Compute wrapped text for each column
-      setF(9.5, true);
-      const titleLines = doc.splitTextToSize(title, colW[0] - 2 * cellPad);
-      setF(8.5, false);
-      const topicLines = doc.splitTextToSize(
-        bullets.join('\n'),
-        colW[1] - 2 * cellPad
-      );
-      setF(9, false);
-      const presLines = doc.splitTextToSize(
-        presenter,
-        colW[2] - 2 * cellPad
+      // Build topic cell content: description sentences + speaker bullets
+      T.normal(8.5);
+      let topicCellLines = [];
+      if (desc) {
+        // Show full description, wrapped – up to 3 lines
+        const descWrapped = doc.splitTextToSize(desc, COL[1] - 2 * CP);
+        topicCellLines.push(...descWrapped.slice(0, 3));
+      }
+      if (speakersArr.length > 0) {
+        if (topicCellLines.length > 0) topicCellLines.push('');
+        speakersArr.slice(0, 4).forEach((sp) => {
+          topicCellLines.push(
+            ...doc.splitTextToSize('\u2022 ' + sp, COL[1] - 2 * CP).slice(0, 2)
+          );
+        });
+      }
+      if (topicCellLines.length === 0) topicCellLines = ['\u2013'];
+
+      // Compute other column line counts
+      T.bold(9.5);
+      const titleLines2 = doc.splitTextToSize(title, COL[0] - 2 * CP);
+      T.normal(8.5);
+      const presLines2 = doc.splitTextToSize(
+        speakersArr.slice(0, 2).join(', ') || venue || '\u2013',
+        COL[2] - 2 * CP
       );
 
-      // Row height based on tallest column
-      const maxLines = Math.max(
-        titleLines.length,
-        topicLines.length,
-        presLines.length,
-        1
-      );
-      const rowH = Math.max(maxLines * lineH + 2 * cellPad, 16);
+      // Row height: derive from max lines × LINE_H + padding
+      const maxL = Math.max(titleLines2.length, topicCellLines.length, presLines2.length, 1);
+      const rowH = Math.max(maxL * LINE_H + 2 * CP, 18);
 
-      // Page break if needed (leave space for footer)
-      if (curY + rowH > ph - 22) {
+      // Page break check (reserve footer space)
+      if (curY + rowH > ph - FOOT_H - 4) {
         doc.addPage();
-        curY = 14;
+        // Repeat accent stripe on new page
+        doc.setFillColor(...orange);
+        doc.rect(0, 0, pw, STRIPE_H, 'F');
+        T.bold(8.5); doc.setTextColor(...white);
+        doc.text('TRUST & SAFETY INDIA FESTIVAL 2026  ·  PERSONALIZED AGENDA', pw / 2, STRIPE_H - 3, { align: 'center' });
+        curY = STRIPE_H + 4;
+        curY = drawTableHeader(curY);
       }
 
-      // Draw card background
-      doc.setFillColor(...cardBg);
-      doc.roundedRect(m, curY, W, rowH, 2, 2, 'F');
+      // Row card background
+      doc.setFillColor(...rowBg);
+      doc.roundedRect(ml, curY, W, rowH, 2, 2, 'F');
 
-      // Agenda column (bold)
-      cx = m + cellPad;
-      setF(9.5, true); setC(dark);
-      doc.text(titleLines, cx + 1, curY + cellPad + 3.5);
-      cx += colW[0];
+      // Left orange accent strip on each row
+      doc.setFillColor(...orange);
+      doc.roundedRect(ml, curY, 2.5, rowH, 1, 1, 'F');
 
-      // Topic column (bullet points)
-      setF(8.5, false); setC(mid);
-      doc.text(topicLines, cx + 1, curY + cellPad + 3.5);
-      cx += colW[1];
+      // Subtle vertical column dividers inside the row
+      doc.setDrawColor(...rule);
+      doc.setLineWidth(0.2);
+      let dvx = ml + COL[0];
+      [0, 1, 2].forEach((i) => {
+        doc.line(dvx, curY + 3, dvx, curY + rowH - 3);
+        dvx += COL[i + 1];
+      });
 
-      // Presenter column
-      setF(9, false); setC(dark);
-      doc.text(presLines, cx + 1, curY + cellPad + 3.5);
-      cx += colW[2];
+      const textY = curY + CP + 3.5;
 
-      // Time column
-      setF(9, false); setC(dark);
-      doc.text(time, cx + 1, curY + cellPad + 3.5);
+      // Col 0: Agenda title (bold, dark)
+      T.bold(9.5); C(dark);
+      doc.text(titleLines2, ml + CP + 2, textY);
 
-      curY += rowH + rowGap;
+      // Col 1: Topic (description normal + speaker bullets smaller)
+      let topicY = textY;
+      const descLines = desc
+        ? doc.splitTextToSize(desc, COL[1] - 2 * CP).slice(0, 3)
+        : [];
+      if (descLines.length > 0) {
+        T.normal(8.5); C(mid);
+        doc.text(descLines, ml + COL[0] + CP, topicY);
+        topicY += descLines.length * LINE_H;
+        if (speakersArr.length > 0) topicY += 1.5; // small gap before bullets
+      }
+      if (speakersArr.length > 0) {
+        T.italic(7.8); C(light);
+        speakersArr.slice(0, 4).forEach((sp) => {
+          const spLines = doc.splitTextToSize('\u2022 ' + sp, COL[1] - 2 * CP).slice(0, 2);
+          doc.text(spLines, ml + COL[0] + CP, topicY);
+          topicY += spLines.length * (LINE_H - 0.5);
+        });
+      }
+
+      // Col 2: Presenter (main speaker name, normal)
+      const presName = speakersArr.length ? speakersArr[0] : (venue || '\u2013');
+      T.normal(8.5); C(dark);
+      const presLines3 = doc.splitTextToSize(presName, COL[2] - 2 * CP);
+      doc.text(presLines3.slice(0, 3), ml + COL[0] + COL[1] + CP, textY);
+
+      // Col 3: Time (bold, brand color)
+      T.bold(9); C(orange);
+      doc.text(time, ml + COL[0] + COL[1] + COL[2] + CP, textY);
+
+      curY += rowH + ROW_GAP;
     });
 
-    // Draw footer on every page
+    // Apply footer to all pages now that we know total count
     const totalPages = doc.internal.getNumberOfPages();
     for (let p = 1; p <= totalPages; p++) {
       doc.setPage(p);
-      drawFooter();
+      drawFooter(p, totalPages);
     }
 
     doc.save('TASI-2026-My-Agenda.pdf');
