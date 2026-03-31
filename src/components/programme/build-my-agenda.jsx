@@ -125,11 +125,12 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
     doc.setLineWidth(0.35);
     doc.line(sepX, hdrY + 6, sepX, hdrY + HEADER_H - 6);
 
-    // Meta grid: 2×2 (Date | Time / Location | Website)
+    // Meta row: 3-item horizontal (Date | Time | Website) — Location intentionally omitted
     const metaX1 = sepX + 8;
-    const metaX2 = metaX1 + 55;
-    const metaY1 = hdrY + 12;
-    const metaY2 = hdrY + 32;
+    const metaItemW = (ml + W - 6 - metaX1) / 3;
+    const metaX2 = metaX1 + metaItemW;
+    const metaX3 = metaX2 + metaItemW;
+    const metaRow = hdrY + 18;
 
     const drawMeta = (x, y, label, value, valueBold) => {
       T.bold(7.5); C(light);
@@ -139,16 +140,18 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
       doc.text(value, x, y + 5.5);
     };
 
-    drawMeta(metaX1, metaY1, 'Date', '13 – 14 October 2026', true);
-    drawMeta(metaX2, metaY1, 'Time', '9:00 am – 5:30 pm', false);
+    drawMeta(metaX1, metaRow, 'Date', '13 \u2013 14 October 2026', true);
 
-    // Thin rule between rows
+    // Thin vertical rules between meta items
     doc.setDrawColor(...rule);
     doc.setLineWidth(0.25);
-    doc.line(metaX1, metaY1 + 9, ml + W - 6, metaY1 + 9);
+    doc.line(metaX2 - 4, hdrY + 10, metaX2 - 4, hdrY + HEADER_H - 10);
 
-    drawMeta(metaX1, metaY2, 'Location', 'India Habitat Centre, New Delhi', false);
-    drawMeta(metaX2, metaY2, 'Website', 'jamsaq.in', false);
+    drawMeta(metaX2, metaRow, 'Time', '9:00 am \u2013 5:30 pm', false);
+
+    doc.line(metaX3 - 4, hdrY + 10, metaX3 - 4, hdrY + HEADER_H - 10);
+
+    drawMeta(metaX3, metaRow, 'Website', 'jamsaq.in', false);
 
     // ════════════════════════════════════════════════════
     // SECTION 3 — Attendee info card
@@ -208,7 +211,7 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
     let curY = infoY + INFO_H + GAP;
 
     // Column header labels
-    const COL_LABELS = ['Agenda', 'Topic', 'Presenter', 'Time'];
+    const COL_LABELS = ['Agenda', 'Topic', 'Speaker', 'Time'];
 
     const drawTableHeader = (y) => {
       doc.setFillColor(...navy);
@@ -342,11 +345,21 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
         });
       }
 
-      // Col 2: Presenter (main speaker name, normal)
+      // Col 2: Speaker (all speakers stacked, bold first)
       const presName = speakersArr.length ? speakersArr[0] : (venue || '\u2013');
-      T.normal(8.5); C(dark);
+      const extraSpeakers = speakersArr.slice(1, 3);
+      T.bold(8.5); C(dark);
       const presLines3 = doc.splitTextToSize(presName, COL[2] - 2 * CP);
-      doc.text(presLines3.slice(0, 3), ml + COL[0] + COL[1] + CP, textY);
+      doc.text(presLines3.slice(0, 2), ml + COL[0] + COL[1] + CP, textY);
+      if (extraSpeakers.length > 0) {
+        T.italic(7.5); C(mid);
+        let spExtraY = textY + presLines3.slice(0, 2).length * LINE_H;
+        extraSpeakers.forEach((sp) => {
+          const spL = doc.splitTextToSize(sp, COL[2] - 2 * CP).slice(0, 1);
+          doc.text(spL, ml + COL[0] + COL[1] + CP, spExtraY);
+          spExtraY += LINE_H - 0.5;
+        });
+      }
 
       // Col 3: Time (bold, brand color)
       T.bold(9); C(orange);
