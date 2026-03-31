@@ -5,17 +5,19 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { X, Download, CheckCircle2, Circle } from 'lucide-react';
 
-const DAY_LABELS = {
-  oct6: 'October 6, 2025',
-  oct7: 'October 7, 2025',
-  oct8: 'October 8, 2025',
+const DAY_LABELS_FALLBACK = {
+  oct6: 'Oct 13 – Opening Reception',
+  oct7: 'Oct 14 – Conference Day 1',
+  oct8: 'Oct 15 – Conference Day 2',
 };
 
-export default function BuildMyAgenda({ sessions, isOpen, onClose }) {
+export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [error, setError] = useState('');
+
+  const effectiveDayLabels = dayLabels || DAY_LABELS_FALLBACK;
 
   if (!isOpen) return null;
 
@@ -36,77 +38,205 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose }) {
 
     setError('');
 
-    // Maintain chronological order as defined in the source
     const selectedSessions = sessions.filter((s) => selectedIds.has(s.id));
     generatePDF(name.trim(), email.trim(), selectedSessions);
   };
 
-  const generatePDF = (userName, userEmail, selectedSessions) => {
-    const doc = new jsPDF();
+  const generatePDF = async (userName, userEmail, selectedSessions) => {
+    // Load TASI logo
+    let logoDataUrl = null;
+    try {
+      const resp = await fetch('/img/tasi-csr-logo.png');
+      const blob = await resp.blob();
+      logoDataUrl = await new Promise((res) => {
+        const reader = new FileReader();
+        reader.onloadend = () => res(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (_) {}
 
-    // Header
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 14;
+    const usableW = pageW - margin * 2;
+
+    // Colour palette – neutral/warm matching the reference design
+    const clrLightGray = [242, 241, 238];
+    const clrTan = [210, 196, 170];
+    const clrRowAlt = [250, 248, 244];
+    const clrOrange = [194, 65, 12];
+    const clrDark = [40, 36, 32];
+    const clrMid = [110, 105, 98];
+    const clrBorder = [210, 205, 198];
+
+    // ─── HEADER SECTION ──────────────────────────────────
+    doc.setFillColor(...clrLightGray);
+    doc.roundedRect(margin, 10, usableW, 45, 3, 3, 'F');
+
+    // Logo inner box
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(margin + 3, 13, 52, 39, 2, 2, 'F');
+
+    if (logoDataUrl) {
+      // Logo is ~2.8:1 wide; fit into 48x17mm centred in the white box
+      doc.addImage(logoDataUrl, 'PNG', margin + 5, 22, 48, 17);
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(...clrOrange);
+      doc.text('TRUST &', margin + 8, 26);
+      doc.text('SAFETY', margin + 8, 33);
+      doc.text('FESTIVAL', margin + 8, 40);
+    }
+
+    // Date (top-left of info area)
+    const infoX = margin + 62;
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(24);
-    doc.setTextColor(194, 65, 12); // Coral color
-    doc.text('TASI 2026', 14, 22);
-
-    doc.setTextColor(28, 25, 23); // Dark brown/gray
-    doc.setFontSize(16);
-    doc.text('Personalized Agenda', 14, 32);
-
-    doc.setFontSize(11);
+    doc.setFontSize(9);
+    doc.setTextColor(...clrDark);
+    doc.text('Date:', infoX, 21);
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Name: ${userName}`, 14, 42);
-    doc.text(`Email: ${userEmail}`, 14, 48);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 54);
+    doc.setTextColor(...clrMid);
+    doc.text('13 – 14 October 2026', infoX, 27);
 
+    // Time (top-right of info area)
+    const col2X = infoX + 67;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...clrDark);
+    doc.text('Time:', col2X, 21);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...clrMid);
+    doc.text('9:00 am – 6:00 pm', col2X, 27);
+
+    // Location (spanning full info area width)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...clrDark);
+    doc.text('Location:', infoX, 40);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...clrMid);
+    doc.text('India Habitat Centre, Lodhi Road, New Delhi', infoX, 46);
+
+    // ─── ATTENDEE INFO SECTION ────────────────────────────
+    const infoY = 60;
+    const infoH = 32;
+    const halfW = (usableW - 4) / 2;
+
+    doc.setFillColor(...clrLightGray);
+    doc.roundedRect(margin, infoY, halfW, infoH, 2, 2, 'F');
+    doc.roundedRect(margin + halfW + 4, infoY, halfW, infoH, 2, 2, 'F');
+
+    // Left panel: Name & Email
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...clrDark);
+    doc.text('Name:', margin + 6, infoY + 11);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...clrMid);
+    const nameFit = doc.splitTextToSize(userName, halfW - 28);
+    doc.text(nameFit[0], margin + 24, infoY + 11);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...clrDark);
+    doc.text('Email:', margin + 6, infoY + 22);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...clrMid);
+    const emailFit = doc.splitTextToSize(userEmail, halfW - 28);
+    doc.text(emailFit[0], margin + 24, infoY + 22);
+
+    // Right panel: Title & Topic
+    const rx = margin + halfW + 10;
+    const daysSelected = [...new Set(selectedSessions.map((s) => s.day))];
+    const topicLabel = daysSelected
+      .map((d) => effectiveDayLabels[d] || d)
+      .join(' / ');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...clrDark);
+    doc.text('Title:', rx, infoY + 11);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...clrMid);
+    doc.text('Trust and Safety India Festival 2026', rx + 13, infoY + 11);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...clrDark);
+    doc.text('Topic:', rx, infoY + 22);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(...clrOrange);
+    const topicFit = doc.splitTextToSize(topicLabel, halfW - 22);
+    doc.text(topicFit, rx + 13, infoY + 22);
+
+    // ─── SESSION TABLE ────────────────────────────────────
     const tableData = selectedSessions.map((s) => {
-      const dayStr = DAY_LABELS[s.day] || s.day;
-      const timeStr = s.time || 'TBD';
-      const titleStr = s.title || '';
-      const speakersStr = Array.isArray(s.speakers)
-        ? s.speakers.join(', ')
-        : s.speakers || '';
-      const venueStr = s.venue || s.track || '';
-
-      return [`${dayStr}\n${timeStr}`, titleStr, speakersStr, venueStr];
+      const title = s.title || '';
+      const desc = s.description
+        ? doc.splitTextToSize(s.description, 72).slice(0, 3).join('\n')
+        : '';
+      const speakersArr = Array.isArray(s.speakers)
+        ? s.speakers
+        : s.speakers
+          ? [s.speakers]
+          : [];
+      const speakerBullets = speakersArr
+        .map((sp) => `\u2022 ${sp}`)
+        .join('\n');
+      const topic = desc
+        ? desc + (speakerBullets ? '\n' + speakerBullets : '')
+        : speakerBullets;
+      const venue = s.venue || s.track || '–';
+      const time = s.time || 'TBD';
+      return [title, topic, venue, time];
     });
 
     autoTable(doc, {
-      startY: 62,
-      head: [['Date & Time', 'Session Title', 'Speaker(s)', 'Venue/Hall']],
+      startY: infoY + infoH + 6,
+      head: [['Agenda', 'Topic', 'Presenter / Hall', 'Time']],
       body: tableData,
-      theme: 'grid',
-      headStyles: { fillColor: [194, 65, 12], textColor: 255 },
-      styles: {
-        cellPadding: 5,
+      theme: 'plain',
+      headStyles: {
+        fillColor: clrTan,
+        textColor: clrDark,
+        fontStyle: 'bold',
         fontSize: 10,
-        valign: 'middle',
+        cellPadding: { top: 5, right: 5, bottom: 5, left: 5 },
+      },
+      styles: {
+        cellPadding: { top: 6, right: 5, bottom: 6, left: 5 },
+        fontSize: 9,
+        valign: 'top',
         font: 'helvetica',
+        lineColor: clrBorder,
+        lineWidth: 0.3,
       },
-      bodyStyles: { textColor: 50 },
+      bodyStyles: { textColor: clrDark },
+      alternateRowStyles: { fillColor: clrRowAlt },
       columnStyles: {
-        0: { cellWidth: 35 },
-        1: { cellWidth: 55 },
-        2: { cellWidth: 55 },
-        3: { cellWidth: 35 },
+        0: { cellWidth: 45, fontStyle: 'bold' },
+        1: { cellWidth: 82 },
+        2: { cellWidth: 32 },
+        3: { cellWidth: 23 },
       },
-      didDrawPage: (data) => {
-        // Footer: Page number
-        const pageCount = doc.internal.getNumberOfPages();
-        doc.setFontSize(9);
-        doc.setTextColor(150);
-        doc.text(
-          `Page ${pageCount}`,
-          doc.internal.pageSize.width - 20,
-          doc.internal.pageSize.height - 10,
-          { align: 'right' }
-        );
+      didDrawPage: () => {
+        // Footer
+        const footerY = pageH - 10;
+        doc.setDrawColor(...clrBorder);
+        doc.setLineWidth(0.4);
+        doc.line(margin, footerY - 4, pageW - margin, footerY - 4);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...clrMid);
+        doc.text('info@csrindia.org', margin, footerY);
+        doc.text('+91 11 2468 2556', pageW / 2, footerY, { align: 'center' });
+        doc.text('jamsaq.in', pageW - margin, footerY, { align: 'right' });
       },
     });
 
-    doc.save('TASI-2026-Agenda.pdf');
+    doc.save('TASI-2026-My-Agenda.pdf');
   };
 
   const groupedSessions = sessions.reduce((acc, sess) => {
@@ -180,7 +310,7 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose }) {
               return (
                 <div key={dayKey}>
                   <h3 className="text-sm font-black text-orange-700 dark:text-orange-500 uppercase tracking-widest mb-3 pb-2 border-b border-stone-100 dark:border-stone-800">
-                    {DAY_LABELS[dayKey] || dayKey}
+                    {effectiveDayLabels[dayKey] || dayKey}
                   </h3>
                   <div className="flex flex-col gap-2">
                     {daySessions.map((session) => {

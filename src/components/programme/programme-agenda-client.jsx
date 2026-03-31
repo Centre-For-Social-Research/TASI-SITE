@@ -587,6 +587,7 @@ export default function ProgrammeAgendaClient({
         sessions={normalizedSessions}
         isOpen={showAgendaBuilder}
         onClose={() => setShowAgendaBuilder(false)}
+        dayLabels={labels}
       />
     </section>
   );
