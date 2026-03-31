@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { X, Download, CheckCircle2, Circle } from 'lucide-react';
 
 const DAY_LABELS_FALLBACK = {
@@ -56,185 +55,259 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
     } catch (_) {}
 
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 14;
-    const usableW = pageW - margin * 2;
+    const pw = doc.internal.pageSize.getWidth();
+    const ph = doc.internal.pageSize.getHeight();
+    const m = 14;
+    const W = pw - 2 * m;
 
-    // Colour palette – neutral/warm matching the reference design
-    const clrLightGray = [242, 241, 238];
-    const clrTan = [210, 196, 170];
-    const clrRowAlt = [250, 248, 244];
-    const clrOrange = [194, 65, 12];
-    const clrDark = [40, 36, 32];
-    const clrMid = [110, 105, 98];
-    const clrBorder = [210, 205, 198];
+    // Colour palette – matching reference neutral modern style
+    const beige = [242, 240, 235];
+    const charcoal = [55, 50, 45];
+    const cardBg = [250, 248, 244];
+    const brown = [120, 80, 50];
+    const dark = [40, 36, 32];
+    const mid = [100, 95, 88];
+    const lineCl = [215, 210, 205];
 
-    // ─── HEADER SECTION ──────────────────────────────────
-    doc.setFillColor(...clrLightGray);
-    doc.roundedRect(margin, 10, usableW, 45, 3, 3, 'F');
+    // Helpers
+    const setF = (size, bold) => {
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
+      doc.setFontSize(size);
+    };
+    const setC = (c) => doc.setTextColor(c[0], c[1], c[2]);
+    const drawIcon = (x, y, type) => {
+      doc.setFillColor(brown[0], brown[1], brown[2]);
+      if (type === 'sq') doc.roundedRect(x, y, 5, 5, 1, 1, 'F');
+      else doc.circle(x + 2.5, y + 2.5, 2.5, 'F');
+    };
 
-    // Logo inner box
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(margin + 3, 13, 52, 39, 2, 2, 'F');
+    // ════════════════════════════════════════════════════
+    // HEADER (single beige block with logo + meta + info)
+    // ════════════════════════════════════════════════════
+    const headerH = 82;
+    doc.setFillColor(...beige);
+    doc.roundedRect(m, 10, W, headerH, 4, 4, 'F');
 
+    // Logo (directly on beige, no white box)
     if (logoDataUrl) {
-      // Logo is ~2.8:1 wide; fit into 48x17mm centred in the white box
-      doc.addImage(logoDataUrl, 'PNG', margin + 5, 22, 48, 17);
+      doc.addImage(logoDataUrl, 'PNG', m + 6, 14, 50, 18);
     } else {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(...clrOrange);
-      doc.text('TRUST &', margin + 8, 26);
-      doc.text('SAFETY', margin + 8, 33);
-      doc.text('FESTIVAL', margin + 8, 40);
+      setF(14, true);
+      doc.setTextColor(194, 65, 12);
+      doc.text('TRUST & SAFETY', m + 6, 24);
+      doc.text('FESTIVAL', m + 6, 32);
     }
 
-    // Date (top-left of info area)
-    const infoX = margin + 62;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...clrDark);
-    doc.text('Date:', infoX, 21);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...clrMid);
-    doc.text('13 – 14 October 2026', infoX, 27);
+    // Date (calendar icon)
+    const ix = m + 64;
+    drawIcon(ix, 16, 'sq');
+    setF(8.5, true); setC(dark);
+    doc.text('Date:', ix + 7, 19.5);
+    setF(8.5, false); setC(mid);
+    doc.text('13 – 14 October 2026', ix + 7, 24.5);
 
-    // Time (top-right of info area)
-    const col2X = infoX + 67;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...clrDark);
-    doc.text('Time:', col2X, 21);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...clrMid);
-    doc.text('9:00 am – 6:00 pm', col2X, 27);
+    // Time (clock icon)
+    const tx = ix + 56;
+    drawIcon(tx, 16, 'circle');
+    setF(8.5, true); setC(dark);
+    doc.text('Time:', tx + 7, 19.5);
+    setF(8.5, false); setC(mid);
+    doc.text('9:00 am – 6:00 pm', tx + 7, 24.5);
 
-    // Location (spanning full info area width)
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...clrDark);
-    doc.text('Location:', infoX, 40);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...clrMid);
-    doc.text('India Habitat Centre, Lodhi Road, New Delhi', infoX, 46);
+    // Thin line under date/time
+    doc.setDrawColor(...lineCl);
+    doc.setLineWidth(0.3);
+    doc.line(ix, 28, pw - m - 6, 28);
 
-    // ─── ATTENDEE INFO SECTION ────────────────────────────
-    const infoY = 60;
-    const infoH = 32;
-    const halfW = (usableW - 4) / 2;
+    // Location (pin icon)
+    drawIcon(ix, 31, 'circle');
+    setF(8.5, true); setC(dark);
+    doc.text('Location:', ix + 7, 34.5);
+    setF(8.5, false); setC(mid);
+    doc.text('India Habitat Centre, Lodhi Road, New Delhi', ix + 7, 39.5);
 
-    doc.setFillColor(...clrLightGray);
-    doc.roundedRect(margin, infoY, halfW, infoH, 2, 2, 'F');
-    doc.roundedRect(margin + halfW + 4, infoY, halfW, infoH, 2, 2, 'F');
+    // ─── Divider across full header width ───
+    const divY = 44;
+    doc.setDrawColor(...lineCl);
+    doc.setLineWidth(0.3);
+    doc.line(m + 6, divY, m + W - 6, divY);
 
-    // Left panel: Name & Email
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...clrDark);
-    doc.text('Name:', margin + 6, infoY + 11);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...clrMid);
-    const nameFit = doc.splitTextToSize(userName, halfW - 28);
-    doc.text(nameFit[0], margin + 24, infoY + 11);
+    // ─── Name / Email (left half) ───
+    const by = 49;
+    drawIcon(m + 6, by, 'circle');
+    setF(9, true); setC(dark);
+    doc.text('Name:', m + 14, by + 4);
+    setF(9, false); setC(mid);
+    const nameStr = doc.splitTextToSize(userName, W / 2 - 30);
+    doc.text(nameStr[0] || '', m + 14, by + 10);
 
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(...clrDark);
-    doc.text('Email:', margin + 6, infoY + 22);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...clrMid);
-    const emailFit = doc.splitTextToSize(userEmail, halfW - 28);
-    doc.text(emailFit[0], margin + 24, infoY + 22);
+    // Underline under name
+    doc.setDrawColor(...lineCl);
+    doc.line(m + 14, by + 12, m + W / 2 - 4, by + 12);
 
-    // Right panel: Title & Topic
-    const rx = margin + halfW + 10;
+    setF(9, true); setC(dark);
+    doc.text('Email:', m + 14, by + 18);
+    setF(9, false); setC(mid);
+    const emailStr = doc.splitTextToSize(userEmail, W / 2 - 30);
+    doc.text(emailStr[0] || '', m + 14, by + 24);
+
+    // ─── Vertical divider ───
+    const midX = m + W / 2;
+    doc.setDrawColor(...lineCl);
+    doc.line(midX, by - 2, midX, by + 38);
+
+    // ─── Title / Topic (right half) ───
+    const rx = midX + 6;
+    setF(9, true); setC(dark);
+    doc.text('Title:', rx, by + 4);
+    setF(9, false); setC(mid);
+    doc.text('Trust And Safety India Festival', rx, by + 10);
+
+    // Underline under title
+    doc.setDrawColor(...lineCl);
+    doc.line(rx, by + 12, m + W - 6, by + 12);
+
     const daysSelected = [...new Set(selectedSessions.map((s) => s.day))];
     const topicLabel = daysSelected
       .map((d) => effectiveDayLabels[d] || d)
       .join(' / ');
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...clrDark);
-    doc.text('Title:', rx, infoY + 11);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...clrMid);
-    doc.text('Trust and Safety India Festival 2026', rx + 13, infoY + 11);
+    setF(9, true); setC(dark);
+    doc.text('Topic:', rx, by + 18);
+    setF(9, true); setC(dark);
+    const topicFit = doc.splitTextToSize(topicLabel, W / 2 - 16);
+    doc.text(topicFit, rx, by + 24);
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...clrDark);
-    doc.text('Topic:', rx, infoY + 22);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8);
-    doc.setTextColor(...clrOrange);
-    const topicFit = doc.splitTextToSize(topicLabel, halfW - 22);
-    doc.text(topicFit, rx + 13, infoY + 22);
+    // ════════════════════════════════════════════════════
+    // TABLE – manually drawn card-style rows
+    // ════════════════════════════════════════════════════
+    const colW = [38, 78, 38, 28]; // Agenda, Topic, Presenter, Time
+    const cellPad = 5;
+    const rowGap = 3;
+    const lineH = 4.5;
+    let curY = 10 + headerH + 8;
 
-    // ─── SESSION TABLE ────────────────────────────────────
-    const tableData = selectedSessions.map((s) => {
+    // ─── Table header (dark charcoal with white text) ───
+    doc.setFillColor(...charcoal);
+    doc.roundedRect(m, curY, W, 12, 2, 2, 'F');
+    setF(11, true);
+    doc.setTextColor(255, 255, 255);
+    const headers = ['Agenda', 'Topic', 'Presenter', 'Time'];
+    let cx = m + cellPad;
+    headers.forEach((h, i) => {
+      doc.text(h, cx + 1, curY + 8);
+      cx += colW[i];
+    });
+    curY += 12 + rowGap;
+
+    // ─── Table body (card rows with gaps) ───
+    const drawFooter = () => {
+      const footY = ph - 12;
+      doc.setDrawColor(...lineCl);
+      doc.setLineWidth(0.3);
+      doc.line(m, footY - 4, pw - m, footY - 4);
+
+      doc.setFillColor(...brown);
+      doc.roundedRect(m, footY - 1.5, 4, 3, 0.5, 0.5, 'F');
+      setF(8, false); setC(mid);
+      doc.text('info@csrindia.org', m + 6, footY + 1);
+
+      doc.setFillColor(...brown);
+      doc.circle(pw / 2 - 10, footY, 2, 'F');
+      doc.text('+91 11 2468 2556', pw / 2 - 6, footY + 1);
+
+      doc.setFillColor(...brown);
+      doc.circle(pw - m - 26, footY, 2, 'F');
+      doc.text('jamsaq.in', pw - m - 22, footY + 1);
+    };
+
+    selectedSessions.forEach((s) => {
       const title = s.title || '';
-      const desc = s.description
-        ? doc.splitTextToSize(s.description, 72).slice(0, 3).join('\n')
-        : '';
       const speakersArr = Array.isArray(s.speakers)
         ? s.speakers
         : s.speakers
           ? [s.speakers]
           : [];
-      const speakerBullets = speakersArr
-        .map((sp) => `\u2022 ${sp}`)
-        .join('\n');
-      const topic = desc
-        ? desc + (speakerBullets ? '\n' + speakerBullets : '')
-        : speakerBullets;
-      const venue = s.venue || s.track || '–';
+      const desc = s.description || '';
+
+      // Build bullet-point topic text
+      const bullets = [];
+      if (desc) {
+        const sentences = desc
+          .split(/[.!?]+/)
+          .map((t) => t.trim())
+          .filter(Boolean);
+        sentences.slice(0, 3).forEach((sent) => bullets.push('\u2022 ' + sent));
+      }
+      if (bullets.length === 0) {
+        speakersArr.forEach((sp) => bullets.push('\u2022 ' + sp));
+      }
+
+      const presenter = speakersArr.join(', ') || s.venue || s.track || '\u2013';
       const time = s.time || 'TBD';
-      return [title, topic, venue, time];
+
+      // Compute wrapped text for each column
+      setF(9.5, true);
+      const titleLines = doc.splitTextToSize(title, colW[0] - 2 * cellPad);
+      setF(8.5, false);
+      const topicLines = doc.splitTextToSize(
+        bullets.join('\n'),
+        colW[1] - 2 * cellPad
+      );
+      setF(9, false);
+      const presLines = doc.splitTextToSize(
+        presenter,
+        colW[2] - 2 * cellPad
+      );
+
+      // Row height based on tallest column
+      const maxLines = Math.max(
+        titleLines.length,
+        topicLines.length,
+        presLines.length,
+        1
+      );
+      const rowH = Math.max(maxLines * lineH + 2 * cellPad, 16);
+
+      // Page break if needed (leave space for footer)
+      if (curY + rowH > ph - 22) {
+        doc.addPage();
+        curY = 14;
+      }
+
+      // Draw card background
+      doc.setFillColor(...cardBg);
+      doc.roundedRect(m, curY, W, rowH, 2, 2, 'F');
+
+      // Agenda column (bold)
+      cx = m + cellPad;
+      setF(9.5, true); setC(dark);
+      doc.text(titleLines, cx + 1, curY + cellPad + 3.5);
+      cx += colW[0];
+
+      // Topic column (bullet points)
+      setF(8.5, false); setC(mid);
+      doc.text(topicLines, cx + 1, curY + cellPad + 3.5);
+      cx += colW[1];
+
+      // Presenter column
+      setF(9, false); setC(dark);
+      doc.text(presLines, cx + 1, curY + cellPad + 3.5);
+      cx += colW[2];
+
+      // Time column
+      setF(9, false); setC(dark);
+      doc.text(time, cx + 1, curY + cellPad + 3.5);
+
+      curY += rowH + rowGap;
     });
 
-    autoTable(doc, {
-      startY: infoY + infoH + 6,
-      head: [['Agenda', 'Topic', 'Presenter / Hall', 'Time']],
-      body: tableData,
-      theme: 'plain',
-      headStyles: {
-        fillColor: clrTan,
-        textColor: clrDark,
-        fontStyle: 'bold',
-        fontSize: 10,
-        cellPadding: { top: 5, right: 5, bottom: 5, left: 5 },
-      },
-      styles: {
-        cellPadding: { top: 6, right: 5, bottom: 6, left: 5 },
-        fontSize: 9,
-        valign: 'top',
-        font: 'helvetica',
-        lineColor: clrBorder,
-        lineWidth: 0.3,
-      },
-      bodyStyles: { textColor: clrDark },
-      alternateRowStyles: { fillColor: clrRowAlt },
-      columnStyles: {
-        0: { cellWidth: 45, fontStyle: 'bold' },
-        1: { cellWidth: 82 },
-        2: { cellWidth: 32 },
-        3: { cellWidth: 23 },
-      },
-      didDrawPage: () => {
-        // Footer
-        const footerY = pageH - 10;
-        doc.setDrawColor(...clrBorder);
-        doc.setLineWidth(0.4);
-        doc.line(margin, footerY - 4, pageW - margin, footerY - 4);
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(...clrMid);
-        doc.text('info@csrindia.org', margin, footerY);
-        doc.text('+91 11 2468 2556', pageW / 2, footerY, { align: 'center' });
-        doc.text('jamsaq.in', pageW - margin, footerY, { align: 'right' });
-      },
-    });
+    // Draw footer on every page
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      doc.setPage(p);
+      drawFooter();
+    }
 
     doc.save('TASI-2026-My-Agenda.pdf');
   };
