@@ -259,35 +259,26 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
       const venue = s.venue || s.track || '';
       const time = s.time || 'TBD';
 
-      // Build topic cell content: description sentences + speaker bullets
+      // Build topic cell content: description only (speakers go in Speaker column)
       T.normal(8.5);
       let topicCellLines = [];
       if (desc) {
-        // Show full description, wrapped – up to 3 lines
         const descWrapped = doc.splitTextToSize(desc, COL[1] - 2 * CP);
-        topicCellLines.push(...descWrapped.slice(0, 3));
-      }
-      if (speakersArr.length > 0) {
-        if (topicCellLines.length > 0) topicCellLines.push('');
-        speakersArr.slice(0, 4).forEach((sp) => {
-          topicCellLines.push(
-            ...doc.splitTextToSize('\u2022 ' + sp, COL[1] - 2 * CP).slice(0, 2)
-          );
-        });
+        topicCellLines.push(...descWrapped.slice(0, 4));
       }
       if (topicCellLines.length === 0) topicCellLines = ['\u2013'];
 
       // Compute other column line counts
       T.bold(9.5);
       const titleLines2 = doc.splitTextToSize(title, COL[0] - 2 * CP);
-      T.normal(8.5);
-      const presLines2 = doc.splitTextToSize(
-        speakersArr.slice(0, 2).join(', ') || venue || '\u2013',
-        COL[2] - 2 * CP
-      );
+      // Speaker column: all speakers stacked
+      T.bold(8.5);
+      const speakerColLines = speakersArr.length > 0
+        ? speakersArr.slice(0, 4).flatMap((sp) => doc.splitTextToSize(sp, COL[2] - 2 * CP).slice(0, 2))
+        : [venue || '\u2013'];
 
       // Row height: derive from max lines × LINE_H + padding
-      const maxL = Math.max(titleLines2.length, topicCellLines.length, presLines2.length, 1);
+      const maxL = Math.max(titleLines2.length, topicCellLines.length, speakerColLines.length, 1);
       const rowH = Math.max(maxL * LINE_H + 2 * CP, 18);
 
       // Page break check (reserve footer space)
@@ -325,40 +316,29 @@ export default function BuildMyAgenda({ sessions, isOpen, onClose, dayLabels }) 
       T.bold(9.5); C(dark);
       doc.text(titleLines2, ml + CP + 2, textY);
 
-      // Col 1: Topic (description normal + speaker bullets smaller)
-      let topicY = textY;
-      const descLines = desc
-        ? doc.splitTextToSize(desc, COL[1] - 2 * CP).slice(0, 3)
-        : [];
-      if (descLines.length > 0) {
+      // Col 1: Topic (description only, no speakers)
+      if (topicCellLines.length > 0 && topicCellLines[0] !== '\u2013') {
         T.normal(8.5); C(mid);
-        doc.text(descLines, ml + COL[0] + CP, topicY);
-        topicY += descLines.length * LINE_H;
-        if (speakersArr.length > 0) topicY += 1.5; // small gap before bullets
-      }
-      if (speakersArr.length > 0) {
-        T.italic(7.8); C(light);
-        speakersArr.slice(0, 4).forEach((sp) => {
-          const spLines = doc.splitTextToSize('\u2022 ' + sp, COL[1] - 2 * CP).slice(0, 2);
-          doc.text(spLines, ml + COL[0] + CP, topicY);
-          topicY += spLines.length * (LINE_H - 0.5);
-        });
+        doc.text(topicCellLines, ml + COL[0] + CP, textY);
+      } else {
+        T.normal(8.5); C(light);
+        doc.text('\u2013', ml + COL[0] + CP, textY);
       }
 
-      // Col 2: Speaker (all speakers stacked, bold first)
-      const presName = speakersArr.length ? speakersArr[0] : (venue || '\u2013');
-      const extraSpeakers = speakersArr.slice(1, 3);
-      T.bold(8.5); C(dark);
-      const presLines3 = doc.splitTextToSize(presName, COL[2] - 2 * CP);
-      doc.text(presLines3.slice(0, 2), ml + COL[0] + COL[1] + CP, textY);
-      if (extraSpeakers.length > 0) {
-        T.italic(7.5); C(mid);
-        let spExtraY = textY + presLines3.slice(0, 2).length * LINE_H;
-        extraSpeakers.forEach((sp) => {
-          const spL = doc.splitTextToSize(sp, COL[2] - 2 * CP).slice(0, 1);
-          doc.text(spL, ml + COL[0] + COL[1] + CP, spExtraY);
-          spExtraY += LINE_H - 0.5;
+      // Col 2: Speaker (all speakers stacked)
+      const spX = ml + COL[0] + COL[1] + CP;
+      if (speakersArr.length > 0) {
+        let spY = textY;
+        speakersArr.slice(0, 4).forEach((sp, idx) => {
+          if (idx === 0) { T.bold(8.5); C(dark); }
+          else { T.normal(7.8); C(mid); }
+          const spL = doc.splitTextToSize(sp, COL[2] - 2 * CP).slice(0, 2);
+          doc.text(spL, spX, spY);
+          spY += spL.length * LINE_H;
         });
+      } else {
+        T.normal(8.5); C(light);
+        doc.text(venue || '\u2013', spX, textY);
       }
 
       // Col 3: Time (bold, brand color)
