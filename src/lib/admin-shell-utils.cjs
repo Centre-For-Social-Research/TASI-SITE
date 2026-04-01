@@ -69,6 +69,14 @@ function buildAdminNavigation({ pathname = '', summary = {}, jobs = [] } = {}) {
           badgeTone: 'default',
           showBadge: false,
         },
+        {
+          href: "/admin/tickets",
+          label: "Tickets",
+          active: normalizedPath === "/admin/tickets",
+          badgeCount: 0,
+          badgeTone: "accent",
+          showBadge: false,
+        },
       ],
     },
   ];

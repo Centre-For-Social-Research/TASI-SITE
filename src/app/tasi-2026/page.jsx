@@ -6,6 +6,15 @@ import HomeNavbar from '@/components/home/navbar';
 import StructureSection from '@/components/home/structure-section';
 import ThemesPreview from '@/components/home/themes-preview';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
+import Link from 'next/link';
+import HomeFooter from '@/components/home/footer';
+import AudienceSection from '@/components/home/audience-section';
+import FormatGrid from '@/components/home/format-grid';
+import GlobalCta from '@/components/home/global-cta';
+import HomeNavbar from '@/components/home/navbar';
+import StructureSection from '@/components/home/structure-section';
+import ThemesPreview from '@/components/home/themes-preview';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
 
 export default function Tasi2026EditionPage() {
   return (
@@ -39,6 +48,20 @@ export default function Tasi2026EditionPage() {
               <span className="rounded-[10px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
                 In person and online
               </span>
+            </div>
+            <div className="mt-2 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/receptions/2026"
+                className="rounded-full bg-rc-secondary px-6 py-3 text-sm font-black uppercase tracking-[0.14em] text-rc-primary transition hover:opacity-90"
+              >
+                View Reception Tickets
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:bg-white/15"
+              >
+                Register For TASI 2026
+              </Link>
             </div>
           </div>
         </BrandedPageHero>

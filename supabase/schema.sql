@@ -259,3 +259,188 @@ on conflict (id) do nothing;
 insert into storage.buckets (id, name, public)
 values ('registration-pass-images', 'registration-pass-images', true)
 on conflict (id) do nothing;
+
+create table if not exists public.ticket_events (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  title text not null,
+  description text,
+  venue text,
+  starts_at timestamptz not null,
+  ends_at timestamptz,
+  timezone text not null default 'Asia/Kolkata',
+  currency text not null default 'INR',
+  status text not null default 'draft' check (status in ('draft', 'published', 'archived')),
+  ui_variant text not null default 'reception',
+  hero_label text,
+  created_by_clerk_id text,
+  created_by_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.ticket_types (
+  id uuid primary key default gen_random_uuid(),
+  event_id uuid not null references public.ticket_events(id) on delete cascade,
+  tier_key text not null,
+  name text not null,
+  description text,
+  ticket_mode text not null check (ticket_mode in ('free', 'paid', 'donation')),
+  price_paise integer check (price_paise is null or price_paise >= 0),
+  min_donation_paise integer check (min_donation_paise is null or min_donation_paise >= 0),
+  capacity integer not null check (capacity >= 0),
+  per_order_limit integer not null default 10 check (per_order_limit > 0),
+  sale_starts_at timestamptz,
+  sale_ends_at timestamptz,
+  is_active boolean not null default true,
+  display_order integer not null default 0,
+  badge_pattern text not null default 'default',
+  short_description text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (event_id, tier_key),
+  unique (event_id, name)
+);
+
+create table if not exists public.ticket_customers (
+  id uuid primary key default gen_random_uuid(),
+  full_name text not null,
+  email text not null,
+  phone text not null,
+  normalized_email text not null,
+  normalized_phone text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_ticket_customers_lookup
+on public.ticket_customers(normalized_email, normalized_phone);
+
+create table if not exists public.ticket_orders (
+  id uuid primary key default gen_random_uuid(),
+  public_order_code text not null unique,
+  event_id uuid not null references public.ticket_events(id) on delete cascade,
+  customer_id uuid not null references public.ticket_customers(id) on delete restrict,
+  status text not null default 'pending' check (status in ('pending', 'payment_pending', 'paid', 'failed', 'expired', 'cancelled')),
+  currency text not null default 'INR',
+  subtotal_paise integer not null default 0 check (subtotal_paise >= 0),
+  donation_paise integer not null default 0 check (donation_paise >= 0),
+  total_paise integer not null default 0 check (total_paise >= 0),
+  buyer_name text not null,
+  buyer_email text not null,
+  buyer_phone text not null,
+  normalized_buyer_email text not null,
+  normalized_buyer_phone text not null,
+  payment_provider text,
+  provider_order_id text unique,
+  hold_expires_at timestamptz,
+  idempotency_key text not null unique,
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_ticket_orders_event_status
+on public.ticket_orders(event_id, status, created_at desc);
+
+create index if not exists idx_ticket_orders_buyer_lookup
+on public.ticket_orders(normalized_buyer_email, normalized_buyer_phone, created_at desc);
+
+create table if not exists public.ticket_order_items (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references public.ticket_orders(id) on delete cascade,
+  ticket_type_id uuid not null references public.ticket_types(id) on delete restrict,
+  quantity integer not null check (quantity > 0),
+  unit_amount_paise integer not null check (unit_amount_paise >= 0),
+  line_total_paise integer not null check (line_total_paise >= 0),
+  ticket_mode text not null check (ticket_mode in ('free', 'paid', 'donation')),
+  donation_paise integer not null default 0 check (donation_paise >= 0),
+  attendee_payload jsonb not null default '[]'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_ticket_order_items_order
+on public.ticket_order_items(order_id);
+
+create index if not exists idx_ticket_order_items_ticket_type
+on public.ticket_order_items(ticket_type_id);
+
+create table if not exists public.ticket_inventory_holds (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references public.ticket_orders(id) on delete cascade,
+  ticket_type_id uuid not null references public.ticket_types(id) on delete cascade,
+  quantity integer not null check (quantity > 0),
+  expires_at timestamptz not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_ticket_inventory_holds_ticket_expiry
+on public.ticket_inventory_holds(ticket_type_id, expires_at desc);
+
+create table if not exists public.tickets (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references public.ticket_orders(id) on delete cascade,
+  event_id uuid not null references public.ticket_events(id) on delete cascade,
+  ticket_type_id uuid not null references public.ticket_types(id) on delete restrict,
+  ticket_code text not null unique,
+  attendee_name text not null,
+  attendee_email text not null,
+  attendee_phone text not null,
+  normalized_attendee_email text not null,
+  normalized_attendee_phone text not null,
+  status text not null default 'issued' check (status in ('issued', 'checked_in', 'cancelled', 'refunded')),
+  qr_token text not null unique,
+  qr_payload text,
+  checked_in_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_tickets_order
+on public.tickets(order_id);
+
+create index if not exists idx_tickets_attendee_lookup
+on public.tickets(normalized_attendee_email, normalized_attendee_phone, created_at desc);
+
+create table if not exists public.ticket_payments (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references public.ticket_orders(id) on delete cascade,
+  provider text not null default 'razorpay',
+  provider_order_id text,
+  provider_payment_id text unique,
+  provider_signature text,
+  amount_paise integer not null check (amount_paise >= 0),
+  currency text not null default 'INR',
+  status text not null default 'created' check (status in ('created', 'authorized', 'captured', 'failed', 'webhook_confirmed')),
+  payload jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_ticket_payments_order
+on public.ticket_payments(order_id, created_at desc);
+
+create table if not exists public.ticket_webhook_events (
+  id uuid primary key default gen_random_uuid(),
+  provider text not null default 'razorpay',
+  provider_event_id text,
+  dedupe_key text not null unique,
+  event_type text not null,
+  signature_valid boolean not null default false,
+  payload jsonb not null default '{}'::jsonb,
+  processed_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_ticket_webhook_events_provider_event
+on public.ticket_webhook_events(provider, provider_event_id);
+
+alter table public.ticket_events enable row level security;
+alter table public.ticket_types enable row level security;
+alter table public.ticket_customers enable row level security;
+alter table public.ticket_orders enable row level security;
+alter table public.ticket_order_items enable row level security;
+alter table public.ticket_inventory_holds enable row level security;
+alter table public.tickets enable row level security;
+alter table public.ticket_payments enable row level security;
+alter table public.ticket_webhook_events enable row level security;

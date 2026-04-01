@@ -235,7 +235,7 @@ function RegistrantDrawer({
                 </a>
               ) : null}
             </div>
-            <div className="h-[132px] w-full overflow-hidden rounded-[10px] border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 sm:w-[132px]">
+            <div className="relative h-[132px] w-full overflow-hidden rounded-[10px] border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 sm:w-[132px]">
               {activeRegistration.profilePhotoUrl ? (
                 <div className="relative h-full w-full">
                   {!photoLoaded && (

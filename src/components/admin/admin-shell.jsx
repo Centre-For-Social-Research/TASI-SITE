@@ -9,6 +9,7 @@ import {
   Users,
   Send,
   ScanLine,
+  Ticket,
   ChevronRight,
   LogOut,
 } from 'lucide-react';
@@ -24,6 +25,7 @@ const NAV_ICONS = {
   '/admin/registrations': Users,
   '/admin/delivery': Send,
   '/admin/check-in': ScanLine,
+  '/admin/tickets': Ticket,
 };
 
 function TopStatPill({ label, value, tone = 'default' }) {
@@ -278,6 +280,8 @@ export default function AdminShell({ operator, currentPath, children }) {
                     ? 'Delivery Jobs'
                     : currentPath === '/admin/check-in'
                       ? 'Check-In Console'
+                      : currentPath === '/admin/tickets'
+                        ? 'Ticketing'
                       : 'Admin'}
               </p>
 

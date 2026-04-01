@@ -14,6 +14,17 @@ import {
 } from '@/components/home/motion-reveal';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import { receptionStats, receptions } from '@/data/receptions';
+import ReceptionTicketing2026 from "@/components/receptions/reception-ticketing-2026";
+import HomeFooter from '@/components/home/footer';
+import HomeNavbar from '@/components/home/navbar';
+import {
+  MotionItem,
+  MotionReveal,
+  MotionStagger,
+} from '@/components/home/motion-reveal';
+import ReceptionTicketing2026 from '@/components/receptions/reception-ticketing-2026';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
+import { receptionStats, receptions } from '@/data/receptions';
 
 function ModeToggle({ mode, onChange }) {
   return (
@@ -317,62 +328,12 @@ function PostMode() {
 }
 
 function PreMode() {
-  return (
-    <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
-      <div className="mx-auto grid w-full max-w-[1300px] gap-8 px-4 md:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:px-16">
-        <MotionReveal>
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary">
-            Future Access
-          </p>
-          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.1rem]">
-            Future TASI receptions will remain intimate, curated, and access
-            managed
-          </h2>
-          <p className="mt-5 text-body-lg leading-relaxed text-stone-700 dark:text-slate-300">
-            Use this page as the premium front door for future diplomatic
-            evenings, partner-hosted receptions, and limited-capacity networking
-            moments around the festival.
-          </p>
-        </MotionReveal>
-
-        <MotionStagger className="grid gap-5">
-          {[
-            {
-              title: 'Curated positioning',
-              text: 'Lead with scarcity and diplomatic prestige so the page feels like a curated access point rather than a generic event listing.',
-            },
-            {
-              title: 'Future access-readiness',
-              text: 'Keep the CTA shell in place now so future RSVP or access workflows can be introduced later without redesigning the page.',
-            },
-            {
-              title: 'Archival credibility',
-              text: 'The existing TASI 2025 receptions stay visible as proof of the standard, tone, and caliber future guests can expect.',
-            },
-          ].map((item) => (
-            <MotionItem key={item.title}>
-              <article className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
-                  Future-ready
-                </p>
-                <h3 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-                  {item.text}
-                </p>
-              </article>
-            </MotionItem>
-          ))}
-        </MotionStagger>
-      </div>
-    </section>
-  );
+  return <ReceptionTicketing2026 />;
 }
 
-export default function ReceptionsPage() {
-  const [mode, setMode] = React.useState('post');
-  const is2025 = mode === 'post';
+export default function ReceptionsPage({ initialMode = "post" }) {
+  const [mode, setMode] = React.useState(initialMode === "pre" ? "pre" : "post");
+  const is2025 = mode === "post";
 
   return (
     <>
@@ -393,8 +354,8 @@ export default function ReceptionsPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/90 md:text-lg">
               {is2025
-                ? 'Explore the embassy-hosted reception journey of TASI 2025 across October 6-8 in New Delhi, from the pre-launch welcome evening to the closing diplomatic finale.'
-                : 'Explore the vision for TASI 2026 receptions as a curated series of high-level networking moments. Venues, hosts, and access details will be announced once the programme is finalized.'}
+                ? "Explore the embassy-hosted reception journey of TASI 2025 across October 6-8 in New Delhi, from the pre-launch welcome evening to the closing diplomatic finale."
+                : "Book your place in the TASI 2026 reception programme through a curated ticketing flow designed for standard, supporter, and community access."}
             </p>
 
             <div className="mt-8">
@@ -403,15 +364,13 @@ export default function ReceptionsPage() {
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? 'October 6-8, 2025' : 'Dates to be announced'}
+                {is2025 ? "October 6-8, 2025" : "Bookings now managed here"}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025
-                  ? 'New Delhi diplomatic receptions'
-                  : 'Reception programme in development'}
+                {is2025 ? "New Delhi diplomatic receptions" : "Three-tier ticket access"}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? 'Invite Only' : 'Final access model to be announced'}
+                {is2025 ? "Invite Only" : "Razorpay-secured checkout"}
               </span>
             </div>
           </div>
