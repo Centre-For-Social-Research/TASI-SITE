@@ -1,6 +1,6 @@
 ---
-description: "Best practices for building Next.js (App Router) apps with modern caching, tooling, and server/client boundaries (aligned with Next.js 16.1.1)."
-applyTo: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css"
+description: 'Best practices for building Next.js (App Router) apps with modern caching, tooling, and server/client boundaries (aligned with Next.js 16.1.1).'
+applyTo: '**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css'
 ---
 
 # Next.js Best Practices for LLMs (2026)
@@ -46,7 +46,7 @@ This document summarizes the latest, authoritative best practices for building, 
 
 ```tsx
 // Server Component
-import DashboardNavbar from "@/components/DashboardNavbar";
+import DashboardNavbar from '@/components/DashboardNavbar';
 
 export default async function DashboardPage() {
   // ...server logic...

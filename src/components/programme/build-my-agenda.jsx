@@ -46,7 +46,9 @@ export default function BuildMyAgenda({
 
     setError('');
 
-    const selectedSessions = sortedSessions.filter((s) => selectedIds.has(s.id));
+    const selectedSessions = sortedSessions.filter((s) =>
+      selectedIds.has(s.id)
+    );
     generatePDF(name.trim(), email.trim(), selectedSessions);
   };
 
@@ -62,7 +64,11 @@ export default function BuildMyAgenda({
       });
     } catch (_) {}
 
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;
@@ -88,8 +94,7 @@ export default function BuildMyAgenda({
         doc.setFontSize(size);
       },
     };
-    const setColor = (color) =>
-      doc.setTextColor(color[0], color[1], color[2]);
+    const setColor = (color) => doc.setTextColor(color[0], color[1], color[2]);
 
     const stripeHeight = 9;
     const headerHeight = 50;
@@ -204,9 +209,16 @@ export default function BuildMyAgenda({
       infoY + 27.5
     );
 
-    doc.line(margin + halfWidth + 6, infoY + 6, margin + halfWidth + 6, infoY + infoHeight - 6);
+    doc.line(
+      margin + halfWidth + 6,
+      infoY + 6,
+      margin + halfWidth + 6,
+      infoY + infoHeight - 6
+    );
 
-    const daysSelected = [...new Set(selectedSessions.map((session) => session.day))];
+    const daysSelected = [
+      ...new Set(selectedSessions.map((session) => session.day)),
+    ];
     const topicLabel = daysSelected
       .map((day) => effectiveDayLabels[day] || day)
       .join(' / ');
@@ -265,9 +277,14 @@ export default function BuildMyAgenda({
 
       fonts.bold(7.5);
       setColor(light);
-      doc.text(`Page ${pageNum} of ${totalPages}`, pageWidth / 2, footerY + 10, {
-        align: 'center',
-      });
+      doc.text(
+        `Page ${pageNum} of ${totalPages}`,
+        pageWidth / 2,
+        footerY + 10,
+        {
+          align: 'center',
+        }
+      );
     };
 
     selectedSessions.forEach((session) => {
@@ -293,7 +310,10 @@ export default function BuildMyAgenda({
       if (topicCellLines.length === 0) topicCellLines = ['-'];
 
       fonts.bold(9.5);
-      const titleLines = doc.splitTextToSize(title, columns[0] - 2 * cellPadding);
+      const titleLines = doc.splitTextToSize(
+        title,
+        columns[0] - 2 * cellPadding
+      );
 
       fonts.bold(8.5);
       const speakerColumnLines =

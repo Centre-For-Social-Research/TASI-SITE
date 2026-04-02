@@ -2,10 +2,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import QRCode from 'qrcode';
 import { jsPDF } from 'jspdf';
-import * as XLSX from 'xlsx';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { EVENT_CONFIG } from '@/lib/registration-constants';
 import badgeLayoutUtils from '@/lib/registration-badge-layout.cjs';
+import badgeExportUtils from '@/lib/badge-export-utils.cjs';
 import {
   buildBadgeDisplayName,
   PROFILE_BUCKET,
@@ -16,6 +16,9 @@ const {
   getBadgeTierTheme,
   normalizeBadgeSingleLine,
 } = badgeLayoutUtils;
+const { buildCsvExport, buildExcelExport } = badgeExportUtils;
+
+export { buildCsvExport, buildExcelExport };
 
 let cachedLogoDataUrl = null;
 
@@ -404,18 +407,6 @@ export function buildBadgeExportRows(registrations) {
       ? 'Yes'
       : 'No',
   }));
-}
-
-export function buildCsvExport(rows) {
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  return XLSX.utils.sheet_to_csv(worksheet);
-}
-
-export function buildExcelExport(rows) {
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Badges');
-  return XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 }
 
 export async function buildPdfMergeExport(registrations) {

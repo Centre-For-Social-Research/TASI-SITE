@@ -46,7 +46,7 @@ export async function GET(request) {
     );
 
     if (format === 'xlsx') {
-      const excel = buildExcelExport(rows);
+      const excel = await buildExcelExport(rows);
       return new Response(excel, {
         headers: {
           'Content-Type':
