@@ -79,10 +79,10 @@ export default function SpeakerApplicationForm() {
   }
 
   const inputClassName =
-    'w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-orange-400 dark:focus:bg-slate-900 dark:focus:ring-orange-500/20';
+    'w-full rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-orange-400 dark:focus:bg-slate-900 dark:focus:ring-orange-500/20';
 
   return (
-    <div className="flex h-full flex-col rounded-[2rem] border border-stone-200/80 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
+    <div className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
       <div className="border-b border-stone-200/80 px-6 py-6 dark:border-slate-800 sm:px-8">
         <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
           Speaker Application
@@ -223,7 +223,7 @@ export default function SpeakerApplicationForm() {
 
         {status.message && (
           <div
-            className={`mt-5 rounded-2xl px-4 py-3 text-sm ${
+            className={`mt-5 rounded-[10px] px-4 py-3 text-sm ${
               status.type === 'success'
                 ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/70 dark:bg-emerald-950/40 dark:text-emerald-200'
                 : 'border border-red-200 bg-red-50 text-red-700 dark:border-red-900/70 dark:bg-red-950/40 dark:text-red-200'

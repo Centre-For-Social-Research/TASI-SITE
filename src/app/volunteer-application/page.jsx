@@ -98,7 +98,7 @@ export default function VolunteerApplicationPage() {
 
         <section className="mx-auto mt-8 max-w-6xl px-6 sm:mt-10 sm:px-8 lg:mt-12">
           <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-stretch">
-            <div className="rounded-[2rem] border border-stone-200/80 bg-white/95 p-7 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-9">
+            <div className="rounded-[10px] border border-stone-200/80 bg-white/95 p-7 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-9">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
                 Why Volunteer
               </p>
@@ -116,7 +116,7 @@ export default function VolunteerApplicationPage() {
                 {volunteerBenefits.map((benefit) => (
                   <div
                     key={benefit.title}
-                    className="rounded-[1.5rem] border border-stone-200 bg-stone-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-800"
+                    className="rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-800"
                   >
                     <h3 className="text-base font-black tracking-tight text-stone-900 dark:text-white">
                       {benefit.title}
@@ -128,7 +128,7 @@ export default function VolunteerApplicationPage() {
                 ))}
               </div>
 
-              <div className="mt-8 rounded-[1.75rem] bg-[linear-gradient(135deg,#111827,#1f2937,#7c2d12)] px-5 py-5 text-white">
+              <div className="mt-8 rounded-[10px] bg-[linear-gradient(135deg,#111827,#1f2937,#7c2d12)] px-5 py-5 text-white">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-200">
                   Where You Can Help
                 </p>
@@ -136,7 +136,7 @@ export default function VolunteerApplicationPage() {
                   {volunteerTracks.map((track) => (
                     <div
                       key={track}
-                      className="rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/85"
+                      className="rounded-[10px] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/85"
                     >
                       {track}
                     </div>
@@ -150,7 +150,7 @@ export default function VolunteerApplicationPage() {
         </section>
 
         <section className="mx-auto mt-14 max-w-6xl px-6 sm:px-8">
-          <div className="overflow-hidden rounded-[2rem] border border-stone-200 bg-[linear-gradient(180deg,#fffaf2_0%,#ffffff_46%,#fff4e7_100%)] px-6 py-7 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(180deg,#111827_0%,#0f172a_46%,#1f2937_100%)] sm:px-8 sm:py-8">
+          <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-[linear-gradient(180deg,#fffaf2_0%,#ffffff_46%,#fff4e7_100%)] px-6 py-7 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(180deg,#111827_0%,#0f172a_46%,#1f2937_100%)] sm:px-8 sm:py-8">
             <div className="max-w-3xl">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700">
                 Inside The Festival
@@ -168,7 +168,7 @@ export default function VolunteerApplicationPage() {
               {volunteerGallery.map((image, index) => (
                 <article
                   key={image.src}
-                  className="group relative overflow-hidden rounded-[1.75rem] border border-stone-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900"
+                  className="group relative overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <Image
@@ -197,7 +197,7 @@ export default function VolunteerApplicationPage() {
 
         <section className="mx-auto mt-20 max-w-6xl px-6 sm:px-8">
           <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="rounded-[2rem] border border-stone-200 bg-white px-6 py-8 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-8">
+            <div className="rounded-[10px] border border-stone-200 bg-white px-6 py-8 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
                 Who Thrives Here
               </p>
@@ -217,7 +217,7 @@ export default function VolunteerApplicationPage() {
                 ].map((item) => (
                   <div
                     key={item}
-                    className="rounded-[1.5rem] border border-stone-200 bg-[#fff8ef] px-4 py-4 text-sm font-medium leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                    className="rounded-[10px] border border-stone-200 bg-[#fff8ef] px-4 py-4 text-sm font-medium leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                   >
                     {item}
                   </div>
@@ -225,7 +225,7 @@ export default function VolunteerApplicationPage() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-stone-200 bg-white px-6 py-8 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-8">
+            <div className="rounded-[10px] border border-stone-200 bg-white px-6 py-8 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
                 How It Works
               </p>
@@ -236,7 +236,7 @@ export default function VolunteerApplicationPage() {
                 {processSteps.map((step, index) => (
                   <div
                     key={step}
-                    className="flex gap-4 rounded-[1.5rem] border border-stone-200 bg-stone-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-800"
+                    className="flex gap-4 rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-800"
                   >
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-950 text-sm font-black text-white">
                       0{index + 1}
@@ -248,7 +248,7 @@ export default function VolunteerApplicationPage() {
                 ))}
               </div>
 
-              <div className="mt-8 rounded-[1.75rem] border border-orange-200 bg-orange-50 px-5 py-5 dark:border-orange-900/60 dark:bg-orange-950/30">
+              <div className="mt-8 rounded-[10px] border border-orange-200 bg-orange-50 px-5 py-5 dark:border-orange-900/60 dark:bg-orange-950/30">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
                   Good To Know
                 </p>

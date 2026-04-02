@@ -117,7 +117,7 @@ export default function SpeakerApplicationPage() {
 
         <section className="mx-auto mt-12 max-w-6xl px-6 sm:mt-14 sm:px-8">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(420px,0.98fr)] lg:items-stretch">
-            <div className="flex h-full flex-col rounded-[2rem] border border-stone-200/80 bg-white p-7 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-9">
+            <div className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white p-7 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-9">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
                 Why Speak
               </p>
@@ -135,7 +135,7 @@ export default function SpeakerApplicationPage() {
                 {proofPoints.map((item) => (
                   <div
                     key={item}
-                    className="rounded-[1.5rem] border border-stone-200 bg-stone-50 px-4 py-4 text-sm font-medium leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                    className="rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-4 text-sm font-medium leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                   >
                     {item}
                   </div>
@@ -143,7 +143,7 @@ export default function SpeakerApplicationPage() {
               </div>
 
               <div className="mt-auto pt-8">
-                <div className="rounded-[1.75rem] bg-[linear-gradient(135deg,#111827,#1f2937,#7c2d12)] px-5 py-5 text-white">
+                <div className="rounded-[10px] bg-[linear-gradient(135deg,#111827,#1f2937,#7c2d12)] px-5 py-5 text-white">
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-200">
                     What To Send
                   </p>
@@ -177,7 +177,7 @@ export default function SpeakerApplicationPage() {
             {speakerHighlights.map((speaker) => (
               <article
                 key={speaker.name}
-                className="overflow-hidden rounded-[1.35rem] border border-stone-200 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900"
+                className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900"
               >
                 <div className="relative aspect-[3/4] bg-stone-200">
                   <Image
@@ -202,7 +202,7 @@ export default function SpeakerApplicationPage() {
         </section>
 
         <section className="mx-auto mt-20 max-w-6xl px-6 sm:px-8">
-          <div className="rounded-[2rem] border border-stone-200 bg-white px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-10">
+          <div className="rounded-[10px] border border-stone-200 bg-white px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-10">
             <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
               Media Reach
             </p>
@@ -213,7 +213,7 @@ export default function SpeakerApplicationPage() {
               {mediaLogos.map((logo) => (
                 <div
                   key={logo.alt}
-                  className="flex h-24 items-center justify-center rounded-[1.5rem] border border-stone-200 bg-stone-50 p-4 dark:border-slate-700 dark:bg-slate-800"
+                  className="flex h-24 items-center justify-center rounded-[10px] border border-stone-200 bg-stone-50 p-4 dark:border-slate-700 dark:bg-slate-800"
                 >
                   <Image
                     src={logo.src}
