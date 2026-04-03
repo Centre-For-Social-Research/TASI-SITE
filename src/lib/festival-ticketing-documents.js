@@ -366,7 +366,7 @@ export async function buildFestivalTicketPdf({ ticket, user }) {
   });
 }
 
-export async function buildFestivalBadgePdf({ ticket, user }) {
+export async function buildFestivalBadgePdf({ ticket, user, profilePhotoDataUrl }) {
   const { jsPDF } = await import("jspdf");
 
   const BW = 419; // A5 width in pt
@@ -404,6 +404,30 @@ export async function buildFestivalBadgePdf({ ticket, user }) {
   doc.setLineWidth(2.5);
   doc.roundedRect(2.5, 2.5, BW - 5, BH - 5, 6, 6, "S");
 
+  // ── PROFILE PHOTO (if provided) ────────────────────────────────────────
+  // Photo "pops out" of the header, centred horizontally
+  const photoSize = 64;
+  const photoX = (BW - photoSize) / 2;
+  const photoY = GRAD_H - 22; // overlaps header bottom by 22pt
+
+  if (profilePhotoDataUrl) {
+    // White background ring (acts as circular border)
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(255, 255, 255);
+    doc.roundedRect(photoX - 5, photoY - 5, photoSize + 10, photoSize + 10, 12, 12, "F");
+    // Photo
+    doc.addImage(profilePhotoDataUrl, "JPEG", photoX, photoY, photoSize, photoSize);
+    // Subtle brand-colored outline
+    doc.setDrawColor(85, 8, 158);
+    doc.setLineWidth(1.5);
+    doc.roundedRect(photoX - 5, photoY - 5, photoSize + 10, photoSize + 10, 12, 12, "S");
+  }
+
+  // Body content starts below the photo (or below header if no photo)
+  const bodyStartY = profilePhotoDataUrl
+    ? photoY + photoSize + 5 + 16 // photo bottom + gap
+    : GRAD_H + 16;
+
   // ── PASS TYPE PILL ────────────────────────────────────────────────────
   const passTypeLabelMap = {
     domestic: "DOMESTIC DELEGATE",
@@ -421,7 +445,7 @@ export async function buildFestivalBadgePdf({ ticket, user }) {
   };
   const pillColor = pillColorMap[ticket.ticket_type] || [85, 8, 158];
 
-  const pillY = GRAD_H + 16;
+  const pillY = bodyStartY;
   const pillH = 26;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
@@ -434,45 +458,47 @@ export async function buildFestivalBadgePdf({ ticket, user }) {
   doc.text(passTypeLabel, BW / 2, pillY + 17, { align: "center" });
 
   // ── ATTENDEE NAME ─────────────────────────────────────────────────────
-  const nameStartY = pillY + pillH + 28;
+  const nameStartY = pillY + pillH + (profilePhotoDataUrl ? 18 : 28);
+  const nameFontSize = profilePhotoDataUrl ? 24 : 28;
+  const nameLineH = profilePhotoDataUrl ? 30 : 34;
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(28);
+  doc.setFontSize(nameFontSize);
   doc.setTextColor(20, 15, 38);
   const nameLines = doc.splitTextToSize(user.full_name || "Attendee", BW - 60);
   let currentY = nameStartY;
   nameLines.slice(0, 2).forEach((line) => {
     doc.text(line, BW / 2, currentY, { align: "center" });
-    currentY += 34;
+    currentY += nameLineH;
   });
 
   // ── ORGANIZATION ──────────────────────────────────────────────────────
-  const orgY = currentY + 6;
+  const orgY = currentY + (profilePhotoDataUrl ? 4 : 6);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
+  doc.setFontSize(11);
   doc.setTextColor(71, 85, 105);
   const orgLines = doc.splitTextToSize(user.organization || "Festival Attendee", BW - 80);
   doc.text(orgLines[0], BW / 2, orgY, { align: "center" });
-  let orgEndY = orgY + 18;
+  let orgEndY = orgY + 16;
 
   // Show country for international delegates
   if (user.country && user.country !== "IN") {
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
-    doc.text(user.country, BW / 2, orgEndY + 8, { align: "center" });
-    orgEndY += 22;
+    doc.text(user.country, BW / 2, orgEndY + 7, { align: "center" });
+    orgEndY += 18;
   }
 
   // ── HAIRLINE DIVIDER ──────────────────────────────────────────────────
-  const divY = orgEndY + 18;
+  const divY = orgEndY + (profilePhotoDataUrl ? 12 : 18);
   doc.setDrawColor(226, 232, 240);
   doc.setLineWidth(0.75);
   doc.line(50, divY, BW - 50, divY);
 
   // ── QR CODE ───────────────────────────────────────────────────────────
-  const qrCardY = divY + 18;
-  const qrSize = 160;
-  const qrPad = 16;
+  const qrCardY = divY + 14;
+  const qrSize = profilePhotoDataUrl ? 132 : 160;
+  const qrPad = profilePhotoDataUrl ? 12 : 16;
   const qrCardW = qrSize + qrPad * 2;
   const qrCardX = (BW - qrCardW) / 2;
 

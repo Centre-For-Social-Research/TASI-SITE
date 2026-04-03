@@ -1,11 +1,14 @@
 import { getResendClient, getResendFromEmail } from "@/lib/resend";
 import { EVENT_CONFIG } from "@/lib/registration-constants";
 import { FESTIVAL_EVENT_COPY } from "@/lib/festival-ticketing-constants";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import {
   buildFestivalBadgePdf,
   buildFestivalInvoicePdf,
   buildFestivalTicketPdf,
 } from "@/lib/festival-ticketing-documents";
+
+const TICKET_PHOTO_BUCKET = "festival-ticket-photos";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -148,7 +151,24 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
   const [ticketPdf, invoicePdf, badgePdf] = await Promise.all([
     buildFestivalTicketPdf({ ticket, user }),
     buildFestivalInvoicePdf({ ticket, user }),
-    buildFestivalBadgePdf({ ticket, user }),
+    (async () => {
+      let profilePhotoDataUrl = null;
+      if (user.profile_photo_path) {
+        try {
+          const supabase = getSupabaseAdmin();
+          const { data, error } = await supabase.storage
+            .from(TICKET_PHOTO_BUCKET)
+            .download(user.profile_photo_path);
+          if (!error && data) {
+            const buffer = Buffer.from(await data.arrayBuffer());
+            profilePhotoDataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+          }
+        } catch {
+          // Non-fatal: badge generates without photo if download fails
+        }
+      }
+      return buildFestivalBadgePdf({ ticket, user, profilePhotoDataUrl });
+    })(),
   ]);
 
   const subject = `Your TASI 2026 Registration is Confirmed — ${ticket.ticket_number}`;

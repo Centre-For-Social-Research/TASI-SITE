@@ -533,4 +533,16 @@ alter table public.tickets enable row level security;
 alter table public.ticket_payments enable row level security;
 alter table public.ticket_webhook_events enable row level security;
 
+-- Festival ticket user: LinkedIn URL and profile photo (added for paid attendee profile)
+alter table public.festival_ticket_users
+  add column if not exists linkedin_url text,
+  add column if not exists profile_photo_path text,
+  add column if not exists profile_photo_size_bytes integer,
+  add column if not exists profile_photo_width integer,
+  add column if not exists profile_photo_height integer;
+
+insert into storage.buckets (id, name, public)
+values ('festival-ticket-photos', 'festival-ticket-photos', false)
+on conflict (id) do nothing;
+
 notify pgrst, 'reload schema';

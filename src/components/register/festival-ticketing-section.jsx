@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   BadgeCheck,
   BookUser,
+  Camera,
   Check,
   CheckCircle2,
   ChevronLeft,
@@ -16,6 +17,7 @@ import {
   Globe,
   Handshake,
   Info,
+  Linkedin,
   LockKeyhole,
   LoaderCircle,
   MessageCircleMore,
@@ -50,6 +52,8 @@ const INITIAL_FORM = {
   jobTitle: "",
   country: "IN",
   phone: "",
+  linkedinUrl: "",
+  profilePhotoPath: "",
   billingName: "",
   billingEmail: "",
   billingPhone: "",
@@ -88,24 +92,24 @@ const FESTIVAL_PASS_OPTIONS = [
   },
 ];
 
-const REVIEW_INCLUDED_ITEMS = {
-  domestic: [
-    "2-Day Access",
-    "Conference Kit",
-    "Digital Badge",
-    "3 Receptions",
-    "Networking App",
-    "Tax Invoice",
-  ],
-  international: [
-    "2-Day Access",
-    "Conference Kit",
-    "Digital Badge",
-    "3 Receptions",
-    "Networking App",
-    "Export Invoice",
-  ],
-};
+const REVIEW_INCLUDED_ITEMS = [
+  {
+    title: "Everything in Free Pass",
+    description: "Full session access + all basic hospitality",
+  },
+  {
+    title: "Exclusive Receptions",
+    description: "Inaugural Reception, Gala Dinner, Closing Ceremony",
+  },
+  {
+    title: "Networking & Access",
+    description: "Curated networking, reserved seating, roundtables",
+  },
+  {
+    title: "Professional Benefits",
+    description: "Certificate, premium badge, priority entry",
+  },
+];
 
 const FULL_BLEED_COMPARISON_ROWS = [
   {
@@ -398,6 +402,8 @@ export default function FestivalTicketingSection() {
   const [step, setStep] = useState("details");
   const [status, setStatus] = useState({ type: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoUploadStatus, setPhotoUploadStatus] = useState("idle"); // idle | uploading | done | error
   const [paymentSession, setPaymentSession] = useState({
     status: "idle",
     orderId: "",
@@ -442,6 +448,8 @@ export default function FestivalTicketingSection() {
     setSelectedCard(null);
     setStep("details");
     setSubmitting(false);
+    setPhotoPreview(null);
+    setPhotoUploadStatus("idle");
     setPaymentSession({
       status: "idle",
       orderId: "",
@@ -450,6 +458,32 @@ export default function FestivalTicketingSection() {
       payload: null,
     });
     setStatus({ type: "", message: "" });
+  }
+
+  async function handlePhotoChange(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setPhotoPreview(URL.createObjectURL(file));
+    setPhotoUploadStatus("uploading");
+    updateField("profilePhotoPath", "");
+
+    const fd = new FormData();
+    fd.append("photo", file);
+
+    try {
+      const res = await fetch("/api/tickets/upload-photo", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Upload failed.");
+      updateField("profilePhotoPath", data.path);
+      setPhotoUploadStatus("done");
+    } catch (err) {
+      setPhotoUploadStatus("error");
+      setStatus({
+        type: "error",
+        message: err instanceof Error ? err.message : "Photo upload failed.",
+      });
+    }
   }
 
   function openTicketModal(country) {
@@ -1061,6 +1095,64 @@ export default function FestivalTicketingSection() {
                         onChange={(event) => updateField("phone", event.target.value)}
                       />
                     </FormField>
+                    <FormField
+                      label="LinkedIn Profile URL (Optional)"
+                      hint="e.g. https://linkedin.com/in/yourname"
+                    >
+                      <div className="relative">
+                        <Linkedin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <input
+                          className={`${fieldClassName} pl-10`}
+                          type="url"
+                          placeholder="https://linkedin.com/in/yourname"
+                          value={form.linkedinUrl}
+                          onChange={(event) => updateField("linkedinUrl", event.target.value)}
+                        />
+                      </div>
+                    </FormField>
+                    <FormField
+                      label="Profile Photo (Optional)"
+                      hint="JPG or PNG, min 150×150 px, max 2 MB. Will appear on your badge."
+                    >
+                      <div className="mt-2 flex items-center gap-4">
+                        {photoPreview ? (
+                          <img
+                            src={photoPreview}
+                            alt="Profile preview"
+                            className="h-14 w-14 rounded-xl object-cover ring-2 ring-slate-200"
+                          />
+                        ) : (
+                          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+                            <Camera className="h-6 w-6" />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <label className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+                            <Camera className="h-4 w-4" />
+                            {photoPreview ? "Change photo" : "Upload photo"}
+                            <input
+                              type="file"
+                              accept="image/jpeg,image/png"
+                              className="sr-only"
+                              onChange={handlePhotoChange}
+                            />
+                          </label>
+                          {photoUploadStatus === "uploading" ? (
+                            <p className="mt-1 flex items-center gap-1.5 text-xs text-amber-600">
+                              <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                              Uploading…
+                            </p>
+                          ) : photoUploadStatus === "done" ? (
+                            <p className="mt-1 flex items-center gap-1.5 text-xs text-emerald-600">
+                              <Check className="h-3.5 w-3.5" />
+                              Photo uploaded
+                            </p>
+                          ) : photoUploadStatus === "error" ? (
+                            <p className="mt-1 text-xs text-red-600">Upload failed — try again</p>
+                          ) : null}
+                        </div>
+                      </div>
+                    </FormField>
                     <FormField label="Country of Residence *">
                       <select
                         className={fieldClassName}
@@ -1251,6 +1343,35 @@ export default function FestivalTicketingSection() {
               ) : null}
               {step === "review" ? (
                 <div>
+                  {/* Profile snapshot (photo + LinkedIn) */}
+                  {(photoPreview || form.linkedinUrl) ? (
+                    <div className="mb-5 flex items-center gap-4 rounded-[10px] border border-slate-200 bg-slate-50 px-5 py-4">
+                      {photoPreview ? (
+                        <img
+                          src={photoPreview}
+                          alt="Profile"
+                          className="h-14 w-14 shrink-0 rounded-xl object-cover ring-2 ring-slate-200"
+                        />
+                      ) : null}
+                      <div className="min-w-0">
+                        <p className="truncate text-base font-black text-slate-900">
+                          {form.fullName}
+                        </p>
+                        {form.linkedinUrl ? (
+                          <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-[#2563eb]">
+                            <Linkedin className="h-3.5 w-3.5 shrink-0" />
+                            {form.linkedinUrl}
+                          </p>
+                        ) : null}
+                        {photoUploadStatus === "done" ? (
+                          <p className="mt-0.5 flex items-center gap-1 text-xs text-emerald-600">
+                            <Check className="h-3 w-3" /> Photo saved
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-6">
                     <div className="flex items-start justify-between gap-4">
                       <p className="text-2xl font-black text-slate-900">Order Summary</p>
@@ -1288,19 +1409,19 @@ export default function FestivalTicketingSection() {
                       What&apos;s included:
                     </p>
                     <div className="mt-5 grid gap-4 md:grid-cols-2">
-                      {REVIEW_INCLUDED_ITEMS[isDomestic ? "domestic" : "international"].map(
-                        (item) => (
-                          <div
-                            key={item}
-                            className="flex items-center gap-3 text-base text-slate-700"
-                          >
-                            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-500 text-emerald-600">
-                              <Check className="h-3.5 w-3.5" />
-                            </span>
-                            <span>{item}</span>
+                      {REVIEW_INCLUDED_ITEMS.map((item) => (
+                        <div key={item.title} className="flex items-start gap-3">
+                          <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-500 text-emerald-600">
+                            <Check className="h-3.5 w-3.5" />
+                          </span>
+                          <div>
+                            <p className="text-base font-black text-slate-900">{item.title}</p>
+                            <p className="mt-0.5 text-sm leading-relaxed text-slate-600">
+                              {item.description}
+                            </p>
                           </div>
-                        ),
-                      )}
+                        </div>
+                      ))}
                     </div>
                   </div>
 

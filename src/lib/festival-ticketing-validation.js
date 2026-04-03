@@ -36,6 +36,17 @@ const booleanConsent = (message) =>
     }),
   });
 
+const linkedinUrlSchema = z
+  .string()
+  .trim()
+  .max(500, "LinkedIn URL must be 500 characters or fewer.")
+  .refine(
+    (val) => !val || /^(https?:\/\/)?(www\.)?linkedin\.com\//i.test(val),
+    "LinkedIn URL must be a valid linkedin.com profile URL.",
+  )
+  .optional()
+  .default("");
+
 export const festivalCreateOrderSchema = z
   .object({
     fullName: textField("Full name", 2, 200)
@@ -46,6 +57,8 @@ export const festivalCreateOrderSchema = z
     jobTitle: textField("Job title", 2, 200, false).optional().default(""),
     country: countryCodeSchema,
     phone: phoneSchema.optional().default(""),
+    linkedinUrl: linkedinUrlSchema,
+    profilePhotoPath: z.string().trim().max(500).optional().default(""),
     billingName: textField("Billing name", 2, 200),
     billingEmail: z.string().trim().email().max(254),
     billingPhone: phoneSchema,
