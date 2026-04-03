@@ -1,13 +1,11 @@
-import { readFileSync } from "node:fs";
+﻿import { readFileSync } from "node:fs";
 import path from "node:path";
+import React from "react";
+import { Document, Page, View, Text, Image, renderToBuffer } from "@react-pdf/renderer";
 import { FESTIVAL_EVENT_COPY } from "./festival-ticketing-constants.js";
 import { EVENT_CONFIG } from "./registration-constants.js";
 import QRCode from "qrcode";
 
-const PAGE_WIDTH = 595;
-const PAGE_HEIGHT = 842;
-const PAGE_MARGIN = 40;
-const HEADER_HEIGHT = 118;
 const BRAND_GRADIENT_STOPS = [
   [0x55, 0x08, 0x9e],
   [0x9f, 0x00, 0x99],
@@ -88,90 +86,325 @@ function readHeaderLogoDataUrl() {
   return cachedHeaderLogoDataUrl;
 }
 
-function drawGradientHeader(doc) {
-  const segmentWidth = PAGE_WIDTH / BRAND_GRADIENT_STOPS.length;
-  BRAND_GRADIENT_STOPS.forEach((color, index) => {
-    doc.setFillColor(color[0], color[1], color[2]);
-    doc.rect(index * segmentWidth, 0, segmentWidth + 1, HEADER_HEIGHT, "F");
-  });
-}
+// â”€â”€ REACT PDF HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-function drawWrappedText(doc, text, x, y, maxWidth, lineHeight) {
-  const lines = doc.splitTextToSize(String(text || ""), maxWidth);
-  lines.forEach((line, index) => {
-    doc.text(line, x, y + index * lineHeight);
-  });
-  return lines.length;
-}
+const toHex = (r, g, b) =>
+  `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 
-function drawKeyValueRows(doc, rows, x, y, labelWidth, valueWidth) {
-  let currentY = y;
+const GradientStrip = ({ height, darken = 1 }) => (
+  <View style={{ flexDirection: "row", height }}>
+    {BRAND_GRADIENT_STOPS.map(([r, g, b], i) => (
+      <View key={i} style={{ flex: 1, backgroundColor: toHex(Math.round(r * darken), Math.round(g * darken), Math.round(b * darken)) }} />
+    ))}
+  </View>
+);
 
-  rows.forEach((row) => {
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(100, 116, 139);
-    doc.text(String(row.label || "").toUpperCase(), x, currentY);
+// â”€â”€ FESTIVAL TICKET DOCUMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
-    doc.setTextColor(17, 24, 39);
-    const lines = doc.splitTextToSize(String(row.value || "-"), valueWidth);
-    lines.forEach((line, index) => {
-      doc.text(line, x + labelWidth, currentY + index * 14);
-    });
+const FestivalTicketDocument = ({ title, subtitleLines, qrDataUrl, footerLines }) => (
+  <Document>
+    <Page size="A4" style={{ backgroundColor: "#ffffff", fontFamily: "Helvetica" }}>
+      {/* Navy header */}
+      <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 90, backgroundColor: "#140f26", justifyContent: "center", paddingLeft: 40 }}>
+        <Text style={{ color: "#ffffff", fontSize: 24, fontFamily: "Helvetica-Bold" }}>{title}</Text>
+      </View>
+      {/* Subtitle lines */}
+      <View style={{ paddingTop: 110, paddingHorizontal: 40 }}>
+        {subtitleLines.map((line, i) => (
+          <Text key={i} style={{ fontSize: 11, color: "#140f26", marginBottom: 6 }}>{line}</Text>
+        ))}
+      </View>
+      {/* QR code */}
+      {qrDataUrl && (
+        <Image src={qrDataUrl} style={{ position: "absolute", top: 120, right: 40, width: 160, height: 160 }} />
+      )}
+      {/* Footer */}
+      <View style={{ position: "absolute", bottom: 82, left: 40 }}>
+        {footerLines.map((line, i) => (
+          <Text key={i} style={{ fontSize: 10, color: "#6b7280", marginBottom: 4 }}>{line}</Text>
+        ))}
+      </View>
+    </Page>
+  </Document>
+);
 
-    currentY += Math.max(lines.length * 14, 18) + 4;
-  });
+// â”€â”€ FESTIVAL BADGE DOCUMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-  return currentY;
-}
+const BADGE_W = 419; // A5 width in pt
+const BADGE_H = 595; // A5 height in pt
+const GRAD_H = 130;  // gradient header height in pt
+const FOOTER_H = 58; // footer strip height in pt
 
-function drawSectionCard(doc, { title, rows, x, y, width }) {
-  const estimatedHeight =
-    46 +
-    rows.reduce((total, row) => {
-      const approxLines = doc.splitTextToSize(String(row.value || "-"), width - 135).length;
-      return total + Math.max(approxLines * 14, 18) + 4;
-    }, 0);
+const FestivalBadgeDocument = ({ ticket, user, profilePhotoDataUrl, qrDataUrl, logoDataUrl }) => {
+  const hasPhoto = Boolean(profilePhotoDataUrl);
+  const photoSize = 64;
+  const photoX = (BADGE_W - photoSize) / 2;
+  const photoY = GRAD_H - 22;
 
-  doc.setDrawColor(226, 232, 240);
-  doc.setFillColor(255, 255, 255);
-  doc.roundedRect(x, y, width, estimatedHeight, 10, 10, "FD");
+  const passTypeLabelMap = {
+    domestic: "DOMESTIC DELEGATE",
+    international: "INTERNATIONAL DELEGATE",
+    vip: "VIP PASS",
+  };
+  const passTypeLabel =
+    passTypeLabelMap[ticket.ticket_type] ||
+    (ticket.ticket_type || "DELEGATE").toUpperCase();
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.setTextColor(20, 15, 38);
-  doc.text(title, x + 18, y + 24);
+  const pillColorMap = {
+    domestic: "#55089e",
+    international: "#0d5fa3",
+    vip: "#ef5700",
+  };
+  const pillColor = pillColorMap[ticket.ticket_type] || "#55089e";
 
-  return drawKeyValueRows(doc, rows, x + 18, y + 44, 92, width - 126);
-}
+  const bodyStartY = hasPhoto ? photoY + photoSize + 21 : GRAD_H + 16;
+  const qrSize = hasPhoto ? 132 : 160;
+  const qrPad = hasPhoto ? 12 : 16;
 
-function drawTotalsTable(doc, totals, x, y, width) {
-  const rowHeight = 22;
-  const totalHeight = totals.length * rowHeight + 18;
+  return (
+    <Document>
+      <Page size={[BADGE_W, BADGE_H]} style={{ backgroundColor: "#ffffff", fontFamily: "Helvetica" }}>
+        {/* Gradient header */}
+        <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: GRAD_H }}>
+          <GradientStrip height={GRAD_H} />
+        </View>
 
-  doc.setDrawColor(226, 232, 240);
-  doc.setFillColor(248, 250, 252);
-  doc.roundedRect(x, y, width, totalHeight, 10, 10, "FD");
+        {/* Logo centered in header */}
+        {logoDataUrl && (
+          <Image src={logoDataUrl} style={{ position: "absolute", top: 14, left: (BADGE_W - 180) / 2, width: 180, height: 44 }} />
+        )}
 
-  let rowY = y + 24;
-  totals.forEach((row, index) => {
-    const emphasized = Boolean(row.emphasis);
-    doc.setFont("helvetica", emphasized ? "bold" : "normal");
-    doc.setFontSize(emphasized ? 12 : 11);
-    doc.setTextColor(17, 24, 39);
-    doc.text(row.label, x + 18, rowY);
-    doc.text(row.value, x + width - 18, rowY, { align: "right" });
+        {/* Event dates in amber */}
+        <Text style={{ position: "absolute", top: 67, left: 0, right: 0, textAlign: "center", fontSize: 8.5, fontFamily: "Helvetica-Bold", color: "#fde68a" }}>
+          13â€“14 OCTOBER 2026  â€¢  NEW DELHI, INDIA
+        </Text>
 
-    if (index < totals.length - 1) {
-      doc.setDrawColor(226, 232, 240);
-      doc.line(x + 18, rowY + 8, x + width - 18, rowY + 8);
-    }
+        {/* "ATTENDEE BADGE" subtitle */}
+        <Text style={{ position: "absolute", top: 84, left: 0, right: 0, textAlign: "center", fontSize: 7.5, color: "#ffffff" }}>
+          ATTENDEE BADGE
+        </Text>
 
-    rowY += rowHeight;
-  });
-}
+        {/* Outer border */}
+        <View style={{ position: "absolute", top: 2.5, left: 2.5, width: BADGE_W - 5, height: BADGE_H - 5, borderWidth: 2.5, borderColor: "#55089e", borderRadius: 6 }} />
+
+        {/* Profile photo (if provided) */}
+        {hasPhoto && (
+          <>
+            <View style={{ position: "absolute", top: photoY - 5, left: photoX - 5, width: photoSize + 10, height: photoSize + 10, backgroundColor: "#ffffff", borderRadius: 12, borderWidth: 1.5, borderColor: "#55089e" }} />
+            <Image src={profilePhotoDataUrl} style={{ position: "absolute", top: photoY, left: photoX, width: photoSize, height: photoSize, borderRadius: 8 }} />
+          </>
+        )}
+
+        {/* Body content area */}
+        <View style={{ position: "absolute", top: bodyStartY, left: 30, right: 30, bottom: FOOTER_H + 10, alignItems: "center" }}>
+          {/* Pass type pill */}
+          <View style={{ backgroundColor: pillColor, borderRadius: 13, paddingHorizontal: 20, paddingVertical: 6, marginBottom: 16 }}>
+            <Text style={{ color: "#ffffff", fontSize: 9, fontFamily: "Helvetica-Bold" }}>{passTypeLabel}</Text>
+          </View>
+
+          {/* Attendee name */}
+          <Text style={{ fontSize: hasPhoto ? 24 : 28, fontFamily: "Helvetica-Bold", color: "#140f26", textAlign: "center", marginBottom: 8 }}>
+            {user.full_name || "Attendee"}
+          </Text>
+
+          {/* Organization */}
+          <Text style={{ fontSize: 11, color: "#475569", textAlign: "center", marginBottom: hasPhoto ? 4 : 6 }}>
+            {user.organization || "Festival Attendee"}
+          </Text>
+
+          {/* Country (international only) */}
+          {user.country && user.country !== "IN" && (
+            <Text style={{ fontSize: 9, color: "#64748b", textAlign: "center", marginBottom: 4 }}>
+              {user.country}
+            </Text>
+          )}
+
+          {/* Hairline divider */}
+          <View style={{ height: 0.75, backgroundColor: "#e2e8f0", alignSelf: "stretch", marginVertical: 12, marginHorizontal: 20 }} />
+
+          {/* QR card */}
+          {qrDataUrl && (
+            <View style={{ borderWidth: 0.5, borderColor: "#e2e8f0", borderRadius: 10, padding: qrPad, backgroundColor: "#ffffff", marginBottom: 12 }}>
+              <Image src={qrDataUrl} style={{ width: qrSize, height: qrSize }} />
+            </View>
+          )}
+
+          {/* Badge number */}
+          <Text style={{ fontSize: 8, color: "#64748b", textAlign: "center", marginBottom: 4 }}>BADGE NO.</Text>
+          <Text style={{ fontSize: 11, fontFamily: "Helvetica-Bold", color: "#140f26", textAlign: "center" }}>
+            {String(ticket.badge_number || ticket.ticket_number || "-")}
+          </Text>
+        </View>
+
+        {/* Footer gradient strip */}
+        <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: FOOTER_H }}>
+          <GradientStrip height={FOOTER_H} darken={0.65} />
+        </View>
+
+        {/* Footer event title */}
+        <Text style={{ position: "absolute", bottom: FOOTER_H - 21, left: 0, right: 0, textAlign: "center", fontSize: 10, fontFamily: "Helvetica-Bold", color: "#ffffff" }}>
+          {FESTIVAL_EVENT_COPY.title}
+        </Text>
+
+        {/* Footer URL / dates */}
+        <Text style={{ position: "absolute", bottom: FOOTER_H - 38, left: 0, right: 0, textAlign: "center", fontSize: 8, color: "#fde68a" }}>
+          {`csrindia.org  â€¢  ${FESTIVAL_EVENT_COPY.datesLabel}  â€¢  ${FESTIVAL_EVENT_COPY.venue}`}
+        </Text>
+      </Page>
+    </Document>
+  );
+};
+
+// â”€â”€ FESTIVAL INVOICE DOCUMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+const KVRow = ({ label, value }) => (
+  <View style={{ marginBottom: 10 }}>
+    <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b", textTransform: "uppercase", marginBottom: 2 }}>{label}</Text>
+    <Text style={{ fontSize: 11, color: "#111827" }}>{String(value || "-")}</Text>
+  </View>
+);
+
+const InvoiceCard = ({ title, rows, style }) => (
+  <View style={[{ flex: 1, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 10, padding: 18, backgroundColor: "#ffffff" }, style]}>
+    <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: "#140f26", marginBottom: 14 }}>{title}</Text>
+    {rows.map((row, i) => <KVRow key={i} label={row.label} value={row.value} />)}
+  </View>
+);
+
+const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
+  const { header, meta, seller, buyer, lineItems, totals, notes } = model;
+  const item = lineItems[0];
+
+  const sellerRows = [
+    { label: "Seller", value: seller.legalName },
+    { label: "Address", value: seller.addressLines.join(", ") },
+    { label: "PAN", value: seller.pan },
+    { label: "GSTIN", value: seller.gstin },
+    { label: "Email", value: seller.email },
+    { label: "Phone", value: seller.phone },
+  ];
+  const buyerRows = [
+    { label: "Bill To", value: buyer.billingName },
+    { label: "Email", value: buyer.billingEmail },
+    { label: "Phone", value: buyer.billingPhone },
+    { label: "Address", value: buyer.billingAddressLines.join(", ") || "-" },
+    ...(buyer.pan != null ? [{ label: "PAN", value: buyer.pan }] : []),
+    ...(buyer.gstin ? [{ label: "GSTIN", value: buyer.gstin }] : []),
+    ...(buyer.intlIdLabel ? [{ label: buyer.intlIdLabel, value: buyer.intlIdValue }] : []),
+  ];
+  const metaRows = [
+    { label: "Invoice Date", value: meta.invoiceDate },
+    { label: "Ticket Number", value: meta.ticketNumber },
+    { label: "Place of Supply", value: meta.placeOfSupply || "-" },
+    { label: "Attendee", value: meta.attendeeName },
+    { label: "Attendee Email", value: meta.attendeeEmail },
+  ];
+
+  return (
+    <Document>
+      <Page size="A4" style={{ backgroundColor: "#ffffff", fontFamily: "Helvetica" }}>
+        {/* Gradient header (absolute background) */}
+        <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 118, flexDirection: "row" }}>
+          {BRAND_GRADIENT_STOPS.map(([r, g, b], i) => (
+            <View key={i} style={{ flex: 1, backgroundColor: toHex(r, g, b) }} />
+          ))}
+        </View>
+
+        {/* Logo */}
+        {header.logoDataUrl && (
+          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 24, left: 40, width: 44, height: 44 }} />
+        )}
+
+        {/* Eyebrow */}
+        <Text style={{ position: "absolute", top: 36, left: 98, fontSize: 12, fontFamily: "Helvetica-Bold", color: "#fde68a", letterSpacing: 1.5 }}>
+          {header.eyebrow}
+        </Text>
+
+        {/* Title */}
+        <Text style={{ position: "absolute", top: 56, left: 98, fontSize: 22, fontFamily: "Helvetica-Bold", color: "#ffffff" }}>
+          {header.title}
+        </Text>
+
+        {/* "Tax Invoice" subtitle */}
+        <Text style={{ position: "absolute", top: 82, left: 98, fontSize: 13, color: "#ffffff" }}>
+          {header.subtitle}
+        </Text>
+
+        {/* Body */}
+        <View style={{ paddingTop: 136, paddingHorizontal: 40 }}>
+          {/* Invoice title row */}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
+            <Text style={{ fontSize: 22, fontFamily: "Helvetica-Bold", color: "#140f26" }}>Invoice</Text>
+            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: "#140f26" }}>{meta.invoiceNumber}</Text>
+          </View>
+
+          {/* Two-column cards */}
+          <View style={{ flexDirection: "row", marginBottom: 16 }}>
+            <InvoiceCard title="Seller Details" rows={sellerRows} style={{ marginRight: 9 }} />
+            <InvoiceCard title="Billing Details" rows={buyerRows} style={{ marginLeft: 9 }} />
+          </View>
+
+          {/* Invoice Summary */}
+          <View style={{ borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 10, padding: 18, backgroundColor: "#ffffff", marginBottom: 16 }}>
+            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: "#140f26", marginBottom: 14 }}>Invoice Summary</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+              {metaRows.map((row, i) => (
+                <View key={i} style={{ width: "50%", marginBottom: 10 }}>
+                  <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b", textTransform: "uppercase", marginBottom: 2 }}>{row.label}</Text>
+                  <Text style={{ fontSize: 11, color: "#111827" }}>{String(row.value || "-")}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Line Items */}
+          <View style={{ borderRadius: 10, backgroundColor: "#f8fafc", padding: 10, marginBottom: 16 }}>
+            <View style={{ flexDirection: "row", marginBottom: 8 }}>
+              <Text style={{ flex: 3.5, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b" }}>DESCRIPTION</Text>
+              <Text style={{ flex: 0.8, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b" }}>SAC</Text>
+              <Text style={{ flex: 0.6, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b" }}>QTY</Text>
+              <Text style={{ flex: 1, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b", textAlign: "right" }}>AMOUNT</Text>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: "#e2e8f0", marginBottom: 8 }} />
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ flex: 3.5, fontSize: 10, color: "#111827" }}>{item?.description}</Text>
+              <Text style={{ flex: 0.8, fontSize: 10, color: "#111827" }}>{item?.sacCode || "-"}</Text>
+              <Text style={{ flex: 0.6, fontSize: 10, color: "#111827" }}>{item?.quantity}</Text>
+              <Text style={{ flex: 1, fontSize: 10, color: "#111827", textAlign: "right" }}>{item?.amount}</Text>
+            </View>
+          </View>
+
+          {/* Bottom row: QR + Totals */}
+          <View style={{ flexDirection: "row", marginBottom: 16 }}>
+            {qrDataUrl && (
+              <View style={{ width: 196, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 10, padding: 18, backgroundColor: "#ffffff", marginRight: 16, alignItems: "center", justifyContent: "center" }}>
+                <Image src={qrDataUrl} style={{ width: 156, height: 156 }} />
+              </View>
+            )}
+            <View style={{ flex: 1, borderRadius: 10, backgroundColor: "#f8fafc", borderWidth: 1, borderColor: "#e2e8f0", padding: 10 }}>
+              {totals.map((row, i) => (
+                <View key={i}>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
+                    <Text style={row.emphasis ? { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#111827" } : { fontSize: 11, color: "#111827" }}>{row.label}</Text>
+                    <Text style={row.emphasis ? { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#111827", textAlign: "right" } : { fontSize: 11, color: "#111827", textAlign: "right" }}>{row.value}</Text>
+                  </View>
+                  {i < totals.length - 1 && <View style={{ height: 0.5, backgroundColor: "#e2e8f0" }} />}
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Notes */}
+          <View>
+            {notes.map((note, i) => (
+              <Text key={i} style={{ fontSize: 10, color: "#475569", marginBottom: 4 }}>{note}</Text>
+            ))}
+          </View>
+        </View>
+      </Page>
+    </Document>
+  );
+};
 
 export function buildFestivalInvoiceMetadata({ ticket, user }) {
   const domestic = ticket.ticket_type === "domestic";
@@ -310,402 +543,67 @@ export function buildFestivalInvoiceDocumentModel({ ticket, user }) {
   };
 }
 
-async function createPdfWithQr({ title, subtitleLines = [], qrPayload, footerLines = [] }) {
-  const { jsPDF } = await import("jspdf");
-  const doc = new jsPDF({
-    unit: "pt",
-    format: "a4",
-  });
-
-  doc.setFillColor(20, 15, 38);
-  doc.rect(0, 0, PAGE_WIDTH, 90, "F");
-  doc.setTextColor(255, 255, 255);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(24);
-  doc.text(title, 40, 52);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  let y = 130;
-  doc.setTextColor(20, 15, 38);
-
-  subtitleLines.forEach((line) => {
-    doc.text(line, 40, y);
-    y += 18;
-  });
-
-  if (qrPayload) {
-    const qrDataUrl = await QRCode.toDataURL(qrPayload, {
+export async function buildFestivalTicketPdf({ ticket, user }) {
+  let qrDataUrl = null;
+  if (ticket.qr_payload) {
+    qrDataUrl = await QRCode.toDataURL(ticket.qr_payload, {
       margin: 1,
       width: 220,
       color: { dark: "#140f26", light: "#FFFFFF" },
     });
-    doc.addImage(qrDataUrl, "PNG", 360, 120, 160, 160);
   }
 
-  doc.setFontSize(10);
-  footerLines.forEach((line, index) => {
-    doc.text(line, 40, 760 + index * 14);
-  });
-
-  return Buffer.from(doc.output("arraybuffer"));
-}
-
-export async function buildFestivalTicketPdf({ ticket, user }) {
-  return createPdfWithQr({
-    title: "TASI 2026 Festival Ticket",
-    subtitleLines: [
-      `Ticket Number: ${ticket.ticket_number}`,
-      `Attendee: ${user.full_name}`,
-      `Organization: ${user.organization || "Independent attendee"}`,
-      `Ticket Type: ${ticket.ticket_type}`,
-      `Event: ${FESTIVAL_EVENT_COPY.title}`,
-      `Dates: ${FESTIVAL_EVENT_COPY.datesLabel}`,
-    ],
-    qrPayload: ticket.qr_payload,
-    footerLines: [FESTIVAL_EVENT_COPY.venue, FESTIVAL_EVENT_COPY.description],
-  });
+  return renderToBuffer(
+    <FestivalTicketDocument
+      title="TASI 2026 Festival Ticket"
+      subtitleLines={[
+        `Ticket Number: ${ticket.ticket_number}`,
+        `Attendee: ${user.full_name}`,
+        `Organization: ${user.organization || "Independent attendee"}`,
+        `Ticket Type: ${ticket.ticket_type}`,
+        `Event: ${FESTIVAL_EVENT_COPY.title}`,
+        `Dates: ${FESTIVAL_EVENT_COPY.datesLabel}`,
+      ]}
+      qrDataUrl={qrDataUrl}
+      footerLines={[FESTIVAL_EVENT_COPY.venue, FESTIVAL_EVENT_COPY.description]}
+    />,
+  );
 }
 
 export async function buildFestivalBadgePdf({ ticket, user, profilePhotoDataUrl }) {
-  const { jsPDF } = await import("jspdf");
-
-  const BW = 419; // A5 width in pt
-  const BH = 595; // A5 height in pt
-  const GRAD_H = 130; // gradient header height
-
-  const doc = new jsPDF({ unit: "pt", format: "a5" });
-
-  // ── GRADIENT HEADER ───────────────────────────────────────────────────
-  const segW = BW / BRAND_GRADIENT_STOPS.length;
-  BRAND_GRADIENT_STOPS.forEach(([r, g, b], i) => {
-    doc.setFillColor(r, g, b);
-    doc.rect(i * segW, 0, segW + 1, GRAD_H, "F");
-  });
-
-  // Logo centered in header
-  const logoDataUrl = readHeaderLogoDataUrl();
-  if (logoDataUrl) {
-    doc.addImage(logoDataUrl, "PNG", (BW - 180) / 2, 14, 180, 44);
-  }
-
-  // Event dates in amber below logo
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(8.5);
-  doc.setTextColor(253, 230, 138);
-  doc.text("13–14 OCTOBER 2026  •  NEW DELHI, INDIA", BW / 2, 76, { align: "center" });
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.5);
-  doc.setTextColor(255, 255, 255);
-  doc.text("ATTENDEE BADGE", BW / 2, 93, { align: "center" });
-
-  // ── OUTER BORDER ──────────────────────────────────────────────────────
-  doc.setDrawColor(85, 8, 158);
-  doc.setLineWidth(2.5);
-  doc.roundedRect(2.5, 2.5, BW - 5, BH - 5, 6, 6, "S");
-
-  // ── PROFILE PHOTO (if provided) ────────────────────────────────────────
-  // Photo "pops out" of the header, centred horizontally
-  const photoSize = 64;
-  const photoX = (BW - photoSize) / 2;
-  const photoY = GRAD_H - 22; // overlaps header bottom by 22pt
-
-  if (profilePhotoDataUrl) {
-    // White background ring (acts as circular border)
-    doc.setFillColor(255, 255, 255);
-    doc.setDrawColor(255, 255, 255);
-    doc.roundedRect(photoX - 5, photoY - 5, photoSize + 10, photoSize + 10, 12, 12, "F");
-    // Photo
-    doc.addImage(profilePhotoDataUrl, "JPEG", photoX, photoY, photoSize, photoSize);
-    // Subtle brand-colored outline
-    doc.setDrawColor(85, 8, 158);
-    doc.setLineWidth(1.5);
-    doc.roundedRect(photoX - 5, photoY - 5, photoSize + 10, photoSize + 10, 12, 12, "S");
-  }
-
-  // Body content starts below the photo (or below header if no photo)
-  const bodyStartY = profilePhotoDataUrl
-    ? photoY + photoSize + 5 + 16 // photo bottom + gap
-    : GRAD_H + 16;
-
-  // ── PASS TYPE PILL ────────────────────────────────────────────────────
-  const passTypeLabelMap = {
-    domestic: "DOMESTIC DELEGATE",
-    international: "INTERNATIONAL DELEGATE",
-    vip: "VIP PASS",
-  };
-  const passTypeLabel =
-    passTypeLabelMap[ticket.ticket_type] ||
-    (ticket.ticket_type || "DELEGATE").toUpperCase();
-
-  const pillColorMap = {
-    domestic: [85, 8, 158],
-    international: [13, 95, 163],
-    vip: [239, 87, 0],
-  };
-  const pillColor = pillColorMap[ticket.ticket_type] || [85, 8, 158];
-
-  const pillY = bodyStartY;
-  const pillH = 26;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(9);
-  const pillTextW = doc.getTextWidth(passTypeLabel);
-  const pillW = pillTextW + 40;
-  const pillX = (BW - pillW) / 2;
-  doc.setFillColor(...pillColor);
-  doc.roundedRect(pillX, pillY, pillW, pillH, pillH / 2, pillH / 2, "F");
-  doc.setTextColor(255, 255, 255);
-  doc.text(passTypeLabel, BW / 2, pillY + 17, { align: "center" });
-
-  // ── ATTENDEE NAME ─────────────────────────────────────────────────────
-  const nameStartY = pillY + pillH + (profilePhotoDataUrl ? 18 : 28);
-  const nameFontSize = profilePhotoDataUrl ? 24 : 28;
-  const nameLineH = profilePhotoDataUrl ? 30 : 34;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(nameFontSize);
-  doc.setTextColor(20, 15, 38);
-  const nameLines = doc.splitTextToSize(user.full_name || "Attendee", BW - 60);
-  let currentY = nameStartY;
-  nameLines.slice(0, 2).forEach((line) => {
-    doc.text(line, BW / 2, currentY, { align: "center" });
-    currentY += nameLineH;
-  });
-
-  // ── ORGANIZATION ──────────────────────────────────────────────────────
-  const orgY = currentY + (profilePhotoDataUrl ? 4 : 6);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  doc.setTextColor(71, 85, 105);
-  const orgLines = doc.splitTextToSize(user.organization || "Festival Attendee", BW - 80);
-  doc.text(orgLines[0], BW / 2, orgY, { align: "center" });
-  let orgEndY = orgY + 16;
-
-  // Show country for international delegates
-  if (user.country && user.country !== "IN") {
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(100, 116, 139);
-    doc.text(user.country, BW / 2, orgEndY + 7, { align: "center" });
-    orgEndY += 18;
-  }
-
-  // ── HAIRLINE DIVIDER ──────────────────────────────────────────────────
-  const divY = orgEndY + (profilePhotoDataUrl ? 12 : 18);
-  doc.setDrawColor(226, 232, 240);
-  doc.setLineWidth(0.75);
-  doc.line(50, divY, BW - 50, divY);
-
-  // ── QR CODE ───────────────────────────────────────────────────────────
-  const qrCardY = divY + 14;
-  const qrSize = profilePhotoDataUrl ? 132 : 160;
-  const qrPad = profilePhotoDataUrl ? 12 : 16;
-  const qrCardW = qrSize + qrPad * 2;
-  const qrCardX = (BW - qrCardW) / 2;
-
-  doc.setFillColor(255, 255, 255);
-  doc.setDrawColor(226, 232, 240);
-  doc.setLineWidth(0.5);
-  doc.roundedRect(qrCardX, qrCardY, qrCardW, qrSize + qrPad * 2, 10, 10, "FD");
-
+  let qrDataUrl = null;
   if (ticket.qr_payload) {
-    const qrDataUrl = await QRCode.toDataURL(ticket.qr_payload, {
+    qrDataUrl = await QRCode.toDataURL(ticket.qr_payload, {
       margin: 1,
       width: 220,
       color: { dark: "#140f26", light: "#FFFFFF" },
     });
-    doc.addImage(qrDataUrl, "PNG", qrCardX + qrPad, qrCardY + qrPad, qrSize, qrSize);
   }
 
-  // ── BADGE NUMBER ──────────────────────────────────────────────────────
-  const qrCardBottom = qrCardY + qrSize + qrPad * 2;
-  const badgeLabelY = qrCardBottom + 14;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(100, 116, 139);
-  doc.text("BADGE NO.", BW / 2, badgeLabelY, { align: "center" });
+  const logoDataUrl = readHeaderLogoDataUrl();
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
-  doc.setTextColor(20, 15, 38);
-  doc.text(String(ticket.badge_number || ticket.ticket_number || "-"), BW / 2, badgeLabelY + 16, {
-    align: "center",
-  });
-
-  // ── FOOTER GRADIENT STRIP ─────────────────────────────────────────────
-  const footerH = 58;
-  const footerY = BH - footerH;
-  const footSegW = BW / BRAND_GRADIENT_STOPS.length;
-  BRAND_GRADIENT_STOPS.forEach(([r, g, b], i) => {
-    doc.setFillColor(Math.round(r * 0.65), Math.round(g * 0.65), Math.round(b * 0.65));
-    doc.rect(i * footSegW, footerY, footSegW + 1, footerH, "F");
-  });
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(10);
-  doc.setTextColor(255, 255, 255);
-  doc.text(FESTIVAL_EVENT_COPY.title, BW / 2, footerY + 21, { align: "center" });
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(253, 230, 138);
-  doc.text(
-    `csrindia.org  •  ${FESTIVAL_EVENT_COPY.datesLabel}  •  ${FESTIVAL_EVENT_COPY.venue}`,
-    BW / 2,
-    footerY + 38,
-    { align: "center" },
+  return renderToBuffer(
+    <FestivalBadgeDocument
+      ticket={ticket}
+      user={user}
+      profilePhotoDataUrl={profilePhotoDataUrl}
+      qrDataUrl={qrDataUrl}
+      logoDataUrl={logoDataUrl}
+    />,
   );
-
-  return Buffer.from(doc.output("arraybuffer"));
 }
 
 export async function buildFestivalInvoicePdf({ ticket, user }) {
-  const { jsPDF } = await import("jspdf");
   const model = buildFestivalInvoiceDocumentModel({ ticket, user });
-  const doc = new jsPDF({
-    unit: "pt",
-    format: "a4",
-  });
 
-  drawGradientHeader(doc);
-
-  if (model.header.logoDataUrl) {
-    doc.addImage(model.header.logoDataUrl, "PNG", PAGE_MARGIN, 24, 44, 44);
-  }
-
-  doc.setTextColor(253, 230, 138);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text(model.header.eyebrow, PAGE_MARGIN + 58, 36);
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(26);
-  doc.text(model.header.title, PAGE_MARGIN + 58, 64);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(13);
-  doc.text(model.header.subtitle, PAGE_MARGIN + 58, 86);
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.setTextColor(20, 15, 38);
-  doc.text("Invoice", PAGE_MARGIN, 154);
-  doc.setFontSize(12);
-  doc.text(model.meta.invoiceNumber, PAGE_WIDTH - PAGE_MARGIN, 154, { align: "right" });
-
-  const topCardY = 176;
-  const columnGap = 18;
-  const columnWidth = (PAGE_WIDTH - PAGE_MARGIN * 2 - columnGap) / 2;
-
-  const sellerRows = [
-    { label: "Seller", value: model.seller.legalName },
-    { label: "Address", value: model.seller.addressLines.join(", ") },
-    { label: "PAN", value: model.seller.pan },
-    { label: "GSTIN", value: model.seller.gstin },
-    { label: "Email", value: model.seller.email },
-    { label: "Phone", value: model.seller.phone },
-  ];
-  const buyerRows = [
-    { label: "Bill To", value: model.buyer.billingName },
-    { label: "Email", value: model.buyer.billingEmail },
-    { label: "Phone", value: model.buyer.billingPhone },
-    { label: "Address", value: model.buyer.billingAddressLines.join(", ") || "-" },
-    ...(model.buyer.pan != null ? [{ label: "PAN", value: model.buyer.pan }] : []),
-    ...(model.buyer.gstin ? [{ label: "GSTIN", value: model.buyer.gstin }] : []),
-    ...(model.buyer.intlIdLabel ? [{ label: model.buyer.intlIdLabel, value: model.buyer.intlIdValue }] : []),
-  ];
-
-  drawSectionCard(doc, {
-    title: "Seller Details",
-    rows: sellerRows,
-    x: PAGE_MARGIN,
-    y: topCardY,
-    width: columnWidth,
-  });
-  drawSectionCard(doc, {
-    title: "Billing Details",
-    rows: buyerRows,
-    x: PAGE_MARGIN + columnWidth + columnGap,
-    y: topCardY,
-    width: columnWidth,
-  });
-
-  const metaRows = [
-    { label: "Invoice Date", value: model.meta.invoiceDate },
-    { label: "Ticket Number", value: model.meta.ticketNumber },
-    { label: "Place of Supply", value: model.meta.placeOfSupply || "-" },
-    { label: "Attendee", value: model.meta.attendeeName },
-    { label: "Attendee Email", value: model.meta.attendeeEmail },
-  ];
-
-  doc.setDrawColor(226, 232, 240);
-  doc.setFillColor(255, 255, 255);
-  doc.roundedRect(PAGE_MARGIN, 376, PAGE_WIDTH - PAGE_MARGIN * 2, 128, 10, 10, "FD");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.setTextColor(20, 15, 38);
-  doc.text("Invoice Summary", PAGE_MARGIN + 18, 400);
-  drawKeyValueRows(
-    doc,
-    metaRows,
-    PAGE_MARGIN + 18,
-    420,
-    108,
-    PAGE_WIDTH - PAGE_MARGIN * 2 - 144,
-  );
-
-  const tableY = 526;
-  const tableWidth = PAGE_WIDTH - PAGE_MARGIN * 2;
-  const col1 = PAGE_MARGIN + 18;
-  const col2 = PAGE_MARGIN + 298;
-  const col3 = PAGE_MARGIN + 358;
-  const col4 = PAGE_MARGIN + tableWidth - 18;
-
-  doc.setFillColor(248, 250, 252);
-  doc.roundedRect(PAGE_MARGIN, tableY, tableWidth, 96, 10, 10, "FD");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(9);
-  doc.setTextColor(100, 116, 139);
-  doc.text("DESCRIPTION", col1, tableY + 20);
-  doc.text("SAC", col2, tableY + 20);
-  doc.text("QTY", col3, tableY + 20);
-  doc.text("AMOUNT", col4, tableY + 20, { align: "right" });
-
-  doc.setDrawColor(226, 232, 240);
-  doc.line(PAGE_MARGIN + 18, tableY + 28, PAGE_MARGIN + tableWidth - 18, tableY + 28);
-
-  const item = model.lineItems[0];
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(17, 24, 39);
-  drawWrappedText(doc, item.description, col1, tableY + 46, 268, 13);
-  doc.text(item.sacCode || "-", col2, tableY + 46);
-  doc.text(item.quantity, col3, tableY + 46);
-  doc.text(item.amount, col4, tableY + 46, { align: "right" });
-
-  // Totals and QR positioned below the table
-  const totalsY = 642;
-  const totalsWidth = tableWidth - 218;
-  drawTotalsTable(doc, model.totals, PAGE_MARGIN + 218, totalsY, totalsWidth, model.totals.length * 22 + 18);
-
+  let qrDataUrl = null;
   if (model.qrPayload) {
-    const qrDataUrl = await QRCode.toDataURL(model.qrPayload, {
+    qrDataUrl = await QRCode.toDataURL(model.qrPayload, {
       margin: 1,
       width: 180,
       color: { dark: "#140f26", light: "#FFFFFF" },
     });
-    doc.setDrawColor(226, 232, 240);
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(PAGE_MARGIN, totalsY, 196, 190, 10, 10, "FD");
-    doc.addImage(qrDataUrl, "PNG", PAGE_MARGIN + 18, totalsY + 15, 156, 156);
   }
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(71, 85, 105);
-  let noteY = 790;
-  model.notes.forEach((note) => {
-    doc.text(note, PAGE_MARGIN, noteY);
-    noteY += 14;
-  });
-
-  return Buffer.from(doc.output("arraybuffer"));
+  return renderToBuffer(<FestivalInvoiceDocument model={model} qrDataUrl={qrDataUrl} />);
 }

@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import React from 'react';
+import { Document, Page, View, Text, Image, renderToBuffer } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
-import { jsPDF } from 'jspdf';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { EVENT_CONFIG } from '@/lib/registration-constants';
 import badgeLayoutUtils from '@/lib/registration-badge-layout.cjs';
@@ -148,14 +149,23 @@ function formatEventDateRange() {
   return `${startLabel} - ${endLabel}`;
 }
 
-function drawInstitutionalBadge(
-  doc,
+// mm → pt conversion helper
+const MM = (v) => v * 2.835;
+
+const toHexReg = (r, g, b) =>
+  `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+// Page size: 101.6mm × 152.4mm → 287.9pt × 432.0pt
+const BADGE_PAGE_W = MM(101.6);
+const BADGE_PAGE_H = MM(152.4);
+
+function InstitutionalBadgePage({
   registration,
   qrDataUrl,
   logoDataUrl,
   photoDataUrl,
-  headerLabel
-) {
+  headerLabel,
+}) {
   const displayName = buildBadgeDisplayName(registration);
   const badgeLabel = registration.badge_color_label || 'Delegate';
   const tierTheme = getBadgeTierTheme({
@@ -166,7 +176,6 @@ function drawInstitutionalBadge(
     registration.organization || '',
     30
   );
-  const attendeeLines = doc.splitTextToSize(displayName || '', 54);
   const categoryLabel = registration.attendee_category || 'Delegate';
   const eventDatesLabel = '13-14 Oct 2026';
   const compactHeaderLabel = normalizeBadgeSingleLine(headerLabel, 24);
@@ -177,210 +186,189 @@ function drawInstitutionalBadge(
     'Security and venue instructions must be followed at all times.',
   ];
 
-  doc.setFillColor(250, 248, 242);
-  doc.rect(0, 0, 101.6, 152.4, 'F');
+  const tierBgColor = toHexReg(...tierTheme.fillColor);
+  const tierDotColor = toHexReg(...tierTheme.dotColor);
+  const tierTextColor = toHexReg(...tierTheme.textColor);
 
-  doc.setFillColor(24, 30, 58);
-  doc.rect(0, 0, 101.6, 29.5, 'F');
-  doc.setFillColor(201, 144, 44);
-  doc.rect(0, 29.5, 101.6, 1.8, 'F');
+  return (
+    <Page size={[BADGE_PAGE_W, BADGE_PAGE_H]} style={{ backgroundColor: '#faf8f2', fontFamily: 'Helvetica' }}>
+      {/* Navy header */}
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: MM(29.5), backgroundColor: '#181e3a' }} />
+      {/* Gold rule */}
+      <View style={{ position: 'absolute', top: MM(29.5), left: 0, right: 0, height: MM(1.8), backgroundColor: '#c9902c' }} />
 
-  doc.addImage(logoDataUrl, 'PNG', 7, 7, 25, 10.6, undefined, 'FAST');
-  doc.setDrawColor(78, 89, 130);
-  doc.setLineWidth(0.5);
-  doc.line(34.7, 4, 34.7, 24.5);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(10.8);
-  doc.text('Trust & Safety India Festival', 39, 11.2);
-  doc.setTextColor(214, 171, 65);
-  doc.setFontSize(7.6);
-  doc.text('TASI 2026', 39, 16.9);
-  doc.text('13-14 October 2026', 58.3, 16.9);
-  doc.setTextColor(235, 239, 247);
-  doc.setFontSize(7.8);
-  doc.text('New Delhi, India', 39, 22.8);
-  doc.setFillColor(255, 255, 255);
-  doc.roundedRect(71.5, 18.4, 25.4, 7.6, 2.2, 2.2, 'F');
-  doc.setTextColor(...tierTheme.fillColor);
-  doc.setFontSize(4.95);
-  doc.text(compactHeaderLabel, 84.2, 23.15, { align: 'center', maxWidth: 23 });
+      {/* Logo */}
+      {logoDataUrl && (
+        <Image src={logoDataUrl} style={{ position: 'absolute', top: MM(7), left: MM(7), width: MM(25), height: MM(10.6) }} />
+      )}
 
-  doc.setTextColor(101, 115, 138);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.2);
-  doc.text('ATTENDEE', 8, 39.5);
+      {/* Vertical separator */}
+      <View style={{ position: 'absolute', top: MM(4), left: MM(34.7), width: 0.5, height: MM(20.5), backgroundColor: '#4e5982' }} />
 
-  doc.setTextColor(15, 23, 42);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(17.8);
-  doc.text(attendeeLines, 8, 48.8);
+      {/* "Trust & Safety India Festival" */}
+      <Text style={{ position: 'absolute', top: MM(8.5), left: MM(39), fontSize: 10.8, fontFamily: 'Helvetica-Bold', color: '#ffffff' }}>
+        Trust &amp; Safety India Festival
+      </Text>
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10.5);
-  doc.setTextColor(51, 65, 85);
-  doc.text(organizationLine || '-', 8, 57.6, { maxWidth: 60 });
+      {/* TASI 2026 */}
+      <Text style={{ position: 'absolute', top: MM(15), left: MM(39), fontSize: 7.6, fontFamily: 'Helvetica-Bold', color: '#d6ab41' }}>
+        TASI 2026
+      </Text>
 
-  doc.setFillColor(255, 255, 255);
-  doc.setDrawColor(15, 23, 42);
-  doc.rect(73.2, 36.3, 20.8, 20.8, 'FD');
-  if (photoDataUrl) {
-    doc.addImage(
-      photoDataUrl,
-      getImageFormatFromDataUrl(photoDataUrl, 'JPEG'),
-      73.9,
-      37,
-      19.4,
-      19.4,
-      undefined,
-      'FAST'
-    );
-  } else {
-    doc.setFillColor(201, 144, 44);
-    doc.circle(83.6, 43.8, 3.4, 'F');
-    doc.setFillColor(38, 71, 130);
-    doc.circle(83.6, 50.4, 5.8, 'F');
-  }
+      {/* 13-14 October 2026 */}
+      <Text style={{ position: 'absolute', top: MM(15), left: MM(58.3), fontSize: 7.6, fontFamily: 'Helvetica-Bold', color: '#d6ab41' }}>
+        13-14 October 2026
+      </Text>
 
-  doc.setFillColor(...tierTheme.fillColor);
-  doc.roundedRect(8, 64.2, 84.2, 7.5, 2.4, 2.4, 'F');
-  doc.setFillColor(...tierTheme.dotColor);
-  doc.circle(12.4, 67.95, 1.35, 'F');
-  doc.setTextColor(...tierTheme.textColor);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.1);
-  doc.text(tierTheme.label, 16, 68.7);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6.8);
-  doc.text(categoryLabel, 84.5, 68.7, { align: 'right' });
+      {/* New Delhi, India */}
+      <Text style={{ position: 'absolute', top: MM(20.8), left: MM(39), fontSize: 7.8, color: '#ebeff7' }}>
+        New Delhi, India
+      </Text>
 
-  doc.setDrawColor(224, 228, 235);
-  doc.setLineWidth(0.35);
-  doc.line(8, 76.8, 93.6, 76.8);
+      {/* Badge pill (top-right of header) */}
+      <View style={{ position: 'absolute', top: MM(18.4), left: MM(71.5), width: MM(25.4), height: MM(7.6), backgroundColor: '#ffffff', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 4.95, fontFamily: 'Helvetica-Bold', color: tierBgColor, textAlign: 'center' }}>
+          {compactHeaderLabel}
+        </Text>
+      </View>
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.2);
-  doc.setTextColor(100, 116, 139);
-  doc.text('REG. ID', 8, 82.8);
-  doc.text('CATEGORY', 41.5, 82.8);
-  doc.text('DATES', 78.5, 82.8, { align: 'center' });
+      {/* "ATTENDEE" label */}
+      <Text style={{ position: 'absolute', top: MM(37.7), left: MM(8), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#65738a' }}>
+        ATTENDEE
+      </Text>
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9.2);
-  doc.setTextColor(15, 23, 42);
-  doc.setFont('helvetica', 'bold');
-  doc.text(registration.registration_code || '-', 8, 87.8, { maxWidth: 33 });
-  doc.text(categoryLabel, 41.5, 87.8, { maxWidth: 18 });
-  doc.text(eventDatesLabel, 78.5, 87.8, { align: 'center', maxWidth: 24 });
+      {/* Attendee name */}
+      <Text style={{ position: 'absolute', top: MM(44.3), left: MM(8), width: MM(62), fontSize: 17.8, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+        {displayName || ''}
+      </Text>
 
-  doc.setDrawColor(224, 228, 235);
-  doc.line(8, 91.3, 93.6, 91.3);
+      {/* Organization */}
+      <Text style={{ position: 'absolute', top: MM(54.9), left: MM(8), width: MM(60), fontSize: 10.5, color: '#334155' }}>
+        {organizationLine || '-'}
+      </Text>
 
-  doc.setTextColor(100, 116, 139);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.2);
-  doc.text('ENTRY PASS', 8, lowerSectionLayout.entryPassLabelY);
+      {/* Photo box */}
+      <View style={{ position: 'absolute', top: MM(36.3), left: MM(73.2), width: MM(20.8), height: MM(20.8), backgroundColor: '#ffffff', borderWidth: 0.5, borderColor: '#0f172a', overflow: 'hidden' }}>
+        {photoDataUrl ? (
+          <Image src={photoDataUrl} style={{ width: MM(19.4), height: MM(19.4), margin: MM(0.7) }} />
+        ) : (
+          <>
+            <View style={{ position: 'absolute', top: MM(3.4), left: MM(7.2), width: MM(6.8), height: MM(6.8), borderRadius: MM(3.4), backgroundColor: '#c9902c' }} />
+            <View style={{ position: 'absolute', top: MM(10), left: MM(4.4), width: MM(11.6), height: MM(11.6), borderRadius: MM(5.8), backgroundColor: '#264782' }} />
+          </>
+        )}
+      </View>
 
-  doc.setTextColor(201, 144, 44);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.1);
-  doc.text('Policy rules', 8, lowerSectionLayout.policyTitleY);
-  doc.setTextColor(88, 102, 122);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(4.7);
-  doc.text(`- ${policyRules[0]}`, 8, lowerSectionLayout.policyRuleYs[0], {
-    maxWidth: 42,
-  });
-  doc.text(`- ${policyRules[1]}`, 8, lowerSectionLayout.policyRuleYs[1], {
-    maxWidth: 42,
-  });
-  doc.text(`- ${policyRules[2]}`, 8, lowerSectionLayout.policyRuleYs[2], {
-    maxWidth: 42,
-  });
+      {/* Tier pill */}
+      <View style={{ position: 'absolute', top: MM(64.2), left: MM(8), width: MM(84.2), height: MM(7.5), backgroundColor: tierBgColor, borderRadius: 2 }}>
+        <View style={{ position: 'absolute', top: MM(7.5) / 2 - MM(1.35), left: MM(2.7), width: MM(2.7), height: MM(2.7), borderRadius: MM(1.35), backgroundColor: tierDotColor }} />
+        <Text style={{ position: 'absolute', top: MM(2.1), left: MM(8), fontSize: 7.1, fontFamily: 'Helvetica-Bold', color: tierTextColor }}>
+          {tierTheme.label}
+        </Text>
+        <Text style={{ position: 'absolute', top: MM(2.1), right: MM(1.5), fontSize: 6.8, color: tierTextColor, textAlign: 'right' }}>
+          {categoryLabel}
+        </Text>
+      </View>
 
-  doc.setFillColor(255, 255, 255);
-  doc.setDrawColor(220, 224, 232);
-  doc.setLineWidth(0.7);
-  doc.roundedRect(
-    lowerSectionLayout.qrBox.x,
-    lowerSectionLayout.qrBox.y,
-    lowerSectionLayout.qrBox.width,
-    lowerSectionLayout.qrBox.height,
-    2.8,
-    2.8,
-    'FD'
-  );
-  if (qrDataUrl) {
-    doc.addImage(
-      qrDataUrl,
-      'PNG',
-      lowerSectionLayout.qrCode.x,
-      lowerSectionLayout.qrCode.y,
-      lowerSectionLayout.qrCode.width,
-      lowerSectionLayout.qrCode.height,
-      undefined,
-      'FAST'
-    );
-  } else {
-    doc.setTextColor(100, 116, 139);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    doc.text('QR pass not', 76.5, 111.7, { align: 'center' });
-    doc.text('issued yet', 76.5, 116.7, { align: 'center' });
-  }
+      {/* Divider 1 */}
+      <View style={{ position: 'absolute', top: MM(76.8), left: MM(8), width: MM(85.6), height: 0.35, backgroundColor: '#e0e4eb' }} />
 
-  doc.setTextColor(100, 116, 139);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6.6);
-  doc.text(
-    registration.registration_code || '-',
-    76.5,
-    lowerSectionLayout.qrRegistrationCodeY,
-    { align: 'center' }
-  );
-  doc.setTextColor(15, 23, 42);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.5);
-  doc.text('Scan to verify', 76.5, lowerSectionLayout.scanLabelY, {
-    align: 'center',
-  });
+      {/* Column headers: REG. ID / CATEGORY / DATES */}
+      <Text style={{ position: 'absolute', top: MM(81), left: MM(8), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b' }}>REG. ID</Text>
+      <Text style={{ position: 'absolute', top: MM(81), left: MM(41.5), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b' }}>CATEGORY</Text>
+      <Text style={{ position: 'absolute', top: MM(81), left: MM(71), width: MM(15), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b', textAlign: 'center' }}>DATES</Text>
 
-  doc.setFillColor(...tierTheme.fillColor);
-  doc.rect(0, 147.6, 101.6, 4.8, 'F');
-  doc.setFillColor(201, 144, 44);
-  doc.rect(0, 147.6, 2.6, 4.8, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(5.6);
-  doc.text(
-    'Organised by Centre for Social Research • Trust and Safety Festival',
-    50.8,
-    150.6,
-    {
-      align: 'center',
-    }
+      {/* Values row */}
+      <Text style={{ position: 'absolute', top: MM(85.5), left: MM(8), width: MM(33), fontSize: 9.2, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+        {registration.registration_code || '-'}
+      </Text>
+      <Text style={{ position: 'absolute', top: MM(85.5), left: MM(41.5), width: MM(18), fontSize: 9.2, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+        {categoryLabel}
+      </Text>
+      <Text style={{ position: 'absolute', top: MM(85.5), left: MM(71), width: MM(15), fontSize: 9.2, fontFamily: 'Helvetica-Bold', color: '#0f172a', textAlign: 'center' }}>
+        {eventDatesLabel}
+      </Text>
+
+      {/* Divider 2 */}
+      <View style={{ position: 'absolute', top: MM(91.3), left: MM(8), width: MM(85.6), height: 0.35, backgroundColor: '#e0e4eb' }} />
+
+      {/* Entry Pass label */}
+      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.entryPassLabelY - 1.8), left: MM(8), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b' }}>
+        ENTRY PASS
+      </Text>
+
+      {/* Policy title */}
+      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.policyTitleY - 1.8), left: MM(8), fontSize: 7.1, fontFamily: 'Helvetica-Bold', color: '#c9902c' }}>
+        Policy rules
+      </Text>
+
+      {/* Policy rules */}
+      {policyRules.map((rule, i) => (
+        <Text key={i} style={{ position: 'absolute', top: MM(lowerSectionLayout.policyRuleYs[i] - 1.2), left: MM(8), width: MM(42), fontSize: 4.7, color: '#58667a' }}>
+          {`- ${rule}`}
+        </Text>
+      ))}
+
+      {/* QR box */}
+      <View style={{
+        position: 'absolute',
+        top: MM(lowerSectionLayout.qrBox.y),
+        left: MM(lowerSectionLayout.qrBox.x),
+        width: MM(lowerSectionLayout.qrBox.width),
+        height: MM(lowerSectionLayout.qrBox.height),
+        backgroundColor: '#ffffff',
+        borderWidth: 0.7,
+        borderColor: '#dce0e8',
+        borderRadius: MM(2.8),
+      }}>
+        {qrDataUrl ? (
+          <Image src={qrDataUrl} style={{ position: 'absolute', top: MM(2), left: MM(2), width: MM(lowerSectionLayout.qrCode.width), height: MM(lowerSectionLayout.qrCode.height) }} />
+        ) : (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 6, color: '#64748b', textAlign: 'center' }}>{'QR pass not\nissued yet'}</Text>
+          </View>
+        )}
+      </View>
+
+      {/* Reg code below QR */}
+      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.qrRegistrationCodeY - 1.7), left: MM(60), width: MM(32.5), fontSize: 6.6, color: '#64748b', textAlign: 'center' }}>
+        {registration.registration_code || '-'}
+      </Text>
+
+      {/* "Scan to verify" */}
+      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.scanLabelY - 1.9), left: MM(60), width: MM(32.5), fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: '#0f172a', textAlign: 'center' }}>
+        Scan to verify
+      </Text>
+
+      {/* Footer strip (tier color) */}
+      <View style={{ position: 'absolute', top: MM(147.6), left: 0, right: 0, height: MM(4.8), backgroundColor: tierBgColor }} />
+      {/* Gold accent left */}
+      <View style={{ position: 'absolute', top: MM(147.6), left: 0, width: MM(2.6), height: MM(4.8), backgroundColor: '#c9902c' }} />
+      {/* Footer text */}
+      <Text style={{ position: 'absolute', top: MM(149.2), left: 0, right: 0, fontSize: 5.6, fontFamily: 'Helvetica-Bold', color: '#ffffff', textAlign: 'center' }}>
+        Organised by Centre for Social Research • Trust and Safety Festival
+      </Text>
+    </Page>
   );
 }
 
 export async function buildPassAttachment({ token, registration }) {
   const qrDataUrl = await buildQrDataUrl(token);
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: [152.4, 101.6],
-  });
   const logoDataUrl = await getBadgeLogoDataUrl();
   const photoDataUrl = await getBadgePhotoDataUrl(registration);
-  drawInstitutionalBadge(
-    doc,
-    registration,
-    qrDataUrl,
-    logoDataUrl,
-    photoDataUrl,
-    'OFFICIAL CREDENTIAL'
+
+  const pdfBuffer = await renderToBuffer(
+    <Document>
+      <InstitutionalBadgePage
+        registration={registration}
+        qrDataUrl={qrDataUrl}
+        logoDataUrl={logoDataUrl}
+        photoDataUrl={photoDataUrl}
+        headerLabel="OFFICIAL CREDENTIAL"
+      />
+    </Document>,
   );
 
-  const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
   return {
     qrDataUrl,
     pdfBuffer,
@@ -410,32 +398,30 @@ export function buildBadgeExportRows(registrations) {
 }
 
 export async function buildPdfMergeExport(registrations) {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: [152.4, 101.6],
-  });
   const logoDataUrl = await getBadgeLogoDataUrl();
 
-  for (let index = 0; index < registrations.length; index += 1) {
-    const registration = registrations[index];
-    const qrDataUrl = registration.qr_token
-      ? await buildQrDataUrl(registration.qr_token)
-      : null;
-    const photoDataUrl = await getBadgePhotoDataUrl(registration);
+  const pages = await Promise.all(
+    registrations.map(async (registration) => {
+      const qrDataUrl = registration.qr_token
+        ? await buildQrDataUrl(registration.qr_token)
+        : null;
+      const photoDataUrl = await getBadgePhotoDataUrl(registration);
+      return { registration, qrDataUrl, photoDataUrl };
+    }),
+  );
 
-    if (index > 0) {
-      doc.addPage([152.4, 101.6], 'portrait');
-    }
-    drawInstitutionalBadge(
-      doc,
-      registration,
-      qrDataUrl,
-      logoDataUrl,
-      photoDataUrl,
-      'BADGE EXPORT PROOF'
-    );
-  }
-
-  return Buffer.from(doc.output('arraybuffer'));
+  return renderToBuffer(
+    <Document>
+      {pages.map(({ registration, qrDataUrl, photoDataUrl }, i) => (
+        <InstitutionalBadgePage
+          key={registration.id || i}
+          registration={registration}
+          qrDataUrl={qrDataUrl}
+          logoDataUrl={logoDataUrl}
+          photoDataUrl={photoDataUrl}
+          headerLabel="BADGE EXPORT PROOF"
+        />
+      ))}
+    </Document>,
+  );
 }

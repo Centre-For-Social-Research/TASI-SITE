@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { jsPDF } from 'jspdf';
+import { Document, Page, View, Text, Image } from '@react-pdf/renderer';
 import { X, Download, CheckCircle2, Circle } from 'lucide-react';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 
@@ -13,6 +13,162 @@ const DAY_LABELS_FALLBACK = {
   oct8: 'Oct 15 - Conference Day 2',
 };
 
+// ── REACT PDF AGENDA DOCUMENT ─────────────────────────────────────────────
+// Colors (pt-based layout for A4)
+const AGENDA_ORANGE = '#c2410c';
+const AGENDA_NAVY   = '#162447';
+const AGENDA_STONE  = '#eeebe5';
+const AGENDA_ROWBG  = '#fbf9f6';
+const AGENDA_DARK   = '#161412';
+const AGENDA_MID    = '#5f5952';
+const AGENDA_LIGHT  = '#a5a099';
+const AGENDA_RULE   = '#d7d3cd';
+
+// Dimensions in pt (1mm = 2.835pt)
+const AG_MARGIN    = 42.5;  // 15mm
+const AG_STRIPE_H  = 25.5;  // 9mm
+const AG_TABLE_H   = 31.2;  // 11mm
+const AG_FOOTER_H  = 39.7;  // 14mm
+const AG_COL_W     = [124.7, 226.8, 90.7, 68]; // column widths in pt
+const AG_CELL_PAD  = 14.2;  // 5mm
+
+function AgendaDocument({ userName, userEmail, selectedSessions, effectiveDayLabels, logoDataUrl }) {
+  const daysSelected = [...new Set(selectedSessions.map((s) => s.day))];
+  const topicLabel = daysSelected.map((d) => effectiveDayLabels[d] || d).join(' / ');
+
+  return (
+    <Document>
+      <Page
+        size="A4"
+        style={{ fontFamily: 'Helvetica', backgroundColor: '#ffffff', paddingTop: AG_STRIPE_H + 11.3, paddingBottom: AG_FOOTER_H, paddingHorizontal: AG_MARGIN }}
+      >
+        {/* Fixed orange stripe */}
+        <View fixed style={{ position: 'absolute', top: 0, left: 0, right: 0, height: AG_STRIPE_H, backgroundColor: AGENDA_ORANGE, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 8.5, fontFamily: 'Helvetica-BoldOblique', color: '#ffffff' }}>
+            TRUST &amp; SAFETY INDIA FESTIVAL 2026  ·  PERSONALIZED AGENDA
+          </Text>
+        </View>
+
+        {/* Fixed footer */}
+        <View fixed style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: AG_FOOTER_H, borderTopWidth: 1.5, borderTopColor: AGENDA_ORANGE, paddingTop: 5, paddingHorizontal: AG_MARGIN }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>info@csrindia.org</Text>
+            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>+91 11 2468 2556</Text>
+            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>jamsaq.in</Text>
+          </View>
+          <Text
+            render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+            style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, textAlign: 'center', marginTop: 5 }}
+            fixed
+          />
+        </View>
+
+        {/* Header card (first page only) */}
+        <View style={{ backgroundColor: AGENDA_STONE, borderRadius: 8.5, padding: 17, flexDirection: 'row', alignItems: 'center', marginBottom: 11.3 }}>
+          {logoDataUrl ? (
+            <Image src={logoDataUrl} style={{ width: 130, height: 44, marginRight: 17 }} />
+          ) : (
+            <Text style={{ fontSize: 13, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE, marginRight: 17 }}>TASI 2026</Text>
+          )}
+          <View style={{ width: 1, height: 84, backgroundColor: AGENDA_RULE, marginRight: 17 }} />
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 4 }}>DATE</Text>
+            <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold', color: AGENDA_DARK }}>13 – 14 October 2026</Text>
+          </View>
+          <View style={{ width: 1, height: 80, backgroundColor: AGENDA_RULE, marginHorizontal: 11 }} />
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 4 }}>TIME</Text>
+            <Text style={{ fontSize: 9, color: AGENDA_DARK }}>9:00 am – 5:30 pm</Text>
+          </View>
+          <View style={{ width: 1, height: 80, backgroundColor: AGENDA_RULE, marginHorizontal: 11 }} />
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 4 }}>WEBSITE</Text>
+            <Text style={{ fontSize: 9, color: AGENDA_DARK }}>jamsaq.in</Text>
+          </View>
+        </View>
+
+        {/* Info card (first page only) */}
+        <View style={{ backgroundColor: AGENDA_STONE, borderRadius: 8.5, flexDirection: 'row', alignItems: 'stretch', marginBottom: 11.3, overflow: 'hidden' }}>
+          <View style={{ width: 8.5, backgroundColor: AGENDA_ORANGE }} />
+          <View style={{ flex: 1, padding: AG_CELL_PAD }}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flex: 1, marginRight: 14 }}>
+                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>ATTENDEE</Text>
+                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>NAME</Text>
+                <Text style={{ fontSize: 9.5, color: AGENDA_DARK }}>{userName}</Text>
+              </View>
+              <View style={{ width: 1, backgroundColor: AGENDA_RULE, marginRight: 14 }} />
+              <View style={{ flex: 1, marginRight: 14 }}>
+                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>EMAIL</Text>
+                <Text style={{ fontSize: 9, color: AGENDA_MID }}>{userEmail}</Text>
+              </View>
+              <View style={{ width: 1, backgroundColor: AGENDA_RULE, marginRight: 14 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>EVENT</Text>
+                <Text style={{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: AGENDA_DARK, marginBottom: 4 }}>Trust And Safety India Festival 2026</Text>
+                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>YOUR SELECTED DAYS</Text>
+                <Text style={{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE }}>{topicLabel}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Table header */}
+        <View style={{ backgroundColor: AGENDA_NAVY, borderRadius: 5.7, height: AG_TABLE_H, flexDirection: 'row', alignItems: 'center', marginBottom: 7, paddingLeft: AG_CELL_PAD }}>
+          {['Agenda', 'Topic', 'Speaker', 'Time'].map((label, i) => (
+            <Text key={i} style={{ width: AG_COL_W[i], fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: '#ffffff' }}>{label}</Text>
+          ))}
+        </View>
+
+        {/* Session rows */}
+        {selectedSessions.map((session, idx) => {
+          const title       = session.title || '';
+          const description = session.description || '';
+          const speakersArr = Array.isArray(session.speakers)
+            ? session.speakers
+            : session.speakers ? [session.speakers] : [];
+          const venue = session.venue || session.track || '';
+          const time  = session.time || 'TBD';
+
+          return (
+            <View key={idx} wrap={false} style={{ flexDirection: 'row', backgroundColor: AGENDA_ROWBG, borderRadius: 5.7, marginBottom: 7 }}>
+              <View style={{ width: 7.1, backgroundColor: AGENDA_ORANGE, borderRadius: 2.8 }} />
+              {/* Col 1: Title */}
+              <View style={{ width: AG_COL_W[0], padding: AG_CELL_PAD }}>
+                <Text style={{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: AGENDA_DARK }}>{title}</Text>
+              </View>
+              <View style={{ width: 0.5, backgroundColor: AGENDA_RULE, marginVertical: 8.5 }} />
+              {/* Col 2: Description */}
+              <View style={{ width: AG_COL_W[1], padding: AG_CELL_PAD }}>
+                {description
+                  ? <Text style={{ fontSize: 8.5, color: AGENDA_MID }}>{description}</Text>
+                  : <Text style={{ fontSize: 8.5, color: AGENDA_LIGHT }}>-</Text>}
+              </View>
+              <View style={{ width: 0.5, backgroundColor: AGENDA_RULE, marginVertical: 8.5 }} />
+              {/* Col 3: Speakers */}
+              <View style={{ width: AG_COL_W[2], padding: AG_CELL_PAD }}>
+                {speakersArr.length > 0
+                  ? speakersArr.slice(0, 4).map((speaker, si) => (
+                      <Text key={si} style={{ fontSize: si === 0 ? 8.5 : 7.8, fontFamily: si === 0 ? 'Helvetica-Bold' : 'Helvetica', color: si === 0 ? AGENDA_DARK : AGENDA_MID, marginBottom: si < speakersArr.length - 1 ? 2 : 0 }}>
+                        {speaker}
+                      </Text>
+                    ))
+                  : <Text style={{ fontSize: 8.5, color: AGENDA_LIGHT }}>{venue || '-'}</Text>}
+              </View>
+              <View style={{ width: 0.5, backgroundColor: AGENDA_RULE, marginVertical: 8.5 }} />
+              {/* Col 4: Time */}
+              <View style={{ width: AG_COL_W[3], padding: AG_CELL_PAD }}>
+                <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE }}>{time}</Text>
+              </View>
+            </View>
+          );
+        })}
+      </Page>
+    </Document>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 export default function BuildMyAgenda({
   sessions,
   isOpen,
@@ -64,366 +220,27 @@ export default function BuildMyAgenda({
       });
     } catch (_) {}
 
-    const doc = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 15;
-    const contentWidth = pageWidth - 2 * margin;
+    const { pdf } = await import('@react-pdf/renderer');
 
-    const navy = [22, 36, 71];
-    const orange = [194, 65, 12];
-    const stone = [238, 235, 229];
-    const rowBg = [251, 249, 246];
-    const white = [255, 255, 255];
-    const dark = [22, 20, 18];
-    const mid = [95, 89, 82];
-    const light = [165, 160, 153];
-    const rule = [215, 211, 205];
+    const blob = await pdf(
+      <AgendaDocument
+        userName={userName}
+        userEmail={userEmail}
+        selectedSessions={selectedSessions}
+        effectiveDayLabels={effectiveDayLabels}
+        logoDataUrl={logoDataUrl}
+      />,
+    ).toBlob();
 
-    const fonts = {
-      bold: (size) => {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(size);
-      },
-      normal: (size) => {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(size);
-      },
-    };
-    const setColor = (color) => doc.setTextColor(color[0], color[1], color[2]);
-
-    const stripeHeight = 9;
-    const headerHeight = 50;
-    const infoHeight = 38;
-    const gap = 4;
-    const tableHeaderHeight = 11;
-    const rowGap = 2.5;
-    const cellPadding = 5;
-    const lineHeight = 5;
-    const footerHeight = 14;
-
-    const columns = [44, 80, 32, 24];
-
-    doc.setFillColor(...orange);
-    doc.rect(0, 0, pageWidth, stripeHeight, 'F');
-    fonts.bold(8.5);
-    doc.setTextColor(...white);
-    doc.text(
-      'TRUST & SAFETY INDIA FESTIVAL 2026  ·  PERSONALIZED AGENDA',
-      pageWidth / 2,
-      stripeHeight - 3,
-      { align: 'center' }
-    );
-
-    const headerY = stripeHeight + 4;
-    doc.setFillColor(...stone);
-    doc.roundedRect(margin, headerY, contentWidth, headerHeight, 3, 3, 'F');
-
-    if (logoDataUrl) {
-      doc.addImage(
-        logoDataUrl,
-        'PNG',
-        margin + 6,
-        headerY + (headerHeight - 21) / 2,
-        58,
-        21
-      );
-    } else {
-      fonts.bold(13);
-      setColor(orange);
-      doc.text('TASI 2026', margin + 8, headerY + 20);
-    }
-
-    const separatorX = margin + 70;
-    doc.setDrawColor(...rule);
-    doc.setLineWidth(0.35);
-    doc.line(separatorX, headerY + 6, separatorX, headerY + headerHeight - 6);
-
-    const metaX1 = separatorX + 8;
-    const metaItemWidth = (margin + contentWidth - 6 - metaX1) / 3;
-    const metaX2 = metaX1 + metaItemWidth;
-    const metaX3 = metaX2 + metaItemWidth;
-    const metaRowY = headerY + 18;
-
-    const drawMeta = (x, y, label, value, valueBold) => {
-      fonts.bold(7.5);
-      setColor(light);
-      doc.text(label.toUpperCase(), x, y);
-      if (valueBold) fonts.bold(9);
-      else fonts.normal(9);
-      setColor(dark);
-      doc.text(value, x, y + 5.5);
-    };
-
-    drawMeta(metaX1, metaRowY, 'Date', '13 - 14 October 2026', true);
-    doc.setDrawColor(...rule);
-    doc.setLineWidth(0.25);
-    doc.line(metaX2 - 4, headerY + 10, metaX2 - 4, headerY + headerHeight - 10);
-    drawMeta(metaX2, metaRowY, 'Time', '9:00 am - 5:30 pm', false);
-    doc.line(metaX3 - 4, headerY + 10, metaX3 - 4, headerY + headerHeight - 10);
-    drawMeta(metaX3, metaRowY, 'Website', 'jamsaq.in', false);
-
-    const infoY = headerY + headerHeight + gap;
-    doc.setFillColor(...stone);
-    doc.roundedRect(margin, infoY, contentWidth, infoHeight, 3, 3, 'F');
-    doc.setFillColor(...orange);
-    doc.roundedRect(margin, infoY, 3, infoHeight, 1.5, 1.5, 'F');
-
-    const halfWidth = (contentWidth - 6) / 2;
-    const leftX = margin + 10;
-    const rightX = margin + 10 + halfWidth + 4;
-
-    fonts.bold(7.5);
-    setColor(light);
-    doc.text('ATTENDEE', leftX, infoY + 8);
-    doc.text('NAME', leftX, infoY + 19.5);
-    fonts.normal(9.5);
-    setColor(dark);
-    doc.text(
-      doc.splitTextToSize(userName, halfWidth - 6)[0] || '',
-      leftX,
-      infoY + 25.5
-    );
-    doc.setDrawColor(...rule);
-    doc.setLineWidth(0.25);
-    doc.line(leftX, infoY + 27.5, margin + halfWidth + 6, infoY + 27.5);
-
-    fonts.bold(7.5);
-    setColor(light);
-    doc.text('EMAIL', leftX + 46, infoY + 19.5);
-    fonts.normal(9);
-    setColor(mid);
-    doc.text(
-      doc.splitTextToSize(userEmail, halfWidth - 6)[0] || '',
-      leftX + 46,
-      infoY + 25.5
-    );
-    doc.line(
-      leftX + 46,
-      infoY + 27.5,
-      margin + halfWidth + 6 + halfWidth - 6,
-      infoY + 27.5
-    );
-
-    doc.line(
-      margin + halfWidth + 6,
-      infoY + 6,
-      margin + halfWidth + 6,
-      infoY + infoHeight - 6
-    );
-
-    const daysSelected = [
-      ...new Set(selectedSessions.map((session) => session.day)),
-    ];
-    const topicLabel = daysSelected
-      .map((day) => effectiveDayLabels[day] || day)
-      .join(' / ');
-
-    fonts.bold(7.5);
-    setColor(light);
-    doc.text('EVENT', rightX, infoY + 8);
-    fonts.bold(9.5);
-    setColor(dark);
-    doc.text('Trust And Safety India Festival 2026', rightX, infoY + 15);
-    doc.setDrawColor(...rule);
-    doc.setLineWidth(0.25);
-    doc.line(rightX, infoY + 17.5, margin + contentWidth - 6, infoY + 17.5);
-
-    fonts.bold(7.5);
-    setColor(light);
-    doc.text('YOUR SELECTED DAYS', rightX, infoY + 22);
-    fonts.bold(9.5);
-    setColor(orange);
-    const topicLines = doc.splitTextToSize(topicLabel, halfWidth - 6);
-    doc.text(topicLines.slice(0, 2), rightX, infoY + 28);
-
-    let currentY = infoY + infoHeight + gap;
-
-    const drawTableHeader = (y) => {
-      doc.setFillColor(...navy);
-      doc.roundedRect(margin, y, contentWidth, tableHeaderHeight, 2, 2, 'F');
-      fonts.bold(9.5);
-      doc.setTextColor(...white);
-      const labels = ['Agenda', 'Topic', 'Speaker', 'Time'];
-      let x = margin + cellPadding;
-      labels.forEach((label, index) => {
-        doc.text(label, x, y + 7.5);
-        x += columns[index];
-      });
-      return y + tableHeaderHeight + rowGap;
-    };
-
-    currentY = drawTableHeader(currentY);
-
-    const drawFooter = (pageNum, totalPages) => {
-      const footerY = pageHeight - footerHeight + 2;
-      doc.setDrawColor(...orange);
-      doc.setLineWidth(0.5);
-      doc.line(margin, footerY, pageWidth - margin, footerY);
-
-      fonts.normal(7.5);
-      setColor(light);
-      doc.text('info@csrindia.org', margin, footerY + 5);
-      doc.text('+91 11 2468 2556', pageWidth / 2, footerY + 5, {
-        align: 'center',
-      });
-      doc.text('jamsaq.in', pageWidth - margin, footerY + 5, {
-        align: 'right',
-      });
-
-      fonts.bold(7.5);
-      setColor(light);
-      doc.text(
-        `Page ${pageNum} of ${totalPages}`,
-        pageWidth / 2,
-        footerY + 10,
-        {
-          align: 'center',
-        }
-      );
-    };
-
-    selectedSessions.forEach((session) => {
-      const title = session.title || '';
-      const speakersArr = Array.isArray(session.speakers)
-        ? session.speakers
-        : session.speakers
-          ? [session.speakers]
-          : [];
-      const description = session.description || '';
-      const venue = session.venue || session.track || '';
-      const time = session.time || 'TBD';
-
-      fonts.normal(8.5);
-      let topicCellLines = [];
-      if (description) {
-        const wrappedDescription = doc.splitTextToSize(
-          description,
-          columns[1] - 2 * cellPadding
-        );
-        topicCellLines.push(...wrappedDescription.slice(0, 4));
-      }
-      if (topicCellLines.length === 0) topicCellLines = ['-'];
-
-      fonts.bold(9.5);
-      const titleLines = doc.splitTextToSize(
-        title,
-        columns[0] - 2 * cellPadding
-      );
-
-      fonts.bold(8.5);
-      const speakerColumnLines =
-        speakersArr.length > 0
-          ? speakersArr
-              .slice(0, 4)
-              .flatMap((speaker) =>
-                doc
-                  .splitTextToSize(speaker, columns[2] - 2 * cellPadding)
-                  .slice(0, 2)
-              )
-          : [venue || '-'];
-
-      const maxLines = Math.max(
-        titleLines.length,
-        topicCellLines.length,
-        speakerColumnLines.length,
-        1
-      );
-      const rowHeight = Math.max(maxLines * lineHeight + 2 * cellPadding, 18);
-
-      if (currentY + rowHeight > pageHeight - footerHeight - 4) {
-        doc.addPage();
-        doc.setFillColor(...orange);
-        doc.rect(0, 0, pageWidth, stripeHeight, 'F');
-        fonts.bold(8.5);
-        doc.setTextColor(...white);
-        doc.text(
-          'TRUST & SAFETY INDIA FESTIVAL 2026  ·  PERSONALIZED AGENDA',
-          pageWidth / 2,
-          stripeHeight - 3,
-          { align: 'center' }
-        );
-        currentY = stripeHeight + 4;
-        currentY = drawTableHeader(currentY);
-      }
-
-      doc.setFillColor(...rowBg);
-      doc.roundedRect(margin, currentY, contentWidth, rowHeight, 2, 2, 'F');
-
-      doc.setFillColor(...orange);
-      doc.roundedRect(margin, currentY, 2.5, rowHeight, 1, 1, 'F');
-
-      doc.setDrawColor(...rule);
-      doc.setLineWidth(0.2);
-      let dividerX = margin + columns[0];
-      [0, 1, 2].forEach((index) => {
-        doc.line(dividerX, currentY + 3, dividerX, currentY + rowHeight - 3);
-        dividerX += columns[index + 1];
-      });
-
-      const textY = currentY + cellPadding + 3.5;
-
-      fonts.bold(9.5);
-      setColor(dark);
-      doc.text(titleLines, margin + cellPadding + 2, textY);
-
-      if (topicCellLines.length > 0 && topicCellLines[0] !== '-') {
-        fonts.normal(8.5);
-        setColor(mid);
-        doc.text(topicCellLines, margin + columns[0] + cellPadding, textY);
-      } else {
-        fonts.normal(8.5);
-        setColor(light);
-        doc.text('-', margin + columns[0] + cellPadding, textY);
-      }
-
-      const speakerX = margin + columns[0] + columns[1] + cellPadding;
-      if (speakersArr.length > 0) {
-        let speakerY = textY;
-        speakersArr.slice(0, 4).forEach((speaker, index) => {
-          if (index === 0) {
-            fonts.bold(8.5);
-            setColor(dark);
-          } else {
-            fonts.normal(7.8);
-            setColor(mid);
-          }
-          const speakerLines = doc
-            .splitTextToSize(speaker, columns[2] - 2 * cellPadding)
-            .slice(0, 2);
-          doc.text(speakerLines, speakerX, speakerY);
-          speakerY += speakerLines.length * lineHeight;
-        });
-      } else {
-        fonts.normal(8.5);
-        setColor(light);
-        doc.text(venue || '-', speakerX, textY);
-      }
-
-      fonts.bold(9);
-      setColor(orange);
-      doc.text(
-        time,
-        margin + columns[0] + columns[1] + columns[2] + cellPadding,
-        textY
-      );
-
-      currentY += rowHeight + rowGap;
-    });
-
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let page = 1; page <= totalPages; page++) {
-      doc.setPage(page);
-      drawFooter(page, totalPages);
-    }
-
-    doc.save('TASI-2026-My-Agenda.pdf');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'TASI-2026-My-Agenda.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   };
-
   const groupedSessions = sortedSessions.reduce((acc, session) => {
     if (!acc[session.day]) acc[session.day] = [];
     acc[session.day].push(session);

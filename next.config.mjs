@@ -81,6 +81,7 @@ const cacheHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
+  serverExternalPackages: ["@react-pdf/renderer"],
   allowedDevOrigins: ["127.0.0.1"],
   images: {
     formats: ['image/webp', 'image/avif'],

@@ -411,6 +411,7 @@ export default function FestivalTicketingSection() {
     gatewayLabel: "",
     payload: null,
   });
+  const [billingSameAsProfile, setBillingSameAsProfile] = useState(false);
 
   const preview = useMemo(() => getTicketPreview(form.country), [form.country]);
   const pricing = useMemo(() => getTicketBreakdown(form.country), [form.country]);
@@ -440,7 +441,29 @@ export default function FestivalTicketingSection() {
     "mt-2 min-h-24 w-full rounded-[10px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200";
 
   function updateField(key, value) {
-    setForm((current) => ({ ...current, [key]: value }));
+    setForm((current) => {
+      const next = { ...current, [key]: value };
+      if (billingSameAsProfile) {
+        if (key === "fullName") next.billingName = value;
+        if (key === "email") next.billingEmail = value;
+        if (key === "phone") next.billingPhone = value;
+        if (key === "country") next.billingCountry = value;
+      }
+      return next;
+    });
+  }
+
+  function handleBillingSameToggle(checked) {
+    setBillingSameAsProfile(checked);
+    if (checked) {
+      setForm((current) => ({
+        ...current,
+        billingName: current.fullName,
+        billingEmail: current.email,
+        billingPhone: current.phone,
+        billingCountry: current.country,
+      }));
+    }
   }
 
   function closeTicketModal() {
@@ -458,6 +481,7 @@ export default function FestivalTicketingSection() {
       payload: null,
     });
     setStatus({ type: "", message: "" });
+    setBillingSameAsProfile(false);
   }
 
   async function handlePhotoChange(event) {
@@ -1171,20 +1195,34 @@ export default function FestivalTicketingSection() {
                         ))}
                       </select>
                     </FormField>
+                    <div className="col-span-full mt-2 flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-sm font-semibold text-slate-900">Billing Details</p>
+                      <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 select-none">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-slate-300 text-amber-600"
+                          checked={billingSameAsProfile}
+                          onChange={(event) => handleBillingSameToggle(event.target.checked)}
+                        />
+                        Same as profile details
+                      </label>
+                    </div>
                     <FormField label="Billing Name *">
                       <input
-                        className={fieldClassName}
+                        className={`${fieldClassName} ${billingSameAsProfile ? "cursor-not-allowed bg-slate-50 text-slate-400" : ""}`}
                         placeholder="Billing name"
                         value={form.billingName}
+                        disabled={billingSameAsProfile}
                         onChange={(event) => updateField("billingName", event.target.value)}
                       />
                     </FormField>
                     <FormField label="Billing Email *">
                       <input
-                        className={fieldClassName}
+                        className={`${fieldClassName} ${billingSameAsProfile ? "cursor-not-allowed bg-slate-50 text-slate-400" : ""}`}
                         type="email"
                         placeholder="billing@example.com"
                         value={form.billingEmail}
+                        disabled={billingSameAsProfile}
                         onChange={(event) =>
                           updateField("billingEmail", event.target.value)
                         }
@@ -1192,28 +1230,14 @@ export default function FestivalTicketingSection() {
                     </FormField>
                     <FormField label="Billing Phone *">
                       <input
-                        className={fieldClassName}
+                        className={`${fieldClassName} ${billingSameAsProfile ? "cursor-not-allowed bg-slate-50 text-slate-400" : ""}`}
                         placeholder="+91 98765 43210"
                         value={form.billingPhone}
+                        disabled={billingSameAsProfile}
                         onChange={(event) =>
                           updateField("billingPhone", event.target.value)
                         }
                       />
-                    </FormField>
-                    <FormField label="Billing Country *">
-                      <select
-                        className={fieldClassName}
-                        value={form.billingCountry}
-                        onChange={(event) =>
-                          updateField("billingCountry", event.target.value)
-                        }
-                      >
-                        {COUNTRY_OPTIONS.map((country) => (
-                          <option key={country.code} value={country.code}>
-                            {country.label}
-                          </option>
-                        ))}
-                      </select>
                     </FormField>
                     <FormField label="Billing Address Line 1 *">
                       <input
@@ -1222,16 +1246,6 @@ export default function FestivalTicketingSection() {
                         value={form.billingAddressLine1}
                         onChange={(event) =>
                           updateField("billingAddressLine1", event.target.value)
-                        }
-                      />
-                    </FormField>
-                    <FormField label="Billing Address Line 2">
-                      <textarea
-                        className={textAreaClassName}
-                        placeholder="Address line 2"
-                        value={form.billingAddressLine2}
-                        onChange={(event) =>
-                          updateField("billingAddressLine2", event.target.value)
                         }
                       />
                     </FormField>
@@ -1264,7 +1278,7 @@ export default function FestivalTicketingSection() {
                       />
                     </FormField>
                     <FormField
-                      label={isDomestic ? "GSTIN *" : "Passport or National ID *"}
+                      label={isDomestic ? "GSTIN" : "Passport or National ID *"}
                     >
                       <input
                         className={fieldClassName}
@@ -1279,7 +1293,7 @@ export default function FestivalTicketingSection() {
                       />
                     </FormField>
                     <FormField
-                      label={isDomestic ? "PAN or Tax Reference" : "Tax ID Number"}
+                      label={isDomestic ? "PAN or Tax Reference *" : "Tax ID Number *"}
                     >
                       <input
                         className={fieldClassName}
