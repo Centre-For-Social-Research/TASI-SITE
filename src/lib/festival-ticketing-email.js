@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { getResendClient, getResendFromEmail } from "@/lib/resend";
 import { EVENT_CONFIG } from "@/lib/registration-constants";
 import { FESTIVAL_EVENT_COPY } from "@/lib/festival-ticketing-constants";
@@ -17,18 +15,10 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
-function getEmailLogoDataUrl() {
-  try {
-    const logoPath = path.join(process.cwd(), "public", "img", "tasi-csr-logo.png");
-    const buf = readFileSync(logoPath);
-    return `data:image/png;base64,${buf.toString("base64")}`;
-  } catch {
-    return "";
-  }
-}
+const EMAIL_LOGO_URL = "https://jamsaq.in/img/tasi-csr-logo.png";
 
 function renderTicketConfirmationEmailHtml({ ticket, user }) {
-  const logoUrl = getEmailLogoDataUrl();
+  const logoUrl = EMAIL_LOGO_URL;
   const firstName = escapeHtml(
     (user.full_name || "").split(" ")[0] || user.full_name || "Attendee"
   );

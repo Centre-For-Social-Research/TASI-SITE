@@ -255,21 +255,26 @@ const FestivalBadgeDocument = ({ ticket, user, profilePhotoDataUrl, qrDataUrl, l
   );
 };
 
-// â”€â”€ FESTIVAL INVOICE DOCUMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
+// ── FESTIVAL INVOICE DOCUMENT ──────────────────────────────────────────────────────────
+
+// Inline label-value row: compact horizontal format
 const KVRow = ({ label, value }) => (
-  <View style={{ marginBottom: 10 }}>
-    <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b", textTransform: "uppercase", marginBottom: 2 }}>{label}</Text>
-    <Text style={{ fontSize: 11, color: "#111827" }}>{String(value || "-")}</Text>
+  <View style={{ flexDirection: "row", marginBottom: 4 }}>
+    <Text style={{ width: 50, fontSize: 8, fontFamily: "Helvetica-Bold", color: "#64748b", flexShrink: 0 }}>{label}</Text>
+    <Text style={{ flex: 1, fontSize: 8, color: "#111827" }}>{String(value || "-")}</Text>
   </View>
 );
 
 const InvoiceCard = ({ title, rows, style }) => (
-  <View style={[{ flex: 1, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 10, padding: 18, backgroundColor: "#ffffff" }, style]}>
-    <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: "#140f26", marginBottom: 14 }}>{title}</Text>
+  <View style={[{ flex: 1, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 8, padding: 12, backgroundColor: "#ffffff" }, style]}>
+    <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: "#140f26", marginBottom: 8 }}>{title}</Text>
     {rows.map((row, i) => <KVRow key={i} label={row.label} value={row.value} />)}
   </View>
 );
+
+const INVOICE_HEADER_H = 130;
+const INVOICE_M = 36; // horizontal margin
 
 const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
   const { header, meta, seller, buyer, lineItems, totals, notes } = model;
@@ -294,117 +299,133 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
   ];
   const metaRows = [
     { label: "Invoice Date", value: meta.invoiceDate },
-    { label: "Ticket Number", value: meta.ticketNumber },
+    { label: "Ticket No.", value: meta.ticketNumber },
     { label: "Place of Supply", value: meta.placeOfSupply || "-" },
     { label: "Attendee", value: meta.attendeeName },
-    { label: "Attendee Email", value: meta.attendeeEmail },
+    { label: "Email", value: meta.attendeeEmail },
   ];
 
   return (
     <Document>
       <Page size="A4" style={{ backgroundColor: "#ffffff", fontFamily: "Helvetica" }}>
-        {/* Gradient header (absolute background) */}
-        <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 118, flexDirection: "row" }}>
+
+        {/* ── Gradient header — matches email layout exactly ── */}
+        <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H, flexDirection: "row" }}>
           {BRAND_GRADIENT_STOPS.map(([r, g, b], i) => (
             <View key={i} style={{ flex: 1, backgroundColor: toHex(r, g, b) }} />
           ))}
         </View>
 
-        {/* Logo */}
+        {/* Logo — block, left-aligned, then text stacked below (mirrors email header) */}
         {header.logoDataUrl && (
-          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 24, left: 40, width: 44, height: 44 }} />
+          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 22, left: INVOICE_M, width: 44, height: 36 }} />
         )}
 
-        {/* Eyebrow */}
-        <Text style={{ position: "absolute", top: 36, left: 98, fontSize: 12, fontFamily: "Helvetica-Bold", color: "#fde68a", letterSpacing: 1.5 }}>
+        {/* Eyebrow — amber, bold, letter-spaced */}
+        <Text style={{ position: "absolute", top: 66, left: INVOICE_M, fontSize: 10, fontFamily: "Helvetica-Bold", color: "#fde68a", letterSpacing: 1.5 }}>
           {header.eyebrow}
         </Text>
 
-        {/* Title */}
-        <Text style={{ position: "absolute", top: 56, left: 98, fontSize: 22, fontFamily: "Helvetica-Bold", color: "#ffffff" }}>
+        {/* Event title — large white */}
+        <Text style={{ position: "absolute", top: 80, left: INVOICE_M, right: INVOICE_M, fontSize: 17, fontFamily: "Helvetica-Bold", color: "#ffffff" }}>
           {header.title}
         </Text>
 
-        {/* "Tax Invoice" subtitle */}
-        <Text style={{ position: "absolute", top: 82, left: 98, fontSize: 13, color: "#ffffff" }}>
-          {header.subtitle}
+        {/* Venue · Dates — white/85% */}
+        <Text style={{ position: "absolute", top: 103, left: INVOICE_M, fontSize: 10, color: "rgba(255,255,255,0.85)" }}>
+          {FESTIVAL_EVENT_COPY.venue + "  ·  " + FESTIVAL_EVENT_COPY.datesLabel}
         </Text>
 
-        {/* Body */}
-        <View style={{ paddingTop: 136, paddingHorizontal: 40 }}>
-          {/* Invoice title row */}
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
-            <Text style={{ fontSize: 22, fontFamily: "Helvetica-Bold", color: "#140f26" }}>Invoice</Text>
-            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: "#140f26" }}>{meta.invoiceNumber}</Text>
+        {/* ── Body ── */}
+        <View style={{ paddingTop: INVOICE_HEADER_H + 14, paddingHorizontal: INVOICE_M }}>
+
+          {/* "Tax Invoice" title + invoice number */}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 12 }}>
+            <Text style={{ fontSize: 20, fontFamily: "Helvetica-Bold", color: "#140f26" }}>Tax Invoice</Text>
+            <Text style={{ fontSize: 11, fontFamily: "Helvetica-Bold", color: "#475569" }}>{meta.invoiceNumber}</Text>
           </View>
 
-          {/* Two-column cards */}
-          <View style={{ flexDirection: "row", marginBottom: 16 }}>
-            <InvoiceCard title="Seller Details" rows={sellerRows} style={{ marginRight: 9 }} />
-            <InvoiceCard title="Billing Details" rows={buyerRows} style={{ marginLeft: 9 }} />
+          {/* Seller & Buyer cards */}
+          <View style={{ flexDirection: "row", marginBottom: 10 }}>
+            <InvoiceCard title="Seller Details" rows={sellerRows} style={{ marginRight: 8 }} />
+            <InvoiceCard title="Billing Details" rows={buyerRows} style={{ marginLeft: 8 }} />
           </View>
 
           {/* Invoice Summary */}
-          <View style={{ borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 10, padding: 18, backgroundColor: "#ffffff", marginBottom: 16 }}>
-            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: "#140f26", marginBottom: 14 }}>Invoice Summary</Text>
+          <View style={{ borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 8, padding: 12, backgroundColor: "#ffffff", marginBottom: 10 }}>
+            <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: "#140f26", marginBottom: 8 }}>Invoice Summary</Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               {metaRows.map((row, i) => (
-                <View key={i} style={{ width: "50%", marginBottom: 10 }}>
-                  <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b", textTransform: "uppercase", marginBottom: 2 }}>{row.label}</Text>
-                  <Text style={{ fontSize: 11, color: "#111827" }}>{String(row.value || "-")}</Text>
+                <View key={i} style={{ width: "50%", marginBottom: 6 }}>
+                  <Text style={{ fontSize: 8, fontFamily: "Helvetica-Bold", color: "#64748b", marginBottom: 1 }}>{row.label.toUpperCase()}</Text>
+                  <Text style={{ fontSize: 9, color: "#111827" }}>{String(row.value || "-")}</Text>
                 </View>
               ))}
             </View>
           </View>
 
           {/* Line Items */}
-          <View style={{ borderRadius: 10, backgroundColor: "#f8fafc", padding: 10, marginBottom: 16 }}>
-            <View style={{ flexDirection: "row", marginBottom: 8 }}>
-              <Text style={{ flex: 3.5, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b" }}>DESCRIPTION</Text>
-              <Text style={{ flex: 0.8, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b" }}>SAC</Text>
-              <Text style={{ flex: 0.6, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b" }}>QTY</Text>
-              <Text style={{ flex: 1, fontSize: 9, fontFamily: "Helvetica-Bold", color: "#64748b", textAlign: "right" }}>AMOUNT</Text>
+          <View style={{ borderRadius: 8, backgroundColor: "#f8fafc", padding: 10, marginBottom: 10 }}>
+            <View style={{ flexDirection: "row", marginBottom: 6 }}>
+              <Text style={{ flex: 3.5, fontSize: 8, fontFamily: "Helvetica-Bold", color: "#64748b" }}>DESCRIPTION</Text>
+              <Text style={{ flex: 0.8, fontSize: 8, fontFamily: "Helvetica-Bold", color: "#64748b" }}>SAC</Text>
+              <Text style={{ flex: 0.5, fontSize: 8, fontFamily: "Helvetica-Bold", color: "#64748b" }}>QTY</Text>
+              <Text style={{ flex: 1, fontSize: 8, fontFamily: "Helvetica-Bold", color: "#64748b", textAlign: "right" }}>AMOUNT</Text>
             </View>
-            <View style={{ height: 0.5, backgroundColor: "#e2e8f0", marginBottom: 8 }} />
+            <View style={{ height: 0.5, backgroundColor: "#e2e8f0", marginBottom: 6 }} />
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ flex: 3.5, fontSize: 10, color: "#111827" }}>{item?.description}</Text>
-              <Text style={{ flex: 0.8, fontSize: 10, color: "#111827" }}>{item?.sacCode || "-"}</Text>
-              <Text style={{ flex: 0.6, fontSize: 10, color: "#111827" }}>{item?.quantity}</Text>
-              <Text style={{ flex: 1, fontSize: 10, color: "#111827", textAlign: "right" }}>{item?.amount}</Text>
+              <Text style={{ flex: 3.5, fontSize: 9, color: "#111827" }}>{item?.description}</Text>
+              <Text style={{ flex: 0.8, fontSize: 9, color: "#111827" }}>{item?.sacCode || "-"}</Text>
+              <Text style={{ flex: 0.5, fontSize: 9, color: "#111827" }}>{item?.quantity}</Text>
+              <Text style={{ flex: 1, fontSize: 9, color: "#111827", textAlign: "right" }}>{item?.amount}</Text>
             </View>
           </View>
 
-          {/* Bottom row: QR + Totals */}
-          <View style={{ flexDirection: "row", marginBottom: 16 }}>
-            {qrDataUrl && (
-              <View style={{ width: 196, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 10, padding: 18, backgroundColor: "#ffffff", marginRight: 16, alignItems: "center", justifyContent: "center" }}>
-                <Image src={qrDataUrl} style={{ width: 156, height: 156 }} />
-              </View>
-            )}
-            <View style={{ flex: 1, borderRadius: 10, backgroundColor: "#f8fafc", borderWidth: 1, borderColor: "#e2e8f0", padding: 10 }}>
-              {totals.map((row, i) => (
-                <View key={i}>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
-                    <Text style={row.emphasis ? { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#111827" } : { fontSize: 11, color: "#111827" }}>{row.label}</Text>
-                    <Text style={row.emphasis ? { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#111827", textAlign: "right" } : { fontSize: 11, color: "#111827", textAlign: "right" }}>{row.value}</Text>
-                  </View>
-                  {i < totals.length - 1 && <View style={{ height: 0.5, backgroundColor: "#e2e8f0" }} />}
+          {/* Totals — right-aligned block */}
+          <View style={{ alignSelf: "flex-end", width: "54%", borderRadius: 8, backgroundColor: "#f8fafc", borderWidth: 1, borderColor: "#e2e8f0", padding: 10, marginBottom: 12 }}>
+            {totals.map((row, i) => (
+              <View key={i}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 5 }}>
+                  <Text style={row.emphasis ? { fontSize: 11, fontFamily: "Helvetica-Bold", color: "#111827" } : { fontSize: 9, color: "#475569" }}>{row.label}</Text>
+                  <Text style={row.emphasis ? { fontSize: 11, fontFamily: "Helvetica-Bold", color: "#111827" } : { fontSize: 9, color: "#475569" }}>{row.value}</Text>
                 </View>
-              ))}
-            </View>
+                {i < totals.length - 1 && <View style={{ height: 0.5, backgroundColor: "#e2e8f0" }} />}
+              </View>
+            ))}
           </View>
 
           {/* Notes */}
-          <View>
+          <View style={{ marginBottom: 12 }}>
             {notes.map((note, i) => (
-              <Text key={i} style={{ fontSize: 10, color: "#475569", marginBottom: 4 }}>{note}</Text>
+              <Text key={i} style={{ fontSize: 9, color: "#64748b", marginBottom: 3 }}>{note}</Text>
             ))}
           </View>
+
+          {/* ── Signatory section — QR as digital signature ── */}
+          <View style={{ borderTopWidth: 0.5, borderColor: "#e2e8f0", paddingTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <View style={{ alignItems: "flex-start" }}>
+              <Text style={{ fontSize: 9, color: "#475569", marginBottom: 8 }}>For {seller.legalName}</Text>
+              {qrDataUrl ? (
+                <Image src={qrDataUrl} style={{ width: 80, height: 80, marginBottom: 4 }} />
+              ) : (
+                <View style={{ width: 80, height: 80, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 4, marginBottom: 4 }} />
+              )}
+              <Text style={{ fontSize: 8, color: "#94a3b8", marginBottom: 6 }}>Scan to verify</Text>
+              <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", color: "#140f26" }}>Authorised Signatory</Text>
+            </View>
+            <View style={{ flex: 1, marginLeft: 24, alignItems: "flex-end", justifyContent: "flex-end" }}>
+              <Text style={{ fontSize: 8, color: "#94a3b8", textAlign: "right", marginTop: 68 }}>
+                {"This is a computer-generated document\nand does not require a physical signature."}
+              </Text>
+            </View>
+          </View>
+
         </View>
       </Page>
     </Document>
   );
 };
+
 
 export function buildFestivalInvoiceMetadata({ ticket, user }) {
   const domestic = ticket.ticket_type === "domestic";
