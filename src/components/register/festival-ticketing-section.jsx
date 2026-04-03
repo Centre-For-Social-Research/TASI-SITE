@@ -3,11 +3,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  BadgeCheck,
+  BookUser,
   Check,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  CircleX,
+  Coffee,
+  FileText,
+  Gift,
+  Globe,
+  Handshake,
   Info,
+  LockKeyhole,
   LoaderCircle,
+  MessageCircleMore,
+  Mic,
+  MonitorPlay,
+  PartyPopper,
+  Sparkles,
+  UtensilsCrossed,
+  Users,
   X,
 } from "lucide-react";
 import { AdminAlert } from "@/components/admin/admin-ui";
@@ -71,34 +88,6 @@ const FESTIVAL_PASS_OPTIONS = [
   },
 ];
 
-const INCLUDED_ROWS = [
-  {
-    title: "2 days of conference programming and 3 receptions",
-    domestic: true,
-    international: true,
-  },
-  {
-    title: "Confirmed festival pass with QR-based venue check-in",
-    domestic: true,
-    international: true,
-  },
-  {
-    title: "Ticket PDF, attendee badge PDF, and invoice PDF after payment",
-    domestic: true,
-    international: true,
-  },
-  {
-    title: "Domestic GST invoice support",
-    domestic: true,
-    international: false,
-  },
-  {
-    title: "Export invoice and FCRA-compliant payment routing",
-    domestic: false,
-    international: true,
-  },
-];
-
 const REVIEW_INCLUDED_ITEMS = {
   domestic: [
     "2-Day Access",
@@ -117,6 +106,99 @@ const REVIEW_INCLUDED_ITEMS = {
     "Export Invoice",
   ],
 };
+
+const FULL_BLEED_COMPARISON_ROWS = [
+  {
+    icon: Mic,
+    label: "Conference Access (Day 1 & Day 2)",
+    free: true,
+    paid: true,
+  },
+  {
+    icon: Users,
+    label: "All panels, keynotes, and discussions",
+    free: true,
+    paid: true,
+  },
+  {
+    icon: Coffee,
+    label: "AM/PM Tea and Lunch (Both Days)",
+    free: true,
+    paid: true,
+  },
+  {
+    icon: PartyPopper,
+    label: "Inaugural Reception & Closing Ceremony",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: UtensilsCrossed,
+    label: "Gala Dinner",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: Users,
+    label: "Curated networking opportunities",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: BadgeCheck,
+    label: "Reserved seating (front or priority zones)",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: MonitorPlay,
+    label: "Access to post-event session recordings",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: Handshake,
+    label: "Curated 1:1 meeting slots (limited / request-based)",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: Gift,
+    label: "Digital goodie kit (reports, toolkits, partner resources)",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: BookUser,
+    label: "Name listing on official website (attendee recognition)",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: MessageCircleMore,
+    label: "Access to Stakeholder Engagement Roundtable",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: FileText,
+    label: "Curated discussion summaries (not public)",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: Users,
+    label: "VIP lounge / informal networking zone access",
+    free: false,
+    paid: true,
+  },
+  {
+    icon: BadgeCheck,
+    label: "Certificate of Participation & Premium Badge",
+    free: false,
+    paid: true,
+  },
+];
 
 function getTicketPreview(country) {
   if (country === "IN") {
@@ -552,17 +634,6 @@ export default function FestivalTicketingSection() {
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600">
           Festival Ticketing
         </p>
-        <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
-          Buy your TASI 2026 festival pass
-        </h2>
-        <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-          Country of residence determines your pass type and payment stream.
-          Domestic purchases include GST and route to the domestic NGO account.
-          International purchases route exclusively to the FCRA account.
-        </p>
-      </div>
-
-      <div className="mt-10 text-center">
         <h3 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
           Choose your ticket
         </h3>
@@ -609,12 +680,12 @@ export default function FestivalTicketingSection() {
                     {useReceptionStyleCard ? (
                       <>
                         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#5a0d6b]/78 via-[#5a0d6b]/18 to-transparent" />
-                        <div className="absolute inset-x-7 bottom-20 max-w-[220px]">
-                          <div className="mb-3 h-[2px] w-40 bg-white/70" />
-                          <p className="text-[2.65rem] font-black leading-[0.92] tracking-tight text-white drop-shadow-[0_6px_18px_rgba(0,0,0,0.25)]">
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-6 text-center">
+                          <div className="mx-auto mb-3 h-[2px] w-36 bg-white/75" />
+                          <p className="mx-auto max-w-[200px] text-[2rem] font-black leading-[0.94] tracking-tight text-white drop-shadow-[0_6px_18px_rgba(0,0,0,0.25)] sm:text-[2.2rem]">
                             {option.title}
                           </p>
-                          <div className="mt-3 h-[2px] w-40 bg-white/70" />
+                          <div className="mx-auto mt-3 h-[2px] w-36 bg-white/75" />
                         </div>
                         <div className="absolute bottom-6 left-7 text-lg font-black leading-none text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.28)]">
                           TASI
@@ -624,16 +695,18 @@ export default function FestivalTicketingSection() {
                       </>
                     ) : (
                       <>
-                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-8 text-center">
-                          <div className="mx-auto mb-4 h-[2px] w-44 bg-white/80" />
-                          <p className="text-5xl font-black tracking-tight text-white drop-shadow-[0_6px_18px_rgba(0,0,0,0.25)]">
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-6 text-center">
+                          <div className="mx-auto mb-3 h-[2px] w-36 bg-white/75" />
+                          <p className="mx-auto max-w-[220px] text-[2.35rem] font-black leading-[0.92] tracking-tight text-white drop-shadow-[0_6px_18px_rgba(0,0,0,0.25)] sm:text-[2.5rem]">
                             {option.title}
                           </p>
-                          <div className="mx-auto mt-4 h-[2px] w-44 bg-white/80" />
+                          <div className="mx-auto mt-3 h-[2px] w-36 bg-white/75" />
                         </div>
-                        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#5a0d6b]/70 via-transparent to-transparent" />
-                        <div className="absolute bottom-5 left-6 text-[1.6rem] font-black uppercase leading-[0.85] tracking-tight">
-                          TASI 2026
+                        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#5a0d6b]/78 via-[#5a0d6b]/18 to-transparent" />
+                        <div className="absolute bottom-6 left-7 text-lg font-black leading-none text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.28)]">
+                          TASI
+                          <br />
+                          2026
                         </div>
                       </>
                     )}
@@ -670,75 +743,210 @@ export default function FestivalTicketingSection() {
         })}
       </div>
 
-      <div className="mt-12 rounded-[10px] border border-slate-200 bg-white/80 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/60 md:p-8">
-        <div className="text-center">
-          <h3 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
-            What&apos;s included in your ticket
-          </h3>
-          <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-            Both passes include the full TASI 2026 festival experience, while the
-            invoice and compliance path changes depending on whether you register
-            as a domestic or international attendee.
+      <div className="mt-12 grid gap-5 lg:grid-cols-2">
+        <article className="order-2 h-full rounded-[10px] border border-slate-200/90 bg-[linear-gradient(180deg,#f8f6f1_0%,#f2f5f8_100%)] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.05)] lg:order-1 lg:p-6">
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] bg-white text-[#6a7b98] shadow-[0_8px_18px_rgba(15,23,42,0.06)]">
+              <LockKeyhole className="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <h3 className="text-xl font-black tracking-tight text-slate-900 md:text-[1.7rem]">
+                Free Pass
+              </h3>
+              <p className="mt-1 text-base text-slate-700 md:text-lg">(Application-Based)</p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#6f5e43]">
+              What&apos;s Included
+            </p>
+            <div className="mt-5 space-y-4">
+              {[
+                "Conference Access (Day 1 & 2)",
+                "Panels & Keynotes",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 text-base text-slate-900 md:text-[1.05rem]"
+                >
+                  <CheckCircle2 className="h-4.5 w-4.5 shrink-0 text-[#5547ec]" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-9">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#b24a2f]">
+              Not Included
+            </p>
+            <div className="mt-5 space-y-4">
+              {[
+                "Inaugural Reception & Gala Dinner",
+                "Closing Ceremony",
+                "Networking Access",
+                "Roundtables & Speaker Access",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 text-base text-slate-400 md:text-[1.05rem]"
+                >
+                  <CircleX className="h-4.5 w-4.5 shrink-0 text-slate-400" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
+
+        <article className="order-1 relative h-full rounded-[10px] border border-[#efc16b]/55 bg-[linear-gradient(135deg,#350265_0%,#6a115e_58%,#ef5700_100%)] p-5 text-white shadow-[0_28px_80px_-42px_rgba(53,2,101,0.58)] ring-1 ring-[#efc16b]/35 lg:order-2 lg:p-6">
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-[10px] border border-[#e0b25c] bg-[#ffd48a] px-6 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-slate-900 shadow-[0_10px_18px_rgba(224,178,92,0.22)]">
+            Recommended
+          </div>
+
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] bg-white/12 text-[#ffd48a] shadow-[0_8px_18px_rgba(15,23,42,0.18)]">
+              <BadgeCheck className="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <h3 className="text-xl font-black tracking-tight text-white md:text-[1.7rem]">
+                Paid Pass
+              </h3>
+              <p className="mt-1 text-base font-semibold text-[#ffd48a] md:text-lg">
+                Full Festival Experience
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#ffd48a]">
+              Core Benefits
+            </p>
+            <div className="mt-5 space-y-5">
+              <div className="flex items-start gap-3">
+                <Sparkles className="mt-0.5 h-4.5 w-4.5 shrink-0 text-[#ffd48a]" />
+                <div>
+                  <p className="text-lg font-black text-white md:text-[1.15rem]">
+                    Everything in Free Pass
+                  </p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-white/82">
+                    Full session access + all basic hospitality
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <BadgeCheck className="mt-0.5 h-4.5 w-4.5 shrink-0 text-[#ffd48a]" />
+                <div>
+                  <p className="text-lg font-black text-white md:text-[1.15rem]">
+                    Exclusive Receptions
+                  </p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-white/82">
+                    Inaugural Reception, Gala Dinner, Closing Ceremony
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Users className="mt-0.5 h-4.5 w-4.5 shrink-0 text-[#ffd48a]" />
+                <div>
+                  <p className="text-lg font-black text-white md:text-[1.15rem]">
+                    Networking &amp; Access
+                  </p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-white/82">
+                    Curated networking, reserved seating, roundtables
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0 text-[#ffd48a]" />
+                <div>
+                  <p className="text-lg font-black text-white md:text-[1.15rem]">
+                    Professional Benefits
+                  </p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-white/82">
+                    Certificate, premium badge, priority entry
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </article>
+      </div>
+
+      <div className="relative left-1/2 right-1/2 mt-14 w-screen -translate-x-1/2 px-5 sm:px-8">
+        <section className="mx-auto max-w-[1100px] overflow-hidden rounded-[20px] bg-[linear-gradient(180deg,#3b1365_0%,#321058_100%)] px-6 py-10 text-white shadow-[0_30px_70px_rgba(49,16,88,0.32)] sm:px-8 md:px-12 md:py-12">
+          <div className="grid gap-6 md:grid-cols-[1.25fr_140px_140px] md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-white/55">
+                Access Comparison
+              </p>
+              <h3 className="mt-3 text-2xl font-black tracking-tight text-white md:text-[2rem]">
+                Compare session-only access with the full festival experience.
+              </h3>
+            </div>
+
+            <div className="text-center">
+              <span className="inline-flex rounded-full bg-[#ffd919] px-4 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-slate-950">
+                Free Pass
+              </span>
+              <p className="mt-2 text-xs font-medium italic text-white/80">
+                Application-Based
+              </p>
+            </div>
+
+            <div className="text-center">
+              <span className="inline-flex rounded-full bg-[#ffd919] px-4 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-slate-950">
+                Paid Pass
+              </span>
+              <p className="mt-2 text-xs font-medium italic text-white/80">
+                Full Experience
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 divide-y divide-white/10 rounded-[16px] border border-white/8 bg-white/[0.02]">
+            {FULL_BLEED_COMPARISON_ROWS.map((row) => {
+              const Icon = row.icon;
+
+              return (
+                <div
+                  key={row.label}
+                  className="grid gap-4 px-4 py-4 sm:px-5 md:grid-cols-[1.25fr_140px_140px] md:items-center"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/80">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <p className="text-sm font-semibold leading-relaxed text-white sm:text-[15px]">
+                      {row.label}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-start md:justify-center">
+                    {row.free ? (
+                      <Check className="h-5 w-5 text-[#ffd919]" />
+                    ) : (
+                      <span className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-start md:justify-center">
+                    {row.paid ? (
+                      <Check className="h-5 w-5 text-[#ffd919]" />
+                    ) : (
+                      <span className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xs italic leading-relaxed text-white/80 sm:text-sm">
+            If you&apos;re planning on registering for our <span className="font-black text-white">Paid Pass</span>, we encourage you to apply early as capacity for exclusive receptions and roundtables is strictly limited.
           </p>
-        </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <article className="rounded-[10px] border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/60">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-600">
-              Domestic Pass
-            </p>
-            <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-              India residents, INR payment, GST invoice
-            </p>
-            <div className="mt-5 space-y-3">
-              {INCLUDED_ROWS.map((item) => (
-                <div
-                  key={`domestic-${item.title}`}
-                  className="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
-                >
-                  <span
-                    className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-black ${
-                      item.domestic
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
-                        : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
-                    }`}
-                  >
-                    {item.domestic ? "Y" : "-"}
-                  </span>
-                  <span>{item.title}</span>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          <article className="rounded-[10px] border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/60">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-600">
-              International Pass
-            </p>
-            <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Non-India residents, USD payment, export invoice
-            </p>
-            <div className="mt-5 space-y-3">
-              {INCLUDED_ROWS.map((item) => (
-                <div
-                  key={`international-${item.title}`}
-                  className="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
-                >
-                  <span
-                    className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-black ${
-                      item.international
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
-                        : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
-                    }`}
-                  >
-                    {item.international ? "Y" : "-"}
-                  </span>
-                  <span>{item.title}</span>
-                </div>
-              ))}
-            </div>
-          </article>
-        </div>
+        </section>
       </div>
 
       {!ticketModalOpen && status.type === "error" ? (
@@ -757,7 +965,11 @@ export default function FestivalTicketingSection() {
             role="dialog"
             aria-modal="true"
             aria-label="Event Registration"
-            className="relative z-10 w-full max-w-[760px] rounded-[10px] bg-white p-6 shadow-[0_30px_120px_rgba(15,23,42,0.28)] sm:p-8 md:p-10"
+            className={`relative z-10 my-auto flex max-h-[88vh] w-full flex-col rounded-[10px] bg-white shadow-[0_30px_120px_rgba(15,23,42,0.28)] ${
+              step === "payment"
+                ? "max-w-[500px] p-5 sm:p-6"
+                : "max-w-[620px] p-5 sm:p-6 md:p-7"
+            }`}
           >
             <div className="flex items-center justify-between">
               <h3 className="text-2xl font-black tracking-tight text-slate-900 md:text-[2rem]">
@@ -787,7 +999,11 @@ export default function FestivalTicketingSection() {
               </div>
             ) : null}
 
-            <div className="mt-8 max-h-[65vh] overflow-y-auto pr-1">
+            <div
+              className={`mt-6 min-h-0 flex-1 overflow-y-auto pr-1 ${
+                step === "payment" ? "max-h-[46vh]" : "max-h-[54vh]"
+              }`}
+            >
               {step === "details" ? (
                 <>
                   <div className="grid gap-5 md:grid-cols-2">
@@ -1098,7 +1314,7 @@ export default function FestivalTicketingSection() {
               ) : null}
 
               {step === "payment" ? (
-                <div className="py-4 text-center">
+                <div className="py-2 text-center">
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#dbeafe] text-[#2563eb]">
                     <LoaderCircle
                       className={`h-8 w-8 ${
@@ -1106,16 +1322,16 @@ export default function FestivalTicketingSection() {
                       }`}
                     />
                   </div>
-                  <h4 className="mt-8 text-4xl font-black tracking-tight text-slate-900">
+                  <h4 className="mt-6 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
                     Initialising Secure Payment
                   </h4>
-                  <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-slate-500">
+                  <p className="mx-auto mt-3 max-w-sm text-base leading-relaxed text-slate-500 sm:text-lg">
                     {paymentSession.status === "ready"
                       ? `Your ${pricing.paymentGatewayLabel.toLowerCase()} is ready.`
                       : `Please wait while we connect to the ${pricing.paymentGatewayLabel.toLowerCase()}.`}
                   </p>
 
-                  <div className="mx-auto mt-8 max-w-md rounded-[10px] border border-slate-200 bg-slate-50 p-5 text-left">
+                  <div className="mx-auto mt-6 max-w-sm rounded-[10px] border border-slate-200 bg-slate-50 p-5 text-left">
                     <div className="flex items-center justify-between gap-4 text-sm text-slate-500">
                       <span>Order ID</span>
                       <span className="font-mono text-slate-900">
@@ -1134,7 +1350,7 @@ export default function FestivalTicketingSection() {
                     type="button"
                     onClick={launchPreparedCheckout}
                     disabled={paymentSession.status !== "ready" || submitting}
-                    className="mx-auto mt-8 inline-flex min-w-[360px] items-center justify-center rounded-[10px] bg-[#17203a] px-8 py-4 text-xl font-black text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="mx-auto mt-6 inline-flex min-w-[280px] items-center justify-center rounded-[10px] bg-[#17203a] px-8 py-4 text-lg font-black text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[320px] sm:text-xl"
                   >
                     {submitting ? "Opening Razorpay..." : "Pay Now"}
                   </button>

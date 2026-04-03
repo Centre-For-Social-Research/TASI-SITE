@@ -26,11 +26,7 @@ test("spotlight card component exists as a reusable UI primitive", () => {
 
   assert.match(source, /export\s+\{\s*GlowCard\s*\}/);
   assert.match(source, /data-glow/);
-  assert.match(source, /addEventListener\("pointermove"/);
-  assert.match(source, /data-glow-overlay/);
   assert.match(source, /overflow-visible/);
   assert.match(source, /overflow-hidden rounded-\[inherit\]/);
-  assert.match(source, /onPointerEnter/);
-  assert.match(source, /onPointerLeave/);
-  assert.match(source, /isHovering/);
+  assert.match(source, /boxShadow:\s*"0 1rem 2rem -1rem rgba\(0,0,0,0\.85\)"/);
 });

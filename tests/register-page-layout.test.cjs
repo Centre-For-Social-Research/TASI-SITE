@@ -10,20 +10,53 @@ function readFile(relativePath) {
 test("register page renders festival ticketing below the approval-based registration flow", () => {
   const source = readFile("src/app/register/page.jsx");
   const registrationFormIndex = source.indexOf("<RegistrationForm />");
+  const skipWaitIndex = source.indexOf("Skip the wait. Get full access to the festival.");
   const festivalSectionIndex = source.indexOf("<FestivalTicketingSection />");
 
   assert.notEqual(registrationFormIndex, -1);
+  assert.notEqual(skipWaitIndex, -1);
   assert.notEqual(festivalSectionIndex, -1);
   assert.ok(
-    festivalSectionIndex > registrationFormIndex,
-    "Festival ticketing section should appear after the approval-based registration block.",
+    skipWaitIndex > registrationFormIndex,
+    "Skip-the-wait divider should appear after the application form.",
+  );
+  assert.ok(
+    festivalSectionIndex > skipWaitIndex,
+    "Festival ticketing section should appear after the skip-the-wait divider.",
+  );
+});
+
+test("register page uses the updated general access intro copy", () => {
+  const source = readFile("src/app/register/page.jsx");
+
+  assert.match(source, /Apply for General Access/);
+  assert.match(
+    source,
+    /This is a manual review process\. Submit your application and our[\s\S]*You will receive a confirmation if[\s\S]*selected\./,
+  );
+  assert.doesNotMatch(source, /Delegate Applications/);
+  assert.doesNotMatch(
+    source,
+    /Approval-based registration remains available below/,
+  );
+});
+
+test("register page includes the OR divider before paid ticketing", () => {
+  const source = readFile("src/app/register/page.jsx");
+
+  assert.match(source, />\s*OR\s*</);
+  assert.match(source, /Skip the wait\. Get full access to the festival\./);
+  assert.match(
+    source,
+    /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/,
   );
 });
 
 test("festival ticketing cards use the legacy footer label", () => {
   const source = readFile("src/components/register/festival-ticketing-section.jsx");
 
-  assert.match(source, /absolute bottom-5 left-6/);
+  assert.match(source, /absolute bottom-6 left-7/);
+  assert.match(source, /TASI\s*<br \/>\s*2026/);
   assert.match(source, /TASI 2026/);
 });
 
@@ -32,7 +65,8 @@ test("festival ticketing cards use the redesigned centered ticket layout", () =>
 
   assert.match(source, /Choose your ticket/);
   assert.match(source, /Register now/);
-  assert.match(source, /top-1\/2/);
+  assert.match(source, /absolute inset-x-0 top-1\/2 -translate-y-1\/2 px-6 text-center/);
+  assert.match(source, /max-w-\[220px\] text-\[2\.35rem\]/);
 });
 
 test("festival ticketing modal stays hidden until a card is selected", () => {
@@ -54,11 +88,27 @@ test("festival ticketing cards are not wrapped in a white boxed container", () =
   );
 });
 
-test("festival ticketing includes a RightsCon-style what's included section", () => {
+test("festival ticketing includes the new free-vs-paid comparison section", () => {
   const source = readFile("src/components/register/festival-ticketing-section.jsx");
 
-  assert.match(source, /What&apos;s included in your ticket/);
-  assert.match(source, /2 days of conference programming and 3 receptions/);
-  assert.match(source, /Domestic Pass/);
-  assert.match(source, /International Pass/);
+  assert.match(source, /Free Pass/);
+  assert.match(source, /\(Application-Based\)/);
+  assert.match(source, /Paid Pass/);
+  assert.match(source, /Recommended/);
+  assert.match(source, /Everything in Free Pass/);
+  assert.match(source, /Access Comparison/);
+  assert.match(source, /Conference Access \(Day 1 & Day 2\)/);
+  assert.match(source, /Reserved seating \(front or priority zones\)/);
+  assert.doesNotMatch(source, /Attendee directory \(opt-in\)/);
+  assert.doesNotMatch(
+    source,
+    /Private roundtable with industry experts, CSOs, and government officials/,
+  );
+  assert.doesNotMatch(
+    source,
+    /Personal introduction by organizers to key stakeholders/,
+  );
+  assert.doesNotMatch(source, /Select roundtables and speaker interaction/);
+  assert.doesNotMatch(source, /International Add-on: Ecosystem briefing & intros/);
+  assert.doesNotMatch(source, /International Bonus/);
 });

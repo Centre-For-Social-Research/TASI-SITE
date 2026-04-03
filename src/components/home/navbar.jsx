@@ -16,7 +16,6 @@ const navItems = [
     children: [
       { label: 'TASI 2025', href: '/tasi-2025' },
       { label: 'TASI 2026', href: '/tasi-2026' },
-      { label: 'Festival Registration', href: '/register' },
     ],
   },
   { label: 'Sponsors', href: '/sponsor' },

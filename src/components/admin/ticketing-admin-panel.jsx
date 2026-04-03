@@ -17,11 +17,30 @@ function formatMoney(minor, currency) {
   }).format(value);
 }
 
+function formatValue(value, fallback = "—") {
+  const normalized = String(value ?? "").trim();
+  return normalized || fallback;
+}
+
+function DetailItem({ label, value }) {
+  return (
+    <div>
+      <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+        {label}
+      </p>
+      <p className="mt-1 text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+        {formatValue(value)}
+      </p>
+    </div>
+  );
+}
+
 export default function TicketingAdminPanel() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState({ message: "", tone: "default" });
+  const [expandedTicketId, setExpandedTicketId] = useState(null);
 
   async function loadTickets(nextSearch = "") {
     setLoading(true);
@@ -35,6 +54,9 @@ export default function TicketingAdminPanel() {
         throw new Error(data?.error || "Unable to load festival tickets.");
       }
       setTickets(data.tickets || []);
+      setExpandedTicketId((current) =>
+        data.tickets?.some((ticket) => ticket.id === current) ? current : null,
+      );
     } catch (error) {
       setToast({
         message:
@@ -129,7 +151,7 @@ export default function TicketingAdminPanel() {
 
         {loading ? (
           <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">
-            Loading festival tickets…
+            Loading festival tickets...
           </p>
         ) : tickets.length === 0 ? (
           <AdminAlert
@@ -145,7 +167,15 @@ export default function TicketingAdminPanel() {
                 key={ticket.id}
                 className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60"
               >
-                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setExpandedTicketId((current) =>
+                      current === ticket.id ? null : ticket.id,
+                    )
+                  }
+                  className="flex w-full flex-col gap-2 text-left md:flex-row md:items-center md:justify-between"
+                >
                   <div>
                     <p className="text-sm font-black text-slate-900 dark:text-white">
                       {ticket.ticket_number}
@@ -160,8 +190,80 @@ export default function TicketingAdminPanel() {
                   <div className="text-sm text-slate-600 dark:text-slate-300 md:text-right">
                     <p>{formatMoney(ticket.total_amount_minor, ticket.currency)}</p>
                     <p className="mt-1">{ticket.invoice_number || "Invoice pending"}</p>
+                    <p className="mt-2 text-[11px] font-black uppercase tracking-[0.14em] text-amber-700 dark:text-amber-300">
+                      {expandedTicketId === ticket.id ? "Hide details" : "View details"}
+                    </p>
                   </div>
-                </div>
+                </button>
+
+                {expandedTicketId === ticket.id ? (
+                  <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700">
+                    <div className="grid gap-5 md:grid-cols-3">
+                      <div className="space-y-4">
+                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                          Buyer Details
+                        </p>
+                        <DetailItem label="Full Name" value={ticket.user?.full_name} />
+                        <DetailItem label="Email" value={ticket.user?.email} />
+                        <DetailItem label="Phone" value={ticket.user?.phone} />
+                        <DetailItem label="Organisation" value={ticket.user?.organization} />
+                        <DetailItem label="Job Title" value={ticket.user?.job_title} />
+                        <DetailItem label="Country" value={ticket.user?.country} />
+                      </div>
+
+                      <div className="space-y-4">
+                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                          Billing Address
+                        </p>
+                        <DetailItem label="Billing Name" value={ticket.user?.billing_name} />
+                        <DetailItem label="Billing Email" value={ticket.user?.billing_email} />
+                        <DetailItem label="Billing Phone" value={ticket.user?.billing_phone} />
+                        <DetailItem
+                          label="Billing Address"
+                          value={[
+                            ticket.user?.billing_address_line1,
+                            ticket.user?.billing_address_line2,
+                            ticket.user?.billing_city,
+                            ticket.user?.billing_state_or_province,
+                            ticket.user?.billing_postal_code,
+                            ticket.user?.billing_country,
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
+                        />
+                        <DetailItem label="Tax ID Number" value={ticket.user?.tax_id_number} />
+                        <DetailItem label="GSTIN" value={ticket.user?.gstin} />
+                        <DetailItem
+                          label="Passport / National ID"
+                          value={ticket.user?.passport_or_national_id}
+                        />
+                      </div>
+
+                      <div className="space-y-4">
+                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                          Payment IDs
+                        </p>
+                        <DetailItem label="Ticket Status" value={ticket.status} />
+                        <DetailItem label="Ticket Type" value={ticket.ticket_type} />
+                        <DetailItem label="Payment Stream" value={ticket.payment_stream} />
+                        <DetailItem
+                          label="Total Amount"
+                          value={formatMoney(ticket.total_amount_minor, ticket.currency)}
+                        />
+                        <DetailItem label="Invoice Number" value={ticket.invoice_number} />
+                        <DetailItem label="Badge Number" value={ticket.badge_number} />
+                        <DetailItem
+                          label="Razorpay Order ID"
+                          value={ticket.razorpay_order_id}
+                        />
+                        <DetailItem
+                          label="Razorpay Payment ID"
+                          value={ticket.razorpay_payment_id}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </article>
             ))}
           </div>

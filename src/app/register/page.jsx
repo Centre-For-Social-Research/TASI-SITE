@@ -74,13 +74,12 @@ export default function RegisterPage() {
         <section className="mx-auto mt-12 max-w-6xl px-6 sm:px-8">
           <div className="mb-8 rounded-[10px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600">
-              Delegate Applications
+              Apply for General Access
             </p>
-            <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100">
-              Approval-based registration remains available below
-            </h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              The original approval-based delegate application flow remains part of the page for attendees who still need to apply through the existing review-led process.
+              This is a manual review process. Submit your application and our
+              team will review your details. You will receive a confirmation if
+              selected.
             </p>
           </div>
           <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
@@ -153,6 +152,27 @@ export default function RegisterPage() {
             </div>
 
             <RegistrationForm />
+          </div>
+        </section>
+
+        <section className="relative mt-14 overflow-hidden bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] py-14 text-center md:py-20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,217,25,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.08),transparent_30%)]" />
+          <div className="relative mx-auto max-w-6xl px-6 sm:px-8">
+            <div className="flex items-center gap-4 text-white/75">
+              <div className="h-px flex-1 bg-white/20" />
+              <span className="text-[1.75rem] font-black uppercase tracking-[0.18em] text-amber-200">
+                OR
+              </span>
+              <div className="h-px flex-1 bg-white/20" />
+            </div>
+            <h2 className="mt-10 text-3xl font-black tracking-tight text-white md:text-5xl">
+              Skip the wait. Get full access to the festival.
+            </h2>
+            <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-white/80 md:text-base">
+              Move from application-only access to the full festival
+              experience, including paid entry, hospitality, and reception
+              access.
+            </p>
           </div>
         </section>
 
