@@ -336,9 +336,9 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
           </View>
         )}
 
-        {/* Logo — block, left-aligned, then text stacked below (mirrors email header) */}
+        {/* Logo — block, left-aligned at natural aspect ratio (281×153 → 74×40) */}
         {header.logoDataUrl && (
-          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 22, left: INVOICE_M, width: 44, height: 36 }} />
+          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 20, left: INVOICE_M, width: 74, height: 40 }} />
         )}
 
         {/* Eyebrow — amber, bold, letter-spaced */}
@@ -637,14 +637,14 @@ export async function buildFestivalBadgePdf({ ticket, user, profilePhotoDataUrl 
 export async function buildFestivalInvoicePdf({ ticket, user }) {
   const model = buildFestivalInvoiceDocumentModel({ ticket, user });
 
-  let qrDataUrl = null;
-  if (model.qrPayload) {
-    qrDataUrl = await QRCode.toDataURL(model.qrPayload, {
-      margin: 1,
-      width: 180,
-      color: { dark: "#140f26", light: "#FFFFFF" },
-    });
-  }
+  const qrSource = model.qrPayload || ticket.ticket_number;
+  const qrDataUrl = qrSource
+    ? await QRCode.toDataURL(qrSource, {
+        margin: 1,
+        width: 180,
+        color: { dark: "#140f26", light: "#FFFFFF" },
+      })
+    : null;
 
   return renderToBuffer(<FestivalInvoiceDocument model={model} qrDataUrl={qrDataUrl} />);
 }
