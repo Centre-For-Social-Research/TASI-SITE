@@ -1,14 +1,10 @@
 import { getResendClient, getResendFromEmail } from "@/lib/resend";
 import { EVENT_CONFIG } from "@/lib/registration-constants";
 import { FESTIVAL_EVENT_COPY } from "@/lib/festival-ticketing-constants";
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import {
-  buildFestivalBadgePdf,
   buildFestivalInvoicePdf,
   buildFestivalTicketPdf,
 } from "@/lib/festival-ticketing-documents";
-
-const TICKET_PHOTO_BUCKET = "festival-ticket-photos";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -73,7 +69,7 @@ function renderTicketConfirmationEmailHtml({ ticket, user }) {
           </p>
           <p style="margin:0 0 24px;color:#111827;font-size:16px;line-height:1.6;">
             Your registration for the <strong>${escapeHtml(FESTIVAL_EVENT_COPY.title)}</strong> is confirmed.
-            Please find your <strong>ticket</strong>, <strong>tax invoice</strong>, and <strong>name badge</strong>
+            Please find your <strong>ticket</strong> and <strong>tax invoice</strong>
             attached to this email.
           </p>
 
@@ -101,7 +97,6 @@ function renderTicketConfirmationEmailHtml({ ticket, user }) {
             <ul style="margin:0;padding-left:18px;color:#78350f;font-size:13px;line-height:1.8;">
               <li><strong>${ticketNumber}.pdf</strong> — Entry ticket with QR code (present at the gate)</li>
               <li><strong>${invoiceNumber}.pdf</strong> — Tax invoice for your records</li>
-              <li>Name badge PDF — Print or save for on-site registration</li>
             </ul>
           </div>
 
@@ -148,27 +143,9 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
     };
   }
 
-  const [ticketPdf, invoicePdf, badgePdf] = await Promise.all([
+  const [ticketPdf, invoicePdf] = await Promise.all([
     buildFestivalTicketPdf({ ticket, user }),
     buildFestivalInvoicePdf({ ticket, user }),
-    (async () => {
-      let profilePhotoDataUrl = null;
-      if (user.profile_photo_path) {
-        try {
-          const supabase = getSupabaseAdmin();
-          const { data, error } = await supabase.storage
-            .from(TICKET_PHOTO_BUCKET)
-            .download(user.profile_photo_path);
-          if (!error && data) {
-            const buffer = Buffer.from(await data.arrayBuffer());
-            profilePhotoDataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
-          }
-        } catch {
-          // Non-fatal: badge generates without photo if download fails
-        }
-      }
-      return buildFestivalBadgePdf({ ticket, user, profilePhotoDataUrl });
-    })(),
   ]);
 
   const subject = `Your TASI 2026 Registration is Confirmed — ${ticket.ticket_number}`;
@@ -184,7 +161,7 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
     `Dates: ${FESTIVAL_EVENT_COPY.datesLabel}`,
     `Venue: ${FESTIVAL_EVENT_COPY.venue}`,
     ``,
-    `Your ticket, tax invoice, and name badge are attached to this email.`,
+    `Your ticket and tax invoice are attached to this email.`,
     `Please bring your ticket and a valid photo ID on the day.`,
     ``,
     `For support, contact: ${EVENT_CONFIG.contactEmail}`,
@@ -207,10 +184,6 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
         {
           filename: `${ticket.invoice_number || "invoice"}.pdf`,
           content: invoicePdf,
-        },
-        {
-          filename: `${ticket.badge_number || ticket.ticket_number}-badge.pdf`,
-          content: badgePdf,
         },
       ],
     });
