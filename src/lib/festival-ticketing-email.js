@@ -70,7 +70,7 @@ function renderTicketConfirmationEmailHtml({ ticket, user }) {
           <p style="margin:0 0 24px;color:#111827;font-size:16px;line-height:1.6;">
             Your registration for the <strong>${escapeHtml(FESTIVAL_EVENT_COPY.title)}</strong> is confirmed.
             Please find your <strong>ticket</strong> and <strong>tax invoice</strong>
-            attached to this email.
+            attached to this email. Your <strong>name badge</strong> will be shared one week before the event.
           </p>
 
           <!-- ── Registration details card ── -->
@@ -162,6 +162,7 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
     `Venue: ${FESTIVAL_EVENT_COPY.venue}`,
     ``,
     `Your ticket and tax invoice are attached to this email.`,
+    `Your name badge will be shared one week before the event.`,
     `Please bring your ticket and a valid photo ID on the day.`,
     ``,
     `For support, contact: ${EVENT_CONFIG.contactEmail}`,
