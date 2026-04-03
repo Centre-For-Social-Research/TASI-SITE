@@ -1,6 +1,6 @@
 import { protectPublicRoute } from "@/lib/api-security";
-import { getTicketsForLookup } from "@/lib/ticketing-db";
-import { ticketLookupSchema } from "@/lib/ticketing-validation";
+import { getFestivalTicketsForLookup } from "@/lib/festival-ticketing-db";
+import { festivalTicketLookupSchema } from "@/lib/festival-ticketing-validation";
 
 export async function GET(request) {
   const protection = await protectPublicRoute(request, "ticket-lookup", {
@@ -14,12 +14,12 @@ export async function GET(request) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const parsed = ticketLookupSchema.parse({
+    const parsed = festivalTicketLookupSchema.parse({
       email: searchParams.get("email") || "",
       phone: searchParams.get("phone") || "",
     });
 
-    const tickets = await getTicketsForLookup(parsed);
+    const tickets = await getFestivalTicketsForLookup(parsed);
     return Response.json({ success: true, tickets }, { headers: protection.headers });
   } catch (error) {
     return Response.json(

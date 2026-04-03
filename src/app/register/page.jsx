@@ -1,6 +1,7 @@
 import HomeNavbar from '@/components/home/navbar';
 import HomeFooter from '@/components/home/footer';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
+import FestivalTicketingSection from '@/components/register/festival-ticketing-section';
 import RegistrationForm from '@/components/register/registration-form';
 import { QR_PASS_RELEASE_TIMING } from '@/lib/registration-constants';
 
@@ -71,6 +72,17 @@ export default function RegisterPage() {
         </BrandedPageHero>
 
         <section className="mx-auto mt-12 max-w-6xl px-6 sm:px-8">
+          <div className="mb-8 rounded-[10px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600">
+              Delegate Applications
+            </p>
+            <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+              Approval-based registration remains available below
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              The original approval-based delegate application flow remains part of the page for attendees who still need to apply through the existing review-led process.
+            </p>
+          </div>
           <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
             <div className="space-y-6">
               <div className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 md:p-8">
@@ -143,6 +155,8 @@ export default function RegisterPage() {
             <RegistrationForm />
           </div>
         </section>
+
+        <FestivalTicketingSection />
       </main>
       <HomeFooter />
     </>

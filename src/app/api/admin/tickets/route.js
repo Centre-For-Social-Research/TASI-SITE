@@ -1,7 +1,7 @@
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { listAdminTickets } from "@/lib/ticketing-db";
+import { listFestivalAdminTickets } from "@/lib/festival-ticketing-db";
 
-export async function GET() {
+export async function GET(request) {
   const authResult = await requireAuthorizedOperator({
     route: "api.admin.tickets.list",
   });
@@ -10,7 +10,10 @@ export async function GET() {
   }
 
   try {
-    const tickets = await listAdminTickets();
+    const { searchParams } = new URL(request.url);
+    const tickets = await listFestivalAdminTickets({
+      search: searchParams.get("search") || "",
+    });
     return Response.json({ success: true, tickets });
   } catch (error) {
     return Response.json(

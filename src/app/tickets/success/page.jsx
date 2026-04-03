@@ -34,14 +34,13 @@ export default async function TicketSuccessPage({ searchParams }) {
     <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] px-4 py-16 text-stone-900 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] dark:text-stone-100">
       <div className="mx-auto max-w-3xl rounded-[10px] border border-stone-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900">
         <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary">
-          TASI 2026 Reception Tickets
+          TASI 2026 Festival Ticketing
         </p>
         <h1 className="mt-4 text-4xl font-black tracking-tight text-stone-900 dark:text-white">
-          {isFreeOrder ? "Your tickets are reserved." : "Your payment is confirmed."}
+          {isFreeOrder ? "Your ticket is reserved." : "Your payment is confirmed."}
         </h1>
         <p className="mt-4 text-base leading-relaxed text-stone-600 dark:text-slate-300">
-          Your confirmation email has been sent with the QR tickets for your
-          reception booking. Keep the email handy for venue access.
+          Your confirmation email includes your ticket PDF, invoice, and attendee badge. Keep the email handy for venue access and check-in.
         </p>
 
         {order ? (
@@ -58,17 +57,17 @@ export default async function TicketSuccessPage({ searchParams }) {
             Need to retrieve your tickets again?
           </p>
           <p className="mt-2 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-            Search using the booking email and phone number used during checkout.
+            Search using the email and phone number used during checkout.
           </p>
           <TicketLookupForm />
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/receptions"
+            href="/register"
             className="inline-flex items-center justify-center rounded-full bg-rc-primary px-6 py-3 text-sm font-black uppercase tracking-[0.14em] text-rc-secondary"
           >
-            Back to receptions
+            Back to registration
           </Link>
           <Link
             href="/contact"

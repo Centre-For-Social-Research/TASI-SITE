@@ -1,11 +1,3 @@
-import HomeFooter from '@/components/home/footer';
-import AudienceSection from '@/components/home/audience-section';
-import FormatGrid from '@/components/home/format-grid';
-import GlobalCta from '@/components/home/global-cta';
-import HomeNavbar from '@/components/home/navbar';
-import StructureSection from '@/components/home/structure-section';
-import ThemesPreview from '@/components/home/themes-preview';
-import BrandedPageHero from '@/components/ui/branded-page-hero';
 import Link from 'next/link';
 import HomeFooter from '@/components/home/footer';
 import AudienceSection from '@/components/home/audience-section';
@@ -51,10 +43,10 @@ export default function Tasi2026EditionPage() {
             </div>
             <div className="mt-2 flex flex-wrap justify-center gap-3">
               <Link
-                href="/receptions/2026"
+                href="/register"
                 className="rounded-full bg-rc-secondary px-6 py-3 text-sm font-black uppercase tracking-[0.14em] text-rc-primary transition hover:opacity-90"
               >
-                View Reception Tickets
+                Buy Festival Pass
               </Link>
               <Link
                 href="/register"

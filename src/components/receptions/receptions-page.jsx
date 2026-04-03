@@ -14,17 +14,6 @@ import {
 } from '@/components/home/motion-reveal';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import { receptionStats, receptions } from '@/data/receptions';
-import ReceptionTicketing2026 from "@/components/receptions/reception-ticketing-2026";
-import HomeFooter from '@/components/home/footer';
-import HomeNavbar from '@/components/home/navbar';
-import {
-  MotionItem,
-  MotionReveal,
-  MotionStagger,
-} from '@/components/home/motion-reveal';
-import ReceptionTicketing2026 from '@/components/receptions/reception-ticketing-2026';
-import BrandedPageHero from '@/components/ui/branded-page-hero';
-import { receptionStats, receptions } from '@/data/receptions';
 
 function ModeToggle({ mode, onChange }) {
   return (
@@ -328,7 +317,54 @@ function PostMode() {
 }
 
 function PreMode() {
-  return <ReceptionTicketing2026 />;
+  return (
+    <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
+      <div className="mx-auto grid w-full max-w-[1300px] gap-8 px-4 md:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:px-16">
+        <MotionReveal>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary">
+            Receptions Programme
+          </p>
+          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.1rem]">
+            TASI 2026 receptions now support the wider festival story
+          </h2>
+          <p className="mt-5 text-body-lg leading-relaxed text-stone-700 dark:text-slate-300">
+            Festival ticketing now lives on the registration page. This receptions page remains focused on diplomatic hosting, hospitality context, and the editorial arc around the main event.
+          </p>
+        </MotionReveal>
+
+        <MotionStagger className="grid gap-5">
+          {[
+            {
+              title: 'Festival purchase flow moved',
+              text: 'Domestic and international payment routing now happens on the registration page where GST and FCRA rules can be enforced consistently.',
+            },
+            {
+              title: 'Receptions stay visible',
+              text: 'This page continues to showcase the programme tone, partner-hosted moments, and hospitality framing without acting as the checkout surface.',
+            },
+            {
+              title: 'Clearer site structure',
+              text: 'Use /register for ticket purchase and delegate flows, and use /receptions/2026 for context, partner storytelling, and archival continuity.',
+            },
+          ].map((item) => (
+            <MotionItem key={item.title}>
+              <article className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
+                  2026
+                </p>
+                <h3 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                  {item.text}
+                </p>
+              </article>
+            </MotionItem>
+          ))}
+        </MotionStagger>
+      </div>
+    </section>
+  );
 }
 
 export default function ReceptionsPage({ initialMode = "post" }) {
@@ -355,7 +391,7 @@ export default function ReceptionsPage({ initialMode = "post" }) {
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/90 md:text-lg">
               {is2025
                 ? "Explore the embassy-hosted reception journey of TASI 2025 across October 6-8 in New Delhi, from the pre-launch welcome evening to the closing diplomatic finale."
-                : "Book your place in the TASI 2026 reception programme through a curated ticketing flow designed for standard, supporter, and community access."}
+                : "Explore how receptions fit into the TASI 2026 experience, while festival registration and payment now happen through the main registration flow."}
             </p>
 
             <div className="mt-8">
@@ -364,13 +400,13 @@ export default function ReceptionsPage({ initialMode = "post" }) {
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "October 6-8, 2025" : "Bookings now managed here"}
+                {is2025 ? "October 6-8, 2025" : "Registration handles ticketing"}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "New Delhi diplomatic receptions" : "Three-tier ticket access"}
+                {is2025 ? "New Delhi diplomatic receptions" : "Hospitality and partner context"}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "Invite Only" : "Razorpay-secured checkout"}
+                {is2025 ? "Invite Only" : "Festival purchase lives on /register"}
               </span>
             </div>
           </div>

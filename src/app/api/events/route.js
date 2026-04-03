@@ -1,5 +1,6 @@
 import { protectPublicRoute } from "@/lib/api-security";
 import { requireAuthorizedOperator } from "@/lib/registration-auth";
+import { shouldServeDemoTicketEvents } from "@/lib/ticketing-api-utils";
 import { DEMO_RECEPTION_EVENT } from "@/lib/ticketing-constants";
 import { createTicketEvent, listPublicTicketEvents } from "@/lib/ticketing-db";
 import { createTicketEventSchema } from "@/lib/ticketing-validation";
@@ -21,10 +22,7 @@ export async function GET(request) {
     const message =
       error instanceof Error ? error.message : "Unable to load ticket events.";
 
-    if (
-      message.includes("Missing SUPABASE_URL") ||
-      message.includes("Missing SUPABASE_SERVICE_ROLE_KEY")
-    ) {
+    if (shouldServeDemoTicketEvents({ message, nodeEnv: process.env.NODE_ENV })) {
       return Response.json(
         {
           success: true,

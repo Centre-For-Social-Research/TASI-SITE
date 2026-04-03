@@ -1,5 +1,10 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import {
+  buildFestivalCheckInRecord,
+  completeFestivalCheckIn,
+  getFestivalTicketByQrPayload,
+} from '@/lib/festival-ticketing-db';
+import {
   completeCheckIn,
   getCheckInRecordByToken,
   getCheckInRegistrationById,
@@ -24,9 +29,35 @@ export async function POST(request) {
     let pass = null;
 
     if (token) {
-      const result = await getCheckInRecordByToken(token);
-      registration = result.registration;
-      pass = result.pass;
+      const festivalTicket = await getFestivalTicketByQrPayload(token);
+      if (festivalTicket) {
+        if (festivalTicket.status === 'pending' || festivalTicket.status === 'cancelled') {
+          return Response.json({
+            success: false,
+            result: 'not_confirmed',
+            registration: buildFestivalCheckInRecord(festivalTicket),
+            recentScans: await listRecentEntryScans(),
+          });
+        }
+
+        const checkedIn = await completeFestivalCheckIn({
+          ticketId: festivalTicket.id,
+          operator: authResult.operator,
+          deskLabel,
+          token,
+        });
+
+        return Response.json({
+          success: true,
+          result: checkedIn.alreadyCheckedIn ? 'already_checked_in' : 'valid',
+          registration: buildFestivalCheckInRecord(checkedIn.ticket),
+          recentScans: await listRecentEntryScans(),
+        });
+      } else {
+        const result = await getCheckInRecordByToken(token);
+        registration = result.registration;
+        pass = result.pass;
+      }
     } else if (registrationId) {
       registration = await getCheckInRegistrationById(registrationId);
     } else {

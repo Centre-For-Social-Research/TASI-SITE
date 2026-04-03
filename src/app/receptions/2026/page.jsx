@@ -3,7 +3,7 @@ import ReceptionsPage from "@/components/receptions/receptions-page";
 export const metadata = {
   title: "TASI 2026 Receptions",
   description:
-    "Book your place in the TASI 2026 reception programme through standard, supporter, and community ticket access.",
+    "Explore the TASI 2026 receptions programme and hospitality context around the wider festival.",
   alternates: {
     canonical: "/receptions/2026",
   },
