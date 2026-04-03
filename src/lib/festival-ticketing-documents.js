@@ -32,6 +32,7 @@ const SELLER_DETAILS = {
 const SERVICE_SAC_CODE = "999596";
 
 let cachedHeaderLogoDataUrl = null;
+let cachedGradientDataUrl = null;
 
 function getInvoiceDate(createdAt) {
   const date = createdAt ? new Date(createdAt) : new Date();
@@ -84,6 +85,20 @@ function readHeaderLogoDataUrl() {
   }
 
   return cachedHeaderLogoDataUrl;
+}
+
+function readGradientDataUrl() {
+  if (cachedGradientDataUrl) return cachedGradientDataUrl;
+
+  try {
+    const gradPath = path.join(process.cwd(), "public", "img", "gradient-header.png");
+    const buffer = readFileSync(gradPath);
+    cachedGradientDataUrl = `data:image/png;base64,${buffer.toString("base64")}`;
+  } catch {
+    cachedGradientDataUrl = null;
+  }
+
+  return cachedGradientDataUrl;
 }
 
 // â”€â”€ REACT PDF HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -279,6 +294,7 @@ const INVOICE_M = 36; // horizontal margin
 const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
   const { header, meta, seller, buyer, lineItems, totals, notes } = model;
   const item = lineItems[0];
+  const gradientDataUrl = readGradientDataUrl();
 
   const sellerRows = [
     { label: "Seller", value: seller.legalName },
@@ -309,12 +325,16 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
     <Document>
       <Page size="A4" style={{ backgroundColor: "#ffffff", fontFamily: "Helvetica" }}>
 
-        {/* ── Gradient header — matches email layout exactly ── */}
-        <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H, flexDirection: "row" }}>
-          {BRAND_GRADIENT_STOPS.map(([r, g, b], i) => (
-            <View key={i} style={{ flex: 1, backgroundColor: toHex(r, g, b) }} />
-          ))}
-        </View>
+        {/* ── Gradient header image ── */}
+        {gradientDataUrl ? (
+          <Image src={gradientDataUrl} style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H }} />
+        ) : (
+          <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H, flexDirection: "row" }}>
+            {BRAND_GRADIENT_STOPS.map(([r, g, b], i) => (
+              <View key={i} style={{ flex: 1, backgroundColor: toHex(r, g, b) }} />
+            ))}
+          </View>
+        )}
 
         {/* Logo — block, left-aligned, then text stacked below (mirrors email header) */}
         {header.logoDataUrl && (
