@@ -118,6 +118,56 @@ test("buildFestivalInvoiceMetadata returns export invoice details for internatio
   assert.equal(invoice.taxAmountMinor, 0);
 });
 
+test("buildFestivalInvoiceDocumentModel uses the branded confirmation header and formal invoice sections", async () => {
+  const { buildFestivalInvoiceDocumentModel } = await importModule(
+    "src/lib/festival-ticketing-documents.js",
+  );
+
+  const model = buildFestivalInvoiceDocumentModel({
+    ticket: {
+      id: "ticket-1",
+      ticket_number: "TASI-DOM-00001",
+      invoice_number: "INV-DOM-2026-CKET1",
+      ticket_type: "domestic",
+      currency: "INR",
+      base_amount_minor: 1000000,
+      tax_amount_minor: 180000,
+      total_amount_minor: 1180000,
+      created_at: "2026-07-01T10:00:00.000Z",
+      qr_payload: "TASI2026:festival-ticket-123:signature",
+    },
+    user: {
+      full_name: "Aditi Rao",
+      email: "aditi@example.com",
+      phone: "+91 9876543210",
+      organization: "Example Org",
+      country: "IN",
+      billing_name: "Aditi Rao",
+      billing_email: "billing@example.com",
+      billing_phone: "+91 9876543210",
+      billing_address_line1: "221B Baker Street",
+      billing_city: "New Delhi",
+      billing_state_or_province: "Delhi",
+      billing_postal_code: "110001",
+      billing_country: "India",
+      tax_id_number: "ABCDE1234F",
+      gstin: "07ABCDE1234F1Z5",
+    },
+  });
+
+  assert.equal(model.header.eyebrow, "TASI 2026");
+  assert.equal(model.header.title, "Trust and Safety India Festival 2026");
+  assert.equal(model.meta.invoiceNumber, "INV-DOM-2026-CKET1");
+  assert.equal(model.meta.ticketNumber, "TASI-DOM-00001");
+  assert.equal(model.seller.taxIdLabel, "PAN");
+  assert.equal(model.buyer.taxIdLabel, "GSTIN");
+  assert.match(model.lineItems[0].description, /Full Access Pass/i);
+  assert.equal(model.totals[0].label, "Base Amount");
+  assert.equal(model.totals[1].label, "GST");
+  assert.equal(model.totals[2].emphasis, true);
+  assert.equal(model.notes.at(-1), "Generated for compliance and attendee verification.");
+});
+
 test("festival QR payload uses signed token format and rejects tampering", async () => {
   process.env.QR_HMAC_SECRET = "test-qr-secret";
   const { buildFestivalQrPayload, verifyFestivalQrPayload } = await importModule(
