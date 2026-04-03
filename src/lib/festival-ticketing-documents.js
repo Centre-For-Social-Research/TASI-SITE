@@ -54,12 +54,12 @@ function buildInvoiceNumber(prefix, createdAt, sourceId) {
 
 function formatMinorAmount(amountMinor, currency) {
   const amount = Number(amountMinor || 0) / 100;
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: currency || "INR",
+  const num = new Intl.NumberFormat("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);
+  // Use "Rs." instead of ₹ — Helvetica built-in font doesn't include the rupee glyph
+  return (currency && currency !== "INR") ? `${currency} ${num}` : `Rs. ${num}`;
 }
 
 function buildBillingAddress(invoice) {
@@ -336,9 +336,9 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
           </View>
         )}
 
-        {/* Logo — block, left-aligned at natural aspect ratio (281×153 → 74×40) */}
+        {/* Logo — block, left-aligned at natural aspect ratio (281×153 → 60×33) */}
         {header.logoDataUrl && (
-          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 20, left: INVOICE_M, width: 74, height: 40 }} />
+          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 22, left: INVOICE_M, width: 60, height: 33 }} />
         )}
 
         {/* Eyebrow — amber, bold, letter-spaced */}
