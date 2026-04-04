@@ -102,18 +102,36 @@ function readGradientDataUrl() {
   return cachedGradientDataUrl;
 }
 
-function readEventPhotoDataUrl() {
+let _eventPhotoPromise = null;
+
+async function readEventPhotoDataUrl() {
   if (cachedEventPhotoDataUrl !== undefined) return cachedEventPhotoDataUrl;
+  if (_eventPhotoPromise) return _eventPhotoPromise;
 
-  try {
-    const photoPath = path.join(process.cwd(), "public", "img", "home-gallery", "7t7a2717.jpg");
-    const buffer = readFileSync(photoPath);
-    cachedEventPhotoDataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
-  } catch {
-    cachedEventPhotoDataUrl = null;
-  }
+  _eventPhotoPromise = (async () => {
+    try {
+      const sharp = (await import("sharp")).default;
+      const photoPath = path.join(process.cwd(), "public", "img", "home-gallery", "7T7A5102.webp");
+      const meta = await sharp(photoPath).metadata();
+      const imgW = meta.width;
+      const imgH = meta.height;
+      // Portrait crop matching the ticket photo panel aspect (175:245)
+      const cropW = Math.round(imgH * (175 / 245));
+      // Crop from the RIGHT side of the image
+      const cropX = Math.max(0, imgW - cropW);
+      const buffer = await sharp(photoPath)
+        .extract({ left: cropX, top: 0, width: Math.min(cropW, imgW), height: imgH })
+        .jpeg({ quality: 88 })
+        .toBuffer();
+      cachedEventPhotoDataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+    } catch (e) {
+      console.error("Failed to load event photo:", e);
+      cachedEventPhotoDataUrl = null;
+    }
+    return cachedEventPhotoDataUrl;
+  })();
 
-  return cachedEventPhotoDataUrl;
+  return _eventPhotoPromise;
 }
 
 // â”€â”€ REACT PDF HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -186,12 +204,12 @@ const FestivalTicketDocument = ({ ticket, user, qrDataUrl, eventPhotoDataUrl }) 
         }}>
           {/* Top row */}
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            <Text style={{ fontSize: 13, fontFamily: "Helvetica-Bold", color: DARK }}>TASI 2026</Text>
-            <Text style={{ fontSize: 8, color: MUTED }}>The Lalit Grand, New Delhi</Text>
+            <Text style={{ fontSize: 16, fontFamily: "Helvetica-Bold", color: DARK }}>TASI 2026</Text>
+            <Text style={{ fontSize: 9, color: MUTED }}>The Lalit Grand, New Delhi</Text>
           </View>
 
           {/* Event title */}
-          <Text style={{ fontSize: 21, fontFamily: "Helvetica-Bold", color: DARK, lineHeight: 1.2 }}>
+          <Text style={{ fontSize: 26, fontFamily: "Helvetica-Bold", color: DARK, lineHeight: 1.25 }}>
             {"Trust and Safety\nIndia Festival 2026"}
           </Text>
 
@@ -199,13 +217,13 @@ const FestivalTicketDocument = ({ ticket, user, qrDataUrl, eventPhotoDataUrl }) 
           <View style={{ flexDirection: "row", gap: 7 }}>
             {["OCT 13-14", "08:00-17:00", priceLabel].map((label, i) => (
               <View key={i} style={{
-                borderWidth: 1,
+                borderWidth: 1.5,
                 borderColor: DARK,
                 borderRadius: 20,
-                paddingHorizontal: 9,
-                paddingVertical: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 6,
               }}>
-                <Text style={{ fontSize: 7.5, color: DARK, fontFamily: "Helvetica-Bold" }}>{label}</Text>
+                <Text style={{ fontSize: 9.5, color: DARK, fontFamily: "Helvetica-Bold" }}>{label}</Text>
               </View>
             ))}
           </View>
@@ -247,10 +265,10 @@ const FestivalTicketDocument = ({ ticket, user, qrDataUrl, eventPhotoDataUrl }) 
               <View style={{ position: "absolute", bottom: 0, right: 0, width: 13, height: 13, borderBottomWidth: 2, borderRightWidth: 2, borderColor: DARK }} />
             </View>
           )}
-          <Text style={{ fontSize: 9.5, fontFamily: "Helvetica-Bold", color: DARK, textAlign: "center" }}>
+          <Text style={{ fontSize: 11, fontFamily: "Helvetica-Bold", color: DARK, textAlign: "center" }}>
             {user.full_name || "Attendee"}
           </Text>
-          <Text style={{ fontSize: 8, color: MUTED, textAlign: "center" }}>
+          <Text style={{ fontSize: 9, color: MUTED, textAlign: "center" }}>
             {user.organization || ""}
           </Text>
         </View>
@@ -711,7 +729,7 @@ export async function buildFestivalTicketPdf({ ticket, user }) {
     });
   }
 
-  const eventPhotoDataUrl = readEventPhotoDataUrl();
+  const eventPhotoDataUrl = await readEventPhotoDataUrl();
 
   return renderToBuffer(
     <FestivalTicketDocument
