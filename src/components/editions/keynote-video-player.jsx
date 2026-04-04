@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { PlayCircle } from 'lucide-react';
 
 function getMuxThumbnail(iframeSrc) {
@@ -32,12 +31,11 @@ export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, de
           <>
             {thumbnail && (
               <>
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={thumbnail}
                   alt={title}
-                  fill
-                  className="object-cover opacity-85"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="absolute inset-0 h-full w-full object-cover opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
               </>
