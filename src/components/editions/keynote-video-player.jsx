@@ -10,19 +10,9 @@ function getMuxThumbnail(iframeSrc, thumbnailTime = 2) {
     : null;
 }
 
-function withAutoplay(iframeSrc) {
-  if (!iframeSrc) {
-    return iframeSrc;
-  }
-
-  const separator = iframeSrc.includes('?') ? '&' : '?';
-  return `${iframeSrc}${separator}autoplay=true&muted=true`;
-}
-
 export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, description, thumbnailTime }) {
   const [playing, setPlaying] = useState(false);
   const thumbnail = getMuxThumbnail(iframeSrc, thumbnailTime);
-  const autoplaySrc = withAutoplay(iframeSrc);
 
   return (
     <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
@@ -30,7 +20,7 @@ export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, de
       <div className="relative aspect-video w-full bg-black">
         {playing ? (
           <iframe
-            src={autoplaySrc}
+            src={iframeSrc}
             title={title}
             className="absolute inset-0 h-full w-full border-0"
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
@@ -73,7 +63,7 @@ export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, de
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-stone-600 dark:text-zinc-300">
           <strong className="text-stone-800 dark:text-zinc-100">{speaker}</strong>
-          {description ? ` ${description}` : ''}
+          {description ? `: ${description}` : ''}
         </p>
       </div>
     </div>
