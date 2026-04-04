@@ -155,51 +155,53 @@ export default function Tasi2025Page() {
           </div>
         </section>
 
-        <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
+        <section className="py-section-sm md:py-section-lg" style={{ background: "linear-gradient(135deg, #55089e 0%, #9f0099 30%, #ff0080 65%, #ef5700 100%)" }}>
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
-              Featured Sessions
+
+            {/* Section header */}
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/70">
+              Testimonials &amp; Video Testimonials
             </p>
-            <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
+            <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-[3.2rem]">
               Keynote Addresses
             </h2>
-            <p className="mt-5 max-w-3xl text-body-lg text-stone-700 dark:text-slate-300">
-              Watch two landmark keynotes from TASI 2025 that shaped the global conversation on online safety and gender-based violence.
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/80">
+              Two landmark keynotes from TASI 2025 that shaped the global conversation on online safety and gender-based harm.
             </p>
 
-            <div className="mt-12 grid gap-10 md:grid-cols-2">
+            <div className="mt-12 grid gap-8 md:grid-cols-2">
 
               {/* Keynote 1 — Julie Inman Grant */}
-              <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-stone-50 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900">
+              <div className="overflow-hidden rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-xl">
                 <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
                   <iframe
-                    src="https://player.mux.com/k100u1ANRTgJCpEhVqJBpNxdREzMvhQWs1mE6IlSGeTE?metadata-video-title=Julie+Inman+Grant+&video-title=Julie+Inman+Grant+"
+                    src="https://player.mux.com/k100u1ANRTgJCpEhVqJBpNxdREzMvhQWs1mE6IlSGeTE?metadata-video-title=Julie+Inman+Grant&video-title=Julie+Inman+Grant"
                     className="absolute inset-0 h-full w-full border-0"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
                     allowFullScreen
                     title="Julie Inman Grant — Safety by Design in the Age of AI"
                   />
                 </div>
-                <div className="p-6 md:p-7">
+                <div className="p-6">
                   <div className="mb-3 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-rc-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-rc-primary dark:bg-white/10 dark:text-white">
+                    <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                       Keynote Address
                     </span>
-                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                    <span className="rounded-full bg-amber-400/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-200">
                       Featured Keynote
                     </span>
                   </div>
-                  <h3 className="mt-2 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-2xl">
+                  <h3 className="mt-1 text-lg font-bold tracking-tight text-white md:text-xl">
                     Safety by Design in the Age of AI
                   </h3>
-                  <p className="mt-3 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
-                    A keynote by <strong>Julie Inman Grant</strong>, eSafety Commissioner, Australia, on AI risks, global regulation, and the future of online safety.
+                  <p className="mt-2 text-sm leading-relaxed text-white/75">
+                    <strong className="text-white">Julie Inman Grant</strong> — eSafety Commissioner, Australia. On AI risks, global regulation, and the future of online safety.
                   </p>
                 </div>
               </div>
 
               {/* Keynote 2 — Delphine O */}
-              <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-stone-50 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900">
+              <div className="overflow-hidden rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-xl">
                 <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
                   <iframe
                     src="https://player.mux.com/l6f94UXaZxMGhwpwVNhzI61C02uYEexTJH02REw1i024Os?metadata-video-title=DELPHINE+O&video-title=DELPHINE+O"
@@ -209,20 +211,20 @@ export default function Tasi2025Page() {
                     title="Delphine O — Combating Technology-Facilitated Gender-Based Violence"
                   />
                 </div>
-                <div className="p-6 md:p-7">
+                <div className="p-6">
                   <div className="mb-3 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-rc-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-rc-primary dark:bg-white/10 dark:text-white">
+                    <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                       Policy &amp; Global Leadership
                     </span>
-                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                    <span className="rounded-full bg-amber-400/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-200">
                       Global Policy Address
                     </span>
                   </div>
-                  <h3 className="mt-2 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-2xl">
-                    Combating Technology-Facilitated Gender-Based Violence: A Global Call to Action
+                  <h3 className="mt-1 text-lg font-bold tracking-tight text-white md:text-xl">
+                    Combating Tech-Facilitated Gender-Based Violence
                   </h3>
-                  <p className="mt-3 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
-                    A keynote by <strong>Delphine O</strong>, Ambassador-at-Large and Secretary General for the Generation Equality Forum, on global efforts to combat technology-facilitated gender-based violence.
+                  <p className="mt-2 text-sm leading-relaxed text-white/75">
+                    <strong className="text-white">Delphine O</strong> — Ambassador-at-Large &amp; Secretary General, Generation Equality Forum. On global efforts to combat technology-facilitated gender-based violence.
                   </p>
                 </div>
               </div>
