@@ -33,6 +33,7 @@ const SERVICE_SAC_CODE = "999596";
 
 let cachedHeaderLogoDataUrl = null;
 let cachedGradientDataUrl = null;
+let cachedEventPhotoDataUrl = undefined;
 
 function getInvoiceDate(createdAt) {
   const date = createdAt ? new Date(createdAt) : new Date();
@@ -101,6 +102,20 @@ function readGradientDataUrl() {
   return cachedGradientDataUrl;
 }
 
+function readEventPhotoDataUrl() {
+  if (cachedEventPhotoDataUrl !== undefined) return cachedEventPhotoDataUrl;
+
+  try {
+    const photoPath = path.join(process.cwd(), "public", "img", "home-gallery", "7t7a2717.jpg");
+    const buffer = readFileSync(photoPath);
+    cachedEventPhotoDataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+  } catch {
+    cachedEventPhotoDataUrl = null;
+  }
+
+  return cachedEventPhotoDataUrl;
+}
+
 // â”€â”€ REACT PDF HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const toHex = (r, g, b) =>
@@ -116,32 +131,134 @@ const GradientStrip = ({ height, darken = 1 }) => (
 
 // â”€â”€ FESTIVAL TICKET DOCUMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-const FestivalTicketDocument = ({ title, subtitleLines, qrDataUrl, footerLines }) => (
-  <Document>
-    <Page size="A4" style={{ backgroundColor: "#ffffff", fontFamily: "Helvetica" }}>
-      {/* Navy header */}
-      <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 90, backgroundColor: "#140f26", justifyContent: "center", paddingLeft: 40 }}>
-        <Text style={{ color: "#ffffff", fontSize: 24, fontFamily: "Helvetica-Bold" }}>{title}</Text>
-      </View>
-      {/* Subtitle lines */}
-      <View style={{ paddingTop: 110, paddingHorizontal: 40 }}>
-        {subtitleLines.map((line, i) => (
-          <Text key={i} style={{ fontSize: 11, color: "#140f26", marginBottom: 6 }}>{line}</Text>
+// Ticket layout constants
+const TICKET_W = 595;
+const TICKET_H = 245;
+const TICKET_PHOTO_W = 175;
+const TICKET_MID_START = 182;
+const TICKET_MID_W = 272;
+const TICKET_DIVIDER_X = 460;
+const TICKET_STUB_START = 466;
+const TICKET_STUB_W = 129; // 595 - 466
+
+function formatTicketPrice(totalAmountMinor, currency) {
+  const amount = Math.round(Number(totalAmountMinor || 0) / 100);
+  if (!currency || currency === "INR") {
+    return `Rs. ${amount.toLocaleString("en-IN")}/-`;
+  }
+  return `${currency} ${amount.toLocaleString("en-US")}`;
+}
+
+const FestivalTicketDocument = ({ ticket, user, qrDataUrl, eventPhotoDataUrl }) => {
+  const priceLabel = formatTicketPrice(ticket.total_amount_minor, ticket.currency);
+  const BG = "#F5EFE4";
+  const DARK = "#1a1a1a";
+  const MUTED = "#555555";
+  const DASH_COLOR = "#888888";
+  const DASH_SEGMENTS = 15;
+
+  return (
+    <Document>
+      <Page size={[TICKET_W, TICKET_H]} style={{ backgroundColor: BG, fontFamily: "Helvetica", overflow: "hidden" }}>
+
+        {/* ── Left: festival photo panel ── */}
+        {eventPhotoDataUrl ? (
+          <Image
+            src={eventPhotoDataUrl}
+            style={{ position: "absolute", top: 0, left: 0, width: TICKET_PHOTO_W, height: TICKET_H }}
+          />
+        ) : (
+          <View style={{ position: "absolute", top: 0, left: 0, width: TICKET_PHOTO_W, height: TICKET_H }}>
+            <GradientStrip height={TICKET_H} />
+          </View>
+        )}
+
+        {/* ── Middle: event info ── */}
+        <View style={{
+          position: "absolute",
+          top: 0,
+          left: TICKET_MID_START,
+          width: TICKET_MID_W,
+          height: TICKET_H,
+          paddingHorizontal: 18,
+          paddingVertical: 18,
+          justifyContent: "space-between",
+        }}>
+          {/* Top row */}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <Text style={{ fontSize: 13, fontFamily: "Helvetica-Bold", color: DARK }}>TASI 2026</Text>
+            <Text style={{ fontSize: 8, color: MUTED }}>The Lalit Grand, New Delhi</Text>
+          </View>
+
+          {/* Event title */}
+          <Text style={{ fontSize: 21, fontFamily: "Helvetica-Bold", color: DARK, lineHeight: 1.2 }}>
+            {"Trust and Safety\nIndia Festival 2026"}
+          </Text>
+
+          {/* Pill row */}
+          <View style={{ flexDirection: "row", gap: 7 }}>
+            {["OCT 13-14", "08:00-17:00", priceLabel].map((label, i) => (
+              <View key={i} style={{
+                borderWidth: 1,
+                borderColor: DARK,
+                borderRadius: 20,
+                paddingHorizontal: 9,
+                paddingVertical: 5,
+              }}>
+                <Text style={{ fontSize: 7.5, color: DARK, fontFamily: "Helvetica-Bold" }}>{label}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* ── Divider: top dot, dashes, bottom dot ── */}
+        <View style={{ position: "absolute", top: -8, left: TICKET_DIVIDER_X - 7, width: 15, height: 15, borderRadius: 7.5, backgroundColor: DARK }} />
+        <View style={{ position: "absolute", bottom: -8, left: TICKET_DIVIDER_X - 7, width: 15, height: 15, borderRadius: 7.5, backgroundColor: DARK }} />
+        {Array.from({ length: DASH_SEGMENTS }).map((_, i) => (
+          <View key={i} style={{
+            position: "absolute",
+            top: 14 + i * 15,
+            left: TICKET_DIVIDER_X,
+            width: 1.5,
+            height: 9,
+            backgroundColor: DASH_COLOR,
+          }} />
         ))}
-      </View>
-      {/* QR code */}
-      {qrDataUrl && (
-        <Image src={qrDataUrl} style={{ position: "absolute", top: 120, right: 40, width: 160, height: 160 }} />
-      )}
-      {/* Footer */}
-      <View style={{ position: "absolute", bottom: 82, left: 40 }}>
-        {footerLines.map((line, i) => (
-          <Text key={i} style={{ fontSize: 10, color: "#6b7280", marginBottom: 4 }}>{line}</Text>
-        ))}
-      </View>
-    </Page>
-  </Document>
-);
+
+        {/* ── Right stub: QR code + name + org ── */}
+        <View style={{
+          position: "absolute",
+          top: 0,
+          left: TICKET_STUB_START,
+          width: TICKET_STUB_W,
+          height: TICKET_H,
+          alignItems: "center",
+          justifyContent: "center",
+          paddingVertical: 20,
+          gap: 8,
+        }}>
+          {/* QR with corner brackets */}
+          {qrDataUrl && (
+            <View style={{ position: "relative", padding: 7, marginBottom: 6 }}>
+              <Image src={qrDataUrl} style={{ width: 86, height: 86 }} />
+              <View style={{ position: "absolute", top: 0, left: 0, width: 13, height: 13, borderTopWidth: 2, borderLeftWidth: 2, borderColor: DARK }} />
+              <View style={{ position: "absolute", top: 0, right: 0, width: 13, height: 13, borderTopWidth: 2, borderRightWidth: 2, borderColor: DARK }} />
+              <View style={{ position: "absolute", bottom: 0, left: 0, width: 13, height: 13, borderBottomWidth: 2, borderLeftWidth: 2, borderColor: DARK }} />
+              <View style={{ position: "absolute", bottom: 0, right: 0, width: 13, height: 13, borderBottomWidth: 2, borderRightWidth: 2, borderColor: DARK }} />
+            </View>
+          )}
+          <Text style={{ fontSize: 9.5, fontFamily: "Helvetica-Bold", color: DARK, textAlign: "center" }}>
+            {user.full_name || "Attendee"}
+          </Text>
+          <Text style={{ fontSize: 8, color: MUTED, textAlign: "center" }}>
+            {user.organization || ""}
+          </Text>
+        </View>
+
+      </Page>
+    </Document>
+  );
+};
 
 // â”€â”€ FESTIVAL BADGE DOCUMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -590,23 +707,18 @@ export async function buildFestivalTicketPdf({ ticket, user }) {
     qrDataUrl = await QRCode.toDataURL(ticket.qr_payload, {
       margin: 1,
       width: 220,
-      color: { dark: "#140f26", light: "#FFFFFF" },
+      color: { dark: "#1a1a1a", light: "#F5EFE4" },
     });
   }
 
+  const eventPhotoDataUrl = readEventPhotoDataUrl();
+
   return renderToBuffer(
     <FestivalTicketDocument
-      title="TASI 2026 Festival Ticket"
-      subtitleLines={[
-        `Ticket Number: ${ticket.ticket_number}`,
-        `Attendee: ${user.full_name}`,
-        `Organization: ${user.organization || "Independent attendee"}`,
-        `Ticket Type: ${ticket.ticket_type}`,
-        `Event: ${FESTIVAL_EVENT_COPY.title}`,
-        `Dates: ${FESTIVAL_EVENT_COPY.datesLabel}`,
-      ]}
+      ticket={ticket}
+      user={user}
       qrDataUrl={qrDataUrl}
-      footerLines={[FESTIVAL_EVENT_COPY.venue, FESTIVAL_EVENT_COPY.description]}
+      eventPhotoDataUrl={eventPhotoDataUrl}
     />,
   );
 }
