@@ -77,7 +77,7 @@ const FESTIVAL_PASS_OPTIONS = [
     amount: "INR 11,800",
     title: "Domestic",
     description:
-      "For attendees based in India, with GST-ready invoicing and domestic Razorpay routing.",
+      "For attendees based in India, with tax-ready invoicing and domestic Razorpay routing.",
     country: "IN",
     badgePattern: "mosaic",
   },
@@ -86,7 +86,7 @@ const FESTIVAL_PASS_OPTIONS = [
     amount: "USD 200",
     title: "International",
     description:
-      "For attendees joining from outside India, with export invoice support and FCRA-only routing.",
+      "For attendees joining from outside India, with export invoice support and international-compliant routing.",
     country: "US",
     badgePattern: "rings",
   },

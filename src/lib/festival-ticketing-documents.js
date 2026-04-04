@@ -102,36 +102,19 @@ function readGradientDataUrl() {
   return cachedGradientDataUrl;
 }
 
-let _eventPhotoPromise = null;
-
 async function readEventPhotoDataUrl() {
   if (cachedEventPhotoDataUrl !== undefined) return cachedEventPhotoDataUrl;
-  if (_eventPhotoPromise) return _eventPhotoPromise;
 
-  _eventPhotoPromise = (async () => {
-    try {
-      const sharp = (await import("sharp")).default;
-      const photoPath = path.join(process.cwd(), "public", "img", "home-gallery", "7T7A5102.webp");
-      const meta = await sharp(photoPath).metadata();
-      const imgW = meta.width;
-      const imgH = meta.height;
-      // Portrait crop matching the ticket photo panel aspect (175:245)
-      const cropW = Math.round(imgH * (175 / 245));
-      // Crop from the RIGHT side of the image
-      const cropX = Math.max(0, imgW - cropW);
-      const buffer = await sharp(photoPath)
-        .extract({ left: cropX, top: 0, width: Math.min(cropW, imgW), height: imgH })
-        .jpeg({ quality: 88 })
-        .toBuffer();
-      cachedEventPhotoDataUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
-    } catch (e) {
-      console.error("Failed to load event photo:", e);
-      cachedEventPhotoDataUrl = null;
-    }
-    return cachedEventPhotoDataUrl;
-  })();
+  try {
+    const photoPath = path.join(process.cwd(), "public", "img", "ticket-photo.png");
+    const buffer = readFileSync(photoPath);
+    cachedEventPhotoDataUrl = `data:image/png;base64,${buffer.toString("base64")}`;
+  } catch (e) {
+    console.error("Failed to load event photo:", e);
+    cachedEventPhotoDataUrl = null;
+  }
 
-  return _eventPhotoPromise;
+  return cachedEventPhotoDataUrl;
 }
 
 // â”€â”€ REACT PDF HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

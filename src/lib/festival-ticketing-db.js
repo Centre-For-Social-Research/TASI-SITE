@@ -351,16 +351,33 @@ export async function recordFestivalAdminAudit({
 
 export async function listFestivalAdminTickets({ search = "" } = {}) {
   const supabase = getSupabase();
-  let query = supabase
+  const trimmed = search.trim();
+
+  let baseQuery = supabase
     .from("festival_tickets")
     .select("*, user:festival_ticket_users(*)")
     .order("created_at", { ascending: false });
 
-  if (search.trim()) {
-    query = query.or(`ticket_number.ilike.%${search}%,invoice_number.ilike.%${search}%`);
+  if (trimmed) {
+    // Step 1: find user IDs matching the search term (name or email)
+    const { data: matchedUsers } = await supabase
+      .from("festival_ticket_users")
+      .select("id")
+      .or(`email.ilike.%${trimmed}%,full_name.ilike.%${trimmed}%`);
+
+    const matchedUserIds = (matchedUsers || []).map((u) => u.id);
+
+    // Step 2: OR across ticket fields + matched user IDs
+    const ticketFieldOr = `ticket_number.ilike.%${trimmed}%,invoice_number.ilike.%${trimmed}%`;
+    const orExpression =
+      matchedUserIds.length > 0
+        ? `${ticketFieldOr},user_id.in.(${matchedUserIds.join(",")})`
+        : ticketFieldOr;
+
+    baseQuery = baseQuery.or(orExpression);
   }
 
-  const { data, error } = await query.limit(100);
+  const { data, error } = await baseQuery.limit(200);
   if (error) throw new Error(error.message);
   return (data || []).map(mapTicketWithUser);
 }

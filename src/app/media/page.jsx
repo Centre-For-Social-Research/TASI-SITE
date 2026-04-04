@@ -50,6 +50,24 @@ const mediaResources = [
   },
 ];
 
+const pressConferenceHighlights = [
+  {
+    title: 'Before The Festival',
+    description:
+      'A pre-festival media briefing that introduced the TASI 2025 agenda and set the tone for the wider coverage cycle.',
+  },
+  {
+    title: 'Media Briefing',
+    description:
+      'The session gave journalists early context on the event, its themes, and the trust and safety issues shaping the conversation.',
+  },
+  {
+    title: 'Shared Momentum',
+    description:
+      'Organizers, speakers, and media stakeholders came together ahead of the festival to build public attention around the gathering.',
+  },
+];
+
 export default function MediaPage() {
   return (
     <>
@@ -90,6 +108,77 @@ export default function MediaPage() {
             </div>
           </div>
         </BrandedPageHero>
+
+        <section className="bg-[linear-gradient(180deg,#fff8ef_0%,#f5ece1_100%)] py-14 dark:bg-[linear-gradient(180deg,#171717_0%,#0f172a_100%)] md:py-20">
+          <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-[1.05fr_0.95fr] md:px-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <article className="relative min-h-[320px] overflow-hidden rounded-[10px] shadow-[0_22px_60px_-36px_rgba(15,23,42,0.22)] sm:col-span-2">
+                <Image
+                  src="/img/media-coverage/press-conference/gcv-06833.jpg"
+                  alt="Speaker addressing the press conference before TASI 2025"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+              </article>
+              <article className="relative min-h-[220px] overflow-hidden rounded-[10px] shadow-[0_18px_50px_-34px_rgba(15,23,42,0.18)]">
+                <Image
+                  src="/img/media-coverage/press-conference/gcv-07061.jpg"
+                  alt="Press interaction during the TASI 2025 pre-festival media briefing"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                />
+              </article>
+              <article className="relative min-h-[220px] overflow-hidden rounded-[10px] shadow-[0_18px_50px_-34px_rgba(15,23,42,0.18)]">
+                <Image
+                  src="/img/media-coverage/press-conference/gcv-07089.jpg"
+                  alt="Interview moment captured at the TASI 2025 press conference"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                />
+              </article>
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
+                Press Conference
+              </p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-5xl">
+                The Media Briefing That Set Up TASI 2025
+              </h2>
+              <p className="mt-5 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
+                Ahead of the festival itself, TASI 2025 opened its media cycle
+                with a press conference that introduced the event, framed its
+                trust and safety agenda, and helped bring journalists into the
+                wider conversation before delegates convened.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
+                The session served as an early editorial moment for the
+                festival, giving the press a clearer view of the issues, voices,
+                and public-interest stakes that would define the gathering in
+                New Delhi.
+              </p>
+
+              <div className="mt-8 grid gap-3">
+                {pressConferenceHighlights.map((item) => (
+                  <article
+                    key={item.title}
+                    className="rounded-[10px] border border-stone-200 bg-white/90 p-4 shadow-[0_18px_44px_-34px_rgba(15,23,42,0.2)] dark:border-slate-800 dark:bg-slate-900"
+                  >
+                    <h3 className="text-sm font-black uppercase tracking-[0.14em] text-stone-900 dark:text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                      {item.description}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] py-14 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-20">
           <div className="mx-auto w-full max-w-6xl px-4 md:px-6">

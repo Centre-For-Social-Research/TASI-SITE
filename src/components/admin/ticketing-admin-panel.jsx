@@ -35,12 +35,72 @@ function DetailItem({ label, value }) {
   );
 }
 
+const TICKET_STATUS_MAP = {
+  confirmed:  { label: 'Payment Confirmed',  classes: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300' },
+  checked_in: { label: 'Checked In',         classes: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' },
+  pending:    { label: 'Awaiting Payment',    classes: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' },
+  cancelled:  { label: 'Cancelled',          classes: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300' },
+};
+
+function TicketStatusBadge({ ticket }) {
+  const cfg = TICKET_STATUS_MAP[ticket.status] ?? { label: ticket.status, classes: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' };
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-black uppercase tracking-[0.12em] ${cfg.classes}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      {cfg.label}
+    </span>
+  );
+}
+
+function PaymentStatusNote({ ticket }) {
+  if (ticket.status === 'cancelled') {
+    const hasOrder   = Boolean(ticket.razorpay_order_id);
+    const hasPayment = Boolean(ticket.razorpay_payment_id);
+    const reason = !hasOrder
+      ? 'No payment order was created — checkout may have been abandoned.'
+      : !hasPayment
+        ? 'A Razorpay order exists but no payment was captured. The buyer may have closed the payment window.'
+        : 'Payment was captured but ticket was later cancelled or refunded.';
+    return <p className="mt-1 text-[11px] text-red-600 dark:text-red-400">{reason}</p>;
+  }
+  if (ticket.status === 'pending') {
+    const hasOrder = Boolean(ticket.razorpay_order_id);
+    const reason = hasOrder
+      ? 'Razorpay order created — waiting for payment confirmation webhook.'
+      : 'No payment order created yet.';
+    return <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400">{reason}</p>;
+  }
+  return null;
+}
+
 export default function TicketingAdminPanel() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState({ message: "", tone: "default" });
   const [expandedTicketId, setExpandedTicketId] = useState(null);
+  const [resendingId, setResendingId] = useState(null);
+
+  const handleResendConfirmation = async (ticket) => {
+    setResendingId(ticket.id);
+    try {
+      const response = await fetch(`/api/admin/tickets/${ticket.id}/resend-confirmation`, {
+        method: "POST",
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to resend confirmation.");
+      }
+      setToast({ message: `Confirmation email with QR code resent to ${ticket.user?.email}.`, tone: "success" });
+    } catch (error) {
+      setToast({
+        message: error instanceof Error ? error.message : "Unable to resend confirmation.",
+        tone: "danger",
+      });
+    } finally {
+      setResendingId(null);
+    }
+  };
 
   async function loadTickets(nextSearch = "") {
     setLoading(true);
@@ -136,7 +196,8 @@ export default function TicketingAdminPanel() {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search festival tickets"
+              onKeyDown={(event) => { if (event.key === 'Enter') void loadTickets(search); }}
+              placeholder="Search by name, email, or ticket number"
               className="h-12 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm dark:border-slate-700 dark:bg-slate-800"
             />
             <button
@@ -177,15 +238,19 @@ export default function TicketingAdminPanel() {
                   className="flex w-full flex-col gap-2 text-left md:flex-row md:items-center md:justify-between"
                 >
                   <div>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">
-                      {ticket.ticket_number}
-                    </p>
+                    <div className="flex items-center gap-2.5">
+                      <p className="text-sm font-black text-slate-900 dark:text-white">
+                        {ticket.ticket_number}
+                      </p>
+                      <TicketStatusBadge ticket={ticket} />
+                    </div>
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                       {ticket.user?.full_name} · {ticket.user?.email}
                     </p>
                     <p className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-                      {ticket.ticket_type} · {ticket.payment_stream} · {ticket.status}
+                      {ticket.ticket_type} · {ticket.payment_stream}
                     </p>
+                    <PaymentStatusNote ticket={ticket} />
                   </div>
                   <div className="text-sm text-slate-600 dark:text-slate-300 md:text-right">
                     <p>{formatMoney(ticket.total_amount_minor, ticket.currency)}</p>
@@ -198,6 +263,21 @@ export default function TicketingAdminPanel() {
 
                 {expandedTicketId === ticket.id ? (
                   <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700">
+                    <div className="mb-5 flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        disabled={resendingId === ticket.id || (ticket.status !== "confirmed" && ticket.status !== "checked_in")}
+                        onClick={() => void handleResendConfirmation(ticket)}
+                        className="inline-flex items-center gap-2 rounded-full bg-rc-primary px-5 py-2 text-xs font-black uppercase tracking-[0.14em] text-rc-secondary disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {resendingId === ticket.id ? "Sending…" : "Resend QR / Confirmation"}
+                      </button>
+                      {ticket.status !== "confirmed" && ticket.status !== "checked_in" && (
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                          Only confirmed or checked-in tickets can be resent.
+                        </span>
+                      )}
+                    </div>
                     <div className="grid gap-5 md:grid-cols-3">
                       <div className="space-y-4">
                         <p className="text-sm font-black text-slate-900 dark:text-white">

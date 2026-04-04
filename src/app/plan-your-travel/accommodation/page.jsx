@@ -46,7 +46,7 @@ const hotels = [
   {
     name: 'Hyatt Regency Delhi',
     area: 'Bhikaji Cama Place',
-    url: 'https://www.hyatt.com/en-US/hotel/india/hyatt-regency-delhi/delhr',
+    url: 'https://www.hyatt.com/hyatt-regency/en-US/delrd-hyatt-regency-delhi?src=corp_swa_agn_iprospectin_sem_dap-delrd-delhi-p1-exact_google_br_DAP_Search_Google_INDIA_DELRD_IN_BR_AO_IN_ALL_Rooms_Delhi-Feeder_P1_Exact_DELRD_DAP_BR_Rooms_Exact_hyatt+regency+delhi&src=sem_aspac_dap_delrd_google_iprospectin_exact_bps_en_p1_h1_22550865343_DAP_Search_Google_INDIA_DELRD_IN_BR_AO_IN_ALL_Rooms_Delhi-Feeder_P1_Exact_178671774479_DELRD_DAP_BR_Rooms_Exact_hyatt+regency+delhi&gclsrc=aw.ds&gad_source=1&gad_campaignid=22550865343&gbraid=0AAAAA-jHPGWQYNub2O22eo73l-7oCGnkg&gclid=Cj0KCQjw7cLOBhDmARIsAGsuA0mfqMPre_VK2ubfz0qrPRTx5cbrvywM_1JsiFK1JuPcaDbOrV3hHfwaAlDeEALw_wcB',
     photo: '/img/travel/hotels/hyatt-delhi.webp',
   },
   {

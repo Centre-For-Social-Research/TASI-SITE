@@ -22,6 +22,7 @@ const { buildCsvExport, buildExcelExport } = badgeExportUtils;
 export { buildCsvExport, buildExcelExport };
 
 let cachedLogoDataUrl = null;
+let cachedHeaderBackgroundDataUrl = null;
 
 async function fileToDataUrl(filePath, mimeType) {
   const buffer = await fs.readFile(filePath);
@@ -46,6 +47,30 @@ export async function getBadgeLogoDataUrl() {
     extension === '.jpg' || extension === '.jpeg' ? 'image/jpeg' : 'image/png';
   cachedLogoDataUrl = await fileToDataUrl(logoPath, mimeType);
   return cachedLogoDataUrl;
+}
+
+async function getBadgeHeaderBackgroundDataUrl() {
+  if (cachedHeaderBackgroundDataUrl) {
+    return cachedHeaderBackgroundDataUrl;
+  }
+
+  const headerBackgroundPath = path.join(
+    process.cwd(),
+    'public',
+    'img',
+    'gradient-header.png'
+  );
+
+  try {
+    cachedHeaderBackgroundDataUrl = await fileToDataUrl(
+      headerBackgroundPath,
+      'image/png'
+    );
+  } catch {
+    cachedHeaderBackgroundDataUrl = null;
+  }
+
+  return cachedHeaderBackgroundDataUrl;
 }
 
 export async function buildQrDataUrl(token) {
@@ -165,6 +190,7 @@ function InstitutionalBadgePage({
   logoDataUrl,
   photoDataUrl,
   headerLabel,
+  headerBackgroundDataUrl,
 }) {
   const displayName = buildBadgeDisplayName(registration);
   const badgeLabel = registration.badge_color_label || 'Delegate';
@@ -189,11 +215,34 @@ function InstitutionalBadgePage({
   const tierBgColor = toHexReg(...tierTheme.fillColor);
   const tierDotColor = toHexReg(...tierTheme.dotColor);
   const tierTextColor = toHexReg(...tierTheme.textColor);
+  const headerBackgroundColor = '#181e3a';
 
   return (
     <Page size={[BADGE_PAGE_W, BADGE_PAGE_H]} style={{ backgroundColor: '#faf8f2', fontFamily: 'Helvetica' }}>
-      {/* Navy header */}
-      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: MM(29.5), backgroundColor: '#181e3a' }} />
+      {/* Header background */}
+      {headerBackgroundDataUrl ? (
+        <Image
+          src={headerBackgroundDataUrl}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: BADGE_PAGE_W,
+            height: MM(29.5),
+          }}
+        />
+      ) : (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: MM(29.5),
+            backgroundColor: headerBackgroundColor,
+          }}
+        />
+      )}
       {/* Gold rule */}
       <View style={{ position: 'absolute', top: MM(29.5), left: 0, right: 0, height: MM(1.8), backgroundColor: '#c9902c' }} />
 
@@ -355,6 +404,7 @@ function InstitutionalBadgePage({
 export async function buildPassAttachment({ token, registration }) {
   const qrDataUrl = await buildQrDataUrl(token);
   const logoDataUrl = await getBadgeLogoDataUrl();
+  const headerBackgroundDataUrl = await getBadgeHeaderBackgroundDataUrl();
   const photoDataUrl = await getBadgePhotoDataUrl(registration);
 
   const pdfBuffer = await renderToBuffer(
@@ -365,6 +415,7 @@ export async function buildPassAttachment({ token, registration }) {
         logoDataUrl={logoDataUrl}
         photoDataUrl={photoDataUrl}
         headerLabel="OFFICIAL CREDENTIAL"
+        headerBackgroundDataUrl={headerBackgroundDataUrl}
       />
     </Document>,
   );
@@ -399,6 +450,7 @@ export function buildBadgeExportRows(registrations) {
 
 export async function buildPdfMergeExport(registrations) {
   const logoDataUrl = await getBadgeLogoDataUrl();
+  const headerBackgroundDataUrl = await getBadgeHeaderBackgroundDataUrl();
 
   const pages = await Promise.all(
     registrations.map(async (registration) => {
@@ -420,6 +472,7 @@ export async function buildPdfMergeExport(registrations) {
           logoDataUrl={logoDataUrl}
           photoDataUrl={photoDataUrl}
           headerLabel="BADGE EXPORT PROOF"
+          headerBackgroundDataUrl={headerBackgroundDataUrl}
         />
       ))}
     </Document>,
