@@ -176,6 +176,7 @@ export default function Tasi2025Page() {
                 speaker="Julie Inman Grant"
                 role="eSafety Commissioner, Australia"
                 description="AI risks, global regulation, and the future of online safety"
+                thumbnailTime="5"
               />
               <KeynoteVideoPlayer
                 iframeSrc="https://player.mux.com/l6f94UXaZxMGhwpwVNhzI61C02uYEexTJH02REw1i024Os?metadata-video-title=DELPHINE+O&video-title=DELPHINE+O"

@@ -4,19 +4,69 @@ export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, de
 
   return (
     <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
+  import { useState } from 'react';
+  import { Play } from 'lucide-react';
       {/* Video area */}
-      <div className="relative aspect-video w-full bg-black">
+  function getMuxThumbnail(iframeSrc, thumbnailTime = 2) {
+    const match = iframeSrc?.match(/player\.mux\.com\/([^?/]+)/i);
+    return match?.[1]
+      ? `https://image.mux.com/${match[1]}/thumbnail.jpg?time=${thumbnailTime}`
+      : null;
+  }
+
+  function withAutoplay(iframeSrc) {
+    if (!iframeSrc) {
+      return iframeSrc;
+    }
+
+    const separator = iframeSrc.includes('?') ? '&' : '?';
+    return `${iframeSrc}${separator}autoplay=true&muted=true`;
+  }
+
+  export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, description, thumbnailTime }) {
+    const [playing, setPlaying] = useState(false);
+    const thumbnail = getMuxThumbnail(iframeSrc, thumbnailTime);
+    const autoplaySrc = withAutoplay(iframeSrc);
+
         <iframe
           src={iframeSrc}
           title={title}
           className="absolute inset-0 h-full w-full border-0"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-
-      {/* Info */}
-      <div className="p-5">
+          {playing ? (
+            <iframe
+              src={autoplaySrc}
+              title={title}
+              className="absolute inset-0 h-full w-full border-0"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+              autoFocus
+            />
+          ) : (
+            <>
+              {thumbnail && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={thumbnail}
+                    alt={title}
+                    className="absolute inset-0 h-full w-full object-cover opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
+                </>
+              )}
+              <button
+                onClick={() => setPlaying(true)}
+                aria-label={`Play ${title}`}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <div className="rounded-full bg-white p-1 shadow-lg ring-4 ring-slate-300/80 dark:ring-slate-500/70">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-orange-500 bg-white">
+                    <Play className="h-6 w-6 fill-orange-500 text-orange-500" />
+                  </div>
+                </div>
+              </button>
+            </>
+          )}
         <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-zinc-400">
           {role}
         </p>
