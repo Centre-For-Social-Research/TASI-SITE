@@ -59,6 +59,7 @@ const future = [
   'Broader cross-industry participation',
 ];
 
+
 export default function Tasi2025Page() {
   return (
     <>
@@ -157,6 +158,82 @@ export default function Tasi2025Page() {
         <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
             <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
+              Featured Sessions
+            </p>
+            <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
+              Keynote Addresses
+            </h2>
+            <p className="mt-5 max-w-3xl text-body-lg text-stone-700 dark:text-slate-300">
+              Watch two landmark keynotes from TASI 2025 that shaped the global conversation on online safety and gender-based violence.
+            </p>
+
+            <div className="mt-12 grid gap-10 md:grid-cols-2">
+
+              {/* Keynote 1 — Julie Inman Grant */}
+              <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-stone-50 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900">
+                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                  <iframe
+                    src="https://player.mux.com/k100u1ANRTgJCpEhVqJBpNxdREzMvhQWs1mE6IlSGeTE?metadata-video-title=Julie+Inman+Grant+&video-title=Julie+Inman+Grant+"
+                    className="absolute inset-0 h-full w-full border-0"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    title="Julie Inman Grant — Safety by Design in the Age of AI"
+                  />
+                </div>
+                <div className="p-6 md:p-7">
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-rc-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-rc-primary dark:bg-white/10 dark:text-white">
+                      Keynote Address
+                    </span>
+                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                      Featured Keynote
+                    </span>
+                  </div>
+                  <h3 className="mt-2 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-2xl">
+                    Safety by Design in the Age of AI
+                  </h3>
+                  <p className="mt-3 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
+                    A keynote by <strong>Julie Inman Grant</strong>, eSafety Commissioner, Australia, on AI risks, global regulation, and the future of online safety.
+                  </p>
+                </div>
+              </div>
+
+              {/* Keynote 2 — Delphine O */}
+              <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-stone-50 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900">
+                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                  <iframe
+                    src="https://player.mux.com/l6f94UXaZxMGhwpwVNhzI61C02uYEexTJH02REw1i024Os?metadata-video-title=DELPHINE+O&video-title=DELPHINE+O"
+                    className="absolute inset-0 h-full w-full border-0"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    title="Delphine O — Combating Technology-Facilitated Gender-Based Violence"
+                  />
+                </div>
+                <div className="p-6 md:p-7">
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-rc-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-rc-primary dark:bg-white/10 dark:text-white">
+                      Policy &amp; Global Leadership
+                    </span>
+                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                      Global Policy Address
+                    </span>
+                  </div>
+                  <h3 className="mt-2 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-2xl">
+                    Combating Technology-Facilitated Gender-Based Violence: A Global Call to Action
+                  </h3>
+                  <p className="mt-3 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
+                    A keynote by <strong>Delphine O</strong>, Ambassador-at-Large and Secretary General for the Generation Equality Forum, on global efforts to combat technology-facilitated gender-based violence.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
+          <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
               Thematic Focus
             </p>
             <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
@@ -189,15 +266,26 @@ export default function Tasi2025Page() {
         <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm md:py-section-lg">
           <div className="mx-auto grid w-full max-w-[1300px] items-center gap-10 px-4 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:px-16">
             <article className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-orange-100/60">
-              <div className="relative aspect-[4/5] md:aspect-[4/4.5]">
-                <Image
-                  src="/img/home-gallery/7T7A0651.webp"
-                  alt="Dr. S. Jaishankar speaking at TASI 2025"
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                />
-              </div>
+              <a
+                href="https://www.youtube.com/live/_s_16oiTqpI?si=vc0sW-zIJeGFnukv"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Watch Dr. S. Jaishankar's TASI 2025 keynote on YouTube"
+                className="group block"
+              >
+                <div className="relative aspect-[4/5] md:aspect-[4/4.5]">
+                  <Image
+                    src="/img/home-gallery/7T7A0651.webp"
+                    alt="Dr. S. Jaishankar speaking at TASI 2025"
+                    fill
+                    className="object-cover transition duration-300 group-hover:scale-[1.02]"
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                  />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-5 py-4 text-sm font-semibold text-white opacity-0 transition duration-300 group-hover:opacity-100">
+                    Click to watch the video
+                  </div>
+                </div>
+              </a>
             </article>
 
             <div>
