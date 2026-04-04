@@ -3,19 +3,19 @@
 import { useState } from 'react';
 import { PlayCircle } from 'lucide-react';
 
-function getMuxThumbnail(iframeSrc) {
+function getMuxThumbnail(iframeSrc, thumbnailTime = 2) {
   const match = iframeSrc?.match(/player\.mux\.com\/([^?/]+)/i);
   return match?.[1]
-    ? `https://image.mux.com/${match[1]}/thumbnail.jpg?time=2`
+    ? `https://image.mux.com/${match[1]}/thumbnail.jpg?time=${thumbnailTime}`
     : null;
 }
 
-export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, description }) {
+export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, description, thumbnailTime }) {
   const [playing, setPlaying] = useState(false);
-  const thumbnail = getMuxThumbnail(iframeSrc);
+  const thumbnail = getMuxThumbnail(iframeSrc, thumbnailTime);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
+    <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
       {/* Video area */}
       <div className="relative aspect-video w-full bg-black">
         {playing ? (

@@ -160,7 +160,7 @@ export default function Tasi2025Page() {
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
 
             <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
-              Testimonials &amp; Video Testimonials
+              Featured Session
             </p>
             <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
               Keynote Addresses
@@ -175,14 +175,15 @@ export default function Tasi2025Page() {
                 title="Safety by Design in the Age of AI"
                 speaker="Julie Inman Grant"
                 role="eSafety Commissioner, Australia"
-                description="On AI risks, global regulation, and the future of online safety."
+                description="AI risks, global regulation, and the future of online safety"
+                thumbnailTime="5"
               />
               <KeynoteVideoPlayer
                 iframeSrc="https://player.mux.com/l6f94UXaZxMGhwpwVNhzI61C02uYEexTJH02REw1i024Os?metadata-video-title=DELPHINE+O&video-title=DELPHINE+O"
                 title="Combating Tech-Facilitated Gender-Based Violence"
                 speaker="Delphine O"
                 role="Ambassador-at-Large, Generation Equality Forum"
-                description="On global efforts to combat technology-facilitated gender-based violence."
+                description="Global efforts to combat technology-facilitated gender-based violence"
               />
             </div>
           </div>
