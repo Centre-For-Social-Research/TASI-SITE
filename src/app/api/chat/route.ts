@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // TODO: Add rate limiting before production
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-flash-latest",
       systemInstruction: `You are the official AI assistant for TASI 2026 conference in New Delhi.
 Answer questions ONLY based on the TASI 2026 information provided below.
 If the answer is not in the provided information, respond with:
