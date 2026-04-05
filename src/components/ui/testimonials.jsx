@@ -57,15 +57,7 @@ export const TestimonialSection = ({
         </div>
 
         {/* Testimonials Carousel */}
-        <div className="relative mt-16">
-          <button
-            onClick={handlePrev}
-            className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 md:left-0 dark:border-white/40 dark:bg-black/35 dark:text-white"
-            aria-label="Previous testimonials"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-
+        <div className="mt-16 flex flex-col gap-4 lg:gap-6">
           <div
             ref={carouselRef}
             className="flex gap-6 overflow-x-auto px-1 pb-2 touch-pan-y overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -111,13 +103,22 @@ export const TestimonialSection = ({
             ))}
           </div>
 
-          <button
-            onClick={handleNext}
-            className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 md:right-0 dark:border-white/40 dark:bg-black/35 dark:text-white"
-            aria-label="Next testimonials"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
+          <div className="flex items-center justify-center gap-3 lg:justify-end">
+            <button
+              onClick={handlePrev}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 dark:border-white/40 dark:bg-black/35 dark:text-white"
+              aria-label="Previous testimonials"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 dark:border-white/40 dark:bg-black/35 dark:text-white"
+              aria-label="Next testimonials"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
     </section>

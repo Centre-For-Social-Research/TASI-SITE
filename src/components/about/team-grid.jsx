@@ -179,7 +179,7 @@ export default function TeamGrid() {
 
     track.scrollBy({
       left: direction * step,
-      behavior: 'auto',
+      behavior: 'smooth',
     });
   };
 

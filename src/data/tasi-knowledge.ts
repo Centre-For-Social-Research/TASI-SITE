@@ -20,7 +20,6 @@ THREE CORE PILLARS:
 ORGANIZERS & LEADERSHIP:
 - Lead Partner: Centre for Social Research (CSR), New Delhi
 - Co-Convening Partner: Trust and Safety Festival
-- Dr. Ranjana Kumari — Director, CSR (40+ years women's rights advocacy); Email: ranjanakumari@csrindia.org
 - Jyoti Vadehra — Head of Online Safety and Wellbeing, CSR; Founding secretariat of ACTS; Email: jyoti@csrindia.org
 - Karuna Nain — Online Safety Expert/Advisor (20+ years experience, formerly Meta Global Safety Policy Director); Email: karunanain@googlemail.com
 - Jean-Christophe Le Toquin — Co-Founder, Trust & Safety Festival; Email: jc.letoquin@trustandsafetyforum.org

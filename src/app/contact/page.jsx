@@ -22,11 +22,6 @@ const sponsorshipContacts = [
     email: 'jc.letoquin@trustandsafetyforum.org',
     role: 'Co Founder, Trust & Safety Festival',
   },
-  {
-    name: 'Dr. Ranjana Kumari',
-    email: 'ranjanakumari@csrindia.org',
-    role: 'Director, Centre For Social Research',
-  },
 ];
 
 export default function ContactPage() {

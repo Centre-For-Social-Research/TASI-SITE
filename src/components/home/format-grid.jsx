@@ -52,12 +52,12 @@ export default function FormatGrid() {
           {formatItems.map((item, index) => (
             <MotionItem key={item.title}>
               <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
-                <div className="relative aspect-[1.5/1] w-full">
+                <div className="relative aspect-[1.5/1] w-full overflow-hidden">
                   <Image
                     src={item.image}
                     alt={item.imageAlt}
                     fill
-                    className={`object-cover transition-transform duration-500 ${item.title === 'Spotlights' ? 'scale-110' : ''}`}
+                    className={`object-cover transition-transform duration-500 ${item.title === 'Spotlights' ? 'scale-110' : 'scale-100'}`}
                     sizes="(min-width: 1280px) 23vw, (min-width: 768px) 50vw, 100vw"
                   />
                 </div>

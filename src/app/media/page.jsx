@@ -114,7 +114,7 @@ export default function MediaPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <article className="relative min-h-[320px] overflow-hidden rounded-[10px] shadow-[0_22px_60px_-36px_rgba(15,23,42,0.22)] sm:col-span-2">
                 <Image
-                  src="/img/media-coverage/press-conference/gcv-06833.jpg"
+                  src="/img/media-coverage/press-conference/gcv-06833.webp"
                   alt="Speaker addressing the press conference before TASI 2025"
                   fill
                   className="object-cover"
@@ -123,7 +123,7 @@ export default function MediaPage() {
               </article>
               <article className="relative min-h-[220px] overflow-hidden rounded-[10px] shadow-[0_18px_50px_-34px_rgba(15,23,42,0.18)]">
                 <Image
-                  src="/img/media-coverage/press-conference/gcv-07061.jpg"
+                  src="/img/media-coverage/press-conference/gcv-07061.webp"
                   alt="Press interaction during the TASI 2025 pre-festival media briefing"
                   fill
                   className="object-cover"
@@ -132,7 +132,7 @@ export default function MediaPage() {
               </article>
               <article className="relative min-h-[220px] overflow-hidden rounded-[10px] shadow-[0_18px_50px_-34px_rgba(15,23,42,0.18)]">
                 <Image
-                  src="/img/media-coverage/press-conference/gcv-07089.jpg"
+                  src="/img/media-coverage/press-conference/gcv-07089.webp"
                   alt="Interview moment captured at the TASI 2025 press conference"
                   fill
                   className="object-cover"
