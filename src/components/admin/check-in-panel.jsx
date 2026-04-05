@@ -180,7 +180,11 @@ export default function CheckInPanel({ operator }) {
 
       await scanner.start(
         { facingMode: 'environment' },
-        { fps: 10 },
+        {
+          fps: 15,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.7777778,
+        },
         async (decodedText) => {
           const now = Date.now();
           if (
