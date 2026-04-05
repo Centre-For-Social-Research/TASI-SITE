@@ -1,6 +1,5 @@
 'use client';
 
-import { Html5Qrcode } from 'html5-qrcode';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
@@ -175,7 +174,8 @@ export default function CheckInPanel({ operator }) {
     scanSessionRef.current = createScanSession();
 
     try {
-      const scanner = new Html5Qrcode(QR_READER_ID);
+      const { Html5Qrcode } = await import('html5-qrcode');
+      const scanner = new Html5Qrcode(QR_READER_ID, { verbose: false });
       html5QrScannerRef.current = scanner;
 
       await scanner.start(
