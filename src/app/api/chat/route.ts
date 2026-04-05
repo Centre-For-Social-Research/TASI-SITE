@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { tasiKnowledge } from "@/data/tasi-knowledge";
 
 const apiKey = process.env.GEMINI_API_KEY || "";
-const genAI = new GoogleGenerativeAI(apiKey);
+const ai = new GoogleGenAI({ apiKey });
 
 export async function POST(req: Request) {
   try {
@@ -19,9 +19,7 @@ export async function POST(req: Request) {
 
     // TODO: Add rate limiting before production
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-      systemInstruction: `You are the official AI assistant for TASI 2026 conference in New Delhi.
+    const systemInstruction = `You are the official AI assistant for TASI 2026 conference in New Delhi.
 Answer questions ONLY based on the TASI 2026 information provided below.
 If the answer is not in the provided information, respond with:
 'I don't have that detail yet. Please reach out to us at [contact email].'
@@ -30,29 +28,43 @@ Keep answers concise, friendly, and professional.
 Always refer to the event as TASI 2026.
 
 Here is the TASI 2026 information:
-${tasiKnowledge}`,
-    });
+${tasiKnowledge}`;
 
-    const history = messages
+    const rawHistory = messages
       .slice(0, -1)
       .map((msg: any) => ({
         role: msg.role === "user" ? "user" : "model",
         parts: [{ text: msg.content }],
       }));
 
-    // Gemini requires history to start with a 'user' message
+    // Enforce strict alternation and ensure history starts with 'user'
+    const history: any[] = [];
+    let lastRole = "";
+    for (const msg of rawHistory) {
+      if (msg.role !== lastRole) {
+        history.push(msg);
+        lastRole = msg.role;
+      } else if (history.length > 0) {
+        history[history.length - 1].parts[0].text += "\n" + msg.parts[0].text;
+      }
+    }
+
     while (history.length > 0 && history[0].role === "model") {
       history.shift();
     }
 
     const lastMessage = messages[messages.length - 1].content;
 
-    const chatSession = model.startChat({
+    const chat = ai.chats.create({
+      model: 'gemini-2.5-flash',
+      config: {
+        systemInstruction,
+      },
       history,
     });
 
-    const result = await chatSession.sendMessage(lastMessage);
-    const reply = result.response.text();
+    const result = await chat.sendMessage({ message: lastMessage });
+    const reply = result.text;
 
     return Response.json({ reply });
   } catch (error) {
