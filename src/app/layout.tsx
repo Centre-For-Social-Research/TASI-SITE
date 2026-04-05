@@ -3,6 +3,7 @@ import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
+import ChatBot from '@/components/chatbot/ChatBot';
 import './globals.css';
 
 const inter = Inter({
@@ -80,6 +81,7 @@ export default function RootLayout({
         <AppShell>{children}</AppShell>
         <Analytics />
         <SpeedInsights />
+        <ChatBot />
       </body>
     </html>
   );
