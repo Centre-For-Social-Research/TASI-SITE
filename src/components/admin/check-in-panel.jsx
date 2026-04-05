@@ -208,7 +208,7 @@ export default function CheckInPanel({ operator }) {
     }
   }
 
-
+  async function lookupAttendee() {
     setLookupLoading(true);
 
     try {
