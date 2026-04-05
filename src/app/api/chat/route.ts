@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // TODO: Add rate limiting before production
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-flash-latest",
+      model: "gemini-2.5-flash",
       systemInstruction: `You are the official AI assistant for TASI 2026 conference in New Delhi.
 Answer questions ONLY based on the TASI 2026 information provided below.
 If the answer is not in the provided information, respond with:
@@ -33,10 +33,17 @@ Here is the TASI 2026 information:
 ${tasiKnowledge}`,
     });
 
-    const history = messages.slice(0, -1).map((msg: any) => ({
-      role: msg.role === "user" ? "user" : "model",
-      parts: [{ text: msg.content }],
-    }));
+    const history = messages
+      .slice(0, -1)
+      .map((msg: any) => ({
+        role: msg.role === "user" ? "user" : "model",
+        parts: [{ text: msg.content }],
+      }));
+
+    // Gemini requires history to start with a 'user' message
+    while (history.length > 0 && history[0].role === "model") {
+      history.shift();
+    }
 
     const lastMessage = messages[messages.length - 1].content;
 
