@@ -26,15 +26,17 @@ export const TestimonialSection = ({
 
     track.scrollBy({
       left: direction * step,
-      behavior: 'auto',
+      behavior: 'smooth',
     });
   };
 
   const handleNext = () => {
+    console.log('Next button clicked');
     scrollByCards(1);
   };
 
   const handlePrev = () => {
+    console.log('Prev button clicked');
     scrollByCards(-1);
   };
 
@@ -103,8 +105,9 @@ export const TestimonialSection = ({
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-3 lg:justify-end">
+          <div className="flex justify-center gap-4 pt-4 lg:pt-6">
             <button
+              type="button"
               onClick={handlePrev}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 dark:border-white/40 dark:bg-black/35 dark:text-white"
               aria-label="Previous testimonials"
@@ -112,6 +115,7 @@ export const TestimonialSection = ({
               <ChevronLeft className="h-6 w-6" />
             </button>
             <button
+              type="button"
               onClick={handleNext}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-rc-primary/20 bg-rc-secondary text-rc-primary shadow-lg transition hover:opacity-90 dark:border-white/40 dark:bg-black/35 dark:text-white"
               aria-label="Next testimonials"

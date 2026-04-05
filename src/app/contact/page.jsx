@@ -89,7 +89,7 @@ export default function ContactPage() {
             {sponsorshipContacts.map((contact) => (
               <article
                 key={contact.email}
-                className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white/85 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900/90"
+                className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white/85 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] text-center dark:border-slate-800 dark:bg-slate-900/90"
               >
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
                   Sponsor Desk
