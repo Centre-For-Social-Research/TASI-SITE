@@ -9,17 +9,30 @@ type Message = {
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Show toast after 3s, auto-hide after 8s
+  useEffect(() => {
+    if (isDismissed) return;
+    const showTimer = setTimeout(() => setShowToast(true), 3000);
+    const hideTimer = setTimeout(() => setShowToast(false), 8000);
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [isDismissed]);
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       setMessages([
         {
           role: "assistant",
-          content: "Hi! I'm the TASI 2026 assistant. Ask me anything about the conference — schedule, speakers, registration, or venue.",
+          content: "Hi! I'm the TASI Chatbot. Ask me anything about the conference — schedule, speakers, registration, or venue.",
         },
       ]);
     }
@@ -29,7 +42,19 @@ export default function ChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  const toggleChat = () => setIsOpen((prev) => !prev);
+  const toggleChat = () => {
+    setShowToast(false);
+    setIsOpen((prev) => !prev);
+  };
+
+  const dismissChat = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(false);
+    setShowToast(false);
+    setIsDismissed(true);
+  };
+
+  const restoreChat = () => setIsDismissed(false);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -69,8 +94,30 @@ export default function ChatBot() {
     }
   };
 
+  if (isDismissed) {
+    return <DismissedButton onRestore={restoreChat} />;
+  }
+
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      {/* Toast */}
+      <div
+        className={`bg-gray-900 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 transform transition-all duration-500 ${
+          showToast && !isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
+        }`}
+      >
+        <span>💬 Need help? Ask the TASI Chatbot!</span>
+        <button
+          onClick={() => setShowToast(false)}
+          className="text-gray-400 hover:text-white transition-colors ml-1"
+          aria-label="Dismiss toast"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
+
       {/* Chat Window */}
       <div
         className={`w-[380px] h-[520px] bg-white rounded-2xl shadow-2xl flex flex-col transform transition-all duration-300 origin-bottom-right ${
@@ -79,7 +126,7 @@ export default function ChatBot() {
       >
         {/* Header */}
         <div className="bg-gray-900 text-white p-4 rounded-t-2xl flex justify-between items-center">
-          <h3 className="font-semibold">TASI 2026 Assistant</h3>
+          <h3 className="font-semibold">TASI Chatbot</h3>
           <button
             onClick={toggleChat}
             className="text-gray-400 hover:text-white transition-colors"
@@ -144,18 +191,31 @@ export default function ChatBot() {
         </div>
       </div>
 
-      {/* Floating Button */}
-      <button
-        onClick={toggleChat}
-        className={`w-14 h-14 bg-gray-900 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform ${
-          isOpen ? "scale-0 opacity-0 pointer-events-none absolute" : "scale-100 opacity-100"
-        }`}
-        aria-label="Open chat assistant"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-      </button>
+      {/* Floating Button + Dismiss */}
+      <div className={`flex items-center gap-2 ${isOpen ? "hidden" : ""}`}>
+        {/* Dismiss button */}
+        <button
+          onClick={dismissChat}
+          className="w-7 h-7 bg-white text-gray-500 rounded-full flex items-center justify-center shadow border border-gray-200 hover:text-gray-800 hover:border-gray-400 transition-colors"
+          aria-label="Dismiss chatbot"
+          title="Remove chatbot"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </button>
+
+        {/* Main chat button */}
+        <button
+          onClick={toggleChat}
+          className="w-14 h-14 bg-gray-900 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+          aria-label="Open TASI Chatbot"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+      </div>
 
       {/* CSS for hiding scrollbar */}
       <style jsx>{`
@@ -167,6 +227,20 @@ export default function ChatBot() {
           scrollbar-width: none;
         }
       `}</style>
+    </div>
+  );
+}
+
+function DismissedButton({ onRestore }: { onRestore: () => void }) {
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      <button
+        onClick={onRestore}
+        className="text-xs text-gray-400 hover:text-gray-700 underline underline-offset-2 transition-colors"
+        aria-label="Restore TASI Chatbot"
+      >
+        Show TASI Chatbot
+      </button>
     </div>
   );
 }
