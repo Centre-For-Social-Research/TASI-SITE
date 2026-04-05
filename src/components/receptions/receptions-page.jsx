@@ -319,49 +319,21 @@ function PostMode() {
 function PreMode() {
   return (
     <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
-      <div className="mx-auto grid w-full max-w-[1300px] gap-8 px-4 md:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:px-16">
+      <div className="mx-auto w-full max-w-[900px] px-4 md:px-8 lg:px-16">
         <MotionReveal>
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary">
-            Receptions Programme
-          </p>
-          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.1rem]">
-            TASI 2026 receptions now support the wider festival story
-          </h2>
-          <p className="mt-5 text-body-lg leading-relaxed text-stone-700 dark:text-slate-300">
-            Festival ticketing now lives on the registration page. This receptions page remains focused on diplomatic hosting, hospitality context, and the editorial arc around the main event.
-          </p>
+          <article className="rounded-[10px] border border-stone-200 bg-white p-8 text-center shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-10">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
+              Update
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-4xl">
+              Reception details will be updated soon.
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-stone-600 dark:text-slate-300">
+              We will share the full 2026 receptions information here once the
+              programme is finalized.
+            </p>
+          </article>
         </MotionReveal>
-
-        <MotionStagger className="grid gap-5">
-          {[
-            {
-              title: 'Festival purchase flow moved',
-              text: 'Domestic and international payment routing now happens on the registration page where GST and FCRA rules can be enforced consistently.',
-            },
-            {
-              title: 'Receptions stay visible',
-              text: 'This page continues to showcase the programme tone, partner-hosted moments, and hospitality framing without acting as the checkout surface.',
-            },
-            {
-              title: 'Clearer site structure',
-              text: 'Use /register for ticket purchase and delegate flows, and use /receptions/2026 for context, partner storytelling, and archival continuity.',
-            },
-          ].map((item) => (
-            <MotionItem key={item.title}>
-              <article className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
-                  2026
-                </p>
-                <h3 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-                  {item.text}
-                </p>
-              </article>
-            </MotionItem>
-          ))}
-        </MotionStagger>
       </div>
     </section>
   );
@@ -385,13 +357,13 @@ export default function ReceptionsPage({ initialMode = "post" }) {
               <span className="mt-2 block text-[1.15rem] font-extrabold text-rc-secondary md:text-[1.9rem]">
                 {is2025
                   ? 'One diplomatic arc for digital safety.'
-                  : 'A future-facing hospitality programme for a landmark edition.'}
+                  : 'Diplomatic hospitality for the conversations that continue after the main stage.'}
               </span>
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/90 md:text-lg">
               {is2025
                 ? "Explore the embassy-hosted reception journey of TASI 2025 across October 6-8 in New Delhi, from the pre-launch welcome evening to the closing diplomatic finale."
-                : "Explore how receptions fit into the TASI 2026 experience, while festival registration and payment now happen through the main registration flow."}
+                : "Explore the role of receptions within TASI 2026, from diplomatic hosting and cross-sector networking to the quieter conversations that help summit relationships turn into action."}
             </p>
 
             <div className="mt-8">
@@ -400,13 +372,13 @@ export default function ReceptionsPage({ initialMode = "post" }) {
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "October 6-8, 2025" : "Registration handles ticketing"}
+                {is2025 ? "October 6-8, 2025" : "Diplomatic hospitality"}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "New Delhi diplomatic receptions" : "Hospitality and partner context"}
+                {is2025 ? "New Delhi diplomatic receptions" : "Cross-sector networking"}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "Invite Only" : "Festival purchase lives on /register"}
+                {is2025 ? "Invite Only" : "Registration via main festival flow"}
               </span>
             </div>
           </div>

@@ -16,13 +16,13 @@ export const TestimonialSection = ({
   const carouselRef = useRef(null);
 
   const scrollByCards = (direction = 1) => {
-    if (!carouselRef.current) {
-      return;
-    }
-
+    if (!carouselRef.current) return;
     const track = carouselRef.current;
+    
+    // Find the first card to get the width
     const card = track.querySelector('[data-testimonial-card]');
-    const step = card ? card.clientWidth + 24 : track.clientWidth * 0.8;
+    // gap is 24px (gap-6)
+    const step = card ? card.offsetWidth + 24 : track.clientWidth * 0.8;
 
     track.scrollBy({
       left: direction * step,
@@ -62,7 +62,7 @@ export const TestimonialSection = ({
         <div className="mt-16 flex flex-col gap-4 lg:gap-6">
           <div
             ref={carouselRef}
-            className="flex gap-6 overflow-x-auto px-1 pb-2 touch-pan-y overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-6 overflow-x-auto px-1 pb-2 overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {testimonials.map((testimonial) => (
               <div

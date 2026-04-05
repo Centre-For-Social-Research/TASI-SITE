@@ -85,11 +85,12 @@ export default function ContactPage() {
             Each contact below can help route sponsorship, partnership, and
             strategic collaboration conversations to the right team.
           </p>
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {sponsorshipContacts.map((contact) => (
+          <div className="mt-6 flex justify-center">
+            <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl">
+              {sponsorshipContacts.map((contact) => (
               <article
                 key={contact.email}
-                className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white/85 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] text-center dark:border-slate-800 dark:bg-slate-900/90"
+                className="flex h-full flex-col items-center justify-center rounded-[10px] border border-stone-200/80 bg-white/85 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] text-center dark:border-slate-800 dark:bg-slate-900/90"
               >
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
                   Sponsor Desk
@@ -110,6 +111,7 @@ export default function ContactPage() {
                 </p>
               </article>
             ))}
+            </div>
           </div>
         </section>
 

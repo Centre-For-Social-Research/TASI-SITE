@@ -168,21 +168,28 @@ ProfileCard.displayName = 'ProfileCard';
 export default function TeamGrid() {
   const carouselRef = React.useRef(null);
 
-  const scrollByCards = (direction = 1) => {
-    if (!carouselRef.current) {
-      return;
-    }
-
+  const scrollByCards = React.useCallback((direction = 1) => {
+    if (!carouselRef.current) return;
+    
     const track = carouselRef.current;
+    
     const card = track.querySelector('[data-team-card]');
-    const step = card ? card.clientWidth + 24 : track.clientWidth * 0.8;
+    // Scroll intentionally slightly more than one card to ensure snap target updates
+    const step = card ? card.offsetWidth + 24 : track.clientWidth * 0.5;
 
     track.scrollBy({
       left: direction * step,
       behavior: 'smooth',
-      block: 'nearest',
     });
-  };
+  }, []);
+
+  const handlePrev = React.useCallback(() => {
+    scrollByCards(-1);
+  }, [scrollByCards]);
+
+  const handleNext = React.useCallback(() => {
+    scrollByCards(1);
+  }, [scrollByCards]);
 
   return (
     <section
@@ -211,7 +218,7 @@ export default function TeamGrid() {
             <button
               type="button"
               aria-label="Previous team member"
-              onClick={() => scrollByCards(-1)}
+              onClick={handlePrev}
               className="tasi-team-prev rounded-full border border-stone-300 bg-white p-3 text-stone-700 shadow-sm transition hover:border-stone-400 hover:text-stone-900 dark:border-white/15 dark:bg-white/5 dark:text-white/80 dark:hover:border-white/30 dark:hover:text-white"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -219,7 +226,7 @@ export default function TeamGrid() {
             <button
               type="button"
               aria-label="Next team member"
-              onClick={() => scrollByCards(1)}
+              onClick={handleNext}
               className="tasi-team-next rounded-full border border-stone-300 bg-white p-3 text-stone-700 shadow-sm transition hover:border-stone-400 hover:text-stone-900 dark:border-white/15 dark:bg-white/5 dark:text-white/80 dark:hover:border-white/30 dark:hover:text-white"
             >
               <ChevronRight className="h-5 w-5" />
@@ -229,13 +236,13 @@ export default function TeamGrid() {
 
         <div
           ref={carouselRef}
-          className="flex gap-6 overflow-x-auto px-1 pb-2 touch-pan-x snap-x snap-mandatory overscroll-x-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-6 overflow-x-auto px-1 pb-2 overscroll-x-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden"
         >
           {teamMembers.map((member) => (
             <div
               key={member.name}
               data-team-card
-              className="min-w-0 shrink-0 snap-start basis-[88%] sm:basis-[70%] lg:basis-[calc((100%-3rem)/4)]"
+              className="min-w-0 shrink-0 basis-[88%] sm:basis-[70%] lg:basis-[calc((100%-3rem)/4)]"
             >
               <ProfileCard
                 name={member.name}
