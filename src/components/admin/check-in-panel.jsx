@@ -1,5 +1,6 @@
 'use client';
 
+import jsQR from 'jsqr';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
@@ -9,13 +10,12 @@ import {
   AdminStatusBadge,
 } from '@/components/admin/admin-ui';
 
-const QR_READER_ID = 'html5-qr-reader';
-
 const {
   classifyCameraStartFailure,
   getCameraStateMessage,
   isCheckInConfigError,
   getCheckInFeedbackTone,
+  shouldRetryCameraRequest,
 } = checkInUtils;
 const { createScanSession } = scanSessionUtils;
 
@@ -61,7 +61,10 @@ export default function CheckInPanel({ operator }) {
   const [scanSubmitting, setScanSubmitting] = useState(false);
   const [configWarning, setConfigWarning] = useState('');
   const [recentScans, setRecentScans] = useState([]);
-  const html5QrScannerRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+  const animationFrameRef = useRef(null);
   const scanSessionRef = useRef(createScanSession());
 
   const cameraMessage = useMemo(
@@ -87,17 +90,17 @@ export default function CheckInPanel({ operator }) {
     };
   }, [recentScans]);
 
-  const stopCamera = useCallback(async (nextState = 'idle') => {
-    if (html5QrScannerRef.current) {
-      try {
-        if (html5QrScannerRef.current.isScanning) {
-          await html5QrScannerRef.current.stop();
-        }
-        html5QrScannerRef.current.clear();
-      } catch {
-        // ignore cleanup errors — scanner may already be stopped
-      }
-      html5QrScannerRef.current = null;
+  const stopCamera = useCallback((nextState = 'idle') => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
     }
     setCameraState(nextState);
   }, []);
@@ -170,46 +173,85 @@ export default function CheckInPanel({ operator }) {
       return;
     }
 
-    await stopCamera('requesting');
+    stopCamera('requesting');
     scanSessionRef.current = createScanSession();
 
+    let stream;
     try {
-      const { Html5Qrcode } = await import('html5-qrcode');
-      const scanner = new Html5Qrcode(QR_READER_ID, { verbose: false });
-      html5QrScannerRef.current = scanner;
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+      });
+    } catch (error) {
+      const errorName = error instanceof DOMException ? error.name : '';
+      if (shouldRetryCameraRequest(errorName)) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        } catch (fallbackError) {
+          stopCamera(
+            classifyCameraStartFailure({
+              isSecureContext: window.isSecureContext,
+              errorName:
+                fallbackError instanceof DOMException
+                  ? fallbackError.name
+                  : '',
+            })
+          );
+          return;
+        }
+      } else {
+        stopCamera(
+          classifyCameraStartFailure({
+            isSecureContext: window.isSecureContext,
+            errorName,
+          })
+        );
+        return;
+      }
+    }
 
-      await scanner.start(
-        { facingMode: 'environment' },
-        {
-          fps: 15,
-          qrbox: { width: 250, height: 250 },
-          aspectRatio: 1.7777778,
-        },
-        async (decodedText) => {
-          const now = Date.now();
+    streamRef.current = stream;
+    const video = videoRef.current;
+    video.srcObject = stream;
+    await video.play();
+    setCameraState('active');
+
+    function scanFrame() {
+      if (
+        !videoRef.current ||
+        videoRef.current.readyState < videoRef.current.HAVE_ENOUGH_DATA
+      ) {
+        animationFrameRef.current = requestAnimationFrame(scanFrame);
+        return;
+      }
+
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+      const now = Date.now();
+      if (scanSessionRef.current.shouldDecode(now)) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const result = jsQR(imageData.data, canvas.width, canvas.height);
+        if (result?.data) {
+          const token = result.data.trim();
           if (
-            scanSessionRef.current.shouldSubmitToken(decodedText, now) &&
+            scanSessionRef.current.shouldSubmitToken(token, now) &&
             !scanSessionRef.current.isSubmitting()
           ) {
-            await stopCamera();
-            setManualToken(decodedText);
-            await completeCheckIn({ token: decodedText });
+            stopCamera();
+            setManualToken(token);
+            void completeCheckIn({ token });
+            return;
           }
-        },
-        () => {
-          // per-frame decode miss — normal, ignore
         }
-      );
+      }
 
-      setCameraState('active');
-    } catch (error) {
-      await stopCamera(
-        classifyCameraStartFailure({
-          isSecureContext: window.isSecureContext,
-          errorName: error instanceof DOMException ? error.name : '',
-        })
-      );
+      animationFrameRef.current = requestAnimationFrame(scanFrame);
     }
+
+    animationFrameRef.current = requestAnimationFrame(scanFrame);
   }
 
   async function lookupAttendee() {
@@ -316,7 +358,7 @@ export default function CheckInPanel({ operator }) {
     };
   }, []);
 
-  useEffect(() => () => { void stopCamera(); }, [stopCamera]);
+  useEffect(() => () => { stopCamera(); }, [stopCamera]);
 
   return (
     <div className="space-y-6">
@@ -381,10 +423,13 @@ export default function CheckInPanel({ operator }) {
             Scanner Frame
           </p>
           <div className="mt-4 overflow-hidden rounded-[10px] border border-slate-200 bg-slate-950 dark:border-slate-700">
-            <div
-              id={QR_READER_ID}
-              className="aspect-video w-full [&_video]:h-full [&_video]:w-full [&_video]:object-cover"
+            <video
+              ref={videoRef}
+              className="aspect-video w-full object-cover"
+              playsInline
+              muted
             />
+            <canvas ref={canvasRef} className="hidden" />
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <button
@@ -398,7 +443,7 @@ export default function CheckInPanel({ operator }) {
             </button>
             <button
               type="button"
-              onClick={() => void stopCamera()}
+              onClick={() => stopCamera()}
               className="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
             >
               Stop Camera
