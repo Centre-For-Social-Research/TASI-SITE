@@ -1,13 +1,17 @@
 'use client';
 
+import '@1771technologies/lytenyte-core/light-dark.css';
 import Image from 'next/image';
 import {
   useCallback,
+  createContext,
+  useContext,
   useDeferredValue,
   useEffect,
   useMemo,
   useState,
 } from 'react';
+import { Grid, useClientDataSource } from '@1771technologies/lytenyte-core';
 import { Download, ExternalLink, Loader2, Trash2 } from 'lucide-react';
 import { ATTENDEE_CATEGORIES } from '@/lib/registration-constants';
 import dashboardUtils from '@/lib/admin-dashboard-utils.cjs';
@@ -68,6 +72,182 @@ function statusHint(status) {
     return 'Rejected registrants are blocked from entry and removed from QR delivery.';
   return 'Pending keeps the record open for operator review without sending a decision email.';
 }
+
+// ── LyteNyte Grid ─ shared context, cell renderers, and column definitions ───
+const RegistrationGridCtx = createContext(null);
+
+function SelectAllHeader() {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!ctx) return null;
+  return (
+    <div className="flex h-full items-center justify-center">
+      <input
+        type="checkbox"
+        checked={ctx.allVisibleSelected}
+        onChange={ctx.toggleVisibleSelection}
+        className="rounded border-slate-300 dark:border-slate-600"
+      />
+    </div>
+  );
+}
+
+function CheckboxCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  const selected = ctx.selectedIds.includes(row.data.id);
+  return (
+    <div
+      className="flex h-full items-center justify-center"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <input
+        type="checkbox"
+        checked={selected}
+        onChange={() => ctx.toggleSelection(row.data.id)}
+        className="rounded border-slate-300 dark:border-slate-600"
+      />
+    </div>
+  );
+}
+
+function RegistrantCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  const r = row.data;
+  return (
+    <div
+      className="flex h-full cursor-pointer flex-col justify-center py-1"
+      onClick={() => ctx.openDrawerFor(r.id)}
+    >
+      <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
+        {r.first_name} {r.last_name}
+      </p>
+      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+        {r.registration_code}
+      </p>
+      <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+        {r.organization || 'Independent'} …{' '}
+        {r.attendee_category || 'Unspecified'}
+      </p>
+    </div>
+  );
+}
+
+function EmailCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <div
+      className="flex h-full cursor-pointer items-center"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+    >
+      <p className="text-xs text-slate-700 dark:text-slate-300">
+        {row.data.email}
+      </p>
+    </div>
+  );
+}
+
+function RegStatusCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <div
+      className="flex h-full cursor-pointer items-center"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+    >
+      <AdminStatusBadge tone={getStatusTone(row.data.status)}>
+        {row.data.status}
+      </AdminStatusBadge>
+    </div>
+  );
+}
+
+function LocationCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  const loc =
+    [row.data.city, row.data.country].filter(Boolean).join(', ') || '…';
+  return (
+    <div
+      className="flex h-full cursor-pointer items-center"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+    >
+      <p className="text-xs text-slate-600 dark:text-slate-400">{loc}</p>
+    </div>
+  );
+}
+
+function QRStatusCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <div
+      className="flex h-full cursor-pointer items-center"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+    >
+      <AdminStatusBadge tone={row.data.qr_pass_issued_at ? 'info' : 'default'}>
+        {row.data.qr_pass_issued_at ? 'Issued' : 'Pending'}
+      </AdminStatusBadge>
+    </div>
+  );
+}
+
+function CheckInCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <div
+      className="flex h-full cursor-pointer items-center"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+    >
+      <AdminStatusBadge tone={row.data.checked_in_at ? 'success' : 'default'}>
+        {row.data.checked_in_at ? 'Checked In' : 'Pending'}
+      </AdminStatusBadge>
+    </div>
+  );
+}
+
+function ActionsCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <div
+      className="flex h-full items-center"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <RowActions
+        registration={row.data}
+        onQuickAction={ctx.handleQuickAction}
+        pendingActions={ctx.pendingActions}
+        disabled={ctx.disabled}
+      />
+    </div>
+  );
+}
+
+const REGISTRATION_COLUMNS = [
+  {
+    id: 'select',
+    name: '',
+    width: 52,
+    cellRenderer: CheckboxCell,
+    headerRenderer: SelectAllHeader,
+  },
+  {
+    id: 'registrant',
+    name: 'Registrant',
+    width: 260,
+    cellRenderer: RegistrantCell,
+  },
+  { id: 'email', name: 'Email', width: 220, cellRenderer: EmailCell },
+  { id: 'status', name: 'Status', width: 130, cellRenderer: RegStatusCell },
+  { id: 'location', name: 'Location', width: 160, cellRenderer: LocationCell },
+  { id: 'qr', name: 'QR', width: 110, cellRenderer: QRStatusCell },
+  { id: 'checkin', name: 'Check-In', width: 130, cellRenderer: CheckInCell },
+  { id: 'actions', name: 'Actions', width: 320, cellRenderer: ActionsCell },
+];
+// ─────────────────────────────────────────────────────────────────────────────
 
 function ReviewSummary({ summary }) {
   if (!summary) return null;
@@ -527,6 +707,7 @@ export default function RegistrationsAdminPanel({ operator }) {
     () => prioritizeRegistrationQueue(state.registrations || []),
     [state.registrations]
   );
+  const ds = useClientDataSource({ data: orderedRegistrations });
 
   const showToast = (message, tone = 'default') => setToast({ message, tone });
   const clearToast = () => setToast({ message: '', tone: 'default' });
@@ -924,6 +1105,17 @@ export default function RegistrationsAdminPanel({ operator }) {
     orderedRegistrations.length > 0 &&
     orderedRegistrations.every((r) => selectedIds.includes(r.id));
 
+  const gridCtxValue = {
+    selectedIds,
+    toggleSelection,
+    toggleVisibleSelection,
+    allVisibleSelected,
+    openDrawerFor,
+    handleQuickAction,
+    pendingActions,
+    disabled: state.loading || hasConfigError,
+  };
+
   return (
     <div className="space-y-5">
       {/* Page header */}
@@ -1112,119 +1304,25 @@ export default function RegistrationsAdminPanel({ operator }) {
             ) : null}
           </p>
         </div>
-        <div className="overflow-auto">
-          <table className="min-w-full">
-            <thead className="sticky top-0 bg-slate-50 dark:bg-slate-800/80">
-              <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:border-slate-700 dark:text-slate-500">
-                <th className="px-4 py-3 text-left">
-                  <input
-                    type="checkbox"
-                    checked={allVisibleSelected}
-                    onChange={toggleVisibleSelection}
-                  />
-                </th>
-                <th className="px-4 py-3 text-left">Registrant</th>
-                <th className="px-4 py-3 text-left">Email</th>
-                <th className="px-4 py-3 text-left">Status</th>
-                <th className="px-4 py-3 text-left">Location</th>
-                <th className="px-4 py-3 text-left">QR</th>
-                <th className="px-4 py-3 text-left">Check-In</th>
-                <th className="px-4 py-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {state.loading ? (
-                <LoadingRows count={8} cols={8} />
-              ) : (
-                orderedRegistrations.map((registration) => {
-                  const selected = selectedIds.includes(registration.id);
-                  return (
-                    <tr
-                      key={registration.id}
-                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 ${selected ? 'bg-amber-50/40 dark:bg-amber-950/20' : ''}`}
-                      onClick={() => openDrawerFor(registration.id)}
-                    >
-                      <td
-                        className="px-4 py-3.5"
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selected}
-                          onChange={() => toggleSelection(registration.id)}
-                        />
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
-                          {registration.first_name} {registration.last_name}
-                        </p>
-                        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                          {registration.registration_code}
-                        </p>
-                        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
-                          {registration.organization || 'Independent'} …{' '}
-                          {registration.attendee_category || 'Unspecified'}
-                        </p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <p className="text-xs text-slate-700 dark:text-slate-300">
-                          {registration.email}
-                        </p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <AdminStatusBadge
-                          tone={getStatusTone(registration.status)}
-                        >
-                          {registration.status}
-                        </AdminStatusBadge>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <p className="text-xs text-slate-600 dark:text-slate-400">
-                          {[registration.city, registration.country]
-                            .filter(Boolean)
-                            .join(', ') || '…'}
-                        </p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <AdminStatusBadge
-                          tone={
-                            registration.qr_pass_issued_at ? 'info' : 'default'
-                          }
-                        >
-                          {registration.qr_pass_issued_at
-                            ? 'Issued'
-                            : 'Pending'}
-                        </AdminStatusBadge>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <AdminStatusBadge
-                          tone={
-                            registration.checked_in_at ? 'success' : 'default'
-                          }
-                        >
-                          {registration.checked_in_at
-                            ? 'Checked In'
-                            : 'Pending'}
-                        </AdminStatusBadge>
-                      </td>
-                      <td
-                        className="px-4 py-3.5"
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        <RowActions
-                          registration={registration}
-                          onQuickAction={handleQuickAction}
-                          pendingActions={pendingActions}
-                          disabled={state.loading || hasConfigError}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <RegistrationGridCtx.Provider value={gridCtxValue}>
+          {state.loading ? (
+            <div className="overflow-auto">
+              <table className="min-w-full">
+                <tbody>
+                  <LoadingRows count={8} cols={8} />
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="ln-grid" style={{ height: '560px' }}>
+              <Grid
+                columns={REGISTRATION_COLUMNS}
+                rowSource={ds}
+                rowHeight={72}
+              />
+            </div>
+          )}
+        </RegistrationGridCtx.Provider>
         {!state.loading && !state.error && orderedRegistrations.length === 0 ? (
           <div className="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
             No registrations match the current filters.
