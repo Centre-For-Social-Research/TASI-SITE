@@ -3,29 +3,29 @@
 
 export const tasiKnowledge = `
 ABOUT TASI 2026:
-International trust and safety conference in New Delhi
+International trust and safety conference in New Delhi. TASI is India's first national convening focused on trust and safety, led by civil society.
 
 VENUE:
-[Placeholder: venue name, address, nearest metro station, parking info]
+New Delhi, India.
 
 DATES AND DEADLINES:
-[Placeholder: conference dates, registration deadline, abstract submission deadline]
+2026
 
 SPEAKERS:
-[Placeholder: Speaker Name — Title, Organization. Topic: ...]
+Includes industry leaders, policy makers, and civil society representatives such as: Abhishek Singh, Akansha Kasera, Anne Collier, Anshul Tewari, Barkha Dutt, Dr. Cuterus (Dr. Tanaya), Dr. Subrahmanyam Jaishankar, Hasina Kharbhih, N.S. Nappinai, Shri Ashwini Vaishnaw, Smt. Annapurna Devi, Snigdha Bhardwaj, Sunil Abraham, Yoel Roth, and many more.
 
-SCHEDULE:
-[Placeholder: Day 1 - Date, timeslot by timeslot agenda]
+SCHEDULE HIGHLIGHTS:
+Panels and workshops on AI for Safety, Protecting Children Online, Building Safer Digital Spaces for Girls (CTRL+SHIFT+RESPECT), Decoding TFGBV, Dating and Safety, Child Influencers in the Creator Economy, and Well-being for Trust and Safety Workers.
 
 REGISTRATION:
-[Placeholder: how to register, fee, eligibility, what's included]
+Accessible through the TASI website registration page.
 
 PARTNERS AND SPONSORS:
-[Placeholder: list of partners, UN agencies, tech platforms involved]
+Booking.com, Teleperformance, Meta, Snapchat, YouTube, Truecaller, GSMA, Match Group, X, Resolver, VYS, GirlEffect, UN Women, Embassies of France, Sweden, Netherlands, Australian High Commission, Canadian High Commission, The Asia Foundation, Roblox, and more.
 
 FAQS:
-[Placeholder: 10 common questions with answers]
+For any questions regarding travel, agenda or ticketing, attendees can refer to the website section.
 
 CONTACT:
-[Placeholder: email addresses for different query types]
+Reach out to the TASI team through the official website contact page.
 `;
