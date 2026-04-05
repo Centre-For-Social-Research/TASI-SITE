@@ -712,8 +712,10 @@ export default function RegistrationsAdminPanel({ operator }) {
   const showToast = (message, tone = 'default') => setToast({ message, tone });
   const clearToast = () => setToast({ message: '', tone: 'default' });
 
-  const loadRegistrations = useCallback(async () => {
-    setState((current) => ({ ...current, loading: true, error: '' }));
+  const loadRegistrations = useCallback(
+    async ({ background = false } = {}) => {
+      if (!background)
+        setState((current) => ({ ...current, loading: true, error: '' }));
     try {
       const response = await fetch(`/api/admin/registrations?${queryString}`, {
         cache: 'no-store',
@@ -753,7 +755,9 @@ export default function RegistrationsAdminPanel({ operator }) {
         error: 'Network error.',
       });
     }
-  }, [queryString]);
+    },
+    [queryString]
+  );
 
   const loadDetail = useCallback(async (registrationId) => {
     if (!registrationId) return;
@@ -899,7 +903,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           'danger'
         );
       showToast(data.message || 'QR email job queued.', 'success');
-      void loadRegistrations();
+      void loadRegistrations({ background: true });
       if (activeRegistrationId) void loadDetail(activeRegistrationId);
     } catch {
       showToast('Network error while queueing QR email job.', 'danger');
@@ -929,7 +933,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         `Updated ${selectedIds.length} registrants to ${nextStatus}.`,
         'success'
       );
-      void loadRegistrations();
+      void loadRegistrations({ background: true });
       if (activeRegistrationId) void loadDetail(activeRegistrationId);
     } catch {
       showToast('Network error during bulk status update.', 'danger');
@@ -993,7 +997,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         `${actionKey} completed for ${registration.first_name} ${registration.last_name}.`,
         'success'
       );
-      void loadRegistrations();
+      void loadRegistrations({ background: true });
       if (activeRegistrationId === registration.id)
         void loadDetail(registration.id);
     } catch (error) {
@@ -1030,7 +1034,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           : 'Notes saved.',
         'success'
       );
-      void loadRegistrations();
+      void loadRegistrations({ background: true });
       void loadDetail(registrationId);
     } catch (error) {
       showToast(
