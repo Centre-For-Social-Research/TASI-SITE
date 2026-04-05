@@ -67,15 +67,6 @@ const cacheHeaders = [
       },
     ],
   },
-  {
-    source: '/_next/image(.*)',
-    headers: [
-      {
-        key: 'Cache-Control',
-        value: 'public, max-age=31536000, immutable',
-      },
-    ],
-  },
 ];
 
 const nextConfig = {
@@ -132,6 +123,10 @@ export default withSentryConfig(nextConfig, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   widenClientFileUpload: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    automaticVercelMonitors: true,
+  },
 });
