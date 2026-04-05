@@ -13,6 +13,7 @@ import {
 } from 'react';
 import { Grid, useClientDataSource } from '@1771technologies/lytenyte-core';
 import { Download, ExternalLink, Loader2, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { ATTENDEE_CATEGORIES } from '@/lib/registration-constants';
 import dashboardUtils from '@/lib/admin-dashboard-utils.cjs';
 import {
@@ -20,7 +21,6 @@ import {
   AdminSectionHeading,
   AdminStatCard,
   AdminStatusBadge,
-  AdminToast,
   LoadingRows,
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
@@ -678,7 +678,6 @@ export default function RegistrationsAdminPanel({ operator }) {
     vipFlag: false,
     reviewNotes: '',
   });
-  const [toast, setToast] = useState({ message: '', tone: 'default' });
   const [savingDetail, setSavingDetail] = useState(false);
   const [exportLoading, setExportLoading] = useState({
     csv: false,
@@ -709,8 +708,13 @@ export default function RegistrationsAdminPanel({ operator }) {
   );
   const ds = useClientDataSource({ data: orderedRegistrations });
 
-  const showToast = (message, tone = 'default') => setToast({ message, tone });
-  const clearToast = () => setToast({ message: '', tone: 'default' });
+  const showToast = (message, tone = 'default') => {
+    if (tone === 'success') toast.success(message);
+    else if (tone === 'danger') toast.error(message);
+    else if (tone === 'warning') toast.warning(message);
+    else toast(message);
+  };
+  const clearToast = () => {};
 
   const loadRegistrations = useCallback(
     async ({ background = false } = {}) => {
@@ -1191,18 +1195,6 @@ export default function RegistrationsAdminPanel({ operator }) {
         </div>
       </section>
 
-      {/* Toast */}
-      {toast.message ? (
-        <AdminToast
-          message={toast.message}
-          tone={
-            getBatchStatusTone(toast.message) !== 'default'
-              ? getBatchStatusTone(toast.message)
-              : toast.tone
-          }
-          onDismiss={clearToast}
-        />
-      ) : null}
       {hasConfigError ? (
         <AdminAlert
           title="Supabase Configuration Required"

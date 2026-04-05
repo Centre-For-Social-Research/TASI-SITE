@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   AdminAlert,
   AdminSectionHeading,
   AdminStatCard,
-  AdminToast,
 } from "@/components/admin/admin-ui";
 
 function formatMoney(minor, currency) {
@@ -77,7 +77,6 @@ export default function TicketingAdminPanel() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [toast, setToast] = useState({ message: "", tone: "default" });
   const [expandedTicketId, setExpandedTicketId] = useState(null);
   const [resendingId, setResendingId] = useState(null);
 
@@ -91,12 +90,9 @@ export default function TicketingAdminPanel() {
       if (!response.ok) {
         throw new Error(data?.error || "Failed to resend confirmation.");
       }
-      setToast({ message: `Confirmation email with QR code resent to ${ticket.user?.email}.`, tone: "success" });
+      toast.success(`Confirmation email with QR code resent to ${ticket.user?.email}.`);
     } catch (error) {
-      setToast({
-        message: error instanceof Error ? error.message : "Unable to resend confirmation.",
-        tone: "danger",
-      });
+      toast.error(error instanceof Error ? error.message : "Unable to resend confirmation.");
     } finally {
       setResendingId(null);
     }
@@ -118,13 +114,11 @@ export default function TicketingAdminPanel() {
         data.tickets?.some((ticket) => ticket.id === current) ? current : null,
       );
     } catch (error) {
-      setToast({
-        message:
-          error instanceof Error
-            ? error.message
-            : "Unable to load festival tickets.",
-        tone: "danger",
-      });
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to load festival tickets.",
+      );
     } finally {
       setLoading(false);
     }
@@ -179,11 +173,6 @@ export default function TicketingAdminPanel() {
         <AdminStatCard label="Checked In" value={stats.checkedIn} tone="info" />
       </div>
 
-      <AdminToast
-        message={toast.message}
-        tone={toast.tone}
-        onDismiss={() => setToast({ message: "", tone: "default" })}
-      />
 
       <section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">

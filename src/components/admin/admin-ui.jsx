@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
 import clsx from 'clsx';
 import { X } from 'lucide-react';
+import { Drawer } from 'vaul';
 
 const toneMap = {
   default: {
@@ -158,45 +158,30 @@ export function AdminSectionHeading({ eyebrow, title, description, action }) {
   );
 }
 
-/** Slide-over drawer that opens from the right */
+/** Slide-over drawer that opens from the right (powered by vaul for touch gesture support) */
 export function SlideOverDrawer({ open, onClose, title, children }) {
-  useEffect(() => {
-    if (!open) return undefined;
-    const handleKey = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      {/* Panel */}
-      <div className="relative flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900">
-        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-700">
-          <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">
-            {title}
-          </p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
-      </div>
-    </div>
+    <Drawer.Root open={open} onOpenChange={(v) => !v && onClose()} direction="right">
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-slate-900/30 backdrop-blur-sm" />
+        <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900 focus:outline-none">
+          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-700">
+            <Drawer.Title className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              {title}
+            </Drawer.Title>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              aria-label="Close"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }
 

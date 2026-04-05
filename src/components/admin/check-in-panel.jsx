@@ -1,6 +1,6 @@
 'use client';
 
-import jsQR from 'jsqr';
+import { Html5Qrcode } from 'html5-qrcode';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
@@ -10,12 +10,13 @@ import {
   AdminStatusBadge,
 } from '@/components/admin/admin-ui';
 
+const QR_READER_ID = 'html5-qr-reader';
+
 const {
   classifyCameraStartFailure,
   getCameraStateMessage,
   isCheckInConfigError,
   getCheckInFeedbackTone,
-  shouldRetryCameraRequest,
 } = checkInUtils;
 const { createScanSession } = scanSessionUtils;
 
@@ -61,10 +62,7 @@ export default function CheckInPanel({ operator }) {
   const [scanSubmitting, setScanSubmitting] = useState(false);
   const [configWarning, setConfigWarning] = useState('');
   const [recentScans, setRecentScans] = useState([]);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const streamRef = useRef(null);
-  const animationFrameRef = useRef(null);
+  const html5QrScannerRef = useRef(null);
   const scanSessionRef = useRef(createScanSession());
 
   const cameraMessage = useMemo(
@@ -90,22 +88,18 @@ export default function CheckInPanel({ operator }) {
     };
   }, [recentScans]);
 
-  const stopCamera = useCallback((nextState = 'idle') => {
-    if (animationFrameRef.current) {
-      window.cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
+  const stopCamera = useCallback(async (nextState = 'idle') => {
+    if (html5QrScannerRef.current) {
+      try {
+        if (html5QrScannerRef.current.isScanning) {
+          await html5QrScannerRef.current.stop();
+        }
+        html5QrScannerRef.current.clear();
+      } catch {
+        // ignore cleanup errors — scanner may already be stopped
+      }
+      html5QrScannerRef.current = null;
     }
-
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    }
-
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.srcObject = null;
-    }
-
     setCameraState(nextState);
   }, []);
 
@@ -166,132 +160,55 @@ export default function CheckInPanel({ operator }) {
     [deskLabel]
   );
 
-  const scanFrame = useCallback(async () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const now = Date.now();
-
-    if (!video || !canvas || cameraState !== 'active') {
+  async function startCamera() {
+    if (!window.isSecureContext) {
+      setCameraState('insecure_or_blocked');
       return;
     }
 
-    if (
-      video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA &&
-      video.videoWidth &&
-      video.videoHeight &&
-      scanSessionRef.current.shouldDecode(now) &&
-      !scanSessionRef.current.isSubmitting()
-    ) {
-      const context = canvas.getContext('2d', { willReadFrequently: true });
-
-      if (context) {
-        const maxWidth = 720;
-        const scale = Math.min(1, maxWidth / video.videoWidth);
-        canvas.width = Math.max(Math.round(video.videoWidth * scale), 320);
-        canvas.height = Math.max(Math.round(video.videoHeight * scale), 180);
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: 'dontInvert',
-        });
-
-        if (
-          code?.data &&
-          scanSessionRef.current.shouldSubmitToken(code.data, now)
-        ) {
-          stopCamera();
-          setManualToken(code.data);
-          await completeCheckIn({ token: code.data });
-          return;
-        }
-      }
-    }
-
-    animationFrameRef.current = window.requestAnimationFrame(() => {
-      void scanFrame();
-    });
-  }, [cameraState, completeCheckIn, stopCamera]);
-
-  const bindStreamToVideo = useCallback(async (stream) => {
-    const video = videoRef.current;
-
-    if (!video) {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraState('unsupported');
       return;
     }
 
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute('playsinline', 'true');
-    video.srcObject = stream;
-
-    await new Promise((resolve) => {
-      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-        resolve();
-        return;
-      }
-
-      const handleLoadedMetadata = () => {
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        resolve();
-      };
-
-      video.addEventListener('loadedmetadata', handleLoadedMetadata, {
-        once: true,
-      });
-      window.setTimeout(() => {
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        resolve();
-      }, 1000);
-    });
+    await stopCamera('requesting');
+    scanSessionRef.current = createScanSession();
 
     try {
-      await video.play();
-    } catch {
-      // Some browsers reject play() even after the camera stream is granted.
-      // We still continue so scanning can start once frames become available.
-    }
-  }, []);
+      const scanner = new Html5Qrcode(QR_READER_ID);
+      html5QrScannerRef.current = scanner;
 
-  const requestCameraStream = useCallback(async () => {
-    const requests = [
-      {
-        video: {
-          facingMode: { ideal: 'environment' },
-          width: { ideal: 960 },
-          height: { ideal: 540 },
+      await scanner.start(
+        { facingMode: 'environment' },
+        { fps: 10 },
+        async (decodedText) => {
+          const now = Date.now();
+          if (
+            scanSessionRef.current.shouldSubmitToken(decodedText, now) &&
+            !scanSessionRef.current.isSubmitting()
+          ) {
+            await stopCamera();
+            setManualToken(decodedText);
+            await completeCheckIn({ token: decodedText });
+          }
         },
-        audio: false,
-      },
-      {
-        video: true,
-        audio: false,
-      },
-    ];
-
-    let lastError = null;
-
-    for (const constraints of requests) {
-      try {
-        return await navigator.mediaDevices.getUserMedia(constraints);
-      } catch (error) {
-        lastError = error;
-        const errorName = error instanceof DOMException ? error.name : '';
-
-        if (!shouldRetryCameraRequest(errorName)) {
-          throw error;
+        () => {
+          // per-frame decode miss — normal, ignore
         }
-      }
+      );
+
+      setCameraState('active');
+    } catch (error) {
+      await stopCamera(
+        classifyCameraStartFailure({
+          isSecureContext: window.isSecureContext,
+          errorName: error instanceof DOMException ? error.name : '',
+        })
+      );
     }
+  }
 
-    throw lastError || new Error('Unable to access the camera.');
-  }, []);
 
-  async function lookupAttendee() {
     setLookupLoading(true);
 
     try {
@@ -329,54 +246,6 @@ export default function CheckInPanel({ operator }) {
       setLookupLoading(false);
     }
   }
-
-  async function startCamera() {
-    if (!window.isSecureContext) {
-      setCameraState('insecure_or_blocked');
-      return;
-    }
-
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraState('unsupported');
-      return;
-    }
-
-    stopCamera('requesting');
-    scanSessionRef.current = createScanSession();
-
-    try {
-      const stream = await requestCameraStream();
-
-      streamRef.current = stream;
-      await bindStreamToVideo(stream);
-
-      setCameraState('active');
-    } catch (error) {
-      stopCamera(
-        classifyCameraStartFailure({
-          isSecureContext: window.isSecureContext,
-          errorName: error instanceof DOMException ? error.name : '',
-        })
-      );
-    }
-  }
-
-  useEffect(() => {
-    if (cameraState !== 'active') {
-      return undefined;
-    }
-
-    animationFrameRef.current = window.requestAnimationFrame(() => {
-      void scanFrame();
-    });
-
-    return () => {
-      if (animationFrameRef.current) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
-    };
-  }, [cameraState, scanFrame]);
 
   useEffect(() => {
     let active = true;
@@ -443,7 +312,7 @@ export default function CheckInPanel({ operator }) {
     };
   }, []);
 
-  useEffect(() => () => stopCamera(), [stopCamera]);
+  useEffect(() => () => { void stopCamera(); }, [stopCamera]);
 
   return (
     <div className="space-y-6">
@@ -508,13 +377,10 @@ export default function CheckInPanel({ operator }) {
             Scanner Frame
           </p>
           <div className="mt-4 overflow-hidden rounded-[10px] border border-slate-200 bg-slate-950 dark:border-slate-700">
-            <video
-              ref={videoRef}
-              className="aspect-video w-full object-cover"
-              muted
-              playsInline
+            <div
+              id={QR_READER_ID}
+              className="aspect-video w-full [&_video]:h-full [&_video]:w-full [&_video]:object-cover"
             />
-            <canvas ref={canvasRef} className="hidden" />
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <button
@@ -528,7 +394,7 @@ export default function CheckInPanel({ operator }) {
             </button>
             <button
               type="button"
-              onClick={() => stopCamera()}
+              onClick={() => void stopCamera()}
               className="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500"
             >
               Stop Camera
