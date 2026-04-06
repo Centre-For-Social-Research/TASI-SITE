@@ -26,7 +26,8 @@ export function verifyFestivalQrPayload(payload) {
   }
 
   const expected = signTicketId(ticketId);
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature))
-    ? ticketId
-    : null;
+  const sigBuf = Buffer.from(signature);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length) return null;
+  return crypto.timingSafeEqual(expBuf, sigBuf) ? ticketId : null;
 }
