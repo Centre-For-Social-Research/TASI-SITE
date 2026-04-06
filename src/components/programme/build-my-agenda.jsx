@@ -66,7 +66,7 @@ function AgendaDocument({ userName, userEmail, selectedSessions, effectiveDayLab
         {/* Header card (first page only) */}
         <View style={{ backgroundColor: AGENDA_STONE, borderRadius: 8.5, padding: 17, flexDirection: 'row', alignItems: 'center', marginBottom: 11.3 }}>
           {logoDataUrl ? (
-            <Image src={logoDataUrl} style={{ width: 130, height: 44, marginRight: 17 }} />
+            <Image alt="" src={logoDataUrl} style={{ width: 130, height: 44, marginRight: 17 }} />
           ) : (
             <Text style={{ fontSize: 13, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE, marginRight: 17 }}>TASI 2026</Text>
           )}

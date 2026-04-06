@@ -222,6 +222,7 @@ function InstitutionalBadgePage({
       {/* Header background */}
       {headerBackgroundDataUrl ? (
         <Image
+          alt=""
           src={headerBackgroundDataUrl}
           style={{
             position: 'absolute',
@@ -248,7 +249,7 @@ function InstitutionalBadgePage({
 
       {/* Logo */}
       {logoDataUrl && (
-        <Image src={logoDataUrl} style={{ position: 'absolute', top: MM(7), left: MM(7), width: MM(25), height: MM(10.6) }} />
+        <Image alt="" src={logoDataUrl} style={{ position: 'absolute', top: MM(7), left: MM(7), width: MM(25), height: MM(10.6) }} />
       )}
 
       {/* Vertical separator */}
@@ -299,7 +300,7 @@ function InstitutionalBadgePage({
       {/* Photo box */}
       <View style={{ position: 'absolute', top: MM(36.3), left: MM(73.2), width: MM(20.8), height: MM(20.8), backgroundColor: '#ffffff', borderWidth: 0.5, borderColor: '#0f172a', overflow: 'hidden' }}>
         {photoDataUrl ? (
-          <Image src={photoDataUrl} style={{ width: MM(19.4), height: MM(19.4), margin: MM(0.7) }} />
+          <Image alt="" src={photoDataUrl} style={{ width: MM(19.4), height: MM(19.4), margin: MM(0.7) }} />
         ) : (
           <>
             <View style={{ position: 'absolute', top: MM(3.4), left: MM(7.2), width: MM(6.8), height: MM(6.8), borderRadius: MM(3.4), backgroundColor: '#c9902c' }} />
@@ -371,7 +372,7 @@ function InstitutionalBadgePage({
         borderRadius: MM(2.8),
       }}>
         {qrDataUrl ? (
-          <Image src={qrDataUrl} style={{ position: 'absolute', top: MM(2), left: MM(2), width: MM(lowerSectionLayout.qrCode.width), height: MM(lowerSectionLayout.qrCode.height) }} />
+          <Image alt="" src={qrDataUrl} style={{ position: 'absolute', top: MM(2), left: MM(2), width: MM(lowerSectionLayout.qrCode.width), height: MM(lowerSectionLayout.qrCode.height) }} />
         ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text style={{ fontSize: 6, color: '#64748b', textAlign: 'center' }}>{'QR pass not\nissued yet'}</Text>

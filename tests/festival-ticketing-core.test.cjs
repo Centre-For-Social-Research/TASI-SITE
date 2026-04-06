@@ -61,7 +61,7 @@ test("deriveFestivalTicketPurchaseDetails normalizes country codes and ignores c
 
 test("buildFestivalInvoiceMetadata returns GST invoice details for domestic tickets", async () => {
   const { buildFestivalInvoiceMetadata } = await importModule(
-    "src/lib/festival-ticketing-documents.js",
+    "src/lib/festival-ticketing-invoice-model.js",
   );
 
   const invoice = buildFestivalInvoiceMetadata({
@@ -91,7 +91,7 @@ test("buildFestivalInvoiceMetadata returns GST invoice details for domestic tick
 
 test("buildFestivalInvoiceMetadata returns export invoice details for international tickets", async () => {
   const { buildFestivalInvoiceMetadata } = await importModule(
-    "src/lib/festival-ticketing-documents.js",
+    "src/lib/festival-ticketing-invoice-model.js",
   );
 
   const invoice = buildFestivalInvoiceMetadata({
@@ -120,7 +120,7 @@ test("buildFestivalInvoiceMetadata returns export invoice details for internatio
 
 test("buildFestivalInvoiceDocumentModel uses the branded confirmation header and formal invoice sections", async () => {
   const { buildFestivalInvoiceDocumentModel } = await importModule(
-    "src/lib/festival-ticketing-documents.js",
+    "src/lib/festival-ticketing-invoice-model.js",
   );
 
   const model = buildFestivalInvoiceDocumentModel({

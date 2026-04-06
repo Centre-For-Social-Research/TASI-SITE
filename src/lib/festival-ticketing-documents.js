@@ -3,8 +3,14 @@ import path from "node:path";
 import React from "react";
 import { Document, Page, View, Text, Image, renderToBuffer } from "@react-pdf/renderer";
 import { FESTIVAL_EVENT_COPY } from "./festival-ticketing-constants.js";
-import { EVENT_CONFIG } from "./registration-constants.js";
 import QRCode from "qrcode";
+import {
+  readHeaderLogoDataUrl,
+  buildFestivalInvoiceMetadata,
+  buildFestivalInvoiceDocumentModel,
+} from "./festival-ticketing-invoice-model.js";
+
+export { buildFestivalInvoiceMetadata, buildFestivalInvoiceDocumentModel };
 
 const BRAND_GRADIENT_STOPS = [
   [0x55, 0x08, 0x9e],
@@ -13,80 +19,9 @@ const BRAND_GRADIENT_STOPS = [
   [0xef, 0x57, 0x00],
   [0xff, 0xff, 0x00],
 ];
-const SELLER_DETAILS = {
-  legalName: "Centre for Social Research",
-  addressLines: [
-    "2, Nelson Mandela Marg",
-    "Vasant Kunj, New Delhi - 110070, India",
-  ],
-  email: EVENT_CONFIG.contactEmail,
-  phone: "+91 011 46131929",
-  taxIdLabel: "PAN",
-  gstin: "07AAATC0681P1ZH",
-  pan: "AAATC0681P",
-  stateCode: "07",
-  stateName: "Delhi",
-};
 
-// SAC code for conference/event admission services
-const SERVICE_SAC_CODE = "999596";
-
-let cachedHeaderLogoDataUrl = null;
 let cachedGradientDataUrl = null;
 let cachedEventPhotoDataUrl = undefined;
-
-function getInvoiceDate(createdAt) {
-  const date = createdAt ? new Date(createdAt) : new Date();
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function buildInvoiceNumber(prefix, createdAt, sourceId) {
-  const year = new Date(createdAt || Date.now()).getUTCFullYear();
-  const suffix =
-    String(sourceId || "")
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .slice(-6)
-      .toUpperCase() || "000001";
-  return `INV-${prefix}-${year}-${suffix}`;
-}
-
-function formatMinorAmount(amountMinor, currency) {
-  const amount = Number(amountMinor || 0) / 100;
-  const num = new Intl.NumberFormat("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-  // Use "Rs." instead of ₹ — Helvetica built-in font doesn't include the rupee glyph
-  return (currency && currency !== "INR") ? `${currency} ${num}` : `Rs. ${num}`;
-}
-
-function buildBillingAddress(invoice) {
-  return [
-    invoice.billingAddressLine1,
-    invoice.billingAddressLine2,
-    invoice.billingCity,
-    invoice.billingStateOrProvince,
-    invoice.billingPostalCode,
-    invoice.billingCountry,
-  ].filter(Boolean);
-}
-
-function readHeaderLogoDataUrl() {
-  if (cachedHeaderLogoDataUrl) return cachedHeaderLogoDataUrl;
-
-  try {
-    const logoPath = path.join(process.cwd(), "public", "img", "tasi-csr-logo.png");
-    const buffer = readFileSync(logoPath);
-    cachedHeaderLogoDataUrl = `data:image/png;base64,${buffer.toString("base64")}`;
-  } catch {
-    cachedHeaderLogoDataUrl = null;
-  }
-
-  return cachedHeaderLogoDataUrl;
-}
 
 function readGradientDataUrl() {
   if (cachedGradientDataUrl) return cachedGradientDataUrl;
@@ -165,6 +100,7 @@ const FestivalTicketDocument = ({ ticket, user, qrDataUrl, eventPhotoDataUrl }) 
         {/* ── Left: festival photo panel ── */}
         {eventPhotoDataUrl ? (
           <Image
+            alt=""
             src={eventPhotoDataUrl}
             style={{ position: "absolute", top: 0, left: 0, width: TICKET_PHOTO_W, height: TICKET_H }}
           />
@@ -241,7 +177,7 @@ const FestivalTicketDocument = ({ ticket, user, qrDataUrl, eventPhotoDataUrl }) 
           {/* QR with corner brackets */}
           {qrDataUrl && (
             <View style={{ position: "relative", padding: 7, marginBottom: 6 }}>
-              <Image src={qrDataUrl} style={{ width: 86, height: 86 }} />
+              <Image alt="" src={qrDataUrl} style={{ width: 86, height: 86 }} />
               <View style={{ position: "absolute", top: 0, left: 0, width: 13, height: 13, borderTopWidth: 2, borderLeftWidth: 2, borderColor: DARK }} />
               <View style={{ position: "absolute", top: 0, right: 0, width: 13, height: 13, borderTopWidth: 2, borderRightWidth: 2, borderColor: DARK }} />
               <View style={{ position: "absolute", bottom: 0, left: 0, width: 13, height: 13, borderBottomWidth: 2, borderLeftWidth: 2, borderColor: DARK }} />
@@ -304,7 +240,7 @@ const FestivalBadgeDocument = ({ ticket, user, profilePhotoDataUrl, qrDataUrl, l
 
         {/* Logo centered in header */}
         {logoDataUrl && (
-          <Image src={logoDataUrl} style={{ position: "absolute", top: 14, left: (BADGE_W - 180) / 2, width: 180, height: 44 }} />
+          <Image alt="" src={logoDataUrl} style={{ position: "absolute", top: 14, left: (BADGE_W - 180) / 2, width: 180, height: 44 }} />
         )}
 
         {/* Event dates in amber */}
@@ -324,7 +260,7 @@ const FestivalBadgeDocument = ({ ticket, user, profilePhotoDataUrl, qrDataUrl, l
         {hasPhoto && (
           <>
             <View style={{ position: "absolute", top: photoY - 5, left: photoX - 5, width: photoSize + 10, height: photoSize + 10, backgroundColor: "#ffffff", borderRadius: 12, borderWidth: 1.5, borderColor: "#55089e" }} />
-            <Image src={profilePhotoDataUrl} style={{ position: "absolute", top: photoY, left: photoX, width: photoSize, height: photoSize, borderRadius: 8 }} />
+            <Image alt="" src={profilePhotoDataUrl} style={{ position: "absolute", top: photoY, left: photoX, width: photoSize, height: photoSize, borderRadius: 8 }} />
           </>
         )}
 
@@ -358,7 +294,7 @@ const FestivalBadgeDocument = ({ ticket, user, profilePhotoDataUrl, qrDataUrl, l
           {/* QR card */}
           {qrDataUrl && (
             <View style={{ borderWidth: 0.5, borderColor: "#e2e8f0", borderRadius: 10, padding: qrPad, backgroundColor: "#ffffff", marginBottom: 12 }}>
-              <Image src={qrDataUrl} style={{ width: qrSize, height: qrSize }} />
+              <Image alt="" src={qrDataUrl} style={{ width: qrSize, height: qrSize }} />
             </View>
           )}
 
@@ -445,7 +381,7 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
 
         {/* ── Gradient header image ── */}
         {gradientDataUrl ? (
-          <Image src={gradientDataUrl} style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H }} />
+          <Image alt="" src={gradientDataUrl} style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H }} />
         ) : (
           <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: INVOICE_HEADER_H, flexDirection: "row" }}>
             {BRAND_GRADIENT_STOPS.map(([r, g, b], i) => (
@@ -456,7 +392,7 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
 
         {/* Logo — block, left-aligned at natural aspect ratio (281×153 → 60×33) */}
         {header.logoDataUrl && (
-          <Image src={header.logoDataUrl} style={{ position: "absolute", top: 22, left: INVOICE_M, width: 60, height: 33 }} />
+          <Image alt="" src={header.logoDataUrl} style={{ position: "absolute", top: 22, left: INVOICE_M, width: 60, height: 33 }} />
         )}
 
         {/* Eyebrow — amber, bold, letter-spaced */}
@@ -544,7 +480,7 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
             <View style={{ alignItems: "flex-start" }}>
               <Text style={{ fontSize: 9, color: "#475569", marginBottom: 8 }}>For {seller.legalName}</Text>
               {qrDataUrl ? (
-                <Image src={qrDataUrl} style={{ width: 80, height: 80, marginBottom: 4 }} />
+                <Image alt="" src={qrDataUrl} style={{ width: 80, height: 80, marginBottom: 4 }} />
               ) : (
                 <View style={{ width: 80, height: 80, borderWidth: 1, borderColor: "#e2e8f0", borderRadius: 4, marginBottom: 4 }} />
               )}
@@ -564,143 +500,6 @@ const FestivalInvoiceDocument = ({ model, qrDataUrl }) => {
   );
 };
 
-
-export function buildFestivalInvoiceMetadata({ ticket, user }) {
-  const domestic = ticket.ticket_type === "domestic";
-  const invoiceDate = getInvoiceDate(ticket.created_at);
-  const baseAmountMinor = Number(ticket.base_amount_minor || 0);
-  const taxAmountMinor = Number(ticket.tax_amount_minor || 0);
-
-  // Determine if intra-state (buyer also in Delhi) for CGST/SGST vs IGST split
-  const buyerState = (user.billing_state_or_province || user.state_or_province || "").trim();
-  const isIntraState =
-    domestic &&
-    buyerState.toLowerCase().replace(/\s+/g, "") ===
-      SELLER_DETAILS.stateName.toLowerCase().replace(/\s+/g, "");
-
-  // Half of GST for CGST/SGST split (each 9%)
-  const halfTaxMinor = Math.round(taxAmountMinor / 2);
-
-  return {
-    invoiceNumber: buildInvoiceNumber(
-      domestic ? "DOM" : "INT",
-      ticket.created_at,
-      ticket.id,
-    ),
-    invoiceDate,
-    currency: ticket.currency,
-    taxLabel: domestic
-      ? isIntraState
-        ? "GST (CGST 9% + SGST 9%)"
-        : "IGST (18%)"
-      : "Zero-rated export",
-    cgstLabel: "CGST (9%)",
-    sgstLabel: "SGST (9%)",
-    igstLabel: "IGST (18%)",
-    isIntraState,
-    taxAmountMinor,
-    halfTaxMinor,
-    totalAmountMinor: Number(ticket.total_amount_minor || 0),
-    baseAmountMinor,
-    attendeeName: user.full_name,
-    attendeeEmail: user.email,
-    country: user.country,
-    billingName: user.billing_name || user.full_name,
-    billingEmail: user.billing_email || user.email,
-    billingPhone: user.billing_phone || user.phone || "",
-    billingAddressLine1: user.billing_address_line1 || "",
-    billingAddressLine2: user.billing_address_line2 || "",
-    billingCity: user.billing_city || "",
-    billingStateOrProvince: buyerState,
-    billingPostalCode: user.billing_postal_code || "",
-    billingCountry: user.billing_country || user.country,
-    pan: user.pan || user.tax_id_number || "",
-    gstin: user.gstin || "",
-    passportOrNationalId: user.passport_or_national_id || "",
-    description: `${FESTIVAL_EVENT_COPY.title} - ${FESTIVAL_EVENT_COPY.description}`,
-    placeOfSupply: domestic ? `${FESTIVAL_EVENT_COPY.venue} (Event Location)` : "Export",
-    sacCode: SERVICE_SAC_CODE,
-  };
-}
-
-export function buildFestivalInvoiceDocumentModel({ ticket, user }) {
-  const invoice = buildFestivalInvoiceMetadata({ ticket, user });
-  const domestic = ticket.ticket_type === "domestic";
-  const invoiceNumber = ticket.invoice_number || invoice.invoiceNumber;
-
-  // Build GST totals rows: CGST + SGST for intra-state, IGST for inter-state/international
-  const taxRows = domestic
-    ? invoice.isIntraState
-      ? [
-          { label: "CGST (9%)", value: formatMinorAmount(invoice.halfTaxMinor, invoice.currency) },
-          { label: "SGST (9%)", value: formatMinorAmount(invoice.halfTaxMinor, invoice.currency) },
-        ]
-      : [{ label: "IGST (18%)", value: formatMinorAmount(invoice.taxAmountMinor, invoice.currency) }]
-    : [{ label: "Zero-rated (Export)", value: formatMinorAmount(0, invoice.currency) }];
-
-  return {
-    header: {
-      eyebrow: EVENT_CONFIG.shortName,
-      title: FESTIVAL_EVENT_COPY.title,
-      subtitle: "Tax Invoice",
-      logoDataUrl: readHeaderLogoDataUrl(),
-    },
-    meta: {
-      invoiceNumber,
-      invoiceDate: invoice.invoiceDate,
-      ticketNumber: ticket.ticket_number || "-",
-      attendeeName: invoice.attendeeName,
-      attendeeEmail: invoice.attendeeEmail,
-      placeOfSupply: invoice.placeOfSupply,
-    },
-    seller: {
-      legalName: SELLER_DETAILS.legalName,
-      addressLines: SELLER_DETAILS.addressLines,
-      email: SELLER_DETAILS.email,
-      phone: SELLER_DETAILS.phone,
-      pan: SELLER_DETAILS.pan,
-      gstin: SELLER_DETAILS.gstin,
-    },
-    buyer: {
-      billingName: invoice.billingName,
-      billingEmail: invoice.billingEmail,
-      billingPhone: invoice.billingPhone || "-",
-      billingAddressLines: buildBillingAddress(invoice),
-      // Domestic: PAN is mandatory, GSTIN is optional
-      pan: domestic ? (invoice.pan || "-") : null,
-      gstin: domestic ? (invoice.gstin || null) : null,
-      // International: show Passport / National ID
-      intlIdLabel: !domestic ? "Passport / National ID" : null,
-      intlIdValue: !domestic ? (invoice.passportOrNationalId || "-") : null,
-    },
-    lineItems: [
-      {
-        description: invoice.description,
-        sacCode: invoice.sacCode,
-        quantity: "1",
-        unitPrice: formatMinorAmount(invoice.baseAmountMinor, invoice.currency),
-        amount: formatMinorAmount(invoice.baseAmountMinor, invoice.currency),
-      },
-    ],
-    totals: [
-      { label: "Taxable Amount", value: formatMinorAmount(invoice.baseAmountMinor, invoice.currency) },
-      ...taxRows,
-      {
-        label: "Total",
-        value: formatMinorAmount(invoice.totalAmountMinor, invoice.currency),
-        emphasis: true,
-      },
-    ],
-    notes: [
-      `${FESTIVAL_EVENT_COPY.description}`,
-      `${FESTIVAL_EVENT_COPY.venue} | ${FESTIVAL_EVENT_COPY.datesLabel}`,
-      domestic
-        ? "Tax invoice as required under Section 31 of CGST Act, 2017."
-        : "Supply meant for export under Letter of Undertaking without payment of integrated tax.",
-    ],
-    qrPayload: ticket.qr_payload,
-  };
-}
 
 export async function buildFestivalTicketPdf({ ticket, user }) {
   let qrDataUrl = null;

@@ -1140,6 +1140,7 @@ export default function FestivalTicketingSection() {
                     >
                       <div className="mt-2 flex items-center gap-4">
                         {photoPreview ? (
+                          // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={photoPreview}
                             alt="Profile preview"
@@ -1361,6 +1362,7 @@ export default function FestivalTicketingSection() {
                   {(photoPreview || form.linkedinUrl) ? (
                     <div className="mb-5 flex items-center gap-4 rounded-[10px] border border-slate-200 bg-slate-50 px-5 py-4">
                       {photoPreview ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={photoPreview}
                           alt="Profile"
