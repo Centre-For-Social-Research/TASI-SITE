@@ -10,32 +10,10 @@ type Message = {
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastDismissedPermanently, setToastDismissedPermanently] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Check localStorage on mount to see if toast was already dismissed permanently
-  useEffect(() => {
-    const toastDismissed = localStorage.getItem("tasi-chatbot-toast-dismissed");
-    if (toastDismissed === "true") {
-      setToastDismissedPermanently(true);
-    }
-  }, []);
-
-  // Show toast after 3s, but only if not permanently dismissed
-  useEffect(() => {
-    if (isDismissed || toastDismissedPermanently) return;
-    const showTimer = setTimeout(() => setShowToast(true), 3000);
-    // Auto-hide after 8s (don't auto-show again)
-    const hideTimer = setTimeout(() => setShowToast(false), 8000);
-    return () => {
-      clearTimeout(showTimer);
-      clearTimeout(hideTimer);
-    };
-  }, [isDismissed, toastDismissedPermanently]);
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -53,24 +31,16 @@ export default function ChatBot() {
   }, [messages, isLoading]);
 
   const toggleChat = () => {
-    setShowToast(false);
     setIsOpen((prev) => !prev);
   };
 
   const dismissChat = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(false);
-    setShowToast(false);
     setIsDismissed(true);
   };
 
   const restoreChat = () => setIsDismissed(false);
-
-  const dismissToastPermanently = () => {
-    setShowToast(false);
-    setToastDismissedPermanently(true);
-    localStorage.setItem("tasi-chatbot-toast-dismissed", "true");
-  };
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -116,24 +86,6 @@ export default function ChatBot() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-      {/* Toast */}
-      <div
-        className={`bg-gray-900 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 transform transition-all duration-500 ${
-          showToast && !isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
-        }`}
-      >
-        <span>💬 Need help? Ask the TASI Chatbot!</span>
-        <button
-          onClick={dismissToastPermanently}
-          className="text-gray-400 hover:text-white transition-colors ml-1"
-          aria-label="Dismiss toast"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-        </button>
-      </div>
-
       {/* Chat Window */}
       <div
         className={`w-[380px] h-[520px] bg-white rounded-2xl shadow-2xl flex flex-col transform transition-all duration-300 origin-bottom-right ${

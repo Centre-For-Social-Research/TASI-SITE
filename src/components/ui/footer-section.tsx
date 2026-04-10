@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,18 +14,13 @@ import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Facebook, Instagram, Linkedin, Send, Twitter } from 'lucide-react';
 
 function AdminLoginButton() {
-  const router = useRouter();
   return (
-    <button
-      type="button"
-      onClick={() => {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        router.push('/sign-in?redirect_url=/admin/registrations');
-      }}
-      className="w-full rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90"
+    <Link
+      href="/sign-in?redirect_url=/admin/registrations"
+      className="block w-full rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90"
     >
       Log In
-    </button>
+    </Link>
   );
 }
 
@@ -277,21 +271,15 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
+                    <a
+                      href="https://www.facebook.com/csrindia.org"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
                     >
-                      <a
-                        href="https://www.facebook.com/csrindia.org"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Facebook className="h-4 w-4" />
-                        <span className="sr-only">Facebook</span>
-                      </a>
-                    </Button>
+                      <Facebook className="h-4 w-4" />
+                      <span className="sr-only">Facebook</span>
+                    </a>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Follow on Facebook</p>
@@ -301,21 +289,15 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
+                    <a
+                      href="https://x.com/CSR_India"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
                     >
-                      <a
-                        href="https://x.com/CSR_India"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Twitter className="h-4 w-4" />
-                        <span className="sr-only">Twitter</span>
-                      </a>
-                    </Button>
+                      <Twitter className="h-4 w-4" />
+                      <span className="sr-only">Twitter</span>
+                    </a>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Follow on X</p>
@@ -325,21 +307,15 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
+                    <a
+                      href="https://www.instagram.com/csr_india/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
                     >
-                      <a
-                        href="https://www.instagram.com/csr_india/"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Instagram className="h-4 w-4" />
-                        <span className="sr-only">Instagram</span>
-                      </a>
-                    </Button>
+                      <Instagram className="h-4 w-4" />
+                      <span className="sr-only">Instagram</span>
+                    </a>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Follow on Instagram</p>
@@ -349,21 +325,15 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20"
+                    <a
+                      href="https://www.linkedin.com/company/centre-for-social-research-india/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
                     >
-                      <a
-                        href="https://www.linkedin.com/company/centre-for-social-research-india/?viewAsMember=trueL"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Linkedin className="h-4 w-4" />
-                        <span className="sr-only">LinkedIn</span>
-                      </a>
-                    </Button>
+                      <Linkedin className="h-4 w-4" />
+                      <span className="sr-only">LinkedIn</span>
+                    </a>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Connect on LinkedIn</p>
