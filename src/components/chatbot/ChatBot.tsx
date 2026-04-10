@@ -11,21 +11,31 @@ export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [toastDismissedPermanently, setToastDismissedPermanently] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Show toast after 3s, auto-hide after 8s
+  // Check localStorage on mount to see if toast was already dismissed permanently
   useEffect(() => {
-    if (isDismissed) return;
+    const toastDismissed = localStorage.getItem("tasi-chatbot-toast-dismissed");
+    if (toastDismissed === "true") {
+      setToastDismissedPermanently(true);
+    }
+  }, []);
+
+  // Show toast after 3s, but only if not permanently dismissed
+  useEffect(() => {
+    if (isDismissed || toastDismissedPermanently) return;
     const showTimer = setTimeout(() => setShowToast(true), 3000);
+    // Auto-hide after 8s (don't auto-show again)
     const hideTimer = setTimeout(() => setShowToast(false), 8000);
     return () => {
       clearTimeout(showTimer);
       clearTimeout(hideTimer);
     };
-  }, [isDismissed]);
+  }, [isDismissed, toastDismissedPermanently]);
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -55,6 +65,12 @@ export default function ChatBot() {
   };
 
   const restoreChat = () => setIsDismissed(false);
+
+  const dismissToastPermanently = () => {
+    setShowToast(false);
+    setToastDismissedPermanently(true);
+    localStorage.setItem("tasi-chatbot-toast-dismissed", "true");
+  };
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -108,7 +124,7 @@ export default function ChatBot() {
       >
         <span>💬 Need help? Ask the TASI Chatbot!</span>
         <button
-          onClick={() => setShowToast(false)}
+          onClick={dismissToastPermanently}
           className="text-gray-400 hover:text-white transition-colors ml-1"
           aria-label="Dismiss toast"
         >
