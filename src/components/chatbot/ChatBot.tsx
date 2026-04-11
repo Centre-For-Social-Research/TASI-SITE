@@ -85,11 +85,11 @@ export default function ChatBot() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
       {/* Chat Window */}
       <div
         className={`w-[380px] h-[520px] bg-white rounded-2xl shadow-2xl flex flex-col transform transition-all duration-300 origin-bottom-right ${
-          isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none"
+          isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-0 opacity-0 pointer-events-none"
         }`}
       >
         {/* Header */}
@@ -160,7 +160,7 @@ export default function ChatBot() {
       </div>
 
       {/* Floating Button + Dismiss */}
-      <div className={`flex items-center gap-2 ${isOpen ? "hidden" : ""}`}>
+      <div className={`flex items-center gap-2 pointer-events-auto ${isOpen ? "hidden" : ""}`}>
         {/* Dismiss button */}
         <button
           onClick={dismissChat}

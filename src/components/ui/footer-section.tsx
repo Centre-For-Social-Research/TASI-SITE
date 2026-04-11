@@ -4,12 +4,6 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Facebook, Instagram, Linkedin, Send, Twitter } from 'lucide-react';
 
@@ -159,7 +153,7 @@ function Footerdemo() {
             {newsletterStatus ? (
               <p className="mt-2 text-xs text-white/80">{newsletterStatus}</p>
             ) : null}
-            <div className="absolute -right-4 top-0 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
+            <div className="pointer-events-none absolute -right-4 top-0 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
@@ -268,78 +262,46 @@ function Footerdemo() {
           <div className="relative">
             <h3 className="mb-4 text-lg font-semibold">Follow CSR</h3>
             <div className="mb-4 flex flex-wrap gap-3">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href="https://www.facebook.com/csrindia.org"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
-                    >
-                      <Facebook className="h-4 w-4" />
-                      <span className="sr-only">Facebook</span>
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Follow on Facebook</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href="https://x.com/CSR_India"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
-                    >
-                      <Twitter className="h-4 w-4" />
-                      <span className="sr-only">Twitter</span>
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Follow on X</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href="https://www.instagram.com/csr_india/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
-                    >
-                      <Instagram className="h-4 w-4" />
-                      <span className="sr-only">Instagram</span>
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Follow on Instagram</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href="https://www.linkedin.com/company/centre-for-social-research-india/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                      <span className="sr-only">LinkedIn</span>
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Connect on LinkedIn</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <a
+                href="https://www.facebook.com/csrindia.org"
+                target="_blank"
+                rel="noreferrer"
+                title="Follow on Facebook"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
+              >
+                <Facebook className="h-4 w-4" />
+                <span className="sr-only">Facebook</span>
+              </a>
+              <a
+                href="https://x.com/CSR_India"
+                target="_blank"
+                rel="noreferrer"
+                title="Follow on X"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
+              >
+                <Twitter className="h-4 w-4" />
+                <span className="sr-only">Twitter</span>
+              </a>
+              <a
+                href="https://www.instagram.com/csr_india/"
+                target="_blank"
+                rel="noreferrer"
+                title="Follow on Instagram"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
+              >
+                <Instagram className="h-4 w-4" />
+                <span className="sr-only">Instagram</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/company/centre-for-social-research-india/"
+                target="_blank"
+                rel="noreferrer"
+                title="Connect on LinkedIn"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20"
+              >
+                <Linkedin className="h-4 w-4" />
+                <span className="sr-only">LinkedIn</span>
+              </a>
             </div>
             <div className="mb-4 w-full max-w-[196px] rounded-[10px] border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30">
               <p className="mb-3 text-sm text-white/85">Admin Access</p>
