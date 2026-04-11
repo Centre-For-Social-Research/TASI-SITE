@@ -538,6 +538,8 @@ function RegistrantDrawer({
                 </label>
               </div>
               <textarea
+                id="reviewNotes"
+                name="reviewNotes"
                 value={detailDraft.reviewNotes}
                 onChange={(event) =>
                   setDetailDraft((current) => ({

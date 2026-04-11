@@ -374,6 +374,8 @@ export default function CheckInPanel({ operator }) {
         <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
           Desk Label
           <input
+            id="deskLabel"
+            name="deskLabel"
             value={deskLabel}
             onChange={(event) => setDeskLabel(event.target.value)}
             className="h-11 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
@@ -454,6 +456,8 @@ export default function CheckInPanel({ operator }) {
           </p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
             <input
+              id="manualToken"
+              name="manualToken"
               value={manualToken}
               onChange={(event) => setManualToken(event.target.value)}
               placeholder="Paste QR token manually"
@@ -476,6 +480,8 @@ export default function CheckInPanel({ operator }) {
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
+              id="lookupQuery"
+              name="lookupQuery"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search by name, email, or registration ID"
