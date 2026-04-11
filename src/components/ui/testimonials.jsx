@@ -75,7 +75,6 @@ export const TestimonialSection = ({
                     <iframe
                       src={testimonial.iframeSrc}
                       allow="autoplay; fullscreen; picture-in-picture"
-                      allowFullScreen
                       loading="lazy"
                       className="absolute top-0 left-0 h-full w-full object-cover"
                     />

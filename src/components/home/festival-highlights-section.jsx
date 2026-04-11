@@ -86,7 +86,7 @@ export default function FestivalHighlightsSection() {
                     title="Trust and Safety India Festival Highlights"
                     className="absolute inset-0 h-full w-full border-0 object-cover"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                    allowFullScreen
+
                     loading="lazy"
                   />
                 </div>
