@@ -6,7 +6,8 @@ const siteSecurityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com https://checkout.razorpay.com",
+      "script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com https://checkout.razorpay.com https://static.cloudflareinsights.com",
+      "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com https://*.clerk.com https://*.clerk.accounts.dev https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co",
