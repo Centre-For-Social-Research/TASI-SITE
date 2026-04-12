@@ -33,16 +33,16 @@ export default function PartnersPage() {
         </BrandedPageHero>
 
         <section className="py-14 md:py-20">
-          <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
-            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="mx-auto w-full max-w-6xl px-8 md:px-16">
+            <div className="flex flex-wrap justify-center gap-7">
               {partners.map((partner) => (
                 <Link
                   key={partner.slug}
                   href={`/partners/${partner.slug}`}
-                  className="group block overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg forced-color-adjust-none [color-scheme:light]"
+                  className="group block w-[200px] shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg forced-color-adjust-none [color-scheme:light]"
                 >
                   {/* Logo area */}
-                  <div className="flex items-center justify-center bg-white px-6 py-8 h-44">
+                  <div className="flex items-center justify-center bg-white px-6 py-8 h-52">
                     <Image
                       src={partner.logo}
                       alt={partner.name}
