@@ -43,7 +43,10 @@ function buildSpeakerPhotoMap() {
       .map((speaker) => {
         const normalizedName = normalizePersonName(speaker.name);
         if (!normalizedName || !speaker.photo) return null;
-        return [normalizedName, `/img/speakers/${speaker.photo}`];
+        const photoPath = speaker.photo.startsWith('/')
+          ? speaker.photo
+          : `/img/speakers/${speaker.photo}`;
+        return [normalizedName, photoPath];
       })
       .filter(Boolean)
   );

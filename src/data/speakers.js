@@ -39,7 +39,7 @@ export const speakers = [
     bio: 'Amelia Wierda is an accomplished attorney and human rights specialist currently serving as Legal Counsel for Human Rights at Booking.com, where she focuses on integrating regulatory requirements and risk management into business practices. She is a primary point of contact for strategically significant human rights risk management, including escalations related to human trafficking and online safety, acting as a key liaison to business partners in the Trust \u0026 Safety and Content Integrity teams. Amelia brings a unique perspective from both the public and private sectors, including experience assisting with human trafficking and OSEC prosecutions in the U.S. and the Philippines, as well as work in UN and international tribunals. She has over 15 years experience actively engaging in anti-trafficking efforts as a speaker and advocate.',
   },
   {
-    name: 'Andras Malnar',
+    name: 'Andras Molnar',
     designation: 'Senior Digital Policy Manager, TUM Think Tank',
     category: 'Academia \u0026 Media',
     photo: 'Andras Malnar.jpg',
@@ -206,7 +206,7 @@ export const speakers = [
     bio: 'Dr. Dylan Gerard Michel Schouten-Adavi is the research project manager for the GroSafe project. He has an interdisciplinary academic/commercial background in human-technology interaction, including a PhD in Interactive Intelligence from Delft University of Technology, combining human-centered research and analysis with technology understanding and design and programming skills. Dylan’s areas of expertise include game research and design, educational research and design, interdisciplinary knowledge transfer and outreach, and employing user-centered and user-driven research to develop and evaluate technological interventions to societal issues. He currently lives in Ireland with his wife and son. Children\u0027s Online Redress (COR) Sandbox: The First Regulatory Sandbox for Online Safety',
   },
   {
-    name: 'Farshida Zafar LL.M.',
+    name: 'Farshida Zafar',
     designation:
       'Executive Director, Erasmus Centre for Entrepreneurship; CEO, ROOM',
     category: 'Academia \u0026 Media',
@@ -275,7 +275,7 @@ export const speakers = [
     bio: 'Japleen Pasricha is the founder, CEO, and editor-in-chief of Feminism in India, an intersectional feminist media platform that explores the intricacies of culture, politics, society, and media through a feminist lens. She has previously worked with women’s rights NGOs, including Breakthrough India and Point of View, before founding FII in 2014. She is a public speaker and has represented FII on platforms such as the UNCSW, Rights Con, Amnesty International, and the UNHRC, among others. Japleen works to strategically shape FII into a space that presents intersectional feminist information in an accessible way to people of varied palettes and backgrounds, smashing the patriarchy with a vision that emboldens the modern Indian youth.',
   },
   {
-    name: 'Jc Le Toquin',
+    name: 'Jean-Christophe (J-C) Le Toquin',
     designation: 'Co Founder, Trust \u0026 Safety Festival',
     category: 'Civil Society',
     photo: 'JC Le Toquin.jpg',
@@ -328,7 +328,7 @@ export const speakers = [
     bio: 'Karuna Nain is a global online safety expert with two decades’ experience in technology policy, safety strategy, government affairs and communications. She advises technology companies, non-profits and governments on building safer digital ecosystems through practical policy, product design and stakeholder engagement. Karuna spent a decade at Meta and served as Global Safety Policy Director, leading work on child safety and well-being, women’s safety and suicide prevention. She co-founded StopNCII.org with UK charity SWGfL and serves on its Board of Trustees.',
   },
   {
-    name: 'Kavita Ayyigari',
+    name: 'Kavita Ayyagari',
     designation: 'Country Director India, Girl Effect',
     category: 'Civil Society',
     photo: 'Kavita Ayyigari.jpg',
@@ -564,7 +564,7 @@ export const speakers = [
     bio: 'Technology, Government of India Shri Ashwini Vaishnaw (born in 1970) is a Member of Rajya Sabha from Odisha. He served the people of Sundergarh, Balasore, Cuttack and Goa. He earned Master’s in Technology from IIT Kanpur and MBA from Wharton. He brings a combination of skills in technology, finance and its application to weakest sections of society. He firmly believes in the philosophy of ‘Antyodaya’, i.e. transforming the lives of the marginalized sections of society.',
   },
   {
-    name: 'Siddharth P.',
+    name: 'Siddharth Pillai',
     designation: 'Co-Founder \u0026 Director, RATI Foundation',
     category: 'Civil Society',
     photo: 'Siddharth P..jpg',
@@ -695,5 +695,19 @@ export const speakers = [
     category: 'Academia \u0026 Media',
     photo: 'Zoya Ali.jpg',
     bio: 'Zoya Ali is a reproductive scientist and sexual health educator, and the founder of Uteropedia, a digital-first platform making reproductive health accessible, stigma-free, and rooted in science. As a senior scientific research associate at Hertility Health, she works at the intersection of reproductive health, fertility and AI driven diagnostics, helping reduce time to diagnosis and turn science into real world solutions. With a growing global audience of 100,000+, Zoya translates complex research into relatable, medically accurate content, challenging taboos and misinformation around sexual and reproductive health and rights (SRHR).She has pursued an MSc in Prenatal Genetics \u0026 Fetal Medicine at University College London (UCL). She has been a past Editor for (European Society of Human Reproduction and Embryology) ESHRE’s Journal Club where she helped bring cutting-edge reproductive research to the forefront, ensuring it reaches the clinicians, scientists, and policymakers who can turn evidence into action.',
+  },
+  {
+    name: 'S. Krishnan',
+    designation: 'Secretary, Ministry of Electronics & Information Technology (MeitY)',
+    category: 'Government',
+    photo: '/img/Speaker Highlights/S. Krishnan.png',
+    bio: '',
+  },
+  {
+    name: 'Thierry Mathou',
+    designation: 'French Ambassador to India',
+    category: 'Government',
+    photo: '/img/Speaker Highlights/Thierry Mathou.png',
+    bio: '',
   },
 ];

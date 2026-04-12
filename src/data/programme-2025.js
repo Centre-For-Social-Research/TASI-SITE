@@ -192,7 +192,7 @@ export const programmeSessions2025 = [
       'Panel: Bodies, Bans & Algorithms - Reclaiming SRHR Access in the Age of Digital Censorship and Control',
     description:
       'This panel explores how censorship and platform algorithms shape access to Bodies, Bans & SRHR content.',
-    speakers: ['FRIDA'],
+    speakers: [],
   },
   {
     id: 'tasi25-15',
@@ -658,7 +658,7 @@ export const programmeSessions2025 = [
       "CLOSED DOOR: #CreateWithCare: A Roundtable on India's Content Ecosystem & Responsible Practices",
     description:
       'A neutral, solutions-focused space for policymakers and content creators to: exchange perspectives on the responsibilities that come with influence, discuss how to align creative freedom with public interest, and expl...',
-    speakers: ['ACTS'],
+    speakers: [],
   },
   {
     id: 'tasi25-49',
