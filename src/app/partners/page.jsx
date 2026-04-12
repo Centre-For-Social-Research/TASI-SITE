@@ -39,10 +39,10 @@ export default function PartnersPage() {
                 <Link
                   key={partner.slug}
                   href={`/partners/${partner.slug}`}
-                  className="group block w-[200px] shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg forced-color-adjust-none [color-scheme:light]"
+                  className="group block w-[220px] shrink-0 overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg forced-color-adjust-none [color-scheme:light]"
                 >
                   {/* Logo area */}
-                  <div className="flex items-center justify-center bg-white px-6 py-8 h-52">
+                  <div className="flex items-center justify-center bg-white px-6 py-8 h-56">
                     <Image
                       src={partner.logo}
                       alt={partner.name}
