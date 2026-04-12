@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { InfiniteGridOverlay } from '@/components/ui/the-infinite-grid';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -23,6 +24,9 @@ export default function HomeHero() {
 
       {/* Hero photo color overlay */}
       <div className="hero-color-overlay absolute inset-0 z-10 opacity-75" />
+
+      {/* Active grid layer — sits above gradient overlay, below content */}
+      <InfiniteGridOverlay className="z-[15]" />
 
       <div className="relative z-20 w-full max-w-6xl mx-auto flex flex-col items-center justify-center text-center mt-4 md:mt-8">
         <motion.div
