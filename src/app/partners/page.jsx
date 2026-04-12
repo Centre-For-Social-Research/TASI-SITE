@@ -39,10 +39,10 @@ export default function PartnersPage() {
                 <Link
                   key={partner.slug}
                   href={`/partners/${partner.slug}`}
-                  className="group block w-[185px] shrink-0 overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg forced-color-adjust-none [color-scheme:light]"
+                  className="group flex flex-col w-[185px] shrink-0 overflow-hidden rounded-[10px] border border-stone-200 bg-stone-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg forced-color-adjust-none [color-scheme:light]"
                 >
                   {/* Logo area */}
-                  <div className="flex items-center justify-center bg-white px-6 py-8 h-56">
+                  <div className="flex flex-1 items-center justify-center bg-white px-6 py-8 min-h-[14rem]">
                     <Image
                       src={partner.logo}
                       alt={partner.name}
@@ -55,7 +55,7 @@ export default function PartnersPage() {
                   </div>
 
                   {/* Info footer */}
-                  <div className="bg-[#C8177A] px-4 py-3">
+                  <div className="mt-auto bg-[#C8177A] px-4 py-3">
                     <p className="text-[13px] font-bold leading-tight text-white">
                       {partner.name}
                     </p>
