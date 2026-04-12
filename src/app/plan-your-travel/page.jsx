@@ -90,7 +90,7 @@ const quickFacts = [
   { icon: Phone, label: 'Emergency', value: '112' },
 ];
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// --- Page --------------------------------------------------------------------
 
 export default function PlanYourTravelPage() {
   return (
@@ -99,7 +99,7 @@ export default function PlanYourTravelPage() {
       <section className="px-4 py-14 md:px-6 md:py-20">
         <div className="mx-auto max-w-5xl">
           <div className="mb-12 text-center">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
+            <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
               New Delhi Travel Guide
             </p>
             <h2 className="text-3xl font-black tracking-tight text-stone-900 dark:text-white md:text-4xl">
@@ -117,7 +117,7 @@ export default function PlanYourTravelPage() {
                 <Link
                   key={s.href}
                   href={s.href}
-                  className={`group relative overflow-hidden rounded-[10px] border p-6 transition hover:shadow-lg ${s.border} ${s.bg}`}
+                  className={`group relative overflow-hidden rounded-[10px] border p-6 shadow-[0_14px_34px_-26px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(15,23,42,0.22)] ${s.border} ${s.bg}`}
                 >
                   <div
                     className={`absolute top-0 left-0 h-1 w-full ${s.accent}`}
@@ -158,9 +158,9 @@ export default function PlanYourTravelPage() {
       </section>
 
       {/* Quick facts strip */}
-      <section className="border-t border-stone-200 bg-stone-50 px-4 py-12 dark:border-stone-800 dark:bg-stone-900">
+      <section className="border-t border-orange-100 bg-orange-50/50 px-4 py-12 dark:border-stone-800 dark:bg-stone-900">
         <div className="mx-auto max-w-5xl">
-          <p className="mb-6 text-center text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
+          <p className="mb-6 text-center text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:text-orange-300">
             Essential Facts · New Delhi
           </p>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -185,13 +185,13 @@ export default function PlanYourTravelPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-stone-200 bg-white px-4 py-12 dark:border-stone-800 dark:bg-stone-950 md:py-16">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
+      <section className="px-4 pb-16 pt-6 dark:bg-stone-950 md:pb-20">
+        <div className="mx-auto max-w-5xl rounded-[10px] bg-[linear-gradient(145deg,#111827,#1f2937,#7c2d12)] px-8 py-10 shadow-[0_24px_80px_rgba(15,23,42,0.18)] md:flex md:items-center md:justify-between md:text-left">
           <div>
-            <p className="text-lg font-bold text-stone-900 dark:text-white">
+            <p className="text-lg font-bold text-white">
               Ready to join us in New Delhi?
             </p>
-            <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+            <p className="mt-1 text-sm text-stone-300">
               Register for TASI 2026 and secure your place at India&apos;s
               foremost trust and safety convening.
             </p>
@@ -205,7 +205,7 @@ export default function PlanYourTravelPage() {
             </Link>
             <Link
               href="/contact"
-              className="rounded-full border border-stone-300 px-6 py-2.5 text-sm font-bold text-stone-700 transition hover:bg-stone-100 dark:border-stone-600 dark:text-stone-300 dark:hover:bg-stone-800"
+              className="rounded-full border border-white/30 bg-white/10 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-white/20"
             >
               Contact Us
             </Link>

@@ -7,7 +7,7 @@ export default function TravelShell({ children }) {
   return (
     <>
       <HomeNavbar forceSolid />
-      <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
+      <main className="bg-[#fdf6ef] text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <BrandedPageHero className="min-h-[300px] py-14 md:min-h-[360px] md:py-20">
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
