@@ -700,8 +700,9 @@ export const speakers = [
     name: 'S. Krishnan',
     designation: 'Secretary, Ministry of Electronics & Information Technology (MeitY)',
     category: 'Government',
-    photo: '/img/Speaker Highlights/S. Krishnan.png',
-    bio: '',
+    photo: 'S Krishnan.png',
+    bio: 'S. Krishnan is Secretary of the Ministry of Electronics and Information Technology (MeitY), Government of India. Krishnan has been a member of the Indian Administrative Services since 1989 and has wide experience in a range of assignments in the Government of Tamil Nadu, Government of India and International Monetary Fund. Civil servant and a member of Indian Administrative Service since 1989. Specialised in Public Finance, policy making and governance',
+    linkedinUrl: 'https://www.linkedin.com/in/s-krishnan-2a96216/',
   },
   {
     name: 'Thierry Mathou',
