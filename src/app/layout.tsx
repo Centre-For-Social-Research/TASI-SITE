@@ -38,6 +38,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jamsaq.in'),
   title: 'TASI 2026',
   description:
     "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
@@ -75,6 +76,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${outfit.variable} ${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}
     >
       <body className="antialiased">
