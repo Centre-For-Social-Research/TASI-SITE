@@ -54,12 +54,12 @@ export default function PartnersPage() {
                     />
                   </div>
 
-                  {/* Info footer */}
-                  <div className="mt-auto bg-[#C8177A] px-4 py-3">
-                    <p className="text-[13px] font-bold leading-tight text-white">
+                  {/* Info footer — fixed height so all cards match */}
+                  <div className="mt-auto bg-[#C8177A] px-4 py-3 h-[72px] flex flex-col justify-center">
+                    <p className="text-[13px] font-bold leading-tight text-white line-clamp-1">
                       {partner.name}
                     </p>
-                    <p className="mt-0.5 text-[11px] leading-snug text-white/80">
+                    <p className="mt-0.5 text-[11px] leading-snug text-white/80 line-clamp-2">
                       {partner.category}
                     </p>
                   </div>

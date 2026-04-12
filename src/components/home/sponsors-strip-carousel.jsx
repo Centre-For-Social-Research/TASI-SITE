@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import { partners } from '@/data/partners';
 
@@ -32,6 +33,15 @@ export default function SponsorsStripCarousel() {
             />
           </article>
         ))}
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <Link
+          href="/partners"
+          className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#350265] px-7 py-3 text-sm font-bold uppercase tracking-[0.12em] text-[#350265] transition-all hover:bg-[#350265] hover:text-white"
+        >
+          See All Partners
+        </Link>
       </div>
     </section>
   );
