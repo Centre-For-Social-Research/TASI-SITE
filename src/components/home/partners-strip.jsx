@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { partners } from '@/data/partners';
 
@@ -30,8 +31,9 @@ export default function PartnersStrip() {
 
         <div className="grid grid-cols-3 gap-4 sm:gap-6 md:grid-cols-4 lg:grid-cols-6">
           {partners.map((partner, index) => (
-            <article
-              key={partner.name}
+            <Link
+              key={partner.slug}
+              href={`/partners/${partner.slug}`}
               className={`forced-color-adjust-none [color-scheme:light] flex min-h-[5rem] items-center justify-center rounded-[10px] border-4 border-[#350265] bg-[#ffffff] px-2 py-3 shadow-[4px_4px_0px_#350265] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_#350265] dark:bg-[#ffffff] sm:min-h-[6rem] sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
             >
               <Image
@@ -43,7 +45,7 @@ export default function PartnersStrip() {
                 className="h-10 w-full object-contain grayscale transition duration-300 hover:grayscale-0 sm:h-12"
                 quality={80}
               />
-            </article>
+            </Link>
           ))}
         </div>
       </div>

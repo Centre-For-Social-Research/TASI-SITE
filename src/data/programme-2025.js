@@ -11,7 +11,7 @@ export const programmeSessions2025 = [
       'Opening TASI 2025 - Building a Safer, More Equitable Digital Future',
     speakers: [
       'Mr. Thierry Mathou',
-      'Ranjana Kumari, PhD',
+      'Dr. Ranjana Kumari',
       'Jean-Christophe (J-C) Le Toquin',
       'Delphine O',
     ],
@@ -112,7 +112,7 @@ export const programmeSessions2025 = [
     title: 'Welcome Address',
     description:
       'A concise stage segment setting the tone and key takeaways for the festival day.',
-    speakers: ['Ranjana Kumari, PhD'],
+    speakers: ['Dr. Ranjana Kumari'],
   },
   {
     id: 'tasi25-9',
@@ -125,18 +125,6 @@ export const programmeSessions2025 = [
     description:
       'Focused discussion on Keynote Speech with practical insights for policymakers, platforms, and civil society.',
     speakers: ['Dr. Subrahmanyam Jaishankar'],
-  },
-  {
-    id: 'tasi25-10',
-    day: 'oct7',
-    time: '10:20',
-    track: 'Dome',
-    venue: 'Dome',
-    format: 'keynote',
-    title: 'Keynote Speech',
-    description:
-      'Focused discussion on Keynote Speech with practical insights for policymakers, platforms, and civil society.',
-    speakers: ['Shri Ashwini Vaishnaw'],
   },
   {
     id: 'tasi25-11',
@@ -176,7 +164,6 @@ export const programmeSessions2025 = [
       'Jordan Benavidez',
       'Akash Pugalia',
       'Henry Adams',
-      'Ajit Kumar',
       'Snigdha Bhardwaj',
       'Jean-Christophe (J-C) Le Toquin',
     ],
@@ -441,8 +428,8 @@ export const programmeSessions2025 = [
     venue: 'Dome',
     format: 'opening',
     title: 'Welcome back',
-    description: 'JYOTI CSR',
-    speakers: [],
+    description: 'Jyoti Vadehra',
+    speakers: ['Jyoti Vadehra'],
   },
   {
     id: 'tasi25-33',
@@ -454,7 +441,7 @@ export const programmeSessions2025 = [
     title: 'Fireside Chat: Dating and Safety',
     description:
       'Online dating is now part of everyday life, but it also raises urgent questions about safety, trust, and accountability.',
-    speakers: ['Yoel Roth, PhD', 'Dr. Ranjana Kumari', 'Nilanjana Bhowmik'],
+    speakers: ['Yoel Roth', 'Dr. Ranjana Kumari', 'Nilanjana Bhowmik'],
   },
   {
     id: 'tasi25-34',
@@ -564,7 +551,6 @@ export const programmeSessions2025 = [
       'Barkha Dutt (Moderator)',
       'Anupriya Kapur',
       'Kriti Trehan',
-      'Ms. Tripti Gurha',
       'Anshul Tewari',
     ],
   },
@@ -579,18 +565,6 @@ export const programmeSessions2025 = [
     description:
       'This workshop explores how young people are reshaping the meaning of safety-beyond top-down measures-through community-led audits, real-time alerts, advocacy, and peer networks.',
     speakers: [],
-  },
-  {
-    id: 'tasi25-43',
-    day: 'oct8',
-    time: '13:00',
-    track: 'Dome',
-    venue: 'Dome',
-    format: 'keynote',
-    title: 'Keynote Speech',
-    description:
-      'From Protection to Empowerment: Reimagining Online Safety for Women and Young Users',
-    speakers: ['Smt. Annapurna Devi'],
   },
   {
     id: 'tasi25-44',
@@ -725,7 +699,7 @@ export const programmeSessions2025 = [
 
 export const agendaSpeakerFallbackTitles2025 = {
   'thierry mathou': 'French Ambassador to India',
-  'ranjana kumari phd': 'Director, Centre for Social Research, India',
+  'dr ranjana kumari': 'Director, Centre for Social Research, India',
   'jean christophe le toquin': 'Co-Founder, T&S Festival',
   'delphine o':
     'Ambassador-at-large and Secretary-General for the Generation Equality Forum (Beijing+25)',
@@ -756,8 +730,6 @@ export const agendaSpeakerFallbackTitles2025 = {
   'jordan benavidez': 'Director of Safety-by-Design, Match',
   'akash pugalia': 'Chief Digital Officer, TP',
   'henry adams': 'Director, Trust and Safety, Resolver',
-  'ajit kumar':
-    'Joint Secretary, Ministry of Information Technology, Government of India',
   'snigdha bhardwaj':
     'Director and Global Head of Generative AI, Trust and Safety, Google',
   frida: 'Sachee Malhotra',
@@ -796,7 +768,7 @@ export const agendaSpeakerFallbackTitles2025 = {
   'sumeysh srivastava': 'Associate Director, The Quantum Hub',
   'deepesh gupta': 'Senior Director, TP',
   'high commissioner of canada to india': 'Christopher Cooter',
-  'yoel roth phd': 'Vice President, Trust & Safety, Match Group',
+  'yoel roth': 'Senior Vice President, Head of Trust & Safety, Match Group',
   'nilanjana bhowmik': 'Journalist',
   'julie inman grant': 'eSafety Commissioner Australia',
   'dhruv khosla': 'Practice Director, Everest Group',

@@ -9,9 +9,6 @@ import { speakers } from '@/data/speakers';
 
 const VIP_SPEAKERS = new Set([
   'Dr. Subrahmanyam Jaishankar',
-  'Shri Ashwini Vaishnaw',
-  'Smt. Annapurna Devi',
-  'Abhishek Singh',
 ]);
 
 const VIP_LABEL = 'Keynote Speaker';
@@ -33,6 +30,11 @@ function linkedInUrlForSpeaker(speaker) {
     `${speaker.name || ''} ${speaker.designation || ''}`.trim()
   );
   return `https://www.linkedin.com/search/results/all/?keywords=${query}`;
+}
+
+function speakerPhotoSrc(speaker) {
+  if (!speaker?.photo) return '';
+  return speaker.photo.startsWith('/') ? speaker.photo : `/img/speakers/${speaker.photo}`;
 }
 
 const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
@@ -81,7 +83,7 @@ const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
                 )}
               >
                 <AvatarImage
-                  src={`/img/speakers/${speaker.photo}`}
+                  src={speakerPhotoSrc(speaker)}
                   alt={speaker.name}
                   className="object-cover"
                 />
@@ -202,7 +204,7 @@ const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(
                   )}
                 >
                   <AvatarImage
-                    src={`/img/speakers/${speaker.photo}`}
+                    src={speakerPhotoSrc(speaker)}
                     alt={speaker.name}
                     className="object-cover"
                   />

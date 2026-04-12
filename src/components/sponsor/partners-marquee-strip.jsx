@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { partners } from '@/data/partners';
 
@@ -40,9 +41,10 @@ export default function PartnersMarqueeStrip() {
 
         <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
           {partners.map((partner, index) => (
-            <article
-              key={partner.name}
-              className={`forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 !bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] dark:!bg-white sm:min-h-24 sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
+            <Link
+              key={partner.slug}
+              href={`/partners/${partner.slug}`}
+              className={`forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 !bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] transition-transform hover:-translate-y-0.5 dark:!bg-white sm:min-h-24 sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
             >
               <Image
                 src={partner.logo}
@@ -53,7 +55,7 @@ export default function PartnersMarqueeStrip() {
                 className="h-10 w-full object-contain sm:h-11"
                 quality={80}
               />
-            </article>
+            </Link>
           ))}
         </div>
       </div>

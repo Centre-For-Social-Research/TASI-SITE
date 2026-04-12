@@ -38,7 +38,7 @@ function buildSpeakerDesignationMap() {
 }
 
 function buildSpeakerPhotoMap() {
-  return Object.fromEntries(
+  const fromSpeakersPage = Object.fromEntries(
     speakers
       .map((speaker) => {
         const normalizedName = normalizePersonName(speaker.name);
@@ -50,6 +50,15 @@ function buildSpeakerPhotoMap() {
       })
       .filter(Boolean)
   );
+
+  return {
+    'delphine o': '/img/speakers/Delphine O.jpg',
+    'julie inman grant': '/img/speakers/Julie_Inman_Grant.jpg',
+    'high commissioner of canada to india':
+      '/img/Speaker Highlights/Christopher Cooter.png',
+    'legal attache suhel daud': '/img/speakers/Suhel Daud.jpg',
+    ...fromSpeakersPage,
+  };
 }
 
 const dayLabels = {

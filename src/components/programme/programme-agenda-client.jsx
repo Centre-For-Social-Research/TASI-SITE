@@ -99,6 +99,13 @@ function formatCalendarDateTime(day, timeParts) {
   return `${date}T${String(timeParts.hours).padStart(2, '0')}${String(timeParts.minutes).padStart(2, '0')}00`;
 }
 
+function formatMicrosoftCalendarDateTime(day, timeParts) {
+  const date = DAY_DATE_MAP[day];
+  if (!date || !timeParts) return '';
+
+  return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}T${String(timeParts.hours).padStart(2, '0')}:${String(timeParts.minutes).padStart(2, '0')}:00`;
+}
+
 function fallbackDurationMinutes(session) {
   const title = String(session.title || '').toLowerCase();
   if (title.includes('lunch')) return 60;
@@ -111,15 +118,6 @@ function fallbackDurationMinutes(session) {
     return 30;
   if (session.format === 'fireside') return 45;
   return 60;
-}
-
-function slugifyFileName(value) {
-  const slug = String(value || 'session')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  return slug || 'session';
 }
 
 function buildCalendarMetadata(session, allSessions, labels) {
@@ -141,6 +139,14 @@ function buildCalendarMetadata(session, allSessions, labels) {
     nextStartParts || addMinutes(startParts, fallbackDurationMinutes(session));
   const startDateTime = formatCalendarDateTime(session.day, startParts);
   const endDateTime = formatCalendarDateTime(session.day, endParts);
+  const microsoftStartDateTime = formatMicrosoftCalendarDateTime(
+    session.day,
+    startParts
+  );
+  const microsoftEndDateTime = formatMicrosoftCalendarDateTime(
+    session.day,
+    endParts
+  );
   const speakersLine = session.speakersDetailed?.length
     ? `Speakers: ${session.speakersDetailed.map((speaker) => speaker.name).join(', ')}`
     : '';
@@ -153,26 +159,14 @@ function buildCalendarMetadata(session, allSessions, labels) {
     .join('\\n\\n');
   const location = `${session.venue || session.track}, ${EVENT_LOCATION}`;
 
-  const icsLines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//TASI//Programme//EN',
-    'CALSCALE:GREGORIAN',
-    `X-WR-TIMEZONE:${EVENT_TIMEZONE}`,
-    'BEGIN:VEVENT',
-    `UID:${session.id}@tasi-2025`,
-    `SUMMARY:${String(session.title || '').replace(/\n/g, ' ')}`,
-    `DTSTART;TZID=${EVENT_TIMEZONE}:${startDateTime}`,
-    `DTEND;TZID=${EVENT_TIMEZONE}:${endDateTime}`,
-    `LOCATION:${location.replace(/\n/g, ' ')}`,
-    `DESCRIPTION:${description}`,
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ];
-
   return {
-    downloadName: `${slugifyFileName(session.title)}.ics`,
-    href: `data:text/calendar;charset=utf-8,${encodeURIComponent(icsLines.join('\r\n'))}`,
+    microsoftHref:
+      `https://outlook.office.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent` +
+      `&subject=${encodeURIComponent(session.title || '')}` +
+      `&startdt=${encodeURIComponent(microsoftStartDateTime)}` +
+      `&enddt=${encodeURIComponent(microsoftEndDateTime)}` +
+      `&body=${encodeURIComponent(description.replace(/\\n\\n/g, '\n\n'))}` +
+      `&location=${encodeURIComponent(location)}`,
     googleHref:
       `https://calendar.google.com/calendar/render?action=TEMPLATE` +
       `&text=${encodeURIComponent(session.title || '')}` +
@@ -482,8 +476,9 @@ export default function ProgrammeAgendaClient({
                         <div className="session-actions">
                           <a
                             className="calendar-btn"
-                            href={session.calendar.href}
-                            download={session.calendar.downloadName}
+                            href={session.calendar.microsoftHref}
+                            target="_blank"
+                            rel="noreferrer"
                           >
                             <CalendarPlus />
                             <span>Add to Calendar</span>
