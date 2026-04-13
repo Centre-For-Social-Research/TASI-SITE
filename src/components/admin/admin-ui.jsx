@@ -4,48 +4,61 @@ import clsx from 'clsx';
 import { X } from 'lucide-react';
 import { Drawer } from 'vaul';
 
+/* ── Tone map: light + dark for every variant ──────────────────────────────── */
 const toneMap = {
   default: {
-    badge: 'border-[#253a5c] bg-[#162040] text-slate-300',
+    badge:
+      'border-slate-200 bg-slate-50 text-slate-600 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300',
     dot: 'bg-slate-400',
-    panel: 'border-[#1e2a45] bg-[#0f1729] text-slate-200',
-    card: 'border-[#1e2a45] bg-[#111a2e]',
-    leftBorder: 'border-l-slate-500',
+    panel:
+      'border-slate-200 bg-slate-50 text-slate-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200',
+    card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
+    iconBg: 'bg-slate-100 text-slate-500 dark:bg-white/10 dark:text-slate-400',
   },
   warning: {
-    badge: 'border-amber-700/50 bg-amber-950/40 text-amber-300',
+    badge:
+      'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300',
     dot: 'bg-amber-500',
-    panel: 'border-amber-700/40 bg-amber-950/30 text-amber-200',
-    card: 'border-[#1e2a45] bg-[#111a2e]',
-    leftBorder: 'border-l-amber-500',
+    panel:
+      'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/[0.08] dark:text-amber-200',
+    card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
+    iconBg: 'bg-amber-50 text-amber-500 dark:bg-amber-500/15 dark:text-amber-400',
   },
   success: {
-    badge: 'border-emerald-700/50 bg-emerald-950/40 text-emerald-300',
+    badge:
+      'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300',
     dot: 'bg-emerald-500',
-    panel: 'border-emerald-700/40 bg-emerald-950/30 text-emerald-200',
-    card: 'border-[#1e2a45] bg-[#111a2e]',
-    leftBorder: 'border-l-emerald-500',
+    panel:
+      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/[0.08] dark:text-emerald-200',
+    card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
+    iconBg: 'bg-emerald-50 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400',
   },
   danger: {
-    badge: 'border-rose-700/50 bg-rose-950/40 text-rose-300',
+    badge:
+      'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300',
     dot: 'bg-rose-500',
-    panel: 'border-rose-700/40 bg-rose-950/30 text-rose-200',
-    card: 'border-[#1e2a45] bg-[#111a2e]',
-    leftBorder: 'border-l-rose-500',
+    panel:
+      'border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-500/20 dark:bg-rose-500/[0.08] dark:text-rose-200',
+    card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
+    iconBg: 'bg-rose-50 text-rose-500 dark:bg-rose-500/15 dark:text-rose-400',
   },
   accent: {
-    badge: 'border-violet-700/50 bg-violet-950/40 text-violet-300',
+    badge:
+      'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-500/20 dark:bg-violet-500/10 dark:text-violet-300',
     dot: 'bg-violet-500',
-    panel: 'border-violet-700/40 bg-violet-950/30 text-violet-200',
-    card: 'border-[#1e2a45] bg-[#111a2e]',
-    leftBorder: 'border-l-violet-500',
+    panel:
+      'border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-500/20 dark:bg-violet-500/[0.08] dark:text-violet-200',
+    card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
+    iconBg: 'bg-violet-50 text-violet-500 dark:bg-violet-500/15 dark:text-violet-400',
   },
   info: {
-    badge: 'border-sky-700/50 bg-sky-950/40 text-sky-300',
+    badge:
+      'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-300',
     dot: 'bg-sky-500',
-    panel: 'border-sky-700/40 bg-sky-950/30 text-sky-200',
-    card: 'border-[#1e2a45] bg-[#111a2e]',
-    leftBorder: 'border-l-sky-500',
+    panel:
+      'border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-500/20 dark:bg-sky-500/[0.08] dark:text-sky-200',
+    card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
+    iconBg: 'bg-sky-50 text-sky-500 dark:bg-sky-500/15 dark:text-sky-400',
   },
 };
 
@@ -74,29 +87,36 @@ export function AdminStatusBadge({
   );
 }
 
-export function AdminStatCard({ label, value, tone = 'default', detail }) {
+export function AdminStatCard({ label, value, tone = 'default', detail, icon: Icon }) {
   const classes = getToneClasses(tone);
 
   return (
     <div
       className={clsx(
-        'rounded-xl border border-l-4 p-4 shadow-sm',
-        classes.card,
-        classes.leftBorder
+        'group relative overflow-hidden rounded-2xl border p-5 shadow-sm backdrop-blur-sm transition-all hover:shadow-md',
+        classes.card
       )}
     >
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-          {label}
-        </p>
-        <span className={clsx('h-2 w-2 rounded-full', classes.dot)} />
+      {/* Subtle gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent to-black/[0.02] dark:to-white/[0.02]" />
+      <div className="relative flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500">
+            {label}
+          </p>
+          <p className="mt-2 text-3xl font-extrabold tabular-nums text-slate-900 dark:text-slate-50">
+            {value}
+          </p>
+          {detail ? (
+            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+              {detail}
+            </p>
+          ) : null}
+        </div>
+        <div className={clsx('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', classes.iconBg)}>
+          {Icon ? <Icon className="h-5 w-5" /> : <span className={clsx('h-2.5 w-2.5 rounded-full', classes.dot)} />}
+        </div>
       </div>
-      <p className="mt-2.5 text-3xl font-bold tabular-nums text-slate-50">
-        {value}
-      </p>
-      {detail ? (
-        <p className="mt-1.5 text-xs text-[#5a6b8a]">{detail}</p>
-      ) : null}
     </div>
   );
 }
@@ -113,14 +133,14 @@ export function AdminAlert({
   return (
     <div
       className={clsx(
-        'rounded-[10px] border px-4 py-3 shadow-sm',
+        'rounded-2xl border px-5 py-4 shadow-sm backdrop-blur-sm',
         classes.panel,
         className
       )}
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-wide">
+          <p className="text-[11px] font-bold uppercase tracking-[0.1em]">
             {title}
           </p>
           <p className="mt-1.5 text-sm leading-relaxed opacity-90">
@@ -138,13 +158,13 @@ export function AdminSectionHeading({ eyebrow, title, description, action }) {
     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
       <div className="min-w-0">
         {eyebrow ? (
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-500">
+          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-indigo-500 dark:text-indigo-400">
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="mt-1 text-2xl font-bold text-slate-50">{title}</h2>
+        <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">{title}</h2>
         {description ? (
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-400">
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
             {description}
           </p>
         ) : null}
@@ -163,16 +183,16 @@ export function SlideOverDrawer({ open, onClose, title, children }) {
       direction="right"
     >
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-50 bg-[#0b1120]/60 backdrop-blur-sm" />
-        <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden bg-[#0d1526] shadow-2xl shadow-black/50 focus:outline-none">
-          <div className="flex shrink-0 items-center justify-between border-b border-[#1e2a45] px-5 py-4">
-            <Drawer.Title className="text-sm font-semibold text-slate-50">
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm dark:bg-black/60" />
+        <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden border-l border-slate-200 bg-white shadow-2xl focus:outline-none dark:border-white/[0.06] dark:bg-[#0d1526]">
+          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-white/[0.06]">
+            <Drawer.Title className="text-sm font-bold text-slate-800 dark:text-slate-50">
               {title}
             </Drawer.Title>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 transition hover:bg-[#1e2a45] hover:text-slate-200"
+              className="rounded-xl p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-white/10 dark:hover:text-slate-200"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -220,12 +240,12 @@ export function LoadingRows({ count = 6, cols = 7 }) {
       {Array.from({ length: count }, (_, rowIndex) => (
         <tr
           key={rowIndex}
-          className="border-b border-[#1a2744]"
+          className="border-b border-slate-100 dark:border-white/[0.04]"
         >
           {Array.from({ length: cols }, (_, colIndex) => (
             <td key={colIndex} className="px-4 py-4">
               <div
-                className="h-4 animate-pulse rounded bg-[#1e2a45]"
+                className="h-4 animate-pulse rounded-lg bg-slate-100 dark:bg-white/[0.06]"
                 style={{
                   width: `${55 + ((rowIndex * 3 + colIndex * 7) % 35)}%`,
                 }}

@@ -1007,7 +1007,44 @@ a {
   }
 }
 
-/* ── Admin navy theme: LyteNyte data-grid overrides ────────────────────────── */
+/* ── Admin dashboard: Recharts tooltip variables ───────────────────────────── */
+:root {
+  --admin-tooltip-bg: #ffffff;
+  --admin-tooltip-border: #e2e8f0;
+}
+.dark {
+  --admin-tooltip-bg: #1e293b;
+  --admin-tooltip-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Admin dashboard: LyteNyte data-grid overrides ─────────────────────────── */
+.admin-grid-navy {
+  --ln-bg: #f8fafc;
+  --ln-bg-page: #f1f5f9;
+  --ln-bg-light: #f8fafc;
+  --ln-bg-strong: #e2e8f0;
+  --ln-bg-row-hover: rgba(99, 102, 241, 0.04);
+  --ln-bg-row-alternate: #f8fafc;
+  --ln-bg-ui-panel: #ffffff;
+  --ln-bg-form-field: #ffffff;
+  --ln-bg-floating-panel: #ffffff;
+  --ln-bg-popover: #ffffff;
+  --ln-bg-button-light: #f8fafc;
+
+  --ln-border: #e2e8f0;
+  --ln-border-row: #f1f5f9;
+  --ln-border-strong: #cbd5e1;
+  --ln-border-xstrong: #94a3b8;
+
+  --ln-text: #334155;
+  --ln-text-dark: #0f172a;
+  --ln-text-light: #64748b;
+  --ln-text-xlight: #94a3b8;
+
+  --ln-column-fill: #f8fafc;
+  --ln-column-stroke: rgba(99, 102, 241, 0.08);
+}
+
 .dark .admin-grid-navy {
   --ln-gray-00: #0b1120;
   --ln-gray-01: #0b1120;
@@ -1028,7 +1065,7 @@ a {
   --ln-bg-page: #0b1120;
   --ln-bg-light: #0d1526;
   --ln-bg-strong: #1a2744;
-  --ln-bg-row-hover: hsla(217, 80%, 54%, 0.08);
+  --ln-bg-row-hover: rgba(99, 102, 241, 0.08);
   --ln-bg-row-alternate: #0d1526;
   --ln-bg-ui-panel: #0b1120;
   --ln-bg-form-field: #162040;
@@ -1053,6 +1090,6 @@ a {
   --ln-text-xlight: #5a6b8a;
 
   --ln-column-fill: #111a2e;
-  --ln-column-stroke: hsla(217, 80%, 50%, 0.12);
+  --ln-column-stroke: rgba(99, 102, 241, 0.12);
   --ln-row-pivot-fill: #111a2e;
 }

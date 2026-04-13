@@ -60,7 +60,7 @@ function TicketStatusBadge({ ticket }) {
   const cfg = TICKET_STATUS_MAP[ticket.status] ?? {
     label: ticket.status,
     classes:
-      'bg-slate-100 text-slate-700 dark:bg-[#162040] dark:text-slate-300',
+      'bg-slate-100 text-slate-700 dark:bg-white/[0.06] dark:text-slate-300',
   };
   return (
     <span
@@ -219,7 +219,7 @@ export default function TicketingAdminPanel() {
         <AdminStatCard label="Checked In" value={stats.checkedIn} tone="info" />
       </div>
 
-      <section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-sm dark:border-[#1e2a45] dark:bg-[#111a2e]">
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <AdminSectionHeading
             eyebrow="Attendees"
@@ -234,7 +234,7 @@ export default function TicketingAdminPanel() {
                 if (event.key === 'Enter') void loadTickets(search);
               }}
               placeholder="Search by name, email, or ticket number"
-              className="h-12 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm dark:border-[#1e2a45] dark:bg-[#162040]"
+              className="h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm dark:border-white/[0.06] dark:bg-white/[0.06]"
             />
             <button
               type="button"
@@ -262,7 +262,7 @@ export default function TicketingAdminPanel() {
             {tickets.map((ticket) => (
               <article
                 key={ticket.id}
-                className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 dark:border-[#1e2a45] dark:bg-[#162040]/60"
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
               >
                 <button
                   type="button"
@@ -304,7 +304,7 @@ export default function TicketingAdminPanel() {
                 </button>
 
                 {expandedTicketId === ticket.id ? (
-                  <div className="mt-4 border-t border-slate-200 pt-4 dark:border-[#1e2a45]">
+                  <div className="mt-4 border-t border-slate-200 pt-4 dark:border-white/[0.06]">
                     <div className="mb-5 flex flex-wrap items-center gap-3">
                       <button
                         type="button"

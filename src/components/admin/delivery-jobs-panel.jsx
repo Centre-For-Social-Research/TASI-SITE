@@ -265,7 +265,7 @@ export default function DeliveryJobsPanel({ operator }) {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-[#1e2a45] dark:bg-[#111a2e]">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <AdminSectionHeading
           eyebrow="Delivery Jobs"
           title="Monitor QR mailings and retry failures"
@@ -319,8 +319,8 @@ export default function DeliveryJobsPanel({ operator }) {
       </section>
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-[#1e2a45] dark:bg-[#111a2e]">
-          <div className="border-b border-slate-200 px-5 py-3 dark:border-[#1e2a45]">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+          <div className="border-b border-slate-200 px-5 py-3 dark:border-white/[0.06]">
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
               Recent Jobs
             </p>
@@ -331,8 +331,8 @@ export default function DeliveryJobsPanel({ operator }) {
 
           <div className="overflow-auto">
             <table className="min-w-full">
-              <thead className="sticky top-0 bg-slate-50 dark:bg-[#162040]/80">
-                <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:border-[#1e2a45] dark:text-slate-500">
+              <thead className="sticky top-0 bg-slate-50 dark:bg-white/[0.06]/80">
+                <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:border-white/[0.06] dark:text-slate-500">
                   <th className="px-4 py-3 text-left">Job</th>
                   <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-left">Progress</th>
@@ -347,7 +347,7 @@ export default function DeliveryJobsPanel({ operator }) {
                   jobsState.jobs.map((job) => (
                     <tr
                       key={job.id}
-                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-[#1a2744] dark:hover:bg-[#1e2a45]/50 ${jobsState.selectedJobId === job.id ? 'bg-amber-50/40 dark:bg-amber-950/20' : ''}`}
+                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-white/[0.04] dark:hover:bg-white/10/50 ${jobsState.selectedJobId === job.id ? 'bg-amber-50/40 dark:bg-amber-950/20' : ''}`}
                       onClick={() =>
                         setJobsState((current) => ({
                           ...current,
@@ -371,7 +371,7 @@ export default function DeliveryJobsPanel({ operator }) {
                         </AdminStatusBadge>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="h-2 w-40 overflow-hidden rounded-full bg-slate-200 dark:bg-[#253a5c]">
+                        <div className="h-2 w-40 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
                           <div
                             className="h-full rounded-full bg-amber-600"
                             style={{ width: progressWidth(job.progress) }}
@@ -432,7 +432,7 @@ export default function DeliveryJobsPanel({ operator }) {
           ) : null}
         </section>
 
-        <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-[#1e2a45] dark:bg-[#111a2e]">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-white/[0.06] dark:bg-white/[0.03]">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
@@ -454,7 +454,7 @@ export default function DeliveryJobsPanel({ operator }) {
           {jobsState.selectedDetail?.job ? (
             <>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-[#1e2a45] dark:bg-[#162040]/60">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     Total
                   </p>
@@ -462,7 +462,7 @@ export default function DeliveryJobsPanel({ operator }) {
                     {jobsState.selectedDetail.job.total_items}
                   </p>
                 </div>
-                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-[#1e2a45] dark:bg-[#162040]/60">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     Sent
                   </p>
@@ -470,7 +470,7 @@ export default function DeliveryJobsPanel({ operator }) {
                     {jobsState.selectedDetail.job.sent_items}
                   </p>
                 </div>
-                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-[#1e2a45] dark:bg-[#162040]/60">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     Skipped
                   </p>
@@ -478,7 +478,7 @@ export default function DeliveryJobsPanel({ operator }) {
                     {jobsState.selectedDetail.job.skipped_items}
                   </p>
                 </div>
-                <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-[#1e2a45] dark:bg-[#162040]/60">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     Failed
                   </p>
@@ -492,7 +492,7 @@ export default function DeliveryJobsPanel({ operator }) {
                 {(jobsState.selectedDetail.items || []).map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-[10px] border border-slate-200 bg-slate-50 p-3 dark:border-[#1e2a45] dark:bg-[#162040]/60"
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div>
