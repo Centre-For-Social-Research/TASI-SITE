@@ -1,7 +1,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import React from 'react';
-import { Document, Page, View, Text, Image, renderToBuffer } from '@react-pdf/renderer';
+import {
+  Document,
+  Page,
+  View,
+  Text,
+  Image,
+  renderToBuffer,
+} from '@react-pdf/renderer';
 import QRCode from 'qrcode';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { EVENT_CONFIG } from '@/lib/registration-constants';
@@ -218,7 +225,10 @@ function InstitutionalBadgePage({
   const headerBackgroundColor = '#181e3a';
 
   return (
-    <Page size={[BADGE_PAGE_W, BADGE_PAGE_H]} style={{ backgroundColor: '#faf8f2', fontFamily: 'Helvetica' }}>
+    <Page
+      size={[BADGE_PAGE_W, BADGE_PAGE_H]}
+      style={{ backgroundColor: '#faf8f2', fontFamily: 'Helvetica' }}
+    >
       {/* Header background */}
       {headerBackgroundDataUrl ? (
         <Image
@@ -245,157 +255,521 @@ function InstitutionalBadgePage({
         />
       )}
       {/* Gold rule */}
-      <View style={{ position: 'absolute', top: MM(29.5), left: 0, right: 0, height: MM(1.8), backgroundColor: '#c9902c' }} />
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(29.5),
+          left: 0,
+          right: 0,
+          height: MM(1.8),
+          backgroundColor: '#c9902c',
+        }}
+      />
 
       {/* Logo */}
       {logoDataUrl && (
-        <Image alt="" src={logoDataUrl} style={{ position: 'absolute', top: MM(7), left: MM(7), width: MM(25), height: MM(10.6) }} />
+        <Image
+          alt=""
+          src={logoDataUrl}
+          style={{
+            position: 'absolute',
+            top: MM(7),
+            left: MM(7),
+            width: MM(25),
+            height: MM(10.6),
+          }}
+        />
       )}
 
       {/* Vertical separator */}
-      <View style={{ position: 'absolute', top: MM(4), left: MM(34.7), width: 0.5, height: MM(20.5), backgroundColor: '#4e5982' }} />
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(4),
+          left: MM(34.7),
+          width: 0.5,
+          height: MM(20.5),
+          backgroundColor: '#4e5982',
+        }}
+      />
 
       {/* "Trust & Safety India Festival" */}
-      <Text style={{ position: 'absolute', top: MM(8.5), left: MM(39), fontSize: 10.8, fontFamily: 'Helvetica-Bold', color: '#ffffff' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(8.5),
+          left: MM(39),
+          fontSize: 10.8,
+          fontFamily: 'Helvetica-Bold',
+          color: '#ffffff',
+        }}
+      >
         Trust &amp; Safety India Festival
       </Text>
 
       {/* TASI 2026 */}
-      <Text style={{ position: 'absolute', top: MM(15), left: MM(39), fontSize: 7.6, fontFamily: 'Helvetica-Bold', color: '#d6ab41' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(15),
+          left: MM(39),
+          fontSize: 7.6,
+          fontFamily: 'Helvetica-Bold',
+          color: '#d6ab41',
+        }}
+      >
         TASI 2026
       </Text>
 
       {/* 13-14 October 2026 */}
-      <Text style={{ position: 'absolute', top: MM(15), left: MM(58.3), fontSize: 7.6, fontFamily: 'Helvetica-Bold', color: '#d6ab41' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(15),
+          left: MM(58.3),
+          fontSize: 7.6,
+          fontFamily: 'Helvetica-Bold',
+          color: '#d6ab41',
+        }}
+      >
         13-14 October 2026
       </Text>
 
       {/* New Delhi, India */}
-      <Text style={{ position: 'absolute', top: MM(20.8), left: MM(39), fontSize: 7.8, color: '#ebeff7' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(20.8),
+          left: MM(39),
+          fontSize: 7.8,
+          color: '#ebeff7',
+        }}
+      >
         New Delhi, India
       </Text>
 
       {/* Badge pill (top-right of header) */}
-      <View style={{ position: 'absolute', top: MM(18.4), left: MM(71.5), width: MM(25.4), height: MM(7.6), backgroundColor: '#ffffff', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontSize: 4.95, fontFamily: 'Helvetica-Bold', color: tierBgColor, textAlign: 'center' }}>
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(18.4),
+          left: MM(71.5),
+          width: MM(25.4),
+          height: MM(7.6),
+          backgroundColor: '#ffffff',
+          borderRadius: 2,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 4.95,
+            fontFamily: 'Helvetica-Bold',
+            color: tierBgColor,
+            textAlign: 'center',
+          }}
+        >
           {compactHeaderLabel}
         </Text>
       </View>
 
       {/* "ATTENDEE" label */}
-      <Text style={{ position: 'absolute', top: MM(37.7), left: MM(8), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#65738a' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(37.7),
+          left: MM(8),
+          fontSize: 7.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#65738a',
+        }}
+      >
         ATTENDEE
       </Text>
 
       {/* Attendee name */}
-      <Text style={{ position: 'absolute', top: MM(44.3), left: MM(8), width: MM(62), fontSize: 17.8, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(44.3),
+          left: MM(8),
+          width: MM(62),
+          fontSize: 17.8,
+          fontFamily: 'Helvetica-Bold',
+          color: '#0f172a',
+        }}
+      >
         {displayName || ''}
       </Text>
 
       {/* Organization */}
-      <Text style={{ position: 'absolute', top: MM(54.9), left: MM(8), width: MM(60), fontSize: 10.5, color: '#334155' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(54.9),
+          left: MM(8),
+          width: MM(60),
+          fontSize: 10.5,
+          color: '#334155',
+        }}
+      >
         {organizationLine || '-'}
       </Text>
 
       {/* Photo box */}
-      <View style={{ position: 'absolute', top: MM(36.3), left: MM(73.2), width: MM(20.8), height: MM(20.8), backgroundColor: '#ffffff', borderWidth: 0.5, borderColor: '#0f172a', overflow: 'hidden' }}>
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(36.3),
+          left: MM(73.2),
+          width: MM(20.8),
+          height: MM(20.8),
+          backgroundColor: '#ffffff',
+          borderWidth: 0.5,
+          borderColor: '#0f172a',
+          overflow: 'hidden',
+        }}
+      >
         {photoDataUrl ? (
-          <Image alt="" src={photoDataUrl} style={{ width: MM(19.4), height: MM(19.4), margin: MM(0.7) }} />
+          <Image
+            alt=""
+            src={photoDataUrl}
+            style={{ width: MM(19.4), height: MM(19.4), margin: MM(0.7) }}
+          />
         ) : (
           <>
-            <View style={{ position: 'absolute', top: MM(3.4), left: MM(7.2), width: MM(6.8), height: MM(6.8), borderRadius: MM(3.4), backgroundColor: '#c9902c' }} />
-            <View style={{ position: 'absolute', top: MM(10), left: MM(4.4), width: MM(11.6), height: MM(11.6), borderRadius: MM(5.8), backgroundColor: '#264782' }} />
+            <View
+              style={{
+                position: 'absolute',
+                top: MM(3.4),
+                left: MM(7.2),
+                width: MM(6.8),
+                height: MM(6.8),
+                borderRadius: MM(3.4),
+                backgroundColor: '#c9902c',
+              }}
+            />
+            <View
+              style={{
+                position: 'absolute',
+                top: MM(10),
+                left: MM(4.4),
+                width: MM(11.6),
+                height: MM(11.6),
+                borderRadius: MM(5.8),
+                backgroundColor: '#264782',
+              }}
+            />
           </>
         )}
       </View>
 
       {/* Tier pill */}
-      <View style={{ position: 'absolute', top: MM(64.2), left: MM(8), width: MM(84.2), height: MM(7.5), backgroundColor: tierBgColor, borderRadius: 2 }}>
-        <View style={{ position: 'absolute', top: MM(7.5) / 2 - MM(1.35), left: MM(2.7), width: MM(2.7), height: MM(2.7), borderRadius: MM(1.35), backgroundColor: tierDotColor }} />
-        <Text style={{ position: 'absolute', top: MM(2.1), left: MM(8), fontSize: 7.1, fontFamily: 'Helvetica-Bold', color: tierTextColor }}>
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(64.2),
+          left: MM(8),
+          width: MM(84.2),
+          height: MM(7.5),
+          backgroundColor: tierBgColor,
+          borderRadius: 2,
+        }}
+      >
+        <View
+          style={{
+            position: 'absolute',
+            top: MM(7.5) / 2 - MM(1.35),
+            left: MM(2.7),
+            width: MM(2.7),
+            height: MM(2.7),
+            borderRadius: MM(1.35),
+            backgroundColor: tierDotColor,
+          }}
+        />
+        <Text
+          style={{
+            position: 'absolute',
+            top: MM(2.1),
+            left: MM(8),
+            fontSize: 7.1,
+            fontFamily: 'Helvetica-Bold',
+            color: tierTextColor,
+          }}
+        >
           {tierTheme.label}
         </Text>
-        <Text style={{ position: 'absolute', top: MM(2.1), right: MM(1.5), fontSize: 6.8, color: tierTextColor, textAlign: 'right' }}>
+        <Text
+          style={{
+            position: 'absolute',
+            top: MM(2.1),
+            right: MM(1.5),
+            fontSize: 6.8,
+            color: tierTextColor,
+            textAlign: 'right',
+          }}
+        >
           {categoryLabel}
         </Text>
       </View>
 
       {/* Divider 1 */}
-      <View style={{ position: 'absolute', top: MM(76.8), left: MM(8), width: MM(85.6), height: 0.35, backgroundColor: '#e0e4eb' }} />
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(76.8),
+          left: MM(8),
+          width: MM(85.6),
+          height: 0.35,
+          backgroundColor: '#e0e4eb',
+        }}
+      />
 
       {/* Column headers: REG. ID / CATEGORY / DATES */}
-      <Text style={{ position: 'absolute', top: MM(81), left: MM(8), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b' }}>REG. ID</Text>
-      <Text style={{ position: 'absolute', top: MM(81), left: MM(41.5), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b' }}>CATEGORY</Text>
-      <Text style={{ position: 'absolute', top: MM(81), left: MM(71), width: MM(15), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b', textAlign: 'center' }}>DATES</Text>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(81),
+          left: MM(8),
+          fontSize: 7.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#64748b',
+        }}
+      >
+        REG. ID
+      </Text>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(81),
+          left: MM(41.5),
+          fontSize: 7.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#64748b',
+        }}
+      >
+        CATEGORY
+      </Text>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(81),
+          left: MM(71),
+          width: MM(15),
+          fontSize: 7.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#64748b',
+          textAlign: 'center',
+        }}
+      >
+        DATES
+      </Text>
 
       {/* Values row */}
-      <Text style={{ position: 'absolute', top: MM(85.5), left: MM(8), width: MM(33), fontSize: 9.2, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(85.5),
+          left: MM(8),
+          width: MM(33),
+          fontSize: 9.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#0f172a',
+        }}
+      >
         {registration.registration_code || '-'}
       </Text>
-      <Text style={{ position: 'absolute', top: MM(85.5), left: MM(41.5), width: MM(18), fontSize: 9.2, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(85.5),
+          left: MM(41.5),
+          width: MM(18),
+          fontSize: 9.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#0f172a',
+        }}
+      >
         {categoryLabel}
       </Text>
-      <Text style={{ position: 'absolute', top: MM(85.5), left: MM(71), width: MM(15), fontSize: 9.2, fontFamily: 'Helvetica-Bold', color: '#0f172a', textAlign: 'center' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(85.5),
+          left: MM(71),
+          width: MM(15),
+          fontSize: 9.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#0f172a',
+          textAlign: 'center',
+        }}
+      >
         {eventDatesLabel}
       </Text>
 
       {/* Divider 2 */}
-      <View style={{ position: 'absolute', top: MM(91.3), left: MM(8), width: MM(85.6), height: 0.35, backgroundColor: '#e0e4eb' }} />
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(91.3),
+          left: MM(8),
+          width: MM(85.6),
+          height: 0.35,
+          backgroundColor: '#e0e4eb',
+        }}
+      />
 
       {/* Entry Pass label */}
-      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.entryPassLabelY - 1.8), left: MM(8), fontSize: 7.2, fontFamily: 'Helvetica-Bold', color: '#64748b' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(lowerSectionLayout.entryPassLabelY - 1.8),
+          left: MM(8),
+          fontSize: 7.2,
+          fontFamily: 'Helvetica-Bold',
+          color: '#64748b',
+        }}
+      >
         ENTRY PASS
       </Text>
 
       {/* Policy title */}
-      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.policyTitleY - 1.8), left: MM(8), fontSize: 7.1, fontFamily: 'Helvetica-Bold', color: '#c9902c' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(lowerSectionLayout.policyTitleY - 1.8),
+          left: MM(8),
+          fontSize: 7.1,
+          fontFamily: 'Helvetica-Bold',
+          color: '#c9902c',
+        }}
+      >
         Policy rules
       </Text>
 
       {/* Policy rules */}
       {policyRules.map((rule, i) => (
-        <Text key={i} style={{ position: 'absolute', top: MM(lowerSectionLayout.policyRuleYs[i] - 1.2), left: MM(8), width: MM(42), fontSize: 4.7, color: '#58667a' }}>
+        <Text
+          key={i}
+          style={{
+            position: 'absolute',
+            top: MM(lowerSectionLayout.policyRuleYs[i] - 1.2),
+            left: MM(8),
+            width: MM(42),
+            fontSize: 4.7,
+            color: '#58667a',
+          }}
+        >
           {`- ${rule}`}
         </Text>
       ))}
 
       {/* QR box */}
-      <View style={{
-        position: 'absolute',
-        top: MM(lowerSectionLayout.qrBox.y),
-        left: MM(lowerSectionLayout.qrBox.x),
-        width: MM(lowerSectionLayout.qrBox.width),
-        height: MM(lowerSectionLayout.qrBox.height),
-        backgroundColor: '#ffffff',
-        borderWidth: 0.7,
-        borderColor: '#dce0e8',
-        borderRadius: MM(2.8),
-      }}>
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(lowerSectionLayout.qrBox.y),
+          left: MM(lowerSectionLayout.qrBox.x),
+          width: MM(lowerSectionLayout.qrBox.width),
+          height: MM(lowerSectionLayout.qrBox.height),
+          backgroundColor: '#ffffff',
+          borderWidth: 0.7,
+          borderColor: '#dce0e8',
+          borderRadius: MM(2.8),
+        }}
+      >
         {qrDataUrl ? (
-          <Image alt="" src={qrDataUrl} style={{ position: 'absolute', top: MM(2), left: MM(2), width: MM(lowerSectionLayout.qrCode.width), height: MM(lowerSectionLayout.qrCode.height) }} />
+          <Image
+            alt=""
+            src={qrDataUrl}
+            style={{
+              position: 'absolute',
+              top: MM(2),
+              left: MM(2),
+              width: MM(lowerSectionLayout.qrCode.width),
+              height: MM(lowerSectionLayout.qrCode.height),
+            }}
+          />
         ) : (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 6, color: '#64748b', textAlign: 'center' }}>{'QR pass not\nissued yet'}</Text>
+          <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Text
+              style={{ fontSize: 6, color: '#64748b', textAlign: 'center' }}
+            >
+              {'QR pass not\nissued yet'}
+            </Text>
           </View>
         )}
       </View>
 
       {/* Reg code below QR */}
-      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.qrRegistrationCodeY - 1.7), left: MM(60), width: MM(32.5), fontSize: 6.6, color: '#64748b', textAlign: 'center' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(lowerSectionLayout.qrRegistrationCodeY - 1.7),
+          left: MM(60),
+          width: MM(32.5),
+          fontSize: 6.6,
+          color: '#64748b',
+          textAlign: 'center',
+        }}
+      >
         {registration.registration_code || '-'}
       </Text>
 
       {/* "Scan to verify" */}
-      <Text style={{ position: 'absolute', top: MM(lowerSectionLayout.scanLabelY - 1.9), left: MM(60), width: MM(32.5), fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: '#0f172a', textAlign: 'center' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(lowerSectionLayout.scanLabelY - 1.9),
+          left: MM(60),
+          width: MM(32.5),
+          fontSize: 7.5,
+          fontFamily: 'Helvetica-Bold',
+          color: '#0f172a',
+          textAlign: 'center',
+        }}
+      >
         Scan to verify
       </Text>
 
       {/* Footer strip (tier color) */}
-      <View style={{ position: 'absolute', top: MM(147.6), left: 0, right: 0, height: MM(4.8), backgroundColor: tierBgColor }} />
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(147.6),
+          left: 0,
+          right: 0,
+          height: MM(4.8),
+          backgroundColor: tierBgColor,
+        }}
+      />
       {/* Gold accent left */}
-      <View style={{ position: 'absolute', top: MM(147.6), left: 0, width: MM(2.6), height: MM(4.8), backgroundColor: '#c9902c' }} />
+      <View
+        style={{
+          position: 'absolute',
+          top: MM(147.6),
+          left: 0,
+          width: MM(2.6),
+          height: MM(4.8),
+          backgroundColor: '#c9902c',
+        }}
+      />
       {/* Footer text */}
-      <Text style={{ position: 'absolute', top: MM(149.2), left: 0, right: 0, fontSize: 5.6, fontFamily: 'Helvetica-Bold', color: '#ffffff', textAlign: 'center' }}>
+      <Text
+        style={{
+          position: 'absolute',
+          top: MM(149.2),
+          left: 0,
+          right: 0,
+          fontSize: 5.6,
+          fontFamily: 'Helvetica-Bold',
+          color: '#ffffff',
+          textAlign: 'center',
+        }}
+      >
         Organised by Centre for Social Research • Trust and Safety Festival
       </Text>
     </Page>
@@ -418,7 +792,7 @@ export async function buildPassAttachment({ token, registration }) {
         headerLabel="OFFICIAL CREDENTIAL"
         headerBackgroundDataUrl={headerBackgroundDataUrl}
       />
-    </Document>,
+    </Document>
   );
 
   return {
@@ -460,7 +834,7 @@ export async function buildPdfMergeExport(registrations) {
         : null;
       const photoDataUrl = await getBadgePhotoDataUrl(registration);
       return { registration, qrDataUrl, photoDataUrl };
-    }),
+    })
   );
 
   return renderToBuffer(
@@ -476,6 +850,6 @@ export async function buildPdfMergeExport(registrations) {
           headerBackgroundDataUrl={headerBackgroundDataUrl}
         />
       ))}
-    </Document>,
+    </Document>
   );
 }

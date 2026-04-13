@@ -4,7 +4,7 @@ function normalizeInteger(value) {
 }
 
 function isActiveHold(hold, nowMs) {
-  const expiresAt = Date.parse(hold?.expires_at || "");
+  const expiresAt = Date.parse(hold?.expires_at || '');
   return Number.isFinite(expiresAt) && expiresAt > nowMs;
 }
 
@@ -17,7 +17,9 @@ export function summarizeTicketAvailability({
   const normalizedCapacity = normalizeInteger(capacity);
   const normalizedSoldQuantity = normalizeInteger(soldQuantity);
   const nowMs =
-    typeof now === "string" || now instanceof Date ? new Date(now).getTime() : Date.now();
+    typeof now === 'string' || now instanceof Date
+      ? new Date(now).getTime()
+      : Date.now();
 
   let activeHeldQuantity = 0;
   let expiredHeldQuantity = 0;
@@ -33,7 +35,7 @@ export function summarizeTicketAvailability({
 
   const availableQuantity = Math.max(
     normalizedCapacity - normalizedSoldQuantity - activeHeldQuantity,
-    0,
+    0
   );
 
   return {

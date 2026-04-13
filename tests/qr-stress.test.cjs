@@ -37,7 +37,10 @@ test('generates 10,000 QR payloads within 2 seconds', async () => {
     buildFestivalQrPayload(`ticket-${i}`);
   }
   const elapsed = performance.now() - start;
-  assert.ok(elapsed < 2000, `generation took ${elapsed.toFixed(0)} ms — exceeded 2 s budget`);
+  assert.ok(
+    elapsed < 2000,
+    `generation took ${elapsed.toFixed(0)} ms — exceeded 2 s budget`
+  );
 });
 
 // ─── 2. Verification throughput — valid payloads ─────────────────────────────
@@ -55,7 +58,10 @@ test('verifies 10,000 valid QR payloads within 2 seconds', async () => {
     assert.ok(result !== null, `valid payload was rejected: ${payload}`);
   }
   const elapsed = performance.now() - start;
-  assert.ok(elapsed < 2000, `verification took ${elapsed.toFixed(0)} ms — exceeded 2 s budget`);
+  assert.ok(
+    elapsed < 2000,
+    `verification took ${elapsed.toFixed(0)} ms — exceeded 2 s budget`
+  );
 });
 
 // ─── 3. Tampered-payload rejection throughput ────────────────────────────────
@@ -80,7 +86,10 @@ test('rejects 10,000 tampered payloads within 2 seconds', async () => {
     );
   }
   const elapsed = performance.now() - start;
-  assert.ok(elapsed < 2000, `rejection took ${elapsed.toFixed(0)} ms — exceeded 2 s budget`);
+  assert.ok(
+    elapsed < 2000,
+    `rejection took ${elapsed.toFixed(0)} ms — exceeded 2 s budget`
+  );
 });
 
 // ─── 4. Uniqueness across large ticket-ID sets ───────────────────────────────
@@ -91,7 +100,10 @@ test('produces unique payloads for 5,000 distinct ticket IDs', async () => {
   const seen = new Set();
   for (let i = 0; i < N; i++) {
     const payload = buildFestivalQrPayload(`ticket-${i}`);
-    assert.ok(!seen.has(payload), `duplicate payload at index ${i}: ${payload}`);
+    assert.ok(
+      !seen.has(payload),
+      `duplicate payload at index ${i}: ${payload}`
+    );
     seen.add(payload);
   }
   assert.equal(seen.size, N);
@@ -116,7 +128,11 @@ test('scan session allows exactly one decode per interval across 1,000 synthetic
 
   // Expected: one decode at t=0, then one per INTERVAL → ceil(TOTAL_MS / INTERVAL) + 1
   const expected = Math.floor(TOTAL_MS / INTERVAL) + 1;
-  assert.equal(decodes, expected, `expected ${expected} decodes, got ${decodes}`);
+  assert.equal(
+    decodes,
+    expected,
+    `expected ${expected} decodes, got ${decodes}`
+  );
 });
 
 test('scan session never decodes more often than the interval', () => {
@@ -181,7 +197,9 @@ test('verifier correctly classifies 2,000 interleaved valid and tampered payload
   const valid = Array.from({ length: N }, (_, i) =>
     buildFestivalQrPayload(`ticket-interleaved-${i}`)
   );
-  const tampered = valid.map((p) => p.slice(0, -1) + (p.endsWith('x') ? 'y' : 'x'));
+  const tampered = valid.map(
+    (p) => p.slice(0, -1) + (p.endsWith('x') ? 'y' : 'x')
+  );
 
   let truePositives = 0;
   let trueNegatives = 0;
@@ -215,10 +233,10 @@ test('verifier safely rejects 500 malformed edge-case payloads', async () => {
     'WRONGPREFIX:ticket-1:abc',
     ':ticket-1:abc',
     'TASI2026:ticket-1',
-    'A'.repeat(256),        // very long garbage
-    '0'.repeat(64),          // looks like a hash but no prefix
-    '\x00\x01\x02',          // binary-ish input
-    'TASI2026:\n:\t',        // whitespace injection
+    'A'.repeat(256), // very long garbage
+    '0'.repeat(64), // looks like a hash but no prefix
+    '\x00\x01\x02', // binary-ish input
+    'TASI2026:\n:\t', // whitespace injection
   ];
 
   // Run each edge case 38+ times to reach ~500 total iterations

@@ -1,14 +1,7 @@
 'use client';
 
 import { useDeferredValue, useMemo, useState } from 'react';
-import {
-  Building2,
-  Filter,
-  Search,
-  Tag,
-  UserRound,
-  X,
-} from 'lucide-react';
+import { Building2, Filter, Search, Tag, UserRound, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -83,7 +76,9 @@ export default function AttendeesDirectory({ attendees }) {
 
   const filteredAttendees = useMemo(() => {
     return attendees
-      .filter((attendee) => matchesAttendeeSearch(attendee, deferredSearchQuery))
+      .filter((attendee) =>
+        matchesAttendeeSearch(attendee, deferredSearchQuery)
+      )
       .filter((attendee) => {
         if (categoryFilter === 'All categories') {
           return true;
@@ -105,7 +100,10 @@ export default function AttendeesDirectory({ attendees }) {
     filteredAttendees.flatMap((attendee) => attendee.events ?? [])
   );
 
-  const totalPages = Math.max(1, Math.ceil(filteredAttendees.length / pageSize));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredAttendees.length / pageSize)
+  );
   const activePage = Math.min(currentPage, totalPages);
   const paginatedAttendees = filteredAttendees.slice(
     (activePage - 1) * pageSize,
@@ -128,9 +126,9 @@ export default function AttendeesDirectory({ attendees }) {
                     Browse the festival community in one place
                   </h2>
                   <p className="max-w-2xl text-sm leading-6 text-stone-600 dark:text-slate-300 md:text-base">
-                    Search across the consolidated TASI attendee list, explore by
-                    category and event, and open each profile for the full set of
-                    public details captured in the master guest workbook.
+                    Search across the consolidated TASI attendee list, explore
+                    by category and event, and open each profile for the full
+                    set of public details captured in the master guest workbook.
                   </p>
                 </div>
 
@@ -192,7 +190,6 @@ export default function AttendeesDirectory({ attendees }) {
                   </select>
                 </label>
               </div>
-
             </div>
           </CardContent>
         </Card>
@@ -212,7 +209,10 @@ export default function AttendeesDirectory({ attendees }) {
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.2, delay: Math.min(index * 0.01, 0.18) }}
+                  transition={{
+                    duration: 0.2,
+                    delay: Math.min(index * 0.01, 0.18),
+                  }}
                 >
                   <Card className="h-full border-stone-200/80 bg-white/90 py-4 shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(15,23,42,0.12)] dark:border-slate-800 dark:bg-slate-950/85">
                     <CardHeader className="gap-3 px-4">
@@ -248,7 +248,8 @@ export default function AttendeesDirectory({ attendees }) {
                           <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-stone-400 dark:text-slate-500" />
                           <div className="min-w-0">
                             <div className="line-clamp-2 text-sm font-semibold text-stone-900 dark:text-white">
-                              {attendee.organisation || 'Organisation not listed'}
+                              {attendee.organisation ||
+                                'Organisation not listed'}
                             </div>
                             <div className="line-clamp-2 text-xs text-stone-500 dark:text-slate-400">
                               {attendee.designation || 'Designation not listed'}
@@ -256,15 +257,17 @@ export default function AttendeesDirectory({ attendees }) {
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          {(attendee.events ?? []).slice(0, 3).map((eventName) => (
-                            <Badge
-                              key={eventName}
-                              variant="secondary"
-                              className="rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-bold text-stone-700 dark:bg-slate-800 dark:text-slate-200"
-                            >
-                              {eventName}
-                            </Badge>
-                          ))}
+                          {(attendee.events ?? [])
+                            .slice(0, 3)
+                            .map((eventName) => (
+                              <Badge
+                                key={eventName}
+                                variant="secondary"
+                                className="rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-bold text-stone-700 dark:bg-slate-800 dark:text-slate-200"
+                              >
+                                {eventName}
+                              </Badge>
+                            ))}
                         </div>
                       </div>
 
@@ -402,7 +405,9 @@ export default function AttendeesDirectory({ attendees }) {
                               variant="secondary"
                               className="rounded-full bg-stone-100 px-3 py-1 text-[11px] font-bold text-stone-700 dark:bg-slate-800 dark:text-slate-200"
                             >
-                              {getAttendeeCategoryLabel(selectedAttendee.category)}
+                              {getAttendeeCategoryLabel(
+                                selectedAttendee.category
+                              )}
                             </Badge>
                           </div>
                         </div>
@@ -467,7 +472,6 @@ export default function AttendeesDirectory({ attendees }) {
                           ))}
                         </div>
                       </div>
-
                     </div>
                   </CardContent>
                 </Card>

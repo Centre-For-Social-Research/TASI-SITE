@@ -60,7 +60,6 @@ const future = [
   'Broader cross-industry participation',
 ];
 
-
 export default function Tasi2025Page() {
   return (
     <>
@@ -158,7 +157,6 @@ export default function Tasi2025Page() {
 
         <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
-
             <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
               Featured Session
             </p>
@@ -166,7 +164,8 @@ export default function Tasi2025Page() {
               Keynote Addresses
             </h2>
             <p className="mt-4 max-w-2xl text-body-lg text-stone-600 dark:text-slate-300">
-              Two landmark keynotes from TASI 2025 that shaped the global conversation on online safety and gender-based harm.
+              Two landmark keynotes from TASI 2025 that shaped the global
+              conversation on online safety and gender-based harm.
             </p>
 
             <div className="mt-10 grid gap-8 md:grid-cols-2">

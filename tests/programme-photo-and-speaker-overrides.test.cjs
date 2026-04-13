@@ -10,7 +10,9 @@ test('programme speaker overrides cover Christopher Cooter, Suhel Daud, and Trip
   ).href;
   const { programmeSessions2025 } = await import(programmeModuleUrl);
 
-  const allSpeakers = programmeSessions2025.flatMap((session) => session.speakers || []);
+  const allSpeakers = programmeSessions2025.flatMap(
+    (session) => session.speakers || []
+  );
   assert.ok(allSpeakers.includes('High Commissioner of Canada to India'));
   assert.ok(allSpeakers.includes('Legal Attache Suhel Daud'));
   assert.ok(!allSpeakers.includes('Ms. Tripti Gurha'));
@@ -32,7 +34,10 @@ test('programme speaker overrides cover Christopher Cooter, Suhel Daud, and Trip
 
 test('programme Add to Calendar button targets Microsoft Calendar', () => {
   const agendaClientSource = fs.readFileSync(
-    path.join(process.cwd(), 'src/components/programme/programme-agenda-client.jsx'),
+    path.join(
+      process.cwd(),
+      'src/components/programme/programme-agenda-client.jsx'
+    ),
     'utf8'
   );
 
@@ -40,10 +45,7 @@ test('programme Add to Calendar button targets Microsoft Calendar', () => {
     agendaClientSource,
     /<a[\s\S]*?href=\{session\.calendar\.microsoftHref\}[\s\S]*?<span>Add to Calendar<\/span>/
   );
-  assert.match(
-    agendaClientSource,
-    /<span>Google Calendar<\/span>/
-  );
+  assert.match(agendaClientSource, /<span>Google Calendar<\/span>/);
   assert.doesNotMatch(
     agendaClientSource,
     /download=\{session\.calendar\.downloadName\}/

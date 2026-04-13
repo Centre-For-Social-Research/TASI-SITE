@@ -1,13 +1,13 @@
-import { getResendClient, getResendFromEmail } from "@/lib/resend";
-import { buildTicketQrDataUrl } from "@/lib/ticketing-qr";
+import { getResendClient, getResendFromEmail } from '@/lib/resend';
+import { buildTicketQrDataUrl } from '@/lib/ticketing-qr';
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 export async function sendTicketConfirmationEmail({ order, event, tickets }) {
@@ -17,7 +17,7 @@ export async function sendTicketConfirmationEmail({ order, event, tickets }) {
     return {
       sent: false,
       skipped: true,
-      error: "Missing RESEND_API_KEY.",
+      error: 'Missing RESEND_API_KEY.',
     };
   }
 
@@ -26,14 +26,14 @@ export async function sendTicketConfirmationEmail({ order, event, tickets }) {
       const qrDataUrl = await buildTicketQrDataUrl(ticket);
       return `
         <div style="margin:0 0 22px;padding:18px;border:1px solid #e5e7eb;border-radius:10px;background:#fffdf8;">
-          <p style="margin:0 0 6px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8a5b00;">${escapeHtml(ticket.ticket_type_name || "Reception Ticket")}</p>
+          <p style="margin:0 0 6px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8a5b00;">${escapeHtml(ticket.ticket_type_name || 'Reception Ticket')}</p>
           <p style="margin:0 0 4px;font-size:20px;font-weight:700;color:#140f26;">${escapeHtml(ticket.attendee_name)}</p>
           <p style="margin:0 0 2px;font-size:13px;color:#475569;">Ticket code: ${escapeHtml(ticket.ticket_code)}</p>
           <p style="margin:0 0 12px;font-size:13px;color:#475569;">${escapeHtml(ticket.attendee_email)} · ${escapeHtml(ticket.attendee_phone)}</p>
           <img src="${qrDataUrl}" alt="QR code for ${escapeHtml(ticket.ticket_code)}" width="180" height="180" style="display:block;width:180px;height:180px;border-radius:10px;border:1px solid #e5e7eb;background:#ffffff;padding:8px;" />
         </div>
       `;
-    }),
+    })
   );
 
   const html = `<!doctype html>
@@ -46,8 +46,8 @@ export async function sendTicketConfirmationEmail({ order, event, tickets }) {
         </div>
         <div style="padding:28px;">
           <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#111827;">Thank you for booking your reception tickets for ${escapeHtml(event.title)}.</p>
-          <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#475569;">Order reference: ${escapeHtml(order.public_order_code)}<br/>Venue: ${escapeHtml(event.venue || "TASI 2026 Reception")}<br/>Start: ${escapeHtml(event.starts_at || "")}</p>
-          ${ticketBlocks.join("")}
+          <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#475569;">Order reference: ${escapeHtml(order.public_order_code)}<br/>Venue: ${escapeHtml(event.venue || 'TASI 2026 Reception')}<br/>Start: ${escapeHtml(event.starts_at || '')}</p>
+          ${ticketBlocks.join('')}
         </div>
       </div>
     </body>
@@ -56,8 +56,10 @@ export async function sendTicketConfirmationEmail({ order, event, tickets }) {
   const text = [
     `Your booking for ${event.title} is confirmed.`,
     `Order reference: ${order.public_order_code}`,
-    ...tickets.map((ticket) => `${ticket.ticket_code} - ${ticket.attendee_name}`),
-  ].join("\n");
+    ...tickets.map(
+      (ticket) => `${ticket.ticket_code} - ${ticket.attendee_name}`
+    ),
+  ].join('\n');
 
   try {
     const { data, error } = await resend.emails.send({
@@ -70,7 +72,7 @@ export async function sendTicketConfirmationEmail({ order, event, tickets }) {
 
     if (error) {
       throw new Error(
-        error.message || "Failed to send ticket confirmation email.",
+        error.message || 'Failed to send ticket confirmation email.'
       );
     }
 
@@ -84,7 +86,7 @@ export async function sendTicketConfirmationEmail({ order, event, tickets }) {
       error:
         error instanceof Error
           ? error.message
-          : "Failed to send ticket confirmation email.",
+          : 'Failed to send ticket confirmation email.',
     };
   }
 }

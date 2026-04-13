@@ -31,7 +31,10 @@ export async function POST(request) {
     if (token) {
       const festivalTicket = await getFestivalTicketByQrPayload(token);
       if (festivalTicket) {
-        if (festivalTicket.status === 'pending' || festivalTicket.status === 'cancelled') {
+        if (
+          festivalTicket.status === 'pending' ||
+          festivalTicket.status === 'cancelled'
+        ) {
           return Response.json({
             success: false,
             result: 'not_confirmed',

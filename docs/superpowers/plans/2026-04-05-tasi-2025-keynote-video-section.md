@@ -13,6 +13,7 @@
 ### Task 1: Add featured session data to the TASI 2025 page
 
 **Files:**
+
 - Modify: `src/components/editions/tasi-2025-page.jsx`
 
 - [ ] **Step 1: Add a local `featuredSessions` array near the other page constants**
@@ -48,6 +49,7 @@ Expected: the page has one local source of truth for the two video cards and no 
 ### Task 2: Insert the new video section below "About the Festival"
 
 **Files:**
+
 - Modify: `src/components/editions/tasi-2025-page.jsx`
 
 - [ ] **Step 1: Add the new section between the existing "About the Festival" and "Thematic Focus" sections**
@@ -65,7 +67,9 @@ Insert a new section with:
         Two Keynotes That Framed the Global Conversation
       </h2>
       <p className="mx-auto mt-5 max-w-2xl text-body-lg text-stone-700 dark:text-slate-300">
-        These featured addresses brought international policy and safety leadership into the TASI 2025 programme, extending the festival&apos;s focus from national dialogue to urgent global questions.
+        These featured addresses brought international policy and safety
+        leadership into the TASI 2025 programme, extending the festival&apos;s
+        focus from national dialogue to urgent global questions.
       </p>
     </div>
 
@@ -123,6 +127,7 @@ Expected: the change is additive and localized.
 ### Task 3: Verify the new section renders correctly in code
 
 **Files:**
+
 - Modify: `src/components/editions/tasi-2025-page.jsx`
 
 - [ ] **Step 1: Run ESLint on the TASI 2025 page**

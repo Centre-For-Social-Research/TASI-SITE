@@ -1,7 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
-import { tasiKnowledge } from "@/data/tasi-knowledge";
+import { GoogleGenAI } from '@google/genai';
+import { tasiKnowledge } from '@/data/tasi-knowledge';
 
-const apiKey = process.env.GEMINI_API_KEY || "";
+const apiKey = process.env.GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 export async function POST(req: Request) {
@@ -9,12 +9,15 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
-      return Response.json({ error: "Invalid messages format" }, { status: 400 });
+      return Response.json(
+        { error: 'Invalid messages format' },
+        { status: 400 }
+      );
     }
 
     if (!apiKey) {
-      console.error("GEMINI_API_KEY is not set.");
-      return Response.json({ error: "Internal Server Error" }, { status: 500 });
+      console.error('GEMINI_API_KEY is not set.');
+      return Response.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 
     // TODO: Add rate limiting before production
@@ -30,26 +33,24 @@ Always refer to the event as TASI 2026.
 Here is the TASI 2026 information:
 ${tasiKnowledge}`;
 
-    const rawHistory = messages
-      .slice(0, -1)
-      .map((msg: any) => ({
-        role: msg.role === "user" ? "user" : "model",
-        parts: [{ text: msg.content }],
-      }));
+    const rawHistory = messages.slice(0, -1).map((msg: any) => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }],
+    }));
 
     // Enforce strict alternation and ensure history starts with 'user'
     const history: any[] = [];
-    let lastRole = "";
+    let lastRole = '';
     for (const msg of rawHistory) {
       if (msg.role !== lastRole) {
         history.push(msg);
         lastRole = msg.role;
       } else if (history.length > 0) {
-        history[history.length - 1].parts[0].text += "\n" + msg.parts[0].text;
+        history[history.length - 1].parts[0].text += '\n' + msg.parts[0].text;
       }
     }
 
-    while (history.length > 0 && history[0].role === "model") {
+    while (history.length > 0 && history[0].role === 'model') {
       history.shift();
     }
 
@@ -68,7 +69,7 @@ ${tasiKnowledge}`;
 
     return Response.json({ reply });
   } catch (error) {
-    console.error("Error in chat API:", error);
-    return Response.json({ error: "Something went wrong" }, { status: 500 });
+    console.error('Error in chat API:', error);
+    return Response.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

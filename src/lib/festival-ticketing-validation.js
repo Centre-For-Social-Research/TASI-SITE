@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const countryCodeSchema = z
   .string()
   .trim()
   .toUpperCase()
-  .regex(/^[A-Z]{2}$/, "Country must be a valid ISO 3166-1 alpha-2 code.");
+  .regex(/^[A-Z]{2}$/, 'Country must be a valid ISO 3166-1 alpha-2 code.');
 
 const phoneSchema = z
   .string()
@@ -12,7 +12,7 @@ const phoneSchema = z
   .max(30)
   .refine(
     (value) => !value || /^\+?[0-9\s\-()]{7,30}$/.test(value),
-    "Phone must be a valid phone number.",
+    'Phone must be a valid phone number.'
   );
 
 const textField = (label, min, max, required = true) =>
@@ -39,62 +39,69 @@ const booleanConsent = (message) =>
 const linkedinUrlSchema = z
   .string()
   .trim()
-  .max(500, "LinkedIn URL must be 500 characters or fewer.")
+  .max(500, 'LinkedIn URL must be 500 characters or fewer.')
   .refine(
     (val) => !val || /^(https?:\/\/)?(www\.)?linkedin\.com\//i.test(val),
-    "LinkedIn URL must be a valid linkedin.com profile URL.",
+    'LinkedIn URL must be a valid linkedin.com profile URL.'
   )
   .optional()
-  .default("");
+  .default('');
 
 export const festivalCreateOrderSchema = z
   .object({
-    fullName: textField("Full name", 2, 200)
-      .regex(/^[A-Za-z\s'\-]+$/, "Full name contains unsupported characters."),
+    fullName: textField('Full name', 2, 200).regex(
+      /^[A-Za-z\s'\-]+$/,
+      'Full name contains unsupported characters.'
+    ),
     email: z.string().trim().email().max(254),
     confirmEmail: z.string().trim().email().max(254),
-    organization: textField("Organization", 2, 300, false).optional().default(""),
-    jobTitle: textField("Job title", 2, 200, false).optional().default(""),
+    organization: textField('Organization', 2, 300, false)
+      .optional()
+      .default(''),
+    jobTitle: textField('Job title', 2, 200, false).optional().default(''),
     country: countryCodeSchema,
-    phone: phoneSchema.optional().default(""),
+    phone: phoneSchema.optional().default(''),
     linkedinUrl: linkedinUrlSchema,
-    profilePhotoPath: z.string().trim().max(500).optional().default(""),
-    billingName: textField("Billing name", 2, 200),
+    profilePhotoPath: z.string().trim().max(500).optional().default(''),
+    billingName: textField('Billing name', 2, 200),
     billingEmail: z.string().trim().email().max(254),
     billingPhone: phoneSchema,
-    billingAddressLine1: textField("Billing address line 1", 3, 200),
-    billingAddressLine2: textField("Billing address line 2", 0, 200, false)
+    billingAddressLine1: textField('Billing address line 1', 3, 200),
+    billingAddressLine2: textField('Billing address line 2', 0, 200, false)
       .optional()
-      .default(""),
-    billingCity: textField("Billing city", 2, 120),
-    billingStateOrProvince: textField("Billing state or province", 2, 120),
-    billingPostalCode: textField("Billing postal code", 3, 30),
+      .default(''),
+    billingCity: textField('Billing city', 2, 120),
+    billingStateOrProvince: textField('Billing state or province', 2, 120),
+    billingPostalCode: textField('Billing postal code', 3, 30),
     billingCountry: countryCodeSchema,
-    taxIdNumber: textField("Tax ID number (PAN)", 5, 80),
-    gstin: textField("GSTIN", 0, 20, false).optional().default(""),
-    passportOrNationalId: textField("Passport or national ID", 0, 80, false)
+    taxIdNumber: textField('Tax ID number (PAN)', 5, 80),
+    gstin: textField('GSTIN', 0, 20, false).optional().default(''),
+    passportOrNationalId: textField('Passport or national ID', 0, 80, false)
       .optional()
-      .default(""),
+      .default(''),
     noRefundAccepted: booleanConsent(
-      "No-refund policy must be acknowledged before payment.",
+      'No-refund policy must be acknowledged before payment.'
     ),
-    termsAccepted: booleanConsent("Terms must be accepted before payment."),
-    privacyAccepted: booleanConsent("Privacy policy must be accepted before payment."),
+    termsAccepted: booleanConsent('Terms must be accepted before payment.'),
+    privacyAccepted: booleanConsent(
+      'Privacy policy must be accepted before payment.'
+    ),
   })
   .superRefine((value, ctx) => {
     if (value.email.toLowerCase() !== value.confirmEmail.toLowerCase()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Email confirmation does not match.",
-        path: ["confirmEmail"],
+        message: 'Email confirmation does not match.',
+        path: ['confirmEmail'],
       });
     }
 
-    if (value.country !== "IN" && !value.passportOrNationalId.trim()) {
+    if (value.country !== 'IN' && !value.passportOrNationalId.trim()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Passport or national ID is required for international ticketing.",
-        path: ["passportOrNationalId"],
+        message:
+          'Passport or national ID is required for international ticketing.',
+        path: ['passportOrNationalId'],
       });
     }
   });

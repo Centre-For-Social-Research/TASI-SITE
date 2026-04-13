@@ -1,8 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 function TicketLookupForm() {
   return (
-    <form action="/api/tickets" method="GET" className="mt-6 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+    <form
+      action="/api/tickets"
+      method="GET"
+      className="mt-6 grid gap-4 md:grid-cols-[1fr_1fr_auto]"
+    >
       <input
         type="email"
         name="email"
@@ -27,8 +31,8 @@ function TicketLookupForm() {
 
 export default async function TicketSuccessPage({ searchParams }) {
   const resolvedSearchParams = await searchParams;
-  const order = resolvedSearchParams?.order || "";
-  const isFreeOrder = resolvedSearchParams?.free === "1";
+  const order = resolvedSearchParams?.order || '';
+  const isFreeOrder = resolvedSearchParams?.free === '1';
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] px-4 py-16 text-stone-900 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] dark:text-stone-100">
@@ -37,10 +41,13 @@ export default async function TicketSuccessPage({ searchParams }) {
           TASI 2026 Festival Ticketing
         </p>
         <h1 className="mt-4 text-4xl font-black tracking-tight text-stone-900 dark:text-white">
-          {isFreeOrder ? "Your ticket is reserved." : "Your payment is confirmed."}
+          {isFreeOrder
+            ? 'Your ticket is reserved.'
+            : 'Your payment is confirmed.'}
         </h1>
         <p className="mt-4 text-base leading-relaxed text-stone-600 dark:text-slate-300">
-          Your confirmation email includes your ticket PDF, invoice, and attendee badge. Keep the email handy for venue access and check-in.
+          Your confirmation email includes your ticket PDF, invoice, and
+          attendee badge. Keep the email handy for venue access and check-in.
         </p>
 
         {order ? (
@@ -48,7 +55,9 @@ export default async function TicketSuccessPage({ searchParams }) {
             <p className="text-xs font-black uppercase tracking-[0.18em] text-stone-500 dark:text-slate-400">
               Order Reference
             </p>
-            <p className="mt-2 text-xl font-black text-stone-900 dark:text-white">{order}</p>
+            <p className="mt-2 text-xl font-black text-stone-900 dark:text-white">
+              {order}
+            </p>
           </div>
         ) : null}
 

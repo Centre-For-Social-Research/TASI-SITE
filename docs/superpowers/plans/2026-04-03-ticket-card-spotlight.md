@@ -13,6 +13,7 @@
 ### Task 1: Lock in integration expectations
 
 **Files:**
+
 - Create: `tests/festival-ticketing-spotlight.test.cjs`
 - Modify: `src/components/register/festival-ticketing-section.jsx`
 - Create: `src/components/ui/spotlight-card.tsx`
@@ -20,25 +21,33 @@
 - [ ] **Step 1: Write the failing test**
 
 ```js
-const test = require("node:test");
-const assert = require("node:assert/strict");
-const { readFileSync } = require("node:fs");
-const { join } = require("node:path");
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const { join } = require('node:path');
 
 function readFile(relativePath) {
-  return readFileSync(join(process.cwd(), relativePath), "utf8");
+  return readFileSync(join(process.cwd(), relativePath), 'utf8');
 }
 
-test("festival ticket cards use the reusable GlowCard wrapper", () => {
-  const source = readFile("src/components/register/festival-ticketing-section.jsx");
+test('festival ticket cards use the reusable GlowCard wrapper', () => {
+  const source = readFile(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
 
-  assert.match(source, /import\s+\{\s*GlowCard\s*\}\s+from\s+"@\/components\/ui\/spotlight-card"/);
+  assert.match(
+    source,
+    /import\s+\{\s*GlowCard\s*\}\s+from\s+"@\/components\/ui\/spotlight-card"/
+  );
   assert.match(source, /<GlowCard/);
-  assert.match(source, /glowColor=\{option\.country === "IN" \? "orange" : "purple"\}/);
+  assert.match(
+    source,
+    /glowColor=\{option\.country === "IN" \? "orange" : "purple"\}/
+  );
 });
 
-test("spotlight card component exists as a reusable UI primitive", () => {
-  const source = readFile("src/components/ui/spotlight-card.tsx");
+test('spotlight card component exists as a reusable UI primitive', () => {
+  const source = readFile('src/components/ui/spotlight-card.tsx');
 
   assert.match(source, /export\s+\{\s*GlowCard\s*\}/);
   assert.match(source, /data-glow/);
@@ -70,6 +79,7 @@ git commit -m "feat: add spotlight effect to festival ticket cards"
 ### Task 2: Verify existing layout still holds
 
 **Files:**
+
 - Test: `tests/register-page-layout.test.cjs`
 
 - [ ] **Step 1: Run the existing registration layout regression**

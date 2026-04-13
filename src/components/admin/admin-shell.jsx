@@ -282,7 +282,7 @@ export default function AdminShell({ operator, currentPath, children }) {
                       ? 'Check-In Console'
                       : currentPath === '/admin/tickets'
                         ? 'Ticketing'
-                      : 'Admin'}
+                        : 'Admin'}
               </p>
 
               {/* Stat pills + theme toggle + logout */}

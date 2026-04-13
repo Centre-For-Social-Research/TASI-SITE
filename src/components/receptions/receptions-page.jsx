@@ -339,9 +339,11 @@ function PreMode() {
   );
 }
 
-export default function ReceptionsPage({ initialMode = "post" }) {
-  const [mode, setMode] = React.useState(initialMode === "pre" ? "pre" : "post");
-  const is2025 = mode === "post";
+export default function ReceptionsPage({ initialMode = 'post' }) {
+  const [mode, setMode] = React.useState(
+    initialMode === 'pre' ? 'pre' : 'post'
+  );
+  const is2025 = mode === 'post';
 
   return (
     <>
@@ -362,8 +364,8 @@ export default function ReceptionsPage({ initialMode = "post" }) {
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/90 md:text-lg">
               {is2025
-                ? "Explore the embassy-hosted reception journey of TASI 2025 across October 6-8 in New Delhi, from the pre-launch welcome evening to the closing diplomatic finale."
-                : "Explore the role of receptions within TASI 2026, from diplomatic hosting and cross-sector networking to the quieter conversations that help summit relationships turn into action."}
+                ? 'Explore the embassy-hosted reception journey of TASI 2025 across October 6-8 in New Delhi, from the pre-launch welcome evening to the closing diplomatic finale.'
+                : 'Explore the role of receptions within TASI 2026, from diplomatic hosting and cross-sector networking to the quieter conversations that help summit relationships turn into action.'}
             </p>
 
             <div className="mt-8">
@@ -372,13 +374,15 @@ export default function ReceptionsPage({ initialMode = "post" }) {
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "October 6-8, 2025" : "Diplomatic hospitality"}
+                {is2025 ? 'October 6-8, 2025' : 'Diplomatic hospitality'}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "New Delhi diplomatic receptions" : "Cross-sector networking"}
+                {is2025
+                  ? 'New Delhi diplomatic receptions'
+                  : 'Cross-sector networking'}
               </span>
               <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm">
-                {is2025 ? "Invite Only" : "Registration via main festival flow"}
+                {is2025 ? 'Invite Only' : 'Registration via main festival flow'}
               </span>
             </div>
           </div>

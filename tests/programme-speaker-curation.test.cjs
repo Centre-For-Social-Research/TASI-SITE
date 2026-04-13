@@ -10,7 +10,9 @@ test('programme data reflects speaker/session curation requests', async () => {
   ).href;
   const { programmeSessions2025 } = await import(programmeModuleUrl);
 
-  const allSpeakers = programmeSessions2025.flatMap((session) => session.speakers || []);
+  const allSpeakers = programmeSessions2025.flatMap(
+    (session) => session.speakers || []
+  );
 
   assert.ok(allSpeakers.includes('Dr. Ranjana Kumari'));
   assert.ok(!allSpeakers.includes('Ranjana Kumari, PhD'));
@@ -22,7 +24,10 @@ test('programme data reflects speaker/session curation requests', async () => {
     'utf8'
   );
 
-  assert.match(programmePageSource, /'delphine o':\s*'\/img\/speakers\/Delphine O\.jpg'/);
+  assert.match(
+    programmePageSource,
+    /'delphine o':\s*'\/img\/speakers\/Delphine O\.jpg'/
+  );
   assert.match(
     programmePageSource,
     /'julie inman grant':\s*'\/img\/speakers\/Julie_Inman_Grant\.jpg'/

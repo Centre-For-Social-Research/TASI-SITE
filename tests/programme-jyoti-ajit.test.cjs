@@ -14,12 +14,16 @@ test('programme replaces Jyoti CSR with Jyoti Vadehra and removes Ajit Kumar', a
   const { programmeSessions2025 } = await import(programmeModuleUrl);
   const { speakers } = await import(speakersModuleUrl);
 
-  const allSpeakers = programmeSessions2025.flatMap((session) => session.speakers || []);
+  const allSpeakers = programmeSessions2025.flatMap(
+    (session) => session.speakers || []
+  );
 
   assert.ok(allSpeakers.includes('Jyoti Vadehra'));
   assert.ok(!allSpeakers.includes('Ajit Kumar'));
 
-  const jyotiProfile = speakers.find((speaker) => speaker.name === 'Jyoti Vadehra');
+  const jyotiProfile = speakers.find(
+    (speaker) => speaker.name === 'Jyoti Vadehra'
+  );
   assert.ok(jyotiProfile, 'Expected Jyoti Vadehra speaker profile to exist');
   assert.equal(jyotiProfile.photo, 'Jyoti Vadehra.jpg');
 

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   BadgeCheck,
   BookUser,
@@ -28,44 +28,44 @@ import {
   UtensilsCrossed,
   Users,
   X,
-} from "lucide-react";
-import { AdminAlert } from "@/components/admin/admin-ui";
-import { GlowCard } from "@/components/ui/spotlight-card";
-import { festivalCreateOrderSchema } from "@/lib/festival-ticketing-validation";
+} from 'lucide-react';
+import { AdminAlert } from '@/components/admin/admin-ui';
+import { GlowCard } from '@/components/ui/spotlight-card';
+import { festivalCreateOrderSchema } from '@/lib/festival-ticketing-validation';
 
 const COUNTRY_OPTIONS = [
-  { code: "IN", label: "India" },
-  { code: "US", label: "United States" },
-  { code: "GB", label: "United Kingdom" },
-  { code: "AE", label: "United Arab Emirates" },
-  { code: "SG", label: "Singapore" },
-  { code: "DE", label: "Germany" },
-  { code: "AU", label: "Australia" },
-  { code: "CA", label: "Canada" },
+  { code: 'IN', label: 'India' },
+  { code: 'US', label: 'United States' },
+  { code: 'GB', label: 'United Kingdom' },
+  { code: 'AE', label: 'United Arab Emirates' },
+  { code: 'SG', label: 'Singapore' },
+  { code: 'DE', label: 'Germany' },
+  { code: 'AU', label: 'Australia' },
+  { code: 'CA', label: 'Canada' },
 ];
 
 const INITIAL_FORM = {
-  fullName: "",
-  email: "",
-  confirmEmail: "",
-  organization: "",
-  jobTitle: "",
-  country: "IN",
-  phone: "",
-  linkedinUrl: "",
-  profilePhotoPath: "",
-  billingName: "",
-  billingEmail: "",
-  billingPhone: "",
-  billingAddressLine1: "",
-  billingAddressLine2: "",
-  billingCity: "",
-  billingStateOrProvince: "",
-  billingPostalCode: "",
-  billingCountry: "IN",
-  taxIdNumber: "",
-  gstin: "",
-  passportOrNationalId: "",
+  fullName: '',
+  email: '',
+  confirmEmail: '',
+  organization: '',
+  jobTitle: '',
+  country: 'IN',
+  phone: '',
+  linkedinUrl: '',
+  profilePhotoPath: '',
+  billingName: '',
+  billingEmail: '',
+  billingPhone: '',
+  billingAddressLine1: '',
+  billingAddressLine2: '',
+  billingCity: '',
+  billingStateOrProvince: '',
+  billingPostalCode: '',
+  billingCountry: 'IN',
+  taxIdNumber: '',
+  gstin: '',
+  passportOrNationalId: '',
   noRefundAccepted: false,
   termsAccepted: false,
   privacyAccepted: false,
@@ -73,199 +73,199 @@ const INITIAL_FORM = {
 
 const FESTIVAL_PASS_OPTIONS = [
   {
-    label: "Domestic",
-    amount: "INR 11,800",
-    title: "Domestic",
+    label: 'Domestic',
+    amount: 'INR 11,800',
+    title: 'Domestic',
     description:
-      "For attendees based in India, with tax-ready invoicing and domestic Razorpay routing.",
-    country: "IN",
-    badgePattern: "mosaic",
+      'For attendees based in India, with tax-ready invoicing and domestic Razorpay routing.',
+    country: 'IN',
+    badgePattern: 'mosaic',
   },
   {
-    label: "International",
-    amount: "USD 200",
-    title: "International",
+    label: 'International',
+    amount: 'USD 200',
+    title: 'International',
     description:
-      "For attendees joining from outside India, with export invoice support and international-compliant routing.",
-    country: "US",
-    badgePattern: "rings",
+      'For attendees joining from outside India, with export invoice support and international-compliant routing.',
+    country: 'US',
+    badgePattern: 'rings',
   },
 ];
 
 const REVIEW_INCLUDED_ITEMS = [
   {
-    title: "Everything in Free Pass",
-    description: "Full session access + all basic hospitality",
+    title: 'Everything in Free Pass',
+    description: 'Full session access + all basic hospitality',
   },
   {
-    title: "Exclusive Receptions",
-    description: "Inaugural Reception, Gala Dinner, Closing Ceremony",
+    title: 'Exclusive Receptions',
+    description: 'Inaugural Reception, Gala Dinner, Closing Ceremony',
   },
   {
-    title: "Networking & Access",
-    description: "Curated networking, reserved seating, roundtables",
+    title: 'Networking & Access',
+    description: 'Curated networking, reserved seating, roundtables',
   },
   {
-    title: "Professional Benefits",
-    description: "Certificate, premium badge, priority entry",
+    title: 'Professional Benefits',
+    description: 'Certificate, premium badge, priority entry',
   },
 ];
 
 const FULL_BLEED_COMPARISON_ROWS = [
   {
     icon: Mic,
-    label: "Conference Access (Day 1 & Day 2)",
+    label: 'Conference Access (Day 1 & Day 2)',
     free: true,
     paid: true,
   },
   {
     icon: Users,
-    label: "All panels, keynotes, and discussions",
+    label: 'All panels, keynotes, and discussions',
     free: true,
     paid: true,
   },
   {
     icon: Coffee,
-    label: "AM/PM Tea and Lunch (Both Days)",
+    label: 'AM/PM Tea and Lunch (Both Days)',
     free: true,
     paid: true,
   },
   {
     icon: PartyPopper,
-    label: "Inaugural Reception & Closing Ceremony",
+    label: 'Inaugural Reception & Closing Ceremony',
     free: false,
     paid: true,
   },
   {
     icon: UtensilsCrossed,
-    label: "Gala Dinner",
+    label: 'Gala Dinner',
     free: false,
     paid: true,
   },
   {
     icon: Users,
-    label: "Curated networking opportunities",
+    label: 'Curated networking opportunities',
     free: false,
     paid: true,
   },
   {
     icon: BadgeCheck,
-    label: "Reserved seating (front or priority zones)",
+    label: 'Reserved seating (front or priority zones)',
     free: false,
     paid: true,
   },
   {
     icon: MonitorPlay,
-    label: "Access to post-event session recordings",
+    label: 'Access to post-event session recordings',
     free: false,
     paid: true,
   },
   {
     icon: Handshake,
-    label: "Curated 1:1 meeting slots (limited / request-based)",
+    label: 'Curated 1:1 meeting slots (limited / request-based)',
     free: false,
     paid: true,
   },
   {
     icon: Gift,
-    label: "Digital goodie kit (reports, toolkits, partner resources)",
+    label: 'Digital goodie kit (reports, toolkits, partner resources)',
     free: false,
     paid: true,
   },
   {
     icon: BookUser,
-    label: "Name listing on official website (attendee recognition)",
+    label: 'Name listing on official website (attendee recognition)',
     free: false,
     paid: true,
   },
   {
     icon: MessageCircleMore,
-    label: "Access to Stakeholder Engagement Roundtable",
+    label: 'Access to Stakeholder Engagement Roundtable',
     free: false,
     paid: true,
   },
   {
     icon: FileText,
-    label: "Curated discussion summaries (not public)",
+    label: 'Curated discussion summaries (not public)',
     free: false,
     paid: true,
   },
   {
     icon: Users,
-    label: "VIP lounge / informal networking zone access",
+    label: 'VIP lounge / informal networking zone access',
     free: false,
     paid: true,
   },
   {
     icon: BadgeCheck,
-    label: "Certificate of Participation & Premium Badge",
+    label: 'Certificate of Participation & Premium Badge',
     free: false,
     paid: true,
   },
 ];
 
 function getTicketPreview(country) {
-  if (country === "IN") {
+  if (country === 'IN') {
     return {
-      label: "Domestic Pass",
-      amount: "INR 11,800",
+      label: 'Domestic Pass',
+      amount: 'INR 11,800',
       description:
-        "Includes 18% GST and routes exclusively to the domestic NGO Razorpay account.",
-      complianceLabel: "GST invoice required",
-      badgeLabel: "DOMESTIC PASS",
+        'Includes 18% GST and routes exclusively to the domestic NGO Razorpay account.',
+      complianceLabel: 'GST invoice required',
+      badgeLabel: 'DOMESTIC PASS',
     };
   }
 
   return {
-    label: "International Pass",
-    amount: "USD 200",
+    label: 'International Pass',
+    amount: 'USD 200',
     description:
-      "Zero-rated export invoice and exclusive routing to the FCRA Razorpay account.",
-    complianceLabel: "Export invoice and identity record required",
-    badgeLabel: "INTERNATIONAL PASS",
+      'Zero-rated export invoice and exclusive routing to the FCRA Razorpay account.',
+    complianceLabel: 'Export invoice and identity record required',
+    badgeLabel: 'INTERNATIONAL PASS',
   };
 }
 
 function getTicketBreakdown(country) {
-  if (country === "IN") {
+  if (country === 'IN') {
     return {
-      baseLabel: "Base Price",
-      baseAmount: "₹10,000",
-      taxLabel: "GST Treatment",
-      taxAmount: "₹1,800 (18%)",
-      totalAmount: "₹11,800",
+      baseLabel: 'Base Price',
+      baseAmount: '₹10,000',
+      taxLabel: 'GST Treatment',
+      taxAmount: '₹1,800 (18%)',
+      totalAmount: '₹11,800',
       paymentMessage:
-        "By proceeding, you confirm that your country of residence is India. This determines the regulatory channel for your payment.",
-      paymentGatewayLabel: "Domestic payment gateway",
+        'By proceeding, you confirm that your country of residence is India. This determines the regulatory channel for your payment.',
+      paymentGatewayLabel: 'Domestic payment gateway',
     };
   }
 
   return {
-    baseLabel: "Base Price",
-    baseAmount: "$200",
-    taxLabel: "GST Treatment",
-    taxAmount: "Zero-rated export",
-    totalAmount: "$200",
+    baseLabel: 'Base Price',
+    baseAmount: '$200',
+    taxLabel: 'GST Treatment',
+    taxAmount: 'Zero-rated export',
+    totalAmount: '$200',
     paymentMessage:
-      "By proceeding, you confirm that your country of residence is outside India. This determines the regulatory channel for your payment.",
-    paymentGatewayLabel: "International payment gateway",
+      'By proceeding, you confirm that your country of residence is outside India. This determines the regulatory channel for your payment.',
+    paymentGatewayLabel: 'International payment gateway',
   };
 }
 
 function getTicketSurface(pattern) {
-  if (pattern === "mosaic") {
-    return "bg-[linear-gradient(180deg,rgba(46,6,89,0.15),rgba(77,7,106,0.72)),linear-gradient(45deg,#b12f2a_12.5%,transparent_12.5%_25%,#cf3f1d_25%_37.5%,transparent_37.5%_50%,#70206b_50%_62.5%,transparent_62.5%_75%,#f08b18_75%_87.5%,transparent_87.5%),linear-gradient(-45deg,#762071_12.5%,transparent_12.5%_25%,#cf3f1d_25%_37.5%,transparent_37.5%_50%,#f08b18_50%_62.5%,transparent_62.5%_75%,#932047_75%_87.5%,transparent_87.5%),linear-gradient(180deg,#60207f_0%,#7d1249_54%,#3a0a6c_100%)] bg-[length:72px_72px,72px_72px,72px_72px,100%_100%]";
+  if (pattern === 'mosaic') {
+    return 'bg-[linear-gradient(180deg,rgba(46,6,89,0.15),rgba(77,7,106,0.72)),linear-gradient(45deg,#b12f2a_12.5%,transparent_12.5%_25%,#cf3f1d_25%_37.5%,transparent_37.5%_50%,#70206b_50%_62.5%,transparent_62.5%_75%,#f08b18_75%_87.5%,transparent_87.5%),linear-gradient(-45deg,#762071_12.5%,transparent_12.5%_25%,#cf3f1d_25%_37.5%,transparent_37.5%_50%,#f08b18_50%_62.5%,transparent_62.5%_75%,#932047_75%_87.5%,transparent_87.5%),linear-gradient(180deg,#60207f_0%,#7d1249_54%,#3a0a6c_100%)] bg-[length:72px_72px,72px_72px,72px_72px,100%_100%]';
   }
 
-  return "bg-[radial-gradient(circle_at_20%_20%,rgba(255,159,28,0.75)_0_18%,transparent_18%_100%),radial-gradient(circle_at_72%_28%,rgba(255,159,28,0.68)_0_18%,transparent_18%_100()),radial-gradient(circle_at_50%_65%,rgba(255,159,28,0.6)_0_18%,transparent_18%_100()),linear-gradient(180deg,#5c1d67_0%,#7c114f_46%,#a20f4a_100%)]";
+  return 'bg-[radial-gradient(circle_at_20%_20%,rgba(255,159,28,0.75)_0_18%,transparent_18%_100%),radial-gradient(circle_at_72%_28%,rgba(255,159,28,0.68)_0_18%,transparent_18%_100()),radial-gradient(circle_at_50%_65%,rgba(255,159,28,0.6)_0_18%,transparent_18%_100()),linear-gradient(180deg,#5c1d67_0%,#7c114f_46%,#a20f4a_100%)]';
 }
 
 function getTicketSurfaceStyle(pattern) {
-  if (pattern === "rings") {
+  if (pattern === 'rings') {
     return {
       backgroundImage:
-        "radial-gradient(circle at 20% 20%, rgba(255,159,28,0.75) 0 18%, transparent 18% 100%), radial-gradient(circle at 72% 28%, rgba(255,159,28,0.68) 0 18%, transparent 18% 100%), radial-gradient(circle at 50% 65%, rgba(255,159,28,0.6) 0 18%, transparent 18% 100%), linear-gradient(180deg, #5c1d67 0%, #7c114f 46%, #a20f4a 100%)",
-      backgroundColor: "#7c114f",
+        'radial-gradient(circle at 20% 20%, rgba(255,159,28,0.75) 0 18%, transparent 18% 100%), radial-gradient(circle at 72% 28%, rgba(255,159,28,0.68) 0 18%, transparent 18% 100%), radial-gradient(circle at 50% 65%, rgba(255,159,28,0.6) 0 18%, transparent 18% 100%), linear-gradient(180deg, #5c1d67 0%, #7c114f 46%, #a20f4a 100%)',
+      backgroundColor: '#7c114f',
     };
   }
 
@@ -273,7 +273,11 @@ function getTicketSurfaceStyle(pattern) {
 }
 
 function getSelectionForCountry(country) {
-  return String(country || "").trim().toUpperCase() === "IN" ? "IN" : "US";
+  return String(country || '')
+    .trim()
+    .toUpperCase() === 'IN'
+    ? 'IN'
+    : 'US';
 }
 
 function getOptionForSelection(selection) {
@@ -283,16 +287,16 @@ function getOptionForSelection(selection) {
 function getFriendlyErrorMessage(errorValue, fallbackMessage) {
   if (!errorValue) return fallbackMessage;
 
-  if (typeof errorValue === "string") {
+  if (typeof errorValue === 'string') {
     const trimmed = errorValue.trim();
 
-    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
       try {
         const parsed = JSON.parse(trimmed);
 
         if (Array.isArray(parsed)) {
           const firstIssue = parsed.find(
-            (issue) => issue && typeof issue.message === "string",
+            (issue) => issue && typeof issue.message === 'string'
           );
 
           if (firstIssue?.message) {
@@ -300,7 +304,7 @@ function getFriendlyErrorMessage(errorValue, fallbackMessage) {
           }
         }
 
-        if (parsed && typeof parsed.error === "string") {
+        if (parsed && typeof parsed.error === 'string') {
           return parsed.error;
         }
       } catch {
@@ -319,12 +323,12 @@ function getFriendlyErrorMessage(errorValue, fallbackMessage) {
 }
 
 async function loadRazorpayScript() {
-  if (typeof window === "undefined") return false;
+  if (typeof window === 'undefined') return false;
   if (window.Razorpay) return true;
 
   return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
     script.onload = () => resolve(true);
     script.onerror = () => resolve(false);
@@ -346,9 +350,9 @@ function FormField({ label, children, hint }) {
 
 function StepIndicator({ currentStep }) {
   const steps = [
-    { key: "details", label: "Details" },
-    { key: "review", label: "Review" },
-    { key: "payment", label: "Payment" },
+    { key: 'details', label: 'Details' },
+    { key: 'review', label: 'Review' },
+    { key: 'payment', label: 'Payment' },
   ];
   const activeIndex = steps.findIndex((step) => step.key === currentStep);
 
@@ -364,17 +368,17 @@ function StepIndicator({ currentStep }) {
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
                   isComplete
-                    ? "bg-emerald-600 text-white"
+                    ? 'bg-emerald-600 text-white'
                     : isCurrent
-                      ? "bg-[#2563eb] text-white"
-                      : "bg-slate-200 text-slate-500"
+                      ? 'bg-[#2563eb] text-white'
+                      : 'bg-slate-200 text-slate-500'
                 }`}
               >
                 {isComplete ? <Check className="h-4 w-4" /> : index + 1}
               </div>
               <span
                 className={`mt-2 text-sm font-medium ${
-                  isCurrent ? "text-[#2563eb]" : "text-slate-500"
+                  isCurrent ? 'text-[#2563eb]' : 'text-slate-500'
                 }`}
               >
                 {step.label}
@@ -383,7 +387,7 @@ function StepIndicator({ currentStep }) {
             {index < steps.length - 1 ? (
               <div
                 className={`mx-4 h-px w-12 ${
-                  activeIndex > index ? "bg-emerald-500" : "bg-slate-200"
+                  activeIndex > index ? 'bg-emerald-500' : 'bg-slate-200'
                 }`}
               />
             ) : null}
@@ -399,55 +403,61 @@ export default function FestivalTicketingSection() {
   const [form, setForm] = useState(INITIAL_FORM);
   const [selectedCard, setSelectedCard] = useState(null);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
-  const [step, setStep] = useState("details");
-  const [status, setStatus] = useState({ type: "", message: "" });
+  const [step, setStep] = useState('details');
+  const [status, setStatus] = useState({ type: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [photoUploadStatus, setPhotoUploadStatus] = useState("idle"); // idle | uploading | done | error
+  const [photoUploadStatus, setPhotoUploadStatus] = useState('idle'); // idle | uploading | done | error
   const [paymentSession, setPaymentSession] = useState({
-    status: "idle",
-    orderId: "",
-    amountLabel: "",
-    gatewayLabel: "",
+    status: 'idle',
+    orderId: '',
+    amountLabel: '',
+    gatewayLabel: '',
     payload: null,
   });
   const [billingSameAsProfile, setBillingSameAsProfile] = useState(false);
 
   const preview = useMemo(() => getTicketPreview(form.country), [form.country]);
-  const pricing = useMemo(() => getTicketBreakdown(form.country), [form.country]);
-  const isDomestic = String(form.country || "").trim().toUpperCase() === "IN";
+  const pricing = useMemo(
+    () => getTicketBreakdown(form.country),
+    [form.country]
+  );
+  const isDomestic =
+    String(form.country || '')
+      .trim()
+      .toUpperCase() === 'IN';
   useEffect(() => {
     if (!ticketModalOpen) return undefined;
 
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
 
     const handleEscape = (event) => {
-      if (event.key === "Escape") closeTicketModal();
+      if (event.key === 'Escape') closeTicketModal();
     };
 
-    window.addEventListener("keydown", handleEscape);
+    window.addEventListener('keydown', handleEscape);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleEscape);
+      window.removeEventListener('keydown', handleEscape);
     };
   }, [ticketModalOpen]);
 
   const fieldClassName =
-    "mt-2 h-12 w-full rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200";
+    'mt-2 h-12 w-full rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200';
 
   const textAreaClassName =
-    "mt-2 min-h-24 w-full rounded-[10px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200";
+    'mt-2 min-h-24 w-full rounded-[10px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200';
 
   function updateField(key, value) {
     setForm((current) => {
       const next = { ...current, [key]: value };
       if (billingSameAsProfile) {
-        if (key === "fullName") next.billingName = value;
-        if (key === "email") next.billingEmail = value;
-        if (key === "phone") next.billingPhone = value;
-        if (key === "country") next.billingCountry = value;
+        if (key === 'fullName') next.billingName = value;
+        if (key === 'email') next.billingEmail = value;
+        if (key === 'phone') next.billingPhone = value;
+        if (key === 'country') next.billingCountry = value;
       }
       return next;
     });
@@ -469,18 +479,18 @@ export default function FestivalTicketingSection() {
   function closeTicketModal() {
     setTicketModalOpen(false);
     setSelectedCard(null);
-    setStep("details");
+    setStep('details');
     setSubmitting(false);
     setPhotoPreview(null);
-    setPhotoUploadStatus("idle");
+    setPhotoUploadStatus('idle');
     setPaymentSession({
-      status: "idle",
-      orderId: "",
-      amountLabel: "",
-      gatewayLabel: "",
+      status: 'idle',
+      orderId: '',
+      amountLabel: '',
+      gatewayLabel: '',
       payload: null,
     });
-    setStatus({ type: "", message: "" });
+    setStatus({ type: '', message: '' });
     setBillingSameAsProfile(false);
   }
 
@@ -489,23 +499,26 @@ export default function FestivalTicketingSection() {
     if (!file) return;
 
     setPhotoPreview(URL.createObjectURL(file));
-    setPhotoUploadStatus("uploading");
-    updateField("profilePhotoPath", "");
+    setPhotoUploadStatus('uploading');
+    updateField('profilePhotoPath', '');
 
     const fd = new FormData();
-    fd.append("photo", file);
+    fd.append('photo', file);
 
     try {
-      const res = await fetch("/api/tickets/upload-photo", { method: "POST", body: fd });
+      const res = await fetch('/api/tickets/upload-photo', {
+        method: 'POST',
+        body: fd,
+      });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Upload failed.");
-      updateField("profilePhotoPath", data.path);
-      setPhotoUploadStatus("done");
+      if (!res.ok) throw new Error(data?.error || 'Upload failed.');
+      updateField('profilePhotoPath', data.path);
+      setPhotoUploadStatus('done');
     } catch (err) {
-      setPhotoUploadStatus("error");
+      setPhotoUploadStatus('error');
       setStatus({
-        type: "error",
-        message: err instanceof Error ? err.message : "Photo upload failed.",
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Photo upload failed.',
       });
     }
   }
@@ -515,15 +528,15 @@ export default function FestivalTicketingSection() {
 
     setSelectedCard(normalizedCountry);
     setTicketModalOpen(true);
-    setStep("details");
+    setStep('details');
     setPaymentSession({
-      status: "idle",
-      orderId: "",
-      amountLabel: "",
-      gatewayLabel: "",
+      status: 'idle',
+      orderId: '',
+      amountLabel: '',
+      gatewayLabel: '',
       payload: null,
     });
-    setStatus({ type: "", message: "" });
+    setStatus({ type: '', message: '' });
     setForm((current) => ({
       ...current,
       country: normalizedCountry,
@@ -536,70 +549,70 @@ export default function FestivalTicketingSection() {
 
     if (!validation.success) {
       setStatus({
-        type: "error",
+        type: 'error',
         message:
           validation.error.issues[0]?.message ||
-          "Please complete the required registration details.",
+          'Please complete the required registration details.',
       });
       return;
     }
 
-    setStatus({ type: "", message: "" });
-    setStep("review");
+    setStatus({ type: '', message: '' });
+    setStep('review');
   }
 
   async function preparePaymentStep() {
     const validation = festivalCreateOrderSchema.safeParse(form);
 
     if (!validation.success) {
-      setStep("details");
+      setStep('details');
       setStatus({
-        type: "error",
+        type: 'error',
         message:
           validation.error.issues[0]?.message ||
-          "Please complete the required registration details.",
+          'Please complete the required registration details.',
       });
       return;
     }
 
-    setStep("payment");
-    setStatus({ type: "", message: "" });
+    setStep('payment');
+    setStatus({ type: '', message: '' });
     setPaymentSession({
-      status: "loading",
-      orderId: "",
+      status: 'loading',
+      orderId: '',
       amountLabel: preview.amount,
       gatewayLabel: pricing.paymentGatewayLabel,
       payload: null,
     });
 
     try {
-      const response = await fetch("/api/tickets/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/tickets/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      const contentType = response.headers.get("content-type") || "";
-      const data = contentType.includes("application/json")
+      const contentType = response.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
         ? await response.json()
         : await response.text();
 
       if (!response.ok) {
         throw new Error(
           getFriendlyErrorMessage(
-            typeof data === "string" ? data : data?.error,
-            "Unable to create your festival ticket.",
-          ),
+            typeof data === 'string' ? data : data?.error,
+            'Unable to create your festival ticket.'
+          )
         );
       }
 
       const scriptLoaded = await loadRazorpayScript();
 
       if (!scriptLoaded || !window.Razorpay) {
-        throw new Error("Razorpay checkout could not be loaded.");
+        throw new Error('Razorpay checkout could not be loaded.');
       }
 
       setPaymentSession({
-        status: "ready",
+        status: 'ready',
         orderId: data.razorpayOrderId,
         amountLabel: data.displayPrice || preview.amount,
         gatewayLabel: pricing.paymentGatewayLabel,
@@ -609,12 +622,12 @@ export default function FestivalTicketingSection() {
       const message =
         error instanceof Error
           ? error.message
-          : "Unable to initialise secure payment.";
+          : 'Unable to initialise secure payment.';
 
-      setStatus({ type: "error", message });
+      setStatus({ type: 'error', message });
       setPaymentSession({
-        status: "error",
-        orderId: "",
+        status: 'error',
+        orderId: '',
         amountLabel: preview.amount,
         gatewayLabel: pricing.paymentGatewayLabel,
         payload: null,
@@ -623,10 +636,10 @@ export default function FestivalTicketingSection() {
   }
 
   async function launchPreparedCheckout() {
-    if (paymentSession.status !== "ready" || !paymentSession.payload) return;
+    if (paymentSession.status !== 'ready' || !paymentSession.payload) return;
 
     setSubmitting(true);
-    setStatus({ type: "", message: "" });
+    setStatus({ type: '', message: '' });
 
     try {
       const data = paymentSession.payload;
@@ -634,11 +647,11 @@ export default function FestivalTicketingSection() {
         key: data.razorpayKeyId,
         amount: data.totalAmountMinor,
         currency: data.currency,
-        name: "TASI 2026",
+        name: 'TASI 2026',
         description:
-          data.ticketType === "domestic"
-            ? "Domestic Festival Pass"
-            : "International Festival Pass",
+          data.ticketType === 'domestic'
+            ? 'Domestic Festival Pass'
+            : 'International Festival Pass',
         order_id: data.razorpayOrderId,
         prefill: {
           name: form.fullName,
@@ -646,12 +659,12 @@ export default function FestivalTicketingSection() {
           contact: form.phone,
         },
         theme: {
-          color: "#17203a",
+          color: '#17203a',
         },
         handler: async (paymentResult) => {
-          const verifyResponse = await fetch("/api/tickets/verify-payment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+          const verifyResponse = await fetch('/api/tickets/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               ticketId: data.ticketId,
               razorpayOrderId: paymentResult.razorpay_order_id,
@@ -662,12 +675,14 @@ export default function FestivalTicketingSection() {
           const verifyData = await verifyResponse.json();
 
           if (!verifyResponse.ok) {
-            throw new Error(verifyData?.error || "Payment verification failed.");
+            throw new Error(
+              verifyData?.error || 'Payment verification failed.'
+            );
           }
 
           closeTicketModal();
           router.push(
-            `/tickets/success?ticket=${encodeURIComponent(data.ticketNumber)}`,
+            `/tickets/success?ticket=${encodeURIComponent(data.ticketNumber)}`
           );
         },
       });
@@ -675,10 +690,10 @@ export default function FestivalTicketingSection() {
       razorpay.open();
     } catch (error) {
       setStatus({
-        type: "error",
+        type: 'error',
         message: getFriendlyErrorMessage(
           error,
-          "Unable to complete your festival ticket purchase.",
+          'Unable to complete your festival ticket purchase.'
         ),
       });
     } finally {
@@ -701,7 +716,7 @@ export default function FestivalTicketingSection() {
       <div className="mx-auto mt-10 grid max-w-5xl gap-10 lg:grid-cols-2">
         {FESTIVAL_PASS_OPTIONS.map((option) => {
           const isActive = selectedCard === option.country;
-          const useReceptionStyleCard = option.country === "US";
+          const useReceptionStyleCard = option.country === 'US';
 
           return (
             <article key={option.label} className="text-center">
@@ -712,19 +727,19 @@ export default function FestivalTicketingSection() {
               >
                 <GlowCard
                   customSize
-                  glowColor={option.country === "IN" ? "orange" : "purple"}
+                  glowColor={option.country === 'IN' ? 'orange' : 'purple'}
                   className={`block overflow-hidden rounded-[10px] p-0 transition duration-300 ${
                     isActive
                       ? useReceptionStyleCard
-                        ? "border-2 border-[#4c178a]"
-                        : "border-[3px] border-[#4c178a]"
+                        ? 'border-2 border-[#4c178a]'
+                        : 'border-[3px] border-[#4c178a]'
                       : useReceptionStyleCard
-                        ? "border-2 border-stone-200"
-                        : "border-[3px] border-transparent"
-                  } ${isActive ? "scale-[1.01]" : "hover:-translate-y-1"}`}
+                        ? 'border-2 border-stone-200'
+                        : 'border-[3px] border-transparent'
+                  } ${isActive ? 'scale-[1.01]' : 'hover:-translate-y-1'}`}
                 >
                   <div
-                    className={`relative overflow-hidden text-white ${useReceptionStyleCard ? "h-[420px] px-7 py-6 text-left" : "h-[424px] px-8 py-5"} ${getTicketSurface(option.badgePattern)}`}
+                    className={`relative overflow-hidden text-white ${useReceptionStyleCard ? 'h-[420px] px-7 py-6 text-left' : 'h-[424px] px-8 py-5'} ${getTicketSurface(option.badgePattern)}`}
                     style={
                       useReceptionStyleCard
                         ? getTicketSurfaceStyle(option.badgePattern)
@@ -777,8 +792,8 @@ export default function FestivalTicketingSection() {
                 onClick={() => openTicketModal(option.country)}
                 className={`mt-6 inline-flex rounded-[10px] px-10 py-3 text-sm font-black uppercase tracking-[0.08em] transition ${
                   isActive
-                    ? "bg-[#3e0d7d] text-[#ffd400]"
-                    : "bg-[#43107f] text-[#ffd400] hover:opacity-90"
+                    ? 'bg-[#3e0d7d] text-[#ffd400]'
+                    : 'bg-[#43107f] text-[#ffd400] hover:opacity-90'
                 }`}
               >
                 Register now
@@ -794,7 +809,9 @@ export default function FestivalTicketingSection() {
                 {option.description}
               </p>
               <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-amber-600">
-                {isActive ? "Modal ready to continue" : "Tap register now to continue"}
+                {isActive
+                  ? 'Modal ready to continue'
+                  : 'Tap register now to continue'}
               </p>
             </article>
           );
@@ -811,7 +828,9 @@ export default function FestivalTicketingSection() {
               <h3 className="text-xl font-black tracking-tight text-slate-900 md:text-[1.7rem]">
                 Free Pass
               </h3>
-              <p className="mt-1 text-base text-slate-700 md:text-lg">(Application-Based)</p>
+              <p className="mt-1 text-base text-slate-700 md:text-lg">
+                (Application-Based)
+              </p>
             </div>
           </div>
 
@@ -820,18 +839,17 @@ export default function FestivalTicketingSection() {
               What&apos;s Included
             </p>
             <div className="mt-5 space-y-4">
-              {[
-                "Conference Access (Day 1 & 2)",
-                "Panels & Keynotes",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-3 text-base text-slate-900 md:text-[1.05rem]"
-                >
-                  <CheckCircle2 className="h-4.5 w-4.5 shrink-0 text-[#5547ec]" />
-                  <span>{item}</span>
-                </div>
-              ))}
+              {['Conference Access (Day 1 & 2)', 'Panels & Keynotes'].map(
+                (item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-3 text-base text-slate-900 md:text-[1.05rem]"
+                  >
+                    <CheckCircle2 className="h-4.5 w-4.5 shrink-0 text-[#5547ec]" />
+                    <span>{item}</span>
+                  </div>
+                )
+              )}
             </div>
           </div>
 
@@ -841,10 +859,10 @@ export default function FestivalTicketingSection() {
             </p>
             <div className="mt-5 space-y-4">
               {[
-                "Inaugural Reception & Gala Dinner",
-                "Closing Ceremony",
-                "Networking Access",
-                "Roundtables & Speaker Access",
+                'Inaugural Reception & Gala Dinner',
+                'Closing Ceremony',
+                'Networking Access',
+                'Roundtables & Speaker Access',
               ].map((item) => (
                 <div
                   key={item}
@@ -928,7 +946,6 @@ export default function FestivalTicketingSection() {
               </div>
             </div>
           </div>
-
         </article>
       </div>
 
@@ -1002,12 +1019,15 @@ export default function FestivalTicketingSection() {
           </div>
 
           <p className="mx-auto mt-8 max-w-2xl text-center text-xs italic leading-relaxed text-white/80 sm:text-sm">
-            If you&apos;re planning on registering for our <span className="font-black text-white">Paid Pass</span>, we encourage you to apply early as capacity for exclusive receptions and roundtables is strictly limited.
+            If you&apos;re planning on registering for our{' '}
+            <span className="font-black text-white">Paid Pass</span>, we
+            encourage you to apply early as capacity for exclusive receptions
+            and roundtables is strictly limited.
           </p>
         </section>
       </div>
 
-      {!ticketModalOpen && status.type === "error" ? (
+      {!ticketModalOpen && status.type === 'error' ? (
         <div className="mt-6">
           <AdminAlert
             title="Festival ticketing unavailable"
@@ -1018,15 +1038,19 @@ export default function FestivalTicketingSection() {
       ) : null}
       {ticketModalOpen ? (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm sm:p-6">
-          <div className="absolute inset-0" aria-hidden="true" onClick={closeTicketModal} />
+          <div
+            className="absolute inset-0"
+            aria-hidden="true"
+            onClick={closeTicketModal}
+          />
           <div
             role="dialog"
             aria-modal="true"
             aria-label="Event Registration"
             className={`relative z-10 my-auto flex max-h-[88vh] w-full flex-col rounded-[10px] bg-white shadow-[0_30px_120px_rgba(15,23,42,0.28)] ${
-              step === "payment"
-                ? "max-w-[500px] p-5 sm:p-6"
-                : "max-w-[620px] p-5 sm:p-6 md:p-7"
+              step === 'payment'
+                ? 'max-w-[500px] p-5 sm:p-6'
+                : 'max-w-[620px] p-5 sm:p-6 md:p-7'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1047,7 +1071,7 @@ export default function FestivalTicketingSection() {
               <StepIndicator currentStep={step} />
             </div>
 
-            {status.type === "error" ? (
+            {status.type === 'error' ? (
               <div className="mt-6">
                 <AdminAlert
                   title="Festival ticketing unavailable"
@@ -1059,10 +1083,10 @@ export default function FestivalTicketingSection() {
 
             <div
               className={`mt-6 min-h-0 flex-1 overflow-y-auto pr-1 ${
-                step === "payment" ? "max-h-[46vh]" : "max-h-[54vh]"
+                step === 'payment' ? 'max-h-[46vh]' : 'max-h-[54vh]'
               }`}
             >
-              {step === "details" ? (
+              {step === 'details' ? (
                 <>
                   <div className="grid gap-5 md:grid-cols-2">
                     <FormField label="Full Name *">
@@ -1070,7 +1094,9 @@ export default function FestivalTicketingSection() {
                         className={fieldClassName}
                         placeholder="John Doe"
                         value={form.fullName}
-                        onChange={(event) => updateField("fullName", event.target.value)}
+                        onChange={(event) =>
+                          updateField('fullName', event.target.value)
+                        }
                       />
                     </FormField>
                     <FormField label="Email Address *">
@@ -1079,7 +1105,9 @@ export default function FestivalTicketingSection() {
                         type="email"
                         placeholder="john@example.com"
                         value={form.email}
-                        onChange={(event) => updateField("email", event.target.value)}
+                        onChange={(event) =>
+                          updateField('email', event.target.value)
+                        }
                       />
                     </FormField>
                     <FormField label="Confirm Email *">
@@ -1089,7 +1117,7 @@ export default function FestivalTicketingSection() {
                         placeholder="john@example.com"
                         value={form.confirmEmail}
                         onChange={(event) =>
-                          updateField("confirmEmail", event.target.value)
+                          updateField('confirmEmail', event.target.value)
                         }
                       />
                     </FormField>
@@ -1098,7 +1126,9 @@ export default function FestivalTicketingSection() {
                         className={fieldClassName}
                         placeholder="e.g. Policy Manager"
                         value={form.jobTitle}
-                        onChange={(event) => updateField("jobTitle", event.target.value)}
+                        onChange={(event) =>
+                          updateField('jobTitle', event.target.value)
+                        }
                       />
                     </FormField>
                     <FormField label="Organisation">
@@ -1107,7 +1137,7 @@ export default function FestivalTicketingSection() {
                         placeholder="Company or Institute"
                         value={form.organization}
                         onChange={(event) =>
-                          updateField("organization", event.target.value)
+                          updateField('organization', event.target.value)
                         }
                       />
                     </FormField>
@@ -1116,7 +1146,9 @@ export default function FestivalTicketingSection() {
                         className={fieldClassName}
                         placeholder="+91 98765 43210"
                         value={form.phone}
-                        onChange={(event) => updateField("phone", event.target.value)}
+                        onChange={(event) =>
+                          updateField('phone', event.target.value)
+                        }
                       />
                     </FormField>
                     <FormField
@@ -1130,7 +1162,9 @@ export default function FestivalTicketingSection() {
                           type="url"
                           placeholder="https://linkedin.com/in/yourname"
                           value={form.linkedinUrl}
-                          onChange={(event) => updateField("linkedinUrl", event.target.value)}
+                          onChange={(event) =>
+                            updateField('linkedinUrl', event.target.value)
+                          }
                         />
                       </div>
                     </FormField>
@@ -1154,7 +1188,7 @@ export default function FestivalTicketingSection() {
                         <div className="flex-1">
                           <label className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
                             <Camera className="h-4 w-4" />
-                            {photoPreview ? "Change photo" : "Upload photo"}
+                            {photoPreview ? 'Change photo' : 'Upload photo'}
                             <input
                               type="file"
                               accept="image/jpeg,image/png"
@@ -1162,18 +1196,20 @@ export default function FestivalTicketingSection() {
                               onChange={handlePhotoChange}
                             />
                           </label>
-                          {photoUploadStatus === "uploading" ? (
+                          {photoUploadStatus === 'uploading' ? (
                             <p className="mt-1 flex items-center gap-1.5 text-xs text-amber-600">
                               <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
                               Uploading…
                             </p>
-                          ) : photoUploadStatus === "done" ? (
+                          ) : photoUploadStatus === 'done' ? (
                             <p className="mt-1 flex items-center gap-1.5 text-xs text-emerald-600">
                               <Check className="h-3.5 w-3.5" />
                               Photo uploaded
                             </p>
-                          ) : photoUploadStatus === "error" ? (
-                            <p className="mt-1 text-xs text-red-600">Upload failed — try again</p>
+                          ) : photoUploadStatus === 'error' ? (
+                            <p className="mt-1 text-xs text-red-600">
+                              Upload failed — try again
+                            </p>
                           ) : null}
                         </div>
                       </div>
@@ -1184,8 +1220,8 @@ export default function FestivalTicketingSection() {
                         value={form.country}
                         onChange={(event) => {
                           const nextCountry = event.target.value;
-                          updateField("country", nextCountry);
-                          updateField("billingCountry", nextCountry);
+                          updateField('country', nextCountry);
+                          updateField('billingCountry', nextCountry);
                           setSelectedCard(getSelectionForCountry(nextCountry));
                         }}
                       >
@@ -1197,46 +1233,52 @@ export default function FestivalTicketingSection() {
                       </select>
                     </FormField>
                     <div className="col-span-full mt-2 flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-sm font-semibold text-slate-900">Billing Details</p>
+                      <p className="text-sm font-semibold text-slate-900">
+                        Billing Details
+                      </p>
                       <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 select-none">
                         <input
                           type="checkbox"
                           className="h-4 w-4 rounded border-slate-300 text-amber-600"
                           checked={billingSameAsProfile}
-                          onChange={(event) => handleBillingSameToggle(event.target.checked)}
+                          onChange={(event) =>
+                            handleBillingSameToggle(event.target.checked)
+                          }
                         />
                         Same as profile details
                       </label>
                     </div>
                     <FormField label="Billing Name *">
                       <input
-                        className={`${fieldClassName} ${billingSameAsProfile ? "cursor-not-allowed bg-slate-50 text-slate-400" : ""}`}
+                        className={`${fieldClassName} ${billingSameAsProfile ? 'cursor-not-allowed bg-slate-50 text-slate-400' : ''}`}
                         placeholder="Billing name"
                         value={form.billingName}
                         disabled={billingSameAsProfile}
-                        onChange={(event) => updateField("billingName", event.target.value)}
+                        onChange={(event) =>
+                          updateField('billingName', event.target.value)
+                        }
                       />
                     </FormField>
                     <FormField label="Billing Email *">
                       <input
-                        className={`${fieldClassName} ${billingSameAsProfile ? "cursor-not-allowed bg-slate-50 text-slate-400" : ""}`}
+                        className={`${fieldClassName} ${billingSameAsProfile ? 'cursor-not-allowed bg-slate-50 text-slate-400' : ''}`}
                         type="email"
                         placeholder="billing@example.com"
                         value={form.billingEmail}
                         disabled={billingSameAsProfile}
                         onChange={(event) =>
-                          updateField("billingEmail", event.target.value)
+                          updateField('billingEmail', event.target.value)
                         }
                       />
                     </FormField>
                     <FormField label="Billing Phone *">
                       <input
-                        className={`${fieldClassName} ${billingSameAsProfile ? "cursor-not-allowed bg-slate-50 text-slate-400" : ""}`}
+                        className={`${fieldClassName} ${billingSameAsProfile ? 'cursor-not-allowed bg-slate-50 text-slate-400' : ''}`}
                         placeholder="+91 98765 43210"
                         value={form.billingPhone}
                         disabled={billingSameAsProfile}
                         onChange={(event) =>
-                          updateField("billingPhone", event.target.value)
+                          updateField('billingPhone', event.target.value)
                         }
                       />
                     </FormField>
@@ -1246,7 +1288,7 @@ export default function FestivalTicketingSection() {
                         placeholder="Address line 1"
                         value={form.billingAddressLine1}
                         onChange={(event) =>
-                          updateField("billingAddressLine1", event.target.value)
+                          updateField('billingAddressLine1', event.target.value)
                         }
                       />
                     </FormField>
@@ -1255,7 +1297,9 @@ export default function FestivalTicketingSection() {
                         className={fieldClassName}
                         placeholder="Billing city"
                         value={form.billingCity}
-                        onChange={(event) => updateField("billingCity", event.target.value)}
+                        onChange={(event) =>
+                          updateField('billingCity', event.target.value)
+                        }
                       />
                     </FormField>
                     <FormField label="State or Province *">
@@ -1264,7 +1308,10 @@ export default function FestivalTicketingSection() {
                         placeholder="State or province"
                         value={form.billingStateOrProvince}
                         onChange={(event) =>
-                          updateField("billingStateOrProvince", event.target.value)
+                          updateField(
+                            'billingStateOrProvince',
+                            event.target.value
+                          )
                         }
                       />
                     </FormField>
@@ -1274,36 +1321,44 @@ export default function FestivalTicketingSection() {
                         placeholder="Postal code"
                         value={form.billingPostalCode}
                         onChange={(event) =>
-                          updateField("billingPostalCode", event.target.value)
+                          updateField('billingPostalCode', event.target.value)
                         }
                       />
                     </FormField>
                     <FormField
-                      label={isDomestic ? "GSTIN" : "Passport or National ID *"}
+                      label={isDomestic ? 'GSTIN' : 'Passport or National ID *'}
                     >
                       <input
                         className={fieldClassName}
-                        placeholder={isDomestic ? "GSTIN" : "Passport or national ID"}
-                        value={isDomestic ? form.gstin : form.passportOrNationalId}
+                        placeholder={
+                          isDomestic ? 'GSTIN' : 'Passport or national ID'
+                        }
+                        value={
+                          isDomestic ? form.gstin : form.passportOrNationalId
+                        }
                         onChange={(event) =>
                           updateField(
-                            isDomestic ? "gstin" : "passportOrNationalId",
-                            event.target.value,
+                            isDomestic ? 'gstin' : 'passportOrNationalId',
+                            event.target.value
                           )
                         }
                       />
                     </FormField>
                     <FormField
-                      label={isDomestic ? "PAN or Tax Reference *" : "Tax ID Number *"}
+                      label={
+                        isDomestic
+                          ? 'PAN or Tax Reference *'
+                          : 'Tax ID Number *'
+                      }
                     >
                       <input
                         className={fieldClassName}
                         placeholder={
-                          isDomestic ? "PAN or tax reference" : "Tax ID number"
+                          isDomestic ? 'PAN or tax reference' : 'Tax ID number'
                         }
                         value={form.taxIdNumber}
                         onChange={(event) =>
-                          updateField("taxIdNumber", event.target.value)
+                          updateField('taxIdNumber', event.target.value)
                         }
                       />
                     </FormField>
@@ -1320,11 +1375,15 @@ export default function FestivalTicketingSection() {
                           className="mt-1 h-4 w-4 rounded border-slate-300 text-amber-600"
                           checked={form.noRefundAccepted}
                           onChange={(event) =>
-                            updateField("noRefundAccepted", event.target.checked)
+                            updateField(
+                              'noRefundAccepted',
+                              event.target.checked
+                            )
                           }
                         />
                         <span>
-                          I understand that festival tickets are non-refundable by default.
+                          I understand that festival tickets are non-refundable
+                          by default.
                         </span>
                       </label>
                       <label className="flex items-start gap-3">
@@ -1333,10 +1392,12 @@ export default function FestivalTicketingSection() {
                           className="mt-1 h-4 w-4 rounded border-slate-300 text-amber-600"
                           checked={form.termsAccepted}
                           onChange={(event) =>
-                            updateField("termsAccepted", event.target.checked)
+                            updateField('termsAccepted', event.target.checked)
                           }
                         />
-                        <span>I accept the ticketing terms and event rules.</span>
+                        <span>
+                          I accept the ticketing terms and event rules.
+                        </span>
                       </label>
                       <label className="flex items-start gap-3">
                         <input
@@ -1344,22 +1405,22 @@ export default function FestivalTicketingSection() {
                           className="mt-1 h-4 w-4 rounded border-slate-300 text-amber-600"
                           checked={form.privacyAccepted}
                           onChange={(event) =>
-                            updateField("privacyAccepted", event.target.checked)
+                            updateField('privacyAccepted', event.target.checked)
                           }
                         />
                         <span>
-                          I consent to storage of attendee and compliance data for invoicing,
-                          check-in, and audit purposes.
+                          I consent to storage of attendee and compliance data
+                          for invoicing, check-in, and audit purposes.
                         </span>
                       </label>
                     </div>
                   </div>
                 </>
               ) : null}
-              {step === "review" ? (
+              {step === 'review' ? (
                 <div>
                   {/* Profile snapshot (photo + LinkedIn) */}
-                  {(photoPreview || form.linkedinUrl) ? (
+                  {photoPreview || form.linkedinUrl ? (
                     <div className="mb-5 flex items-center gap-4 rounded-[10px] border border-slate-200 bg-slate-50 px-5 py-4">
                       {photoPreview ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -1379,7 +1440,7 @@ export default function FestivalTicketingSection() {
                             {form.linkedinUrl}
                           </p>
                         ) : null}
-                        {photoUploadStatus === "done" ? (
+                        {photoUploadStatus === 'done' ? (
                           <p className="mt-0.5 flex items-center gap-1 text-xs text-emerald-600">
                             <Check className="h-3 w-3" /> Photo saved
                           </p>
@@ -1390,7 +1451,9 @@ export default function FestivalTicketingSection() {
 
                   <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-6">
                     <div className="flex items-start justify-between gap-4">
-                      <p className="text-2xl font-black text-slate-900">Order Summary</p>
+                      <p className="text-2xl font-black text-slate-900">
+                        Order Summary
+                      </p>
                       <span className="rounded-[10px] bg-[#dbeafe] px-4 py-1 text-xs font-black uppercase tracking-[0.14em] text-[#2563eb]">
                         {preview.badgeLabel}
                       </span>
@@ -1426,12 +1489,17 @@ export default function FestivalTicketingSection() {
                     </p>
                     <div className="mt-5 grid gap-4 md:grid-cols-2">
                       {REVIEW_INCLUDED_ITEMS.map((item) => (
-                        <div key={item.title} className="flex items-start gap-3">
+                        <div
+                          key={item.title}
+                          className="flex items-start gap-3"
+                        >
                           <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-500 text-emerald-600">
                             <Check className="h-3.5 w-3.5" />
                           </span>
                           <div>
-                            <p className="text-base font-black text-slate-900">{item.title}</p>
+                            <p className="text-base font-black text-slate-900">
+                              {item.title}
+                            </p>
                             <p className="mt-0.5 text-sm leading-relaxed text-slate-600">
                               {item.description}
                             </p>
@@ -1450,12 +1518,14 @@ export default function FestivalTicketingSection() {
                 </div>
               ) : null}
 
-              {step === "payment" ? (
+              {step === 'payment' ? (
                 <div className="py-2 text-center">
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#dbeafe] text-[#2563eb]">
                     <LoaderCircle
                       className={`h-8 w-8 ${
-                        paymentSession.status === "loading" ? "animate-spin" : ""
+                        paymentSession.status === 'loading'
+                          ? 'animate-spin'
+                          : ''
                       }`}
                     />
                   </div>
@@ -1463,7 +1533,7 @@ export default function FestivalTicketingSection() {
                     Initialising Secure Payment
                   </h4>
                   <p className="mx-auto mt-3 max-w-sm text-base leading-relaxed text-slate-500 sm:text-lg">
-                    {paymentSession.status === "ready"
+                    {paymentSession.status === 'ready'
                       ? `Your ${pricing.paymentGatewayLabel.toLowerCase()} is ready.`
                       : `Please wait while we connect to the ${pricing.paymentGatewayLabel.toLowerCase()}.`}
                   </p>
@@ -1472,7 +1542,7 @@ export default function FestivalTicketingSection() {
                     <div className="flex items-center justify-between gap-4 text-sm text-slate-500">
                       <span>Order ID</span>
                       <span className="font-mono text-slate-900">
-                        {paymentSession.orderId || "Preparing..."}
+                        {paymentSession.orderId || 'Preparing...'}
                       </span>
                     </div>
                     <div className="mt-4 flex items-center justify-between gap-4 text-sm text-slate-500">
@@ -1486,10 +1556,10 @@ export default function FestivalTicketingSection() {
                   <button
                     type="button"
                     onClick={launchPreparedCheckout}
-                    disabled={paymentSession.status !== "ready" || submitting}
+                    disabled={paymentSession.status !== 'ready' || submitting}
                     className="mx-auto mt-6 inline-flex min-w-[280px] items-center justify-center rounded-[10px] bg-[#17203a] px-8 py-4 text-lg font-black text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[320px] sm:text-xl"
                   >
-                    {submitting ? "Opening Razorpay..." : "Pay Now"}
+                    {submitting ? 'Opening Razorpay...' : 'Pay Now'}
                   </button>
 
                   <p className="mt-6 text-xs font-black uppercase tracking-[0.18em] text-slate-400">
@@ -1500,7 +1570,7 @@ export default function FestivalTicketingSection() {
             </div>
 
             <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-              {step === "details" ? (
+              {step === 'details' ? (
                 <>
                   <button
                     type="button"
@@ -1521,11 +1591,11 @@ export default function FestivalTicketingSection() {
                 </>
               ) : null}
 
-              {step === "review" ? (
+              {step === 'review' ? (
                 <>
                   <button
                     type="button"
-                    onClick={() => setStep("details")}
+                    onClick={() => setStep('details')}
                     className="inline-flex items-center gap-2 rounded-[10px] px-2 py-2 text-lg font-semibold text-slate-500 transition hover:text-slate-700"
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -1542,11 +1612,11 @@ export default function FestivalTicketingSection() {
                 </>
               ) : null}
 
-              {step === "payment" ? (
+              {step === 'payment' ? (
                 <button
                   type="button"
-                  onClick={() => setStep("review")}
-                  disabled={paymentSession.status === "loading"}
+                  onClick={() => setStep('review')}
+                  disabled={paymentSession.status === 'loading'}
                   className="inline-flex items-center gap-2 rounded-[10px] px-2 py-2 text-lg font-semibold text-slate-500 transition hover:text-slate-700 disabled:opacity-40"
                 >
                   <ChevronLeft className="h-5 w-5" />

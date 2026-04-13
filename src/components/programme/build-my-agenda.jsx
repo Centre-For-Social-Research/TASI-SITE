@@ -16,149 +16,464 @@ const DAY_LABELS_FALLBACK = {
 // ── REACT PDF AGENDA DOCUMENT ─────────────────────────────────────────────
 // Colors (pt-based layout for A4)
 const AGENDA_ORANGE = '#c2410c';
-const AGENDA_NAVY   = '#162447';
-const AGENDA_STONE  = '#eeebe5';
-const AGENDA_ROWBG  = '#fbf9f6';
-const AGENDA_DARK   = '#161412';
-const AGENDA_MID    = '#5f5952';
-const AGENDA_LIGHT  = '#a5a099';
-const AGENDA_RULE   = '#d7d3cd';
+const AGENDA_NAVY = '#162447';
+const AGENDA_STONE = '#eeebe5';
+const AGENDA_ROWBG = '#fbf9f6';
+const AGENDA_DARK = '#161412';
+const AGENDA_MID = '#5f5952';
+const AGENDA_LIGHT = '#a5a099';
+const AGENDA_RULE = '#d7d3cd';
 
 // Dimensions in pt (1mm = 2.835pt)
-const AG_MARGIN    = 42.5;  // 15mm
-const AG_STRIPE_H  = 25.5;  // 9mm
-const AG_TABLE_H   = 31.2;  // 11mm
-const AG_FOOTER_H  = 39.7;  // 14mm
-const AG_COL_W     = [124.7, 226.8, 90.7, 68]; // column widths in pt
-const AG_CELL_PAD  = 14.2;  // 5mm
+const AG_MARGIN = 42.5; // 15mm
+const AG_STRIPE_H = 25.5; // 9mm
+const AG_TABLE_H = 31.2; // 11mm
+const AG_FOOTER_H = 39.7; // 14mm
+const AG_COL_W = [124.7, 226.8, 90.7, 68]; // column widths in pt
+const AG_CELL_PAD = 14.2; // 5mm
 
-function AgendaDocument({ userName, userEmail, selectedSessions, effectiveDayLabels, logoDataUrl }) {
+function AgendaDocument({
+  userName,
+  userEmail,
+  selectedSessions,
+  effectiveDayLabels,
+  logoDataUrl,
+}) {
   const daysSelected = [...new Set(selectedSessions.map((s) => s.day))];
-  const topicLabel = daysSelected.map((d) => effectiveDayLabels[d] || d).join(' / ');
+  const topicLabel = daysSelected
+    .map((d) => effectiveDayLabels[d] || d)
+    .join(' / ');
 
   return (
     <Document>
       <Page
         size="A4"
-        style={{ fontFamily: 'Helvetica', backgroundColor: '#ffffff', paddingTop: AG_STRIPE_H + 11.3, paddingBottom: AG_FOOTER_H, paddingHorizontal: AG_MARGIN }}
+        style={{
+          fontFamily: 'Helvetica',
+          backgroundColor: '#ffffff',
+          paddingTop: AG_STRIPE_H + 11.3,
+          paddingBottom: AG_FOOTER_H,
+          paddingHorizontal: AG_MARGIN,
+        }}
       >
         {/* Fixed orange stripe */}
-        <View fixed style={{ position: 'absolute', top: 0, left: 0, right: 0, height: AG_STRIPE_H, backgroundColor: AGENDA_ORANGE, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 8.5, fontFamily: 'Helvetica-BoldOblique', color: '#ffffff' }}>
-            TRUST &amp; SAFETY INDIA FESTIVAL 2026  ·  PERSONALIZED AGENDA
+        <View
+          fixed
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: AG_STRIPE_H,
+            backgroundColor: AGENDA_ORANGE,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 8.5,
+              fontFamily: 'Helvetica-BoldOblique',
+              color: '#ffffff',
+            }}
+          >
+            TRUST &amp; SAFETY INDIA FESTIVAL 2026 · PERSONALIZED AGENDA
           </Text>
         </View>
 
         {/* Fixed footer */}
-        <View fixed style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: AG_FOOTER_H, borderTopWidth: 1.5, borderTopColor: AGENDA_ORANGE, paddingTop: 5, paddingHorizontal: AG_MARGIN }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>info@csrindia.org</Text>
-            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>+91 11 2468 2556</Text>
-            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>jamsaq.in</Text>
+        <View
+          fixed
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: AG_FOOTER_H,
+            borderTopWidth: 1.5,
+            borderTopColor: AGENDA_ORANGE,
+            paddingTop: 5,
+            paddingHorizontal: AG_MARGIN,
+          }}
+        >
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>
+              info@csrindia.org
+            </Text>
+            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>
+              +91 11 2468 2556
+            </Text>
+            <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>
+              jamsaq.in
+            </Text>
           </View>
           <Text
-            render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
-            style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, textAlign: 'center', marginTop: 5 }}
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} of ${totalPages}`
+            }
+            style={{
+              fontSize: 7.5,
+              fontFamily: 'Helvetica-Bold',
+              color: AGENDA_LIGHT,
+              textAlign: 'center',
+              marginTop: 5,
+            }}
             fixed
           />
         </View>
 
         {/* Header card (first page only) */}
-        <View style={{ backgroundColor: AGENDA_STONE, borderRadius: 8.5, padding: 17, flexDirection: 'row', alignItems: 'center', marginBottom: 11.3 }}>
+        <View
+          style={{
+            backgroundColor: AGENDA_STONE,
+            borderRadius: 8.5,
+            padding: 17,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 11.3,
+          }}
+        >
           {logoDataUrl ? (
-            <Image alt="" src={logoDataUrl} style={{ width: 130, height: 44, marginRight: 17 }} />
+            <Image
+              alt=""
+              src={logoDataUrl}
+              style={{ width: 130, height: 44, marginRight: 17 }}
+            />
           ) : (
-            <Text style={{ fontSize: 13, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE, marginRight: 17 }}>TASI 2026</Text>
+            <Text
+              style={{
+                fontSize: 13,
+                fontFamily: 'Helvetica-Bold',
+                color: AGENDA_ORANGE,
+                marginRight: 17,
+              }}
+            >
+              TASI 2026
+            </Text>
           )}
-          <View style={{ width: 1, height: 84, backgroundColor: AGENDA_RULE, marginRight: 17 }} />
+          <View
+            style={{
+              width: 1,
+              height: 84,
+              backgroundColor: AGENDA_RULE,
+              marginRight: 17,
+            }}
+          />
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 4 }}>DATE</Text>
-            <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold', color: AGENDA_DARK }}>13 – 14 October 2026</Text>
+            <Text
+              style={{
+                fontSize: 7.5,
+                fontFamily: 'Helvetica-Bold',
+                color: AGENDA_LIGHT,
+                marginBottom: 4,
+              }}
+            >
+              DATE
+            </Text>
+            <Text
+              style={{
+                fontSize: 9,
+                fontFamily: 'Helvetica-Bold',
+                color: AGENDA_DARK,
+              }}
+            >
+              13 – 14 October 2026
+            </Text>
           </View>
-          <View style={{ width: 1, height: 80, backgroundColor: AGENDA_RULE, marginHorizontal: 11 }} />
+          <View
+            style={{
+              width: 1,
+              height: 80,
+              backgroundColor: AGENDA_RULE,
+              marginHorizontal: 11,
+            }}
+          />
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 4 }}>TIME</Text>
-            <Text style={{ fontSize: 9, color: AGENDA_DARK }}>9:00 am – 5:30 pm</Text>
+            <Text
+              style={{
+                fontSize: 7.5,
+                fontFamily: 'Helvetica-Bold',
+                color: AGENDA_LIGHT,
+                marginBottom: 4,
+              }}
+            >
+              TIME
+            </Text>
+            <Text style={{ fontSize: 9, color: AGENDA_DARK }}>
+              9:00 am – 5:30 pm
+            </Text>
           </View>
-          <View style={{ width: 1, height: 80, backgroundColor: AGENDA_RULE, marginHorizontal: 11 }} />
+          <View
+            style={{
+              width: 1,
+              height: 80,
+              backgroundColor: AGENDA_RULE,
+              marginHorizontal: 11,
+            }}
+          />
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 4 }}>WEBSITE</Text>
+            <Text
+              style={{
+                fontSize: 7.5,
+                fontFamily: 'Helvetica-Bold',
+                color: AGENDA_LIGHT,
+                marginBottom: 4,
+              }}
+            >
+              WEBSITE
+            </Text>
             <Text style={{ fontSize: 9, color: AGENDA_DARK }}>jamsaq.in</Text>
           </View>
         </View>
 
         {/* Info card (first page only) */}
-        <View style={{ backgroundColor: AGENDA_STONE, borderRadius: 8.5, flexDirection: 'row', alignItems: 'stretch', marginBottom: 11.3, overflow: 'hidden' }}>
+        <View
+          style={{
+            backgroundColor: AGENDA_STONE,
+            borderRadius: 8.5,
+            flexDirection: 'row',
+            alignItems: 'stretch',
+            marginBottom: 11.3,
+            overflow: 'hidden',
+          }}
+        >
           <View style={{ width: 8.5, backgroundColor: AGENDA_ORANGE }} />
           <View style={{ flex: 1, padding: AG_CELL_PAD }}>
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flex: 1, marginRight: 14 }}>
-                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>ATTENDEE</Text>
-                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>NAME</Text>
-                <Text style={{ fontSize: 9.5, color: AGENDA_DARK }}>{userName}</Text>
+                <Text
+                  style={{
+                    fontSize: 7.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_LIGHT,
+                    marginBottom: 3,
+                  }}
+                >
+                  ATTENDEE
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 7.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_LIGHT,
+                    marginBottom: 3,
+                  }}
+                >
+                  NAME
+                </Text>
+                <Text style={{ fontSize: 9.5, color: AGENDA_DARK }}>
+                  {userName}
+                </Text>
               </View>
-              <View style={{ width: 1, backgroundColor: AGENDA_RULE, marginRight: 14 }} />
+              <View
+                style={{
+                  width: 1,
+                  backgroundColor: AGENDA_RULE,
+                  marginRight: 14,
+                }}
+              />
               <View style={{ flex: 1, marginRight: 14 }}>
-                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>EMAIL</Text>
-                <Text style={{ fontSize: 9, color: AGENDA_MID }}>{userEmail}</Text>
+                <Text
+                  style={{
+                    fontSize: 7.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_LIGHT,
+                    marginBottom: 3,
+                  }}
+                >
+                  EMAIL
+                </Text>
+                <Text style={{ fontSize: 9, color: AGENDA_MID }}>
+                  {userEmail}
+                </Text>
               </View>
-              <View style={{ width: 1, backgroundColor: AGENDA_RULE, marginRight: 14 }} />
+              <View
+                style={{
+                  width: 1,
+                  backgroundColor: AGENDA_RULE,
+                  marginRight: 14,
+                }}
+              />
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>EVENT</Text>
-                <Text style={{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: AGENDA_DARK, marginBottom: 4 }}>Trust And Safety India Festival 2026</Text>
-                <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: AGENDA_LIGHT, marginBottom: 3 }}>YOUR SELECTED DAYS</Text>
-                <Text style={{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE }}>{topicLabel}</Text>
+                <Text
+                  style={{
+                    fontSize: 7.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_LIGHT,
+                    marginBottom: 3,
+                  }}
+                >
+                  EVENT
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 9.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_DARK,
+                    marginBottom: 4,
+                  }}
+                >
+                  Trust And Safety India Festival 2026
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 7.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_LIGHT,
+                    marginBottom: 3,
+                  }}
+                >
+                  YOUR SELECTED DAYS
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 9.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_ORANGE,
+                  }}
+                >
+                  {topicLabel}
+                </Text>
               </View>
             </View>
           </View>
         </View>
 
         {/* Table header */}
-        <View style={{ backgroundColor: AGENDA_NAVY, borderRadius: 5.7, height: AG_TABLE_H, flexDirection: 'row', alignItems: 'center', marginBottom: 7, paddingLeft: AG_CELL_PAD }}>
+        <View
+          style={{
+            backgroundColor: AGENDA_NAVY,
+            borderRadius: 5.7,
+            height: AG_TABLE_H,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 7,
+            paddingLeft: AG_CELL_PAD,
+          }}
+        >
           {['Agenda', 'Topic', 'Speaker', 'Time'].map((label, i) => (
-            <Text key={i} style={{ width: AG_COL_W[i], fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: '#ffffff' }}>{label}</Text>
+            <Text
+              key={i}
+              style={{
+                width: AG_COL_W[i],
+                fontSize: 9.5,
+                fontFamily: 'Helvetica-Bold',
+                color: '#ffffff',
+              }}
+            >
+              {label}
+            </Text>
           ))}
         </View>
 
         {/* Session rows */}
         {selectedSessions.map((session, idx) => {
-          const title       = session.title || '';
+          const title = session.title || '';
           const description = session.description || '';
           const speakersArr = Array.isArray(session.speakers)
             ? session.speakers
-            : session.speakers ? [session.speakers] : [];
+            : session.speakers
+              ? [session.speakers]
+              : [];
           const venue = session.venue || session.track || '';
-          const time  = session.time || 'TBD';
+          const time = session.time || 'TBD';
 
           return (
-            <View key={idx} wrap={false} style={{ flexDirection: 'row', backgroundColor: AGENDA_ROWBG, borderRadius: 5.7, marginBottom: 7 }}>
-              <View style={{ width: 7.1, backgroundColor: AGENDA_ORANGE, borderRadius: 2.8 }} />
+            <View
+              key={idx}
+              wrap={false}
+              style={{
+                flexDirection: 'row',
+                backgroundColor: AGENDA_ROWBG,
+                borderRadius: 5.7,
+                marginBottom: 7,
+              }}
+            >
+              <View
+                style={{
+                  width: 7.1,
+                  backgroundColor: AGENDA_ORANGE,
+                  borderRadius: 2.8,
+                }}
+              />
               {/* Col 1: Title */}
               <View style={{ width: AG_COL_W[0], padding: AG_CELL_PAD }}>
-                <Text style={{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: AGENDA_DARK }}>{title}</Text>
+                <Text
+                  style={{
+                    fontSize: 9.5,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_DARK,
+                  }}
+                >
+                  {title}
+                </Text>
               </View>
-              <View style={{ width: 0.5, backgroundColor: AGENDA_RULE, marginVertical: 8.5 }} />
+              <View
+                style={{
+                  width: 0.5,
+                  backgroundColor: AGENDA_RULE,
+                  marginVertical: 8.5,
+                }}
+              />
               {/* Col 2: Description */}
               <View style={{ width: AG_COL_W[1], padding: AG_CELL_PAD }}>
-                {description
-                  ? <Text style={{ fontSize: 8.5, color: AGENDA_MID }}>{description}</Text>
-                  : <Text style={{ fontSize: 8.5, color: AGENDA_LIGHT }}>-</Text>}
+                {description ? (
+                  <Text style={{ fontSize: 8.5, color: AGENDA_MID }}>
+                    {description}
+                  </Text>
+                ) : (
+                  <Text style={{ fontSize: 8.5, color: AGENDA_LIGHT }}>-</Text>
+                )}
               </View>
-              <View style={{ width: 0.5, backgroundColor: AGENDA_RULE, marginVertical: 8.5 }} />
+              <View
+                style={{
+                  width: 0.5,
+                  backgroundColor: AGENDA_RULE,
+                  marginVertical: 8.5,
+                }}
+              />
               {/* Col 3: Speakers */}
               <View style={{ width: AG_COL_W[2], padding: AG_CELL_PAD }}>
-                {speakersArr.length > 0
-                  ? speakersArr.slice(0, 4).map((speaker, si) => (
-                      <Text key={si} style={{ fontSize: si === 0 ? 8.5 : 7.8, fontFamily: si === 0 ? 'Helvetica-Bold' : 'Helvetica', color: si === 0 ? AGENDA_DARK : AGENDA_MID, marginBottom: si < speakersArr.length - 1 ? 2 : 0 }}>
-                        {speaker}
-                      </Text>
-                    ))
-                  : <Text style={{ fontSize: 8.5, color: AGENDA_LIGHT }}>{venue || '-'}</Text>}
+                {speakersArr.length > 0 ? (
+                  speakersArr.slice(0, 4).map((speaker, si) => (
+                    <Text
+                      key={si}
+                      style={{
+                        fontSize: si === 0 ? 8.5 : 7.8,
+                        fontFamily: si === 0 ? 'Helvetica-Bold' : 'Helvetica',
+                        color: si === 0 ? AGENDA_DARK : AGENDA_MID,
+                        marginBottom: si < speakersArr.length - 1 ? 2 : 0,
+                      }}
+                    >
+                      {speaker}
+                    </Text>
+                  ))
+                ) : (
+                  <Text style={{ fontSize: 8.5, color: AGENDA_LIGHT }}>
+                    {venue || '-'}
+                  </Text>
+                )}
               </View>
-              <View style={{ width: 0.5, backgroundColor: AGENDA_RULE, marginVertical: 8.5 }} />
+              <View
+                style={{
+                  width: 0.5,
+                  backgroundColor: AGENDA_RULE,
+                  marginVertical: 8.5,
+                }}
+              />
               {/* Col 4: Time */}
               <View style={{ width: AG_COL_W[3], padding: AG_CELL_PAD }}>
-                <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold', color: AGENDA_ORANGE }}>{time}</Text>
+                <Text
+                  style={{
+                    fontSize: 9,
+                    fontFamily: 'Helvetica-Bold',
+                    color: AGENDA_ORANGE,
+                  }}
+                >
+                  {time}
+                </Text>
               </View>
             </View>
           );
@@ -229,7 +544,7 @@ export default function BuildMyAgenda({
         selectedSessions={selectedSessions}
         effectiveDayLabels={effectiveDayLabels}
         logoDataUrl={logoDataUrl}
-      />,
+      />
     ).toBlob();
 
     const url = URL.createObjectURL(blob);

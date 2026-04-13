@@ -1,32 +1,32 @@
-import { getResendClient, getResendFromEmail } from "@/lib/resend";
-import { EVENT_CONFIG } from "@/lib/registration-constants";
-import { FESTIVAL_EVENT_COPY } from "@/lib/festival-ticketing-constants";
+import { getResendClient, getResendFromEmail } from '@/lib/resend';
+import { EVENT_CONFIG } from '@/lib/registration-constants';
+import { FESTIVAL_EVENT_COPY } from '@/lib/festival-ticketing-constants';
 import {
   buildFestivalInvoicePdf,
   buildFestivalTicketPdf,
-} from "@/lib/festival-ticketing-documents";
+} from '@/lib/festival-ticketing-documents';
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-const EMAIL_LOGO_URL = "https://jamsaq.in/img/tasi-csr-logo.png";
+const EMAIL_LOGO_URL = 'https://jamsaq.in/img/tasi-csr-logo.png';
 
 function renderTicketConfirmationEmailHtml({ ticket, user }) {
   const logoUrl = EMAIL_LOGO_URL;
   const firstName = escapeHtml(
-    (user.full_name || "").split(" ")[0] || user.full_name || "Attendee"
+    (user.full_name || '').split(' ')[0] || user.full_name || 'Attendee'
   );
-  const fullName = escapeHtml(user.full_name || "");
-  const ticketNumber = escapeHtml(ticket.ticket_number || "—");
-  const invoiceNumber = escapeHtml(ticket.invoice_number || "—");
+  const fullName = escapeHtml(user.full_name || '');
+  const ticketNumber = escapeHtml(ticket.ticket_number || '—');
+  const invoiceNumber = escapeHtml(ticket.invoice_number || '—');
   const ticketType = escapeHtml(
-    ticket.ticket_type === "domestic" ? "Domestic" : "International"
+    ticket.ticket_type === 'domestic' ? 'Domestic' : 'International'
   );
 
   const kv = (label, value) => `
@@ -74,13 +74,13 @@ function renderTicketConfirmationEmailHtml({ ticket, user }) {
             </div>
             <div style="padding:6px 18px 14px;">
               <table style="width:100%;border-collapse:collapse;">
-                ${kv("Attendee", escapeHtml(fullName))}
-                ${kv("Ticket Number", `<strong style="font-family:monospace;font-size:15px;">${ticketNumber}</strong>`)}
-                ${kv("Invoice Number", `<span style="font-family:monospace;">${invoiceNumber}</span>`)}
-                ${kv("Pass Type", ticketType)}
-                ${kv("Event", escapeHtml(FESTIVAL_EVENT_COPY.title))}
-                ${kv("Dates", escapeHtml(FESTIVAL_EVENT_COPY.datesLabel))}
-                ${kv("Venue", escapeHtml(FESTIVAL_EVENT_COPY.venue))}
+                ${kv('Attendee', escapeHtml(fullName))}
+                ${kv('Ticket Number', `<strong style="font-family:monospace;font-size:15px;">${ticketNumber}</strong>`)}
+                ${kv('Invoice Number', `<span style="font-family:monospace;">${invoiceNumber}</span>`)}
+                ${kv('Pass Type', ticketType)}
+                ${kv('Event', escapeHtml(FESTIVAL_EVENT_COPY.title))}
+                ${kv('Dates', escapeHtml(FESTIVAL_EVENT_COPY.datesLabel))}
+                ${kv('Venue', escapeHtml(FESTIVAL_EVENT_COPY.venue))}
               </table>
             </div>
           </div>
@@ -117,7 +117,7 @@ function renderTicketConfirmationEmailHtml({ ticket, user }) {
         <div style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:16px 30px;text-align:center;">
           <p style="margin:0;color:#9ca3af;font-size:11px;line-height:1.6;">
             ${escapeHtml(EVENT_CONFIG.shortName)} &nbsp;·&nbsp; ${escapeHtml(FESTIVAL_EVENT_COPY.venue)} &nbsp;·&nbsp; ${escapeHtml(FESTIVAL_EVENT_COPY.datesLabel)}<br/>
-            This email was sent to ${escapeHtml(user.email || "")} because you registered for the festival.
+            This email was sent to ${escapeHtml(user.email || '')} because you registered for the festival.
           </p>
         </div>
 
@@ -133,7 +133,7 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
     return {
       sent: false,
       skipped: true,
-      error: "Missing RESEND_API_KEY.",
+      error: 'Missing RESEND_API_KEY.',
     };
   }
 
@@ -150,7 +150,7 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
     ``,
     `Ticket Number: ${ticket.ticket_number}`,
     `Invoice Number: ${ticket.invoice_number}`,
-    `Pass Type: ${ticket.ticket_type === "domestic" ? "Domestic" : "International"}`,
+    `Pass Type: ${ticket.ticket_type === 'domestic' ? 'Domestic' : 'International'}`,
     `Event: ${FESTIVAL_EVENT_COPY.title}`,
     `Dates: ${FESTIVAL_EVENT_COPY.datesLabel}`,
     `Venue: ${FESTIVAL_EVENT_COPY.venue}`,
@@ -160,7 +160,7 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
     `Please bring your ticket and a valid photo ID on the day.`,
     ``,
     `For support, contact: ${EVENT_CONFIG.contactEmail}`,
-  ].join("\n");
+  ].join('\n');
 
   const html = renderTicketConfirmationEmailHtml({ ticket, user });
 
@@ -177,14 +177,16 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
           content: ticketPdf,
         },
         {
-          filename: `${ticket.invoice_number || "invoice"}.pdf`,
+          filename: `${ticket.invoice_number || 'invoice'}.pdf`,
           content: invoicePdf,
         },
       ],
     });
 
     if (error) {
-      throw new Error(error.message || "Failed to send festival confirmation email.");
+      throw new Error(
+        error.message || 'Failed to send festival confirmation email.'
+      );
     }
 
     return {
@@ -197,7 +199,7 @@ export async function sendFestivalTicketConfirmationEmail({ ticket, user }) {
       error:
         error instanceof Error
           ? error.message
-          : "Failed to send festival confirmation email.",
+          : 'Failed to send festival confirmation email.',
     };
   }
 }

@@ -61,7 +61,9 @@ export default function RegistrationForm() {
 
     if (!file) {
       setProfilePhoto(null);
-      setPhotoNote('Upload a JPG or PNG under 100KB. Recommended size: 400 x 400 pixels.');
+      setPhotoNote(
+        'Upload a JPG or PNG under 100KB. Recommended size: 400 x 400 pixels.'
+      );
       return;
     }
 
@@ -91,7 +93,9 @@ export default function RegistrationForm() {
       );
     } catch {
       setProfilePhoto(null);
-      setPhotoError('We could not read that image. Please try another JPG or PNG file.');
+      setPhotoError(
+        'We could not read that image. Please try another JPG or PNG file.'
+      );
     }
   }
 
@@ -105,7 +109,9 @@ export default function RegistrationForm() {
 
     try {
       const payload = new FormData();
-      Object.entries(data).forEach(([key, value]) => payload.append(key, value));
+      Object.entries(data).forEach(([key, value]) =>
+        payload.append(key, value)
+      );
       payload.append('profile_photo', profilePhoto);
 
       const response = await fetch('/api/registrations/create', {
@@ -115,13 +121,18 @@ export default function RegistrationForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        setStatus({ type: 'error', message: result.error || 'Unable to submit registration.' });
+        setStatus({
+          type: 'error',
+          message: result.error || 'Unable to submit registration.',
+        });
         return;
       }
 
       reset();
       setProfilePhoto(null);
-      setPhotoNote('Upload a JPG or PNG under 100KB. Recommended size: 400 x 400 pixels.');
+      setPhotoNote(
+        'Upload a JPG or PNG under 100KB. Recommended size: 400 x 400 pixels.'
+      );
       setStatus({
         type: 'success',
         message: result.emailQueued
@@ -129,7 +140,10 @@ export default function RegistrationForm() {
           : `Registration submitted. Your application is now under review. Registration ID: ${result.registrationCode}. We could not send the acknowledgment email automatically yet, but the TASI team can resend it from the dashboard.`,
       });
     } catch {
-      setStatus({ type: 'error', message: 'Network error. Please try again in a moment.' });
+      setStatus({
+        type: 'error',
+        message: 'Network error. Please try again in a moment.',
+      });
     }
   }
 
@@ -143,75 +157,113 @@ export default function RegistrationForm() {
           Apply for TASI 2026
         </h2>
         <p className="max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-          Registrations are reviewed manually by the TASI team. Approved attendees will receive
-          their QR-based entry pass {QR_PASS_RELEASE_TIMING}.
+          Registrations are reviewed manually by the TASI team. Approved
+          attendees will receive their QR-based entry pass{' '}
+          {QR_PASS_RELEASE_TIMING}.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4 md:grid-cols-2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-6 grid gap-4 md:grid-cols-2"
+      >
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">First Name</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            First Name
+          </span>
           <input
             className={FIELD_CLASS}
             {...register('first_name', { required: 'First name is required' })}
           />
-          {errors.first_name && <span className={ERROR_CLASS}>{errors.first_name.message}</span>}
+          {errors.first_name && (
+            <span className={ERROR_CLASS}>{errors.first_name.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Last Name</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Last Name
+          </span>
           <input
             className={FIELD_CLASS}
             {...register('last_name', { required: 'Last name is required' })}
           />
-          {errors.last_name && <span className={ERROR_CLASS}>{errors.last_name.message}</span>}
+          {errors.last_name && (
+            <span className={ERROR_CLASS}>{errors.last_name.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Email</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Email
+          </span>
           <input
             type="email"
             className={FIELD_CLASS}
             {...register('email', {
               required: 'Email is required',
-              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' },
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Enter a valid email',
+              },
             })}
           />
-          {errors.email && <span className={ERROR_CLASS}>{errors.email.message}</span>}
+          {errors.email && (
+            <span className={ERROR_CLASS}>{errors.email.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Phone</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Phone
+          </span>
           <input
             className={FIELD_CLASS}
             {...register('phone', { required: 'Phone number is required' })}
           />
-          {errors.phone && <span className={ERROR_CLASS}>{errors.phone.message}</span>}
+          {errors.phone && (
+            <span className={ERROR_CLASS}>{errors.phone.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Organization</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Organization
+          </span>
           <input
             className={FIELD_CLASS}
-            {...register('organization', { required: 'Organization is required' })}
+            {...register('organization', {
+              required: 'Organization is required',
+            })}
           />
-          {errors.organization && <span className={ERROR_CLASS}>{errors.organization.message}</span>}
+          {errors.organization && (
+            <span className={ERROR_CLASS}>{errors.organization.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Designation</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Designation
+          </span>
           <input
             className={FIELD_CLASS}
-            {...register('designation', { required: 'Designation is required' })}
+            {...register('designation', {
+              required: 'Designation is required',
+            })}
           />
-          {errors.designation && <span className={ERROR_CLASS}>{errors.designation.message}</span>}
+          {errors.designation && (
+            <span className={ERROR_CLASS}>{errors.designation.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
           <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Category / Attendee Type
           </span>
-          <select className={FIELD_CLASS} {...register('attendee_category', { required: true })}>
+          <select
+            className={FIELD_CLASS}
+            {...register('attendee_category', { required: true })}
+          >
             {ATTENDEE_CATEGORIES.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -221,7 +273,9 @@ export default function RegistrationForm() {
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">LinkedIn Profile</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            LinkedIn Profile
+          </span>
           <input
             type="url"
             className={FIELD_CLASS}
@@ -234,25 +288,35 @@ export default function RegistrationForm() {
               },
             })}
           />
-          {errors.linkedin_url && <span className={ERROR_CLASS}>{errors.linkedin_url.message}</span>}
+          {errors.linkedin_url && (
+            <span className={ERROR_CLASS}>{errors.linkedin_url.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">City</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            City
+          </span>
           <input
             className={FIELD_CLASS}
             {...register('city', { required: 'City is required' })}
           />
-          {errors.city && <span className={ERROR_CLASS}>{errors.city.message}</span>}
+          {errors.city && (
+            <span className={ERROR_CLASS}>{errors.city.message}</span>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Country</span>
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Country
+          </span>
           <input
             className={FIELD_CLASS}
             {...register('country', { required: 'Country is required' })}
           />
-          {errors.country && <span className={ERROR_CLASS}>{errors.country.message}</span>}
+          {errors.country && (
+            <span className={ERROR_CLASS}>{errors.country.message}</span>
+          )}
         </label>
 
         <label className="md:col-span-2 flex flex-col gap-2">
@@ -279,7 +343,9 @@ export default function RegistrationForm() {
           {photoError ? (
             <span className={ERROR_CLASS}>{photoError}</span>
           ) : (
-            <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">{photoNote}</p>
+            <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+              {photoNote}
+            </p>
           )}
         </label>
 
@@ -289,7 +355,9 @@ export default function RegistrationForm() {
             disabled={isSubmitting}
             className="inline-flex h-12 items-center justify-center rounded-full bg-[#4C1D95] px-6 text-sm font-semibold text-white transition hover:bg-[#5b21b6] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSubmitting ? 'Submitting registration...' : 'Submit Registration'}
+            {isSubmitting
+              ? 'Submitting registration...'
+              : 'Submit Registration'}
           </button>
           {status.message ? (
             <p

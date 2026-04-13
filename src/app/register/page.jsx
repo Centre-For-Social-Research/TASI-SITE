@@ -169,9 +169,8 @@ export default function RegisterPage() {
               Skip the wait. Get full access to the festival.
             </h2>
             <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-white/80 md:text-base">
-              Move from application-only access to the full festival
-              experience, including paid entry, hospitality, and reception
-              access.
+              Move from application-only access to the full festival experience,
+              including paid entry, hospitality, and reception access.
             </p>
           </div>
         </section>

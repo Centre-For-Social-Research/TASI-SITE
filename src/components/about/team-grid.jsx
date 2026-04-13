@@ -170,9 +170,9 @@ export default function TeamGrid() {
 
   const scrollByCards = React.useCallback((direction = 1) => {
     if (!carouselRef.current) return;
-    
+
     const track = carouselRef.current;
-    
+
     const card = track.querySelector('[data-team-card]');
     // Scroll intentionally slightly more than one card to ensure snap target updates
     const step = card ? card.offsetWidth + 24 : track.clientWidth * 0.5;

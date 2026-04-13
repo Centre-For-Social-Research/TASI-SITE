@@ -1,6 +1,6 @@
-import { protectPublicPostRoute } from "@/lib/api-security";
-import { createRazorpayOrder, getPublicRazorpayConfig } from "@/lib/razorpay";
-import { sendTicketConfirmationEmail } from "@/lib/ticketing-email";
+import { protectPublicPostRoute } from '@/lib/api-security';
+import { createRazorpayOrder, getPublicRazorpayConfig } from '@/lib/razorpay';
+import { sendTicketConfirmationEmail } from '@/lib/ticketing-email';
 import {
   createTicketOrder,
   findOrderByIdempotencyKey,
@@ -9,10 +9,10 @@ import {
   getTicketOrder,
   issueTicketsForOrder,
   setOrderProviderOrderId,
-} from "@/lib/ticketing-db";
-import { buildOrderPricing } from "@/lib/ticketing-pricing";
-import { buildOrderIdempotencyKey } from "@/lib/ticketing-utils";
-import { createTicketOrderSchema } from "@/lib/ticketing-validation";
+} from '@/lib/ticketing-db';
+import { buildOrderPricing } from '@/lib/ticketing-pricing';
+import { buildOrderIdempotencyKey } from '@/lib/ticketing-utils';
+import { createTicketOrderSchema } from '@/lib/ticketing-validation';
 
 function toPublicTicketEvent(event) {
   return {
@@ -26,10 +26,14 @@ function toPublicTicketEvent(event) {
 }
 
 export async function POST(request) {
-  const protection = await protectPublicPostRoute(request, "ticket-orders-create", {
-    windowMs: 10 * 60 * 1000,
-    maxRequests: 5,
-  });
+  const protection = await protectPublicPostRoute(
+    request,
+    'ticket-orders-create',
+    {
+      windowMs: 10 * 60 * 1000,
+      maxRequests: 5,
+    }
+  );
 
   if (!protection.ok) {
     return protection.response;
@@ -40,18 +44,23 @@ export async function POST(request) {
     const parsed = createTicketOrderSchema.parse(body);
     const event = await getTicketEventForCheckout(parsed.eventId);
 
-    if (event.status !== "published") {
+    if (event.status !== 'published') {
       return Response.json(
-        { error: "This event is not accepting bookings right now." },
-        { status: 400, headers: protection.headers },
+        { error: 'This event is not accepting bookings right now.' },
+        { status: 400, headers: protection.headers }
       );
     }
 
-    const ticketTypeMap = new Map((event.ticket_types || []).map((ticketType) => [ticketType.id, ticketType]));
+    const ticketTypeMap = new Map(
+      (event.ticket_types || []).map((ticketType) => [
+        ticketType.id,
+        ticketType,
+      ])
+    );
     const pricingSelections = parsed.ticketSelections.map((selection) => {
       const ticketType = ticketTypeMap.get(selection.ticketTypeId);
       if (!ticketType) {
-        throw new Error("One or more ticket types are invalid.");
+        throw new Error('One or more ticket types are invalid.');
       }
 
       if (!ticketType.is_on_sale) {
@@ -59,11 +68,17 @@ export async function POST(request) {
       }
 
       if (selection.quantity > ticketType.per_order_limit) {
-        throw new Error(`${ticketType.name} allows a maximum of ${ticketType.per_order_limit} per order.`);
+        throw new Error(
+          `${ticketType.name} allows a maximum of ${ticketType.per_order_limit} per order.`
+        );
       }
 
-      if ((ticketType.availability?.availableQuantity || 0) < selection.quantity) {
-        throw new Error(`${ticketType.name} does not have enough tickets remaining.`);
+      if (
+        (ticketType.availability?.availableQuantity || 0) < selection.quantity
+      ) {
+        throw new Error(
+          `${ticketType.name} does not have enough tickets remaining.`
+        );
       }
 
       return {
@@ -94,7 +109,7 @@ export async function POST(request) {
             internalOrderId: existingOrder.id,
             eventSlug: event.slug,
           },
-          currency: existingOrder.currency || "INR",
+          currency: existingOrder.currency || 'INR',
         });
 
         await setOrderProviderOrderId(existingOrder.id, razorpayOrder.id);
@@ -108,10 +123,10 @@ export async function POST(request) {
             amountPaise: existingOrder.total_paise,
             razorpayKeyId: getPublicRazorpayConfig().keyId,
             razorpayOrderId: razorpayOrder.id,
-            currency: existingOrder.currency || "INR",
+            currency: existingOrder.currency || 'INR',
             event: toPublicTicketEvent(event),
           },
-          { headers: protection.headers },
+          { headers: protection.headers }
         );
       }
 
@@ -126,7 +141,7 @@ export async function POST(request) {
           razorpayOrderId: existingOrder.provider_order_id,
           event: toPublicTicketEvent(event),
         },
-        { headers: protection.headers },
+        { headers: protection.headers }
       );
     }
 
@@ -153,13 +168,13 @@ export async function POST(request) {
           success: true,
           orderId: order.id,
           orderCode: order.public_order_code,
-          status: "paid",
+          status: 'paid',
           amountPaise: 0,
           freeOrder: true,
           tickets,
           event: toPublicTicketEvent(event),
         },
-        { headers: protection.headers },
+        { headers: protection.headers }
       );
     }
 
@@ -170,7 +185,7 @@ export async function POST(request) {
         internalOrderId: order.id,
         eventSlug: event.slug,
       },
-      currency: event.currency || "INR",
+      currency: event.currency || 'INR',
     });
 
     await setOrderProviderOrderId(order.id, razorpayOrder.id);
@@ -189,12 +204,17 @@ export async function POST(request) {
         buyer: parsed.buyer,
         event: toPublicTicketEvent(event),
       },
-      { headers: protection.headers },
+      { headers: protection.headers }
     );
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to create ticket order." },
-      { status: 400, headers: protection.headers },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to create ticket order.',
+      },
+      { status: 400, headers: protection.headers }
     );
   }
 }

@@ -1,21 +1,21 @@
-import { protectPublicPostRoute } from "@/lib/api-security";
-import { sendFestivalTicketConfirmationEmail } from "@/lib/festival-ticketing-email";
+import { protectPublicPostRoute } from '@/lib/api-security';
+import { sendFestivalTicketConfirmationEmail } from '@/lib/festival-ticketing-email';
 import {
   confirmFestivalTicketPayment,
   getFestivalTicketById,
   recordFestivalPaymentAudit,
-} from "@/lib/festival-ticketing-db";
-import { festivalVerifyPaymentSchema } from "@/lib/festival-ticketing-validation";
-import { verifyFestivalRazorpayCheckoutSignature } from "@/lib/razorpay";
+} from '@/lib/festival-ticketing-db';
+import { festivalVerifyPaymentSchema } from '@/lib/festival-ticketing-validation';
+import { verifyFestivalRazorpayCheckoutSignature } from '@/lib/razorpay';
 
 export async function POST(request) {
   const protection = await protectPublicPostRoute(
     request,
-    "festival-ticket-verify-payment",
+    'festival-ticket-verify-payment',
     {
       windowMs: 10 * 60 * 1000,
       maxRequests: 10,
-    },
+    }
   );
   if (!protection.ok) {
     return protection.response;
@@ -37,15 +37,15 @@ export async function POST(request) {
       await recordFestivalPaymentAudit({
         ticketId: ticket.id,
         userId: ticket.user.id,
-        eventType: "festival_payment_verify_failed",
+        eventType: 'festival_payment_verify_failed',
         paymentStream: ticket.payment_stream,
         payload: {
           razorpayOrderId: parsed.razorpayOrderId,
         },
       });
       return Response.json(
-        { error: "Payment verification failed." },
-        { status: 400, headers: protection.headers },
+        { error: 'Payment verification failed.' },
+        { status: 400, headers: protection.headers }
       );
     }
 
@@ -58,7 +58,7 @@ export async function POST(request) {
     await recordFestivalPaymentAudit({
       ticketId: confirmedTicket.id,
       userId: confirmedTicket.user.id,
-      eventType: "festival_payment_confirmed",
+      eventType: 'festival_payment_confirmed',
       paymentStream: confirmedTicket.payment_stream,
       payload: {
         razorpayPaymentId: parsed.razorpayPaymentId,
@@ -77,7 +77,7 @@ export async function POST(request) {
         ticketNumber: confirmedTicket.ticket_number,
         invoiceNumber: confirmedTicket.invoice_number,
       },
-      { headers: protection.headers },
+      { headers: protection.headers }
     );
   } catch (error) {
     return Response.json(
@@ -85,9 +85,9 @@ export async function POST(request) {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to verify festival payment.",
+            : 'Unable to verify festival payment.',
       },
-      { status: 400, headers: protection.headers },
+      { status: 400, headers: protection.headers }
     );
   }
 }

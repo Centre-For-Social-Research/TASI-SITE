@@ -722,45 +722,48 @@ export default function RegistrationsAdminPanel({ operator }) {
     async ({ background = false } = {}) => {
       if (!background)
         setState((current) => ({ ...current, loading: true, error: '' }));
-    try {
-      const response = await fetch(`/api/admin/registrations?${queryString}`, {
-        cache: 'no-store',
-      });
-      const data = await response.json();
-      if (!response.ok)
-        return setState({
+      try {
+        const response = await fetch(
+          `/api/admin/registrations?${queryString}`,
+          {
+            cache: 'no-store',
+          }
+        );
+        const data = await response.json();
+        if (!response.ok)
+          return setState({
+            loading: false,
+            registrations: [],
+            summary: null,
+            pagination: null,
+            count: 0,
+            error: data.error || 'Unable to load registrations.',
+          });
+        setState({
+          loading: false,
+          registrations: data.registrations || [],
+          summary: data.summary,
+          pagination: data.pagination,
+          count: data.count || 0,
+          error: '',
+        });
+        setSelectedIds((current) =>
+          current.filter((id) =>
+            (data.registrations || []).some(
+              (registration) => registration.id === id
+            )
+          )
+        );
+      } catch {
+        setState({
           loading: false,
           registrations: [],
           summary: null,
           pagination: null,
           count: 0,
-          error: data.error || 'Unable to load registrations.',
+          error: 'Network error.',
         });
-      setState({
-        loading: false,
-        registrations: data.registrations || [],
-        summary: data.summary,
-        pagination: data.pagination,
-        count: data.count || 0,
-        error: '',
-      });
-      setSelectedIds((current) =>
-        current.filter((id) =>
-          (data.registrations || []).some(
-            (registration) => registration.id === id
-          )
-        )
-      );
-    } catch {
-      setState({
-        loading: false,
-        registrations: [],
-        summary: null,
-        pagination: null,
-        count: 0,
-        error: 'Network error.',
-      });
-    }
+      }
     },
     [queryString]
   );

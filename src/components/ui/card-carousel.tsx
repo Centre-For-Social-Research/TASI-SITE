@@ -183,7 +183,6 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({
                               className="h-full w-full"
                               loading="lazy"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-
                             />
                           ) : muxThumbnail ? (
                             <>

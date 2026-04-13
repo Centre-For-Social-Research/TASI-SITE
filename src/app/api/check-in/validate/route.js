@@ -51,7 +51,10 @@ export async function POST(request) {
       if (festivalTicket) {
         return Response.json({
           success: true,
-          ...buildStatusPayload(buildFestivalCheckInRecord(festivalTicket), true),
+          ...buildStatusPayload(
+            buildFestivalCheckInRecord(festivalTicket),
+            true
+          ),
         });
       }
 

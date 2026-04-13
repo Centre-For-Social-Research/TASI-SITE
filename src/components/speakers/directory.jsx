@@ -7,9 +7,7 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { speakers } from '@/data/speakers';
 
-const VIP_SPEAKERS = new Set([
-  'Dr. Subrahmanyam Jaishankar',
-]);
+const VIP_SPEAKERS = new Set(['Dr. Subrahmanyam Jaishankar']);
 
 const VIP_LABEL = 'Keynote Speaker';
 const SPEAKERS_PER_PAGE = 9;
@@ -34,7 +32,9 @@ function linkedInUrlForSpeaker(speaker) {
 
 function speakerPhotoSrc(speaker) {
   if (!speaker?.photo) return '';
-  return speaker.photo.startsWith('/') ? speaker.photo : `/img/speakers/${speaker.photo}`;
+  return speaker.photo.startsWith('/')
+    ? speaker.photo
+    : `/img/speakers/${speaker.photo}`;
 }
 
 const SpeakerProfileCard = React.forwardRef(function SpeakerProfileCard(

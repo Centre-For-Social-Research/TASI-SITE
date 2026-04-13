@@ -191,9 +191,7 @@ export default function CheckInPanel({ operator }) {
             classifyCameraStartFailure({
               isSecureContext: window.isSecureContext,
               errorName:
-                fallbackError instanceof DOMException
-                  ? fallbackError.name
-                  : '',
+                fallbackError instanceof DOMException ? fallbackError.name : '',
             })
           );
           return;
@@ -358,7 +356,12 @@ export default function CheckInPanel({ operator }) {
     };
   }, []);
 
-  useEffect(() => () => { stopCamera(); }, [stopCamera]);
+  useEffect(
+    () => () => {
+      stopCamera();
+    },
+    [stopCamera]
+  );
 
   return (
     <div className="space-y-6">

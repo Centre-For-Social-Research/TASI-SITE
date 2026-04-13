@@ -65,7 +65,11 @@ export function InfiniteGridOverlay({ className = '' }) {
     >
       {/* Static faint base grid */}
       <div className="absolute inset-0 opacity-[0.07] text-white">
-        <GridPattern patternId="hero-grid-base" offsetX={gridOffsetX} offsetY={gridOffsetY} />
+        <GridPattern
+          patternId="hero-grid-base"
+          offsetX={gridOffsetX}
+          offsetY={gridOffsetY}
+        />
       </div>
 
       {/* Mouse-reactive bright reveal layer */}
@@ -73,7 +77,11 @@ export function InfiniteGridOverlay({ className = '' }) {
         className="absolute inset-0 opacity-50 text-white"
         style={{ maskImage, WebkitMaskImage: maskImage }}
       >
-        <GridPattern patternId="hero-grid-reveal" offsetX={gridOffsetX} offsetY={gridOffsetY} />
+        <GridPattern
+          patternId="hero-grid-reveal"
+          offsetX={gridOffsetX}
+          offsetY={gridOffsetY}
+        />
       </motion.div>
     </div>
   );

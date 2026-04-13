@@ -168,25 +168,29 @@ export default async function PartnerDetailPage({ params }) {
       Icon: LinkedInIcon,
       href: partner.social.linkedin,
       label: 'LinkedIn',
-      color: 'border-[#0077b5]/30 bg-[#0077b5]/8 text-[#0077b5] hover:bg-[#0077b5]/15 hover:border-[#0077b5]/60',
+      color:
+        'border-[#0077b5]/30 bg-[#0077b5]/8 text-[#0077b5] hover:bg-[#0077b5]/15 hover:border-[#0077b5]/60',
     },
     partner.social?.instagram && {
       Icon: InstagramIcon,
       href: partner.social.instagram,
       label: 'Instagram',
-      color: 'border-[#e1306c]/30 bg-[#e1306c]/8 text-[#e1306c] hover:bg-[#e1306c]/15 hover:border-[#e1306c]/60',
+      color:
+        'border-[#e1306c]/30 bg-[#e1306c]/8 text-[#e1306c] hover:bg-[#e1306c]/15 hover:border-[#e1306c]/60',
     },
     partner.social?.twitter && {
       Icon: XIcon,
       href: partner.social.twitter,
       label: 'X (Twitter)',
-      color: 'border-stone-300 bg-stone-100 text-stone-800 hover:bg-stone-200 hover:border-stone-500',
+      color:
+        'border-stone-300 bg-stone-100 text-stone-800 hover:bg-stone-200 hover:border-stone-500',
     },
     partner.social?.youtube && {
       Icon: YouTubeIcon,
       href: partner.social.youtube,
       label: 'YouTube',
-      color: 'border-[#ff0000]/30 bg-[#ff0000]/8 text-[#ff0000] hover:bg-[#ff0000]/15 hover:border-[#ff0000]/60',
+      color:
+        'border-[#ff0000]/30 bg-[#ff0000]/8 text-[#ff0000] hover:bg-[#ff0000]/15 hover:border-[#ff0000]/60',
     },
   ].filter(Boolean);
 
@@ -194,7 +198,6 @@ export default async function PartnerDetailPage({ params }) {
     <>
       <HomeNavbar />
       <main className="min-h-screen bg-[#f1f1f0] dark:bg-stone-950">
-
         {/* ── Gradient banner ──────────────────────────────────────── */}
         {/* pt-[72px] clears the fixed navbar; pb-20 leaves room for card overlap */}
         <div className="bg-[linear-gradient(135deg,#350265_0%,#6a115e_52%,#c0392b_100%)] pb-20 pt-[72px] md:pb-24 md:pt-[80px]">
@@ -203,7 +206,19 @@ export default async function PartnerDetailPage({ params }) {
               href="/partners"
               className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white/60 transition-colors hover:text-white"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden="true"><path fillRule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clipRule="evenodd" /></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z"
+                  clipRule="evenodd"
+                />
+              </svg>
               All Partners
             </Link>
           </div>
@@ -212,10 +227,8 @@ export default async function PartnerDetailPage({ params }) {
         {/* ── Cards (overlap the banner bottom) ───────────────────── */}
         <div className="mx-auto w-full max-w-5xl px-4 pb-20 md:px-6">
           <div className="-mt-14 flex flex-col gap-4 md:flex-row md:items-stretch md:gap-5">
-
             {/* ── LEFT: Logo card ─────────────────────────────────── */}
             <div className="flex w-full flex-col rounded-[10px] border border-stone-200/80 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.10)] dark:border-slate-700 dark:bg-slate-900 md:w-[280px] md:shrink-0">
-
               {/* Logo */}
               <div className="flex flex-1 items-center justify-center p-10">
                 <Image
@@ -274,7 +287,6 @@ export default async function PartnerDetailPage({ params }) {
 
             {/* ── RIGHT: Info card ─────────────────────────────────── */}
             <div className="flex flex-1 flex-col rounded-[10px] border border-stone-200/80 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.10)] dark:border-slate-700 dark:bg-slate-900">
-
               {/* Top bar: type label + share */}
               <div className="flex items-center justify-between px-8 pt-7 pb-0 md:px-10 md:pt-8">
                 <span className="text-[10px] font-black uppercase tracking-[0.22em] text-stone-400 dark:text-slate-500">
@@ -312,13 +324,11 @@ export default async function PartnerDetailPage({ params }) {
                 </span>
               </div>
             </div>
-
           </div>
 
           {/* ── Prev / Next navigation ───────────────────────────── */}
           <PartnerPagination currentSlug={slug} />
         </div>
-
       </main>
       <HomeFooter />
     </>
@@ -341,7 +351,12 @@ function PartnerPagination({ currentSlug }) {
             href={`/partners/${prev.slug}`}
             className="group inline-flex items-center gap-2 text-sm font-semibold text-stone-500 transition hover:text-stone-900 dark:text-slate-400 dark:hover:text-white"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-[10px] border border-stone-200 bg-white text-stone-500 transition group-hover:border-stone-400 dark:border-slate-600 dark:bg-slate-800" aria-hidden="true">←</span>
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-[10px] border border-stone-200 bg-white text-stone-500 transition group-hover:border-stone-400 dark:border-slate-600 dark:bg-slate-800"
+              aria-hidden="true"
+            >
+              ←
+            </span>
             <span className="hidden sm:inline">{prev.name}</span>
           </Link>
         )}
@@ -359,7 +374,12 @@ function PartnerPagination({ currentSlug }) {
             className="group inline-flex items-center gap-2 text-sm font-semibold text-stone-500 transition hover:text-stone-900 dark:text-slate-400 dark:hover:text-white"
           >
             <span className="hidden sm:inline">{next.name}</span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-[10px] border border-stone-200 bg-white text-stone-500 transition group-hover:border-stone-400 dark:border-slate-600 dark:bg-slate-800" aria-hidden="true">→</span>
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-[10px] border border-stone-200 bg-white text-stone-500 transition group-hover:border-stone-400 dark:border-slate-600 dark:bg-slate-800"
+              aria-hidden="true"
+            >
+              →
+            </span>
           </Link>
         )}
       </div>

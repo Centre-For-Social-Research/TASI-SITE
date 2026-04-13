@@ -1,7 +1,12 @@
 'use client';
 
-export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, description }) {
-
+export default function KeynoteVideoPlayer({
+  iframeSrc,
+  title,
+  speaker,
+  role,
+  description,
+}) {
   return (
     <div className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-md dark:border-zinc-700 dark:bg-zinc-900">
       {/* Video area */}
@@ -24,7 +29,9 @@ export default function KeynoteVideoPlayer({ iframeSrc, title, speaker, role, de
           {title}
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-stone-600 dark:text-zinc-300">
-          <strong className="text-stone-800 dark:text-zinc-100">{speaker}</strong>
+          <strong className="text-stone-800 dark:text-zinc-100">
+            {speaker}
+          </strong>
           {description ? `: ${description}` : ''}
         </p>
       </div>

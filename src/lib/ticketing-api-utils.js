@@ -3,23 +3,23 @@ function includesAny(value, patterns) {
 }
 
 export function isSupabaseAdminConfigError(message) {
-  const value = String(message || "");
+  const value = String(message || '');
 
   return includesAny(value, [
-    "Missing SUPABASE_URL",
-    "Missing SUPABASE_SERVICE_ROLE_KEY",
+    'Missing SUPABASE_URL',
+    'Missing SUPABASE_SERVICE_ROLE_KEY',
   ]);
 }
 
 export function isMissingTicketingSchemaError(message) {
-  const value = String(message || "");
+  const value = String(message || '');
 
   return (
-    value.includes("ticket_events") &&
+    value.includes('ticket_events') &&
     includesAny(value.toLowerCase(), [
-      "schema cache",
-      "relation",
-      "does not exist",
+      'schema cache',
+      'relation',
+      'does not exist',
     ])
   );
 }
@@ -29,5 +29,5 @@ export function shouldServeDemoTicketEvents({ message, nodeEnv }) {
     return true;
   }
 
-  return nodeEnv !== "production" && isMissingTicketingSchemaError(message);
+  return nodeEnv !== 'production' && isMissingTicketingSchemaError(message);
 }

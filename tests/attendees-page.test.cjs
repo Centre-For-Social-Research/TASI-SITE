@@ -4,7 +4,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 test('attendees page artifacts exist and expose public directory content', () => {
-  const pagePath = path.join(process.cwd(), 'src', 'app', 'attendees', 'page.jsx');
+  const pagePath = path.join(
+    process.cwd(),
+    'src',
+    'app',
+    'attendees',
+    'page.jsx'
+  );
   const componentPath = path.join(
     process.cwd(),
     'src',
@@ -79,7 +85,13 @@ test('attendees page artifacts exist and expose public directory content', () =>
   assert.match(publicDataSource, /'meta-412'/);
   assert.match(publicDataSource, /'resolver-282'/);
   assert.match(publicDataSource, /'name-441'/);
-  assert.match(publicDataSource, /const \{ email, phone, \.\.\.publicFields \} = curatedAttendee/);
-  assert.match(publicDataSource, /\.filter\(\(attendee\) => attendee\.organisation \|\| attendee\.designation\)/);
+  assert.match(
+    publicDataSource,
+    /const \{ email, phone, \.\.\.publicFields \} = curatedAttendee/
+  );
+  assert.match(
+    publicDataSource,
+    /\.filter\(\(attendee\) => attendee\.organisation \|\| attendee\.designation\)/
+  );
   assert.match(navbarSource, /children:\s*\[[\s\S]*Attendees/);
 });

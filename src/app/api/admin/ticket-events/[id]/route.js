@@ -1,10 +1,10 @@
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { updateTicketEvent } from "@/lib/ticketing-db";
-import { patchTicketEventSchema } from "@/lib/ticketing-validation";
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { updateTicketEvent } from '@/lib/ticketing-db';
+import { patchTicketEventSchema } from '@/lib/ticketing-validation';
 
 export async function PATCH(request, { params }) {
   const authResult = await requireAuthorizedOperator({
-    route: "api.admin.ticket-events.update",
+    route: 'api.admin.ticket-events.update',
   });
   if (!authResult.ok) {
     return authResult.response;
@@ -25,9 +25,9 @@ export async function PATCH(request, { params }) {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to update ticket event.",
+            : 'Unable to update ticket event.',
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }

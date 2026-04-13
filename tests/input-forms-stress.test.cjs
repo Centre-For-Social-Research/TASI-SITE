@@ -71,12 +71,21 @@ test('sanitizeEmail lowercases and strips whitespace across 10,000 inputs', asyn
     assert.ok(!result.match(/\s/), `whitespace survived at ${i}: "${result}"`);
   }
   const ms = performance.now() - start;
-  assert.ok(ms < 1000, `sanitizeEmail: ${N} calls took ${ms.toFixed(0)} ms (limit 1 s)`);
+  assert.ok(
+    ms < 1000,
+    `sanitizeEmail: ${N} calls took ${ms.toFixed(0)} ms (limit 1 s)`
+  );
 });
 
 test('isValidEmail accepts 5,000 structurally valid email addresses', async () => {
   const { isValidEmail } = await importModule('src/lib/input-sanitizers.js');
-  const domains = ['gmail.com', 'yahoo.co.in', 'company.org', 'university.edu', 'tasi.org.in'];
+  const domains = [
+    'gmail.com',
+    'yahoo.co.in',
+    'company.org',
+    'university.edu',
+    'tasi.org.in',
+  ];
   for (let i = 0; i < 5_000; i++) {
     const email = `user${i}@${domains[i % domains.length]}`;
     assert.equal(isValidEmail(email), true, `should accept: ${email}`);
@@ -89,8 +98,8 @@ test('isValidEmail rejects 5,000 malformed email patterns', async () => {
     (i) => `noatsign${i}`,
     (i) => `double@@sign${i}.com`,
     (i) => `@nodomain${i}`,
-    () => ''.padEnd(65, 'a') + '@domain.com',       // local > 64 chars
-    () => 'x@' + 'a'.repeat(256),                   // domain > 255 chars
+    () => ''.padEnd(65, 'a') + '@domain.com', // local > 64 chars
+    () => 'x@' + 'a'.repeat(256), // domain > 255 chars
     (i) => `user${i}@.leadingdot.com`,
     (i) => `user${i}@trailingdot.`,
     () => '',
@@ -99,27 +108,56 @@ test('isValidEmail rejects 5,000 malformed email patterns', async () => {
   ];
   for (let i = 0; i < 5_000; i++) {
     const email = invalids[i % invalids.length](i);
-    assert.equal(isValidEmail(email), false, `should reject: ${JSON.stringify(email)}`);
+    assert.equal(
+      isValidEmail(email),
+      false,
+      `should reject: ${JSON.stringify(email)}`
+    );
   }
 });
 
 test('isValidEmail enforces length boundaries precisely', async () => {
   const { isValidEmail } = await importModule('src/lib/input-sanitizers.js');
   // local part: exactly 64 = valid, 65 = invalid
-  assert.equal(isValidEmail('a'.repeat(64) + '@mail.com'), true, 'local 64 should pass');
-  assert.equal(isValidEmail('a'.repeat(65) + '@mail.com'), false, 'local 65 should fail');
+  assert.equal(
+    isValidEmail('a'.repeat(64) + '@mail.com'),
+    true,
+    'local 64 should pass'
+  );
+  assert.equal(
+    isValidEmail('a'.repeat(65) + '@mail.com'),
+    false,
+    'local 65 should fail'
+  );
   // domain part: exactly 255 = valid, 256 = invalid
   // 'a' + '@' + domain → total must stay ≤ 320
-  assert.equal(isValidEmail('a@' + 'b'.repeat(251) + '.com'), true, 'domain 255 should pass');
-  assert.equal(isValidEmail('a@' + 'b'.repeat(256)), false, 'domain 256 should fail');
+  assert.equal(
+    isValidEmail('a@' + 'b'.repeat(251) + '.com'),
+    true,
+    'domain 255 should pass'
+  );
+  assert.equal(
+    isValidEmail('a@' + 'b'.repeat(256)),
+    false,
+    'domain 256 should fail'
+  );
   // total length > 320 fails
   assert.equal(
     isValidEmail('a'.repeat(64) + '@' + 'b'.repeat(252) + '.com'), // 64+1+256=321
-    false, '321-char email should fail'
+    false,
+    '321-char email should fail'
   );
   // domain starting or ending with dot
-  assert.equal(isValidEmail('x@.domain.com'), false, 'domain leading dot should fail');
-  assert.equal(isValidEmail('x@domain.'), false, 'domain trailing dot should fail');
+  assert.equal(
+    isValidEmail('x@.domain.com'),
+    false,
+    'domain leading dot should fail'
+  );
+  assert.equal(
+    isValidEmail('x@domain.'),
+    false,
+    'domain trailing dot should fail'
+  );
 });
 
 test('sanitizeEmail neutralizes XSS and injection content in email fields', async () => {
@@ -135,7 +173,7 @@ test('sanitizeEmail neutralizes XSS and injection content in email fields', asyn
     const raw = payloads[i % payloads.length];
     const result = sanitizeEmail(raw);
     // Control bytes must not survive
-    for (let cp = 0x00; cp <= 0x1F; cp++) {
+    for (let cp = 0x00; cp <= 0x1f; cp++) {
       assert.ok(
         !result.includes(String.fromCharCode(cp)),
         `Control byte 0x${cp.toString(16)} survived in "${result}"`
@@ -152,7 +190,9 @@ test('sanitizeEmail neutralizes XSS and injection content in email fields', asyn
 // ══════════════════════════════════════════════════════════════════════════════
 
 test('sanitizeShortText strips HTML tags across 10,000 name/org/city inputs', async () => {
-  const { sanitizeShortText } = await importModule('src/lib/input-sanitizers.js');
+  const { sanitizeShortText } = await importModule(
+    'src/lib/input-sanitizers.js'
+  );
   const payloads = [
     '<b>John</b>',
     '<script>alert("xss")</script>Acme',
@@ -176,17 +216,26 @@ test('sanitizeShortText strips HTML tags across 10,000 name/org/city inputs', as
 });
 
 test('sanitizeShortText enforces maxLength for all field sizes (80/120/160/180/255)', async () => {
-  const { sanitizeShortText } = await importModule('src/lib/input-sanitizers.js');
+  const { sanitizeShortText } = await importModule(
+    'src/lib/input-sanitizers.js'
+  );
   const maxLengths = [80, 120, 160, 180, 255];
   let total = 0;
   for (const maxLength of maxLengths) {
     for (let i = 0; i < 1_000; i++) {
       assert.throws(
-        () => sanitizeShortText('A'.repeat(maxLength + 1), { maxLength, fieldName: 'Test' }),
+        () =>
+          sanitizeShortText('A'.repeat(maxLength + 1), {
+            maxLength,
+            fieldName: 'Test',
+          }),
         /must be .* characters or fewer/i
       );
       // One char under limit passes
-      const ok = sanitizeShortText('A'.repeat(maxLength), { maxLength, fieldName: 'Test' });
+      const ok = sanitizeShortText('A'.repeat(maxLength), {
+        maxLength,
+        fieldName: 'Test',
+      });
       assert.equal(ok.length, maxLength);
       total++;
     }
@@ -195,16 +244,27 @@ test('sanitizeShortText enforces maxLength for all field sizes (80/120/160/180/2
 });
 
 test('sanitizeShortText throws for all empty-value patterns on required fields', async () => {
-  const { sanitizeShortText } = await importModule('src/lib/input-sanitizers.js');
+  const { sanitizeShortText } = await importModule(
+    'src/lib/input-sanitizers.js'
+  );
   const fieldNames = [
-    'First name', 'Last name', 'Organization', 'Designation',
-    'City', 'Country', 'Topic', 'Role', 'Availability', 'Interest area',
+    'First name',
+    'Last name',
+    'Organization',
+    'Designation',
+    'City',
+    'Country',
+    'Topic',
+    'Role',
+    'Availability',
+    'Interest area',
   ];
   const emptyValues = ['', '   ', '\t', '\n', '\r\n', null, undefined];
   for (const fieldName of fieldNames) {
     for (const val of emptyValues) {
       assert.throws(
-        () => sanitizeShortText(val, { maxLength: 80, fieldName, required: true }),
+        () =>
+          sanitizeShortText(val, { maxLength: 80, fieldName, required: true }),
         /is required/i,
         `"${fieldName}" should throw for ${JSON.stringify(val)}`
       );
@@ -213,9 +273,13 @@ test('sanitizeShortText throws for all empty-value patterns on required fields',
 });
 
 test('sanitizeShortText collapses internal whitespace across 5,000 org/city inputs', async () => {
-  const { sanitizeShortText } = await importModule('src/lib/input-sanitizers.js');
+  const { sanitizeShortText } = await importModule(
+    'src/lib/input-sanitizers.js'
+  );
   for (let i = 0; i < 5_000; i++) {
-    const result = sanitizeShortText(`Acme   Corp   Ltd  ${i}`, { maxLength: 255 });
+    const result = sanitizeShortText(`Acme   Corp   Ltd  ${i}`, {
+      maxLength: 255,
+    });
     assert.ok(!/\s{2,}/.test(result), `Multi-space not collapsed: "${result}"`);
   }
 });
@@ -259,14 +323,22 @@ test('sanitizeMessage collapses triple+ newlines across 5,000 pitch/motivation i
   ];
   for (let i = 0; i < 5_000; i++) {
     const result = sanitizeMessage(multilineInputs[i % multilineInputs.length]);
-    assert.ok(!/\n{3,}/.test(result), `Triple newline survived: ${JSON.stringify(result)}`);
+    assert.ok(
+      !/\n{3,}/.test(result),
+      `Triple newline survived: ${JSON.stringify(result)}`
+    );
   }
 });
 
 test('sanitizeMessage strips control characters from user messages', async () => {
   const { sanitizeMessage } = await importModule('src/lib/input-sanitizers.js');
   for (const [cp, name] of [
-    [0x00, 'NUL'], [0x01, 'SOH'], [0x08, 'BS'], [0x0D, 'CR'], [0x1B, 'ESC'], [0x7F, 'DEL'],
+    [0x00, 'NUL'],
+    [0x01, 'SOH'],
+    [0x08, 'BS'],
+    [0x0d, 'CR'],
+    [0x1b, 'ESC'],
+    [0x7f, 'DEL'],
   ]) {
     const input = `Before${String.fromCharCode(cp)}After`;
     const result = sanitizeMessage(input);
@@ -279,12 +351,16 @@ test('sanitizeMessage strips control characters from user messages', async () =>
 
 test('sanitizeMessage handles max-length (5,000-char) textarea values at volume', async () => {
   const { sanitizeMessage } = await importModule('src/lib/input-sanitizers.js');
-  const longMsg = 'A'.repeat(4000) + '\n\n' + 'B'.repeat(900) + '<script>x</script>';
+  const longMsg =
+    'A'.repeat(4000) + '\n\n' + 'B'.repeat(900) + '<script>x</script>';
   const N = 1_000;
   const start = performance.now();
   for (let i = 0; i < N; i++) {
     const result = sanitizeMessage(longMsg);
-    assert.ok(!result.includes('<script'), 'script tag survived in long message');
+    assert.ok(
+      !result.includes('<script'),
+      'script tag survived in long message'
+    );
   }
   const ms = performance.now() - start;
   assert.ok(ms < 500, `${N} max-length sanitizations took ${ms.toFixed(0)} ms`);
@@ -352,9 +428,26 @@ test('sanitizeUrl strips whitespace from 5,000 LinkedIn URL inputs', async () =>
 // ══════════════════════════════════════════════════════════════════════════════
 
 test('normalizeRegistrationPayload processes 500 valid payloads without error', async () => {
-  const { normalizeRegistrationPayload } = await importModule('src/lib/registration-utils.js');
-  const categories = ['Government', 'Tech', 'NGO', 'Academia', 'Media', 'Student', 'Other'];
-  const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune'];
+  const { normalizeRegistrationPayload } = await importModule(
+    'src/lib/registration-utils.js'
+  );
+  const categories = [
+    'Government',
+    'Tech',
+    'NGO',
+    'Academia',
+    'Media',
+    'Student',
+    'Other',
+  ];
+  const cities = [
+    'Mumbai',
+    'Delhi',
+    'Bangalore',
+    'Chennai',
+    'Hyderabad',
+    'Pune',
+  ];
   const start = performance.now();
   for (let i = 0; i < 500; i++) {
     const result = normalizeRegistrationPayload({
@@ -368,11 +461,17 @@ test('normalizeRegistrationPayload processes 500 valid payloads without error', 
       city: cities[i % cities.length],
       country: 'India',
       linkedin_url: `https://linkedin.com/in/user${i}`,
-      attendance_reason: i % 3 === 0 ? `Reason ${i}: I am deeply interested in trust and safety` : '',
+      attendance_reason:
+        i % 3 === 0
+          ? `Reason ${i}: I am deeply interested in trust and safety`
+          : '',
     });
     assert.ok(result.first_name.length > 0, `first_name empty at ${i}`);
     assert.equal(result.email, `user${i}@testdomain.org`);
-    assert.ok(result.linkedin_url.startsWith('https://'), `LinkedIn not normalised at ${i}`);
+    assert.ok(
+      result.linkedin_url.startsWith('https://'),
+      `LinkedIn not normalised at ${i}`
+    );
     assert.ok(
       categories.includes(result.attendee_category),
       `attendee_category invalid at ${i}`
@@ -383,15 +482,28 @@ test('normalizeRegistrationPayload processes 500 valid payloads without error', 
 });
 
 test('normalizeRegistrationPayload rejects all empty patterns for each required field', async () => {
-  const { normalizeRegistrationPayload } = await importModule('src/lib/registration-utils.js');
+  const { normalizeRegistrationPayload } = await importModule(
+    'src/lib/registration-utils.js'
+  );
   const validBase = {
-    first_name: 'Alice', last_name: 'Smith', email: 'alice@example.com',
-    phone: '+91 9876543210', organization: 'Acme', designation: 'Engineer',
-    attendee_category: 'Tech', city: 'Delhi', country: 'India',
+    first_name: 'Alice',
+    last_name: 'Smith',
+    email: 'alice@example.com',
+    phone: '+91 9876543210',
+    organization: 'Acme',
+    designation: 'Engineer',
+    attendee_category: 'Tech',
+    city: 'Delhi',
+    country: 'India',
     linkedin_url: 'https://linkedin.com/in/alice',
   };
   const requiredTextFields = [
-    'first_name', 'last_name', 'organization', 'designation', 'city', 'country',
+    'first_name',
+    'last_name',
+    'organization',
+    'designation',
+    'city',
+    'country',
   ];
   for (const field of requiredTextFields) {
     for (const empty of [undefined, '', '   ', '\t\n']) {
@@ -405,11 +517,19 @@ test('normalizeRegistrationPayload rejects all empty patterns for each required 
 });
 
 test('normalizeRegistrationPayload rejects non-LinkedIn and malformed URLs', async () => {
-  const { normalizeRegistrationPayload } = await importModule('src/lib/registration-utils.js');
+  const { normalizeRegistrationPayload } = await importModule(
+    'src/lib/registration-utils.js'
+  );
   const validBase = {
-    first_name: 'Alice', last_name: 'Smith', email: 'alice@example.com',
-    phone: '+91 9876543210', organization: 'Acme', designation: 'Engineer',
-    attendee_category: 'Tech', city: 'Delhi', country: 'India',
+    first_name: 'Alice',
+    last_name: 'Smith',
+    email: 'alice@example.com',
+    phone: '+91 9876543210',
+    organization: 'Acme',
+    designation: 'Engineer',
+    attendee_category: 'Tech',
+    city: 'Delhi',
+    country: 'India',
   };
   const badUrls = [
     '',
@@ -430,15 +550,23 @@ test('normalizeRegistrationPayload rejects non-LinkedIn and malformed URLs', asy
 });
 
 test('normalizeRegistrationPayload rejects phone numbers outside the 7–32 char window', async () => {
-  const { normalizeRegistrationPayload } = await importModule('src/lib/registration-utils.js');
+  const { normalizeRegistrationPayload } = await importModule(
+    'src/lib/registration-utils.js'
+  );
   const validBase = {
-    first_name: 'Alice', last_name: 'Smith', email: 'alice@example.com',
-    organization: 'Acme', designation: 'Engineer', attendee_category: 'Tech',
-    city: 'Delhi', country: 'India', linkedin_url: 'https://linkedin.com/in/alice',
+    first_name: 'Alice',
+    last_name: 'Smith',
+    email: 'alice@example.com',
+    organization: 'Acme',
+    designation: 'Engineer',
+    attendee_category: 'Tech',
+    city: 'Delhi',
+    country: 'India',
+    linkedin_url: 'https://linkedin.com/in/alice',
   };
   const badPhones = [
-    '',          // empty
-    '12345',     // 5 chars — too short
+    '', // empty
+    '12345', // 5 chars — too short
     '9'.repeat(33), // too long after sanitization
   ];
   for (const phone of badPhones) {
@@ -451,20 +579,38 @@ test('normalizeRegistrationPayload rejects phone numbers outside the 7–32 char
 });
 
 test('normalizeRegistrationPayload attendance_reason is rejected when over 2,000 chars', async () => {
-  const { normalizeRegistrationPayload } = await importModule('src/lib/registration-utils.js');
+  const { normalizeRegistrationPayload } = await importModule(
+    'src/lib/registration-utils.js'
+  );
   const validBase = {
-    first_name: 'Alice', last_name: 'Smith', email: 'alice@example.com',
-    phone: '+91 9876543210', organization: 'Acme', designation: 'Engineer',
-    attendee_category: 'Tech', city: 'Delhi', country: 'India',
+    first_name: 'Alice',
+    last_name: 'Smith',
+    email: 'alice@example.com',
+    phone: '+91 9876543210',
+    organization: 'Acme',
+    designation: 'Engineer',
+    attendee_category: 'Tech',
+    city: 'Delhi',
+    country: 'India',
     linkedin_url: 'https://linkedin.com/in/alice',
   };
   assert.throws(
-    () => normalizeRegistrationPayload({ ...validBase, attendance_reason: 'X'.repeat(2001) }),
+    () =>
+      normalizeRegistrationPayload({
+        ...validBase,
+        attendance_reason: 'X'.repeat(2001),
+      }),
     /2000/
   );
   // Exactly 2000 chars passes
-  const ok = normalizeRegistrationPayload({ ...validBase, attendance_reason: 'X'.repeat(2000) });
-  assert.ok(ok.attendance_reason?.length === 2000, '2000-char reason should be kept');
+  const ok = normalizeRegistrationPayload({
+    ...validBase,
+    attendance_reason: 'X'.repeat(2000),
+  });
+  assert.ok(
+    ok.attendance_reason?.length === 2000,
+    '2000-char reason should be kept'
+  );
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -473,11 +619,22 @@ test('normalizeRegistrationPayload attendance_reason is rejected when over 2,000
 // ══════════════════════════════════════════════════════════════════════════════
 
 test('normalizeRegistrationStatus accepts all 4 valid statuses and rejects everything else', async () => {
-  const { normalizeRegistrationStatus } = await importModule('src/lib/registration-utils.js');
+  const { normalizeRegistrationStatus } = await importModule(
+    'src/lib/registration-utils.js'
+  );
   const valid = ['pending', 'confirmed', 'waitlisted', 'rejected'];
   const invalid = [
-    'approved', 'active', 'blocked', 'CONFIRMED', 'Pending', '', '   ', undefined, null,
-    '<script>alert(1)</script>', 'pending; DROP TABLE event_registrations;--',
+    'approved',
+    'active',
+    'blocked',
+    'CONFIRMED',
+    'Pending',
+    '',
+    '   ',
+    undefined,
+    null,
+    '<script>alert(1)</script>',
+    'pending; DROP TABLE event_registrations;--',
   ];
   for (const s of valid) {
     assert.equal(normalizeRegistrationStatus(s), s, `should accept: "${s}"`);
@@ -492,11 +649,28 @@ test('normalizeRegistrationStatus accepts all 4 valid statuses and rejects every
 });
 
 test('normalizeCategory accepts all 7 attendee categories and rejects everything else', async () => {
-  const { normalizeCategory } = await importModule('src/lib/registration-utils.js');
-  const valid = ['Government', 'Tech', 'NGO', 'Academia', 'Media', 'Student', 'Other'];
+  const { normalizeCategory } = await importModule(
+    'src/lib/registration-utils.js'
+  );
+  const valid = [
+    'Government',
+    'Tech',
+    'NGO',
+    'Academia',
+    'Media',
+    'Student',
+    'Other',
+  ];
   const invalid = [
-    'celebrity', 'Investor', 'VIP', '', undefined, null,
-    'TECH', 'tech', 'speaker',
+    'celebrity',
+    'Investor',
+    'VIP',
+    '',
+    undefined,
+    null,
+    'TECH',
+    'tech',
+    'speaker',
     '<script>celebrity</script>', // strips to 'celebrity' → not in list
     '{{Tech}}',
   ];
@@ -530,7 +704,11 @@ test('festivalTicketLookupSchema validates 2,000 valid email+phone pairs', async
       email: `user${i}@${domains[i % domains.length]}`,
       phone: phones[i % phones.length],
     });
-    assert.equal(res.success, true, `valid pair ${i} failed: ${JSON.stringify(res.error)}`);
+    assert.equal(
+      res.success,
+      true,
+      `valid pair ${i} failed: ${JSON.stringify(res.error)}`
+    );
   }
   const ms = performance.now() - start;
   assert.ok(ms < 2000, `2,000 lookup validations took ${ms.toFixed(0)} ms`);
@@ -541,14 +719,23 @@ test('festivalTicketLookupSchema rejects 1,000 invalid email patterns', async ()
     'src/lib/festival-ticketing-validation.js'
   );
   const badEmails = [
-    'notanemail', '@nodomain.com', 'two@@at.com', '', 'missing.tld@', 'spaces in@email.com',
+    'notanemail',
+    '@nodomain.com',
+    'two@@at.com',
+    '',
+    'missing.tld@',
+    'spaces in@email.com',
   ];
   for (let i = 0; i < 1_000; i++) {
     const res = festivalTicketLookupSchema.safeParse({
       email: badEmails[i % badEmails.length],
       phone: '+91 9876543210',
     });
-    assert.equal(res.success, false, `should reject: "${badEmails[i % badEmails.length]}"`);
+    assert.equal(
+      res.success,
+      false,
+      `should reject: "${badEmails[i % badEmails.length]}"`
+    );
   }
 });
 
@@ -557,19 +744,23 @@ test('festivalTicketLookupSchema rejects 1,000 invalid phone formats', async () 
     'src/lib/festival-ticketing-validation.js'
   );
   const badPhones = [
-    '123',          // too short (< 7 digits)
-    'abcdefgh',     // letters only
-    '12345',        // 5 chars < 7
+    '123', // too short (< 7 digits)
+    'abcdefgh', // letters only
+    '12345', // 5 chars < 7
     '++9876543210', // double + prefix
     'not-a-phone',
-    'ABCDEFGHIJK',  // 11 alpha chars
+    'ABCDEFGHIJK', // 11 alpha chars
   ];
   for (let i = 0; i < 1_000; i++) {
     const res = festivalTicketLookupSchema.safeParse({
       email: 'valid@example.com',
       phone: badPhones[i % badPhones.length],
     });
-    assert.equal(res.success, false, `should reject phone: "${badPhones[i % badPhones.length]}"`);
+    assert.equal(
+      res.success,
+      false,
+      `should reject phone: "${badPhones[i % badPhones.length]}"`
+    );
   }
 });
 
@@ -592,7 +783,9 @@ test('festivalTicketLookupSchema rejects phones longer than 30 chars', async () 
 // ══════════════════════════════════════════════════════════════════════════════
 
 test('createTicketEventSchema validates 500 valid event payloads across all 3 ticket modes', async () => {
-  const { createTicketEventSchema } = await importModule('src/lib/ticketing-validation.js');
+  const { createTicketEventSchema } = await importModule(
+    'src/lib/ticketing-validation.js'
+  );
   const modes = ['free', 'paid', 'donation'];
   const statuses = ['draft', 'published', 'archived'];
   const N = 500;
@@ -608,17 +801,20 @@ test('createTicketEventSchema validates 500 valid event payloads across all 3 ti
       endsAt: '2026-10-14T18:00:00.000Z',
       timezone: 'Asia/Kolkata',
       status: statuses[i % 3],
-      ticketTypes: [{
-        tierKey: `tier-${i}`,
-        name: `Tier ${i}`,
-        ticketMode: mode,
-        pricePaise: mode === 'paid' ? 100_000 : null,
-        minDonationPaise: mode === 'donation' ? 5_000 : null,
-        capacity: 100 + i,
-      }],
+      ticketTypes: [
+        {
+          tierKey: `tier-${i}`,
+          name: `Tier ${i}`,
+          ticketMode: mode,
+          pricePaise: mode === 'paid' ? 100_000 : null,
+          minDonationPaise: mode === 'donation' ? 5_000 : null,
+          capacity: 100 + i,
+        },
+      ],
     });
     assert.equal(
-      res.success, true,
+      res.success,
+      true,
       `valid event ${i} failed: ${JSON.stringify(res.error?.issues)}`
     );
   }
@@ -627,27 +823,36 @@ test('createTicketEventSchema validates 500 valid event payloads across all 3 ti
 });
 
 test('createTicketEventSchema rejects invalid slug, title, description, and date values', async () => {
-  const { createTicketEventSchema } = await importModule('src/lib/ticketing-validation.js');
-  const freeTicket = { tierKey: 'base', name: 'Base Tier', ticketMode: 'free', capacity: 100 };
+  const { createTicketEventSchema } = await importModule(
+    'src/lib/ticketing-validation.js'
+  );
+  const freeTicket = {
+    tierKey: 'base',
+    name: 'Base Tier',
+    ticketMode: 'free',
+    capacity: 100,
+  };
   const validBase = {
-    slug: 'valid-event', title: 'Valid Event Title',
+    slug: 'valid-event',
+    title: 'Valid Event Title',
     startsAt: '2026-10-13T09:00:00.000Z',
-    timezone: 'Asia/Kolkata', ticketTypes: [freeTicket],
+    timezone: 'Asia/Kolkata',
+    ticketTypes: [freeTicket],
   };
   const invalidCases = [
-    { ...validBase, slug: 'ab' },                // slug < 3 chars
-    { ...validBase, slug: 'a'.repeat(121) },     // slug > 120 chars
-    { ...validBase, title: 'Ti' },               // title < 3 chars
-    { ...validBase, title: 'T'.repeat(201) },    // title > 200 chars
+    { ...validBase, slug: 'ab' }, // slug < 3 chars
+    { ...validBase, slug: 'a'.repeat(121) }, // slug > 120 chars
+    { ...validBase, title: 'Ti' }, // title < 3 chars
+    { ...validBase, title: 'T'.repeat(201) }, // title > 200 chars
     { ...validBase, description: 'D'.repeat(4001) }, // description > 4000 chars
-    { ...validBase, venue: 'V'.repeat(201) },    // venue > 200 chars
-    { ...validBase, startsAt: 'not-a-date' },    // invalid ISO
-    { ...validBase, startsAt: '' },              // empty date
-    { ...validBase, timezone: 'XY' },            // timezone < 3 chars
-    { ...validBase, timezone: 'T'.repeat(81) },  // timezone > 80 chars
-    { ...validBase, status: 'active' },          // invalid status enum
-    { ...validBase, status: 'DRAFT' },           // wrong case
-    { ...validBase, ticketTypes: [] },           // no ticket types (min 1)
+    { ...validBase, venue: 'V'.repeat(201) }, // venue > 200 chars
+    { ...validBase, startsAt: 'not-a-date' }, // invalid ISO
+    { ...validBase, startsAt: '' }, // empty date
+    { ...validBase, timezone: 'XY' }, // timezone < 3 chars
+    { ...validBase, timezone: 'T'.repeat(81) }, // timezone > 80 chars
+    { ...validBase, status: 'active' }, // invalid status enum
+    { ...validBase, status: 'DRAFT' }, // wrong case
+    { ...validBase, ticketTypes: [] }, // no ticket types (min 1)
   ];
   for (const input of invalidCases) {
     const res = createTicketEventSchema.safeParse(input);
@@ -656,58 +861,100 @@ test('createTicketEventSchema rejects invalid slug, title, description, and date
 });
 
 test('createTicketEventSchema enforces ticket-type field constraints', async () => {
-  const { createTicketEventSchema } = await importModule('src/lib/ticketing-validation.js');
+  const { createTicketEventSchema } = await importModule(
+    'src/lib/ticketing-validation.js'
+  );
   const eventBase = {
-    slug: 'test-event', title: 'Test Event', startsAt: '2026-10-13T09:00:00.000Z',
+    slug: 'test-event',
+    title: 'Test Event',
+    startsAt: '2026-10-13T09:00:00.000Z',
     timezone: 'Asia/Kolkata',
   };
   // paid ticket with no pricePaise
   assert.equal(
     createTicketEventSchema.safeParse({
       ...eventBase,
-      ticketTypes: [{ tierKey: 'vip', name: 'VIP', ticketMode: 'paid', capacity: 50, pricePaise: null }],
+      ticketTypes: [
+        {
+          tierKey: 'vip',
+          name: 'VIP',
+          ticketMode: 'paid',
+          capacity: 50,
+          pricePaise: null,
+        },
+      ],
     }).success,
-    false, 'paid ticket without pricePaise should fail'
+    false,
+    'paid ticket without pricePaise should fail'
   );
   // donation ticket with no minDonationPaise
   assert.equal(
     createTicketEventSchema.safeParse({
       ...eventBase,
-      ticketTypes: [{ tierKey: 'don', name: 'Donation', ticketMode: 'donation', capacity: 50, minDonationPaise: null }],
+      ticketTypes: [
+        {
+          tierKey: 'don',
+          name: 'Donation',
+          ticketMode: 'donation',
+          capacity: 50,
+          minDonationPaise: null,
+        },
+      ],
     }).success,
-    false, 'donation ticket without minDonationPaise should fail'
+    false,
+    'donation ticket without minDonationPaise should fail'
   );
   // more than 10 ticket types
   const tooMany = Array.from({ length: 11 }, (_, i) => ({
-    tierKey: `tier${i}`, name: `Tier ${i}`, ticketMode: 'free', capacity: 10,
+    tierKey: `tier${i}`,
+    name: `Tier ${i}`,
+    ticketMode: 'free',
+    capacity: 10,
   }));
   assert.equal(
-    createTicketEventSchema.safeParse({ ...eventBase, ticketTypes: tooMany }).success,
-    false, '> 10 ticket types should fail'
+    createTicketEventSchema.safeParse({ ...eventBase, ticketTypes: tooMany })
+      .success,
+    false,
+    '> 10 ticket types should fail'
   );
   // tierKey too short
   assert.equal(
     createTicketEventSchema.safeParse({
       ...eventBase,
-      ticketTypes: [{ tierKey: 'x', name: 'Short Key', ticketMode: 'free', capacity: 50 }],
+      ticketTypes: [
+        { tierKey: 'x', name: 'Short Key', ticketMode: 'free', capacity: 50 },
+      ],
     }).success,
-    false, 'tierKey < 2 chars should fail'
+    false,
+    'tierKey < 2 chars should fail'
   );
   // capacity must be ≥ 0
   assert.equal(
     createTicketEventSchema.safeParse({
       ...eventBase,
-      ticketTypes: [{ tierKey: 'base', name: 'Base', ticketMode: 'free', capacity: -1 }],
+      ticketTypes: [
+        { tierKey: 'base', name: 'Base', ticketMode: 'free', capacity: -1 },
+      ],
     }).success,
-    false, 'negative capacity should fail'
+    false,
+    'negative capacity should fail'
   );
   // perOrderLimit max 20
   assert.equal(
     createTicketEventSchema.safeParse({
       ...eventBase,
-      ticketTypes: [{ tierKey: 'base', name: 'Base', ticketMode: 'free', capacity: 100, perOrderLimit: 21 }],
+      ticketTypes: [
+        {
+          tierKey: 'base',
+          name: 'Base',
+          ticketMode: 'free',
+          capacity: 100,
+          perOrderLimit: 21,
+        },
+      ],
     }).success,
-    false, 'perOrderLimit > 20 should fail'
+    false,
+    'perOrderLimit > 20 should fail'
   );
 });
 
@@ -725,9 +972,23 @@ test('chat input rejects 1,000 non-array message payloads and accepts 1,000 vali
     return true;
   }
 
-  const invalid = [null, undefined, '', 0, {}, 'hello', 42, false, NaN, Symbol('msg')];
+  const invalid = [
+    null,
+    undefined,
+    '',
+    0,
+    {},
+    'hello',
+    42,
+    false,
+    NaN,
+    Symbol('msg'),
+  ];
   for (let i = 0; i < 1_000; i++) {
-    assert.throws(() => validateChatMessages(invalid[i % invalid.length]), /must be an array/i);
+    assert.throws(
+      () => validateChatMessages(invalid[i % invalid.length]),
+      /must be an array/i
+    );
   }
 
   for (let i = 0; i < 1_000; i++) {
@@ -747,7 +1008,11 @@ test('chatbot message content is trimmed and non-empty before send (client-side 
 
   const empties = ['', '   ', '\t', '\n', '\r\n', '  \t  \n  '];
   for (const e of empties) {
-    assert.equal(shouldSendMessage(e), false, `empty should be blocked: ${JSON.stringify(e)}`);
+    assert.equal(
+      shouldSendMessage(e),
+      false,
+      `empty should be blocked: ${JSON.stringify(e)}`
+    );
   }
 
   const valid = ['Hello', ' Question? ', 'What is trust and safety?', 'a'];
@@ -763,7 +1028,11 @@ test('chatbot message content is trimmed and non-empty before send (client-side 
 
 test('all string sanitizers survive 2,000 prototype-pollution and injection payloads', async () => {
   const {
-    sanitizeEmail, sanitizeMessage, sanitizeShortText, sanitizePhone, sanitizeUrl,
+    sanitizeEmail,
+    sanitizeMessage,
+    sanitizeShortText,
+    sanitizePhone,
+    sanitizeUrl,
   } = await importModule('src/lib/input-sanitizers.js');
 
   const injections = [
@@ -776,7 +1045,11 @@ test('all string sanitizers survive 2,000 prototype-pollution and injection payl
     '`; DROP TABLE event_registrations;--',
     '\u202E reversed text',
     '\uFEFF zero-width no-break space',
-    'null', 'undefined', 'NaN', 'Infinity', '[object Object]',
+    'null',
+    'undefined',
+    'NaN',
+    'Infinity',
+    '[object Object]',
     '\u0000\u0001\u001F',
   ];
 

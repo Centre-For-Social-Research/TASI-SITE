@@ -12,7 +12,7 @@ const siteSecurityHeaders = [
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com https://*.clerk.com https://*.clerk.accounts.dev https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co",
       "connect-src 'self' https://*.supabase.co https://api.resend.com https://clerk.com https://*.clerk.accounts.dev https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com https://api.razorpay.com https://checkout.razorpay.com",
-      "frame-src https://challenges.cloudflare.com https://clerk.com https://*.clerk.accounts.dev https://player.mux.com https://api.razorpay.com https://checkout.razorpay.com",
+      'frame-src https://challenges.cloudflare.com https://clerk.com https://*.clerk.accounts.dev https://player.mux.com https://api.razorpay.com https://checkout.razorpay.com',
       "object-src 'none'",
       "base-uri 'self'",
     ].join('; '),
@@ -73,8 +73,8 @@ const cacheHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
-  serverExternalPackages: ["@react-pdf/renderer"],
-  allowedDevOrigins: ["127.0.0.1"],
+  serverExternalPackages: ['@react-pdf/renderer'],
+  allowedDevOrigins: ['127.0.0.1'],
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

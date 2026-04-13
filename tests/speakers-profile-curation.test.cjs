@@ -33,13 +33,12 @@ test('speakers curation reflects removals, VIP list, and Prakshi Saha normalizat
   assert.ok(!names.has('Shri Ashwini Vaishnaw'));
   assert.ok(!names.has('Smt. Annapurna Devi'));
 
-  const prakshi = speakers.find((speaker) => speaker.photo === 'Prakshi Saha.jpg');
+  const prakshi = speakers.find(
+    (speaker) => speaker.photo === 'Prakshi Saha.jpg'
+  );
   assert.ok(prakshi, 'Expected Prakshi Saha profile to exist');
   assert.equal(prakshi.name, 'Prakshi Saha');
-  assert.equal(
-    prakshi.designation,
-    'Founder, Frida Health'
-  );
+  assert.equal(prakshi.designation, 'Founder, Frida Health');
 
   assert.equal(
     speakers.find((speaker) => speaker.name === 'Seema Jindal')?.category,
@@ -50,8 +49,9 @@ test('speakers curation reflects removals, VIP list, and Prakshi Saha normalizat
     'Civil Society'
   );
   assert.equal(
-    speakers.find((speaker) => speaker.name === 'Jean-Christophe (J-C) Le Toquin')
-      ?.category,
+    speakers.find(
+      (speaker) => speaker.name === 'Jean-Christophe (J-C) Le Toquin'
+    )?.category,
     'International'
   );
 });

@@ -1,11 +1,11 @@
-import ReceptionsPage from "@/components/receptions/receptions-page";
+import ReceptionsPage from '@/components/receptions/receptions-page';
 
 export const metadata = {
-  title: "TASI 2026 Receptions",
+  title: 'TASI 2026 Receptions',
   description:
-    "Explore the TASI 2026 receptions programme and hospitality context around the wider festival.",
+    'Explore the TASI 2026 receptions programme and hospitality context around the wider festival.',
   alternates: {
-    canonical: "/receptions/2026",
+    canonical: '/receptions/2026',
   },
 };
 

@@ -13,6 +13,7 @@
 ### Task 1: Add curated press-conference image assets
 
 **Files:**
+
 - Create: `public/img/media-coverage/press-conference/gcv-06833.jpg`
 - Create: `public/img/media-coverage/press-conference/gcv-06902.jpg`
 - Create: `public/img/media-coverage/press-conference/gcv-07089.jpg`
@@ -43,6 +44,7 @@ Expected: all three files are listed with non-zero sizes.
 ### Task 2: Add press-conference section data and markup to the media page
 
 **Files:**
+
 - Modify: `src/app/media/page.jsx`
 
 - [ ] **Step 1: Add a local data object for the press-conference section**
@@ -116,10 +118,15 @@ Add a new section with:
         The Media Briefing That Set Up TASI 2025
       </h2>
       <p className="mt-5 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
-        Ahead of the festival itself, TASI 2025 opened its media cycle with a press conference that introduced the event, framed its trust and safety agenda, and helped bring journalists into the wider conversation before delegates convened.
+        Ahead of the festival itself, TASI 2025 opened its media cycle with a
+        press conference that introduced the event, framed its trust and safety
+        agenda, and helped bring journalists into the wider conversation before
+        delegates convened.
       </p>
       <p className="mt-4 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
-        The session served as an early editorial moment for the festival, giving the press a clearer view of the issues, voices, and public-interest stakes that would define the gathering in New Delhi.
+        The session served as an early editorial moment for the festival, giving
+        the press a clearer view of the issues, voices, and public-interest
+        stakes that would define the gathering in New Delhi.
       </p>
 
       <div className="mt-8 grid gap-3">
@@ -153,6 +160,7 @@ Expected: only the new section and its local constant are added, without unrelat
 ### Task 3: Verify the page update
 
 **Files:**
+
 - Modify: `src/app/media/page.jsx`
 - Verify: `public/img/media-coverage/press-conference/gcv-06833.jpg`
 - Verify: `public/img/media-coverage/press-conference/gcv-06902.jpg`

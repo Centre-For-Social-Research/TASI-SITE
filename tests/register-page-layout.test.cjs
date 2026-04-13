@@ -1,95 +1,110 @@
-const test = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 function readFile(relativePath) {
-  return fs.readFileSync(path.join(process.cwd(), relativePath), "utf8");
+  return fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
 
-test("register page renders festival ticketing below the approval-based registration flow", () => {
-  const source = readFile("src/app/register/page.jsx");
-  const registrationFormIndex = source.indexOf("<RegistrationForm />");
-  const skipWaitIndex = source.indexOf("Skip the wait. Get full access to the festival.");
-  const festivalSectionIndex = source.indexOf("<FestivalTicketingSection />");
+test('register page renders festival ticketing below the approval-based registration flow', () => {
+  const source = readFile('src/app/register/page.jsx');
+  const registrationFormIndex = source.indexOf('<RegistrationForm />');
+  const skipWaitIndex = source.indexOf(
+    'Skip the wait. Get full access to the festival.'
+  );
+  const festivalSectionIndex = source.indexOf('<FestivalTicketingSection />');
 
   assert.notEqual(registrationFormIndex, -1);
   assert.notEqual(skipWaitIndex, -1);
   assert.notEqual(festivalSectionIndex, -1);
   assert.ok(
     skipWaitIndex > registrationFormIndex,
-    "Skip-the-wait divider should appear after the application form.",
+    'Skip-the-wait divider should appear after the application form.'
   );
   assert.ok(
     festivalSectionIndex > skipWaitIndex,
-    "Festival ticketing section should appear after the skip-the-wait divider.",
+    'Festival ticketing section should appear after the skip-the-wait divider.'
   );
 });
 
-test("register page uses the updated general access intro copy", () => {
-  const source = readFile("src/app/register/page.jsx");
+test('register page uses the updated general access intro copy', () => {
+  const source = readFile('src/app/register/page.jsx');
 
   assert.match(source, /Apply for General Access/);
   assert.match(
     source,
-    /This is a manual review process\. Submit your application and our[\s\S]*You will receive a confirmation if[\s\S]*selected\./,
+    /This is a manual review process\. Submit your application and our[\s\S]*You will receive a confirmation if[\s\S]*selected\./
   );
   assert.doesNotMatch(source, /Delegate Applications/);
   assert.doesNotMatch(
     source,
-    /Approval-based registration remains available below/,
+    /Approval-based registration remains available below/
   );
 });
 
-test("register page includes the OR divider before paid ticketing", () => {
-  const source = readFile("src/app/register/page.jsx");
+test('register page includes the OR divider before paid ticketing', () => {
+  const source = readFile('src/app/register/page.jsx');
 
   assert.match(source, />\s*OR\s*</);
   assert.match(source, /Skip the wait\. Get full access to the festival\./);
   assert.match(
     source,
-    /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/,
+    /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/
   );
 });
 
-test("festival ticketing cards use the legacy footer label", () => {
-  const source = readFile("src/components/register/festival-ticketing-section.jsx");
+test('festival ticketing cards use the legacy footer label', () => {
+  const source = readFile(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
 
   assert.match(source, /absolute bottom-6 left-7/);
   assert.match(source, /TASI\s*<br \/>\s*2026/);
   assert.match(source, /TASI 2026/);
 });
 
-test("festival ticketing cards use the redesigned centered ticket layout", () => {
-  const source = readFile("src/components/register/festival-ticketing-section.jsx");
+test('festival ticketing cards use the redesigned centered ticket layout', () => {
+  const source = readFile(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
 
   assert.match(source, /Choose your ticket/);
   assert.match(source, /Register now/);
-  assert.match(source, /absolute inset-x-0 top-1\/2 -translate-y-1\/2 px-6 text-center/);
+  assert.match(
+    source,
+    /absolute inset-x-0 top-1\/2 -translate-y-1\/2 px-6 text-center/
+  );
   assert.match(source, /max-w-\[220px\] text-\[2\.35rem\]/);
 });
 
-test("festival ticketing modal stays hidden until a card is selected", () => {
-  const source = readFile("src/components/register/festival-ticketing-section.jsx");
+test('festival ticketing modal stays hidden until a card is selected', () => {
+  const source = readFile(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
 
   assert.match(
     source,
-    /const \[ticketModalOpen, setTicketModalOpen\] = useState\(false\)/,
+    /const \[ticketModalOpen, setTicketModalOpen\] = useState\(false\)/
   );
   assert.match(source, /ticketModalOpen \? \(/);
 });
 
-test("festival ticketing cards are not wrapped in a white boxed container", () => {
-  const source = readFile("src/components/register/festival-ticketing-section.jsx");
+test('festival ticketing cards are not wrapped in a white boxed container', () => {
+  const source = readFile(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
 
   assert.doesNotMatch(
     source,
-    /<div className="rounded-\[10px\] border border-slate-200 bg-white p-6 shadow-\[0_24px_80px_rgba\(15,23,42,0\.08\)\] dark:border-slate-800 dark:bg-slate-900 md:p-8">/,
+    /<div className="rounded-\[10px\] border border-slate-200 bg-white p-6 shadow-\[0_24px_80px_rgba\(15,23,42,0\.08\)\] dark:border-slate-800 dark:bg-slate-900 md:p-8">/
   );
 });
 
-test("festival ticketing includes the new free-vs-paid comparison section", () => {
-  const source = readFile("src/components/register/festival-ticketing-section.jsx");
+test('festival ticketing includes the new free-vs-paid comparison section', () => {
+  const source = readFile(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
 
   assert.match(source, /Free Pass/);
   assert.match(source, /\(Application-Based\)/);
@@ -102,13 +117,16 @@ test("festival ticketing includes the new free-vs-paid comparison section", () =
   assert.doesNotMatch(source, /Attendee directory \(opt-in\)/);
   assert.doesNotMatch(
     source,
-    /Private roundtable with industry experts, CSOs, and government officials/,
+    /Private roundtable with industry experts, CSOs, and government officials/
   );
   assert.doesNotMatch(
     source,
-    /Personal introduction by organizers to key stakeholders/,
+    /Personal introduction by organizers to key stakeholders/
   );
   assert.doesNotMatch(source, /Select roundtables and speaker interaction/);
-  assert.doesNotMatch(source, /International Add-on: Ecosystem briefing & intros/);
+  assert.doesNotMatch(
+    source,
+    /International Add-on: Ecosystem briefing & intros/
+  );
   assert.doesNotMatch(source, /International Bonus/);
 });

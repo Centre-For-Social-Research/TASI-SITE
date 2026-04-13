@@ -5,7 +5,7 @@ export const partners = [
     slug: 'booking-com',
     type: 'Corporate Partner',
     description:
-      'Booking.com is one of the world\'s leading online travel platforms, connecting travellers with accommodation, transport, attractions, and travel experiences across global markets.',
+      "Booking.com is one of the world's leading online travel platforms, connecting travellers with accommodation, transport, attractions, and travel experiences across global markets.",
     country: 'Netherlands',
     category: 'Travel Technology',
     website: 'https://www.booking.com',
@@ -72,7 +72,7 @@ export const partners = [
     slug: 'youtube',
     type: 'Corporate Partner',
     description:
-      'YouTube\'s mission is to give everyone a voice and show them the world, making it a major global platform for video creation, education, entertainment, and public discourse.',
+      "YouTube's mission is to give everyone a voice and show them the world, making it a major global platform for video creation, education, entertainment, and public discourse.",
     country: 'United States',
     category: 'Video Platform',
     website: 'https://about.youtube/',
@@ -204,7 +204,7 @@ export const partners = [
     slug: 'un-women',
     type: 'International Partner',
     description:
-      'UN Women is the United Nations entity dedicated to gender equality and the empowerment of women, working across law, policy, institutions, and services to advance women\'s rights globally.',
+      "UN Women is the United Nations entity dedicated to gender equality and the empowerment of women, working across law, policy, institutions, and services to advance women's rights globally.",
     country: 'International',
     category: 'UN Entity',
     website: 'https://www.unwomen.org',
@@ -221,7 +221,7 @@ export const partners = [
     slug: 'embassy-of-france-in-india',
     type: 'Diplomatic Partner',
     description:
-      'The Embassy of France in India represents France\'s diplomatic presence in India and supports political, cultural, educational, and strategic engagement between the two countries.',
+      "The Embassy of France in India represents France's diplomatic presence in India and supports political, cultural, educational, and strategic engagement between the two countries.",
     country: 'India',
     category: 'Diplomatic Mission',
     website: 'https://in.ambafrance.org',
@@ -251,7 +251,7 @@ export const partners = [
     slug: 'australian-high-commission-india',
     type: 'Diplomatic Partner',
     description:
-      'The Australian High Commission in India advances Australia\'s diplomatic, economic, and public engagement with India through consular, policy, and partnership work.',
+      "The Australian High Commission in India advances Australia's diplomatic, economic, and public engagement with India through consular, policy, and partnership work.",
     country: 'India',
     category: 'Diplomatic Mission',
     website: 'https://india.highcommission.gov.au',
@@ -283,10 +283,11 @@ export const partners = [
     slug: 'high-commission-of-canada-in-india',
     type: 'Diplomatic Partner',
     description:
-      'The High Commission of Canada in India represents Canada\'s diplomatic presence in India and supports bilateral engagement, consular work, and strategic cooperation.',
+      "The High Commission of Canada in India represents Canada's diplomatic presence in India and supports bilateral engagement, consular work, and strategic cooperation.",
     country: 'India',
     category: 'Diplomatic Mission',
-    website: 'https://www.international.gc.ca/country-pays/india-inde/new_delhi-info.aspx?lang=eng',
+    website:
+      'https://www.international.gc.ca/country-pays/india-inde/new_delhi-info.aspx?lang=eng',
     social: {
       twitter: 'https://x.com/CanadainIndia',
       instagram: 'https://www.instagram.com/canadainindia',
@@ -314,15 +315,17 @@ export const partners = [
     slug: 'asci',
     type: 'Standards Partner',
     description:
-      'The Advertising Standards Council of India (ASCI) is India\'s self-regulatory body for advertising, working to promote responsible advertising and consumer trust.',
+      "The Advertising Standards Council of India (ASCI) is India's self-regulatory body for advertising, working to promote responsible advertising and consumer trust.",
     country: 'India',
     category: 'Self-Regulatory Organisation',
     website: 'https://www.ascionline.in',
     social: {
-      linkedin: 'https://www.linkedin.com/company/the-advertising-standards-council-of-india',
+      linkedin:
+        'https://www.linkedin.com/company/the-advertising-standards-council-of-india',
       twitter: 'https://twitter.com/ascionline',
       instagram: 'https://www.instagram.com/ascionline',
-      youtube: 'https://www.youtube.com/c/TheAdvertisingStandardsCouncilofIndia',
+      youtube:
+        'https://www.youtube.com/c/TheAdvertisingStandardsCouncilofIndia',
     },
   },
   {
@@ -336,7 +339,8 @@ export const partners = [
     category: 'University',
     website: 'https://www.daiict.ac.in',
     social: {
-      linkedin: 'https://www.linkedin.com/school/dhirubhai-ambani-institute-of-information-and-communication-technology',
+      linkedin:
+        'https://www.linkedin.com/school/dhirubhai-ambani-institute-of-information-and-communication-technology',
       twitter: 'https://x.com/dauofficial_',
       instagram: 'https://www.instagram.com/daiictofficial',
       youtube: 'https://www.youtube.com/channel/UCVF7imL-YrGjnPaTFY--Sww',
@@ -370,7 +374,8 @@ export const partners = [
     category: 'Coalition / Nonprofit',
     website: 'https://actsindia.org',
     social: {
-      linkedin: 'https://www.linkedin.com/company/acts-alliance-for-cyber-trust-and-safety-india',
+      linkedin:
+        'https://www.linkedin.com/company/acts-alliance-for-cyber-trust-and-safety-india',
       twitter: 'https://x.com/ACTS_India',
       instagram: 'https://www.instagram.com/acts.india',
     },
@@ -462,7 +467,7 @@ export const partners = [
     slug: 'cor-sandbox',
     type: 'Research Partner',
     description:
-      'COR, the Children\'s Online Redress Sandbox, is the first regulatory sandbox for child online safety, bringing together regulators, companies, experts, and youth to co-design response and redress mechanisms.',
+      "COR, the Children's Online Redress Sandbox, is the first regulatory sandbox for child online safety, bringing together regulators, companies, experts, and youth to co-design response and redress mechanisms.",
     country: 'International',
     category: 'Research / Safety Sandbox',
     website: 'https://www.corsandbox.org',
@@ -499,7 +504,8 @@ export const partners = [
     category: 'Child Safety Technology',
     website: 'https://www.grosafe.eu',
     social: {
-      linkedin: 'https://www.linkedin.com/school/technological-university-dublin',
+      linkedin:
+        'https://www.linkedin.com/school/technological-university-dublin',
       twitter: 'https://x.com/grosafe_eu',
     },
   },

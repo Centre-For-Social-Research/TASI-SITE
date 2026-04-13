@@ -1,6 +1,6 @@
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { summarizeTicketAvailability } from "@/lib/ticketing-availability";
-import { TICKET_ORDER_HOLD_MINUTES } from "@/lib/ticketing-constants";
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { summarizeTicketAvailability } from '@/lib/ticketing-availability';
+import { TICKET_ORDER_HOLD_MINUTES } from '@/lib/ticketing-constants';
 import {
   buildTicketCode,
   buildTicketOrderCode,
@@ -9,7 +9,7 @@ import {
   normalizeTicketEmail,
   normalizeTicketName,
   normalizeTicketPhone,
-} from "@/lib/ticketing-utils";
+} from '@/lib/ticketing-utils';
 
 function nowIso() {
   return new Date().toISOString();
@@ -45,8 +45,8 @@ function mapTicketType(row, availabilitySummary) {
     saleEndsAt: row.sale_ends_at,
     isActive: row.is_active,
     displayOrder: row.display_order,
-    shortDescription: row.short_description || "",
-    badgePattern: row.badge_pattern || "default",
+    shortDescription: row.short_description || '',
+    badgePattern: row.badge_pattern || 'default',
     availability: availabilitySummary,
   };
 }
@@ -56,10 +56,10 @@ async function listSoldQuantities(ticketTypeIds) {
 
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_order_items")
-    .select("ticket_type_id, quantity, ticket_orders!inner(status)")
-    .in("ticket_type_id", ticketTypeIds)
-    .eq("ticket_orders.status", "paid");
+    .from('ticket_order_items')
+    .select('ticket_type_id, quantity, ticket_orders!inner(status)')
+    .in('ticket_type_id', ticketTypeIds)
+    .eq('ticket_orders.status', 'paid');
 
   if (error) throw new Error(error.message);
 
@@ -67,7 +67,7 @@ async function listSoldQuantities(ticketTypeIds) {
   for (const row of data || []) {
     totals.set(
       row.ticket_type_id,
-      (totals.get(row.ticket_type_id) || 0) + Number(row.quantity || 0),
+      (totals.get(row.ticket_type_id) || 0) + Number(row.quantity || 0)
     );
   }
 
@@ -79,10 +79,10 @@ async function listActiveHolds(ticketTypeIds) {
 
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_inventory_holds")
-    .select("ticket_type_id, quantity, expires_at")
-    .in("ticket_type_id", ticketTypeIds)
-    .gt("expires_at", nowIso());
+    .from('ticket_inventory_holds')
+    .select('ticket_type_id, quantity, expires_at')
+    .in('ticket_type_id', ticketTypeIds)
+    .gt('expires_at', nowIso());
 
   if (error) throw new Error(error.message);
 
@@ -111,7 +111,7 @@ async function buildAvailabilityMap(ticketTypeRows) {
         capacity: row.capacity,
         soldQuantity: soldQuantities.get(row.id) || 0,
         holds: activeHolds.get(row.id) || [],
-      }),
+      })
     );
   }
 
@@ -121,12 +121,12 @@ async function buildAvailabilityMap(ticketTypeRows) {
 export async function listPublicTicketEvents() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_events")
+    .from('ticket_events')
     .select(
-      "id, slug, title, description, venue, starts_at, ends_at, timezone, currency, status, ui_variant, hero_label, ticket_types(*)",
+      'id, slug, title, description, venue, starts_at, ends_at, timezone, currency, status, ui_variant, hero_label, ticket_types(*)'
     )
-    .eq("status", "published")
-    .order("starts_at", { ascending: true });
+    .eq('status', 'published')
+    .order('starts_at', { ascending: true });
 
   if (error) throw new Error(error.message);
 
@@ -157,7 +157,7 @@ export async function listPublicTicketEvents() {
 export async function createTicketEvent({ event, ticketTypes, operator }) {
   const supabase = getSupabaseAdmin();
   const { data: createdEvent, error: eventError } = await supabase
-    .from("ticket_events")
+    .from('ticket_events')
     .insert({
       slug: event.slug,
       title: event.title,
@@ -172,7 +172,7 @@ export async function createTicketEvent({ event, ticketTypes, operator }) {
       created_by_email: operator.primaryEmail,
       updated_at: nowIso(),
     })
-    .select("*")
+    .select('*')
     .single();
 
   if (eventError) throw new Error(eventError.message);
@@ -197,9 +197,9 @@ export async function createTicketEvent({ event, ticketTypes, operator }) {
   }));
 
   const { data: createdTypes, error: ticketTypeError } = await supabase
-    .from("ticket_types")
+    .from('ticket_types')
     .insert(rows)
-    .select("*");
+    .select('*');
 
   if (ticketTypeError) throw new Error(ticketTypeError.message);
 
@@ -214,19 +214,19 @@ export async function updateTicketEvent({ eventId, updates }) {
 
   if (updates.status) {
     const { error } = await supabase
-      .from("ticket_events")
+      .from('ticket_events')
       .update({
         status: updates.status,
         updated_at: nowIso(),
       })
-      .eq("id", eventId);
+      .eq('id', eventId);
 
     if (error) throw new Error(error.message);
   }
 
   for (const ticketType of updates.ticketTypes || []) {
     const { error } = await supabase
-      .from("ticket_types")
+      .from('ticket_types')
       .update({
         ...(ticketType.capacity != null
           ? { capacity: ticketType.capacity }
@@ -242,8 +242,8 @@ export async function updateTicketEvent({ eventId, updates }) {
           : {}),
         updated_at: nowIso(),
       })
-      .eq("id", ticketType.id)
-      .eq("event_id", eventId);
+      .eq('id', ticketType.id)
+      .eq('event_id', eventId);
 
     if (error) throw new Error(error.message);
   }
@@ -252,11 +252,11 @@ export async function updateTicketEvent({ eventId, updates }) {
 export async function getTicketEventForCheckout(eventId) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_events")
+    .from('ticket_events')
     .select(
-      "id, slug, title, description, venue, starts_at, ends_at, timezone, currency, status, hero_label, ticket_types(*)",
+      'id, slug, title, description, venue, starts_at, ends_at, timezone, currency, status, hero_label, ticket_types(*)'
     )
-    .eq("id", eventId)
+    .eq('id', eventId)
     .single();
 
   if (error) throw new Error(error.message);
@@ -277,13 +277,13 @@ export async function getOrCreateTicketCustomer(buyer) {
   const supabase = getSupabaseAdmin();
   const normalizedEmail = normalizeTicketEmail(buyer.email);
   const normalizedPhone = normalizeTicketPhone(buyer.phone);
-  const fullName = normalizeTicketName(buyer.fullName, "Buyer name");
+  const fullName = normalizeTicketName(buyer.fullName, 'Buyer name');
 
   const { data: existingCustomer, error: existingError } = await supabase
-    .from("ticket_customers")
-    .select("*")
-    .eq("normalized_email", normalizedEmail)
-    .eq("normalized_phone", normalizedPhone)
+    .from('ticket_customers')
+    .select('*')
+    .eq('normalized_email', normalizedEmail)
+    .eq('normalized_phone', normalizedPhone)
     .limit(1)
     .maybeSingle();
 
@@ -291,7 +291,7 @@ export async function getOrCreateTicketCustomer(buyer) {
   if (existingCustomer) return existingCustomer;
 
   const { data, error } = await supabase
-    .from("ticket_customers")
+    .from('ticket_customers')
     .insert({
       full_name: fullName,
       email: buyer.email,
@@ -300,7 +300,7 @@ export async function getOrCreateTicketCustomer(buyer) {
       normalized_phone: normalizedPhone,
       updated_at: nowIso(),
     })
-    .select("*")
+    .select('*')
     .single();
 
   if (error) throw new Error(error.message);
@@ -310,9 +310,9 @@ export async function getOrCreateTicketCustomer(buyer) {
 export async function findOrderByIdempotencyKey(idempotencyKey) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_orders")
-    .select("*")
-    .eq("idempotency_key", idempotencyKey)
+    .from('ticket_orders')
+    .select('*')
+    .eq('idempotency_key', idempotencyKey)
     .maybeSingle();
 
   if (error) throw new Error(error.message);
@@ -330,17 +330,17 @@ export async function createTicketOrder({
 }) {
   const supabase = getSupabaseAdmin();
   const holdExpiresAt = new Date(
-    Date.now() + TICKET_ORDER_HOLD_MINUTES * 60 * 1000,
+    Date.now() + TICKET_ORDER_HOLD_MINUTES * 60 * 1000
   ).toISOString();
 
   const { data: createdOrder, error: orderError } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .insert({
       public_order_code: buildTicketOrderCode(),
       event_id: event.id,
       customer_id: customer.id,
-      status: pricing.totalPaise > 0 ? "payment_pending" : "pending",
-      currency: event.currency || "INR",
+      status: pricing.totalPaise > 0 ? 'payment_pending' : 'pending',
+      currency: event.currency || 'INR',
       subtotal_paise: pricing.subtotalPaise,
       donation_paise: pricing.donationPaise,
       total_paise: pricing.totalPaise,
@@ -349,14 +349,14 @@ export async function createTicketOrder({
       buyer_phone: buyer.phone,
       normalized_buyer_email: normalizeTicketEmail(buyer.email),
       normalized_buyer_phone: normalizeTicketPhone(buyer.phone),
-      payment_provider: pricing.totalPaise > 0 ? "razorpay" : null,
+      payment_provider: pricing.totalPaise > 0 ? 'razorpay' : null,
       provider_order_id: providerOrderId,
       hold_expires_at: holdExpiresAt,
       idempotency_key: idempotencyKey,
       metadata: {},
       updated_at: nowIso(),
     })
-    .select("*")
+    .select('*')
     .single();
 
   if (orderError) throw new Error(orderError.message);
@@ -369,12 +369,12 @@ export async function createTicketOrder({
     line_total_paise: lineItem.lineTotalPaise,
     ticket_mode: lineItem.ticketMode,
     donation_paise:
-      lineItem.ticketMode === "donation" ? lineItem.lineTotalPaise : 0,
+      lineItem.ticketMode === 'donation' ? lineItem.lineTotalPaise : 0,
     attendee_payload: ticketSelections[index].attendees,
   }));
 
   const { error: itemError } = await supabase
-    .from("ticket_order_items")
+    .from('ticket_order_items')
     .insert(itemRows);
 
   if (itemError) throw new Error(itemError.message);
@@ -387,7 +387,7 @@ export async function createTicketOrder({
   }));
 
   const { error: holdError } = await supabase
-    .from("ticket_inventory_holds")
+    .from('ticket_inventory_holds')
     .insert(holdRows);
 
   if (holdError) throw new Error(holdError.message);
@@ -398,12 +398,12 @@ export async function createTicketOrder({
 export async function setOrderProviderOrderId(orderId, providerOrderId) {
   const supabase = getSupabaseAdmin();
   const { error } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .update({
       provider_order_id: providerOrderId,
       updated_at: nowIso(),
     })
-    .eq("id", orderId);
+    .eq('id', orderId);
 
   if (error) throw new Error(error.message);
 }
@@ -411,11 +411,11 @@ export async function setOrderProviderOrderId(orderId, providerOrderId) {
 export async function getTicketOrder(orderId) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .select(
-      "*, ticket_events(*), ticket_order_items(*, ticket_types(*)), tickets(*)",
+      '*, ticket_events(*), ticket_order_items(*, ticket_types(*)), tickets(*)'
     )
-    .eq("id", orderId)
+    .eq('id', orderId)
     .single();
 
   if (error) throw new Error(error.message);
@@ -425,11 +425,11 @@ export async function getTicketOrder(orderId) {
 export async function getTicketOrderByProviderOrderId(providerOrderId) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .select(
-      "*, ticket_events(*), ticket_order_items(*, ticket_types(*)), tickets(*)",
+      '*, ticket_events(*), ticket_order_items(*, ticket_types(*)), tickets(*)'
     )
-    .eq("provider_order_id", providerOrderId)
+    .eq('provider_order_id', providerOrderId)
     .maybeSingle();
 
   if (error) throw new Error(error.message);
@@ -447,7 +447,7 @@ export async function createOrUpdateTicketPayment({
 }) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_payments")
+    .from('ticket_payments')
     .upsert(
       {
         order_id: orderId,
@@ -460,10 +460,10 @@ export async function createOrUpdateTicketPayment({
         updated_at: nowIso(),
       },
       {
-        onConflict: "provider_payment_id",
-      },
+        onConflict: 'provider_payment_id',
+      }
     )
-    .select("*")
+    .select('*')
     .single();
 
   if (error) throw new Error(error.message);
@@ -491,12 +491,12 @@ export async function issueTicketsForOrder(orderId) {
         event_id: order.event_id,
         ticket_type_id: item.ticket_type_id,
         ticket_code: ticketCode,
-        attendee_name: normalizeTicketName(attendee.fullName, "Attendee name"),
+        attendee_name: normalizeTicketName(attendee.fullName, 'Attendee name'),
         attendee_email: attendee.email,
         attendee_phone: attendee.phone,
         normalized_attendee_email: normalizeTicketEmail(attendee.email),
         normalized_attendee_phone: normalizeTicketPhone(attendee.phone),
-        status: "issued",
+        status: 'issued',
         qr_token: qrToken,
         qr_payload: buildTicketQrPayload({
           ticket_code: ticketCode,
@@ -509,40 +509,43 @@ export async function issueTicketsForOrder(orderId) {
   }
 
   const { data: createdTickets, error: ticketError } = await supabase
-    .from("tickets")
+    .from('tickets')
     .insert(ticketRows)
-    .select("*, ticket_types(name)");
+    .select('*, ticket_types(name)');
 
   if (ticketError) throw new Error(ticketError.message);
 
-  await supabase.from("ticket_inventory_holds").delete().eq("order_id", order.id);
+  await supabase
+    .from('ticket_inventory_holds')
+    .delete()
+    .eq('order_id', order.id);
 
   const { error: orderError } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .update({
-      status: "paid",
+      status: 'paid',
       updated_at: nowIso(),
     })
-    .eq("id", order.id);
+    .eq('id', order.id);
 
   if (orderError) throw new Error(orderError.message);
 
   return (createdTickets || []).map((ticket) => ({
     ...ticket,
-    ticket_type_name: ticket.ticket_types?.name || "",
+    ticket_type_name: ticket.ticket_types?.name || '',
   }));
 }
 
 export async function markTicketOrderFailed(orderId, metadata = {}) {
   const supabase = getSupabaseAdmin();
   const { error } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .update({
-      status: "failed",
+      status: 'failed',
       metadata,
       updated_at: nowIso(),
     })
-    .eq("id", orderId);
+    .eq('id', orderId);
 
   if (error) throw new Error(error.message);
 }
@@ -553,21 +556,21 @@ export async function getTicketsForLookup({ email, phone }) {
   const normalizedPhone = normalizeTicketPhone(phone);
 
   const attendeeLookup = await supabase
-    .from("tickets")
+    .from('tickets')
     .select(
-      "id, order_id, ticket_code, attendee_name, attendee_email, attendee_phone, status, created_at, checked_in_at, ticket_events(title, venue, starts_at), ticket_types(name)",
+      'id, order_id, ticket_code, attendee_name, attendee_email, attendee_phone, status, created_at, checked_in_at, ticket_events(title, venue, starts_at), ticket_types(name)'
     )
-    .eq("normalized_attendee_email", normalizedEmail)
-    .eq("normalized_attendee_phone", normalizedPhone)
-    .order("created_at", { ascending: false });
+    .eq('normalized_attendee_email', normalizedEmail)
+    .eq('normalized_attendee_phone', normalizedPhone)
+    .order('created_at', { ascending: false });
 
   if (attendeeLookup.error) throw new Error(attendeeLookup.error.message);
 
   const { data: buyerOrders, error: buyerOrdersError } = await supabase
-    .from("ticket_orders")
-    .select("id")
-    .eq("normalized_buyer_email", normalizedEmail)
-    .eq("normalized_buyer_phone", normalizedPhone);
+    .from('ticket_orders')
+    .select('id')
+    .eq('normalized_buyer_email', normalizedEmail)
+    .eq('normalized_buyer_phone', normalizedPhone);
 
   if (buyerOrdersError) throw new Error(buyerOrdersError.message);
 
@@ -576,12 +579,12 @@ export async function getTicketsForLookup({ email, phone }) {
 
   if (buyerOrderIds.length) {
     const buyerLookup = await supabase
-      .from("tickets")
+      .from('tickets')
       .select(
-        "id, order_id, ticket_code, attendee_name, attendee_email, attendee_phone, status, created_at, checked_in_at, ticket_events(title, venue, starts_at), ticket_types(name)",
+        'id, order_id, ticket_code, attendee_name, attendee_email, attendee_phone, status, created_at, checked_in_at, ticket_events(title, venue, starts_at), ticket_types(name)'
       )
-      .in("order_id", buyerOrderIds)
-      .order("created_at", { ascending: false });
+      .in('order_id', buyerOrderIds)
+      .order('created_at', { ascending: false });
 
     if (buyerLookup.error) throw new Error(buyerLookup.error.message);
     buyerTickets = buyerLookup.data || [];
@@ -598,11 +601,11 @@ export async function getTicketsForLookup({ email, phone }) {
 export async function listAdminTicketOrders() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_orders")
+    .from('ticket_orders')
     .select(
-      "id, public_order_code, status, total_paise, buyer_name, buyer_email, buyer_phone, created_at, hold_expires_at, ticket_events(title, venue), ticket_payments(provider_payment_id, status)",
+      'id, public_order_code, status, total_paise, buyer_name, buyer_email, buyer_phone, created_at, hold_expires_at, ticket_events(title, venue), ticket_payments(provider_payment_id, status)'
     )
-    .order("created_at", { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(100);
 
   if (error) throw new Error(error.message);
@@ -612,11 +615,11 @@ export async function listAdminTicketOrders() {
 export async function listAdminTickets() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("tickets")
+    .from('tickets')
     .select(
-      "id, ticket_code, attendee_name, attendee_email, attendee_phone, status, created_at, checked_in_at, ticket_events(title), ticket_types(name)",
+      'id, ticket_code, attendee_name, attendee_email, attendee_phone, status, created_at, checked_in_at, ticket_events(title), ticket_types(name)'
     )
-    .order("created_at", { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(200);
 
   if (error) throw new Error(error.message);
@@ -632,7 +635,7 @@ export async function recordWebhookEvent({
 }) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from("ticket_webhook_events")
+    .from('ticket_webhook_events')
     .upsert(
       {
         dedupe_key: dedupeKey,
@@ -642,9 +645,9 @@ export async function recordWebhookEvent({
         signature_valid: signatureValid,
         processed_at: nowIso(),
       },
-      { onConflict: "dedupe_key" },
+      { onConflict: 'dedupe_key' }
     )
-    .select("*")
+    .select('*')
     .single();
 
   if (error) throw new Error(error.message);

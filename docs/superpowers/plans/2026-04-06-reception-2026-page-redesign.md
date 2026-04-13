@@ -13,13 +13,14 @@
 ### Task 1: Lock the 2026 page contract with a regression test
 
 **Files:**
+
 - Create: `tests/receptions-2026-page.test.cjs`
 - Modify: `src/components/receptions/receptions-page.jsx`
 
 - [ ] **Step 1: Write the failing test**
 
 ```js
-const source = readFile("src/components/receptions/receptions-page.jsx");
+const source = readFile('src/components/receptions/receptions-page.jsx');
 
 assert.match(source, /Why These Receptions Matter/);
 assert.match(source, /Who Should Plan To Be In The Room/);
@@ -65,15 +66,18 @@ git commit -m "feat: redesign receptions 2026 landing page"
 ### Task 2: Reshape the 2026 page into the approved hybrid layout
 
 **Files:**
+
 - Modify: `src/components/receptions/receptions-page.jsx`
 - Test: `tests/receptions-2026-page.test.cjs`
 
 - [ ] **Step 1: Replace the old hero support copy with stronger 2026 framing**
 
 ```jsx
-{is2025
-  ? 'One diplomatic arc for digital safety.'
-  : 'Diplomatic hospitality for the conversations that continue after the main stage.'}
+{
+  is2025
+    ? 'One diplomatic arc for digital safety.'
+    : 'Diplomatic hospitality for the conversations that continue after the main stage.';
+}
 ```
 
 - [ ] **Step 2: Add the value-led 2026 sections**
@@ -83,15 +87,13 @@ git commit -m "feat: redesign receptions 2026 landing page"
   'Why These Receptions Matter',
   'Who Should Plan To Be In The Room',
   'How Access Works',
-]
+];
 ```
 
 - [ ] **Step 3: Add the practical registration call-to-action**
 
 ```jsx
-<a href="/register">
-  Begin delegate registration
-</a>
+<a href="/register">Begin delegate registration</a>
 ```
 
 - [ ] **Step 4: Run the targeted tests**

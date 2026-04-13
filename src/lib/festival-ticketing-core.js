@@ -1,11 +1,13 @@
-import { FESTIVAL_PRICING } from "./festival-ticketing-constants.js";
+import { FESTIVAL_PRICING } from './festival-ticketing-constants.js';
 
 function normalizeCountryCode(country) {
-  return String(country || "").trim().toUpperCase();
+  return String(country || '')
+    .trim()
+    .toUpperCase();
 }
 
 export function getFestivalTicketTypeForCountry(country) {
-  return normalizeCountryCode(country) === "IN" ? "domestic" : "international";
+  return normalizeCountryCode(country) === 'IN' ? 'domestic' : 'international';
 }
 
 export function deriveFestivalTicketPurchaseDetails({ country }) {
@@ -16,5 +18,7 @@ export function deriveFestivalTicketPurchaseDetails({ country }) {
 }
 
 export function getFestivalTicketCountryLabel(country) {
-  return normalizeCountryCode(country) === "IN" ? "India" : normalizeCountryCode(country);
+  return normalizeCountryCode(country) === 'IN'
+    ? 'India'
+    : normalizeCountryCode(country);
 }

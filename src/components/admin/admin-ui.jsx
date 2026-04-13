@@ -161,7 +161,11 @@ export function AdminSectionHeading({ eyebrow, title, description, action }) {
 /** Slide-over drawer that opens from the right (powered by vaul for touch gesture support) */
 export function SlideOverDrawer({ open, onClose, title, children }) {
   return (
-    <Drawer.Root open={open} onOpenChange={(v) => !v && onClose()} direction="right">
+    <Drawer.Root
+      open={open}
+      onOpenChange={(v) => !v && onClose()}
+      direction="right"
+    >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-50 bg-slate-900/30 backdrop-blur-sm" />
         <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900 focus:outline-none">

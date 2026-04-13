@@ -59,10 +59,11 @@ const ATTENDEE_OVERRIDES = {
   'mr-shantaram-jonnalagadda-106': {
     name: 'Shantaram Jonnalagadda',
   },
-  'ms-agnes-julin-minister-counsellor-deputy-head-of-mission-embassy-of-sweden-141': {
-    name: 'Agnes Julin',
-    designation: 'Minister Counsellor, Deputy Head of Mission',
-  },
+  'ms-agnes-julin-minister-counsellor-deputy-head-of-mission-embassy-of-sweden-141':
+    {
+      name: 'Agnes Julin',
+      designation: 'Minister Counsellor, Deputy Head of Mission',
+    },
   'ms-chitra-iyer-252': {
     name: 'Chitra Iyer',
     organisation: 'Space2Grow',
@@ -81,14 +82,16 @@ const ATTENDEE_OVERRIDES = {
     organisation: 'Revenge Porn Helpline',
     designation: 'Manager',
   },
-  'mr-christoffer-orre-second-secretary-of-political-affairs-embassy-of-sweden-295': {
-    name: 'Christoffer Orre',
-    designation: 'Second Secretary of Political Affairs',
-  },
-  'ms-cecilia-tall-counsellor-of-science-and-innovations-embassy-of-sweden-302': {
-    name: 'Cecilia Tall',
-    designation: 'Counsellor of Science and Innovations',
-  },
+  'mr-christoffer-orre-second-secretary-of-political-affairs-embassy-of-sweden-295':
+    {
+      name: 'Christoffer Orre',
+      designation: 'Second Secretary of Political Affairs',
+    },
+  'ms-cecilia-tall-counsellor-of-science-and-innovations-embassy-of-sweden-302':
+    {
+      name: 'Cecilia Tall',
+      designation: 'Counsellor of Science and Innovations',
+    },
   'ms-disa-m-ller-intern-embassy-of-sweden-328': {
     name: 'Disa Muller',
     designation: 'Intern, Embassy of Sweden',

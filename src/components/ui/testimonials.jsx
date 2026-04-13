@@ -18,7 +18,7 @@ export const TestimonialSection = ({
   const scrollByCards = (direction = 1) => {
     if (!carouselRef.current) return;
     const track = carouselRef.current;
-    
+
     // Find the first card to get the width
     const card = track.querySelector('[data-testimonial-card]');
     // gap is 24px (gap-6)

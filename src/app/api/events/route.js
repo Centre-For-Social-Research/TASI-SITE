@@ -1,12 +1,12 @@
-import { protectPublicRoute } from "@/lib/api-security";
-import { requireAuthorizedOperator } from "@/lib/registration-auth";
-import { shouldServeDemoTicketEvents } from "@/lib/ticketing-api-utils";
-import { DEMO_RECEPTION_EVENT } from "@/lib/ticketing-constants";
-import { createTicketEvent, listPublicTicketEvents } from "@/lib/ticketing-db";
-import { createTicketEventSchema } from "@/lib/ticketing-validation";
+import { protectPublicRoute } from '@/lib/api-security';
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { shouldServeDemoTicketEvents } from '@/lib/ticketing-api-utils';
+import { DEMO_RECEPTION_EVENT } from '@/lib/ticketing-constants';
+import { createTicketEvent, listPublicTicketEvents } from '@/lib/ticketing-db';
+import { createTicketEventSchema } from '@/lib/ticketing-validation';
 
 export async function GET(request) {
-  const protection = await protectPublicRoute(request, "ticket-events-list", {
+  const protection = await protectPublicRoute(request, 'ticket-events-list', {
     windowMs: 10 * 60 * 1000,
     maxRequests: 30,
   });
@@ -17,31 +17,38 @@ export async function GET(request) {
 
   try {
     const events = await listPublicTicketEvents();
-    return Response.json({ success: true, events }, { headers: protection.headers });
+    return Response.json(
+      { success: true, events },
+      { headers: protection.headers }
+    );
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Unable to load ticket events.";
+      error instanceof Error ? error.message : 'Unable to load ticket events.';
 
-    if (shouldServeDemoTicketEvents({ message, nodeEnv: process.env.NODE_ENV })) {
+    if (
+      shouldServeDemoTicketEvents({ message, nodeEnv: process.env.NODE_ENV })
+    ) {
       return Response.json(
         {
           success: true,
           events: [DEMO_RECEPTION_EVENT],
           demoMode: true,
         },
-        { headers: protection.headers },
+        { headers: protection.headers }
       );
     }
 
     return Response.json(
       { error: message },
-      { status: 500, headers: protection.headers },
+      { status: 500, headers: protection.headers }
     );
   }
 }
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({ route: "api.events.create" });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.events.create',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }
@@ -58,8 +65,13 @@ export async function POST(request) {
     return Response.json({ success: true, ...result });
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : "Unable to create ticket event." },
-      { status: 400 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unable to create ticket event.',
+      },
+      { status: 400 }
     );
   }
 }
