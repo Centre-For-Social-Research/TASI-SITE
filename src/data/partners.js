@@ -510,15 +510,14 @@ export const partners = [
     },
   },
   {
-    name: 'FRIDA Fund',
+    name: 'FRIDA Health',
     logo: '/img/Logo/FRIDA Logo.png',
     slug: 'frida-fund',
     type: 'International Partner',
     description:
-      'FRIDA, The Young Feminist Fund, is a youth-led fund that supports young feminist organising, movement building, and resourcing for girls, young women, and trans and queer youth.',
+      'FRIDA Health is a women’s health advocacy lab founded to make women’s health a public priority through research, policy advocacy, communications, and campaigning. The organisation is building India’s first Parliamentarians’ Forum on Women’s Health, which currently brings together 10 Members of Parliament from seven political parties.',
     country: 'International',
-    category: 'Feminist Fund',
-    website: 'https://youngfeministfund.org',
+    category: "Women's Health Advocacy",
     social: {
       linkedin: 'https://www.linkedin.com/company/fridahealth',
       twitter: 'https://x.com/fridahealth',

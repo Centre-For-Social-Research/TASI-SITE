@@ -1006,3 +1006,53 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Admin navy theme: LyteNyte data-grid overrides ────────────────────────── */
+.dark .admin-grid-navy {
+  --ln-gray-00: #0b1120;
+  --ln-gray-01: #0b1120;
+  --ln-gray-02: #0d1526;
+  --ln-gray-05: #111a2e;
+  --ln-gray-10: #162040;
+  --ln-gray-20: #1a2744;
+  --ln-gray-30: #1e2a45;
+  --ln-gray-40: #253a5c;
+  --ln-gray-50: #3a5078;
+  --ln-gray-60: #5a6b8a;
+  --ln-gray-70: #7b8ba4;
+  --ln-gray-80: #94a3b8;
+  --ln-gray-90: #cbd5e1;
+  --ln-gray-100: #e2e8f0;
+
+  --ln-bg: #111a2e;
+  --ln-bg-page: #0b1120;
+  --ln-bg-light: #0d1526;
+  --ln-bg-strong: #1a2744;
+  --ln-bg-row-hover: hsla(217, 80%, 54%, 0.08);
+  --ln-bg-row-alternate: #0d1526;
+  --ln-bg-ui-panel: #0b1120;
+  --ln-bg-form-field: #162040;
+  --ln-bg-floating-panel: #111a2e;
+  --ln-bg-popover: #111a2e;
+  --ln-bg-button-light: #162040;
+
+  --ln-border: #1e2a45;
+  --ln-border-row: #1a2744;
+  --ln-border-strong: #253a5c;
+  --ln-border-xstrong: #3a5078;
+  --ln-border-icon: #5a6b8a;
+  --ln-border-ui-panel: #0d1526;
+  --ln-border-button-light: #1e2a45;
+  --ln-border-field-and-button: #253a5c;
+  --ln-border-floating-panel: #0d1526;
+  --ln-border-popover: #253a5c;
+
+  --ln-text: #94a3b8;
+  --ln-text-dark: #e2e8f0;
+  --ln-text-light: #7b8ba4;
+  --ln-text-xlight: #5a6b8a;
+
+  --ln-column-fill: #111a2e;
+  --ln-column-stroke: hsla(217, 80%, 50%, 0.12);
+  --ln-row-pivot-fill: #111a2e;
+}

@@ -6,52 +6,46 @@ import { Drawer } from 'vaul';
 
 const toneMap = {
   default: {
-    badge:
-      'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300',
+    badge: 'border-[#253a5c] bg-[#162040] text-slate-300',
     dot: 'bg-slate-400',
-    panel:
-      'border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200',
-    card: 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900',
+    panel: 'border-[#1e2a45] bg-[#0f1729] text-slate-200',
+    card: 'border-[#1e2a45] bg-[#111a2e]',
+    leftBorder: 'border-l-slate-500',
   },
   warning: {
-    badge:
-      'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300',
+    badge: 'border-amber-700/50 bg-amber-950/40 text-amber-300',
     dot: 'bg-amber-500',
-    panel:
-      'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200',
-    card: 'border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30',
+    panel: 'border-amber-700/40 bg-amber-950/30 text-amber-200',
+    card: 'border-[#1e2a45] bg-[#111a2e]',
+    leftBorder: 'border-l-amber-500',
   },
   success: {
-    badge:
-      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300',
+    badge: 'border-emerald-700/50 bg-emerald-950/40 text-emerald-300',
     dot: 'bg-emerald-500',
-    panel:
-      'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200',
-    card: 'border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30',
+    panel: 'border-emerald-700/40 bg-emerald-950/30 text-emerald-200',
+    card: 'border-[#1e2a45] bg-[#111a2e]',
+    leftBorder: 'border-l-emerald-500',
   },
   danger: {
-    badge:
-      'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300',
+    badge: 'border-rose-700/50 bg-rose-950/40 text-rose-300',
     dot: 'bg-rose-500',
-    panel:
-      'border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200',
-    card: 'border-rose-200 bg-rose-50 dark:border-rose-800 dark:bg-rose-950/30',
+    panel: 'border-rose-700/40 bg-rose-950/30 text-rose-200',
+    card: 'border-[#1e2a45] bg-[#111a2e]',
+    leftBorder: 'border-l-rose-500',
   },
   accent: {
-    badge:
-      'border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-800 dark:bg-violet-950/60 dark:text-violet-300',
+    badge: 'border-violet-700/50 bg-violet-950/40 text-violet-300',
     dot: 'bg-violet-500',
-    panel:
-      'border-violet-200 bg-violet-50 text-violet-900 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-200',
-    card: 'border-violet-200 bg-violet-50 dark:border-violet-800 dark:bg-violet-950/30',
+    panel: 'border-violet-700/40 bg-violet-950/30 text-violet-200',
+    card: 'border-[#1e2a45] bg-[#111a2e]',
+    leftBorder: 'border-l-violet-500',
   },
   info: {
-    badge:
-      'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300',
+    badge: 'border-sky-700/50 bg-sky-950/40 text-sky-300',
     dot: 'bg-sky-500',
-    panel:
-      'border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-200',
-    card: 'border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950/30',
+    panel: 'border-sky-700/40 bg-sky-950/30 text-sky-200',
+    card: 'border-[#1e2a45] bg-[#111a2e]',
+    leftBorder: 'border-l-sky-500',
   },
 };
 
@@ -84,20 +78,24 @@ export function AdminStatCard({ label, value, tone = 'default', detail }) {
   const classes = getToneClasses(tone);
 
   return (
-    <div className={clsx('rounded-[10px] border p-4 shadow-sm', classes.card)}>
+    <div
+      className={clsx(
+        'rounded-xl border border-l-4 p-4 shadow-sm',
+        classes.card,
+        classes.leftBorder
+      )}
+    >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
           {label}
         </p>
         <span className={clsx('h-2 w-2 rounded-full', classes.dot)} />
       </div>
-      <p className="mt-2.5 text-3xl font-bold tabular-nums text-slate-900 dark:text-slate-50">
+      <p className="mt-2.5 text-3xl font-bold tabular-nums text-slate-50">
         {value}
       </p>
       {detail ? (
-        <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
-          {detail}
-        </p>
+        <p className="mt-1.5 text-xs text-[#5a6b8a]">{detail}</p>
       ) : null}
     </div>
   );
@@ -140,15 +138,13 @@ export function AdminSectionHeading({ eyebrow, title, description, action }) {
     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
       <div className="min-w-0">
         {eyebrow ? (
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-600">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-500">
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="mt-1 text-2xl font-bold text-slate-900 dark:text-slate-50">
-          {title}
-        </h2>
+        <h2 className="mt-1 text-2xl font-bold text-slate-50">{title}</h2>
         {description ? (
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-400">
             {description}
           </p>
         ) : null}
@@ -167,16 +163,16 @@ export function SlideOverDrawer({ open, onClose, title, children }) {
       direction="right"
     >
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-50 bg-slate-900/30 backdrop-blur-sm" />
-        <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900 focus:outline-none">
-          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-700">
-            <Drawer.Title className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-[#0b1120]/60 backdrop-blur-sm" />
+        <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden bg-[#0d1526] shadow-2xl shadow-black/50 focus:outline-none">
+          <div className="flex shrink-0 items-center justify-between border-b border-[#1e2a45] px-5 py-4">
+            <Drawer.Title className="text-sm font-semibold text-slate-50">
               {title}
             </Drawer.Title>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              className="rounded-lg p-1.5 text-slate-400 transition hover:bg-[#1e2a45] hover:text-slate-200"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -224,12 +220,12 @@ export function LoadingRows({ count = 6, cols = 7 }) {
       {Array.from({ length: count }, (_, rowIndex) => (
         <tr
           key={rowIndex}
-          className="border-b border-slate-100 dark:border-slate-800"
+          className="border-b border-[#1a2744]"
         >
           {Array.from({ length: cols }, (_, colIndex) => (
             <td key={colIndex} className="px-4 py-4">
               <div
-                className="h-4 animate-pulse rounded bg-slate-100 dark:bg-slate-800"
+                className="h-4 animate-pulse rounded bg-[#1e2a45]"
                 style={{
                   width: `${55 + ((rowIndex * 3 + colIndex * 7) % 35)}%`,
                 }}
