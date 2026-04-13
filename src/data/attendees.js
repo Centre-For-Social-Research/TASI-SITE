@@ -1,0 +1,7962 @@
+export const attendees = [
+  {
+    "id": "snigdha-bhardwaj-1",
+    "name": "Snigdha Bhardwaj",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Director and Global Head of Generative AI, Trust and Safety, Google",
+    "designation": "Director and Global Head of Generative AI, Trust and Safety,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "mohammad-saquib-2",
+    "name": "Mohammad Saquib",
+    "category": "Industry / Online Registration",
+    "organisation": "Deloitte",
+    "designation": "Manager",
+    "notes": "https://www.linkedin.com/in/mohammad-saquib-76ab5321/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "shoma-chaudhury-3",
+    "name": "Shoma CHAUDHURY",
+    "category": "",
+    "organisation": "Lucid Lines & SYNAPSE Conclave",
+    "designation": "CEO",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "shohini-banerjee-4",
+    "name": "Shohini Banerjee",
+    "category": "Panelist",
+    "organisation": "Knowledge Specialist",
+    "designation": "Point of View",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "vidya-raghavan-5",
+    "name": "Vidya Raghavan",
+    "category": "Online Registration",
+    "organisation": "New Concept Centre for Development Communication",
+    "designation": "CEO",
+    "notes": "https://www.linkedin.com/in/vidya-raghavan-7b2a3b61?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "rajesh-ranjan-6",
+    "name": "Rajesh Ranjan",
+    "category": "Panelist (7th Oct)",
+    "organisation": "India Lead, Core Government Affairs and Public Policy, Google",
+    "designation": "India Lead, Core Government Affairs and Public Policy, Google",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "harshit-gupta-7",
+    "name": "Harshit Gupta",
+    "category": "Online Registration",
+    "organisation": "Womenite",
+    "designation": "Founder",
+    "notes": "https://www.linkedin.com/in/harshitgupta812/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "dylan-schouten-8",
+    "name": "Dylan Schouten",
+    "category": "Panelist / Non-Profit",
+    "organisation": "GroSafe Online",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "mr-munish-sharma-9",
+    "name": "Mr. Munish Sharma",
+    "category": "",
+    "organisation": "The Australian High Commission",
+    "designation": "Senior Advisor (Cyber & Technology)",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "truecaller-10",
+    "name": "Truecaller",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "tanya-thakur-11",
+    "name": "Tanya Thakur",
+    "category": "",
+    "organisation": "Safetipin",
+    "designation": "",
+    "notes": "Workshop only",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "natasha-nayak-12",
+    "name": "Natasha Nayak",
+    "category": "Industry",
+    "organisation": "GSMA",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "amrita-tripathi-13",
+    "name": "Amrita TRIPATHI",
+    "category": "",
+    "organisation": "Healthcollectif & TapinTribe",
+    "designation": "CEO",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "priyank-kanoongo-14",
+    "name": "Priyank Kanoongo",
+    "category": "GoI",
+    "organisation": "Former NCPCR",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "mudita-avasthi-15",
+    "name": "Mudita Avasthi",
+    "category": "Online Registration",
+    "organisation": "Swiggy",
+    "designation": "Manager - Trust and Safety",
+    "notes": "https://www.linkedin.com/in/mudita-avasthi",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "aruna-16",
+    "name": "Aruna",
+    "category": "Industry / Online Registration",
+    "organisation": "TaskUs",
+    "designation": "Senior Behavioral Scientist",
+    "notes": "https://www.linkedin.com/in/aruna-balammal-51650615/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sonali-17",
+    "name": "Sonali",
+    "category": "Online Registration",
+    "organisation": "Responsible Netism",
+    "designation": "CEO",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "neda-niazian-18",
+    "name": "Neda Niazian",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Director Group Trust & Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "nandita-baruah-19",
+    "name": "Nandita Baruah",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Country Representative, India, The Asia Foundation",
+    "designation": "Country Representative, India,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "sonali-patkar-unmesh-joshi-20",
+    "name": "Sonali Patkar/Unmesh Joshi",
+    "category": "ACTS",
+    "organisation": "Responsible Netism",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy",
+      "Opening Reception"
+    ],
+    "source": [
+      "master embassy list",
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "dr-debjyoti-barman-21",
+    "name": "Dr Debjyoti Barman",
+    "category": "GoI",
+    "organisation": "Department of Revenue",
+    "designation": "Deputy Commissioner (Technical Officer) at the Tax Research Unit (TRU)",
+    "notes": "Nominated by GSMA",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "jordan-benavidez-22",
+    "name": "Jordan Benavidez",
+    "category": "Panelist / Industry",
+    "organisation": "Director of Safety-by-Design, Match",
+    "designation": "Director of Safety-by-Design,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "shilpi-singh-23",
+    "name": "Shilpi Singh",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Gurgaon Moms",
+    "designation": "Member",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "abhishek-singh-24",
+    "name": "Abhishek Singh",
+    "category": "Panelist",
+    "organisation": "Government of India (MEITY)",
+    "designation": "Additional Secretary, Ministry of Information Technology",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "ankhi-das-25",
+    "name": "Ankhi Das",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Co Founder & Managing Partner, Ankurit Capital",
+    "designation": "Co Founder & Managing Partner",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "tbc-girl-effect-india-26",
+    "name": "TBC/Girl Effect India",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "aayushi-jaiswal-27",
+    "name": "Aayushi Jaiswal",
+    "category": "Industry",
+    "organisation": "Amazon",
+    "designation": "T&S Support Engineer",
+    "notes": "Nominated by CH",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "shailendra-jha-28",
+    "name": "Shailendra Jha",
+    "category": "Sponsor/Industry",
+    "organisation": "Google",
+    "designation": "Director, Government Affairs & Public Policy, Youtube India",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Additions For Embassies",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "lin-yuan-chong-29",
+    "name": "Lin Yuan Chong",
+    "category": "Online Registration",
+    "organisation": "Technological University Dublin",
+    "designation": "AI Research Assistant",
+    "notes": "https://www.linkedin.com/in/linyuan-chong/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "professor-debi-fry-30",
+    "name": "Professor Debi Fry",
+    "category": "Panelist",
+    "organisation": "University of Edinburgh",
+    "designation": "Global Director of Data, Childlight Global Child Safety Institute; Professor of International Child Protection Research,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "rabi-poddar-31",
+    "name": "Rabi Poddar",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Head of Detection and Services, Trust and Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "jasmine-tahir-32",
+    "name": "Jasmine tahir",
+    "category": "Online Registration",
+    "organisation": "Task Us",
+    "designation": "Sr. Manager (Wellness & Resiliency)",
+    "notes": "https://www.linkedin.com/in/jasmine-tahir-a7a11624/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "supriya-kulkari-33",
+    "name": "Supriya Kulkari",
+    "category": "NGO",
+    "organisation": "Ethics by Design",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "elsa-marie-34",
+    "name": "Elsa Marie",
+    "category": "ACTS",
+    "organisation": "Red Dot Foundation",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "tania-chatterjee-35",
+    "name": "Tania Chatterjee",
+    "category": "Online Registrations",
+    "organisation": "University of Queensland, Australia & Indian Institute of Technology, Delhi",
+    "designation": "PhD Candidate",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "arjun-doraiswamy-36",
+    "name": "Arjun Doraiswamy",
+    "category": "",
+    "organisation": "",
+    "designation": "Head of Responsibility Partnerships, India, YouTube",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "samantha-mccoy-37",
+    "name": "Samantha McCoy",
+    "category": "Panelist / Industry",
+    "organisation": "Survivor, Attorney, Activist",
+    "designation": "Licensed Master Social Worker, Attorney",
+    "notes": "https://www.linkedin.com/in/samantha-mccoy27",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "pankaj-38",
+    "name": "Pankaj",
+    "category": "Online Registration",
+    "organisation": "1Point1 Solutions ltd",
+    "designation": "VP Sales",
+    "notes": "https://www.linkedin.com/in/pankaj-chauhan-8626114/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sarah-pilot-39",
+    "name": "Sarah Pilot",
+    "category": "VIP/GoI",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "ranjana-40",
+    "name": "Ranjana",
+    "category": "",
+    "organisation": "",
+    "designation": "IGPP",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "lalita-panikar-41",
+    "name": "Lalita Panikar",
+    "category": "VIP/GoI",
+    "organisation": "Hindustan Times",
+    "designation": "",
+    "notes": "Dr. Ranjana's Guest | Dr. Ranjana's Guests",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "dylan-schouten-adavi-42",
+    "name": "Dylan Schouten-Adavi",
+    "category": "Panelist / Online Registration",
+    "organisation": "TU Dublin",
+    "designation": "Research Project Manager",
+    "notes": "https://www.linkedin.com/in/dgmschouten/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "dhiya-ann-mathew-43",
+    "name": "Dhiya Ann Mathew",
+    "category": "Online Registration",
+    "organisation": "Ywca of India",
+    "designation": "National General Secretary (CEO)",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sasha-mathew-44",
+    "name": "Sasha Mathew",
+    "category": "",
+    "organisation": "Bumble",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "rakesh-maheshwari-45",
+    "name": "Rakesh Maheshwari",
+    "category": "Panelist / GoI",
+    "organisation": "Fmr Senior Director, Ministry of Information Technology, Government of India",
+    "designation": "Former Senior Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "dr-ranjana-kumari-46",
+    "name": "Dr Ranjana Kumari",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Director, Centre for Social Reseach, India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "govind-kelkar-47",
+    "name": "Govind Kelkar",
+    "category": "",
+    "organisation": "Landesa",
+    "designation": "Senior Adviser",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "shad-joynal-abedin-48",
+    "name": "Shad JOYNAL-ABEDIN",
+    "category": "",
+    "organisation": "French Embassy",
+    "designation": "Political Counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sanjay-raitani-49",
+    "name": "Sanjay Raitani",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Sr. EVP and Vertical lead",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "veda-bharadwaja-50",
+    "name": "Veda Bharadwaja",
+    "category": "Knowledge Partner",
+    "organisation": "UN Women India",
+    "designation": "UN Women India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "prakshi-saha-51",
+    "name": "Prakshi Saha",
+    "category": "Moderator",
+    "organisation": "",
+    "designation": "FRIDA",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sneha-52",
+    "name": "Sneha",
+    "category": "",
+    "organisation": "Sasha India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "atharva-kadam-53",
+    "name": "Atharva KADAM",
+    "category": "",
+    "organisation": "French Embassy / IFI",
+    "designation": "LDI",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ms-ritika-bhatia-54",
+    "name": "Ms. Ritika Bhatia",
+    "category": "",
+    "organisation": "EHSGuru",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ruchi-55",
+    "name": "Ruchi",
+    "category": "Online Registration",
+    "organisation": "Tiss",
+    "designation": "Faculty",
+    "notes": "https://www.linkedin.com/in/ruchi-sinha-1351aa71?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "gemma-haines-56",
+    "name": "Gemma Haines",
+    "category": "",
+    "organisation": "",
+    "designation": "GMAIL",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "archana-ginka-57",
+    "name": "Archana Ginka",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Global Ops, VP",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "shan-gupta-58",
+    "name": "Shan Gupta",
+    "category": "FRIDA Team",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "antaraa-vasudev-59",
+    "name": "Antaraa Vasudev",
+    "category": "NGO",
+    "organisation": "Civis",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "josephine-van-zante-60",
+    "name": "Josephine van Zante",
+    "category": "Panelist",
+    "organisation": "Embassy of the Netherlands in India",
+    "designation": "Second Secretary Political Affairs & Human Rights",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "atharva-nimje-61",
+    "name": "Atharva Nimje",
+    "category": "",
+    "organisation": "",
+    "designation": "Project Manager",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "dr-pragya-kaushik-62",
+    "name": "Dr Pragya Kaushik",
+    "category": "Online Registration",
+    "organisation": "Independent",
+    "designation": "Media Educator,Visiting Faculty Govt.Polytechnic",
+    "notes": "https://www.linkedin.com/in/dr-pragya-kaushik-9a9867168?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "nilanjana-bhowmik-63",
+    "name": "Nilanjana Bhowmik",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Author and Journalist",
+    "designation": "N/A",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "jayanthi-a-pushkaran-64",
+    "name": "Jayanthi A Pushkaran",
+    "category": "",
+    "organisation": "EMpower - The Emerging Markets Foundation",
+    "designation": "Senior Program Officer, Adolescent Girls",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "mr-orson-passi-65",
+    "name": "Mr. Orson Passi",
+    "category": "",
+    "organisation": "The Australian High Commission",
+    "designation": "Second Secretary (Political)",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "surbhi-mittal-66",
+    "name": "Surbhi Mittal",
+    "category": "Online Registration",
+    "organisation": "IIT Jodhpur",
+    "designation": "Phd Researcher",
+    "notes": "linkedin.com/surbhimittal97",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "barkha-dutt-67",
+    "name": "Barkha Dutt",
+    "category": "Journalist/Media",
+    "organisation": "Journalist",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "axelle-blanchard-68",
+    "name": "Axelle BLANCHARD",
+    "category": "",
+    "organisation": "French Embassy / SER",
+    "designation": "Counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "tahil-ali-69",
+    "name": "Tahil Ali",
+    "category": "Online Registration",
+    "organisation": "Freelancer",
+    "designation": "Freelancer",
+    "notes": "https://www.linkedin.com/in/tahilali/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "unmesh-70",
+    "name": "Unmesh",
+    "category": "Online Registration",
+    "organisation": "Responsible Netism",
+    "designation": "COO",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "somnath-banerjee-71",
+    "name": "Somnath Banerjee",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "kanta-singh-72",
+    "name": "Kanta Singh",
+    "category": "Knowledge Partner",
+    "organisation": "UN Women India",
+    "designation": "Deputy Country Representative,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "estelle-david-73",
+    "name": "Estelle DAVID",
+    "category": "",
+    "organisation": "French Embassy / BF",
+    "designation": "Comercial Counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "karuna-nain-74",
+    "name": "Karuna Nain",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Advisor",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "dinesh-75",
+    "name": "Dinesh",
+    "category": "Industry / Online Registration",
+    "organisation": "Electronic Arts",
+    "designation": "Terms of Service Manager",
+    "notes": "https://linkedin.com/in/dineshbehara",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "dr-rabindra-narayan-behera-76",
+    "name": "Dr. Rabindra Narayan Behera",
+    "category": "",
+    "organisation": "",
+    "designation": "MP, Lok Sabha",
+    "notes": "IGPP",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "yoel-roth-77",
+    "name": "Yoel Roth",
+    "category": "Panelist",
+    "organisation": "Match Group",
+    "designation": "Vice President, Trust & Safety",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "akhil-neelam-78",
+    "name": "Akhil Neelam",
+    "category": "NGO",
+    "organisation": "CGAP",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "aditi-oli-79",
+    "name": "Aditi Oli",
+    "category": "",
+    "organisation": "",
+    "designation": "Girl Effect",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "padmapriya-sastry-80",
+    "name": "Padmapriya Sastry",
+    "category": "Industry",
+    "organisation": "Independent Consultant",
+    "designation": "N/A",
+    "notes": "Nominated by GSMA",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "hasina-kharbhih-81",
+    "name": "Hasina Kharbhih",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Impulse NGO Network",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "camelia-assaoui-82",
+    "name": "Camelia Assaoui",
+    "category": "Panelist / Industry",
+    "organisation": "Match Group",
+    "designation": "Senior Director, International Corporate Affairs",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "ms-melika-tolf-intern-embassy-of-sweden-83",
+    "name": "Ms. Melika Tolf, Intern Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Intern",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "naveen-kumar-gond-84",
+    "name": "Naveen Kumar Gond",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "vikas-85",
+    "name": "Vikas",
+    "category": "",
+    "organisation": "",
+    "designation": "IGPP",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "somya-malik-86",
+    "name": "Somya Malik",
+    "category": "Online Registration",
+    "organisation": "Route Social Media Marketing Bureau",
+    "designation": "Founder and Creative Head",
+    "notes": "https://www.linkedin.com/in/somya-malik-3b262ab0?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "philip-green-87",
+    "name": "Philip GREEN",
+    "category": "",
+    "organisation": "Australian High Commission",
+    "designation": "High Commissioner (TBC)",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ronak-soni-88",
+    "name": "Ronak Soni",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Senior Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "sonali-patkar-and-unmesh-joshi-89",
+    "name": "Sonali Patkar and Unmesh Joshi",
+    "category": "NGO",
+    "organisation": "Responsible Netism",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "rahul-mukand-90",
+    "name": "Rahul MUKAND",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "jean-christophe-j-c-le-touquin-91",
+    "name": "Jean-Christophe (J-C) Le Touquin",
+    "category": "Host",
+    "organisation": "Trust and Safety Forum",
+    "designation": "Co-founder Trust & Safety Festival",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "noula-92",
+    "name": "Noula",
+    "category": "Online Registration",
+    "organisation": "COR Innovation",
+    "designation": "Director",
+    "notes": "https://www.linkedin.com/in/ioannanoula/",
+    "events": [
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "thomas-yaqoubi-reboul-93",
+    "name": "Thomas Yaqoubi Reboul",
+    "category": "Accompanying Shanley",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "filippa-braarud-94",
+    "name": "Filippa BRAARUD",
+    "category": "",
+    "organisation": "Norvegian Embassy",
+    "designation": "Cyber counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "rahul-singh-bhadoriya-95",
+    "name": "Rahul Singh Bhadoriya",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "vrinda-bhandari-96",
+    "name": "Vrinda Bhandari",
+    "category": "Panelist",
+    "organisation": "Supreme Court of India",
+    "designation": "Supreme Court of India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "snigdhaa-ritesh-97",
+    "name": "Snigdhaa Ritesh",
+    "category": "Online Registration",
+    "organisation": "Pink Shakti Women Safety App",
+    "designation": "Chief Visionary",
+    "notes": "https://www.linkedin.com/in/snigdhaaritesh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "fawaz-shaheen-98",
+    "name": "Fawaz Shaheen",
+    "category": "NGO",
+    "organisation": "Centre For Communication Governance",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "ai-sasaki-99",
+    "name": "AI Sasaki",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "snap-rep-100",
+    "name": "Snap Rep",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Opening Reception"
+    ],
+    "source": [
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "judith-weinberger-singh-101",
+    "name": "Judith Weinberger Singh",
+    "category": "",
+    "organisation": "Hanns Siedel Foundation India",
+    "designation": "Resident Representative",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "momoe-saito-102",
+    "name": "Momoe Saito",
+    "category": "Others",
+    "organisation": "",
+    "designation": "Well Being Advisor",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "jasmeet-gulati-103",
+    "name": "Jasmeet GULATI",
+    "category": "",
+    "organisation": "Jindal Global Law School, O.P. Jindal Global University,",
+    "designation": "Professor of Law / Vice Dean",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "anukool-kumar-104",
+    "name": "Anukool Kumar",
+    "category": "Panelist / Industry",
+    "organisation": "Match Group",
+    "designation": "Senior Director, Marketing India Middle East",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "bijayalaxmi-105",
+    "name": "Bijayalaxmi",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "mr-shantaram-jonnalagadda-106",
+    "name": "Mr. Shantaram Jonnalagadda",
+    "category": "Industry / Online Registration",
+    "organisation": "Yoti Biometric Identity Pvt Ltd",
+    "designation": "Director",
+    "notes": "https://www.linkedin.com/in/shantaramj/ | IGPP",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "tbc-107",
+    "name": "TBC",
+    "category": "Think Tank",
+    "organisation": "Dhirubhai Ambani University",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Swedish Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Swedish Embassy (8th Oct)",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "ritika-passi-108",
+    "name": "Ritika PASSI",
+    "category": "",
+    "organisation": "Lucid Lines & SYNAPSE Conclave",
+    "designation": "Chief Executor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sudeshna-mukherjee-109",
+    "name": "Sudeshna Mukherjee",
+    "category": "Knowledge Partner",
+    "organisation": "UN Women India",
+    "designation": "UN Women India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "kalpana-viswanath-110",
+    "name": "Kalpana Viswanath",
+    "category": "",
+    "organisation": "Safetipin",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "fatima-tahir-111",
+    "name": "Fatima Tahir",
+    "category": "Online Registration",
+    "organisation": "Red Dot Foundation",
+    "designation": "Communications and Policy Associate",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "japleen-pasricha-112",
+    "name": "Japleen Pasricha",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Founder-CEO & Editor-in-Chief, Feminism in India",
+    "designation": "Founder-CEO & Editor-in-Chief,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "sunil-abraham-113",
+    "name": "Sunil Abraham",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Public Policy Director, Data Economy and Emerging Tech, Meta, India",
+    "designation": "Public Policy Director, Data Economy and Emerging Tech",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "akash-pugalia-114",
+    "name": "Akash Pugalia",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Chief Digital Officer",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "abby-roberts-115",
+    "name": "Abby Roberts",
+    "category": "Panelist / Non-Profit",
+    "organisation": "InHope",
+    "designation": "Project Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "andrea-powell-116",
+    "name": "Andrea Powell",
+    "category": "",
+    "organisation": "",
+    "designation": "Co Founder, STISA, Prune, Fair Girls,",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "deepesh-gupta-117",
+    "name": "Deepesh Gupta",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Senior Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "pallavi-aus-commission-118",
+    "name": "Pallavi Aus Commission",
+    "category": "",
+    "organisation": "",
+    "designation": "HCLTECH",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "vidhushi-119",
+    "name": "Vidhushi",
+    "category": "Panelist",
+    "organisation": "NITI AYOG",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "ajit-kumar-120",
+    "name": "Ajit Kumar",
+    "category": "Panelist",
+    "organisation": "Ministry of Information Technology, Government of India",
+    "designation": "Joint Secretary",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "aamod-omprakash-121",
+    "name": "Aamod Omprakash",
+    "category": "Diplomatic Mission",
+    "organisation": "Cyber & Digital Policy Officer, U.S. Embassy New Delhi",
+    "designation": "",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ranjani-balasubramanyam-122",
+    "name": "Ranjani Balasubramanyam",
+    "category": "",
+    "organisation": "",
+    "designation": "APAC Manager, Scam Ads, Trust & Safety",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sachee-malhotra-123",
+    "name": "Sachee Malhotra",
+    "category": "FRIDA Panelist",
+    "organisation": "",
+    "designation": "That Sassy Thing",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "nakshathra-suresh-124",
+    "name": "Nakshathra Suresh",
+    "category": "Online Registration",
+    "organisation": "eiris",
+    "designation": "Co-Founder",
+    "notes": "https://linkedin.com/in/nakshathrasuresh",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sonali-vyas-125",
+    "name": "Sonali Vyas",
+    "category": "",
+    "organisation": "Safetipin",
+    "designation": "",
+    "notes": "Workshop only",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sameer-jadhav-126",
+    "name": "Sameer Jadhav",
+    "category": "",
+    "organisation": "",
+    "designation": "Senior Compliance Officer",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "iqra-choudhary-127",
+    "name": "Iqra Choudhary",
+    "category": "Panelist - Google",
+    "organisation": "",
+    "designation": "Member of Parliament, Kairana, Uttar Pradesh",
+    "notes": "Sweden ONLY",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "anita-sharma-128",
+    "name": "Anita Sharma",
+    "category": "",
+    "organisation": "TVET Expert (ex-ILO, ex-GIZ, ex-DGE&T) – Independent",
+    "designation": "AVPN",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "nakul-phull-129",
+    "name": "Nakul Phull",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "trai-rep-130",
+    "name": "TRAI Rep",
+    "category": "GoI",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "fbi-usa-tbc-131",
+    "name": "FBI USA / TBC",
+    "category": "Panelist",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "radhika-hablani-132",
+    "name": "Radhika Hablani",
+    "category": "",
+    "organisation": "",
+    "designation": "Project Manager",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "supriya-kulkarni-133",
+    "name": "Supriya Kulkarni",
+    "category": "Online Registration",
+    "organisation": "The Ethics Company",
+    "designation": "Founder & Consultant",
+    "notes": "www.linkedin.com/in/supriya-kulkarni",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sandeep-dubey-134",
+    "name": "Sandeep Dubey",
+    "category": "",
+    "organisation": "Hanns Siedel Foundation India",
+    "designation": "Programme Head",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "mayank-pandey-135",
+    "name": "Mayank Pandey",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Software Engineer, Trust & Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "ms-shuchi-nagpal-136",
+    "name": "Ms Shuchi Nagpal",
+    "category": "Academia",
+    "organisation": "Asian School of Cyber Laws",
+    "designation": "",
+    "notes": "https://www.linkedin.com/in/shuchinagpal/ Recommended by UN WOmen",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "kristin-alvandi-137",
+    "name": "Kristin Alvandi",
+    "category": "",
+    "organisation": "Thorn",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "diwakar-das-138",
+    "name": "Diwakar Das",
+    "category": "",
+    "organisation": "Water.org",
+    "designation": "Head of Insights, South Asia Region",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "abhishek-gulati-139",
+    "name": "Abhishek Gulati",
+    "category": "",
+    "organisation": "High Commission of Canada",
+    "designation": "Trade Commissioner",
+    "notes": "Sweden ONLY",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "nicolas-140",
+    "name": "Nicolas",
+    "category": "",
+    "organisation": "French Embassy / SER",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ms-agnes-julin-minister-counsellor-deputy-head-of-mission-embassy-of-sweden-141",
+    "name": "Ms. Agnes Julin, Minister Counsellor Deputy Head of Mission Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Deputy Head",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "resolver-rep-142",
+    "name": "Resolver Rep",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Opening Reception"
+    ],
+    "source": [
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "rohit-kumar-143",
+    "name": "Rohit Kumar",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Founding Partner, The Quantum Hub",
+    "designation": "Founding Partner",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "dilip-cherian-144",
+    "name": "Dilip Cherian",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "blanchard-145",
+    "name": "Blanchard",
+    "category": "Diplomatic Mission/Online Registration",
+    "organisation": "French Embassy in India",
+    "designation": "Deputy Head of the Economic Department, Counsellor for Digital and Energy",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "lalita-panicker-146",
+    "name": "Lalita Panicker",
+    "category": "Journalist",
+    "organisation": "Hindustan Times",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy",
+      "Opening Reception"
+    ],
+    "source": [
+      "master embassy list",
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "philippe-orenes-147",
+    "name": "Philippe ORENES",
+    "category": "",
+    "organisation": "French Embassy",
+    "designation": "Political Counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "guriya-singh-148",
+    "name": "Guriya Singh",
+    "category": "Industry",
+    "organisation": "GSMA",
+    "designation": "Manager, Innovation Fund",
+    "notes": "Nominated by GSMA",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "nicolas-gascoin-149",
+    "name": "Nicolas GASCOIN",
+    "category": "",
+    "organisation": "French Embassy / IFI",
+    "designation": "COCAC Adjoint",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "anumegha-bhatnagar-150",
+    "name": "Anumegha Bhatnagar",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Communications & Project Lead",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "shanley-clemot-mclaren-151",
+    "name": "Shanley Clemot McLaren",
+    "category": "Panelist / Non-Profit",
+    "organisation": "#StopFisha",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "harmeet-randhawa-152",
+    "name": "Harmeet Randhawa",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "done | Netherlands",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "kriti-trehan-153",
+    "name": "Kriti Trehan",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Founder Data & Co - Law & Policy Advisors",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "prakhar-dixit-154",
+    "name": "Prakhar Dixit",
+    "category": "",
+    "organisation": "Pixstory",
+    "designation": "Member Platform Safety Team",
+    "notes": "J.C.",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "robin-thomas-155",
+    "name": "Robin Thomas",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "dr-samir-parikh-156",
+    "name": "Dr. Samir Parikh",
+    "category": "Panelist / Industry",
+    "organisation": "Fortis Mental Health",
+    "designation": "Director of the Department of Mental Health and Behavioural Sciences at Fortis Healthcare",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "sugandhi-157",
+    "name": "Sugandhi",
+    "category": "Online Registration",
+    "organisation": "Indian Council of World Affairs",
+    "designation": "Research intern",
+    "notes": "https://www.linkedin.com/in/sugandhi-j-784639131?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "jyotsna-roy-158",
+    "name": "Jyotsna Roy",
+    "category": "CSR Board",
+    "organisation": "Centre for Social Research,India",
+    "designation": "Member, Board",
+    "notes": "Dr. Ranjana's Guest",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "suraj-rao-159",
+    "name": "Suraj Rao",
+    "category": "",
+    "organisation": "",
+    "designation": "Resident Grievance Officer - India",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "mira-swaminathan-160",
+    "name": "Mira Swaminathan",
+    "category": "Sponsor/Industry",
+    "organisation": "Google",
+    "designation": "Government Affairs and Public Policy Manager, Youtube, Google",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Additions For Embassies",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "tuqa-rammahi-161",
+    "name": "Tuqa Rammahi",
+    "category": "Online Registration",
+    "organisation": "International Labour Organization",
+    "designation": "Communication and Branding Expert / Standing Designer",
+    "notes": "https://www.linkedin.com/in/tuqarmahi/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "karun-kumar-162",
+    "name": "Karun Kumar",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "EVP",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "jai-gangwani-163",
+    "name": "Jai Gangwani",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Engineering Manager, Trust & Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "sejal-164",
+    "name": "Sejal",
+    "category": "",
+    "organisation": "Hindustan Times",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "nidhi-singh-165",
+    "name": "Nidhi Singh",
+    "category": "FRIDA Team",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "somi-das-166",
+    "name": "Somi DAS",
+    "category": "",
+    "organisation": "Committee to Protect Journalists",
+    "designation": "Researcher India",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "tarika-167",
+    "name": "Tarika",
+    "category": "Online Registration",
+    "organisation": "The Atlas of Behavior Change in Development",
+    "designation": "User Research and Design Associate",
+    "notes": "https://www.linkedin.com/in/tarikajain01/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "zainab-perveen-168",
+    "name": "Zainab Perveen",
+    "category": "Industry / Online Registration",
+    "organisation": "Deloitte",
+    "designation": "Director: Head of Offshore Forensic and FinCrime| Risk Leader for ICC Team",
+    "notes": "https://www.linkedin.com/in/zainab-jabri-0175974/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sidharth-deb-169",
+    "name": "Sidharth Deb",
+    "category": "",
+    "organisation": "TQH",
+    "designation": "Associate Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "pragya-misha-170",
+    "name": "Pragya Misha",
+    "category": "",
+    "organisation": "Open AI",
+    "designation": "Lead Public Policy and Partnerships in India",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "robin-hcl-171",
+    "name": "Robin HCL",
+    "category": "",
+    "organisation": "",
+    "designation": "CAPGEMINI",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "payal-kamat-172",
+    "name": "Payal Kamat",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "neeruja-gupta-173",
+    "name": "Neeruja Gupta",
+    "category": "",
+    "organisation": "Safetipin",
+    "designation": "",
+    "notes": "Workshop only",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "jasvinder-kaur-174",
+    "name": "Jasvinder Kaur",
+    "category": "Diplomatic Mission",
+    "organisation": "High Commission of Canada in India",
+    "designation": "Public Diplomacy & Communications Officer",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "mr-gokul-narayan-175",
+    "name": "Mr Gokul Narayan",
+    "category": "Academia",
+    "organisation": "Asian School of Cyber Laws",
+    "designation": "Asian School of Cyber Law",
+    "notes": "CEO of Asial Law School recommended by UN WOmen https://www.linkedin.com/in/gok/",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "wanchoo-176",
+    "name": "Wanchoo",
+    "category": "Online Registration",
+    "organisation": "Aashray Foundation",
+    "designation": "Coordinator",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "khushal-wadhawan-177",
+    "name": "Khushal Wadhawan",
+    "category": "GoI",
+    "organisation": "IndiaAI, Ministry of Electronics and IT, Government of India",
+    "designation": "Manager - Policy",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "vandita-moraka-anvita-178",
+    "name": "Vandita Moraka / Anvita",
+    "category": "ACTS",
+    "organisation": "One Future Collective",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "aenea-van-zweeden-179",
+    "name": "Aenea van Zweeden",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Head of Response & Recovery, Trust & Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "arzu-chimni-180",
+    "name": "Arzu Chimni",
+    "category": "Sponsor / Online Registration",
+    "organisation": "Sponsor / Online Registration",
+    "designation": "Managing Associate",
+    "notes": "http://linkedin.com/in/arzu-chimni-1410baa",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "stanfield-181",
+    "name": "Stanfield",
+    "category": "Academic / Online Registration",
+    "organisation": "Childlight, the global child safety institute",
+    "designation": "Chief Executive Officer",
+    "notes": "www.linkedin.com/in/1Paul-Stanfield",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "vaneesha-jain-182",
+    "name": "Vaneesha Jain",
+    "category": "Think Tanks/NGOs/Civil Society/INGOs",
+    "organisation": "SASHA India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "bharat-raigangar-183",
+    "name": "Bharat Raigangar",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "J.C.",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "ashneet-hanspal-184",
+    "name": "Ashneet Hanspal",
+    "category": "",
+    "organisation": "",
+    "designation": "Lawyer",
+    "notes": "J.C.",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "nida-shaikh-185",
+    "name": "Nida Shaikh",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Marketing",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "dr-naveen-kumar-186",
+    "name": "Dr. Naveen Kumar",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Head - Gender, Water and Climate Change",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "vaksha-sachdev-187",
+    "name": "Vaksha Sachdev",
+    "category": "ACTS",
+    "organisation": "Logically Facts",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "p-k-singh-188",
+    "name": "P.K. Singh",
+    "category": "Panelist",
+    "organisation": "Additional Secretary",
+    "designation": "Additional Secretary",
+    "notes": "ALREADY ADDED",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "priyaswara-bharti-189",
+    "name": "Priyaswara Bharti",
+    "category": "Online Registration",
+    "organisation": "Yuvaa",
+    "designation": "Associate Campaigns",
+    "notes": "https://in.linkedin.com/in/priyaswara-bharti-9105221a5",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "vikas-agarwal-190",
+    "name": "Vikas Agarwal",
+    "category": "",
+    "organisation": "Google",
+    "designation": "Strategic Partner Manager, Civics Content Partnerships, YouTube",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "seema-jindal-191",
+    "name": "Seema Jindal",
+    "category": "Sponsor/Industry",
+    "organisation": "Sponsor/Industry",
+    "designation": "Senior Director, Public Affairs",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "parneet-kaur-192",
+    "name": "Parneet Kaur",
+    "category": "Online Registration",
+    "organisation": "Symbiosis Law School, NOIDA",
+    "designation": "Law Student",
+    "notes": "https://www.linkedin.com/in/-parneetkaur/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "akriti-jayant-193",
+    "name": "Akriti Jayant",
+    "category": "Knowledge Partner",
+    "organisation": "The Dialogue",
+    "designation": "Head of Communications",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "ayush-verma-194",
+    "name": "Ayush Verma",
+    "category": "Panelist (T&S Workers)",
+    "organisation": "Resolver",
+    "designation": "Senior Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "shruti-bhatt-195",
+    "name": "Shruti Bhatt",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Senior Content Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "sadaf-wani-196",
+    "name": "Sadaf Wani",
+    "category": "Panelist / Non-Profit",
+    "organisation": "IT for Change",
+    "designation": "Communications Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "kavita-ayyigari-197",
+    "name": "Kavita Ayyigari",
+    "category": "Panelist",
+    "organisation": "GirlEffect",
+    "designation": "Country Director",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "neha-agrawal-198",
+    "name": "Neha Agrawal",
+    "category": "Panelist - Google",
+    "organisation": "",
+    "designation": "",
+    "notes": "Sweden ONLY",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "julia-reischle-199",
+    "name": "Julia Reischle",
+    "category": "",
+    "organisation": "German Embassy",
+    "designation": "First Secretary",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "namrata-bgchi-200",
+    "name": "Namrata Bgchi",
+    "category": "ASCI",
+    "organisation": "The Advertising Standards Council of India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "dr-aman-kumar-201",
+    "name": "Dr Aman Kumar",
+    "category": "INGO / Online Registration",
+    "organisation": "UNICEF",
+    "designation": "State Consultant on Cyber Safety",
+    "notes": "Aman Kumar PhD",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "gagandeep-singh-202",
+    "name": "Gagandeep Singh",
+    "category": "Industry",
+    "organisation": "GSMA",
+    "designation": "Senior Market Engagement Manager, Digital Inclusion",
+    "notes": "Nominated by GSMA",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "florent-mangin-203",
+    "name": "Florent MANGIN",
+    "category": "",
+    "organisation": "French Embassy / SER",
+    "designation": "Head",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sophie-mortimer-204",
+    "name": "Sophie Mortimer",
+    "category": "Panelist / Non-Profit",
+    "organisation": "UK Revenge Porn Helpline, South West Grid for Learning",
+    "designation": "Manager",
+    "notes": "",
+    "events": [
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "uthara-ganesh-205",
+    "name": "Uthara Ganesh",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Public Policy Head, India and South Asia, Snapchat",
+    "designation": "Public Policy Head, India and South Asia,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "k-k-balakrishnan-206",
+    "name": "K.K Balakrishnan",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Administrative Secretary",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "shreyasi-tripathi-207",
+    "name": "Shreyasi Tripathi",
+    "category": "Online Registration",
+    "organisation": "Kaio",
+    "designation": "Head of Strategic Communications",
+    "notes": "https://www.linkedin.com/in/shreyasi-tripathi-785385151?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "neha-kaushik-208",
+    "name": "Neha Kaushik",
+    "category": "Industry",
+    "organisation": "GSMA",
+    "designation": "Subgrant Compliance Manager",
+    "notes": "Nominated by GSMA",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "akansha-baveja-209",
+    "name": "Akansha Baveja",
+    "category": "FRIDA Team",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "kalpana-vishwanath-210",
+    "name": "Kalpana Vishwanath",
+    "category": "",
+    "organisation": "Safetipin",
+    "designation": "",
+    "notes": "Day 1 only",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "tejasi-panjiar-211",
+    "name": "Tejasi Panjiar",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "andras-molnar-212",
+    "name": "Andras Molnar",
+    "category": "Panelist / Online Registration",
+    "organisation": "Technical University",
+    "designation": "Senior Digital Policy Manager and Director of Online Safety",
+    "notes": "https://www.linkedin.com/in/andras-molnar-25022599/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "kunal-majunder-213",
+    "name": "Kunal MAJUNDER",
+    "category": "",
+    "organisation": "Committee to Protect Journalists",
+    "designation": "Representative",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sahaj-vaidya-214",
+    "name": "Sahaj Vaidya",
+    "category": "Online Registration",
+    "organisation": "Koita Center for Digital Health, Ashoka University",
+    "designation": "Senior Research Associate - AI",
+    "notes": "https://www.linkedin.com/in/sahaj-vaidya-80624b129/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "ms-shivangi-sharma-215",
+    "name": "Ms. Shivangi Sharma",
+    "category": "",
+    "organisation": "EHSGuru",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "fabien-chareux-216",
+    "name": "Fabien CHAREUX",
+    "category": "",
+    "organisation": "French Embassy / IFI",
+    "designation": "CUST",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "shristi-boro-217",
+    "name": "Shristi Boro",
+    "category": "",
+    "organisation": "TaskUS",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "aparna-joshi-218",
+    "name": "Aparna Joshi",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "namrata-219",
+    "name": "Namrata",
+    "category": "",
+    "organisation": "ASCI",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "gaurav-kumar-220",
+    "name": "Gaurav Kumar",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Trust & Safety Response Executive",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "garima-saxena-221",
+    "name": "Garima Saxena",
+    "category": "Knowledge Partner",
+    "organisation": "The Dialogue",
+    "designation": "Senior Research Associate",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "yannick-ragonneau-222",
+    "name": "Yannick Ragonneau",
+    "category": "Panelist / Think Tank",
+    "organisation": "Expertise France",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "kritika-223",
+    "name": "Kritika",
+    "category": "NGO",
+    "organisation": "Logically Facts",
+    "designation": "DataLeads",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "akansha-kasera-224",
+    "name": "Akansha Kasera",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Senior Market Engagement Manager, GSMA",
+    "designation": "Senior Market Engagement Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "dr-ioanna-noula-225",
+    "name": "Dr. Ioanna Noula",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Founder, The Children's Online Redress Sandbox",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "zoya-ali-226",
+    "name": "Zoya Ali",
+    "category": "FRIDA Panelist",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "amoha-basrur-227",
+    "name": "Amoha Basrur",
+    "category": "",
+    "organisation": "ORF (Observer Research Foundation)",
+    "designation": "Consultant",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "niharika-vasumitra-228",
+    "name": "Niharika Vasumitra",
+    "category": "Non-profit",
+    "organisation": "EkStep Foundation",
+    "designation": "DPI for AI strategy and implementation",
+    "notes": "Nominated by GSMA",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "netherlands-embassy-rep-229",
+    "name": "Netherlands Embassy Rep",
+    "category": "Netherlands Embassy Rep",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "stefan-halusa-230",
+    "name": "Stefan Halusa",
+    "category": "",
+    "organisation": "",
+    "designation": "HCL",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "farah-lalani-231",
+    "name": "Farah Lalani",
+    "category": "",
+    "organisation": "",
+    "designation": "Senior Manager,Trust & Safety, Prime Video & Amazon MGM Studios",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "gunjan-soni-232",
+    "name": "Gunjan Soni",
+    "category": "Sponsor/Industry",
+    "organisation": "Google",
+    "designation": "Country Lead, YouTube Partnerships, India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "saquib-jamil-233",
+    "name": "Saquib Jamil",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Communications Associate",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "sumit-bahl-234",
+    "name": "Sumit Bahl",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "Sr. EVP and Vertical lead",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "anshul-tiwari-235",
+    "name": "Anshul Tiwari",
+    "category": "Panelist",
+    "organisation": "Youth Ki Awaz",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "mr-steven-biddle-236",
+    "name": "Mr. Steven Biddle",
+    "category": "",
+    "organisation": "The Australian High Commission",
+    "designation": "Minister Counsellor and Regional Director South Asia",
+    "notes": "ALREADY ADDED",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "adnan-khan-237",
+    "name": "Adnan Khan",
+    "category": "FRIDA Team",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "barsha-chakraborty-238",
+    "name": "Barsha Chakraborty",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Breakthrough Trust",
+    "designation": "TFGBV Research and Policy Consultant",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "neha-khanna-239",
+    "name": "Neha Khanna",
+    "category": "Online Registration",
+    "organisation": "Yuvaa",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "navpreet-randhawa-240",
+    "name": "Navpreet Randhawa",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Senior Director, Trust and Safety, Roblox",
+    "designation": "Senior Director, Trust and Safety,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "shally-kaushal-241",
+    "name": "Shally Kaushal",
+    "category": "",
+    "organisation": "",
+    "designation": "HCLTECH",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "tithi-neogi-242",
+    "name": "Tithi Neogi",
+    "category": "",
+    "organisation": "",
+    "designation": "Associate - author of the report getting launched at Meta Spotlight",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "rajesh-kumar-243",
+    "name": "Rajesh Kumar",
+    "category": "Panelist",
+    "organisation": "CEO, I4C",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "madhusri-das-244",
+    "name": "Madhusri Das",
+    "category": "Diplomatic Mission",
+    "organisation": "High Commission of Canada in India",
+    "designation": "Senior Analyst, Foreign Policy & Diplomacy Section",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "tanushree-bhan-245",
+    "name": "Tanushree Bhan",
+    "category": "",
+    "organisation": "GSMA",
+    "designation": "Senior Data and Insights Manager",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "nandini-ray-246",
+    "name": "Nandini Ray",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Senior Product Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "dr-manuj-bhardwaj-247",
+    "name": "Dr. Manuj Bhardwaj",
+    "category": "Sponsor",
+    "organisation": "Dhirubhai Ambani University",
+    "designation": "Assistant Professor of Law, Founding Faculty Member and Head of Executive Education",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "smita-bharti-248",
+    "name": "Smita Bharti",
+    "category": "NGO",
+    "organisation": "Sakshi",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "poulomi-pal-249",
+    "name": "Poulomi Pal",
+    "category": "Knowledge Partner",
+    "organisation": "UN Women India",
+    "designation": "UN Women India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "ishita-bhatia-250",
+    "name": "Ishita Bhatia",
+    "category": "",
+    "organisation": "International Innovation Corps",
+    "designation": "Consultant",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "abhishek-shrivastava-251",
+    "name": "Abhishek Shrivastava",
+    "category": "Industry / Online Registration",
+    "organisation": "TaskUs",
+    "designation": "Sr. Technical Analyst for Trust & Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "ms-chitra-iyer-252",
+    "name": "Ms. Chitra Iyer",
+    "category": "",
+    "organisation": "",
+    "designation": "Co-Founder & CEO, Space2Grow",
+    "notes": "IGPP",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sneha-chandna-253",
+    "name": "Sneha Chandna",
+    "category": "Online Registration",
+    "organisation": "SASHA",
+    "designation": "Legal Consultant",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "aditi-jha-254",
+    "name": "Aditi Jha",
+    "category": "Industry",
+    "organisation": "LinkedIn",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "french-embassy-rep-255",
+    "name": "French Embassy Rep",
+    "category": "Diplomatic Missions",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "h-e-mr-jan-thesleff-ambassador-of-sweden-to-india-256",
+    "name": "H.E. Mr. Jan Thesleff, Ambassador of Sweden to India",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Ambassador",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "nidhi-pundhir-257",
+    "name": "Nidhi Pundhir",
+    "category": "",
+    "organisation": "",
+    "designation": "INDO-GERMAN",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "mr-gustav-ekstr-m-intern-embassy-of-sweden-258",
+    "name": "Mr. Gustav Ekström, Intern Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Intern",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "sachin-dhawan-259",
+    "name": "Sachin Dhawan",
+    "category": "Knowledge Partner",
+    "organisation": "The Dialogue",
+    "designation": "Deputy Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "kundan-mishra-260",
+    "name": "Kundan Mishra",
+    "category": "Panelist",
+    "organisation": "International Development Research Centre",
+    "designation": "International Development Research Centre (IDRC)",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "sanya-seth-261",
+    "name": "Sanya SETH",
+    "category": "Knowledge Partner",
+    "organisation": "UN Women India",
+    "designation": "UN Women India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "rimmy-taneja-262",
+    "name": "Rimmy Taneja",
+    "category": "",
+    "organisation": "",
+    "designation": "EXIMBANKINDIA",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sophie-mortimer-swgfl-org-uk-263",
+    "name": "Sophie Mortimer",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Revenge Porn Helpline",
+    "designation": "Manager",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "amitesh-kumar-sinha-264",
+    "name": "Amitesh Kumar Sinha",
+    "category": "Panelist",
+    "organisation": "MeitY, Government of India",
+    "designation": "Additional Secretary",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "will-gardner-265",
+    "name": "Will Gardner",
+    "category": "",
+    "organisation": "",
+    "designation": "CEO, Childnet International",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "renzdon-rodrigues-266",
+    "name": "Renzdon Rodrigues",
+    "category": "",
+    "organisation": "",
+    "designation": "MFAT",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "vidushi-dhawan-267",
+    "name": "Vidushi Dhawan",
+    "category": "Sponsor/Industry",
+    "organisation": "Meta",
+    "designation": "Public Policy Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "bhakti-sheth-268",
+    "name": "Bhakti Sheth",
+    "category": "",
+    "organisation": "",
+    "designation": "Strategic Partner Manager, YouTube",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "subhash-manav-269",
+    "name": "Subhash Manav",
+    "category": "Online Registration",
+    "organisation": "Delhi Management Association (DMA",
+    "designation": "Principal Advisor",
+    "notes": "https://www.linkedin.com/in/subash-manav?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "ragini-pant-puja-270",
+    "name": "Ragini Pant/ Puja",
+    "category": "NGO",
+    "organisation": "CRY",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "deepak-maheshwari-271",
+    "name": "Deepak Maheshwari",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "siva-272",
+    "name": "Siva",
+    "category": "Online Registration",
+    "organisation": "University of Pennsylvania",
+    "designation": "Assistant Professor",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "vaskha-sachdev-273",
+    "name": "Vaskha Sachdev",
+    "category": "NGO",
+    "organisation": "Logically Facts",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "dr-alok-kumar-274",
+    "name": "Dr. Alok Kumar",
+    "category": "CSR Board",
+    "organisation": "Navnirman Trust",
+    "designation": "Member",
+    "notes": "Dr. Ranjana's Guest",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "megha-275",
+    "name": "Megha",
+    "category": "Online Registration",
+    "organisation": "Alstom",
+    "designation": "",
+    "notes": "https://www.linkedin.com/in/megha-chaturvedi-/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "paul-standfield-276",
+    "name": "Paul Standfield",
+    "category": "",
+    "organisation": "Childlight",
+    "designation": "",
+    "notes": "With Debi Fry",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "akash-kumar-277",
+    "name": "Akash Kumar",
+    "category": "",
+    "organisation": "Jawaharlal Nehru University",
+    "designation": "PhD Researcher Science Technology Policy, Centre for Studies in Science Policy",
+    "notes": "IGPP",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "valerie-hohman-278",
+    "name": "Valerie Hohman",
+    "category": "Host",
+    "organisation": "CSR",
+    "designation": "Head of Organisational Development",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "sumeysh-srivastava-279",
+    "name": "Sumeysh Srivastava",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Associate Director, The Quantum Hub",
+    "designation": "Associate Director, Public Policy",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "wasbir-hazarika-280",
+    "name": "Wasbir Hazarika",
+    "category": "Online Registration",
+    "organisation": "TaskUs",
+    "designation": "Project Lead - T&S",
+    "notes": "https://linkedin.com/in/wazbir-hazarika",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "raphaelle-sananes-281",
+    "name": "Raphaelle SANANES",
+    "category": "",
+    "organisation": "French Embassy",
+    "designation": "Political Counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "resolver-282",
+    "name": "Resolver",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "ankur-tiwari-283",
+    "name": "Ankur Tiwari",
+    "category": "Online Registration",
+    "organisation": "Institute for Governance Policies and Politics (IGPP)",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "kunwar-abhijeet-284",
+    "name": "Kunwar Abhijeet",
+    "category": "Industry / Online Registration",
+    "organisation": "Deloitte",
+    "designation": "Assistant Manager",
+    "notes": "https://www.linkedin.com/in/kunwar-abhijeet-304335197?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "kavitha-kunhi-kannan-285",
+    "name": "Kavitha Kunhi Kannan",
+    "category": "",
+    "organisation": "OpenAI",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "senu-nizar-286",
+    "name": "Senu Nizar",
+    "category": "",
+    "organisation": "TQH",
+    "designation": "Manager- author of the report getting launched at Meta Spotlight",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "phangong-konyak-287",
+    "name": "Phangong Konyak",
+    "category": "Panelist",
+    "organisation": "Government of India",
+    "designation": "Member of Parliament",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "julianne-biddle-288",
+    "name": "Julianne BIDDLE",
+    "category": "",
+    "organisation": "Australian High Commission",
+    "designation": "Partner of Mr BIDDLE",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "aatman-shukla-289",
+    "name": "Aatman Shukla",
+    "category": "Sponsor",
+    "organisation": "Dhirubhai Ambani University",
+    "designation": "Assistant Professor of Law, Dhirubhai Ambani University",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "natasha-singh-290",
+    "name": "Natasha Singh",
+    "category": "Knowledge Partner / Online Registration",
+    "organisation": "The Quantum Hub Consulting",
+    "designation": "Public Policy Analyst",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "yash-agarwal-291",
+    "name": "Yash Agarwal",
+    "category": "Think Tank",
+    "organisation": "Public Policy India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "amelia-wierda-292",
+    "name": "Amelia Wierda",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Legal Counsel - Human Rights • Human Rights",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "geoffrey-dean-293",
+    "name": "Geoffrey Dean",
+    "category": "Diplomatic Mission",
+    "organisation": "High Commission of Canada in India",
+    "designation": "Acting Deputy High Commissioner of Canada to India & Head of Political, Economic, Advocacy & Protocol Programs",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "kanav-294",
+    "name": "Kanav",
+    "category": "ACTS",
+    "organisation": "Nyaaya",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "mr-christoffer-orre-second-secretary-of-political-affairs-embassy-of-sweden-295",
+    "name": "Mr. Christoffer Orre, Second Secretary of Political Affairs Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Second Secretary",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "farshida-zafar-296",
+    "name": "Farshida Zafar",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Erasmus Centre for Entrepreneurship",
+    "designation": "Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "nisha-297",
+    "name": "Nisha",
+    "category": "Industry / Online Registration",
+    "organisation": "Teleperformance",
+    "designation": "Global Privacy Manager",
+    "notes": "https://www.linkedin.com/in/nisha-sadwal-46767928",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "odile-henri-298",
+    "name": "Odile HENRI",
+    "category": "",
+    "organisation": "CSH",
+    "designation": "Director",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "bansuri-swaraj-299",
+    "name": "Bansuri Swaraj",
+    "category": "Panelist",
+    "organisation": "BJP",
+    "designation": "MP",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "vys-300",
+    "name": "VYS",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "siddharth-pillai-301",
+    "name": "Siddharth Pillai",
+    "category": "Panelist",
+    "organisation": "Rati Foundation",
+    "designation": "Co-Founder",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "ms-cecilia-tall-counsellor-of-science-and-innovations-embassy-of-sweden-302",
+    "name": "Ms. Cecilia Tall, Counsellor of Science and Innovations Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Counsellor of Science and Innovations",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "dr-sameer-parikh-303",
+    "name": "Dr. Sameer Parikh",
+    "category": "Panelist",
+    "organisation": "Fortis Mental Health",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "henry-adams-304",
+    "name": "Henry Adams",
+    "category": "Panelist / Industry",
+    "organisation": "Resolver",
+    "designation": "Director, Trust and Safety,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "deepak-sahdev-305",
+    "name": "Deepak Sahdev",
+    "category": "Industry / Online Registration",
+    "organisation": "Concentrix",
+    "designation": "Senior Project Manager - Trust and Safety",
+    "notes": "http://www.linkedin.com/in/deepak-sahdev",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "kavitha-kk-306",
+    "name": "Kavitha KK",
+    "category": "",
+    "organisation": "Open AI",
+    "designation": "Senior Poicy Advisor",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "meity-rep-307",
+    "name": "MEITY Rep",
+    "category": "GoI",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "christopher-cooter-308",
+    "name": "Christopher Cooter",
+    "category": "Diplomatic Mission",
+    "organisation": "High Commission of Canada in India",
+    "designation": "High Commissioner for Canada to India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "sudhir-rai-309",
+    "name": "Sudhir Rai",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "laxmi-310",
+    "name": "Laxmi",
+    "category": "Panelist - Google",
+    "organisation": "",
+    "designation": "Co-Producer, Khabar Lahariya",
+    "notes": "Sweden ONLY",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "gaurav-bhalla-311",
+    "name": "Gaurav Bhalla",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "J.C.",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "bharath-ravindran-312",
+    "name": "Bharath Ravindran",
+    "category": "Industry / Online Registration",
+    "organisation": "Infosys",
+    "designation": "Principal Consultant",
+    "notes": "https://www.linkedin.com/in/bharath-ravindran-7a771293/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sonia-313",
+    "name": "Sonia",
+    "category": "",
+    "organisation": "",
+    "designation": "DataLeads",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "pragya-tiwari-314",
+    "name": "Pragya TIWARI",
+    "category": "",
+    "organisation": "IP law specialist and anchor",
+    "designation": "CEO",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "breeze-liu-315",
+    "name": "Breeze Liu",
+    "category": "",
+    "organisation": "",
+    "designation": "Co-Founder of Alecto Al",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "devanshi-yadav-316",
+    "name": "Devanshi Yadav",
+    "category": "",
+    "organisation": "",
+    "designation": "Girl Effect",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "anne-collier-317",
+    "name": "Anne Collier",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Net Family News",
+    "designation": "Strategy Lead, COR Sandbox, Founder/Executive Director at The Net Safety Collaborative",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "shalini-yog-318",
+    "name": "Shalini Yog",
+    "category": "",
+    "organisation": "Henrich Boll Foundation",
+    "designation": "Deputy Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "ekta-sapra-319",
+    "name": "Ekta Sapra",
+    "category": "",
+    "organisation": "",
+    "designation": "Manager, User Excellence, T&S Ads & Shopping RSX (Regulatory & Systems Excellence)",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ketaki-hate-320",
+    "name": "Ketaki Hate",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Gender and SBC Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "anthony-morelli-321",
+    "name": "Anthony Morelli",
+    "category": "",
+    "organisation": "High Commission of Canada",
+    "designation": "First Secretary, Foreign Policy and Diplomacy Services (FPDS)",
+    "notes": "Netherlands ONLY",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "jenn-louie-322",
+    "name": "Jenn Louie",
+    "category": "INGO / Online Registration",
+    "organisation": "UNDP",
+    "designation": "Lead, AI, Trust and Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "bharti-323",
+    "name": "Bharti",
+    "category": "Knowledge Partner / Online Registration",
+    "organisation": "TQH",
+    "designation": "Founding Partner",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "pranay-dixit-324",
+    "name": "Pranay Dixit",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "divanshi-325",
+    "name": "Divanshi",
+    "category": "Online Registration",
+    "organisation": "Climate Mobility Community Action Network",
+    "designation": "HR Assistant",
+    "notes": "https://www.linkedin.com/in/divanshi-d-21112004-evein-eleven",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "valerie-swope-326",
+    "name": "Valerie Swope",
+    "category": "",
+    "organisation": "",
+    "designation": "INDO-GERMAN",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ashima-obhan-327",
+    "name": "Ashima Obhan",
+    "category": "Sponsor / Online Registration",
+    "organisation": "Sponsor / Online Registration",
+    "designation": "Obhan & Associates",
+    "notes": "http://linkedin.com/in/ashima-obhan-0128a45",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "ms-disa-m-ller-intern-embassy-of-sweden-328",
+    "name": "Ms. Disa Müller, Intern Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Intern",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "heena-goswami-329",
+    "name": "Heena Goswami",
+    "category": "Moderator",
+    "organisation": "",
+    "designation": "IGPP",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "anil-reddy-chidurala-330",
+    "name": "Anil Reddy Chidurala",
+    "category": "",
+    "organisation": "",
+    "designation": "Business Insights Lead, T&S Ads & Shopping",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "julia-331",
+    "name": "Julia",
+    "category": "",
+    "organisation": "Auswärtiges Amt (German Federal Foreign Office)",
+    "designation": "(Implied Political/Diplomatic)",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "anjali-mehta-332",
+    "name": "Anjali Mehta",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "payal-s-kanwar-indo-french-chamber-commerce-333",
+    "name": "Payal S Kanwar Indo French Chamber Commerce",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "rhea-nijhawan-334",
+    "name": "Rhea Nijhawan",
+    "category": "Online Registration",
+    "organisation": "Intellect",
+    "designation": "Trust & Safety Solutions Specialist",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "gayatri-335",
+    "name": "Gayatri",
+    "category": "Online Registration",
+    "organisation": "TARSHI",
+    "designation": "Programme Associate",
+    "notes": "https://www.linkedin.com/in/gayatri-gupta27",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "dhara-mungra-336",
+    "name": "Dhara Mungra",
+    "category": "Online Registration",
+    "organisation": "SimPPL",
+    "designation": "Co-Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "berges-y-malu-337",
+    "name": "Berges Y Malu",
+    "category": "",
+    "organisation": "Koan Advisory",
+    "designation": "Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "anupriya-kapur-338",
+    "name": "Anupriya Kapur",
+    "category": "",
+    "organisation": "Influencer",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "manisha-kapoor-339",
+    "name": "Manisha Kapoor",
+    "category": "Panelist (Oct 8)",
+    "organisation": "CEO & Secretary-General, The Advertising Standards Council of India",
+    "designation": "CEO & Secretary-General, The Advertising Standards Council of India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "nitin-saluja-340",
+    "name": "Nitin Saluja",
+    "category": "Industry",
+    "organisation": "Lego",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "mehru-gokhale-341",
+    "name": "Mehru GOKHALE",
+    "category": "",
+    "organisation": "Editrix",
+    "designation": "CEO",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "pinki-mathur-anurag-342",
+    "name": "Pinki Mathur ANURAG",
+    "category": "",
+    "organisation": "Centre for Human Rights Studies, O.P. Jindal Global University,",
+    "designation": "Professor and Head of the center",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "renuka-singh-343",
+    "name": "Renuka Singh",
+    "category": "CSR Board",
+    "organisation": "Centre for Social Research,India",
+    "designation": "Chairperson",
+    "notes": "Dr. Ranjana's Guest",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "jayant-kaushal-344",
+    "name": "Jayant Kaushal",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ms-n-s-nappinai-345",
+    "name": "Ms. N.S. Nappinai",
+    "category": "",
+    "organisation": "",
+    "designation": "Senior Advocate, Supreme Court",
+    "notes": "IGPP",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "adwait-deshpande-346",
+    "name": "Adwait Deshpande",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "VP",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "garima-panigrahi-347",
+    "name": "Garima Panigrahi",
+    "category": "FRIDA Team",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "aashraya-sharma-348",
+    "name": "Aashraya Sharma",
+    "category": "Online Registration",
+    "organisation": "M-League Limited",
+    "designation": "Senior Counsel",
+    "notes": "Aashraya Sharma",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "greeshma-chauhan-349",
+    "name": "Greeshma Chauhan",
+    "category": "Online Registration",
+    "organisation": "SFLC.in",
+    "designation": "Community Manager",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "natasha-jog-350",
+    "name": "Natasha Jog",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Head, Public Policy India, Meta",
+    "designation": "India Public Policy Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "trishee-goyal-351",
+    "name": "Trishee Goyal",
+    "category": "Sponsor/Industry",
+    "organisation": "Google",
+    "designation": "Government Affairs and Public Policy Manager, Privacy and Security",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Additions For Embassies",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "heera-352",
+    "name": "Heera",
+    "category": "",
+    "organisation": "EMpower-The Emerging Markets Foundation",
+    "designation": "Program Director, India",
+    "notes": "Dr. Manasi's Guests",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "supratin-chatterjee-353",
+    "name": "Supratin Chatterjee",
+    "category": "Diplomatic Mission",
+    "organisation": "U.S. Embassy",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "raj-pagariya-354",
+    "name": "Raj Pagariya",
+    "category": "NGO",
+    "organisation": "Cyber Blog India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "mr-ludvig-foghammar-counsellor-of-economic-affairs-embassy-of-sweden-355",
+    "name": "Mr. Ludvig Foghammar, Counsellor of Economic Affairs Embassy of Sweden",
+    "category": "",
+    "organisation": "Sweden Embassy",
+    "designation": "Counsellor of Economic Affairs",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "himanshu-356",
+    "name": "Himanshu",
+    "category": "Online Registration",
+    "organisation": "RWTH Aachen University, Germany",
+    "designation": "Head India office",
+    "notes": "Looks relevant",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "niharika-sharma-357",
+    "name": "Niharika Sharma",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Evidence & Insights lead",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "vidushi-chaturvedi-358",
+    "name": "Vidushi Chaturvedi",
+    "category": "VIP/GoI",
+    "organisation": "Niti Ayog",
+    "designation": "Consultant",
+    "notes": "",
+    "events": [
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "shireen-vakil-359",
+    "name": "Shireen Vakil",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Child Rights Advocate (Fmr. British Asian Trust, Meta, Tata Trust)",
+    "designation": "Child Rights Advocate (Fmr. British Asian Trust, Meta, Tata Trust)",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "aparajita-bharati-360",
+    "name": "Aparajita Bharati",
+    "category": "Knowledge Partner",
+    "organisation": "The Quantum Hub",
+    "designation": "Founding Partner",
+    "notes": "",
+    "events": [
+      "Invitees",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Invitees",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "saswati-chatterjee-361",
+    "name": "Saswati Chatterjee",
+    "category": "Online Registration",
+    "organisation": "Breakthrough",
+    "designation": "Manager - Digital Engagement",
+    "notes": "https://www.linkedin.com/in/saswati-chatterjee-4a45a0116/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "kavita-ayyagari-362",
+    "name": "Kavita Ayyagari",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Girl Effect India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "anjali-sood-363",
+    "name": "Anjali Sood",
+    "category": "",
+    "organisation": "Chief Manager (CSR)",
+    "designation": "GIZ",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "nick-dale-364",
+    "name": "Nick Dale",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Stop The Traffik",
+    "designation": "Director of Intelligence",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "caroline-humer-365",
+    "name": "Caroline Humer",
+    "category": "Host",
+    "organisation": "Trust and Safety Forum",
+    "designation": "Co-founder Trust & Safety Festival",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "nisha-dhawan-366",
+    "name": "Nisha Dhawan",
+    "category": "",
+    "organisation": "The Emerging Markets Foundation.",
+    "designation": "Vice President - Impact and Influence",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "nick-mcqueen-367",
+    "name": "Nick McQueen",
+    "category": "",
+    "organisation": "Access Partnership",
+    "designation": "Senior Manager",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "jyoti-vadehra-368",
+    "name": "Jyoti Vadehra",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Lead, Digital Trust and Safety, Head, Media & Communications",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "rubal-ahuja-369",
+    "name": "Rubal Ahuja",
+    "category": "",
+    "organisation": "International Innovation Corps",
+    "designation": "Consultant",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sohini-banerjee-370",
+    "name": "Sohini Banerjee",
+    "category": "Panelist",
+    "organisation": "Point of View",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "pallavi-nayek-371",
+    "name": "Pallavi Nayek",
+    "category": "",
+    "organisation": "Australian High Commission",
+    "designation": "Senior Program and Research Officer",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "shashikala-gurpur-372",
+    "name": "Shashikala Gurpur",
+    "category": "",
+    "organisation": "",
+    "designation": "Indian author and Professor, Director of Symbiosis Law School",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "rajneil-kamath-373",
+    "name": "Rajneil Kamath",
+    "category": "Sponsor/Industry",
+    "organisation": "Trusted Information Alliance",
+    "designation": "Vice President, Trusted Information Alliance (external partner)",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "nilesh-deshpande-374",
+    "name": "Nilesh Deshpande",
+    "category": "FRIDA Panelist",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "chima-375",
+    "name": "Chima",
+    "category": "Online Registration",
+    "organisation": "Access Now",
+    "designation": "Global Cybersecurity Lead | Senior International Counsel and Asia Pacific Policy Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "amit-kumar-376",
+    "name": "Amit Kumar",
+    "category": "Industry / Online Registration",
+    "organisation": "Infosys",
+    "designation": "Industry Principal",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "anwesha-sen-377",
+    "name": "Anwesha Sen",
+    "category": "Online Registration",
+    "organisation": "Takshashila Institution",
+    "designation": "",
+    "notes": "https://www.linkedin.com/in/anwesha-sen25",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "manish-tiwari-378",
+    "name": "Manish Tiwari",
+    "category": "Think Tank",
+    "organisation": "IGPP",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "supriya-sule-379",
+    "name": "Supriya Sule",
+    "category": "Panelist",
+    "organisation": "Member of Parliament",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "sahana-gupta-380",
+    "name": "Sahana Gupta",
+    "category": "Online Registration",
+    "organisation": "Confederation of Indian industry",
+    "designation": "Research associate",
+    "notes": "https://www.linkedin.com/in/sahana-gupta-37a14a202?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "shreya-v-basu-381",
+    "name": "Shreya V. Basu",
+    "category": "",
+    "organisation": "Safetipin",
+    "designation": "",
+    "notes": "Day 1 only",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "umang-382",
+    "name": "Umang",
+    "category": "Online Registration",
+    "organisation": "World AI Governance (WAIG Foundation)",
+    "designation": "Founder and Director",
+    "notes": "https://www.linkedin.com/in/mehtaumang/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sarmistha-mukherjee-383",
+    "name": "Sarmistha Mukherjee",
+    "category": "VIP/GoI",
+    "organisation": "Delhi Police",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "lena-dasgupta-basu-384",
+    "name": "Lena Dasgupta Basu",
+    "category": "Panelist / Non-Profit",
+    "organisation": "Panelist / Non-Profit",
+    "designation": "Programme Manager on Child Protection at the Child in Need Institute (CINI), ECPAT International",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "rhydhi-385",
+    "name": "Rhydhi",
+    "category": "",
+    "organisation": "YLAC",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "nikhil-taneja-386",
+    "name": "Nikhil Taneja",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Co-Founder/Chief, Yuvaa",
+    "designation": "Co-Founder/Chief",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "bijayalakshmi-387",
+    "name": "Bijayalakshmi",
+    "category": "",
+    "organisation": "Miranda House",
+    "designation": "Principal Miranda House",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "sara-pilot-388",
+    "name": "Sara Pilot",
+    "category": "VIP/GoI",
+    "organisation": "CEQUIN",
+    "designation": "",
+    "notes": "Dr. Ranjana's Guest",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "thibault-weigelt-389",
+    "name": "Thibault WEIGELT",
+    "category": "",
+    "organisation": "O.P. Jindal Global University,",
+    "designation": "Professor Health Law, Ethics and Technology",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "pranav-tiwari-390",
+    "name": "Pranav Tiwari",
+    "category": "Panelist",
+    "organisation": "ACTS",
+    "designation": "Secretariat",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "jean-s-bastien-lhuillier-391",
+    "name": "Jean-Sébastien LHUILLIER",
+    "category": "",
+    "organisation": "French Embassy",
+    "designation": "Political Counsellor",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "julia-trouilloud-392",
+    "name": "Julia TROUILLOUD",
+    "category": "",
+    "organisation": "French Embassy / IFI",
+    "designation": "LDI",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "adv-sneha-kala-393",
+    "name": "Adv Sneha Kala",
+    "category": "Online Registration",
+    "organisation": "Feeling Minds",
+    "designation": "POSH Law Trainer",
+    "notes": "https://www.linkedin.com/in/adv-sneha-kala-81085014/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "gayatri-sharma-394",
+    "name": "Gayatri Sharma",
+    "category": "Think Tank",
+    "organisation": "Friedrich-Ebert-Stiftung",
+    "designation": "Program Adviser, Gender and Social Justice",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "norman-ng-395",
+    "name": "Norman Ng",
+    "category": "Sponsor / Online Registration",
+    "organisation": "Google",
+    "designation": "Head, Trust and Safety Global Engagement (APAC),",
+    "notes": "https://www.linkedin.com/in/ngnorman/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sagar-deoskar-396",
+    "name": "Sagar Deoskar",
+    "category": "Sponsor/Industry",
+    "organisation": "Snap",
+    "designation": "Lead, Public Policy for South Asia at Snap Inc.",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "aparajita-bharti-397",
+    "name": "Aparajita Bharti",
+    "category": "Think Tank",
+    "organisation": "Quantum Hub",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "mayur-guptha-398",
+    "name": "Mayur Guptha",
+    "category": "Sponsor/Industry",
+    "organisation": "Booking.com",
+    "designation": "Junior Trust and Safety Analyst",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "lorenzo-parrulli-399",
+    "name": "Lorenzo Parrulli",
+    "category": "",
+    "organisation": "Second Secretary, Political Affairs",
+    "designation": "American Chamber of Commerce in India (AMCHAM)",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "aditi-chaturvedi-400",
+    "name": "Aditi Chaturvedi",
+    "category": "Sponsor/Industry",
+    "organisation": "Google",
+    "designation": "India Lead for Platforms and Devices, Government Affairs and Public Policy",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Additions For Embassies",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "chayeeta-sarkar-401",
+    "name": "Chayeeta Sarkar",
+    "category": "Industry / Service Provider",
+    "organisation": "Alorica",
+    "designation": "VP, Trust and Safety",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "richa-tigga-402",
+    "name": "Richa Tigga",
+    "category": "",
+    "organisation": "British Asia Trust",
+    "designation": "",
+    "notes": "Sweden",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "vithika-yadav-403",
+    "name": "Vithika Yadav",
+    "category": "FRIDA Panelist",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "pragya-misra-404",
+    "name": "Pragya Misra",
+    "category": "Industry (non-sponsor)",
+    "organisation": "OpenAI",
+    "designation": "Public Policy & Partnerships Lead",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "chiki-sarkar-405",
+    "name": "Chiki SARKAR",
+    "category": "",
+    "organisation": "Jugernaut",
+    "designation": "CEO",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "vaishnavi-j-406",
+    "name": "Vaishnavi J",
+    "category": "Panelist / Industry",
+    "organisation": "Vyanam Staretgies",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "samarth-pathak-407",
+    "name": "Samarth Pathak",
+    "category": "Panelist",
+    "organisation": "UNODC India",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "anders-both-408",
+    "name": "Anders Both",
+    "category": "",
+    "organisation": "Basechat",
+    "designation": "Founder",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "pankaj-rohra-409",
+    "name": "Pankaj Rohra",
+    "category": "Industry",
+    "organisation": "Amazon",
+    "designation": "T&S Operations Manager",
+    "notes": "Nominated by CH",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "uday-singh-410",
+    "name": "Uday Singh",
+    "category": "Industry / Online Registration",
+    "organisation": "TaskUs",
+    "designation": "Project Manager, T&S Practice",
+    "notes": "https://www.linkedin.com/in/uday-singh-thakur-91445330/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "satviki-verma-411",
+    "name": "Satviki Verma",
+    "category": "Sponsor/Industry",
+    "organisation": "Girl Effect India",
+    "designation": "Girl Effect India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "meta-412",
+    "name": "Meta",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "uma-subramanian-413",
+    "name": "Uma Subramanian",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Rati Foundation",
+    "designation": "Co-Founder",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "pooja-priyamvada-414",
+    "name": "Pooja Priyamvada",
+    "category": "Online Registration",
+    "organisation": "Bharat Dialogues",
+    "designation": "Co-founder",
+    "notes": "https://www.linkedin.com/in/poojapriyamvada/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "m-v-prasanth-415",
+    "name": "M V Prasanth",
+    "category": "Sponsor/Industry",
+    "organisation": "TP",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Embassy"
+    ],
+    "source": [
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "japreet-grewal-416",
+    "name": "Japreet Grewal",
+    "category": "Industry",
+    "organisation": "X/Twitter",
+    "designation": "Head of Global Government Affairs, India",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "swedish-embassy-rep-417",
+    "name": "Swedish Embassy Rep",
+    "category": "Diplomatic Mission",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Opening Reception",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "satish-golchha-418",
+    "name": "Satish Golchha",
+    "category": "",
+    "organisation": "",
+    "designation": "Commissioner of Police",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "dr-manasi-mishra-419",
+    "name": "Dr. Manasi Mishra",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Head of Research",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "juliet-ohahuru-obiora-420",
+    "name": "Juliet Ohahuru-Obiora",
+    "category": "Online Registration",
+    "organisation": "Action Against Child Sexual Abuse Initiative (ACSAI)",
+    "designation": "Executive Director",
+    "notes": "https://www.linkedin.com/in/julietohahuruobiora?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "deepak-tyagi-421",
+    "name": "Deepak Tyagi",
+    "category": "Sponsor/Industry",
+    "organisation": "Teleperformance",
+    "designation": "VP",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "jeff-wu-422",
+    "name": "Jeff Wu",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Vice President - Partnerships Finance Operations, K-ID",
+    "designation": "Vice President - Partnerships Finance Operations",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "payal-twitter-423",
+    "name": "Payal Twitter",
+    "category": "",
+    "organisation": "",
+    "designation": "TWITTER",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sandeep-gupta-424",
+    "name": "Sandeep Gupta",
+    "category": "",
+    "organisation": "",
+    "designation": "CSR",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "shilohu-rao-425",
+    "name": "Shilohu Rao",
+    "category": "Online Registration",
+    "organisation": "NLU Jodhpur",
+    "designation": "Professor",
+    "notes": "www.linkedin.com/in/shilohu-rao",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "zabita-426",
+    "name": "Zabita",
+    "category": "NGO",
+    "organisation": "Women Power Connect",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "hariti-chadda-427",
+    "name": "Hariti Chadda",
+    "category": "Sponsor/Industry",
+    "organisation": "Sponsor/Industry",
+    "designation": "Senior Manager, Public Affairs",
+    "notes": "i",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "delphine-brissonneau-428",
+    "name": "Delphine Brissonneau",
+    "category": "",
+    "organisation": "",
+    "designation": "European Commission",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "dr-swati-chawla-429",
+    "name": "Dr. Swati Chawla",
+    "category": "Panelist (Oct 8)",
+    "organisation": "Independent Consultant",
+    "designation": "Director of Global Operational Wellbeing",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "roberts-430",
+    "name": "Roberts",
+    "category": "Panelist / Online Registration",
+    "organisation": "INHOPE",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "nins-431",
+    "name": "Nins",
+    "category": "Online Registration",
+    "organisation": "Cyberlite",
+    "designation": "Founder",
+    "notes": "https://www.linkedin.com/in/ninabual/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "devyani-srivastava-432",
+    "name": "Devyani Srivastava",
+    "category": "FRIDA Team",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "dhruv-khosla-433",
+    "name": "Dhruv Khosla",
+    "category": "Panelist / Online Registration",
+    "organisation": "Everest Group",
+    "designation": "Practice Director, Everest Group",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "acts-434",
+    "name": "ACTS",
+    "category": "Non-profit",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "khushboo-hasija-435",
+    "name": "Khushboo Hasija",
+    "category": "Industry",
+    "organisation": "Independent Consultant",
+    "designation": "N/A",
+    "notes": "Nominated by KN",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "anshul-tewari-gurkirrat-436",
+    "name": "Anshul Tewari / Gurkirrat",
+    "category": "NGO",
+    "organisation": "Youth Ki Awaaz",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "jayanthi-pushkaran-437",
+    "name": "Jayanthi Pushkaran",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)"
+    ]
+  },
+  {
+    "id": "barsha-438",
+    "name": "Barsha",
+    "category": "Online Registration",
+    "organisation": "Breakthrough Trust",
+    "designation": "Head of Media",
+    "notes": "https://www.linkedin.com/in/barsha-chakraborty-a2423255?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "gregor-trumel-439",
+    "name": "GREGOR TRUMEL",
+    "category": "",
+    "organisation": "French Embassy / IFI",
+    "designation": "COCAC",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ketaki-ruchika-singh-440",
+    "name": "Ketaki Ruchika Singh",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Project Coordinator - Media and Communications",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "name-441",
+    "name": "Name",
+    "category": "Category",
+    "organisation": "Organisation",
+    "designation": "Designation",
+    "notes": "Notes",
+    "events": [
+      "Online Registration"
+    ],
+    "source": [
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "prof-arvinder-ansari-442",
+    "name": "Prof. Arvinder Ansari",
+    "category": "CSR Board",
+    "organisation": "Centre for Social Research,India",
+    "designation": "Member, Board",
+    "notes": "Dr. Ranjana's Guest",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "megha-jadia-443",
+    "name": "Megha Jadia",
+    "category": "NGO",
+    "organisation": "NetSafe New Zealand",
+    "designation": "Digital Harms Resolution Officer",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "nir-444",
+    "name": "Nir",
+    "category": "Online Registration",
+    "organisation": "Dalberg Advisors",
+    "designation": "Associate Partner",
+    "notes": "https://www.linkedin.com/in/nir-kumar-02915522/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "girl-effects-rep-445",
+    "name": "Girl Effects Rep",
+    "category": "Sponsor/Industry",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Opening Reception"
+    ],
+    "source": [
+      "Opening Reception (Embassy of F"
+    ]
+  },
+  {
+    "id": "mcqueen-446",
+    "name": "McQueen",
+    "category": "Online Registration",
+    "organisation": "Access Partnership",
+    "designation": "Senior Manager",
+    "notes": "https://www.linkedin.com/in/nick-mcqueen-304778111?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "kazim-rizvi-447",
+    "name": "Kazim Rizvi",
+    "category": "Knowledge Partners",
+    "organisation": "The Dialogue",
+    "designation": "Founding Director",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "rachna-sharma-448",
+    "name": "Rachna Sharma",
+    "category": "Industry",
+    "organisation": "Independent Consultant",
+    "designation": "N/A",
+    "notes": "Nominated by KN",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "professor-deborah-fry-449",
+    "name": "Professor Deborah Fry",
+    "category": "Panelist",
+    "organisation": "University of Edinburgh",
+    "designation": "Global Director of Data, Childlight Global Child Safety Institute; Professor of International Child Protection Research,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "nikhil-pahwa-450",
+    "name": "Nikhil Pahwa",
+    "category": "Think Tank",
+    "organisation": "Medianama",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "diksha-bharti-451",
+    "name": "Diksha Bharti",
+    "category": "Online Registration",
+    "organisation": "Aakhya India",
+    "designation": "Policy Manager",
+    "notes": "https://www.linkedin.com/in/diksha-b-488787a0?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "anupriya-mohta-452",
+    "name": "Anupriya Mohta",
+    "category": "Sponsor/Industry",
+    "organisation": "Google",
+    "designation": "Government Affairs and Public Policy Manager, YouTube",
+    "notes": "done",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Additions 7-8",
+      "Additions For Embassies",
+      "Invitees",
+      "master embassy list"
+    ]
+  },
+  {
+    "id": "kashvi-verma-453",
+    "name": "Kashvi Verma",
+    "category": "",
+    "organisation": "",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "sameer-454",
+    "name": "Sameer",
+    "category": "Online Registration",
+    "organisation": "Mediafirewall",
+    "designation": "CEO",
+    "notes": "https://www.linkedin.com/in/sameer-532b14165/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "sapann-harish-talwar-455",
+    "name": "Sapann Harish Talwar",
+    "category": "Online Registration",
+    "organisation": "Aristi Ninja",
+    "designation": "CTSO",
+    "notes": "https://www.linkedin.com/in/sapanntalwar/",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "akankshya-acharya-456",
+    "name": "Akankshya Acharya",
+    "category": "Host",
+    "organisation": "Centre for Social Research, India",
+    "designation": "Project Coordinator - Digital Safety and Online Wellbeing",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "cristina-albertin-457",
+    "name": "Cristina ALBERTIN",
+    "category": "",
+    "organisation": "",
+    "designation": "GAIL (India) Limited",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "vatsla-srivastava-458",
+    "name": "Vatsla Srivastava",
+    "category": "Online Registration",
+    "organisation": "Ministry of Information & Broadcasting, Government of India",
+    "designation": "Young Professional",
+    "notes": "https://in.linkedin.com/in/vatsla-srivastava-6701291b1",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "anindita-bose-459",
+    "name": "Anindita Bose",
+    "category": "",
+    "organisation": "Project Manager, Digital Transformation",
+    "designation": "U.S. Department of State",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "ms-charlotte-stevenson-460",
+    "name": "Ms. Charlotte Stevenson",
+    "category": "",
+    "organisation": "The Australian High Commission",
+    "designation": "Principal Migration Officer (Integrity)",
+    "notes": "",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  },
+  {
+    "id": "jhalak-mrignayani-kakkar-461",
+    "name": "Jhalak Mrignayani Kakkar",
+    "category": "NGO",
+    "organisation": "Centre For Communication Governance",
+    "designation": "",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Invitees"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees"
+    ]
+  },
+  {
+    "id": "sadhana-singh-462",
+    "name": "Sadhana Singh",
+    "category": "Panelist (7th Oct)",
+    "organisation": "Consultant, Niti Ayog",
+    "designation": "Consultant",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Netherlands Reception"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Netherlands Reception (7th Oct)"
+    ]
+  },
+  {
+    "id": "yoel-roth-phd-463",
+    "name": "Yoel Roth, PhD",
+    "category": "Panelist / Industry",
+    "organisation": "Vice President, Trust & Safety, Match Group",
+    "designation": "Vice President, Trust & Safety,",
+    "notes": "",
+    "events": [
+      "Conference",
+      "Embassy",
+      "Opening Reception",
+      "Netherlands Reception",
+      "Swedish Embassy"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "master embassy list",
+      "Opening Reception (Embassy of F",
+      "Netherlands Reception (7th Oct)",
+      "Swedish Embassy (8th Oct)"
+    ]
+  },
+  {
+    "id": "dr-cuterus-dr-tanaya-464",
+    "name": "Dr. Cuterus (Dr. Tanaya)",
+    "category": "Panelist - Google",
+    "organisation": "",
+    "designation": "",
+    "notes": "Sweden ONLY",
+    "events": [
+      "Conference",
+      "Embassy"
+    ],
+    "source": [
+      "Additions 7-8",
+      "Additions For Embassies"
+    ]
+  },
+  {
+    "id": "shubhra-465",
+    "name": "Shubhra",
+    "category": "Online Registration",
+    "organisation": "YLAC",
+    "designation": "Senior Officer",
+    "notes": "https://www.linkedin.com/in/shubhra-jha?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    "events": [
+      "Conference",
+      "Invitees",
+      "Online Registration"
+    ],
+    "source": [
+      "Master (Inaugural+Conference)",
+      "Invitees",
+      "Online Registrations"
+    ]
+  },
+  {
+    "id": "indras-ghosh-466",
+    "name": "Indras Ghosh",
+    "category": "",
+    "organisation": "",
+    "designation": "GOV",
+    "notes": "done",
+    "events": [
+      "Conference"
+    ],
+    "source": [
+      "Additions 7-8"
+    ]
+  }
+];

@@ -23,5 +23,12 @@ Thumbs.db
 *.log
 *.err
 
+# Sensitive spreadsheet or export files
+*.xlsx
+*.xls
+*.csv
+*.zip
+tasi_guest_list_unzipped/
+
 # clerk configuration (can include secrets)
 /.clerk/
