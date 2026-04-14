@@ -1,4 +1,4 @@
-﻿import { MotionReveal } from './motion-reveal';
+import { MotionReveal } from './motion-reveal';
 import Link from 'next/link';
 
 const MUX_EMBED_URL =
@@ -15,6 +15,7 @@ export default function FestivalHighlightsSection() {
             { label: 'Testimonials', href: '#video-testimonials' },
             { label: 'Speakers', href: '#speakers' },
             { label: 'Sponsors', href: '/sponsor' },
+            { label: 'Exhibit', href: '/exhibition' },
           ].map((item) => (
             <a
               key={item.label}

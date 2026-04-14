@@ -112,7 +112,7 @@ const involvementOptions = [
       'Showcase your trust and safety tools, initiatives, and professional services through dedicated pavilions and custom brand activations.',
     href: '/exhibition',
     cta: 'Explore Exhibition',
-    image: '/img/Exhibition/WhatsApp Image 2026-04-14 at 8.17.09 PM.jpeg',
+    image: '/img/Exhibition/WhatsApp Image 2026-04-14 at 8.17.09 PM.webp',
     imageAlt: 'Premium showcase pavilions and exhibition presence at TASI',
     eyebrow: 'Exhibition',
   },
