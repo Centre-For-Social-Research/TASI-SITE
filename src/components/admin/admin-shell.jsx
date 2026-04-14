@@ -15,14 +15,22 @@ import {
   Moon,
   Sun,
   LayoutDashboard,
+  Activity,
+  ShieldCheck,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useClerk } from '@clerk/nextjs';
 import {
   buildAdminNavigation,
+  buildAdminNotificationId,
+  buildAdminNotifications,
   buildAdminStatPills,
+  filterUnreadAdminNotifications,
 } from '@/lib/admin-shell-utils.cjs';
-import { AdminStatusBadge } from '@/components/admin/admin-ui';
+import {
+  AdminStatusBadge,
+  SlideOverDrawer,
+} from '@/components/admin/admin-ui';
 
 const NAV_ICONS = {
   '/admin/registrations': Users,
@@ -38,6 +46,8 @@ const PAGE_TITLES = {
   '/admin/check-in': 'Check-In Console',
   '/admin/tickets': 'Ticketing',
 };
+
+const ADMIN_NOTIFICATION_READ_KEY = 'tasi-admin-read-notifications';
 
 function TopStatPill({ label, value, tone = 'default' }) {
   const toneClasses = {
@@ -55,7 +65,9 @@ function TopStatPill({ label, value, tone = 'default' }) {
 
   return (
     <div
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs backdrop-blur-sm ${toneClasses[tone] || toneClasses.default}`}
+      className={`inline-flex items-center gap-2 rounded-[10px] border px-3 py-1.5 text-xs shadow-sm backdrop-blur-sm ${
+        toneClasses[tone] || toneClasses.default
+      }`}
     >
       <span className="font-medium opacity-70">{label}</span>
       <span className="font-bold tabular-nums">{value}</span>
@@ -65,24 +77,51 @@ function TopStatPill({ label, value, tone = 'default' }) {
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return <div className="h-8 w-8" />;
+  const currentTheme = theme === 'dark' ? 'dark' : 'light';
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-slate-200"
+      onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
+      className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-slate-200"
       aria-label="Toggle theme"
-      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={
+        currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+      }
     >
-      {theme === 'dark' ? (
+      {currentTheme === 'dark' ? (
         <Sun className="h-4 w-4" />
       ) : (
         <Moon className="h-4 w-4" />
       )}
     </button>
+  );
+}
+
+function NotificationCard({ item, onMarkRead }) {
+  return (
+    <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+            {item.title}
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            {item.detail}
+          </p>
+        </div>
+        <AdminStatusBadge tone={item.tone}>{item.tone}</AdminStatusBadge>
+      </div>
+      <div className="mt-3 flex justify-end">
+        <button
+          type="button"
+          onClick={() => onMarkRead(item)}
+          className="rounded-[10px] border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300 dark:hover:border-white/15 dark:hover:text-slate-100"
+        >
+          Mark as read
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -97,6 +136,17 @@ function getInitials(name) {
 
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [readNotificationIds, setReadNotificationIds] = useState(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const stored = window.localStorage.getItem(ADMIN_NOTIFICATION_READ_KEY);
+      const parsed = stored ? JSON.parse(stored) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
 
   async function handleSignOut() {
     await signOut({ redirectUrl: '/' });
@@ -176,14 +226,51 @@ export default function AdminShell({ operator, currentPath, children }) {
     [shellState.jobs, shellState.summary]
   );
 
+  const notifications = useMemo(
+    () =>
+      buildAdminNotifications({
+        summary: shellState.summary,
+        jobs: shellState.jobs,
+      }),
+    [shellState.jobs, shellState.summary]
+  );
+  const unreadNotifications = useMemo(
+    () =>
+      filterUnreadAdminNotifications(
+        notifications,
+        new Set(readNotificationIds)
+      ),
+    [notifications, readNotificationIds]
+  );
+
   const pageTitle = PAGE_TITLES[currentPath] || 'Admin';
+  const attentionCount = unreadNotifications.filter((item) =>
+    ['warning', 'danger', 'accent'].includes(item.tone)
+  ).length;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(
+      ADMIN_NOTIFICATION_READ_KEY,
+      JSON.stringify(readNotificationIds)
+    );
+  }, [readNotificationIds]);
+
+  function markNotificationRead(notification) {
+    const id = buildAdminNotificationId(notification);
+    setReadNotificationIds((current) =>
+      current.includes(id) ? current : [...current, id]
+    );
+  }
+
+  function markAllNotificationsRead() {
+    setReadNotificationIds(notifications.map(buildAdminNotificationId));
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100 text-slate-900 dark:from-[#060c1a] dark:via-[#0a1128] dark:to-[#0d1526] dark:text-slate-100">
+    <div className="admin-console admin-console--saas min-h-screen bg-[radial-gradient(circle_at_top,#eef4ff_0%,#f8fafc_36%,#eef2ff_100%)] text-slate-900 dark:bg-[radial-gradient(circle_at_top,#12203f_0%,#08101f_36%,#050913_100%)] dark:text-slate-100">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-[272px_minmax(0,1fr)]">
-        {/* ─── Sidebar ─── */}
-        <aside className="hidden lg:flex lg:flex-col border-r border-slate-200/70 bg-white/70 backdrop-blur-xl dark:border-white/[0.06] dark:bg-white/[0.02]">
-          {/* Logo */}
+        <aside className="hidden border-r border-white/70 bg-white/72 shadow-[0_24px_80px_rgba(99,102,241,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-950/30 lg:flex lg:flex-col">
           <div className="px-6 py-5">
             <Link href="/" className="inline-block">
               <Image
@@ -196,16 +283,16 @@ export default function AdminShell({ operator, currentPath, children }) {
             </Link>
           </div>
 
-          {/* Search */}
           <div className="px-4">
-            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 transition focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-200/40 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-indigo-500/40 dark:focus-within:ring-indigo-500/20">
+            <div className="flex items-center gap-2.5 rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-sm transition focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-200/40 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-indigo-500/40 dark:focus-within:ring-indigo-500/20">
               <Search className="h-4 w-4 text-slate-400 dark:text-slate-500" />
-              <span className="text-sm text-slate-400 dark:text-slate-500">Search…</span>
+              <span className="text-sm text-slate-400 dark:text-slate-500">
+                Search...
+              </span>
             </div>
           </div>
 
-          {/* Nav */}
-          <nav className="flex flex-1 flex-col gap-5 px-3 pt-5 pb-4">
+          <nav className="flex flex-1 flex-col gap-5 px-3 pb-4 pt-5">
             {navSections.map((section) => (
               <div key={section.key}>
                 <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
@@ -218,19 +305,23 @@ export default function AdminShell({ operator, currentPath, children }) {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`group relative flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-all ${
+                        className={`group relative flex items-center justify-between rounded-[10px] px-3 py-2.5 text-sm transition-all ${
                           item.active
-                            ? 'bg-gradient-to-r from-indigo-500/10 via-indigo-500/5 to-transparent font-semibold text-indigo-600 dark:from-indigo-500/15 dark:text-indigo-400'
+                            ? 'bg-[linear-gradient(90deg,rgba(79,70,229,0.14),rgba(56,189,248,0.08),transparent)] font-semibold text-indigo-700 shadow-sm dark:text-indigo-300'
                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.06] dark:hover:text-slate-100'
                         }`}
                       >
-                        {item.active && (
+                        {item.active ? (
                           <span className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-indigo-500" />
-                        )}
+                        ) : null}
                         <span className="flex items-center gap-2.5">
                           {Icon ? (
                             <Icon
-                              className={`h-[18px] w-[18px] shrink-0 ${item.active ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300'}`}
+                              className={`h-[18px] w-[18px] shrink-0 ${
+                                item.active
+                                  ? 'text-indigo-500'
+                                  : 'text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300'
+                              }`}
                             />
                           ) : null}
                           {item.label}
@@ -249,11 +340,9 @@ export default function AdminShell({ operator, currentPath, children }) {
               </div>
             ))}
 
-            {/* Spacer */}
             <div className="flex-1" />
 
-            {/* Event card */}
-            <div className="rounded-2xl border border-slate-200/70 bg-gradient-to-br from-indigo-50 via-white to-violet-50 p-4 dark:border-white/[0.06] dark:from-indigo-500/[0.06] dark:via-transparent dark:to-violet-500/[0.04]">
+            <div className="rounded-[10px] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(238,242,255,0.92))] p-4 shadow-[0_18px_40px_rgba(99,102,241,0.10)] dark:border-white/[0.06] dark:bg-[linear-gradient(145deg,rgba(15,23,42,0.88),rgba(30,41,59,0.54))]">
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-indigo-500/80 dark:text-indigo-400/70">
                 Event
               </p>
@@ -261,11 +350,14 @@ export default function AdminShell({ operator, currentPath, children }) {
                 Trust &amp; Safety India Festival
               </p>
               <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                13–14 October 2026
+                13-14 October 2026
               </p>
+              <div className="mt-4 flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                Final SaaS dashboard enabled
+              </div>
             </div>
 
-            {/* Operator info */}
             <div className="flex items-center gap-3 border-t border-slate-200/70 pt-4 dark:border-white/[0.06]">
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-bold text-white shadow-md shadow-indigo-500/20">
@@ -284,7 +376,7 @@ export default function AdminShell({ operator, currentPath, children }) {
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-rose-50 hover:text-rose-500 dark:text-slate-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-slate-400 transition hover:bg-rose-50 hover:text-rose-500 dark:text-slate-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
                 aria-label="Log out"
                 title="Log out"
               >
@@ -294,22 +386,20 @@ export default function AdminShell({ operator, currentPath, children }) {
           </nav>
         </aside>
 
-        {/* ─── Main area ─── */}
         <div className="min-w-0 flex flex-col">
-          {/* Sticky header */}
-          <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#0a1128]/80">
+          <header className="sticky top-0 z-40 border-b border-white/70 bg-white/72 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-950/42">
             <div className="flex items-center justify-between gap-4 px-4 py-3 lg:px-6">
-              {/* Breadcrumb + page title */}
               <div className="flex items-center gap-2 text-sm">
                 <LayoutDashboard className="hidden h-4 w-4 text-slate-400 dark:text-slate-500 sm:block" />
-                <span className="hidden text-slate-400 dark:text-slate-500 sm:inline">Admin</span>
+                <span className="hidden text-slate-400 dark:text-slate-500 sm:inline">
+                  Admin
+                </span>
                 <ChevronRight className="hidden h-3 w-3 text-slate-300 dark:text-slate-600 sm:block" />
                 <span className="font-semibold text-slate-800 dark:text-slate-100">
                   {pageTitle}
                 </span>
               </div>
 
-              {/* Stat pills + actions */}
               <div className="flex items-center gap-2">
                 <div className="hidden items-center gap-2 md:flex">
                   {statPills.map((pill) => (
@@ -325,17 +415,21 @@ export default function AdminShell({ operator, currentPath, children }) {
                   <ThemeToggle />
                   <button
                     type="button"
-                    className="relative flex h-8 w-8 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-slate-200"
+                    onClick={() => setNotificationsOpen(true)}
+                    className="relative flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-slate-200"
                     aria-label="Notifications"
+                    title="Notifications"
                   >
                     <Bell className="h-4 w-4" />
-                    <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#0a1128]" />
+                    {attentionCount > 0 ? (
+                      <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#0a1128]" />
+                    ) : null}
                   </button>
                 </div>
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-500 transition hover:bg-rose-50 hover:text-rose-500 dark:text-slate-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 lg:hidden"
+                  className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-500 transition hover:bg-rose-50 hover:text-rose-500 dark:text-slate-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 lg:hidden"
                   aria-label="Log out"
                   title="Log out"
                 >
@@ -344,7 +438,6 @@ export default function AdminShell({ operator, currentPath, children }) {
               </div>
             </div>
 
-            {/* Mobile nav tabs */}
             <div className="flex gap-1.5 overflow-x-auto px-3 pb-2.5 lg:hidden">
               {navSections.flatMap((section) =>
                 section.items.map((item) => {
@@ -353,7 +446,7 @@ export default function AdminShell({ operator, currentPath, children }) {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl border px-3 py-1.5 text-sm whitespace-nowrap transition ${
+                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-sm whitespace-nowrap transition ${
                         item.active
                           ? 'border-indigo-200 bg-indigo-50 font-semibold text-indigo-600 dark:border-indigo-500/20 dark:bg-indigo-500/10 dark:text-indigo-400'
                           : 'border-slate-200 bg-white text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-400'
@@ -374,10 +467,107 @@ export default function AdminShell({ operator, currentPath, children }) {
           </header>
 
           <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
+            <section className="mb-6 rounded-[10px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(238,242,255,0.88)_42%,rgba(224,231,255,0.78)_100%)] p-5 shadow-[0_30px_80px_rgba(79,70,229,0.12)] dark:border-white/[0.08] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.82),rgba(17,24,39,0.92)_44%,rgba(30,41,59,0.72)_100%)]">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-indigo-500 dark:text-indigo-300">
+                    Operations Overview
+                  </p>
+                  <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white">
+                    {pageTitle}
+                  </h1>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    Review queue health, delivery progress, and check-in status
+                    from one central admin workspace, with live updates
+                    available from the notification panel.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
+                    <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                      <Activity className="h-3.5 w-3.5 text-cyan-500" />
+                        Pending Review
+                    </div>
+                    <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+                      {statPills[0]?.value || 0} pending
+                    </p>
+                  </div>
+                  <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                      Open Alerts
+                    </p>
+                    <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+                      {attentionCount} active alerts
+                    </p>
+                  </div>
+                  <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                      Signed In
+                    </p>
+                    <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+                      {operator.displayName}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
             {children}
           </main>
         </div>
       </div>
+
+      <SlideOverDrawer
+        open={notificationsOpen}
+        onClose={() => setNotificationsOpen(false)}
+        title="Notifications"
+      >
+        <div className="space-y-4">
+          <div className="rounded-[10px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                Live Summary
+              </p>
+              <button
+                type="button"
+                onClick={markAllNotificationsRead}
+                disabled={!unreadNotifications.length}
+                className="rounded-[10px] border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300 dark:hover:border-white/15 dark:hover:text-slate-100"
+              >
+                Mark all as read
+              </button>
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {statPills.map((pill) => (
+                <TopStatPill
+                  key={pill.key}
+                  label={pill.label}
+                  value={pill.value}
+                  tone={pill.tone}
+                />
+              ))}
+            </div>
+          </div>
+          {unreadNotifications.length ? (
+            unreadNotifications.map((item) => (
+              <NotificationCard
+                key={buildAdminNotificationId(item)}
+                item={item}
+                onMarkRead={markNotificationRead}
+              />
+            ))
+          ) : (
+            <div className="rounded-[10px] border border-emerald-200 bg-emerald-50 p-5 shadow-sm dark:border-emerald-500/20 dark:bg-emerald-500/10">
+              <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-200">
+                No active notifications
+              </p>
+              <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-300">
+                You have read or dismissed the current admin alerts. New issues
+                will appear here automatically when the underlying status changes.
+              </p>
+            </div>
+          )}
+        </div>
+      </SlideOverDrawer>
     </div>
   );
 }

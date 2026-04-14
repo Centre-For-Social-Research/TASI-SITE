@@ -82,7 +82,59 @@ function buildAdminNavigation({ pathname = '', summary = {}, jobs = [] } = {}) {
   ];
 }
 
+function buildAdminNotifications({ summary = {}, jobs = [] } = {}) {
+  const pending = toNumber(summary.pending);
+  const confirmed = toNumber(summary.confirmed);
+  const qrIssued = toNumber(summary.qrIssued);
+  const checkedIn = toNumber(summary.checkedIn);
+  const failed = jobs.reduce(
+    (total, job) => total + toNumber(job?.failed_items),
+    0
+  );
+  const qrQueue = Math.max(confirmed - qrIssued, 0);
+
+  return [
+    {
+      key: 'pending',
+      title: 'Review queue needs attention',
+      detail: `${pending} registrations are still pending an operator decision.`,
+      tone: 'warning',
+    },
+    {
+      key: 'qrQueue',
+      title: 'QR delivery backlog',
+      detail: `${qrQueue} confirmed attendees are still waiting for QR issuance.`,
+      tone: 'accent',
+    },
+    {
+      key: 'failed',
+      title: 'Delivery failures detected',
+      detail: `${failed} QR delivery attempts need retry or manual review.`,
+      tone: 'danger',
+    },
+    {
+      key: 'checkin',
+      title: 'On-site progress',
+      detail: `${checkedIn} attendees have already checked in.`,
+      tone: 'success',
+    },
+  ];
+}
+
+function buildAdminNotificationId(notification = {}) {
+  return `${notification.key || 'notification'}:${notification.detail || ''}`;
+}
+
+function filterUnreadAdminNotifications(notifications = [], readIds = new Set()) {
+  return notifications.filter(
+    (notification) => !readIds.has(buildAdminNotificationId(notification))
+  );
+}
+
 module.exports = {
   buildAdminNavigation,
+  buildAdminNotificationId,
+  buildAdminNotifications,
   buildAdminStatPills,
+  filterUnreadAdminNotifications,
 };

@@ -24,6 +24,7 @@ import {
   LoadingRows,
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
+import AdminPageIntro from '@/components/admin/admin-page-intro';
 import {
   RegistrationTrendChart,
   StatusDonutChart,
@@ -1141,42 +1142,46 @@ export default function RegistrationsAdminPanel({ operator }) {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <section className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-        <AdminSectionHeading
-          eyebrow="Registrations"
-          title="Review Queue"
-          description="Sort the most urgent records to the top, act inline for speed, and click a row to open the detail drawer."
-          action={
-            <div className="flex flex-wrap gap-2">
-              {['csv', 'xlsx', 'pdf'].map((format) => (
-                <button
-                  key={format}
-                  type="button"
-                  disabled={exportLoading[format] || hasConfigError}
-                  onClick={() => handleExport(format)}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10 dark:hover:bg-white/10"
-                >
-                  {exportLoading[format] ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <Download className="h-3 w-3" />
-                  )}
-                  {format === 'csv'
-                    ? 'Export CSV'
-                    : format === 'xlsx'
-                      ? 'Export Excel'
-                      : 'Export PDF'}
-                </button>
-              ))}
-            </div>
-          }
-        />
-        <div className="mt-4 flex flex-wrap gap-2">
+      <AdminPageIntro
+        eyebrow="Registrations"
+        title="Review Queue"
+        description="Sort the most urgent records to the top, act inline for speed, and open richer registrant detail from the review drawer."
+        chips={[
+          'Review decisions',
+          'Bulk status updates',
+          'QR pass delivery',
+        ]}
+        actions={
+          <div className="flex flex-wrap gap-2">
+            {['csv', 'xlsx', 'pdf'].map((format) => (
+              <button
+                key={format}
+                type="button"
+                disabled={exportLoading[format] || hasConfigError}
+                onClick={() => handleExport(format)}
+                className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10 dark:hover:bg-white/10"
+              >
+                {exportLoading[format] ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <Download className="h-3 w-3" />
+                )}
+                {format === 'csv'
+                  ? 'Export CSV'
+                  : format === 'xlsx'
+                    ? 'Export Excel'
+                    : 'Export PDF'}
+              </button>
+            ))}
+          </div>
+        }
+      />
+      <div className="mt-4 flex flex-wrap gap-2">
           <button
             type="button"
             onClick={handleSendQr}
             disabled={state.loading || hasConfigError || qrLoading.send}
-            className="inline-flex h-8 items-center gap-1.5 rounded-full bg-amber-600 px-4 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
           >
             {qrLoading.send ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1187,7 +1192,7 @@ export default function RegistrationsAdminPanel({ operator }) {
             type="button"
             onClick={handleResendQr}
             disabled={state.loading || hasConfigError || qrLoading.resend}
-            className="inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
           >
             {qrLoading.resend ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1196,18 +1201,17 @@ export default function RegistrationsAdminPanel({ operator }) {
           </button>
           <a
             href="/admin/delivery"
-            className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+            className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
           >
             Delivery Jobs
           </a>
           <a
             href="/admin/check-in"
-            className="inline-flex h-8 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+            className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
           >
             Check-In Console
           </a>
-        </div>
-      </section>
+      </div>
 
       {hasConfigError ? (
         <AdminAlert
@@ -1291,7 +1295,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       </section>
 
       {/* Filters */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             Filters
@@ -1373,7 +1377,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       ) : null}
 
       {/* Review queue table */}
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="border-b border-slate-200 px-5 py-3 dark:border-white/[0.06]">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             Review Queue

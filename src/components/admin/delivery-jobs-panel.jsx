@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AdminAlert,
-  AdminSectionHeading,
   AdminStatCard,
   AdminStatusBadge,
   LoadingRows,
 } from '@/components/admin/admin-ui';
+import AdminPageIntro from '@/components/admin/admin-page-intro';
 
 function formatDate(value) {
   if (!value) return 'Not yet';
@@ -265,16 +265,16 @@ export default function DeliveryJobsPanel({ operator }) {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-        <AdminSectionHeading
-          eyebrow="Delivery Jobs"
-          title="Monitor QR mailings and retry failures"
-          description="This screen is dedicated to outbound QR delivery. Keep review work in the registrations queue, and use this page to watch throughput, process background chunks, and recover failed sends."
-        />
-        <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-          Operator: {operator.displayName} · {operator.primaryEmail}
-        </p>
-      </section>
+      <AdminPageIntro
+        eyebrow="Delivery Jobs"
+        title="Monitor QR mailings and retry failures"
+        description="Track throughput, process background chunks, and recover failed sends from one delivery-focused workspace."
+        chips={[
+          `Handled by ${operator.displayName}`,
+          'Delivery queue status',
+          'Retry failed sends',
+        ]}
+      />
 
       {jobsState.error ? (
         <AdminAlert
@@ -319,7 +319,7 @@ export default function DeliveryJobsPanel({ operator }) {
       </section>
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
           <div className="border-b border-slate-200 px-5 py-3 dark:border-white/[0.06]">
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
               Recent Jobs
@@ -432,7 +432,7 @@ export default function DeliveryJobsPanel({ operator }) {
           ) : null}
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-white/[0.06] dark:bg-white/[0.03]">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">

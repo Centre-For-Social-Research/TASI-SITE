@@ -107,13 +107,14 @@ const involvementOptions = [
     eyebrow: 'Meetings',
   },
   {
-    title: 'Plan Your Stay in New Delhi',
+    title: 'Exhibit at TASI',
     description:
-      'We can help point delegates, speakers, and partners toward practical planning guidance for travel, timing, and staying close to the festival.',
-    image: '/img/home-gallery/7T7A9399.webp',
-    imageAlt: 'Delegates arriving for TASI',
-    eyebrow: 'Travel',
-    note: 'Travel guidance available on request',
+      'Showcase your trust and safety tools, initiatives, and professional services through dedicated pavilions and custom brand activations.',
+    href: '/exhibition',
+    cta: 'Explore Exhibition',
+    image: '/img/Exhibition/WhatsApp Image 2026-04-14 at 8.17.09 PM.jpeg',
+    imageAlt: 'Premium showcase pavilions and exhibition presence at TASI',
+    eyebrow: 'Exhibition',
   },
   {
     title: 'Build a Custom Delegation Experience',

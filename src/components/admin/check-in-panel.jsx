@@ -5,10 +5,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
 import {
-  AdminSectionHeading,
   AdminStatCard,
   AdminStatusBadge,
 } from '@/components/admin/admin-ui';
+import AdminPageIntro from '@/components/admin/admin-page-intro';
 
 const {
   classifyCameraStartFailure,
@@ -365,15 +365,17 @@ export default function CheckInPanel({ operator }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-        <AdminSectionHeading
+      <section className="space-y-4">
+        <AdminPageIntro
           eyebrow="Check-In"
           title="Scanner-first entry validation"
-          description="Keep the camera running during live operations, fall back to manual token lookup when needed, and keep the latest scan outcomes visible for the entire desk team."
+          description="Keep the camera running during live operations, fall back to manual lookup when needed, and keep the latest scan outcomes visible for the whole desk team."
+          chips={[
+            `Desk lead: ${operator.displayName}`,
+            'Live QR scanning',
+            'Manual attendee lookup',
+          ]}
         />
-        <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-          Signed in as {operator.displayName} ({operator.primaryEmail}).
-        </p>
         <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
           Desk Label
           <input
@@ -381,7 +383,7 @@ export default function CheckInPanel({ operator }) {
             name="deskLabel"
             value={deskLabel}
             onChange={(event) => setDeskLabel(event.target.value)}
-            className="h-11 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-11 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
           />
         </label>
       </section>
@@ -423,11 +425,11 @@ export default function CheckInPanel({ operator }) {
             />
           </div>
         ) : null}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
           <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
             Scanner Frame
           </p>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 dark:border-white/[0.06]">
+          <div className="mt-4 overflow-hidden rounded-[10px] border border-slate-200 bg-slate-950 dark:border-white/[0.06]">
             <video
               ref={videoRef}
               className="aspect-video w-full object-cover"
@@ -477,7 +479,7 @@ export default function CheckInPanel({ operator }) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
           <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
             Manual Lookup
           </p>
@@ -551,7 +553,7 @@ export default function CheckInPanel({ operator }) {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">

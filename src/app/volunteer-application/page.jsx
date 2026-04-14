@@ -54,11 +54,10 @@ const volunteerGallery = [
     title: 'Warm, quick, and organised',
   },
   {
-    src: '/img/volunteers/volunteer-partners.webp',
+    src: '/img/volunteers/IMG_5787.JPG',
     alt: 'Volunteer team members standing behind a TASI partner display',
     eyebrow: 'Front Of House',
     title: 'Visible, reliable support',
-    imageClassName: 'object-cover scale-[1.7] -rotate-90 origin-center',
   },
   {
     src: '/img/volunteers/volunteer-lobby.webp',

@@ -7,6 +7,7 @@ import {
   AdminSectionHeading,
   AdminStatCard,
 } from '@/components/admin/admin-ui';
+import AdminPageIntro from '@/components/admin/admin-page-intro';
 
 function formatMoney(minor, currency) {
   const value = Number(minor || 0) / 100;
@@ -194,10 +195,11 @@ export default function TicketingAdminPanel() {
 
   return (
     <div className="space-y-6">
-      <AdminSectionHeading
+      <AdminPageIntro
         eyebrow="Ticketing"
         title="Festival ticketing dashboard"
-        description="Monitor PRD-aligned domestic and FCRA ticket sales, attendee state, and compliance-facing ticket records."
+        description="Monitor domestic and FCRA sales, attendee state, and compliance-facing ticket records from a cleaner revenue operations view."
+        chips={['Sales summary', 'Buyer records', 'Resend confirmations']}
       />
 
       <div className="grid gap-4 md:grid-cols-4">
@@ -219,7 +221,7 @@ export default function TicketingAdminPanel() {
         <AdminStatCard label="Checked In" value={stats.checkedIn} tone="info" />
       </div>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <AdminSectionHeading
             eyebrow="Attendees"

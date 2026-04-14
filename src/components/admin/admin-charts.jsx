@@ -40,7 +40,7 @@ function generateTrendData(summary) {
 }
 
 const CHART_CARD =
-  'rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-sm backdrop-blur-sm dark:border-white/[0.06] dark:bg-white/[0.03]';
+  'rounded-[10px] border border-slate-200/70 bg-white/80 p-5 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]';
 
 export function RegistrationTrendChart({ summary }) {
   const data = useMemo(() => generateTrendData(summary), [summary]);
@@ -255,7 +255,7 @@ export function AdminProgressCard({
   const clampedPercent = Math.min(Math.max(percent || 0, 0), 100);
 
   return (
-    <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 shadow-sm backdrop-blur-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+    <div className="rounded-[10px] border border-slate-200/70 bg-white/80 p-4 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
           {label}

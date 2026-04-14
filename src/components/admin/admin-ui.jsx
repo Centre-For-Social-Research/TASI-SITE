@@ -76,7 +76,7 @@ export function AdminStatusBadge({
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium',
+        'inline-flex items-center gap-1.5 rounded-[10px] border px-2.5 py-0.5 text-[11px] font-medium shadow-sm',
         classes.badge,
         className
       )}
@@ -93,7 +93,7 @@ export function AdminStatCard({ label, value, tone = 'default', detail, icon: Ic
   return (
     <div
       className={clsx(
-        'group relative overflow-hidden rounded-2xl border p-5 shadow-sm backdrop-blur-sm transition-all hover:shadow-md',
+        'group relative overflow-hidden rounded-[10px] border p-5 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg',
         classes.card
       )}
     >
@@ -133,7 +133,7 @@ export function AdminAlert({
   return (
     <div
       className={clsx(
-        'rounded-2xl border px-5 py-4 shadow-sm backdrop-blur-sm',
+        'rounded-[10px] border px-5 py-4 shadow-sm backdrop-blur-sm',
         classes.panel,
         className
       )}
@@ -162,7 +162,9 @@ export function AdminSectionHeading({ eyebrow, title, description, action }) {
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">{title}</h2>
+        <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
+          {title}
+        </h2>
         {description ? (
           <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
             {description}
