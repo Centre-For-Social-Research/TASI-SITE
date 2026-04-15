@@ -1,4 +1,4 @@
-import { ClerkProvider, SignIn } from '@clerk/nextjs';
+import { SignIn } from '@clerk/nextjs';
 import { isClerkClientConfigured } from '@/lib/clerk-config';
 import operatorAuthUi from '@/lib/operator-auth-ui.cjs';
 import ScrollToTop from './scroll-to-top';
@@ -32,7 +32,7 @@ export default async function Page({ searchParams }) {
   }
 
   return (
-    <ClerkProvider>
+    <>
       <ScrollToTop />
       <div className="flex min-h-screen items-center justify-center">
         <SignIn
@@ -41,6 +41,6 @@ export default async function Page({ searchParams }) {
           withSignUp={false}
         />
       </div>
-    </ClerkProvider>
+    </>
   );
 }

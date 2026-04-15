@@ -7,30 +7,48 @@ import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 
 const tracks = [
-  [
-    'AI Governance and Safety',
-    'Building ethical, accountable, and inclusive AI frameworks rooted in transparency and global cooperation.',
-  ],
-  [
-    'Child Protection',
-    'Designing safer digital environments with privacy-first defaults, age-appropriate design, and abuse prevention.',
-  ],
-  [
-    'Gendered and Sexualized Harms',
-    'Addressing TFGBV, image-based abuse, and emerging AI-enabled exploitation.',
-  ],
-  [
-    'Trust and Safety Workforce',
-    'Recognizing emotional labor in moderation and advancing care-by-design practices.',
-  ],
-  [
-    'Safety by Design',
-    'Embedding safety, transparency, and accountability from product and model inception.',
-  ],
-  [
-    'Platform Responsibility and Collaboration',
-    'Cross-sector cooperation among government, industry, and civil society to address online harms.',
-  ],
+  {
+    title: 'AI Governance and Safety',
+    description:
+      'Building ethical, accountable, and inclusive AI frameworks rooted in transparency and global cooperation.',
+    illustrationVariant: 'accent',
+    illustration: 'orbit',
+  },
+  {
+    title: 'Child Protection',
+    description:
+      'Designing safer digital environments with privacy-first defaults, age-appropriate design, and abuse prevention.',
+    illustrationVariant: 'accent',
+    illustration: 'shield',
+  },
+  {
+    title: 'Gendered and Sexualized Harms',
+    description:
+      'Addressing TFGBV, image-based abuse, and emerging AI-enabled exploitation.',
+    illustrationVariant: 'accent',
+    illustration: 'signal',
+  },
+  {
+    title: 'Trust and Safety Workforce',
+    description:
+      'Recognizing emotional labor in moderation and advancing care-by-design practices.',
+    illustrationVariant: 'accent',
+    illustration: 'support',
+  },
+  {
+    title: 'Safety by Design',
+    description:
+      'Embedding safety, transparency, and accountability from product and model inception.',
+    illustrationVariant: 'accent',
+    illustration: 'foundation',
+  },
+  {
+    title: 'Platform Responsibility and Collaboration',
+    description:
+      'Cross-sector cooperation among government, industry, and civil society to address online harms.',
+    illustrationVariant: 'accent',
+    illustration: 'network',
+  },
 ];
 
 const impacts = [
@@ -59,6 +77,88 @@ const future = [
   'Regional and state-level dialogues across India',
   'Broader cross-industry participation',
 ];
+
+function TrackIllustration({ track }) {
+  const isSubtle = track.illustrationVariant === 'subtle';
+  const shellClasses = isSubtle
+    ? 'border-stone-200/80 bg-[linear-gradient(135deg,rgba(245,245,244,0.96),rgba(255,255,255,0.92))] dark:border-slate-700 dark:bg-[linear-gradient(135deg,rgba(26,26,26,0.92),rgba(15,23,42,0.78))]'
+    : 'border-transparent bg-[linear-gradient(135deg,rgba(53,2,101,0.92),rgba(92,15,79,0.88),rgba(255,105,0,0.78))] shadow-lg shadow-[#5c0f4f]/20 dark:shadow-[#15002b]/40';
+  const illustrationTone = isSubtle
+    ? 'bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),rgba(244,244,245,0.72)_42%,rgba(231,229,228,0.56)_100%)]'
+    : 'bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.28),rgba(255,255,255,0.12)_36%,rgba(17,24,39,0)_100%)]';
+  const strokeTone = isSubtle ? 'border-stone-400/75' : 'border-white/60';
+  const glowTone = isSubtle ? 'bg-stone-300/55' : 'bg-white/25';
+  const accentFill = isSubtle
+    ? 'bg-stone-500/14'
+    : 'bg-[linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,217,25,0.3),rgba(255,105,0,0.28))]';
+
+  const patterns = {
+    orbit: (
+      <>
+        <div className={`absolute inset-6 rounded-full border ${strokeTone}`} />
+        <div className={`absolute inset-x-10 top-3 h-12 rounded-full border ${strokeTone}`} />
+        <div className={`absolute inset-y-4 right-10 w-12 rounded-full border ${strokeTone}`} />
+        <div className={`absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full ${glowTone}`} />
+        <div className={`absolute right-10 top-7 h-3 w-3 rounded-full ${glowTone}`} />
+      </>
+    ),
+    shield: (
+      <>
+        <div className={`absolute left-1/2 top-5 h-16 w-16 -translate-x-1/2 rounded-[10px] border ${strokeTone} ${accentFill}`} />
+        <div className={`absolute left-1/2 top-10 h-9 w-9 -translate-x-1/2 rotate-45 rounded-[10px] border ${strokeTone}`} />
+        <div className={`absolute left-1/2 top-[4.7rem] h-3 w-10 -translate-x-1/2 rounded-full ${glowTone}`} />
+      </>
+    ),
+    signal: (
+      <>
+        <div className={`absolute left-8 top-8 h-12 w-12 rounded-full border ${strokeTone}`} />
+        <div className={`absolute left-14 top-14 h-12 w-12 rounded-full border ${strokeTone}`} />
+        <div className={`absolute left-20 top-20 h-12 w-12 rounded-full border ${strokeTone}`} />
+        <div className={`absolute right-10 top-10 h-4 w-4 rounded-full ${glowTone}`} />
+        <div className={`absolute right-16 bottom-8 h-10 w-24 rounded-full ${accentFill}`} />
+      </>
+    ),
+    support: (
+      <>
+        <div className={`absolute left-7 top-8 h-12 w-12 rounded-full ${accentFill}`} />
+        <div className={`absolute right-8 top-8 h-12 w-12 rounded-full ${accentFill}`} />
+        <div className={`absolute left-12 top-16 h-14 w-16 rotate-[-12deg] rounded-[10px] border ${strokeTone}`} />
+        <div className={`absolute right-12 top-16 h-14 w-16 rotate-[12deg] rounded-[10px] border ${strokeTone}`} />
+        <div className={`absolute left-1/2 top-[4.6rem] h-3 w-20 -translate-x-1/2 rounded-full ${glowTone}`} />
+      </>
+    ),
+    foundation: (
+      <>
+        <div className={`absolute left-10 top-7 h-14 w-14 rounded-[10px] border ${strokeTone}`} />
+        <div className={`absolute left-[5.4rem] top-12 h-14 w-14 rounded-[10px] border ${strokeTone}`} />
+        <div className={`absolute right-10 top-7 h-14 w-14 rounded-[10px] border ${strokeTone}`} />
+        <div className={`absolute left-1/2 bottom-7 h-3 w-28 -translate-x-1/2 rounded-full ${glowTone}`} />
+      </>
+    ),
+    network: (
+      <>
+        <div className={`absolute left-10 top-9 h-4 w-4 rounded-full ${glowTone}`} />
+        <div className={`absolute left-1/2 top-5 h-5 w-5 -translate-x-1/2 rounded-full ${glowTone}`} />
+        <div className={`absolute right-10 top-10 h-4 w-4 rounded-full ${glowTone}`} />
+        <div className={`absolute left-[4.4rem] bottom-8 h-4 w-4 rounded-full ${glowTone}`} />
+        <div className={`absolute right-[4.4rem] bottom-8 h-4 w-4 rounded-full ${glowTone}`} />
+        <div className={`absolute left-[4.9rem] top-11 h-px w-24 rotate-[14deg] ${accentFill}`} />
+        <div className={`absolute left-1/2 top-8 h-16 w-px -translate-x-1/2 ${accentFill}`} />
+        <div className={`absolute right-[4.9rem] top-11 h-px w-24 -rotate-[14deg] ${accentFill}`} />
+        <div className={`absolute left-[5.2rem] bottom-10 h-px w-24 ${accentFill}`} />
+      </>
+    ),
+  };
+
+  return (
+    <div className={`mb-6 rounded-[10px] border p-4 ${shellClasses}`}>
+      <div className={`cardIllustration relative h-28 overflow-hidden rounded-[10px] ${illustrationTone}`}>
+        <div className="absolute inset-0 opacity-90">{patterns[track.illustration]}</div>
+        <div className={`absolute inset-x-6 bottom-4 h-px ${isSubtle ? 'bg-stone-300/80' : 'bg-white/30'}`} />
+      </div>
+    </div>
+  );
+}
 
 export default function Tasi2025Page() {
   return (
@@ -191,7 +291,7 @@ export default function Tasi2025Page() {
               Thematic Focus
             </p>
             <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
-              Seven Key Tracks
+              Six Key Tracks
             </h2>
             <p className="mt-5 max-w-3xl text-body-lg text-stone-700 dark:text-slate-300">
               The inaugural edition spanned core trust and safety concerns
@@ -199,17 +299,18 @@ export default function Tasi2025Page() {
               response.
             </p>
             <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {tracks.map(([title, desc]) => (
+              {tracks.map((track) => (
                 <article
-                  key={title}
+                  key={track.title}
                   className="rounded-[10px] border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 md:p-8"
                 >
+                  <TrackIllustration track={track} />
                   <h3 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                    {title}
+                    {track.title}
                   </h3>
                   <div className="mt-5 h-1 w-14 rounded-full bg-rc-accent dark:bg-white"></div>
                   <p className="mt-5 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
-                    {desc}
+                    {track.description}
                   </p>
                 </article>
               ))}
@@ -218,18 +319,18 @@ export default function Tasi2025Page() {
         </section>
 
         <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm md:py-section-lg">
-          <div className="mx-auto grid w-full max-w-[1300px] items-center gap-10 px-4 md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:px-16">
-            <article className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-orange-100/60">
+          <div className="mx-auto grid w-full max-w-[1300px] gap-10 px-4 md:items-stretch md:grid-cols-[0.9fr_1.1fr] md:px-8 lg:px-16">
+            <article className="overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-orange-100/60 md:h-full">
               <a
                 href="https://www.youtube.com/live/_s_16oiTqpI?si=vc0sW-zIJeGFnukv"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Watch Dr. S. Jaishankar's TASI 2025 keynote on YouTube"
-                className="group block"
+                className="group block md:h-full"
               >
-                <div className="relative aspect-[4/5] md:aspect-[4/4.5]">
+                <div className="relative aspect-[3/2] md:h-full md:min-h-[100%] md:aspect-auto">
                   <Image
-                    src="/img/home-gallery/7T7A0651.webp"
+                    src="/img/home-gallery/tasi-2025-jaishankar-keynote.png"
                     alt="Dr. S. Jaishankar speaking at TASI 2025"
                     fill
                     className="object-cover transition duration-300 group-hover:scale-[1.02]"

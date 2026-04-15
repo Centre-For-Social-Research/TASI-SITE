@@ -9,8 +9,8 @@ import { sendInboundNotificationEmail } from '@/lib/resend';
 
 export async function POST(request) {
   const protection = await protectPublicPostRoute(request, 'messages', {
-    windowMs: 10 * 60 * 1000,
-    maxRequests: 5,
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 3,
   });
 
   if (!protection.ok) {
@@ -19,8 +19,11 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
+    const source = body?.source;
     const email = sanitizeEmail(body?.email);
     const message = sanitizeMessage(body?.message);
+    const normalizedSource =
+      typeof source === 'string' && source.trim() ? source.trim() : 'site-footer';
 
     if (!isValidEmail(email)) {
       return Response.json(
@@ -48,7 +51,7 @@ export async function POST(request) {
     const { error } = await supabase.from('contact_messages').insert({
       email,
       message,
-      source: 'site-footer',
+      source: normalizedSource,
       created_at: new Date().toISOString(),
     });
 
@@ -61,7 +64,7 @@ export async function POST(request) {
         subject: 'New TASI contact message',
         text: [
           'A new contact message was submitted on the website.',
-          `Source: site-footer`,
+          `Source: ${normalizedSource}`,
           `Email: ${email}`,
           '',
           'Message:',

@@ -1,6 +1,6 @@
 'use client';
 
-import { ClerkProvider, useClerk } from '@clerk/nextjs';
+import { useClerk } from '@clerk/nextjs';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import adminExitUtils from '@/lib/admin-exit-utils.cjs';
@@ -85,9 +85,5 @@ function AdminExitGuardInner({ children }) {
 }
 
 export default function AdminExitGuard({ children }) {
-  return (
-    <ClerkProvider>
-      <AdminExitGuardInner>{children}</AdminExitGuardInner>
-    </ClerkProvider>
-  );
+  return <AdminExitGuardInner>{children}</AdminExitGuardInner>;
 }

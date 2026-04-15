@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Search,
   Users,
@@ -28,6 +28,10 @@ import {
   filterUnreadAdminNotifications,
 } from '@/lib/admin-shell-utils.cjs';
 import {
+  buildAdminNotificationStorageKey,
+  resolveAdminShellRuntimeState,
+} from '@/lib/admin-runtime-guards.cjs';
+import {
   AdminStatusBadge,
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
@@ -46,8 +50,6 @@ const PAGE_TITLES = {
   '/admin/check-in': 'Check-In Console',
   '/admin/tickets': 'Ticketing',
 };
-
-const ADMIN_NOTIFICATION_READ_KEY = 'tasi-admin-read-notifications';
 
 function TopStatPill({ label, value, tone = 'default' }) {
   const toneClasses = {
@@ -137,16 +139,13 @@ function getInitials(name) {
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [readNotificationIds, setReadNotificationIds] = useState(() => {
-    if (typeof window === 'undefined') return [];
-    try {
-      const stored = window.localStorage.getItem(ADMIN_NOTIFICATION_READ_KEY);
-      const parsed = stored ? JSON.parse(stored) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  });
+  const storageKey = useMemo(
+    () => buildAdminNotificationStorageKey(operator),
+    [operator?.primaryEmail, operator?.userId]
+  );
+  const [readNotificationIds, setReadNotificationIds] = useState([]);
+  const [storageReady, setStorageReady] = useState(false);
+  const [runtimeIssue, setRuntimeIssue] = useState(null);
 
   async function handleSignOut() {
     await signOut({ redirectUrl: '/' });
@@ -156,6 +155,26 @@ export default function AdminShell({ operator, currentPath, children }) {
     summary: { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
     jobs: [],
   });
+  const shellStateRef = useRef(shellState);
+
+  useEffect(() => {
+    shellStateRef.current = shellState;
+  }, [shellState]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    setStorageReady(false);
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      const parsed = stored ? JSON.parse(stored) : [];
+      setReadNotificationIds(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      setReadNotificationIds([]);
+    } finally {
+      setStorageReady(true);
+    }
+  }, [storageKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -175,22 +194,29 @@ export default function AdminShell({ operator, currentPath, children }) {
 
         if (cancelled) return;
 
-        setShellState({
-          summary: registrationsResponse.ok
-            ? registrationsData.summary || {
-                pending: 0,
-                confirmed: 0,
-                qrIssued: 0,
-                checkedIn: 0,
-              }
-            : { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
-          jobs: jobsResponse.ok ? jobsData.jobs || [] : [],
-        });
+        const { nextState, runtimeIssue: nextRuntimeIssue } =
+          resolveAdminShellRuntimeState({
+            currentPath,
+            previousState: shellStateRef.current,
+            registrations: {
+              ok: registrationsResponse.ok,
+              status: registrationsResponse.status,
+              data: registrationsData,
+            },
+            jobs: {
+              ok: jobsResponse.ok,
+              status: jobsResponse.status,
+              data: jobsData,
+            },
+          });
+
+        setShellState(nextState);
+        setRuntimeIssue(nextRuntimeIssue);
       } catch {
         if (!cancelled) {
-          setShellState({
-            summary: { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
-            jobs: [],
+          setRuntimeIssue({
+            kind: 'degraded',
+            message: 'Live admin stats are temporarily unavailable.',
           });
         }
       }
@@ -205,7 +231,22 @@ export default function AdminShell({ operator, currentPath, children }) {
       cancelled = true;
       window.clearInterval(timer);
     };
-  }, []);
+  }, [currentPath]);
+
+  useEffect(() => {
+    if (!runtimeIssue || typeof window === 'undefined') return;
+
+    if (runtimeIssue.kind === 'reauth') {
+      void signOut({ redirectUrl: runtimeIssue.redirectTo }).catch(() => {
+        window.location.assign(runtimeIssue.redirectTo);
+      });
+      return;
+    }
+
+    if (runtimeIssue.kind === 'forbidden') {
+      window.location.assign(runtimeIssue.redirectTo);
+    }
+  }, [runtimeIssue, signOut]);
 
   const navSections = useMemo(
     () =>
@@ -250,11 +291,12 @@ export default function AdminShell({ operator, currentPath, children }) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (!storageReady) return;
     window.localStorage.setItem(
-      ADMIN_NOTIFICATION_READ_KEY,
+      storageKey,
       JSON.stringify(readNotificationIds)
     );
-  }, [readNotificationIds]);
+  }, [readNotificationIds, storageKey, storageReady]);
 
   function markNotificationRead(notification) {
     const id = buildAdminNotificationId(notification);
@@ -467,6 +509,11 @@ export default function AdminShell({ operator, currentPath, children }) {
           </header>
 
           <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
+            {runtimeIssue?.kind === 'degraded' ? (
+              <div className="mb-4 rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
+                {runtimeIssue.message}
+              </div>
+            ) : null}
             <section className="mb-6 rounded-[10px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(238,242,255,0.88)_42%,rgba(224,231,255,0.78)_100%)] p-5 shadow-[0_30px_80px_rgba(79,70,229,0.12)] dark:border-white/[0.08] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.82),rgba(17,24,39,0.92)_44%,rgba(30,41,59,0.72)_100%)]">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>

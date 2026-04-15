@@ -297,7 +297,10 @@ export async function confirmFestivalTicketPayment({
 }) {
   const current = await getFestivalTicketById(ticketId);
   if (current.status === 'confirmed' || current.status === 'checked_in') {
-    return current;
+    return {
+      ticket: current,
+      alreadyConfirmed: true,
+    };
   }
 
   const invoice = buildFestivalInvoiceMetadata({
@@ -320,7 +323,10 @@ export async function confirmFestivalTicketPayment({
     .eq('id', ticketId);
 
   if (error) throw new Error(error.message);
-  return getFestivalTicketById(ticketId);
+  return {
+    ticket: await getFestivalTicketById(ticketId),
+    alreadyConfirmed: false,
+  };
 }
 
 export async function recordFestivalPaymentAudit({

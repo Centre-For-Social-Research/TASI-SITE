@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
 import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -80,10 +81,12 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} ${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}
     >
       <body className="antialiased">
-        <AppShell>{children}</AppShell>
-        <Analytics />
-        <SpeedInsights />
-        <ChatBot />
+        <ClerkProvider>
+          <AppShell>{children}</AppShell>
+          <Analytics />
+          <SpeedInsights />
+          <ChatBot />
+        </ClerkProvider>
       </body>
     </html>
   );

@@ -1,5 +1,16 @@
 import crypto from 'node:crypto';
 
+function timingSafeCompare(expectedValue, receivedValue) {
+  const expected = Buffer.from(String(expectedValue));
+  const received = Buffer.from(String(receivedValue));
+
+  if (expected.length !== received.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(expected, received);
+}
+
 function getRazorpayKeyId() {
   return process.env.RAZORPAY_KEY_ID?.trim() || '';
 }
@@ -138,10 +149,7 @@ export function verifyRazorpayCheckoutSignature({
     .update(`${razorpayOrderId}|${razorpayPaymentId}`)
     .digest('hex');
 
-  return crypto.timingSafeEqual(
-    Buffer.from(expectedSignature),
-    Buffer.from(String(razorpaySignature))
-  );
+  return timingSafeCompare(expectedSignature, razorpaySignature);
 }
 
 export function verifyFestivalRazorpayCheckoutSignature({
@@ -162,10 +170,7 @@ export function verifyFestivalRazorpayCheckoutSignature({
     .update(`${razorpayOrderId}|${razorpayPaymentId}`)
     .digest('hex');
 
-  return crypto.timingSafeEqual(
-    Buffer.from(expectedSignature),
-    Buffer.from(String(razorpaySignature))
-  );
+  return timingSafeCompare(expectedSignature, razorpaySignature);
 }
 
 export function verifyRazorpayWebhookSignature({ payload, signature }) {
@@ -179,10 +184,7 @@ export function verifyRazorpayWebhookSignature({ payload, signature }) {
     .update(payload)
     .digest('hex');
 
-  return crypto.timingSafeEqual(
-    Buffer.from(expectedSignature),
-    Buffer.from(String(signature || ''))
-  );
+  return timingSafeCompare(expectedSignature, signature || '');
 }
 
 export function verifyFestivalRazorpayWebhookSignature({
@@ -202,8 +204,5 @@ export function verifyFestivalRazorpayWebhookSignature({
     .update(payload)
     .digest('hex');
 
-  return crypto.timingSafeEqual(
-    Buffer.from(expectedSignature),
-    Buffer.from(String(signature || ''))
-  );
+  return timingSafeCompare(expectedSignature, signature || '');
 }

@@ -77,6 +77,7 @@ function Footerdemo() {
         body: JSON.stringify({
           email: normalizeEmailInput(messageEmail),
           message: normalizeMessageInput(messageText),
+          source: 'site-footer',
         }),
       });
 
