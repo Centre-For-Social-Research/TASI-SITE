@@ -39,7 +39,7 @@ function buildPayload() {
   });
 }
 
-export default function () {
+function messagesRateLimitProbe() {
   const response = http.post(`${baseUrl}/api/messages`, buildPayload(), {
     headers: { 'Content-Type': 'application/json' },
     tags: {
@@ -55,3 +55,5 @@ export default function () {
     'no server failures': (r) => r.status !== 500,
   });
 }
+
+export default messagesRateLimitProbe;

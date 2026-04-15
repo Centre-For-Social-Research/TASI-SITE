@@ -139,10 +139,9 @@ function getInitials(name) {
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const storageKey = useMemo(
-    () => buildAdminNotificationStorageKey(operator),
-    [operator?.primaryEmail, operator?.userId]
-  );
+  const storageKey = useMemo(() => buildAdminNotificationStorageKey(operator), [
+    operator,
+  ]);
   const [readNotificationIds, setReadNotificationIds] = useState([]);
   const [storageReady, setStorageReady] = useState(false);
   const [runtimeIssue, setRuntimeIssue] = useState(null);
