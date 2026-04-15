@@ -32,3 +32,6 @@ tasi_guest_list_unzipped/
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Local brainstorm / preview artifacts
+.superpowers/

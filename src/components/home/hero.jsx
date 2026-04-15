@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { InfiniteGridOverlay } from '@/components/ui/the-infinite-grid';
+import SparklesText from '@/components/ui/sparkles-text';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -53,9 +54,9 @@ export default function HomeHero() {
           <div className="text-right flex-1 flex justify-end">
             <h1 className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end">
               <span className="leading-[0.8] mb-2">TASI</span>
-              <span className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">
+              <SparklesText className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">
                 2026
-              </span>
+              </SparklesText>
             </h1>
           </div>
 
@@ -66,9 +67,9 @@ export default function HomeHero() {
           {/* Right Side: Location and Info */}
           <div className="text-left flex-1 flex justify-start">
             <div className="flex flex-col text-center md:text-left">
-              <h2 className="text-[2.5rem] md:text-[4rem] font-black text-rc-secondary dark:text-white leading-none mb-3 tracking-tight drop-shadow-sm">
+              <SparklesText className="text-[2.5rem] md:text-[4rem] font-black text-rc-secondary dark:text-white leading-none mb-3 tracking-tight drop-shadow-sm">
                 Delhi
-              </h2>
+              </SparklesText>
               <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white mb-2">
                 IN PERSON & ONLINE
               </p>

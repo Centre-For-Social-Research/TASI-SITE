@@ -62,6 +62,8 @@ test('attendees page artifacts exist and expose public directory content', () =>
   assert.match(pageSource, /Public Attendees/);
   assert.match(componentSource, /Search attendees/);
   assert.match(componentSource, /View profile/);
+  assert.match(componentSource, /AvatarFallback/);
+  assert.match(componentSource, /getAttendeeInitials/);
   assert.match(componentSource, /All categories/);
   assert.match(componentSource, /EXCLUDED_CATEGORY_FILTERS/);
   assert.match(componentSource, /'Industry'/);

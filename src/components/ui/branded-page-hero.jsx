@@ -1,6 +1,11 @@
 import DarkHeroParticles from '@/components/ui/dark-hero-particles';
+import LightHeroParticles from '@/components/ui/light-hero-particles';
 
-export default function BrandedPageHero({ children, className = '' }) {
+export default function BrandedPageHero({
+  children,
+  className = '',
+  backgroundLayer = null,
+}) {
   return (
     <section
       className={`relative overflow-hidden bg-[linear-gradient(120deg,#55089e_-7.06%,#9f0099_16.19%,#ff0080_39.45%,#ef5700_85.96%,#ffff00_109.21%)] py-16 text-white md:py-24 ${className}`.trim()}
@@ -10,7 +15,9 @@ export default function BrandedPageHero({ children, className = '' }) {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(85,8,158,0)_-7.06%,rgba(159,0,153,0)_16.19%,rgba(255,0,188,0)_39.45%,rgba(239,87,0,0.25)_85.96%,rgba(255,255,0,0.85)_109.21%)]" />
       <div className="pointer-events-none absolute -top-20 left-[-8%] h-64 w-64 rounded-full bg-[#5547ec]/45 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-28 right-[-8%] h-72 w-72 rounded-full bg-[#ff2bbf]/35 blur-3xl" />
+      <LightHeroParticles />
       <DarkHeroParticles />
+      {backgroundLayer}
       <div className="relative z-10">{children}</div>
     </section>
   );

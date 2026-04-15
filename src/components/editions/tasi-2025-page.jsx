@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import KeynoteVideoPlayer from '@/components/editions/keynote-video-player';
+import RadialOrbitalTimeline from '@/components/editions/radial-orbital-timeline';
 import AboutQuotes from '@/components/about/quotes';
 import HomeFooter from '@/components/home/footer';
 import GlobalCta from '@/components/home/global-cta';
@@ -76,6 +77,74 @@ const future = [
   'Trust and Safety Index for measurable progress',
   'Regional and state-level dialogues across India',
   'Broader cross-industry participation',
+];
+
+const festivalJourneyEditorialNotes = [
+  'A compact map of how TASI 2025 moved from convening to policy direction.',
+  'Each stop links the edition’s momentum to the wider TASI 2026 conversation.',
+];
+
+const festivalJourneyTimeline = [
+  {
+    id: 1,
+    title: 'Opening Convening',
+    date: 'Stop 01',
+    content:
+      'TASI 2025 opened as a landmark convening in New Delhi, bringing together government, diplomats, platforms, researchers, and civil society around a shared trust and safety agenda.',
+    category: 'arrival',
+    icon: 'arrival',
+    relatedIds: [2, 3],
+    status: 'completed',
+    energy: 88,
+  },
+  {
+    id: 2,
+    title: 'Keynote Moments',
+    date: 'Stop 02',
+    content:
+      'Ministerial and global keynote voices framed the festival with urgency, strategic policy context, and a human-guided vision for safer digital ecosystems.',
+    category: 'keynotes',
+    icon: 'keynotes',
+    relatedIds: [1, 3, 4],
+    status: 'completed',
+    energy: 94,
+  },
+  {
+    id: 3,
+    title: 'Six Key Tracks',
+    date: 'Stop 03',
+    content:
+      'The festival moved into six connected thematic tracks covering AI governance, child protection, gendered harms, workforce realities, safety by design, and platform collaboration.',
+    category: 'tracks',
+    icon: 'tracks',
+    relatedIds: [1, 2, 4],
+    status: 'completed',
+    energy: 90,
+  },
+  {
+    id: 4,
+    title: 'Core Takeaways',
+    date: 'Stop 04',
+    content:
+      'Research findings, policy discussions, and implementation-focused recommendations translated the event into practical priorities for India’s digital future.',
+    category: 'takeaways',
+    icon: 'takeaways',
+    relatedIds: [2, 3, 5],
+    status: 'completed',
+    energy: 86,
+  },
+  {
+    id: 5,
+    title: 'TASI 2026',
+    date: 'Stop 05',
+    content:
+      'The inaugural edition closed with a forward path for stronger Global South leadership, year-round engagement, and a more ambitious TASI 2026.',
+    category: 'future',
+    icon: 'future',
+    relatedIds: [4],
+    status: 'in-progress',
+    energy: 82,
+  },
 ];
 
 function TrackIllustration({ track }) {
@@ -206,7 +275,10 @@ export default function Tasi2025Page() {
           </div>
         </BrandedPageHero>
 
-        <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
+        <section
+          id="about-festival"
+          className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg"
+        >
           <div className="mx-auto grid w-full max-w-[1300px] items-center gap-10 px-4 md:grid-cols-[1.15fr_0.85fr] md:px-8 lg:px-16">
             <div>
               <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
@@ -255,7 +327,51 @@ export default function Tasi2025Page() {
           </div>
         </section>
 
-        <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
+        <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] pb-section-sm md:pb-section-lg">
+          <div className="mx-auto grid w-full max-w-[1300px] gap-8 px-4 md:grid-cols-[0.94fr_1.06fr] md:items-stretch md:px-8 lg:px-16">
+            <div className="flex h-full flex-col justify-between pt-8 md:pt-10">
+              <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
+                Festival Journey
+              </p>
+              <h2 className="max-w-2xl text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl lg:text-[3rem]">
+                The edition in one connected arc
+              </h2>
+              <p className="mt-5 max-w-lg text-body-lg leading-relaxed text-stone-700">
+                TASI 2025 unfolded as a connected progression, from convening
+                the right room in New Delhi to turning shared urgency into
+                recommendations, institutional momentum, and the next chapter
+                for TASI 2026.
+              </p>
+              <div className="mt-6 grid gap-3">
+                {festivalJourneyEditorialNotes.map((note, index) => (
+                  <article
+                    key={note}
+                    className="rounded-[10px] border border-stone-200 bg-white/75 px-5 py-4 shadow-lg shadow-stone-200/30 backdrop-blur-sm"
+                  >
+                    <p className="mb-2 text-xs font-black uppercase tracking-[0.16em] text-rc-primary">
+                      Arc {String(index + 1).padStart(2, '0')}
+                    </p>
+                    <p className="text-sm leading-relaxed text-stone-700 md:text-[0.95rem]">
+                      {note}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex h-full rounded-[10px] border border-white/65 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(248,241,232,0.82))] p-3 shadow-[0_24px_70px_rgba(120,92,70,0.12)] backdrop-blur-xl md:min-h-[30rem] md:p-4">
+              <RadialOrbitalTimeline
+                timelineData={festivalJourneyTimeline}
+                variant="compact"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="keynote-moments"
+          className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
+        >
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
             <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
               Featured Session
@@ -285,7 +401,10 @@ export default function Tasi2025Page() {
           </div>
         </section>
 
-        <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
+        <section
+          id="key-tracks"
+          className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
+        >
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
             <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
               Thematic Focus
@@ -401,7 +520,10 @@ export default function Tasi2025Page() {
           </div>
         </section>
 
-        <section className="bg-white py-section-sm md:py-section-lg">
+        <section
+          id="core-takeaways"
+          className="bg-white py-section-sm md:py-section-lg"
+        >
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
             <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
               Recommendations
@@ -446,7 +568,10 @@ export default function Tasi2025Page() {
 
         <AboutQuotes />
 
-        <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm md:py-section-lg">
+        <section
+          id="looking-ahead"
+          className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm md:py-section-lg"
+        >
           <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
             <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
               What Comes Next
