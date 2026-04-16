@@ -1,4 +1,16 @@
 {
   "projectId": "prj_MjfkqXnBFgHGvmSFnj3qeW0AvdKc",
-  "orgId": "team_AvldiVsd7JH2THx7xZW1JGi0"
+  "orgId": "team_AvldiVsd7JH2THx7xZW1JGi0",
+  "projectName": "tasi-2026",
+  "settings": {
+    "createdAt": 1773175802082,
+    "framework": "nextjs",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "24.x"
+  }
 }

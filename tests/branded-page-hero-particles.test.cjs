@@ -22,14 +22,15 @@ test('branded hero uses shared light-only particles while preserving dark partic
   assert.match(hero, /<LightHeroParticles \/>/);
   assert.match(hero, /<DarkHeroParticles \/>/);
   assert.match(lightParticles, /'use client';/);
-  assert.match(lightParticles, /await import\('particles\.js'\);/);
-  assert.match(lightParticles, /window\.particlesJS\('light-hero-particles'/);
+  assert.match(lightParticles, /@tsparticles\/react/);
+  assert.match(lightParticles, /loadSlim/);
+  assert.match(lightParticles, /<Particles/);
   assert.match(lightParticles, /dark:hidden/);
-  assert.match(lightParticles, /value:\s*0\.48/);
+  assert.match(lightParticles, /value:\s*'#ffe7a8'/);
   assert.match(
     aboutPage,
     /<BrandedPageHero[\s\S]*className="min-h-\[300px\] py-14 md:min-h-\[360px\] md:py-20"/
   );
   assert.doesNotMatch(aboutPage, /backgroundLayer=\{/);
-  assert.match(packageJson, /"particles\.js":/);
+  assert.doesNotMatch(packageJson, /"particles\.js":/);
 });

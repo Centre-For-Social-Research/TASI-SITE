@@ -3,7 +3,7 @@
   "crons": [
     {
       "path": "/api/internal/registration-ops/drain",
-      "schedule": "* * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }

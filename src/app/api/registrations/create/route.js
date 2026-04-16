@@ -6,7 +6,8 @@ import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { isValidEmail } from '@/lib/input-sanitizers';
 import { REGISTRATION_SOURCE } from '@/lib/registration-constants';
 import { createNotification, createRegistration } from '@/lib/registration-db';
-import { queueRegistrationEmailJob } from '@/lib/registration-email-job-service';
+import { after } from 'next/server';
+import { processNextAvailableRegistrationEmailJob, queueRegistrationEmailJob } from '@/lib/registration-email-job-service';
 import {
   PROFILE_BUCKET,
   buildRegistrationCode,
@@ -157,6 +158,19 @@ export async function POST(request) {
       registrationId: createdRegistration.id,
       templateType: 'submission_received',
       notificationId,
+    });
+
+    after(async () => {
+      try {
+        await processNextAvailableRegistrationEmailJob({
+          operator: {
+            userId: 'system-after-trigger',
+            primaryEmail: 'system-after-trigger@local',
+          },
+        });
+      } catch (error) {
+        console.error('Failed to process registration email job in background:', error);
+      }
     });
 
     return Response.json(

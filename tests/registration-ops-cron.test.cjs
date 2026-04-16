@@ -15,7 +15,7 @@ test('vercel cron is configured to drain registration ops queues through a dedic
     config.crons.some(
       (cron) =>
         cron.path === '/api/internal/registration-ops/drain' &&
-        cron.schedule === '* * * * *'
+        cron.schedule === '0 0 * * *'
     )
   );
 });
