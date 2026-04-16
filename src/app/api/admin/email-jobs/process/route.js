@@ -1,9 +1,9 @@
 import { authorizeJobProcessorRequest } from '@/lib/job-processor-auth';
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
 import {
-  processNextAvailablePassIssueEmailJob,
-  processPassIssueEmailJob,
-} from '@/lib/pass-issue-job-service';
+  processNextAvailableRegistrationEmailJob,
+  processRegistrationEmailJob,
+} from '@/lib/registration-email-job-service';
 
 function serializeJob(job) {
   if (!job) {
@@ -18,7 +18,7 @@ function serializeJob(job) {
         total: job.total_items,
         queued: job.queued_items,
         processing: job.processing_items,
-        sent: job.sent_items + job.skipped_items,
+        sent: job.sent_items,
         failed: job.failed_items,
         retrying: job.retrying_items,
       },
@@ -28,7 +28,7 @@ function serializeJob(job) {
 
 export async function POST(request) {
   const authResult = await authorizeJobProcessorRequest(request, {
-    route: 'api.admin.passes.jobs.process',
+    route: 'api.admin.email.jobs.process',
   });
   if (!authResult.ok) {
     return authResult.response;
@@ -39,12 +39,12 @@ export async function POST(request) {
     const jobId = String(body?.jobId || '').trim();
     const chunkSize = Number(body?.chunkSize || 0) || undefined;
     const processedJob = jobId
-      ? await processPassIssueEmailJob({
+      ? await processRegistrationEmailJob({
           jobId,
           operator: authResult.operator,
           chunkSize,
         })
-      : await processNextAvailablePassIssueEmailJob({
+      : await processNextAvailableRegistrationEmailJob({
           operator: authResult.operator,
           chunkSize,
         });
@@ -59,7 +59,7 @@ export async function POST(request) {
         error:
           error instanceof Error
             ? error.message
-            : 'Unable to process QR delivery jobs.',
+            : 'Unable to process registration email jobs.',
       },
       { status: 500 }
     );

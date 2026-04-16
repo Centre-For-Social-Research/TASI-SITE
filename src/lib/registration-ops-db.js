@@ -556,6 +556,226 @@ export async function retryFailedPassIssueEmailJobItems(jobId) {
   return data || [];
 }
 
+export async function createRegistrationEmailJobRecord({
+  templateType,
+  operator = null,
+}) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('registration_email_jobs')
+    .insert({
+      status: 'queued',
+      template_type: templateType,
+      created_by_clerk_id: operator?.userId || null,
+      created_by_email: operator?.primaryEmail || null,
+      updated_at: new Date().toISOString(),
+    })
+    .select('*')
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function insertRegistrationEmailJobItems({
+  jobId,
+  items = [],
+  maxAttempts = 3,
+}) {
+  if (!items.length) {
+    return [];
+  }
+
+  const supabase = getSupabase();
+  const payload = items.map((item) => ({
+    job_id: jobId,
+    registration_id: item.registrationId,
+    notification_id: item.notificationId || null,
+    template_type: item.templateType,
+    status: 'queued',
+    max_attempts: maxAttempts,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  }));
+
+  const { data, error } = await supabase
+    .from('registration_email_job_items')
+    .insert(payload)
+    .select(
+      'id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
+    );
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data || [];
+}
+
+export async function refreshRegistrationEmailJob(jobId) {
+  const supabase = getSupabase();
+  const { data: items, error } = await supabase
+    .from('registration_email_job_items')
+    .select('status')
+    .eq('job_id', jobId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const counters = {
+    total_items: items.length,
+    queued_items: 0,
+    processing_items: 0,
+    sent_items: 0,
+    failed_items: 0,
+    retrying_items: 0,
+  };
+
+  for (const item of items) {
+    if (item.status === 'queued') counters.queued_items += 1;
+    if (item.status === 'processing') counters.processing_items += 1;
+    if (item.status === 'sent') counters.sent_items += 1;
+    if (item.status === 'failed') counters.failed_items += 1;
+    if (item.status === 'retrying') counters.retrying_items += 1;
+  }
+
+  let status = 'queued';
+  let completedAt = null;
+  if (counters.processing_items > 0 || counters.retrying_items > 0) {
+    status = 'processing';
+  } else if (counters.queued_items > 0) {
+    status = 'queued';
+  } else if (counters.failed_items > 0) {
+    status = 'failed';
+    completedAt = new Date().toISOString();
+  } else {
+    status = 'completed';
+    completedAt = new Date().toISOString();
+  }
+
+  const { data, error: updateError } = await supabase
+    .from('registration_email_jobs')
+    .update({
+      ...counters,
+      status,
+      completed_at: completedAt,
+      last_processed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', jobId)
+    .select('*')
+    .single();
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+
+  return data;
+}
+
+export async function listRegistrationEmailJobs({ limit = 20 } = {}) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('registration_email_jobs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data || [];
+}
+
+export async function getRegistrationEmailJob(jobId) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('registration_email_jobs')
+    .select('*')
+    .eq('id', jobId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function claimRegistrationEmailJobItems({
+  jobId,
+  limit = 20,
+} = {}) {
+  const supabase = getSupabase();
+  const { data: items, error } = await supabase
+    .from('registration_email_job_items')
+    .select(
+      'id, job_id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
+    )
+    .eq('job_id', jobId)
+    .in('status', ['queued', 'retrying'])
+    .order('created_at', { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const claimed = [];
+
+  for (const item of items || []) {
+    const nextAttemptCount = Number(item.attempt_count || 0) + 1;
+    const { data: updatedItem, error: updateError } = await supabase
+      .from('registration_email_job_items')
+      .update({
+        status: 'processing',
+        attempt_count: nextAttemptCount,
+        last_attempt_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', item.id)
+      .eq('status', item.status)
+      .select(
+        'id, job_id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
+      )
+      .maybeSingle();
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+
+    if (updatedItem) {
+      claimed.push(updatedItem);
+    }
+  }
+
+  return claimed;
+}
+
+export async function updateRegistrationEmailJobItem(itemId, fields) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('registration_email_job_items')
+    .update({
+      ...fields,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', itemId)
+    .select('*')
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
 export async function deleteRegistration(id) {
   const supabase = getSupabase();
   const { error } = await supabase
