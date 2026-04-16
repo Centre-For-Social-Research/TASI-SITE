@@ -77,6 +77,14 @@ function buildAdminNavigation({ pathname = '', summary = {}, jobs = [] } = {}) {
           badgeTone: 'accent',
           showBadge: false,
         },
+        {
+          href: '/admin/email-jobs',
+          label: 'Emails',
+          active: normalizedPath === '/admin/email-jobs',
+          badgeCount: 0,
+          badgeTone: 'warning',
+          showBadge: false,
+        },
       ],
     },
   ];

@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   Activity,
   ShieldCheck,
+  Mail,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useClerk } from '@clerk/nextjs';
@@ -41,6 +42,7 @@ const NAV_ICONS = {
   '/admin/delivery': Send,
   '/admin/check-in': ScanLine,
   '/admin/tickets': Ticket,
+  '/admin/email-jobs': Mail,
 };
 
 const PAGE_TITLES = {
@@ -49,6 +51,7 @@ const PAGE_TITLES = {
   '/admin/delivery': 'Delivery Jobs',
   '/admin/check-in': 'Check-In Console',
   '/admin/tickets': 'Ticketing',
+  '/admin/email-jobs': 'Registration Emails',
 };
 
 function TopStatPill({ label, value, tone = 'default' }) {

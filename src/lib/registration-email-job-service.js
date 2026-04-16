@@ -14,8 +14,10 @@ import {
   createRegistrationEmailJobRecord,
   getRegistrationEmailJob,
   insertRegistrationEmailJobItems,
+  listRegistrationEmailJobItems,
   listRegistrationEmailJobs,
   refreshRegistrationEmailJob,
+  retryFailedRegistrationEmailJobItems,
   updateRegistrationEmailJobItem,
 } from './registration-ops-db.js';
 
@@ -39,6 +41,8 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     sendRegistrationEmail = deliverRegistrationEmail,
     createRegistrationNotification = createNotification,
     updateNotificationDelivery = markNotificationDelivery,
+    listJobItems = listRegistrationEmailJobItems,
+    retryFailedItems = retryFailedRegistrationEmailJobItems,
   } = deps;
 
   async function queueRegistrationEmailJob({
@@ -163,10 +167,26 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     });
   }
 
+  async function getRegistrationEmailJobDetail(jobId) {
+    const [job, items] = await Promise.all([
+      getJob(jobId),
+      listJobItems({ jobId, limit: 100 }),
+    ]);
+
+    return { job, items };
+  }
+
+  async function retryRegistrationEmailJob(jobId) {
+    await retryFailedItems(jobId);
+    return refreshJob(jobId);
+  }
+
   return {
     queueRegistrationEmailJob,
     processRegistrationEmailJob,
     processNextAvailableRegistrationEmailJob,
+    getRegistrationEmailJobDetail,
+    retryRegistrationEmailJob,
   };
 }
 
@@ -178,3 +198,7 @@ export const processRegistrationEmailJob =
   defaultProcessor.processRegistrationEmailJob;
 export const processNextAvailableRegistrationEmailJob =
   defaultProcessor.processNextAvailableRegistrationEmailJob;
+export const getRegistrationEmailJobDetail =
+  defaultProcessor.getRegistrationEmailJobDetail;
+export const retryRegistrationEmailJob =
+  defaultProcessor.retryRegistrationEmailJob;

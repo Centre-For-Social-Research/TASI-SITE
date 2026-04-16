@@ -757,6 +757,74 @@ export async function claimRegistrationEmailJobItems({
   return claimed;
 }
 
+export async function listRegistrationEmailJobItems({ jobId, limit = 50 } = {}) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('registration_email_job_items')
+    .select(
+      `
+      id,
+      job_id,
+      registration_id,
+      notification_id,
+      template_type,
+      status,
+      attempt_count,
+      max_attempts,
+      failure_reason,
+      sent_at,
+      last_attempt_at,
+      created_at,
+      updated_at,
+      registration:event_registrations (
+        registration_code,
+        first_name,
+        last_name,
+        email,
+        organization
+      )
+    `
+    )
+    .eq('job_id', jobId)
+    .order('created_at', { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data || [];
+}
+
+export async function retryFailedRegistrationEmailJobItems(jobId) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('registration_email_job_items')
+    .update({
+      status: 'queued',
+      failure_reason: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('job_id', jobId)
+    .eq('status', 'failed')
+    .select('id');
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  await supabase
+    .from('registration_email_jobs')
+    .update({
+      status: 'queued',
+      completed_at: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', jobId);
+
+  return data || [];
+}
+
 export async function updateRegistrationEmailJobItem(itemId, fields) {
   const supabase = getSupabase();
   const { data, error } = await supabase
