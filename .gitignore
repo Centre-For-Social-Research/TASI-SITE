@@ -36,6 +36,11 @@ tasi_guest_list_unzipped/
 # Local brainstorm / preview artifacts
 .superpowers/
 .worktrees/
+docs/superpowers/
+.agents/
+.claude/
+skills-lock.json
+scripts/*.ndjson
 
 # Vercel and Supabase local runtimes
 .vercel/
