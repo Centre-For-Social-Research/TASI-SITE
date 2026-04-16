@@ -36,3 +36,7 @@ tasi_guest_list_unzipped/
 # Local brainstorm / preview artifacts
 .superpowers/
 .worktrees/
+
+# Vercel and Supabase local runtimes
+.vercel/
+supabase/.temp/
