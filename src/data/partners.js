@@ -334,16 +334,16 @@ export const partners = [
     slug: 'dhirubhai-ambani-university',
     type: 'Academic Partner',
     description:
-      'Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT) is an Indian institution focused on education and research in information and communication technology.',
+      'Dhirubhai Ambani University (DAU), through its specialized School of Law (DAU-SoL), is a premier research-led institution in Gandhinagar. It serves as a hub for legal innovation and capacity building, with a specific focus on postgraduate (LLM) and PhD programs in emerging frontiers including AI and Technology Law, Aviation Law, ESG, and Construction Law & Arbitration.',
     country: 'India',
     category: 'University',
-    website: 'https://www.daiict.ac.in',
+    website: 'https://dau.ac.in',
     social: {
       linkedin:
-        'https://www.linkedin.com/school/dhirubhai-ambani-institute-of-information-and-communication-technology',
+        'https://www.linkedin.com/school/dhirubhai-ambani-university/',
       twitter: 'https://x.com/dauofficial_',
-      instagram: 'https://www.instagram.com/daiictofficial',
-      youtube: 'https://www.youtube.com/channel/UCVF7imL-YrGjnPaTFY--Sww',
+      instagram: 'https://www.instagram.com/dau._official',
+      youtube: 'https://www.youtube.com/@dauofficial_',
     },
   },
   {

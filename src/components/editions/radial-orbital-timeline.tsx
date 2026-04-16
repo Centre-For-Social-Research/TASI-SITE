@@ -137,13 +137,15 @@ export default function RadialOrbitalTimeline({
     const radius = isCompact ? 132 : 272;
     const radian = (angle * Math.PI) / 180;
 
-    const x = radius * Math.cos(radian) + centerOffset.x;
-    const y = radius * Math.sin(radian) + centerOffset.y;
+    const x = Number((radius * Math.cos(radian) + centerOffset.x).toFixed(2));
+    const y = Number((radius * Math.sin(radian) + centerOffset.y).toFixed(2));
 
     const zIndex = Math.round(100 + 50 * Math.cos(radian));
-    const opacity = Math.max(
-      0.4,
-      Math.min(1, 0.4 + 0.6 * ((1 + Math.sin(radian)) / 2))
+    const opacity = Number(
+      Math.max(
+        0.4,
+        Math.min(1, 0.4 + 0.6 * ((1 + Math.sin(radian)) / 2))
+      ).toFixed(4)
     );
 
     return { x, y, angle, zIndex, opacity };
@@ -350,48 +352,7 @@ export default function RadialOrbitalTimeline({
                     >
                       <p>{item.content}</p>
 
-                      {item.relatedIds.length > 0 && (
-                        <div
-                          className={`mt-4 pt-3 ${isCompact ? "border-t border-stone-200/90" : "border-t border-white/10"}`}
-                        >
-                          <div className="flex items-center mb-2">
-                            <Link
-                              size={10}
-                              className={`mr-1 ${isCompact ? "text-[#a66b43]" : "text-[#ffd38a]/80"}`}
-                            />
-                            <h4
-                              className={`text-xs uppercase tracking-wider font-medium ${isCompact ? "text-stone-500" : "text-white/70"}`}
-                            >
-                              Connected Nodes
-                            </h4>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {item.relatedIds.map((relatedId) => {
-                              const relatedItem = timelineData.find(
-                                (i) => i.id === relatedId
-                              );
-                              return (
-                                <Button
-                                  key={relatedId}
-                                  variant="outline"
-                                  size="sm"
-                                  className={`flex items-center h-6 px-2 py-0 text-xs rounded-none transition-all ${isCompact ? "border-stone-300 bg-white/55 text-stone-700 hover:bg-white hover:text-stone-900" : "border-[#ffd38a]/20 bg-transparent text-white/80 hover:bg-white/10 hover:text-white"}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleItem(relatedId);
-                                  }}
-                                >
-                                  {relatedItem?.title}
-                                  <ArrowRight
-                                    size={8}
-                                    className="ml-1 text-white/60"
-                                  />
-                                </Button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
+
                     </CardContent>
                   </Card>
                 )}

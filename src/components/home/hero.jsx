@@ -51,7 +51,7 @@ export default function HomeHero() {
           custom={0.1}
         >
           {/* Left Side: Logo equivalent */}
-          <div className="text-right flex-1 flex justify-end">
+          <div className="flex-1 flex justify-center md:justify-end text-center md:text-right">
             <h1 className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end">
               <span className="leading-[0.8] mb-2">TASI</span>
               <SparklesText className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">
@@ -65,8 +65,8 @@ export default function HomeHero() {
           <div className="md:hidden h-[2px] w-24 bg-white my-2"></div>
 
           {/* Right Side: Location and Info */}
-          <div className="text-left flex-1 flex justify-start">
-            <div className="flex flex-col text-center md:text-left">
+          <div className="flex-1 flex justify-center md:justify-start text-center md:text-left">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <SparklesText className="text-[2.5rem] md:text-[4rem] font-black text-rc-secondary dark:text-white leading-none mb-3 tracking-tight drop-shadow-sm">
                 Delhi
               </SparklesText>

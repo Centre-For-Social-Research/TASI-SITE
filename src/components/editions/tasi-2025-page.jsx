@@ -359,7 +359,7 @@ export default function Tasi2025Page() {
               </div>
             </div>
 
-            <div className="flex h-full rounded-[10px] border border-white/65 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(248,241,232,0.82))] p-3 shadow-[0_24px_70px_rgba(120,92,70,0.12)] backdrop-blur-xl md:min-h-[30rem] md:p-4">
+            <div className="relative flex h-full min-h-[28rem] overflow-hidden rounded-[10px] border border-white/65 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(248,241,232,0.82))] p-3 shadow-[0_24px_70px_rgba(120,92,70,0.12)] backdrop-blur-xl md:min-h-[30rem] md:overflow-visible md:p-4">
               <RadialOrbitalTimeline
                 timelineData={festivalJourneyTimeline}
                 variant="compact"
