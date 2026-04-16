@@ -358,12 +358,28 @@ alter table public.festival_tickets enable row level security;
 alter table public.festival_payment_audit_log enable row level security;
 alter table public.festival_admin_audit_log enable row level security;
 
+drop policy if exists "Deny registration email jobs api access" on public.registration_email_jobs;
+drop policy if exists "Deny registration email job items api access" on public.registration_email_job_items;
 drop policy if exists "Deny all newsletter anon" on public.newsletter_subscribers;
 drop policy if exists "Deny all contact anon" on public.contact_messages;
 drop policy if exists "Deny all registration confirmation anon" on public.registration_confirmation_requests;
 drop policy if exists "Allow newsletter insert" on public.newsletter_subscribers;
 drop policy if exists "Allow message insert" on public.contact_messages;
 drop policy if exists "Allow registration confirmation insert" on public.registration_confirmation_requests;
+
+create policy "Deny registration email jobs api access"
+on public.registration_email_jobs
+for all
+to anon, authenticated
+using (false)
+with check (false);
+
+create policy "Deny registration email job items api access"
+on public.registration_email_job_items
+for all
+to anon, authenticated
+using (false)
+with check (false);
 
 create policy "Allow newsletter insert"
 on public.newsletter_subscribers

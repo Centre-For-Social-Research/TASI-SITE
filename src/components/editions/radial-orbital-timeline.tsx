@@ -200,6 +200,11 @@ export default function RadialOrbitalTimeline({
             transform: `translate(${centerOffset.x}px, ${centerOffset.y}px)`,
           }}
         >
+          {isCompact ? (
+            <div className="absolute left-1/2 top-6 z-20 -translate-x-1/2 rounded-full border border-[#d7b48d]/70 bg-white/78 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#6d5143] shadow-[0_10px_30px_rgba(120,92,70,0.08)]">
+              Connected Nodes
+            </div>
+          ) : null}
           <div
             className={`absolute rounded-full animate-pulse flex items-center justify-center z-10 ${isCompact ? "h-16 w-16 bg-[linear-gradient(135deg,#fff6e8_0%,#f5dcb8_26%,#d7a36b_58%,#b87554_100%)] shadow-[0_0_36px_rgba(189,127,66,0.18)]" : "w-24 h-24 bg-[linear-gradient(135deg,#ffd38a_0%,#ff9d3d_24%,#8a1f65_62%,#3b0c63_100%)] shadow-[0_0_60px_rgba(255,157,61,0.28)]"}`}
           >

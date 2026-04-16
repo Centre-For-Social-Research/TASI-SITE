@@ -12,6 +12,7 @@ Operate registration confirmation mail and pre-event QR delivery in queue-backed
   - `registration_email_jobs`
   - `registration_email_job_items`
 - `REGISTRATION_JOB_PROCESSOR_SECRET` is configured for server-to-server processing calls if you do not want to depend on an open admin session.
+- `CRON_SECRET` is configured so Vercel Cron can authenticate the scheduled queue drain route.
 - Resend and Supabase credentials are configured correctly.
 
 ## Registration confirmation behavior
@@ -27,6 +28,15 @@ Operate registration confirmation mail and pre-event QR delivery in queue-backed
 - Bulk QR sends must not fall back to inline direct-send mode.
 
 ## Processing routes
+
+### Scheduled drain route
+
+`GET /api/internal/registration-ops/drain`
+
+- Invoked every minute by the cron entry in `vercel.json`
+- Authenticated with `Authorization: Bearer <CRON_SECRET>`
+- Drains both QR and registration email queues in bounded passes per invocation
+- Keeps queue progression moving even when no admin page is open
 
 ### Process QR delivery chunks
 
@@ -60,6 +70,7 @@ Either:
 
 - call the routes from an authorized operator session, or
 - send `x-registration-job-secret: <REGISTRATION_JOB_PROCESSOR_SECRET>`
+- let Vercel Cron call the scheduled drain route with `Authorization: Bearer <CRON_SECRET>`
 
 This second mode is intended for cron or server-to-server triggers.
 
