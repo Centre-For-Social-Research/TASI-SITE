@@ -5,12 +5,8 @@ import { protectPublicRoute } from '@/lib/api-security';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { isValidEmail } from '@/lib/input-sanitizers';
 import { REGISTRATION_SOURCE } from '@/lib/registration-constants';
-import {
-  createNotification,
-  createRegistration,
-  markNotificationDelivery,
-} from '@/lib/registration-db';
-import { deliverRegistrationEmail } from '@/lib/registration-email';
+import { createNotification, createRegistration } from '@/lib/registration-db';
+import { queueRegistrationEmailJob } from '@/lib/registration-email-job-service';
 import {
   PROFILE_BUCKET,
   buildRegistrationCode,
@@ -157,11 +153,10 @@ export async function POST(request) {
       recipientEmail: createdRegistration.email,
     });
 
-    const emailResult = await deliverRegistrationEmail({
-      registration: createdRegistration,
+    const emailResult = await queueRegistrationEmailJob({
+      registrationId: createdRegistration.id,
       templateType: 'submission_received',
       notificationId,
-      db: { markNotificationDelivery },
     });
 
     return Response.json(
@@ -169,8 +164,8 @@ export async function POST(request) {
         success: true,
         registrationId: createdRegistration.id,
         registrationCode: createdRegistration.registration_code,
-        emailQueued: Boolean(emailResult.sent),
-        emailError: emailResult.sent ? null : emailResult.error || null,
+        emailQueued: Boolean(emailResult.queued),
+        emailError: emailResult.queued ? null : emailResult.error || null,
       },
       { headers: protection.headers }
     );

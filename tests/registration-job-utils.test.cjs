@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
+  assertQueueInfrastructureAvailable,
   buildJobSelection,
   deriveJobProgress,
   isQueueInfrastructureUnavailable,
@@ -115,5 +116,22 @@ test('recognizes schema-cache queue table errors', () => {
     ),
     true
   );
+  assert.equal(
+    isQueueInfrastructureUnavailable(
+      'relation "registration_email_job_items" does not exist'
+    ),
+    true
+  );
   assert.equal(isQueueInfrastructureUnavailable('Network error'), false);
+});
+
+test('assertQueueInfrastructureAvailable throws a clear operator-facing error for unavailable queues', () => {
+  assert.throws(
+    () =>
+      assertQueueInfrastructureAvailable(
+        new Error('relation "pass_issue_email_jobs" does not exist'),
+        'QR bulk delivery queue is unavailable.'
+      ),
+    /QR bulk delivery queue is unavailable/i
+  );
 });

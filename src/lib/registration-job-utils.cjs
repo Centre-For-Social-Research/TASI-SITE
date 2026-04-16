@@ -84,13 +84,29 @@ function isQueueInfrastructureUnavailable(errorOrMessage) {
   return (
     message.includes('pass_issue_email_jobs') ||
     message.includes('pass_issue_email_job_items') ||
+    message.includes('registration_email_jobs') ||
+    message.includes('registration_email_job_items') ||
     message.includes('schema cache')
   );
+}
+
+function assertQueueInfrastructureAvailable(
+  errorOrMessage,
+  message = 'Queue infrastructure is unavailable.'
+) {
+  if (isQueueInfrastructureUnavailable(errorOrMessage)) {
+    throw new Error(message);
+  }
+
+  throw errorOrMessage instanceof Error
+    ? errorOrMessage
+    : new Error(String(errorOrMessage || message));
 }
 
 module.exports = {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
+  assertQueueInfrastructureAvailable,
   buildJobSelection,
   deriveJobProgress,
   isQueueInfrastructureUnavailable,
