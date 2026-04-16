@@ -322,24 +322,6 @@ drop policy if exists "Allow newsletter insert" on public.newsletter_subscribers
 drop policy if exists "Allow message insert" on public.contact_messages;
 drop policy if exists "Allow registration confirmation insert" on public.registration_confirmation_requests;
 
-create policy "Allow newsletter insert"
-on public.newsletter_subscribers
-for insert
-to anon, authenticated
-with check (true);
-
-create policy "Allow message insert"
-on public.contact_messages
-for insert
-to anon, authenticated
-with check (true);
-
-create policy "Allow registration confirmation insert"
-on public.registration_confirmation_requests
-for insert
-to anon, authenticated
-with check (true);
-
 insert into storage.buckets (id, name, public)
 values ('registration-profile-photos', 'registration-profile-photos', false)
 on conflict (id) do nothing;

@@ -35,3 +35,4 @@ tasi_guest_list_unzipped/
 
 # Local brainstorm / preview artifacts
 .superpowers/
+.worktrees/
