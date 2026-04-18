@@ -100,7 +100,7 @@ function SelectAllHeader() {
         type="checkbox"
         checked={ctx.allVisibleSelected}
         onChange={ctx.toggleVisibleSelection}
-        className="rounded border-slate-300 dark:border-white/10"
+        className="rounded border-zinc-300 dark:border-white/10"
       />
     </div>
   );
@@ -119,7 +119,7 @@ function CheckboxCell({ row }) {
         type="checkbox"
         checked={selected}
         onChange={() => ctx.toggleSelection(row.data.id)}
-        className="rounded border-slate-300 dark:border-white/10"
+        className="rounded border-zinc-300 dark:border-white/10"
       />
     </div>
   );
@@ -134,13 +134,13 @@ function RegistrantCell({ row }) {
       className="flex h-full cursor-pointer flex-col justify-center py-1"
       onClick={() => ctx.openDrawerFor(r.id)}
     >
-      <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
+      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
         {r.first_name} {r.last_name}
       </p>
-      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+      <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
         {r.registration_code}
       </p>
-      <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+      <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
         {r.organization || 'Independent'} …{' '}
         {r.attendee_category || 'Unspecified'}
       </p>
@@ -156,7 +156,7 @@ function EmailCell({ row }) {
       className="flex h-full cursor-pointer items-center"
       onClick={() => ctx.openDrawerFor(row.data.id)}
     >
-      <p className="text-xs text-slate-700 dark:text-slate-300">
+      <p className="text-xs text-zinc-700 dark:text-zinc-300">
         {row.data.email}
       </p>
     </div>
@@ -188,7 +188,7 @@ function LocationCell({ row }) {
       className="flex h-full cursor-pointer items-center"
       onClick={() => ctx.openDrawerFor(row.data.id)}
     >
-      <p className="text-xs text-slate-600 dark:text-slate-400">{loc}</p>
+      <p className="text-xs text-zinc-600 dark:text-zinc-400">{loc}</p>
     </div>
   );
 }
@@ -384,12 +384,12 @@ function RegistrantDrawer({
       {detailState.loading ? (
         <div className="flex flex-col items-center justify-center gap-3 py-16">
           <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Loading details…
           </p>
         </div>
       ) : !activeRegistration ? (
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Select a registrant row to see their details here.
         </p>
       ) : (
@@ -413,13 +413,13 @@ function RegistrantDrawer({
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
                 Contact
               </p>
-              <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">
+              <p className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
                 {activeRegistration.first_name} {activeRegistration.last_name}
               </p>
-              <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+              <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
                 {activeRegistration.organization || 'Independent attendee'}
               </p>
-              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+              <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
                 {activeRegistration.email}
               </p>
               {activeRegistration.linkedin_url ? (
@@ -434,12 +434,12 @@ function RegistrantDrawer({
                 </a>
               ) : null}
             </div>
-            <div className="relative h-[132px] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 dark:border-white/[0.06] dark:bg-white/[0.06] sm:w-[132px]">
+            <div className="relative h-[132px] w-full overflow-hidden rounded-[10px] border border-zinc-200 bg-zinc-100 dark:border-white/[0.06] dark:bg-white/[0.06] sm:w-[132px]">
               {activeRegistration.profilePhotoUrl ? (
                 <div className="relative h-full w-full">
                   {!photoLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                      <Loader2 className="h-5 w-5 animate-spin text-zinc-400" />
                     </div>
                   )}
                   <Image
@@ -452,7 +452,7 @@ function RegistrantDrawer({
                   />
                 </div>
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-center text-xs text-slate-500 dark:text-slate-400">
+                <div className="flex h-full w-full items-center justify-center text-center text-xs text-zinc-500 dark:text-zinc-400">
                   No photo
                 </div>
               )}
@@ -461,42 +461,42 @@ function RegistrantDrawer({
 
           {/* Key dates */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 Category
               </p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                 {activeRegistration.attendee_category || 'Unspecified'}
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 Priority
               </p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                 {activeRegistration.priority_tier || 'Standard'}
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 QR Issued
               </p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                 {formatDate(activeRegistration.qr_pass_issued_at)}
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 Checked In
               </p>
-              <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                 {formatDate(activeRegistration.checked_in_at)}
               </p>
             </div>
           </div>
 
           {/* Status + notes */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
+          <div className="rounded-[10px] border border-zinc-200 bg-white p-4 dark:border-white/[0.06] dark:bg-white/[0.04]">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
                 Status + Notes
@@ -504,12 +504,12 @@ function RegistrantDrawer({
               <button
                 type="button"
                 onClick={resendDetailEmail}
-                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-white/10 dark:text-slate-300 dark:hover:border-white/10 dark:hover:text-slate-100"
+                className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs text-zinc-600 transition hover:border-zinc-300 hover:text-zinc-800 dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/10 dark:hover:text-zinc-100"
               >
                 Resend Update
               </button>
             </div>
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
               {statusHint(detailDraft.status)}
             </p>
             <div className="mt-3 space-y-3">
@@ -521,7 +521,7 @@ function RegistrantDrawer({
                     status: event.target.value,
                   }))
                 }
-                className="h-9 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+                className="h-9 w-full rounded-[10px] border border-zinc-200 bg-white px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
               >
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
@@ -529,7 +529,7 @@ function RegistrantDrawer({
                 <option value="rejected">Rejected</option>
               </select>
               <div className="grid grid-cols-2 gap-2">
-                <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-700 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300">
                   <input
                     type="checkbox"
                     checked={detailDraft.speakerFlag}
@@ -542,7 +542,7 @@ function RegistrantDrawer({
                   />
                   Speaker
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-700 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300">
                   <input
                     type="checkbox"
                     checked={detailDraft.vipFlag}
@@ -566,7 +566,7 @@ function RegistrantDrawer({
                     reviewNotes: event.target.value,
                   }))
                 }
-                className="min-h-24 w-full resize-none rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+                className="min-h-24 w-full resize-none rounded-[10px] border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
                 placeholder="Operator notes for context, exceptions, or follow-up"
               />
               <button
@@ -603,20 +603,20 @@ function RegistrantDrawer({
                 {detailState.data.history.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
+                    className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                      <p className="text-xs font-medium text-zinc-700 dark:text-zinc-200">
                         {item.action_type}
                       </p>
                       <AdminStatusBadge tone={getStatusTone(item.next_status)}>
                         {item.next_status || 'update'}
                       </AdminStatusBadge>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+                    <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                       {item.notes || 'No notes captured.'}
                     </p>
-                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
+                    <p className="mt-1 text-[10px] text-zinc-400 dark:text-zinc-500">
                       {formatDate(item.created_at)}
                     </p>
                   </div>
@@ -635,10 +635,10 @@ function RegistrantDrawer({
                 {detailState.data.notifications.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
+                    className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                      <p className="text-xs font-medium text-zinc-700 dark:text-zinc-200">
                         {item.template_type}
                       </p>
                       <AdminStatusBadge
@@ -647,12 +647,12 @@ function RegistrantDrawer({
                         {item.delivery_status || 'pending'}
                       </AdminStatusBadge>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+                    <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                       {item.failure_reason ||
                         item.recipient_email ||
                         'Awaiting delivery update.'}
                     </p>
-                    <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
+                    <p className="mt-1 text-[10px] text-zinc-400 dark:text-zinc-500">
                       {formatDate(item.updated_at || item.created_at)}
                     </p>
                   </div>
@@ -1164,7 +1164,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                 type="button"
                 disabled={exportLoading[format] || hasConfigError}
                 onClick={() => handleExport(format)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10 dark:hover:bg-white/10"
+                className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10 dark:hover:bg-white/10"
               >
                 {exportLoading[format] ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -1197,7 +1197,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           type="button"
           onClick={handleResendQr}
           disabled={state.loading || hasConfigError || qrLoading.resend}
-          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
         >
           {qrLoading.resend ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1206,13 +1206,13 @@ export default function RegistrationsAdminPanel({ operator }) {
         </button>
         <a
           href="/admin/delivery"
-          className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+          className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
         >
           Delivery Jobs
         </a>
         <a
           href="/admin/check-in"
-          className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+          className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
         >
           Check-In Console
         </a>
@@ -1298,12 +1298,12 @@ export default function RegistrationsAdminPanel({ operator }) {
       </section>
 
       {/* Filters */}
-      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
             Filters
           </p>
-          <div className="flex gap-3 text-xs text-slate-400 dark:text-slate-500">
+          <div className="flex gap-3 text-xs text-zinc-400 dark:text-zinc-500">
             <span>{selectionSummary.selectedLabel}</span>
             <span>{selectionSummary.matchedLabel}</span>
           </div>
@@ -1312,13 +1312,13 @@ export default function RegistrationsAdminPanel({ operator }) {
           <input
             value={filters.search}
             onChange={(event) => setFilterValue('search', event.target.value)}
-            className="h-9 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 xl:col-span-2 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 xl:col-span-2 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
             placeholder="Search name, email, code, org…"
           />
           <select
             value={filters.status}
             onChange={(event) => setFilterValue('status', event.target.value)}
-            className="h-9 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
           >
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
@@ -1329,7 +1329,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           <select
             value={filters.category}
             onChange={(event) => setFilterValue('category', event.target.value)}
-            className="h-9 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
           >
             <option value="all">All categories</option>
             {ATTENDEE_CATEGORIES.map((category) => (
@@ -1341,13 +1341,13 @@ export default function RegistrationsAdminPanel({ operator }) {
           <input
             value={filters.city}
             onChange={(event) => setFilterValue('city', event.target.value)}
-            className="h-9 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
             placeholder="Filter by city"
           />
           <button
             type="button"
             onClick={toggleVisibleSelection}
-            className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+            className="h-9 rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-700 transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
           >
             {allVisibleSelected ? 'Clear Visible' : 'Select Visible'}
           </button>
@@ -1356,7 +1356,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           <input
             value={filters.country}
             onChange={(event) => setFilterValue('country', event.target.value)}
-            className="h-9 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
             placeholder="Filter by country"
           />
           <input
@@ -1364,7 +1364,7 @@ export default function RegistrationsAdminPanel({ operator }) {
             onChange={(event) =>
               setFilterValue('organization', event.target.value)
             }
-            className="h-9 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
             placeholder="Filter by organization"
           />
         </div>
@@ -1380,12 +1380,12 @@ export default function RegistrationsAdminPanel({ operator }) {
       ) : null}
 
       {/* Review queue table */}
-      <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-        <div className="border-b border-slate-200 px-5 py-3 dark:border-white/[0.06]">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+      <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <div className="border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
+          <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
             Review Queue
             {!state.loading && state.count > 0 ? (
-              <span className="ml-2 text-xs font-normal text-slate-400 dark:text-slate-500">
+              <span className="ml-2 text-xs font-normal text-zinc-400 dark:text-zinc-500">
                 {state.count} registrants
               </span>
             ) : null}
@@ -1414,13 +1414,13 @@ export default function RegistrationsAdminPanel({ operator }) {
           )}
         </RegistrationGridCtx.Provider>
         {!state.loading && !state.error && orderedRegistrations.length === 0 ? (
-          <div className="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
+          <div className="p-8 text-center text-sm text-zinc-400 dark:text-zinc-500">
             No registrations match the current filters.
           </div>
         ) : null}
         {state.pagination ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3 dark:border-white/[0.06]">
-            <p className="text-xs text-slate-400 dark:text-slate-500">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
+            <p className="text-xs text-zinc-400 dark:text-zinc-500">
               Page {state.pagination.page} of {state.pagination.totalPages}
             </p>
             <div className="flex gap-2">
@@ -1433,7 +1433,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                   }))
                 }
                 disabled={state.pagination.page <= 1}
-                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200"
+                className="h-8 rounded-full border border-zinc-200 bg-white px-3 text-xs text-zinc-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
               >
                 Previous
               </button>
@@ -1449,7 +1449,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                   }))
                 }
                 disabled={state.pagination.page >= state.pagination.totalPages}
-                className="h-8 rounded-full border border-slate-200 bg-white px-3 text-xs text-slate-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200"
+                className="h-8 rounded-full border border-zinc-200 bg-white px-3 text-xs text-zinc-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
               >
                 Next
               </button>
@@ -1473,9 +1473,9 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Sticky bulk actions bar */}
       {selectedIds.length > 0 ? (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]/95">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]/95">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
               {selectedIds.length} selected
             </span>
             <div className="flex flex-wrap gap-2">
@@ -1516,7 +1516,7 @@ export default function RegistrationsAdminPanel({ operator }) {
             <button
               type="button"
               onClick={() => setSelectedIds([])}
-              className="ml-auto text-xs text-slate-400 transition hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+              className="ml-auto text-xs text-zinc-400 transition hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
             >
               Clear selection
             </button>

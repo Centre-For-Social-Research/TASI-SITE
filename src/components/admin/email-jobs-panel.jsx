@@ -309,20 +309,20 @@ export default function EmailJobsPanel({ operator }) {
       </section>
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <div className="border-b border-slate-200 px-5 py-3 dark:border-white/[0.06]">
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+        <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+          <div className="border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
+            <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
               Recent Email Jobs
             </p>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               Select a job to inspect failures and retry actions.
             </p>
           </div>
 
           <div className="overflow-auto">
             <table className="min-w-full">
-              <thead className="sticky top-0 bg-slate-50 dark:bg-white/[0.06]/80">
-                <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:border-white/[0.06] dark:text-slate-500">
+              <thead className="sticky top-0 bg-zinc-50 dark:bg-white/[0.06]/80">
+                <tr className="border-b border-zinc-200 text-[10px] font-semibold uppercase tracking-wide text-zinc-400 dark:border-white/[0.06] dark:text-zinc-500">
                   <th className="px-4 py-3 text-left">Job</th>
                   <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-left">Progress</th>
@@ -337,7 +337,7 @@ export default function EmailJobsPanel({ operator }) {
                   jobsState.jobs.map((job) => (
                     <tr
                       key={job.id}
-                      className={`cursor-pointer border-b border-slate-100 transition hover:bg-slate-50 dark:border-white/[0.04] dark:hover:bg-white/10/50 ${jobsState.selectedJobId === job.id ? 'bg-amber-50/40 dark:bg-amber-950/20' : ''}`}
+                      className={`cursor-pointer border-b border-zinc-100 transition hover:bg-zinc-50 dark:border-white/[0.04] dark:hover:bg-white/10/50 ${jobsState.selectedJobId === job.id ? 'bg-purple-50/40 dark:bg-purple-950/20' : ''}`}
                       onClick={() =>
                         setJobsState((current) => ({
                           ...current,
@@ -346,10 +346,10 @@ export default function EmailJobsPanel({ operator }) {
                       }
                     >
                       <td className="px-4 py-4">
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
+                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                           {job.template_type}
                         </p>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                           ID: {job.id.slice(0, 8)}... · {job.total_items} items
                         </p>
                       </td>
@@ -359,22 +359,22 @@ export default function EmailJobsPanel({ operator }) {
                         </AdminStatusBadge>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="h-2 w-40 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+                        <div className="h-2 w-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10">
                           <div
-                            className="h-full rounded-full bg-amber-600"
+                            className="h-full rounded-full bg-purple-600"
                             style={{ width: progressWidth(job.progress) }}
                           />
                         </div>
-                        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                        <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
                           {job.progress?.completed || 0} completed ·{' '}
                           {job.progress?.remaining || 0} remaining
                         </p>
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">
+                      <td className="px-4 py-4 text-sm text-zinc-700 dark:text-zinc-300">
                         {job.sent_items || 0} sent · {job.failed_items || 0}{' '}
                         failed
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-500 dark:text-slate-400">
+                      <td className="px-4 py-4 text-sm text-zinc-500 dark:text-zinc-400">
                         {formatDate(job.updated_at || job.created_at)}
                       </td>
                       <td className="px-4 py-4">
@@ -386,7 +386,7 @@ export default function EmailJobsPanel({ operator }) {
                                 event.stopPropagation();
                                 void processJob(job.id);
                               }}
-                              className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
+                              className="rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs text-purple-900 dark:border-purple-800 dark:bg-purple-950/50 dark:text-purple-300"
                             >
                               Process
                             </button>
@@ -412,19 +412,19 @@ export default function EmailJobsPanel({ operator }) {
           </div>
 
           {!jobsState.loading && !jobsState.jobs.length ? (
-            <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">
+            <div className="p-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
               No registration email jobs yet.
             </div>
           ) : null}
         </section>
 
-        <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-white/[0.06] dark:bg-white/[0.03]">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+              <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
                 Selected Job
               </p>
-              <h3 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">
+              <h3 className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
                 {jobsState.selectedDetail?.job?.id
                   ? `${jobsState.selectedDetail.job.id.slice(0, 12)}…`
                   : 'Pick a job'}
@@ -440,27 +440,27 @@ export default function EmailJobsPanel({ operator }) {
           {jobsState.selectedDetail?.job ? (
             <>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                     Total
                   </p>
-                  <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                  <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                     {jobsState.selectedDetail.job.total_items}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                     Sent
                   </p>
-                  <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                  <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                     {jobsState.selectedDetail.job.sent_items}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                     Failed
                   </p>
-                  <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">
+                  <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                     {jobsState.selectedDetail.job.failed_items}
                   </p>
                 </div>
@@ -470,15 +470,15 @@ export default function EmailJobsPanel({ operator }) {
                 {(jobsState.selectedDetail.items || []).map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
+                    className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
+                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                           {item.registration?.first_name}{' '}
                           {item.registration?.last_name}
                         </p>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                           {item.registration?.registration_code} ·{' '}
                           {item.registration?.email}
                         </p>
@@ -495,12 +495,12 @@ export default function EmailJobsPanel({ operator }) {
                         {item.status}
                       </AdminStatusBadge>
                     </div>
-                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                       {item.failure_reason ||
                         item.registration?.organization ||
                         'No failure reason recorded.'}
                     </p>
-                    <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                    <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
                       Attempts: {item.attempt_count}/{item.max_attempts} · Last
                       attempt:{' '}
                       {formatDate(item.last_attempt_at || item.updated_at)}
@@ -509,14 +509,14 @@ export default function EmailJobsPanel({ operator }) {
                 ))}
 
                 {!(jobsState.selectedDetail.items || []).length ? (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     This job has no item-level attempts recorded yet.
                   </p>
                 ) : null}
               </div>
             </>
           ) : (
-            <p className="mt-5 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
               Select an email job to inspect its timeline and retry failures.
             </p>
           )}

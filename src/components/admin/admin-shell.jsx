@@ -15,7 +15,6 @@ import {
   Moon,
   Sun,
   LayoutDashboard,
-  Activity,
   ShieldCheck,
   Mail,
 } from 'lucide-react';
@@ -33,6 +32,8 @@ import {
   resolveAdminShellRuntimeState,
 } from '@/lib/admin-runtime-guards.cjs';
 import { AdminStatusBadge, SlideOverDrawer } from '@/components/admin/admin-ui';
+import AdminCommandPalette from '@/components/admin/admin-command-palette';
+import { useRouter } from 'next/navigation';
 
 const NAV_ICONS = {
   '/admin/registrations': Users,
@@ -54,7 +55,7 @@ const PAGE_TITLES = {
 function TopStatPill({ label, value, tone = 'default' }) {
   const toneClasses = {
     default:
-      'border-slate-200 bg-slate-50 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300',
+      'border-zinc-200 bg-zinc-50 text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300',
     warning:
       'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300',
     success:
@@ -62,7 +63,7 @@ function TopStatPill({ label, value, tone = 'default' }) {
     danger:
       'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300',
     accent:
-      'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-500/20 dark:bg-violet-500/10 dark:text-violet-300',
+      'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-500/20 dark:bg-purple-500/10 dark:text-purple-300',
   };
 
   return (
@@ -85,7 +86,7 @@ function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
-      className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-slate-200"
+      className="flex h-8 w-8 items-center justify-center rounded-[10px] text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-200"
       aria-label="Toggle theme"
       title={
         currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
@@ -102,13 +103,13 @@ function ThemeToggle() {
 
 function NotificationCard({ item, onMarkRead }) {
   return (
-    <div className="rounded-[10px] border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
+    <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
             {item.title}
           </p>
-          <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+          <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             {item.detail}
           </p>
         </div>
@@ -118,7 +119,7 @@ function NotificationCard({ item, onMarkRead }) {
         <button
           type="button"
           onClick={() => onMarkRead(item)}
-          className="rounded-[10px] border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300 dark:hover:border-white/15 dark:hover:text-slate-100"
+          className="rounded-[10px] border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition hover:border-zinc-300 hover:text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:border-white/15 dark:hover:text-zinc-100"
         >
           Mark as read
         </button>
@@ -138,7 +139,9 @@ function getInitials(name) {
 
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
+  const router = useRouter();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const storageKey = useMemo(
     () => buildAdminNotificationStorageKey(operator),
     [operator]
@@ -248,6 +251,64 @@ export default function AdminShell({ operator, currentPath, children }) {
     }
   }, [runtimeIssue, signOut]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const leaderMap = {
+      r: '/admin/registrations',
+      c: '/admin/check-in',
+      d: '/admin/delivery',
+      e: '/admin/email-jobs',
+      t: '/admin/tickets',
+    };
+    let leaderArmed = false;
+    let leaderTimer = null;
+
+    const isTypingTarget = (target) => {
+      if (!target) return false;
+      const tag = target.tagName;
+      return (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        target.isContentEditable
+      );
+    };
+
+    const onKey = (event) => {
+      const meta = event.metaKey || event.ctrlKey;
+      if (meta && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setPaletteOpen((open) => !open);
+        return;
+      }
+      if (isTypingTarget(event.target)) return;
+      if (event.key === 'g' && !meta && !event.altKey) {
+        leaderArmed = true;
+        window.clearTimeout(leaderTimer);
+        leaderTimer = window.setTimeout(() => {
+          leaderArmed = false;
+        }, 1200);
+        return;
+      }
+      if (leaderArmed) {
+        const dest = leaderMap[event.key.toLowerCase()];
+        leaderArmed = false;
+        window.clearTimeout(leaderTimer);
+        if (dest) {
+          event.preventDefault();
+          router.push(dest);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.clearTimeout(leaderTimer);
+    };
+  }, [router]);
+
   const navSections = useMemo(
     () =>
       buildAdminNavigation({
@@ -310,9 +371,9 @@ export default function AdminShell({ operator, currentPath, children }) {
   }
 
   return (
-    <div className="admin-console admin-console--saas min-h-screen bg-[radial-gradient(circle_at_top,#eef4ff_0%,#f8fafc_36%,#eef2ff_100%)] text-slate-900 dark:bg-[radial-gradient(circle_at_top,#12203f_0%,#08101f_36%,#050913_100%)] dark:text-slate-100">
+    <div className="admin-console admin-console--saas min-h-screen bg-[radial-gradient(circle_at_top,#eef4ff_0%,#f8fafc_36%,#eef2ff_100%)] text-zinc-900 dark:bg-[radial-gradient(circle_at_top,#12203f_0%,#08101f_36%,#050913_100%)] dark:text-zinc-100">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-[272px_minmax(0,1fr)]">
-        <aside className="hidden border-r border-white/70 bg-white/72 shadow-[0_24px_80px_rgba(99,102,241,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-950/30 lg:flex lg:flex-col">
+        <aside className="hidden border-r border-white/70 bg-white/72 shadow-[0_24px_80px_rgba(99,102,241,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-zinc-950/30 lg:flex lg:flex-col">
           <div className="px-6 py-5">
             <Link href="/" className="inline-block">
               <Image
@@ -326,9 +387,9 @@ export default function AdminShell({ operator, currentPath, children }) {
           </div>
 
           <div className="px-4">
-            <div className="flex items-center gap-2.5 rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-sm transition focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-200/40 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-indigo-500/40 dark:focus-within:ring-indigo-500/20">
-              <Search className="h-4 w-4 text-slate-400 dark:text-slate-500" />
-              <span className="text-sm text-slate-400 dark:text-slate-500">
+            <div className="flex items-center gap-2.5 rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-sm transition focus-within:border-purple-300 focus-within:ring-2 focus-within:ring-purple-200/40 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-purple-500/40 dark:focus-within:ring-purple-500/20">
+              <Search className="h-4 w-4 text-zinc-400 dark:text-zinc-500" />
+              <span className="text-sm text-zinc-400 dark:text-zinc-500">
                 Search...
               </span>
             </div>
@@ -337,7 +398,7 @@ export default function AdminShell({ operator, currentPath, children }) {
           <nav className="flex flex-1 flex-col gap-5 px-3 pb-4 pt-5">
             {navSections.map((section) => (
               <div key={section.key}>
-                <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+                <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-500">
                   {section.label}
                 </p>
                 <div className="space-y-0.5">
@@ -349,20 +410,20 @@ export default function AdminShell({ operator, currentPath, children }) {
                         href={item.href}
                         className={`group relative flex items-center justify-between rounded-[10px] px-3 py-2.5 text-sm transition-all ${
                           item.active
-                            ? 'bg-[linear-gradient(90deg,rgba(79,70,229,0.14),rgba(56,189,248,0.08),transparent)] font-semibold text-indigo-700 shadow-sm dark:text-indigo-300'
-                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.06] dark:hover:text-slate-100'
+                            ? 'bg-[linear-gradient(90deg,rgba(79,70,229,0.14),rgba(56,189,248,0.08),transparent)] font-semibold text-purple-700 shadow-sm dark:text-purple-300'
+                            : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-zinc-100'
                         }`}
                       >
                         {item.active ? (
-                          <span className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-indigo-500" />
+                          <span className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-purple-500" />
                         ) : null}
                         <span className="flex items-center gap-2.5">
                           {Icon ? (
                             <Icon
                               className={`h-[18px] w-[18px] shrink-0 ${
                                 item.active
-                                  ? 'text-indigo-500'
-                                  : 'text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300'
+                                  ? 'text-purple-500'
+                                  : 'text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300'
                               }`}
                             />
                           ) : null}
@@ -373,7 +434,7 @@ export default function AdminShell({ operator, currentPath, children }) {
                             {item.badgeCount}
                           </AdminStatusBadge>
                         ) : item.active ? (
-                          <ChevronRight className="h-3.5 w-3.5 text-indigo-400/60" />
+                          <ChevronRight className="h-3.5 w-3.5 text-purple-400/60" />
                         ) : null}
                       </Link>
                     );
@@ -385,40 +446,40 @@ export default function AdminShell({ operator, currentPath, children }) {
             <div className="flex-1" />
 
             <div className="rounded-[10px] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(238,242,255,0.92))] p-4 shadow-[0_18px_40px_rgba(99,102,241,0.10)] dark:border-white/[0.06] dark:bg-[linear-gradient(145deg,rgba(15,23,42,0.88),rgba(30,41,59,0.54))]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-indigo-500/80 dark:text-indigo-400/70">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-purple-500/80 dark:text-purple-400/70">
                 Event
               </p>
-              <p className="mt-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100">
+              <p className="mt-1.5 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
                 Trust &amp; Safety India Festival
               </p>
-              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
                 13-14 October 2026
               </p>
-              <div className="mt-4 flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+              <div className="mt-4 flex items-center gap-2 text-[11px] text-zinc-500 dark:text-zinc-400">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
                 Final SaaS dashboard enabled
               </div>
             </div>
 
-            <div className="flex items-center gap-3 border-t border-slate-200/70 pt-4 dark:border-white/[0.06]">
+            <div className="flex items-center gap-3 border-t border-zinc-200/70 pt-4 dark:border-white/[0.06]">
               <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-bold text-white shadow-md shadow-indigo-500/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-500 text-xs font-bold text-white shadow-md shadow-purple-500/20">
                   {getInitials(operator.displayName)}
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 dark:border-[#0d1526]" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                <p className="truncate text-sm font-medium text-zinc-800 dark:text-zinc-100">
                   {operator.displayName}
                 </p>
-                <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">
+                <p className="truncate text-[11px] text-zinc-400 dark:text-zinc-500">
                   {operator.primaryEmail}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-slate-400 transition hover:bg-rose-50 hover:text-rose-500 dark:text-slate-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-zinc-400 transition hover:bg-rose-50 hover:text-rose-500 dark:text-zinc-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
                 aria-label="Log out"
                 title="Log out"
               >
@@ -429,15 +490,15 @@ export default function AdminShell({ operator, currentPath, children }) {
         </aside>
 
         <div className="min-w-0 flex flex-col">
-          <header className="sticky top-0 z-40 border-b border-white/70 bg-white/72 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-950/42">
+          <header className="sticky top-0 z-40 border-b border-white/70 bg-white/72 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-zinc-950/42">
             <div className="flex items-center justify-between gap-4 px-4 py-3 lg:px-6">
               <div className="flex items-center gap-2 text-sm">
-                <LayoutDashboard className="hidden h-4 w-4 text-slate-400 dark:text-slate-500 sm:block" />
-                <span className="hidden text-slate-400 dark:text-slate-500 sm:inline">
+                <LayoutDashboard className="hidden h-4 w-4 text-zinc-400 dark:text-zinc-500 sm:block" />
+                <span className="hidden text-zinc-400 dark:text-zinc-500 sm:inline">
                   Admin
                 </span>
-                <ChevronRight className="hidden h-3 w-3 text-slate-300 dark:text-slate-600 sm:block" />
-                <span className="font-semibold text-slate-800 dark:text-slate-100">
+                <ChevronRight className="hidden h-3 w-3 text-zinc-300 dark:text-zinc-600 sm:block" />
+                <span className="font-semibold text-zinc-800 dark:text-zinc-100">
                   {pageTitle}
                 </span>
               </div>
@@ -453,12 +514,25 @@ export default function AdminShell({ operator, currentPath, children }) {
                     />
                   ))}
                 </div>
-                <div className="flex items-center gap-1 border-l border-slate-200 pl-2 dark:border-white/10">
+                <div className="flex items-center gap-1 border-l border-zinc-200 pl-2 dark:border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setPaletteOpen(true)}
+                    className="hidden items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-500 shadow-sm transition hover:border-zinc-300 hover:text-zinc-700 md:flex dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:border-white/20 dark:hover:text-zinc-200"
+                    aria-label="Open command palette"
+                    title="Command palette"
+                  >
+                    <Search className="h-3.5 w-3.5" />
+                    <span>Search</span>
+                    <kbd className="rounded border border-zinc-200 bg-zinc-50 px-1 text-[10px] font-semibold dark:border-white/10 dark:bg-white/[0.06]">
+                      ⌘K
+                    </kbd>
+                  </button>
                   <ThemeToggle />
                   <button
                     type="button"
                     onClick={() => setNotificationsOpen(true)}
-                    className="relative flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-slate-200"
+                    className="relative flex h-8 w-8 items-center justify-center rounded-[10px] text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-200"
                     aria-label="Notifications"
                     title="Notifications"
                   >
@@ -471,7 +545,7 @@ export default function AdminShell({ operator, currentPath, children }) {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-500 transition hover:bg-rose-50 hover:text-rose-500 dark:text-slate-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 lg:hidden"
+                  className="flex h-8 w-8 items-center justify-center rounded-[10px] text-zinc-500 transition hover:bg-rose-50 hover:text-rose-500 dark:text-zinc-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 lg:hidden"
                   aria-label="Log out"
                   title="Log out"
                 >
@@ -490,8 +564,8 @@ export default function AdminShell({ operator, currentPath, children }) {
                       href={item.href}
                       className={`inline-flex shrink-0 items-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-sm whitespace-nowrap transition ${
                         item.active
-                          ? 'border-indigo-200 bg-indigo-50 font-semibold text-indigo-600 dark:border-indigo-500/20 dark:bg-indigo-500/10 dark:text-indigo-400'
-                          : 'border-slate-200 bg-white text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-400'
+                          ? 'border-purple-200 bg-purple-50 font-semibold text-purple-600 dark:border-purple-500/20 dark:bg-purple-500/10 dark:text-purple-400'
+                          : 'border-zinc-200 bg-white text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400'
                       }`}
                     >
                       {Icon ? <Icon className="h-3.5 w-3.5 shrink-0" /> : null}
@@ -514,49 +588,13 @@ export default function AdminShell({ operator, currentPath, children }) {
                 {runtimeIssue.message}
               </div>
             ) : null}
-            <section className="mb-6 rounded-[10px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(238,242,255,0.88)_42%,rgba(224,231,255,0.78)_100%)] p-5 shadow-[0_30px_80px_rgba(79,70,229,0.12)] dark:border-white/[0.08] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.82),rgba(17,24,39,0.92)_44%,rgba(30,41,59,0.72)_100%)]">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-indigo-500 dark:text-indigo-300">
-                    Operations Overview
-                  </p>
-                  <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white">
-                    {pageTitle}
-                  </h1>
-                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                    Review queue health, delivery progress, and check-in status
-                    from one central admin workspace, with live updates
-                    available from the notification panel.
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
-                    <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-                      <Activity className="h-3.5 w-3.5 text-cyan-500" />
-                      Pending Review
-                    </div>
-                    <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
-                      {statPills[0]?.value || 0} pending
-                    </p>
-                  </div>
-                  <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-                      Open Alerts
-                    </p>
-                    <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
-                      {attentionCount} active alerts
-                    </p>
-                  </div>
-                  <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-                      Signed In
-                    </p>
-                    <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
-                      {operator.displayName}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <section className="mb-6 border-l-[3px] border-purple-900 pl-5 py-1 dark:border-purple-500">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-purple-900 dark:text-purple-400">
+                Operations Overview
+              </p>
+              <h1 className="mt-1.5 font-heading text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-white">
+                {pageTitle}
+              </h1>
             </section>
             {children}
           </main>
@@ -569,16 +607,16 @@ export default function AdminShell({ operator, currentPath, children }) {
         title="Notifications"
       >
         <div className="space-y-4">
-          <div className="rounded-[10px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
+          <div className="rounded-[10px] border border-zinc-200 bg-white p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
                 Live Summary
               </p>
               <button
                 type="button"
                 onClick={markAllNotificationsRead}
                 disabled={!unreadNotifications.length}
-                className="rounded-[10px] border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300 dark:hover:border-white/15 dark:hover:text-slate-100"
+                className="rounded-[10px] border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition hover:border-zinc-300 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:border-white/15 dark:hover:text-zinc-100"
               >
                 Mark all as read
               </button>
@@ -616,6 +654,10 @@ export default function AdminShell({ operator, currentPath, children }) {
           )}
         </div>
       </SlideOverDrawer>
+      <AdminCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+      />
     </div>
   );
 }

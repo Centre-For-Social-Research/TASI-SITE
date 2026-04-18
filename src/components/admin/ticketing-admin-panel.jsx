@@ -26,10 +26,10 @@ function formatValue(value, fallback = '—') {
 function DetailItem({ label, value }) {
   return (
     <div>
-      <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400">
         {label}
       </p>
-      <p className="mt-1 text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+      <p className="mt-1 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
         {formatValue(value)}
       </p>
     </div>
@@ -61,11 +61,11 @@ function TicketStatusBadge({ ticket }) {
   const cfg = TICKET_STATUS_MAP[ticket.status] ?? {
     label: ticket.status,
     classes:
-      'bg-slate-100 text-slate-700 dark:bg-white/[0.06] dark:text-slate-300',
+      'bg-zinc-100 text-zinc-700 dark:bg-white/[0.06] dark:text-zinc-300',
   };
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-black uppercase tracking-[0.12em] ${cfg.classes}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.12em] ${cfg.classes}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {cfg.label}
@@ -221,7 +221,7 @@ export default function TicketingAdminPanel() {
         <AdminStatCard label="Checked In" value={stats.checkedIn} tone="info" />
       </div>
 
-      <section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="rounded-[10px] border border-zinc-200 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <AdminSectionHeading
             eyebrow="Attendees"
@@ -236,7 +236,7 @@ export default function TicketingAdminPanel() {
                 if (event.key === 'Enter') void loadTickets(search);
               }}
               placeholder="Search by name, email, or ticket number"
-              className="h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm dark:border-white/[0.06] dark:bg-white/[0.06]"
+              className="h-12 rounded-[10px] border border-zinc-200 bg-zinc-50 px-4 text-sm dark:border-white/[0.06] dark:bg-white/[0.06]"
             />
             <button
               type="button"
@@ -249,7 +249,7 @@ export default function TicketingAdminPanel() {
         </div>
 
         {loading ? (
-          <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
             Loading festival tickets...
           </p>
         ) : tickets.length === 0 ? (
@@ -264,7 +264,7 @@ export default function TicketingAdminPanel() {
             {tickets.map((ticket) => (
               <article
                 key={ticket.id}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
+                className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.04]"
               >
                 <button
                   type="button"
@@ -277,27 +277,27 @@ export default function TicketingAdminPanel() {
                 >
                   <div>
                     <div className="flex items-center gap-2.5">
-                      <p className="text-sm font-black text-slate-900 dark:text-white">
+                      <p className="text-sm font-black text-zinc-900 dark:text-white">
                         {ticket.ticket_number}
                       </p>
                       <TicketStatusBadge ticket={ticket} />
                     </div>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
                       {ticket.user?.full_name} · {ticket.user?.email}
                     </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                    <p className="mt-1 text-xs uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400">
                       {ticket.ticket_type} · {ticket.payment_stream}
                     </p>
                     <PaymentStatusNote ticket={ticket} />
                   </div>
-                  <div className="text-sm text-slate-600 dark:text-slate-300 md:text-right">
+                  <div className="text-sm text-zinc-600 dark:text-zinc-300 md:text-right">
                     <p>
                       {formatMoney(ticket.total_amount_minor, ticket.currency)}
                     </p>
                     <p className="mt-1">
                       {ticket.invoice_number || 'Invoice pending'}
                     </p>
-                    <p className="mt-2 text-[11px] font-black uppercase tracking-[0.14em] text-amber-700 dark:text-amber-300">
+                    <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.14em] text-amber-700 dark:text-amber-300">
                       {expandedTicketId === ticket.id
                         ? 'Hide details'
                         : 'View details'}
@@ -306,7 +306,7 @@ export default function TicketingAdminPanel() {
                 </button>
 
                 {expandedTicketId === ticket.id ? (
-                  <div className="mt-4 border-t border-slate-200 pt-4 dark:border-white/[0.06]">
+                  <div className="mt-4 border-t border-zinc-200 pt-4 dark:border-white/[0.06]">
                     <div className="mb-5 flex flex-wrap items-center gap-3">
                       <button
                         type="button"
@@ -324,14 +324,14 @@ export default function TicketingAdminPanel() {
                       </button>
                       {ticket.status !== 'confirmed' &&
                         ticket.status !== 'checked_in' && (
-                          <span className="text-xs text-slate-500 dark:text-slate-400">
+                          <span className="text-xs text-zinc-500 dark:text-zinc-400">
                             Only confirmed or checked-in tickets can be resent.
                           </span>
                         )}
                     </div>
                     <div className="grid gap-5 md:grid-cols-3">
                       <div className="space-y-4">
-                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                        <p className="text-sm font-black text-zinc-900 dark:text-white">
                           Buyer Details
                         </p>
                         <DetailItem
@@ -355,7 +355,7 @@ export default function TicketingAdminPanel() {
                       </div>
 
                       <div className="space-y-4">
-                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                        <p className="text-sm font-black text-zinc-900 dark:text-white">
                           Billing Address
                         </p>
                         <DetailItem
@@ -395,7 +395,7 @@ export default function TicketingAdminPanel() {
                       </div>
 
                       <div className="space-y-4">
-                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                        <p className="text-sm font-black text-zinc-900 dark:text-white">
                           Payment IDs
                         </p>
                         <DetailItem

@@ -50,17 +50,17 @@ function generateTrendData(summary) {
 }
 
 const CHART_CARD =
-  'rounded-[10px] border border-slate-200/70 bg-white/80 p-5 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]';
+  'rounded-[10px] border border-zinc-200/70 bg-white/80 p-5 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]';
 
 export function RegistrationTrendChart({ summary }) {
   const data = useMemo(() => generateTrendData(summary), [summary]);
 
   return (
     <div className={CHART_CARD}>
-      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-500">
         Registration Trend
       </p>
-      <h3 className="mt-1 text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
+      <h3 className="mt-1 text-lg font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
         Activity Overview
       </h3>
       <div className="mt-4 h-64">
@@ -71,12 +71,12 @@ export function RegistrationTrendChart({ summary }) {
           >
             <defs>
               <linearGradient id="gradConfirmed" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#6366f1" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#7e22ce" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#7e22ce" stopOpacity={0.02} />
               </linearGradient>
               <linearGradient id="gradPending" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#06b6d4" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -109,7 +109,7 @@ export function RegistrationTrendChart({ summary }) {
               type="monotone"
               dataKey="confirmed"
               name="Confirmed"
-              stroke="#6366f1"
+              stroke="#7e22ce"
               strokeWidth={2.5}
               fill="url(#gradConfirmed)"
             />
@@ -117,7 +117,7 @@ export function RegistrationTrendChart({ summary }) {
               type="monotone"
               dataKey="pending"
               name="Pending"
-              stroke="#06b6d4"
+              stroke="#f59e0b"
               strokeWidth={2}
               fill="url(#gradPending)"
             />
@@ -128,7 +128,7 @@ export function RegistrationTrendChart({ summary }) {
   );
 }
 
-const DONUT_COLORS = ['#6366f1', '#10b981', '#8b5cf6', '#06b6d4'];
+const DONUT_COLORS = ['#f59e0b', '#10b981', '#7e22ce', '#0ea5e9'];
 const DONUT_LABELS = ['Pending', 'Confirmed', 'QR Issued', 'Checked In'];
 
 export function StatusDonutChart({ summary }) {
@@ -146,10 +146,10 @@ export function StatusDonutChart({ summary }) {
 
   return (
     <div className={CHART_CARD + ' flex flex-col'}>
-      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-500">
         Status Distribution
       </p>
-      <h3 className="mt-1 text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
+      <h3 className="mt-1 text-lg font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
         Breakdown
       </h3>
       <div className="mt-4 flex flex-1 items-center justify-center">
@@ -195,10 +195,10 @@ export function StatusDonutChart({ summary }) {
           </ResponsiveContainer>
           {/* Center label */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-extrabold tabular-nums text-slate-900 dark:text-slate-50">
+            <span className="text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">
               {total}
             </span>
-            <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
+            <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500">
               Total
             </span>
           </div>
@@ -214,10 +214,10 @@ export function StatusDonutChart({ summary }) {
                 className="h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: DONUT_COLORS[i] }}
               />
-              <span className="text-xs text-slate-600 dark:text-slate-400">
+              <span className="text-xs text-zinc-600 dark:text-zinc-400">
                 {label}
               </span>
-              <span className="ml-auto text-xs font-bold tabular-nums text-slate-800 dark:text-slate-200">
+              <span className="ml-auto text-xs font-bold tabular-nums text-zinc-800 dark:text-zinc-200">
                 {d?.value || 0}
               </span>
             </div>
@@ -262,13 +262,13 @@ export function AdminProgressCard({ label, value, percent, color = 'cyan' }) {
   const clampedPercent = Math.min(Math.max(percent || 0, 0), 100);
 
   return (
-    <div className="rounded-[10px] border border-slate-200/70 bg-white/80 p-4 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]">
+    <div className="rounded-[10px] border border-zinc-200/70 bg-white/80 p-4 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+        <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
           {label}
         </p>
         <span
-          className={`rounded-lg px-2 py-0.5 text-[11px] font-bold tabular-nums ${c.badge}`}
+          className={`rounded-[10px] px-2 py-0.5 text-[11px] font-bold tabular-nums ${c.badge}`}
         >
           {clampedPercent}%
         </span>

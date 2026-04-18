@@ -19,7 +19,7 @@ const { createScanSession } = scanSessionUtils;
 function ResultCard({ title, description, tone = 'default' }) {
   const toneMap = {
     default:
-      'border-slate-200 bg-white text-slate-700 dark:border-white/[0.06] dark:bg-white/[0.06]/60 dark:text-slate-200',
+      'border-zinc-200 bg-white text-zinc-700 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-zinc-200',
     success:
       'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200',
     danger:
@@ -29,7 +29,7 @@ function ResultCard({ title, description, tone = 'default' }) {
   };
 
   return (
-    <div className={`rounded-2xl border p-4 ${toneMap[tone]}`}>
+    <div className={`rounded-[10px] border p-4 ${toneMap[tone]}`}>
       <p className="text-sm font-semibold">{title}</p>
       <p className="mt-1 text-sm leading-relaxed opacity-90">{description}</p>
     </div>
@@ -373,14 +373,14 @@ export default function CheckInPanel({ operator }) {
             'Manual attendee lookup',
           ]}
         />
-        <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
+        <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Desk Label
           <input
             id="deskLabel"
             name="deskLabel"
             value={deskLabel}
             onChange={(event) => setDeskLabel(event.target.value)}
-            className="h-11 rounded-[10px] border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+            className="h-11 rounded-[10px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
           />
         </label>
       </section>
@@ -422,11 +422,11 @@ export default function CheckInPanel({ operator }) {
             />
           </div>
         ) : null}
-        <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+        <div className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+          <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
             Scanner Frame
           </p>
-          <div className="mt-4 overflow-hidden rounded-[10px] border border-slate-200 bg-slate-950 dark:border-white/[0.06]">
+          <div className="mt-4 overflow-hidden rounded-[10px] border border-zinc-200 bg-zinc-950 dark:border-white/[0.06]">
             <video
               ref={videoRef}
               className="aspect-video w-full object-cover"
@@ -439,7 +439,7 @@ export default function CheckInPanel({ operator }) {
             <button
               type="button"
               onClick={startCamera}
-              className="h-11 rounded-full bg-amber-600 px-5 text-sm font-medium text-white transition hover:bg-amber-700"
+              className="h-11 rounded-full bg-purple-600 px-5 text-sm font-medium text-white transition hover:bg-purple-700"
             >
               {cameraState === 'active'
                 ? 'Restart Camera Scan'
@@ -448,12 +448,12 @@ export default function CheckInPanel({ operator }) {
             <button
               type="button"
               onClick={() => stopCamera()}
-              className="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+              className="h-11 rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-700 transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
             >
               Stop Camera
             </button>
           </div>
-          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
             {cameraMessage}
           </p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -463,21 +463,21 @@ export default function CheckInPanel({ operator }) {
               value={manualToken}
               onChange={(event) => setManualToken(event.target.value)}
               placeholder="Paste QR token manually"
-              className="h-11 flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+              className="h-11 flex-1 rounded-[10px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
             />
             <button
               type="button"
               onClick={() => completeCheckIn({ token: manualToken })}
               disabled={!manualToken.trim() || scanSubmitting}
-              className="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm text-slate-700 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+              className="h-11 rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-700 transition hover:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
             >
               {scanSubmitting ? 'Validating...' : 'Validate Token'}
             </button>
           </div>
         </div>
 
-        <div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+        <div className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+          <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
             Manual Lookup
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
@@ -487,13 +487,13 @@ export default function CheckInPanel({ operator }) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search by name, email, or registration ID"
-              className="h-11 flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+              className="h-11 flex-1 rounded-[10px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
             />
             <button
               type="button"
               onClick={lookupAttendee}
               disabled={!query.trim() || lookupLoading}
-              className="h-11 rounded-full bg-amber-600 px-5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-11 rounded-full bg-purple-600 px-5 text-sm font-medium text-white transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {lookupLoading ? 'Searching...' : 'Search'}
             </button>
@@ -503,12 +503,12 @@ export default function CheckInPanel({ operator }) {
             {lookupResults.map((registration) => (
               <div
                 key={registration.id}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
+                className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.04]"
               >
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
                   {registration.first_name} {registration.last_name}
                 </p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                   {registration.organization} | {registration.registration_code}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -535,14 +535,14 @@ export default function CheckInPanel({ operator }) {
                     completeCheckIn({ registrationId: registration.id })
                   }
                   disabled={scanSubmitting}
-                  className="mt-3 h-10 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+                  className="mt-3 h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
                 >
                   Check In This Attendee
                 </button>
               </div>
             ))}
             {!lookupLoading && !lookupResults.length ? (
-              <p className="text-sm text-slate-500 dark:text-slate-400">
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Search results will appear here for manual fallback check-in.
               </p>
             ) : null}
@@ -550,13 +550,13 @@ export default function CheckInPanel({ operator }) {
         </div>
       </section>
 
-      <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+            <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
               Recent Activity
             </p>
-            <h2 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-50">
+            <h2 className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Last validated scans
             </h2>
           </div>
@@ -577,7 +577,7 @@ export default function CheckInPanel({ operator }) {
                 }
               })();
             }}
-            className="h-10 rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+            className="h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
           >
             Refresh Activity
           </button>
@@ -587,9 +587,9 @@ export default function CheckInPanel({ operator }) {
           {recentScans.map((scan) => (
             <div
               key={scan.id}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.06]/60"
+              className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.04]"
             >
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
                 {scan.registration?.first_name} {scan.registration?.last_name}
               </p>
               <div className="mt-2">
@@ -599,18 +599,18 @@ export default function CheckInPanel({ operator }) {
                   {scan.scan_result.replaceAll('_', ' ')}
                 </AdminStatusBadge>
               </div>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                 {scan.registration?.registration_code} |{' '}
                 {scan.registration?.organization}
               </p>
-              <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
                 {scan.desk_label || 'Desk not set'} |{' '}
                 {formatDate(scan.created_at)}
               </p>
             </div>
           ))}
           {!recentScans.length ? (
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
               Recent scan activity will appear here after the first successful
               validation.
             </p>

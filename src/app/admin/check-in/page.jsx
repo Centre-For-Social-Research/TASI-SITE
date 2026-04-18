@@ -9,7 +9,7 @@ const { toOperatorSession, logOperatorEvent } = operatorSession;
 function AccessFallback() {
   return (
     <main className="min-h-screen bg-[#0b0c0f] px-6 py-24 text-[#edf0f6]">
-      <div className="mx-auto max-w-3xl rounded-[28px] border border-[#23262d] bg-[#111318] p-8">
+      <div className="mx-auto max-w-3xl rounded-[10px] border border-[#23262d] bg-[#111318] p-8">
         <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#8d93a5]">
           Access Required
         </p>
