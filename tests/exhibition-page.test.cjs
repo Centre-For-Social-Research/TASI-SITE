@@ -20,8 +20,14 @@ test('exhibition page route uses the new flagship pavilion sales story', () => {
 
   const source = readFile('src/app/exhibition/page.jsx');
 
-  assert.match(source, /import BrandedPageHero from ['"]@\/components\/ui\/branded-page-hero['"]/);
-  assert.match(source, /import GlobalCta from ['"]@\/components\/home\/global-cta['"]/);
+  assert.match(
+    source,
+    /import BrandedPageHero from ['"]@\/components\/ui\/branded-page-hero['"]/
+  );
+  assert.match(
+    source,
+    /import GlobalCta from ['"]@\/components\/home\/global-cta['"]/
+  );
   assert.match(source, /<BrandedPageHero/);
   assert.match(source, /Participation & Exhibition/);
   assert.match(source, /Flagship Pavilion/);
@@ -57,7 +63,10 @@ test('exhibition page route uses the new flagship pavilion sales story', () => {
   assert.doesNotMatch(source, /Shaped around the right format/);
   assert.doesNotMatch(source, /Follow-up with context/);
   assert.match(source, /Prefer to reach out directly\? Write to/);
-  assert.match(source, /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/);
+  assert.match(
+    source,
+    /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/
+  );
   assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.09 PM\.webp/);
   assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.16 PM\.webp/);
   assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.17 PM\.webp/);
@@ -103,7 +112,9 @@ test('exhibition enquiry form posts basic details through the shared messages pi
     'Expected exhibition enquiry form component to exist.'
   );
 
-  const source = readFile('src/components/exhibition/exhibition-enquiry-form.jsx');
+  const source = readFile(
+    'src/components/exhibition/exhibition-enquiry-form.jsx'
+  );
 
   assert.match(source, /fetch\('\/api\/messages'/);
   assert.match(source, /name="name"/);

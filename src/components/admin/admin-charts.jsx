@@ -21,8 +21,18 @@ function generateTrendData(summary) {
   const scale = Math.max(total, 40);
 
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   return months.map((month, i) => {
@@ -218,12 +228,7 @@ export function StatusDonutChart({ summary }) {
   );
 }
 
-export function AdminProgressCard({
-  label,
-  value,
-  percent,
-  color = 'cyan',
-}) {
+export function AdminProgressCard({ label, value, percent, color = 'cyan' }) {
   const colorMap = {
     cyan: {
       bg: 'bg-cyan-500',
@@ -235,13 +240,15 @@ export function AdminProgressCard({
       bg: 'bg-emerald-500',
       track: 'bg-emerald-100 dark:bg-emerald-500/15',
       text: 'text-emerald-600 dark:text-emerald-400',
-      badge: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400',
+      badge:
+        'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400',
     },
     amber: {
       bg: 'bg-amber-500',
       track: 'bg-amber-100 dark:bg-amber-500/15',
       text: 'text-amber-600 dark:text-amber-400',
-      badge: 'bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400',
+      badge:
+        'bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400',
     },
     rose: {
       bg: 'bg-rose-500',
@@ -266,9 +273,7 @@ export function AdminProgressCard({
           {clampedPercent}%
         </span>
       </div>
-      <p
-        className={`mt-2 text-2xl font-extrabold tabular-nums ${c.text}`}
-      >
+      <p className={`mt-2 text-2xl font-extrabold tabular-nums ${c.text}`}>
         {value}
       </p>
       <div className={`mt-3 h-2 overflow-hidden rounded-full ${c.track}`}>

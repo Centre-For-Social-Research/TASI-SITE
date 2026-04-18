@@ -8,9 +8,7 @@ export default function AdminPageIntro({
   actions = null,
 }) {
   return (
-    <section
-      className="admin-page-intro rounded-[10px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92)_48%,rgba(224,231,255,0.72)_100%)] p-6 shadow-[0_24px_64px_rgba(79,70,229,0.10)] dark:border-white/[0.08] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.88),rgba(17,24,39,0.92)_48%,rgba(30,41,59,0.68)_100%)]"
-    >
+    <section className="admin-page-intro rounded-[10px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92)_48%,rgba(224,231,255,0.72)_100%)] p-6 shadow-[0_24px_64px_rgba(79,70,229,0.10)] dark:border-white/[0.08] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.88),rgba(17,24,39,0.92)_48%,rgba(30,41,59,0.68)_100%)]">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div className="max-w-3xl">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-indigo-500 dark:text-indigo-300">

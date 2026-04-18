@@ -89,7 +89,9 @@ export default function ExhibitionPage() {
               Participation & Exhibition
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-white/90">
-              An enquiry-led invitation for organisations that want to show up inside India&apos;s leading trust and safety gathering with more relevance, more presence, and more intent.
+              An enquiry-led invitation for organisations that want to show up
+              inside India&apos;s leading trust and safety gathering with more
+              relevance, more presence, and more intent.
             </p>
           </div>
         </BrandedPageHero>
@@ -106,10 +108,17 @@ export default function ExhibitionPage() {
                 </h2>
                 <div className="space-y-6 text-body-md leading-relaxed text-stone-700 dark:text-stone-300">
                   <p>
-                    Rather than a generic expo room, the physical language of TASI creates an environment where ecosystem brands can natively host their own dialogues. Past activations have demonstrated how impactful direct, in-event physical footprints can be when merged with core session content.
+                    Rather than a generic expo room, the physical language of
+                    TASI creates an environment where ecosystem brands can
+                    natively host their own dialogues. Past activations have
+                    demonstrated how impactful direct, in-event physical
+                    footprints can be when merged with core session content.
                   </p>
                   <p>
-                    For 2026, exhibition spaces span from premium central pavilions to intimate brand walls, each crafted using sleek lines, timber accents, and clean lighting to ensure organizational credibility.
+                    For 2026, exhibition spaces span from premium central
+                    pavilions to intimate brand walls, each crafted using sleek
+                    lines, timber accents, and clean lighting to ensure
+                    organizational credibility.
                   </p>
                 </div>
               </div>
@@ -142,7 +151,9 @@ export default function ExhibitionPage() {
               </h2>
               <div className="mt-8 space-y-6 text-base leading-[1.65] text-white/90 md:text-[17px]">
                 <p>
-                  TASI exhibition participation is designed for organisations that want to meet the right people, occupy a thoughtfully staged environment, and leave with more than logo visibility.
+                  TASI exhibition participation is designed for organisations
+                  that want to meet the right people, occupy a thoughtfully
+                  staged environment, and leave with more than logo visibility.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <a
@@ -246,7 +257,9 @@ export default function ExhibitionPage() {
                 Festival-wide branding opportunities
               </h2>
               <p className="text-body-md leading-relaxed text-stone-700 dark:text-stone-300">
-                Beyond physical structures and booths, your organization can embed itself directly into the delegate experience through critical event touchpoints.
+                Beyond physical structures and booths, your organization can
+                embed itself directly into the delegate experience through
+                critical event touchpoints.
               </p>
             </div>
 
@@ -344,11 +357,11 @@ export default function ExhibitionPage() {
                   room.
                 </h2>
                 <p className="mt-6 max-w-xl text-body-md leading-relaxed text-stone-700 dark:text-stone-300">
-                  TASI exhibition participation is shaped for organisations
-                  that want more than surface visibility. Share a few details
-                  about your team, your intent, and the kind of presence you
-                  are considering, and we will guide the conversation toward
-                  the format that fits best.
+                  TASI exhibition participation is shaped for organisations that
+                  want more than surface visibility. Share a few details about
+                  your team, your intent, and the kind of presence you are
+                  considering, and we will guide the conversation toward the
+                  format that fits best.
                 </p>
 
                 <p className="mt-6 text-sm leading-relaxed text-stone-500 dark:text-stone-400">
@@ -358,9 +371,8 @@ export default function ExhibitionPage() {
                     className="font-semibold text-[#5c0f4f] underline underline-offset-4 dark:text-rc-secondary"
                   >
                     info1@csrindia.org
-                  </a>
-                  {' '}and the team will route your enquiry with the same
-                  context.
+                  </a>{' '}
+                  and the team will route your enquiry with the same context.
                 </p>
               </div>
               <div className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-[0_24px_70px_-42px_rgba(15,23,42,0.18)] dark:border-stone-800 dark:bg-stone-950/80 md:p-8">

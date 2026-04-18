@@ -161,7 +161,9 @@ export function createFestivalWebhookHandler(
     await recordFestivalPaymentAudit({
       ticketId: ticket?.id || null,
       userId: ticket?.user?.id || null,
-      eventType: valid ? 'festival_webhook_received' : 'festival_webhook_invalid',
+      eventType: valid
+        ? 'festival_webhook_received'
+        : 'festival_webhook_invalid',
       paymentStream,
       payload: parsed,
     });

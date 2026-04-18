@@ -21,7 +21,9 @@ test('vercel cron is configured to drain registration ops queues through a dedic
 });
 
 test('registration ops drain route secures cron execution with CRON_SECRET and processes both queues', () => {
-  const source = readSource('src/app/api/internal/registration-ops/drain/route.js');
+  const source = readSource(
+    'src/app/api/internal/registration-ops/drain/route.js'
+  );
 
   assert.match(source, /processNextAvailablePassIssueEmailJob/);
   assert.match(source, /processNextAvailableRegistrationEmailJob/);

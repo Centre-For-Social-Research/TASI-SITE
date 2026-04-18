@@ -78,6 +78,9 @@ test('resolveAdminShellRuntimeState preserves the previous live state for non-au
 test('AppShell mounts a route-level admin exit watcher so pathname changes can sign out admin sessions', () => {
   const source = readFile('src/components/app-shell.jsx');
 
-  assert.match(source, /import AdminRouteExitWatcher from '@\/components\/admin\/admin-route-exit-watcher'/);
+  assert.match(
+    source,
+    /import AdminRouteExitWatcher from '@\/components\/admin\/admin-route-exit-watcher'/
+  );
   assert.match(source, /<AdminRouteExitWatcher \/>/);
 });

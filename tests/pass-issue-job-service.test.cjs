@@ -10,10 +10,7 @@ function readSource(relativePath) {
 test('pass issue job service requires queue-backed bulk delivery and no longer returns legacy direct-send jobs', () => {
   const source = readSource('src/lib/pass-issue-job-service.js');
 
-  assert.match(
-    source,
-    /Queue-backed QR delivery is required for bulk sends/
-  );
+  assert.match(source, /Queue-backed QR delivery is required for bulk sends/);
   assert.doesNotMatch(source, /legacyDirect/);
   assert.doesNotMatch(source, /deliverPassEmailDirect/);
 });

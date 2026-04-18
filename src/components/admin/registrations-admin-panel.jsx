@@ -12,7 +12,16 @@ import {
   useState,
 } from 'react';
 import { Grid, useClientDataSource } from '@1771technologies/lytenyte-core';
-import { Clock, Download, ExternalLink, Loader2, CheckCircle2, QrCode, UserCheck, Trash2 } from 'lucide-react';
+import {
+  Clock,
+  Download,
+  ExternalLink,
+  Loader2,
+  CheckCircle2,
+  QrCode,
+  UserCheck,
+  Trash2,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { ATTENDEE_CATEGORIES } from '@/lib/registration-constants';
 import dashboardUtils from '@/lib/admin-dashboard-utils.cjs';
@@ -1146,11 +1155,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         eyebrow="Registrations"
         title="Review Queue"
         description="Sort the most urgent records to the top, act inline for speed, and open richer registrant detail from the review drawer."
-        chips={[
-          'Review decisions',
-          'Bulk status updates',
-          'QR pass delivery',
-        ]}
+        chips={['Review decisions', 'Bulk status updates', 'QR pass delivery']}
         actions={
           <div className="flex flex-wrap gap-2">
             {['csv', 'xlsx', 'pdf'].map((format) => (
@@ -1177,40 +1182,40 @@ export default function RegistrationsAdminPanel({ operator }) {
         }
       />
       <div className="mt-4 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={handleSendQr}
-            disabled={state.loading || hasConfigError || qrLoading.send}
-            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
-          >
-            {qrLoading.send ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : null}
-            {selectedIds.length ? 'Send QR To Selected' : 'Send QR To Filtered'}
-          </button>
-          <button
-            type="button"
-            onClick={handleResendQr}
-            disabled={state.loading || hasConfigError || qrLoading.resend}
-            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
-          >
-            {qrLoading.resend ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : null}
-            Resend Issued QR
-          </button>
-          <a
-            href="/admin/delivery"
-            className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
-          >
-            Delivery Jobs
-          </a>
-          <a
-            href="/admin/check-in"
-            className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
-          >
-            Check-In Console
-          </a>
+        <button
+          type="button"
+          onClick={handleSendQr}
+          disabled={state.loading || hasConfigError || qrLoading.send}
+          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
+        >
+          {qrLoading.send ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : null}
+          {selectedIds.length ? 'Send QR To Selected' : 'Send QR To Filtered'}
+        </button>
+        <button
+          type="button"
+          onClick={handleResendQr}
+          disabled={state.loading || hasConfigError || qrLoading.resend}
+          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+        >
+          {qrLoading.resend ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : null}
+          Resend Issued QR
+        </button>
+        <a
+          href="/admin/delivery"
+          className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+        >
+          Delivery Jobs
+        </a>
+        <a
+          href="/admin/check-in"
+          className="inline-flex h-9 items-center rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:border-white/10"
+        >
+          Check-In Console
+        </a>
       </div>
 
       {hasConfigError ? (
@@ -1254,8 +1259,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           percent={
             (state.summary?.confirmed || 0) > 0
               ? Math.round(
-                  ((state.summary.qrIssued || 0) /
-                    state.summary.confirmed) *
+                  ((state.summary.qrIssued || 0) / state.summary.confirmed) *
                     100
                 )
               : 0
@@ -1268,8 +1272,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           percent={
             (state.summary?.qrIssued || 0) > 0
               ? Math.round(
-                  ((state.summary.checkedIn || 0) /
-                    state.summary.qrIssued) *
+                  ((state.summary.checkedIn || 0) / state.summary.qrIssued) *
                     100
                 )
               : 0
@@ -1398,7 +1401,10 @@ export default function RegistrationsAdminPanel({ operator }) {
               </table>
             </div>
           ) : (
-            <div className="admin-grid-navy ln-grid" style={{ height: '560px' }}>
+            <div
+              className="admin-grid-navy ln-grid"
+              style={{ height: '560px' }}
+            >
               <Grid
                 columns={REGISTRATION_COLUMNS}
                 rowSource={ds}

@@ -98,7 +98,9 @@ test('filterUnreadAdminNotifications removes notifications that were marked read
   ]);
 
   assert.deepEqual(
-    filterUnreadAdminNotifications(notifications, readIds).map((item) => item.key),
+    filterUnreadAdminNotifications(notifications, readIds).map(
+      (item) => item.key
+    ),
     ['qrQueue', 'checkin']
   );
 });

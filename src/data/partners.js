@@ -339,8 +339,7 @@ export const partners = [
     category: 'University',
     website: 'https://dau.ac.in',
     social: {
-      linkedin:
-        'https://www.linkedin.com/school/dhirubhai-ambani-university/',
+      linkedin: 'https://www.linkedin.com/school/dhirubhai-ambani-university/',
       twitter: 'https://x.com/dauofficial_',
       instagram: 'https://www.instagram.com/dau._official',
       youtube: 'https://www.youtube.com/@dauofficial_',

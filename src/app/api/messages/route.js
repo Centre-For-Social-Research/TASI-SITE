@@ -23,7 +23,9 @@ export async function POST(request) {
     const email = sanitizeEmail(body?.email);
     const message = sanitizeMessage(body?.message);
     const normalizedSource =
-      typeof source === 'string' && source.trim() ? source.trim() : 'site-footer';
+      typeof source === 'string' && source.trim()
+        ? source.trim()
+        : 'site-footer';
 
     if (!isValidEmail(email)) {
       return Response.json(

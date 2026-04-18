@@ -4,10 +4,7 @@ import jsQR from 'jsqr';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
-import {
-  AdminStatCard,
-  AdminStatusBadge,
-} from '@/components/admin/admin-ui';
+import { AdminStatCard, AdminStatusBadge } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
 
 const {

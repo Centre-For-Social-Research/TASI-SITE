@@ -1,6 +1,6 @@
 # TASI 2026
 
-The official website for TASI 2026 — the annual conference of The Advertising Standards Council of India (ASCI). This site covers event information, speaker profiles, programme details, registration, sponsorship, and media coverage.
+The official website for TASI 2026 — the annual conference of The Centre For Social Research. This site covers event information, speaker profiles, programme details, registration, sponsorship, and media coverage.
 
 ## Stack
 

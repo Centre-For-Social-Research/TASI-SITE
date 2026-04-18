@@ -2,8 +2,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 const baseUrl = __ENV.MESSAGES_BASE_URL;
-const email =
-  __ENV.MESSAGES_TEST_EMAIL || 'loadtest+tasi-messages@example.com';
+const email = __ENV.MESSAGES_TEST_EMAIL || 'loadtest+tasi-messages@example.com';
 const source = __ENV.MESSAGES_TEST_SOURCE || 'k6-production-messages';
 const message =
   __ENV.MESSAGES_TEST_MESSAGE ||

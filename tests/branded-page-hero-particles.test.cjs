@@ -9,9 +9,7 @@ function readFile(relativePath) {
 
 test('branded hero uses shared light-only particles while preserving dark particles', () => {
   const hero = readFile('src/components/ui/branded-page-hero.jsx');
-  const lightParticles = readFile(
-    'src/components/ui/light-hero-particles.jsx'
-  );
+  const lightParticles = readFile('src/components/ui/light-hero-particles.jsx');
   const aboutPage = readFile('src/app/about/page.jsx');
   const packageJson = readFile('package.json');
 

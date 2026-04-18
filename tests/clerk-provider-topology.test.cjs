@@ -19,7 +19,10 @@ test('sign-in page does not create a nested ClerkProvider', () => {
   const signInPage = readFile('src/app/sign-in/[[...sign-in]]/page.jsx');
 
   assert.doesNotMatch(signInPage, /<ClerkProvider>/);
-  assert.doesNotMatch(signInPage, /import \{ ClerkProvider, SignIn \} from '@clerk\/nextjs'/);
+  assert.doesNotMatch(
+    signInPage,
+    /import \{ ClerkProvider, SignIn \} from '@clerk\/nextjs'/
+  );
   assert.match(signInPage, /import \{ SignIn \} from '@clerk\/nextjs'/);
 });
 

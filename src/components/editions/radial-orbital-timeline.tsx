@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import type { ElementType } from "react";
+import { useState, useEffect, useRef } from 'react';
+import type { ElementType } from 'react';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -10,10 +10,10 @@ import {
   Link,
   Mic2,
   Orbit,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const iconMap = {
   arrival: Building2,
@@ -31,23 +31,23 @@ interface TimelineItem {
   category: string;
   icon: keyof typeof iconMap;
   relatedIds: number[];
-  status: "completed" | "in-progress" | "pending";
+  status: 'completed' | 'in-progress' | 'pending';
   energy: number;
 }
 
 interface RadialOrbitalTimelineProps {
   timelineData: TimelineItem[];
-  variant?: "immersive" | "compact";
+  variant?: 'immersive' | 'compact';
 }
 
 export default function RadialOrbitalTimeline({
   timelineData,
-  variant = "immersive",
+  variant = 'immersive',
 }: RadialOrbitalTimelineProps) {
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>(
     {}
   );
-  const [viewMode, setViewMode] = useState<"orbital">("orbital");
+  const [viewMode, setViewMode] = useState<'orbital'>('orbital');
   const [rotationAngle, setRotationAngle] = useState<number>(0);
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
   const [pulseEffect, setPulseEffect] = useState<Record<number, boolean>>({});
@@ -59,7 +59,7 @@ export default function RadialOrbitalTimeline({
   const containerRef = useRef<HTMLDivElement>(null);
   const orbitRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({});
-  const isCompact = variant === "compact";
+  const isCompact = variant === 'compact';
 
   const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === containerRef.current || e.target === orbitRef.current) {
@@ -106,7 +106,7 @@ export default function RadialOrbitalTimeline({
   useEffect(() => {
     let rotationTimer: NodeJS.Timeout;
 
-    if (autoRotate && viewMode === "orbital") {
+    if (autoRotate && viewMode === 'orbital') {
       rotationTimer = setInterval(() => {
         setRotationAngle((prev) => {
           const newAngle = (prev + 0.3) % 360;
@@ -123,7 +123,7 @@ export default function RadialOrbitalTimeline({
   }, [autoRotate, viewMode]);
 
   const centerViewOnNode = (nodeId: number) => {
-    if (viewMode !== "orbital" || !nodeRefs.current[nodeId]) return;
+    if (viewMode !== 'orbital' || !nodeRefs.current[nodeId]) return;
 
     const nodeIndex = timelineData.findIndex((item) => item.id === nodeId);
     const totalNodes = timelineData.length;
@@ -162,16 +162,16 @@ export default function RadialOrbitalTimeline({
     return relatedItems.includes(itemId);
   };
 
-  const getStatusStyles = (status: TimelineItem["status"]): string => {
+  const getStatusStyles = (status: TimelineItem['status']): string => {
     switch (status) {
-      case "completed":
-        return "text-white bg-black border-white";
-      case "in-progress":
-        return "text-black bg-white border-black";
-      case "pending":
-        return "text-white bg-black/40 border-white/50";
+      case 'completed':
+        return 'text-white bg-black border-white';
+      case 'in-progress':
+        return 'text-black bg-white border-black';
+      case 'pending':
+        return 'text-white bg-black/40 border-white/50';
       default:
-        return "text-white bg-black/40 border-white/50";
+        return 'text-white bg-black/40 border-white/50';
     }
   };
 
@@ -179,8 +179,8 @@ export default function RadialOrbitalTimeline({
     <div
       className={
         isCompact
-          ? "flex w-full items-center justify-center rounded-[10px] border border-white/65 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.96),rgba(248,241,232,0.92)_44%,rgba(240,230,220,0.82)_100%)] shadow-[0_24px_70px_rgba(120,92,70,0.12)] backdrop-blur-xl"
-          : "w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,216,158,0.16),rgba(92,15,79,0.18)_22%,rgba(53,2,101,0.88)_56%,rgba(21,0,43,1)_100%)]"
+          ? 'flex w-full items-center justify-center rounded-[10px] border border-white/65 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.96),rgba(248,241,232,0.92)_44%,rgba(240,230,220,0.82)_100%)] shadow-[0_24px_70px_rgba(120,92,70,0.12)] backdrop-blur-xl'
+          : 'w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,216,158,0.16),rgba(92,15,79,0.18)_22%,rgba(53,2,101,0.88)_56%,rgba(21,0,43,1)_100%)]'
       }
       ref={containerRef}
       onClick={handleContainerClick}
@@ -188,15 +188,15 @@ export default function RadialOrbitalTimeline({
       <div
         className={
           isCompact
-            ? "relative flex w-full items-center justify-center py-12 md:py-14 lg:py-16"
-            : "relative w-full max-w-6xl h-full min-h-[56rem] flex items-center justify-center"
+            ? 'relative flex w-full items-center justify-center py-12 md:py-14 lg:py-16'
+            : 'relative w-full max-w-6xl h-full min-h-[56rem] flex items-center justify-center'
         }
       >
         <div
-          className={`${isCompact ? "absolute inset-0 flex items-center justify-center" : "absolute w-full h-full"} flex items-center justify-center ${isCompact ? "scale-[0.96] md:scale-100" : ""}`}
+          className={`${isCompact ? 'absolute inset-0 flex items-center justify-center' : 'absolute w-full h-full'} flex items-center justify-center ${isCompact ? 'scale-[0.96] md:scale-100' : ''}`}
           ref={orbitRef}
           style={{
-            perspective: "1000px",
+            perspective: '1000px',
             transform: `translate(${centerOffset.x}px, ${centerOffset.y}px)`,
           }}
         >
@@ -206,28 +206,28 @@ export default function RadialOrbitalTimeline({
             </div>
           ) : null}
           <div
-            className={`absolute rounded-full animate-pulse flex items-center justify-center z-10 ${isCompact ? "h-16 w-16 bg-[linear-gradient(135deg,#fff6e8_0%,#f5dcb8_26%,#d7a36b_58%,#b87554_100%)] shadow-[0_0_36px_rgba(189,127,66,0.18)]" : "w-24 h-24 bg-[linear-gradient(135deg,#ffd38a_0%,#ff9d3d_24%,#8a1f65_62%,#3b0c63_100%)] shadow-[0_0_60px_rgba(255,157,61,0.28)]"}`}
+            className={`absolute rounded-full animate-pulse flex items-center justify-center z-10 ${isCompact ? 'h-16 w-16 bg-[linear-gradient(135deg,#fff6e8_0%,#f5dcb8_26%,#d7a36b_58%,#b87554_100%)] shadow-[0_0_36px_rgba(189,127,66,0.18)]' : 'w-24 h-24 bg-[linear-gradient(135deg,#ffd38a_0%,#ff9d3d_24%,#8a1f65_62%,#3b0c63_100%)] shadow-[0_0_60px_rgba(255,157,61,0.28)]'}`}
           >
             <div
-              className={`absolute rounded-full animate-ping opacity-70 ${isCompact ? "h-24 w-24 border border-[#d7b48d]/45" : "w-32 h-32 border border-[#ffd38a]/30"}`}
+              className={`absolute rounded-full animate-ping opacity-70 ${isCompact ? 'h-24 w-24 border border-[#d7b48d]/45' : 'w-32 h-32 border border-[#ffd38a]/30'}`}
             ></div>
             <div
-              className={`absolute rounded-full animate-ping opacity-50 ${isCompact ? "h-32 w-32 border border-white/45" : "w-40 h-40 border border-white/10"}`}
-              style={{ animationDelay: "0.5s" }}
+              className={`absolute rounded-full animate-ping opacity-50 ${isCompact ? 'h-32 w-32 border border-white/45' : 'w-40 h-40 border border-white/10'}`}
+              style={{ animationDelay: '0.5s' }}
             ></div>
             <div
-              className={`rounded-full backdrop-blur-md ${isCompact ? "h-8 w-8 bg-white/90 shadow-[0_0_18px_rgba(255,255,255,0.3)]" : "w-12 h-12 bg-white/85 shadow-[0_0_24px_rgba(255,255,255,0.28)]"}`}
+              className={`rounded-full backdrop-blur-md ${isCompact ? 'h-8 w-8 bg-white/90 shadow-[0_0_18px_rgba(255,255,255,0.3)]' : 'w-12 h-12 bg-white/85 shadow-[0_0_24px_rgba(255,255,255,0.28)]'}`}
             ></div>
           </div>
 
           <div
-            className={`absolute rounded-full ${isCompact ? "h-[16rem] w-[16rem] border border-[#d8b592]/65" : "h-[34rem] w-[34rem] border border-[#ffd38a]/16"}`}
+            className={`absolute rounded-full ${isCompact ? 'h-[16rem] w-[16rem] border border-[#d8b592]/65' : 'h-[34rem] w-[34rem] border border-[#ffd38a]/16'}`}
           />
           <div
-            className={`absolute rounded-full ${isCompact ? "h-[22rem] w-[22rem] border border-[#ead8c3]/85" : "h-[44rem] w-[44rem] border border-white/10"}`}
+            className={`absolute rounded-full ${isCompact ? 'h-[22rem] w-[22rem] border border-[#ead8c3]/85' : 'h-[44rem] w-[44rem] border border-white/10'}`}
           />
           <div
-            className={`absolute rounded-full ${isCompact ? "h-[28rem] w-[28rem] border border-white/80" : "h-[54rem] w-[54rem] border border-white/6"}`}
+            className={`absolute rounded-full ${isCompact ? 'h-[28rem] w-[28rem] border border-white/80' : 'h-[54rem] w-[54rem] border border-white/6'}`}
           />
 
           {timelineData.map((item, index) => {
@@ -258,7 +258,7 @@ export default function RadialOrbitalTimeline({
               >
                 <div
                   className={`absolute rounded-full -inset-1 ${
-                    isPulsing ? "animate-pulse duration-1000" : ""
+                    isPulsing ? 'animate-pulse duration-1000' : ''
                   }`}
                   style={{
                     background: isCompact
@@ -274,36 +274,36 @@ export default function RadialOrbitalTimeline({
                 <div
                   className={`
                   rounded-full flex items-center justify-center
-                  ${isCompact ? "w-8 h-8" : "w-10 h-10"}
+                  ${isCompact ? 'w-8 h-8' : 'w-10 h-10'}
                   ${
                     isExpanded
                       ? isCompact
-                        ? "bg-white text-[#5f2b24]"
-                        : "bg-[#fff2db] text-[#2f143d]"
+                        ? 'bg-white text-[#5f2b24]'
+                        : 'bg-[#fff2db] text-[#2f143d]'
                       : isRelated
                         ? isCompact
-                          ? "bg-[#f1d8bb] text-[#5f2b24]"
-                          : "bg-[#ffd38a]/70 text-[#2f143d]"
+                          ? 'bg-[#f1d8bb] text-[#5f2b24]'
+                          : 'bg-[#ffd38a]/70 text-[#2f143d]'
                         : isCompact
-                          ? "bg-[linear-gradient(135deg,#6b3659_0%,#9a5e56_100%)] text-white"
-                          : "bg-[#1a0828] text-white"
+                          ? 'bg-[linear-gradient(135deg,#6b3659_0%,#9a5e56_100%)] text-white'
+                          : 'bg-[#1a0828] text-white'
                   }
                   border-2 
                   ${
                     isExpanded
                       ? isCompact
-                        ? "border-white shadow-lg shadow-[#d8b592]/35"
-                        : "border-[#fff2db] shadow-lg shadow-[#ffd38a]/25"
+                        ? 'border-white shadow-lg shadow-[#d8b592]/35'
+                        : 'border-[#fff2db] shadow-lg shadow-[#ffd38a]/25'
                       : isRelated
                         ? isCompact
-                          ? "border-[#c58c55] animate-pulse"
-                          : "border-[#ffd38a] animate-pulse"
+                          ? 'border-[#c58c55] animate-pulse'
+                          : 'border-[#ffd38a] animate-pulse'
                         : isCompact
-                          ? "border-white/75"
-                          : "border-white/30"
+                          ? 'border-white/75'
+                          : 'border-white/30'
                   }
                   transition-all duration-300 transform
-                  ${isExpanded ? "scale-150" : ""}
+                  ${isExpanded ? 'scale-150' : ''}
                 `}
                 >
                   <Icon size={isCompact ? 13 : 16} />
@@ -313,8 +313,8 @@ export default function RadialOrbitalTimeline({
                   className={`
                   absolute whitespace-nowrap font-semibold tracking-wider
                   transition-all duration-300
-                  ${isCompact ? "top-10 text-[10px]" : "top-12 text-xs"}
-                  ${isExpanded ? (isCompact ? "text-[#5f2b24] scale-110" : "text-white scale-125") : isCompact ? "text-[#6d5143]/88" : "text-white/78"}
+                  ${isCompact ? 'top-10 text-[10px]' : 'top-12 text-xs'}
+                  ${isExpanded ? (isCompact ? 'text-[#5f2b24] scale-110' : 'text-white scale-125') : isCompact ? 'text-[#6d5143]/88' : 'text-white/78'}
                 `}
                 >
                   {item.title}
@@ -322,10 +322,10 @@ export default function RadialOrbitalTimeline({
 
                 {isExpanded && (
                   <Card
-                    className={`absolute left-1/2 -translate-x-1/2 overflow-visible backdrop-blur-lg ${isCompact ? "top-16 w-56 border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,239,229,0.96))] shadow-xl shadow-[#d9c0ab]/35" : "top-24 w-72 border-[#ffd38a]/20 bg-[linear-gradient(180deg,rgba(35,9,50,0.94),rgba(17,4,31,0.96))] shadow-xl shadow-[#12001f]/30"}`}
+                    className={`absolute left-1/2 -translate-x-1/2 overflow-visible backdrop-blur-lg ${isCompact ? 'top-16 w-56 border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,239,229,0.96))] shadow-xl shadow-[#d9c0ab]/35' : 'top-24 w-72 border-[#ffd38a]/20 bg-[linear-gradient(180deg,rgba(35,9,50,0.94),rgba(17,4,31,0.96))] shadow-xl shadow-[#12001f]/30'}`}
                   >
                     <div
-                      className={`absolute -top-3 left-1/2 -translate-x-1/2 w-px h-3 ${isCompact ? "bg-[#c58c55]/70" : "bg-[#ffd38a]/60"}`}
+                      className={`absolute -top-3 left-1/2 -translate-x-1/2 w-px h-3 ${isCompact ? 'bg-[#c58c55]/70' : 'bg-[#ffd38a]/60'}`}
                     ></div>
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-center">
@@ -334,30 +334,28 @@ export default function RadialOrbitalTimeline({
                             item.status
                           )}`}
                         >
-                          {item.status === "completed"
-                            ? "COMPLETE"
-                            : item.status === "in-progress"
-                              ? "IN PROGRESS"
-                              : "PENDING"}
+                          {item.status === 'completed'
+                            ? 'COMPLETE'
+                            : item.status === 'in-progress'
+                              ? 'IN PROGRESS'
+                              : 'PENDING'}
                         </Badge>
                         <span
-                          className={`text-xs font-mono ${isCompact ? "text-stone-500" : "text-white/60"}`}
+                          className={`text-xs font-mono ${isCompact ? 'text-stone-500' : 'text-white/60'}`}
                         >
                           {item.date}
                         </span>
                       </div>
                       <CardTitle
-                        className={`text-sm mt-2 ${isCompact ? "text-[#2f1e18]" : "text-white"}`}
+                        className={`text-sm mt-2 ${isCompact ? 'text-[#2f1e18]' : 'text-white'}`}
                       >
                         {item.title}
                       </CardTitle>
                     </CardHeader>
                     <CardContent
-                      className={`text-xs ${isCompact ? "text-stone-700" : "text-white/84"}`}
+                      className={`text-xs ${isCompact ? 'text-stone-700' : 'text-white/84'}`}
                     >
                       <p>{item.content}</p>
-
-
                     </CardContent>
                   </Card>
                 )}

@@ -32,10 +32,7 @@ import {
   buildAdminNotificationStorageKey,
   resolveAdminShellRuntimeState,
 } from '@/lib/admin-runtime-guards.cjs';
-import {
-  AdminStatusBadge,
-  SlideOverDrawer,
-} from '@/components/admin/admin-ui';
+import { AdminStatusBadge, SlideOverDrawer } from '@/components/admin/admin-ui';
 
 const NAV_ICONS = {
   '/admin/registrations': Users,
@@ -142,9 +139,10 @@ function getInitials(name) {
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const storageKey = useMemo(() => buildAdminNotificationStorageKey(operator), [
-    operator,
-  ]);
+  const storageKey = useMemo(
+    () => buildAdminNotificationStorageKey(operator),
+    [operator]
+  );
   const [readNotificationIds, setReadNotificationIds] = useState([]);
   const [storageReady, setStorageReady] = useState(false);
   const [runtimeIssue, setRuntimeIssue] = useState(null);
@@ -535,7 +533,7 @@ export default function AdminShell({ operator, currentPath, children }) {
                   <div className="rounded-[10px] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.05]">
                     <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
                       <Activity className="h-3.5 w-3.5 text-cyan-500" />
-                        Pending Review
+                      Pending Review
                     </div>
                     <p className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-100">
                       {statPills[0]?.value || 0} pending
@@ -611,7 +609,8 @@ export default function AdminShell({ operator, currentPath, children }) {
               </p>
               <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-300">
                 You have read or dismissed the current admin alerts. New issues
-                will appear here automatically when the underlying status changes.
+                will appear here automatically when the underlying status
+                changes.
               </p>
             </div>
           )}

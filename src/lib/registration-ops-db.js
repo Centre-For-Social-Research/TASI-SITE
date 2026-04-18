@@ -757,7 +757,10 @@ export async function claimRegistrationEmailJobItems({
   return claimed;
 }
 
-export async function listRegistrationEmailJobItems({ jobId, limit = 50 } = {}) {
+export async function listRegistrationEmailJobItems({
+  jobId,
+  limit = 50,
+} = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('registration_email_job_items')

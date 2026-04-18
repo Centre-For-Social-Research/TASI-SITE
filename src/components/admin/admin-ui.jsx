@@ -22,7 +22,8 @@ const toneMap = {
     panel:
       'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/[0.08] dark:text-amber-200',
     card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg: 'bg-amber-50 text-amber-500 dark:bg-amber-500/15 dark:text-amber-400',
+    iconBg:
+      'bg-amber-50 text-amber-500 dark:bg-amber-500/15 dark:text-amber-400',
   },
   success: {
     badge:
@@ -31,7 +32,8 @@ const toneMap = {
     panel:
       'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/[0.08] dark:text-emerald-200',
     card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg: 'bg-emerald-50 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400',
+    iconBg:
+      'bg-emerald-50 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400',
   },
   danger: {
     badge:
@@ -49,7 +51,8 @@ const toneMap = {
     panel:
       'border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-500/20 dark:bg-violet-500/[0.08] dark:text-violet-200',
     card: 'border-slate-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg: 'bg-violet-50 text-violet-500 dark:bg-violet-500/15 dark:text-violet-400',
+    iconBg:
+      'bg-violet-50 text-violet-500 dark:bg-violet-500/15 dark:text-violet-400',
   },
   info: {
     badge:
@@ -87,7 +90,13 @@ export function AdminStatusBadge({
   );
 }
 
-export function AdminStatCard({ label, value, tone = 'default', detail, icon: Icon }) {
+export function AdminStatCard({
+  label,
+  value,
+  tone = 'default',
+  detail,
+  icon: Icon,
+}) {
   const classes = getToneClasses(tone);
 
   return (
@@ -113,8 +122,17 @@ export function AdminStatCard({ label, value, tone = 'default', detail, icon: Ic
             </p>
           ) : null}
         </div>
-        <div className={clsx('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', classes.iconBg)}>
-          {Icon ? <Icon className="h-5 w-5" /> : <span className={clsx('h-2.5 w-2.5 rounded-full', classes.dot)} />}
+        <div
+          className={clsx(
+            'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
+            classes.iconBg
+          )}
+        >
+          {Icon ? (
+            <Icon className="h-5 w-5" />
+          ) : (
+            <span className={clsx('h-2.5 w-2.5 rounded-full', classes.dot)} />
+          )}
         </div>
       </div>
     </div>

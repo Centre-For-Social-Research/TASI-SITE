@@ -7,7 +7,10 @@ import { isValidEmail } from '@/lib/input-sanitizers';
 import { REGISTRATION_SOURCE } from '@/lib/registration-constants';
 import { createNotification, createRegistration } from '@/lib/registration-db';
 import { after } from 'next/server';
-import { processNextAvailableRegistrationEmailJob, queueRegistrationEmailJob } from '@/lib/registration-email-job-service';
+import {
+  processNextAvailableRegistrationEmailJob,
+  queueRegistrationEmailJob,
+} from '@/lib/registration-email-job-service';
 import {
   PROFILE_BUCKET,
   buildRegistrationCode,
@@ -169,7 +172,10 @@ export async function POST(request) {
           },
         });
       } catch (error) {
-        console.error('Failed to process registration email job in background:', error);
+        console.error(
+          'Failed to process registration email job in background:',
+          error
+        );
       }
     });
 

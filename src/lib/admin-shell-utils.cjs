@@ -133,7 +133,10 @@ function buildAdminNotificationId(notification = {}) {
   return `${notification.key || 'notification'}:${notification.detail || ''}`;
 }
 
-function filterUnreadAdminNotifications(notifications = [], readIds = new Set()) {
+function filterUnreadAdminNotifications(
+  notifications = [],
+  readIds = new Set()
+) {
   return notifications.filter(
     (notification) => !readIds.has(buildAdminNotificationId(notification))
   );

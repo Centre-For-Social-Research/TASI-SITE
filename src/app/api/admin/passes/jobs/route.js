@@ -4,7 +4,10 @@ import {
   isQueueInfrastructureUnavailable,
 } from '@/lib/registration-job-utils.cjs';
 import { after } from 'next/server';
-import { createPassIssueEmailJob, processNextAvailablePassIssueEmailJob } from '@/lib/pass-issue-job-service';
+import {
+  createPassIssueEmailJob,
+  processNextAvailablePassIssueEmailJob,
+} from '@/lib/pass-issue-job-service';
 import { listPassIssueEmailJobs } from '@/lib/registration-ops-db';
 
 function serializeJob(job) {
@@ -85,11 +88,16 @@ export async function POST(request) {
           primaryEmail: 'system-after-trigger@local',
         };
         for (let i = 0; i < 6; i++) {
-          const processed = await processNextAvailablePassIssueEmailJob({ operator: bgOperator });
+          const processed = await processNextAvailablePassIssueEmailJob({
+            operator: bgOperator,
+          });
           if (!processed) break;
         }
       } catch (error) {
-        console.error('Failed to process QR delivery jobs in background:', error);
+        console.error(
+          'Failed to process QR delivery jobs in background:',
+          error
+        );
       }
     });
 

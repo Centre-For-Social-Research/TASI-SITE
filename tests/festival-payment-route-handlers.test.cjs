@@ -152,7 +152,10 @@ test('verify handler does not resend confirmation email when the domestic ticket
 
   assert.equal(response.status, 200);
   assert.equal(emailCalled, false);
-  assert.equal(audits.at(-1).eventType, 'festival_payment_confirmation_duplicate');
+  assert.equal(
+    audits.at(-1).eventType,
+    'festival_payment_confirmation_duplicate'
+  );
   assert.deepEqual(await response.json(), {
     success: true,
     ticketId: 'ticket-1',
@@ -219,7 +222,10 @@ test('domestic webhook handler does not resend the confirmation email for duplic
 
   assert.equal(response.status, 200);
   assert.equal(emailCalled, false);
-  assert.equal(audits.at(-1).eventType, 'festival_webhook_confirmation_duplicate');
+  assert.equal(
+    audits.at(-1).eventType,
+    'festival_webhook_confirmation_duplicate'
+  );
   assert.deepEqual(await response.json(), { success: true });
 });
 

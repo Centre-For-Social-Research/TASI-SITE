@@ -43,11 +43,11 @@ test('TASI 2025 thematic focus cards use the final accent illustration treatment
   );
   assert.match(source, /Festival Journey/);
   assert.match(source, /The edition in one connected arc/);
+  assert.match(source, /md:grid-cols-\[0\.94fr_1\.06fr\] md:items-stretch/);
   assert.match(
     source,
-    /md:grid-cols-\[0\.94fr_1\.06fr\] md:items-stretch/
+    /className="flex h-full flex-col justify-between pt-8 md:pt-10"/
   );
-  assert.match(source, /className="flex h-full flex-col justify-between pt-8 md:pt-10"/);
   assert.match(source, /md:min-h-\[30rem\]/);
   assert.match(source, /Arc \{String\(index \+ 1\)\.padStart\(2, '0'\)\}/);
   assert.match(source, /<GlobalCta \/>/);
@@ -57,7 +57,10 @@ test('TASI 2025 thematic focus cards use the final accent illustration treatment
   );
   assert.doesNotMatch(source, /Information Integrity and Misinformation/);
   assert.doesNotMatch(source, /Thematic Illustration/);
-  assert.match(timelineSource, /const \[viewMode, setViewMode\] = useState<"orbital">\("orbital"\);/);
+  assert.match(
+    timelineSource,
+    /const \[viewMode, setViewMode\] = useState<"orbital">\("orbital"\);/
+  );
   assert.match(timelineSource, /ArrowRight,/);
   assert.match(timelineSource, /ArrowUpRight,/);
   assert.match(timelineSource, /Building2,/);
@@ -71,7 +74,10 @@ test('TASI 2025 thematic focus cards use the final accent illustration treatment
   assert.match(timelineSource, /variant\?: "immersive" \| "compact";/);
   assert.match(timelineSource, /const isCompact = variant === "compact";/);
   assert.match(timelineSource, /const radius = isCompact \? 132 : 272;/);
-  assert.match(timelineSource, /flex w-full items-center justify-center rounded-\[10px\] border border-white\/65 bg-\[radial-gradient/);
+  assert.match(
+    timelineSource,
+    /flex w-full items-center justify-center rounded-\[10px\] border border-white\/65 bg-\[radial-gradient/
+  );
   assert.match(
     timelineSource,
     /relative flex w-full items-center justify-center py-12 md:py-14 lg:py-16/
@@ -80,7 +86,10 @@ test('TASI 2025 thematic focus cards use the final accent illustration treatment
     timelineSource,
     /absolute inset-0 flex items-center justify-center/
   );
-  assert.match(timelineSource, /h-\[28rem\] w-\[28rem\] border border-white\/80/);
+  assert.match(
+    timelineSource,
+    /h-\[28rem\] w-\[28rem\] border border-white\/80/
+  );
   assert.doesNotMatch(timelineSource, /Energy Level/);
   assert.match(timelineSource, /Connected Nodes/);
   assert.match(source, /Opening Convening/);
