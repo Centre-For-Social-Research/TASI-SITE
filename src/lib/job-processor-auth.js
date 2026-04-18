@@ -1,4 +1,4 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 
 function buildSystemProcessorOperator() {
   return {
@@ -25,5 +25,5 @@ export async function authorizeJobProcessorRequest(request, context = {}) {
     };
   }
 
-  return requireAuthorizedOperator(context);
+  return requireAdminOperator(context);
 }

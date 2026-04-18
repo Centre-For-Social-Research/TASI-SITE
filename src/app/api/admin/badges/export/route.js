@@ -1,4 +1,4 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import {
   listBadgeExportRegistrations,
   recordBadgeExport,
@@ -16,7 +16,7 @@ function contentDisposition(filename) {
 }
 
 export async function GET(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.badges.export',
   });
   if (!authResult.ok) {

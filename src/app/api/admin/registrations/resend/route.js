@@ -1,4 +1,4 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import {
   createNotification,
   getRegistrationById,
@@ -17,7 +17,9 @@ const ALLOWED_TEMPLATES = new Set([
 ]);
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator();
+  const authResult = await requireAdminOperator({
+    route: 'api.admin.registrations.resend',
+  });
   if (!authResult.ok) {
     return authResult.response;
   }

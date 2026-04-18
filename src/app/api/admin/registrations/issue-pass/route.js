@@ -1,9 +1,9 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
 import { createPassIssueEmailJob } from '@/lib/pass-issue-job-service';
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.registrations.issue-pass',
   });
   if (!authResult.ok) {

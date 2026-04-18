@@ -1,13 +1,14 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { after } from 'next/server';
+import { requireAdminOperator } from '@/lib/registration-auth';
+import { updateRegistrationStatus } from '@/lib/registration-db';
 import {
-  createNotification,
-  updateRegistrationStatus,
-} from '@/lib/registration-db';
-import { deliverRegistrationEmail } from '@/lib/registration-email';
+  processNextAvailableRegistrationEmailJob,
+  queueRegistrationEmailJob,
+} from '@/lib/registration-email-job-service';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.registrations.status',
   });
   if (!authResult.ok) {
@@ -35,26 +36,36 @@ export async function POST(request) {
     });
 
     const templateType = updatedRegistration.status;
-    const notificationId = await createNotification({
+    const queueResult = await queueRegistrationEmailJob({
       registrationId: updatedRegistration.id,
       templateType,
-      recipientEmail: updatedRegistration.email,
-      actorClerkId: authResult.operator.userId,
-      actorEmail: authResult.operator.primaryEmail,
+      operator: authResult.operator,
     });
 
-    const { markNotificationDelivery } = await import('@/lib/registration-db');
-    const emailResult = await deliverRegistrationEmail({
-      registration: updatedRegistration,
-      templateType,
-      notificationId,
-      db: { markNotificationDelivery },
+    after(async () => {
+      try {
+        await processNextAvailableRegistrationEmailJob({
+          operator: {
+            userId: 'system-after-trigger',
+            primaryEmail: 'system-after-trigger@local',
+          },
+        });
+      } catch (error) {
+        console.error(
+          'Failed to process registration email job in background:',
+          error
+        );
+      }
     });
 
     return Response.json({
       success: true,
       registration: updatedRegistration,
-      emailResult,
+      emailResult: {
+        queued: Boolean(queueResult.queued),
+        sent: false,
+        error: queueResult.queued ? null : queueResult.error || null,
+      },
     });
   } catch (error) {
     return Response.json(

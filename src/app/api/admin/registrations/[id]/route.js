@@ -1,4 +1,7 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import {
+  requireAdminOperator,
+  requireAuthorizedOperator,
+} from '@/lib/registration-auth';
 import {
   getRegistrationDetail,
   deleteRegistration,
@@ -45,7 +48,7 @@ export async function GET(_request, context) {
 }
 
 export async function DELETE(_request, context) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.registrations.delete',
   });
   if (!authResult.ok) {

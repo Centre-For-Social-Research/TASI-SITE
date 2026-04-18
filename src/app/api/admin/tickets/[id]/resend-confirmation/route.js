@@ -1,9 +1,9 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import { getFestivalTicketById } from '@/lib/festival-ticketing-db';
 import { sendFestivalTicketConfirmationEmail } from '@/lib/festival-ticketing-email';
 
 export async function POST(_request, { params }) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.tickets.resend-confirmation',
   });
   if (!authResult.ok) {

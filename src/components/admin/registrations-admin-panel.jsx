@@ -1057,8 +1057,8 @@ export default function RegistrationsAdminPanel({ operator }) {
         reviewNotes: detailDraft.reviewNotes,
       });
       showToast(
-        data.emailResult?.sent
-          ? 'Notes saved and attendee email sent.'
+        data.emailResult?.queued
+          ? 'Notes saved; email queued for delivery.'
           : 'Notes saved.',
         'success'
       );

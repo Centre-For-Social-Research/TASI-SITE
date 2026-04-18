@@ -1,9 +1,9 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import { updateTicketEvent } from '@/lib/ticketing-db';
 import { patchTicketEventSchema } from '@/lib/ticketing-validation';
 
 export async function PATCH(request, { params }) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.ticket-events.update',
   });
   if (!authResult.ok) {
