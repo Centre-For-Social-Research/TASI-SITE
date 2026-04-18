@@ -201,6 +201,33 @@ export async function requireAuthorizedOperator(context = {}) {
   return { ok: true, operator };
 }
 
+export async function requireAdminOperator(context = {}) {
+  const result = await requireAuthorizedOperator(context);
+  if (!result.ok) {
+    return result;
+  }
+
+  if (result.operator.role !== 'admin') {
+    logOperatorEvent(
+      'operator.admin_required',
+      context.route || 'registration-auth',
+      result.operator
+    );
+    return {
+      ok: false,
+      response: Response.json(
+        {
+          error:
+            'This action requires an admin role. Reviewer access is read-only.',
+        },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return result;
+}
+
 export async function getOperatorUiState() {
   const clerkConfig = getClerkConfigDiagnostics();
 
