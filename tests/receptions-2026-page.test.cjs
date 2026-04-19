@@ -25,3 +25,24 @@ test('receptions 2026 page removes the old placeholder-style cards', () => {
   assert.doesNotMatch(source, /Clearer site structure/);
   assert.doesNotMatch(source, /Festival purchase lives on \/register/);
 });
+
+test('receptions page avoids low-contrast dark-mode accent tokens and raw bg-white pills', () => {
+  const source = readFile('src/components/receptions/receptions-page.jsx');
+
+  assert.doesNotMatch(source, /dark:text-rc-secondary/);
+  assert.doesNotMatch(source, /'bg-white text-\[#140f26\]'/);
+});
+
+test('receptions page keeps embassy logos unchanged across light and dark mode', () => {
+  const source = readFile('src/components/receptions/receptions-page.jsx');
+
+  assert.doesNotMatch(source, /dark:invert/);
+  assert.doesNotMatch(source, /dark:brightness-200/);
+});
+
+test('receptions page keeps embassy logo circles white in dark mode', () => {
+  const source = readFile('src/components/receptions/receptions-page.jsx');
+
+  const matches = source.match(/className="relative flex h-(?:12|16) w-(?:12|16) items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-\[#fff\] dark:border-slate-700"/g) || [];
+  assert.equal(matches.length, 2);
+});

@@ -38,7 +38,10 @@ export default function HomeHero() {
           custom={0}
         >
           <span>Centre for Social Research</span>
-          <span className="hidden h-1 w-1 rounded-full bg-white/70 md:block" />
+          <span
+            className="hidden h-1 w-1 rounded-full md:block"
+            style={{ backgroundColor: '#fff' }}
+          />
           <span>Trust &amp; Safety Forum</span>
         </motion.div>
 
@@ -61,8 +64,14 @@ export default function HomeHero() {
           </div>
 
           {/* Vertical Separator */}
-          <div className="hidden md:block w-[2px] h-24 bg-white"></div>
-          <div className="md:hidden h-[2px] w-24 bg-white my-2"></div>
+          <div
+            className="hidden md:block w-[2px] h-24"
+            style={{ backgroundColor: '#fff' }}
+          ></div>
+          <div
+            className="md:hidden h-[2px] w-24 my-2"
+            style={{ backgroundColor: '#fff' }}
+          ></div>
 
           {/* Right Side: Location and Info */}
           <div className="flex-1 flex justify-center md:justify-start text-center md:text-left">

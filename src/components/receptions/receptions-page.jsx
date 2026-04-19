@@ -28,7 +28,7 @@ function ModeToggle({ mode, onChange }) {
             onClick={() => onChange(value)}
             className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-[0.18em] transition ${
               active
-                ? 'bg-white text-[#140f26]'
+                ? 'bg-[#fff] text-[#140f26]'
                 : 'text-white/80 hover:text-white'
             }`}
           >
@@ -77,14 +77,14 @@ function OverviewCard({ reception }) {
     <article className="flex h-full flex-col rounded-[10px] border border-stone-200 bg-white p-6 shadow-xl shadow-stone-200/40 transition-transform duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-amber-300">
             {reception.shortDate}
           </p>
           <h3 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
             {reception.title}
           </h3>
         </div>
-        <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-white dark:border-slate-700 dark:bg-slate-950">
+        <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-[#fff] dark:border-slate-700">
           <Image
             src={reception.hostLogo}
             alt={reception.hostEmbassy}
@@ -108,14 +108,14 @@ function OverviewCard({ reception }) {
           href={reception.agendaDownload}
           target="_blank"
           rel="noreferrer"
-          className="mt-5 inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.14em] text-stone-700 transition hover:text-rc-primary dark:text-slate-200 dark:hover:text-rc-secondary"
+          className="mt-5 inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.14em] text-stone-700 transition hover:text-rc-primary dark:text-slate-200 dark:hover:text-amber-300"
         >
           Download agenda
         </a>
       ) : null}
       <a
         href={`#${reception.slug}`}
-        className="mt-6 inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.14em] text-rc-primary dark:text-rc-secondary"
+        className="mt-6 inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.14em] text-rc-primary dark:text-amber-300"
       >
         Explore reception
         <MoveRight className="h-4 w-4" />
@@ -130,7 +130,7 @@ function PostMode() {
       <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
         <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
           <MotionReveal className="max-w-3xl">
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary md:text-sm">
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-amber-300 md:text-sm">
               Reception Overview
             </p>
             <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.1rem]">
@@ -148,7 +148,7 @@ function PostMode() {
             {receptionStats.map((item) => (
               <MotionItem key={item.label}>
                 <article className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
-                  <p className="text-4xl font-black tracking-tight text-rc-primary dark:text-rc-secondary">
+                  <p className="text-4xl font-black tracking-tight text-rc-primary dark:text-amber-300">
                     {item.value}
                   </p>
                   <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
@@ -212,7 +212,7 @@ function PostMode() {
                       </p>
 
                       <div className="mt-8 flex items-center gap-4 rounded-[10px] border border-stone-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
-                        <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-white dark:border-slate-700 dark:bg-slate-950">
+                        <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-[#fff] dark:border-slate-700">
                           <Image
                             src={reception.hostLogo}
                             alt={reception.hostEmbassy}
@@ -222,7 +222,7 @@ function PostMode() {
                           />
                         </div>
                         <div>
-                          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-rc-secondary">
+                          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-amber-300">
                             Host Embassy
                           </p>
                           <p className="mt-2 text-lg font-bold text-stone-900 dark:text-white">
@@ -322,7 +322,7 @@ function PreMode() {
       <div className="mx-auto w-full max-w-[900px] px-4 md:px-8 lg:px-16">
         <MotionReveal>
           <article className="rounded-[10px] border border-stone-200 bg-white p-8 text-center shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-10">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-amber-300">
               Update
             </p>
             <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-4xl">
