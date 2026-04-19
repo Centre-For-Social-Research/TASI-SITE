@@ -1,39 +1,54 @@
 'use client';
 
-export default function AdminPageIntro({
-  eyebrow,
-  title,
-  description,
-  chips = [],
-  actions = null,
-}) {
+export default function AdminPageIntro({ eyebrow, title, description, chips = [], actions = null }) {
   return (
-    <section className="admin-page-intro rounded-[10px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92)_48%,rgba(224,231,255,0.72)_100%)] p-6 shadow-[0_24px_64px_rgba(79,70,229,0.10)] dark:border-white/[0.08] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.88),rgba(17,24,39,0.92)_48%,rgba(30,41,59,0.68)_100%)]">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-        <div className="max-w-3xl">
-          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-purple-500 dark:text-purple-300">
-            {eyebrow}
-          </p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-zinc-950 dark:text-white">
-            {title}
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            {description}
-          </p>
-          {chips.length ? (
-            <div className="mt-4 flex flex-wrap gap-2">
+    <section style={{
+      borderRadius: 10,
+      border: '1px solid var(--adm-line)',
+      background: 'linear-gradient(135deg, var(--adm-panel) 0%, var(--adm-panel-2) 60%, var(--adm-canvas-2) 100%)',
+      padding: '20px 24px',
+      marginBottom: 22,
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      <div style={{
+        position: 'absolute', top: 0, right: 0, width: 200, bottom: 0,
+        background: 'radial-gradient(circle at 100% 0%, var(--adm-accent-soft), transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div>
+          {eyebrow && (
+            <p style={{
+              fontFamily: 'var(--adm-mono)', fontSize: 10, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: 'var(--adm-accent)', fontWeight: 500, marginBottom: 8,
+            }}>{eyebrow}</p>
+          )}
+          <h1 style={{
+            margin: 0, fontFamily: 'var(--adm-sans)',
+            fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em',
+            color: 'var(--adm-ink)', lineHeight: 1.1,
+          }}>{title}</h1>
+          {description && (
+            <p style={{ marginTop: 8, fontSize: 13, color: 'var(--adm-ink-3)', lineHeight: 1.6 }}>
+              {description}
+            </p>
+          )}
+          {chips.length > 0 && (
+            <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {chips.map((chip) => (
-                <span
-                  key={chip}
-                  className="inline-flex cursor-default items-center rounded-[10px] border border-white/80 bg-white/85 px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-zinc-300"
-                >
-                  {chip}
-                </span>
+                <span key={chip} style={{
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: '3px 10px', borderRadius: 10,
+                  border: '1px solid var(--adm-line)', background: 'var(--adm-panel-2)',
+                  fontFamily: 'var(--adm-mono)', fontSize: 10.5,
+                  color: 'var(--adm-ink-3)', letterSpacing: '0.06em',
+                }}>{chip}</span>
               ))}
             </div>
-          ) : null}
+          )}
         </div>
-        {actions ? <div className="shrink-0">{actions}</div> : null}
+        {actions && <div style={{ flexShrink: 0 }}>{actions}</div>}
       </div>
     </section>
   );

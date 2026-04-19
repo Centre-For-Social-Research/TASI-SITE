@@ -11,8 +11,9 @@ import LenisProvider from '@/components/lenis-provider';
 export default function AppShell({ children }) {
   const pathname = usePathname();
   const isStudioRoute = pathname?.startsWith('/studio');
+  const isAdminRoute  = pathname?.startsWith('/admin');
 
-  if (isStudioRoute) {
+  if (isStudioRoute || isAdminRoute) {
     return children;
   }
 

@@ -1,24 +1,10 @@
 'use client';
 
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Toaster } from 'sonner';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Search,
-  Users,
-  Send,
-  ScanLine,
-  Ticket,
-  ChevronRight,
-  LogOut,
-  Bell,
-  Moon,
-  Sun,
-  LayoutDashboard,
-  ShieldCheck,
-  Mail,
-} from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { useRouter } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
 import {
   buildAdminNavigation,
@@ -31,142 +17,592 @@ import {
   buildAdminNotificationStorageKey,
   resolveAdminShellRuntimeState,
 } from '@/lib/admin-runtime-guards.cjs';
-import { AdminStatusBadge, SlideOverDrawer } from '@/components/admin/admin-ui';
 import AdminCommandPalette from '@/components/admin/admin-command-palette';
-import { useRouter } from 'next/navigation';
+
+/* ── Inline SVG icons (thin stroke, 18×18) ───────────────────────────────── */
+const Ico = {
+  gauge:   (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12 14l4-4"/><path d="M4 14a8 8 0 0 1 16 0"/><path d="M4 14v2M20 14v2"/></svg>,
+  users:   (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15 19c0-2.6 1.8-4.8 4.2-5.3"/></svg>,
+  mail:    (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>,
+  truck:   (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>,
+  qr:      (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v3M14 20h7"/></svg>,
+  ticket:  (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" {...p}><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12" strokeDasharray="2 2"/></svg>,
+  search:  (p) => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/></svg>,
+  bell:    (p) => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>,
+  sun:     (p) => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>,
+  moon:    (p) => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>,
+  logout:  (p) => <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+  sliders: (p) => <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M4 7h10M4 12h6M4 17h14"/><circle cx="17" cy="7" r="1.5"/><circle cx="13" cy="12" r="1.5"/><circle cx="19" cy="17" r="1.5"/></svg>,
+  x:       (p) => <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...p}><path d="M6 6l12 12M18 6L6 18"/></svg>,
+  check:   (p) => <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 12l5 5L20 7"/></svg>,
+  audit:   (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h3"/></svg>,
+  gear:    (p) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.6 2.5a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2L10 21h4l.6-2.5a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>,
+};
 
 const NAV_ICONS = {
-  '/admin/registrations': Users,
-  '/admin/delivery': Send,
-  '/admin/check-in': ScanLine,
-  '/admin/tickets': Ticket,
-  '/admin/email-jobs': Mail,
+  '/admin':               Ico.gauge,
+  '/admin/registrations': Ico.users,
+  '/admin/email-jobs':    Ico.mail,
+  '/admin/delivery':      Ico.truck,
+  '/admin/check-in':      Ico.qr,
+  '/admin/tickets':       Ico.ticket,
+  '/admin/audit':         Ico.audit,
+  '/admin/settings':      Ico.gear,
 };
 
 const PAGE_TITLES = {
-  '/admin/registrations': 'Review Queue',
-  '/admin': 'Review Queue',
-  '/admin/delivery': 'Delivery Jobs',
-  '/admin/check-in': 'Check-In Console',
-  '/admin/tickets': 'Ticketing',
-  '/admin/email-jobs': 'Registration Emails',
+  '/admin':               { kicker: 'OPERATIONS · LIVE',          title: 'Dashboard',     meta: 'Auto-refresh · 30s' },
+  '/admin/registrations': { kicker: 'REGISTRATIONS · REVIEW',     title: 'Review Queue',  meta: 'Pending decisions' },
+  '/admin/email-jobs':    { kicker: 'EMAILS · CONFIRMATION',       title: 'Confirmation Emails', meta: 'Text-only · No attachment' },
+  '/admin/delivery':      { kicker: 'PASSES · DISPATCH',          title: 'Entry Pass Dispatch', meta: 'PDF badge + QR delivery' },
+  '/admin/check-in':      { kicker: 'DAY-OF · LIVE',              title: 'Check-in',      meta: 'QR scanner ready' },
+  '/admin/tickets':       { kicker: 'FESTIVAL · TICKETS',         title: 'Orders',        meta: 'Razorpay · live' },
+  '/admin/audit':         { kicker: 'SYSTEM · AUDIT',             title: 'Audit Trail',   meta: 'Last 30 days' },
+  '/admin/settings':      { kicker: 'SYSTEM · CONFIG',            title: 'Settings',      meta: '' },
 };
 
-function TopStatPill({ label, value, tone = 'default' }) {
-  const toneClasses = {
-    default:
-      'border-zinc-200 bg-zinc-50 text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300',
-    warning:
-      'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300',
-    success:
-      'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300',
-    danger:
-      'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300',
-    accent:
-      'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-500/20 dark:bg-purple-500/10 dark:text-purple-300',
-  };
+const ADM_NAV_GROUPS = [
+  {
+    group: 'Overview',
+    keys: ['/admin'],
+  },
+  {
+    group: 'Registrations',
+    keys: ['/admin/registrations', '/admin/email-jobs', '/admin/delivery'],
+  },
+  {
+    group: 'Day-of',
+    keys: ['/admin/check-in', '/admin/tickets'],
+  },
+  {
+    group: 'System',
+    keys: ['/admin/audit', '/admin/settings'],
+  },
+];
 
-  return (
-    <div
-      className={`inline-flex items-center gap-2 rounded-[10px] border px-3 py-1.5 text-xs shadow-sm backdrop-blur-sm ${
-        toneClasses[tone] || toneClasses.default
-      }`}
-    >
-      <span className="font-medium opacity-70">{label}</span>
-      <span className="font-bold tabular-nums">{value}</span>
-    </div>
-  );
-}
-
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const currentTheme = theme === 'dark' ? 'dark' : 'light';
-
-  return (
-    <button
-      type="button"
-      onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
-      className="flex h-8 w-8 items-center justify-center rounded-[10px] text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-200"
-      aria-label="Toggle theme"
-      title={
-        currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-      }
-    >
-      {currentTheme === 'dark' ? (
-        <Sun className="h-4 w-4" />
-      ) : (
-        <Moon className="h-4 w-4" />
-      )}
-    </button>
-  );
-}
-
-function NotificationCard({ item, onMarkRead }) {
-  return (
-    <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-            {item.title}
-          </p>
-          <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            {item.detail}
-          </p>
-        </div>
-        <AdminStatusBadge tone={item.tone}>{item.tone}</AdminStatusBadge>
-      </div>
-      <div className="mt-3 flex justify-end">
-        <button
-          type="button"
-          onClick={() => onMarkRead(item)}
-          className="rounded-[10px] border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition hover:border-zinc-300 hover:text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:border-white/15 dark:hover:text-zinc-100"
-        >
-          Mark as read
-        </button>
-      </div>
-    </div>
-  );
+function daysToEvent() {
+  const event = new Date('2026-10-13T00:00:00+05:30');
+  const diff = Math.ceil((event.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  return Math.max(0, diff);
 }
 
 function getInitials(name) {
-  return String(name || 'Operator')
+  return String(name || 'OP')
     .trim()
     .split(/\s+/)
     .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || '')
+    .map((w) => w[0]?.toUpperCase() || '')
     .join('');
 }
 
+/* ── Live clock ─────────────────────────────────────────────────────────── */
+function useClock() {
+  const [now, setNow] = useState(null);
+  useEffect(() => {
+    setNow(new Date());
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return now;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────────── */
+function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
+  const isActive = (href) =>
+    href === '/admin' ? currentPath === '/admin' : currentPath.startsWith(href);
+
+  const navLabels = {};
+  navSections.forEach((s) => s.items.forEach((item) => { navLabels[item.href] = item; }));
+
+  return (
+    <aside
+      className="adm-sidebar"
+      style={{
+        width: 248,
+        flexShrink: 0,
+        borderRight: '1px solid var(--adm-line)',
+        background: 'var(--adm-canvas-2)',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Brand */}
+      <div style={{ padding: '18px 20px 16px', borderBottom: '1px solid var(--adm-line)' }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center',
+          background: '#fff', borderRadius: 0,
+          padding: '5px 10px',
+        }}>
+          <Image
+            src="/img/tasi-csr-logo.png"
+            alt="TASI 2026 — The Centre for Social Research"
+            width={148}
+            height={40}
+            style={{ objectFit: 'contain', objectPosition: 'left', display: 'block' }}
+            priority
+          />
+        </div>
+        <div className="adm-mono" style={{ fontSize: 10, color: 'var(--adm-ink-3)', letterSpacing: '0.1em', marginTop: 8 }}>
+          OPERATIONS CONSOLE · OCT 2026
+        </div>
+      </div>
+
+      {/* Nav */}
+      <nav style={{ flex: 1, overflow: 'auto', padding: '14px 10px' }}>
+        {ADM_NAV_GROUPS.map((group) => (
+          <div key={group.group} style={{ marginBottom: 18 }}>
+            <div className="adm-eyebrow" style={{ padding: '0 12px', marginBottom: 6 }}>
+              {group.group}
+            </div>
+            {group.keys.map((href) => {
+              const Icon = NAV_ICONS[href];
+              const meta = navLabels[href];
+              const active = isActive(href);
+              const label = PAGE_TITLES[href]?.title || href;
+              return (
+                <button
+                  key={href}
+                  className="adm-nav-btn"
+                  onClick={() => navigate(href)}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '9px 12px',
+                    marginBottom: 2,
+                    background: active ? 'var(--adm-panel-2)' : 'transparent',
+                    border: '1px solid ' + (active ? 'var(--adm-line)' : 'transparent'),
+                    borderRadius: 10,
+                    color: active ? 'var(--adm-ink)' : 'var(--adm-ink-2)',
+                    fontSize: 13,
+                    fontWeight: active ? 500 : 400,
+                    cursor: 'pointer',
+                    position: 'relative',
+                    fontFamily: 'var(--adm-sans)',
+                  }}
+                >
+                  {active && (
+                    <span style={{
+                      position: 'absolute', left: -1, top: 10, bottom: 10,
+                      width: 2, background: 'var(--adm-accent)', borderRadius: 10,
+                    }} />
+                  )}
+                  {Icon && <Icon style={{ color: active ? 'var(--adm-accent)' : 'var(--adm-ink-3)' }} />}
+                  <span style={{ flex: 1 }}>{label}</span>
+                  {meta?.showBadge && (
+                    <span className="adm-mono" style={{
+                      fontSize: 10, padding: '2px 6px', borderRadius: 10,
+                      background: 'var(--adm-accent-soft)', color: 'var(--adm-accent)',
+                      border: '1px solid var(--adm-accent-line)',
+                    }}>
+                      {meta.badgeCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        ))}
+      </nav>
+
+      {/* Event panel */}
+      <div style={{ padding: 12, borderTop: '1px solid var(--adm-line)' }}>
+        <div style={{
+          padding: 14, borderRadius: 10,
+          background: 'var(--adm-panel)', border: '1px solid var(--adm-line)',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', top: 0, right: 0, bottom: 0, width: 120,
+            background: 'radial-gradient(circle at 100% 0%, var(--adm-accent-soft), transparent 70%)',
+            pointerEvents: 'none',
+          }} />
+          <div className="adm-eyebrow" style={{ color: 'var(--adm-accent)', marginBottom: 6 }}>
+            EVENT · T-{daysToEvent()}
+          </div>
+          <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.3, color: 'var(--adm-ink)' }}>
+            Trust &amp; Safety India Festival
+          </div>
+          <div className="adm-mono" style={{ fontSize: 10.5, color: 'var(--adm-ink-3)', marginTop: 4, letterSpacing: '0.04em' }}>
+            13–14 OCT 2026
+          </div>
+          <div className="adm-mono" style={{ fontSize: 10.5, color: 'var(--adm-ink-3)', letterSpacing: '0.04em' }}>
+            INDIA HABITAT CENTRE
+          </div>
+        </div>
+
+        {/* Operator */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 4px 2px' }}>
+          <div style={{
+            width: 30, height: 30, borderRadius: 999,
+            background: 'linear-gradient(135deg, var(--adm-accent), rgba(240,168,50,0.4))',
+            color: 'var(--adm-accent-ink)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: 'var(--adm-mono)', fontSize: 11, fontWeight: 600,
+            border: '1px solid var(--adm-line)',
+          }}>
+            {getInitials(operator?.displayName)}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--adm-ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {operator?.displayName || 'Operator'}
+            </div>
+            <div className="adm-mono" style={{ fontSize: 10, color: 'var(--adm-ink-3)' }}>
+              ADMIN · ONLINE
+            </div>
+          </div>
+          <span className="adm-pulse-dot" style={{ background: 'var(--adm-ok)' }} />
+          <button
+            onClick={onSignOut}
+            title="Sign out"
+            style={{
+              width: 28, height: 28, borderRadius: 10,
+              border: '1px solid var(--adm-line)', background: 'transparent',
+              color: 'var(--adm-ink-3)', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <Ico.logout />
+          </button>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+/* ── TopBar ──────────────────────────────────────────────────────────────── */
+function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNotifications, onPalette, operator }) {
+  const now = useClock();
+  const titleDef = PAGE_TITLES[currentPath] || PAGE_TITLES['/admin/registrations'];
+  const { summary, jobs } = shellState;
+
+  const fmtTime = now ? now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) : '--:--:--';
+  const fmtDate = now ? now.toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short' }).toUpperCase() : '---';
+
+  const runningJobs = jobs.filter((j) => j?.status === 'running').length;
+  const failedJobs  = jobs.reduce((t, j) => t + Number(j?.failed_items || 0), 0);
+  const qrQueue     = Math.max((summary.confirmed || 0) - (summary.qrIssued || 0), 0);
+
+  return (
+    <header style={{
+      position: 'sticky', top: 0, zIndex: 10,
+      background: 'color-mix(in srgb, var(--adm-canvas) 92%, transparent)',
+      backdropFilter: 'blur(14px)',
+      borderBottom: '1px solid var(--adm-line)',
+    }}>
+      {/* Ticker strip */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '6px 22px', borderBottom: '1px solid var(--adm-line)',
+        fontFamily: 'var(--adm-mono)', fontSize: 10.5, letterSpacing: '0.06em',
+        color: 'var(--adm-ink-3)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--adm-accent)' }}>
+            <span className="adm-pulse-dot" />LIVE
+          </span>
+          <span style={{ color: 'var(--adm-ink-2)' }}>IST {fmtTime}</span>
+          <span>·</span>
+          <span>{fmtDate}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span>PENDING <span style={{ color: 'var(--adm-warn)' }}>{summary.pending || 0}</span></span>
+          <span>·</span>
+          <span>CONFIRMED {summary.confirmed || 0}</span>
+          <span style={{ opacity: 0.35 }}>|</span>
+          <span>CHECK-IN {summary.checkedIn || 0}</span>
+          <span>·</span>
+          <span>QR QUEUE <span style={{ color: qrQueue > 0 ? 'var(--adm-warn)' : 'var(--adm-ink-3)' }}>{qrQueue}</span></span>
+          {runningJobs > 0 && (<><span style={{ opacity: 0.35 }}>|</span><span style={{ color: 'var(--adm-accent)' }}>{runningJobs} JOB{runningJobs > 1 ? 'S' : ''} RUNNING</span></>)}
+          {failedJobs  > 0 && (<><span style={{ opacity: 0.35 }}>|</span><span style={{ color: 'var(--adm-bad)' }}>{failedJobs} FAILED</span></>)}
+        </div>
+      </div>
+
+      {/* Title row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 22px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="adm-eyebrow" style={{ marginBottom: 4, color: 'var(--adm-accent)' }}>
+            {titleDef.kicker}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
+            <h1 style={{
+              fontFamily: 'var(--adm-sans)',
+              fontSize: 32, fontWeight: 600, margin: 0,
+              letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--adm-ink)',
+            }}>
+              {titleDef.title}
+            </h1>
+            {titleDef.meta && (
+              <span className="adm-mono" style={{ fontSize: 11, color: 'var(--adm-ink-3)', letterSpacing: '0.06em' }}>
+                {titleDef.meta.toUpperCase()}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Search */}
+        <button
+          onClick={onPalette}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '8px 12px', borderRadius: 10,
+            background: 'var(--adm-panel)', border: '1px solid var(--adm-line)',
+            width: 260, cursor: 'pointer', color: 'var(--adm-ink-3)',
+            fontFamily: 'var(--adm-sans)', fontSize: 13,
+          }}
+        >
+          <Ico.search />
+          <span style={{ flex: 1, textAlign: 'left' }}>Search or jump to…</span>
+          <kbd className="adm-mono" style={{ fontSize: 10, padding: '2px 6px', border: '1px solid var(--adm-line)', borderRadius: 10 }}>
+            ⌘K
+          </kbd>
+        </button>
+
+        {/* Actions */}
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          title="Toggle theme"
+          style={{
+            width: 36, height: 36, borderRadius: 10,
+            border: '1px solid var(--adm-line)', background: 'var(--adm-panel)',
+            color: 'var(--adm-ink-2)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          {theme === 'dark' ? <Ico.sun /> : <Ico.moon />}
+        </button>
+        <button
+          onClick={onNotifications}
+          title="Notifications"
+          style={{
+            position: 'relative', width: 36, height: 36, borderRadius: 10,
+            border: '1px solid var(--adm-line)', background: 'var(--adm-panel)',
+            color: 'var(--adm-ink-2)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <Ico.bell />
+          {attentionCount > 0 && (
+            <span style={{
+              position: 'absolute', top: 7, right: 8,
+              width: 7, height: 7, borderRadius: 999,
+              background: 'var(--adm-bad)', border: '2px solid var(--adm-panel)',
+            }} />
+          )}
+        </button>
+
+        {/* Current user */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '6px 10px', borderRadius: 10,
+          border: '1px solid var(--adm-line)', background: 'var(--adm-panel)',
+        }}>
+          <div style={{
+            width: 26, height: 26, borderRadius: 999, flexShrink: 0,
+            background: 'linear-gradient(135deg, var(--adm-accent), rgba(240,168,50,0.4))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: 'var(--adm-mono)', fontSize: 10, fontWeight: 700,
+            color: 'var(--adm-accent-ink)', border: '1px solid var(--adm-line)',
+          }}>
+            {getInitials(operator?.displayName)}
+          </div>
+          <div style={{ lineHeight: 1.2 }}>
+            <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--adm-ink)', whiteSpace: 'nowrap' }}>
+              {operator?.displayName || 'Operator'}
+            </div>
+            <div className="adm-mono" style={{ fontSize: 9.5, color: 'var(--adm-ink-3)', letterSpacing: '0.06em' }}>
+              ADMIN · ONLINE
+            </div>
+          </div>
+          <span className="adm-pulse-dot" style={{ background: 'var(--adm-ok)', flexShrink: 0 }} />
+        </div>
+      </div>
+
+      {/* Mobile nav tabs */}
+      <div
+        className="adm-mobile-nav"
+        style={{
+          gap: 6, overflowX: 'auto', padding: '0 12px 10px',
+          fontFamily: 'var(--adm-sans)',
+        }}
+      >
+        {Object.entries(PAGE_TITLES).map(([href, def]) => {
+          const Icon = NAV_ICONS[href];
+          const active = href === '/admin' ? currentPath === '/admin' : currentPath.startsWith(href);
+          return (
+            <Link key={href} href={href} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6, flexShrink: 0,
+              padding: '7px 12px', borderRadius: 10, fontSize: 12, whiteSpace: 'nowrap',
+              border: '1px solid ' + (active ? 'var(--adm-accent-line)' : 'var(--adm-line)'),
+              background: active ? 'var(--adm-accent-soft)' : 'var(--adm-panel)',
+              color: active ? 'var(--adm-accent)' : 'var(--adm-ink-2)',
+              fontWeight: active ? 600 : 400, textDecoration: 'none',
+            }}>
+              {Icon && <Icon style={{ width: 14, height: 14 }} />}
+              {def.title}
+            </Link>
+          );
+        })}
+      </div>
+    </header>
+  );
+}
+
+/* ── Notifications panel ─────────────────────────────────────────────────── */
+function NotificationsPanel({ open, onClose, notifications, unread, onMarkRead, onMarkAll, statPills }) {
+  if (!open) return null;
+  const toneColor = { warning: 'var(--adm-warn)', danger: 'var(--adm-bad)', success: 'var(--adm-ok)', accent: 'var(--adm-accent)', default: 'var(--adm-ink-3)', info: 'var(--adm-info)' };
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50 }}>
+      <div
+        onClick={onClose}
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }}
+      />
+      <div style={{
+        position: 'absolute', top: 0, right: 0, bottom: 0, width: 420,
+        background: 'var(--adm-panel)', borderLeft: '1px solid var(--adm-line-strong)',
+        display: 'flex', flexDirection: 'column', overflow: 'hidden',
+        boxShadow: '-40px 0 80px rgba(0,0,0,0.35)',
+      }}>
+        {/* Header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '16px 20px', borderBottom: '1px solid var(--adm-line)',
+        }}>
+          <div className="adm-eyebrow" style={{ color: 'var(--adm-accent)' }}>
+            NOTIFICATIONS
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            {unread.length > 0 && (
+              <button onClick={onMarkAll} style={{
+                fontSize: 11, fontFamily: 'var(--adm-mono)', padding: '4px 10px',
+                borderRadius: 10, border: '1px solid var(--adm-line)',
+                background: 'transparent', color: 'var(--adm-ink-3)', cursor: 'pointer',
+              }}>
+                MARK ALL READ
+              </button>
+            )}
+            <button onClick={onClose} style={{
+              width: 30, height: 30, borderRadius: 10,
+              border: '1px solid var(--adm-line)', background: 'var(--adm-panel-2)',
+              color: 'var(--adm-ink-2)', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Ico.x />
+            </button>
+          </div>
+        </div>
+
+        {/* Live summary pills */}
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--adm-line)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {statPills.map((pill) => (
+            <span key={pill.key} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '4px 10px', borderRadius: 10,
+              background: 'var(--adm-panel-2)', border: '1px solid var(--adm-line)',
+              fontFamily: 'var(--adm-mono)', fontSize: 10.5,
+            }}>
+              <span style={{ color: toneColor[pill.tone] || 'var(--adm-ink-3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                {pill.label}
+              </span>
+              <span style={{ color: 'var(--adm-ink)', fontWeight: 600 }}>{pill.value}</span>
+            </span>
+          ))}
+        </div>
+
+        {/* Items */}
+        <div style={{ flex: 1, overflow: 'auto', padding: '12px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {unread.length === 0 ? (
+            <div style={{
+              padding: '20px', borderRadius: 10,
+              border: '1px solid var(--adm-ok-soft)', background: 'var(--adm-ok-soft)',
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--adm-ok)', marginBottom: 4 }}>
+                All clear
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--adm-ink-3)', lineHeight: 1.5 }}>
+                No active alerts. New issues will surface here automatically.
+              </div>
+            </div>
+          ) : unread.map((item) => (
+            <div key={buildAdminNotificationId(item)} style={{
+              padding: 16, borderRadius: 10,
+              background: 'var(--adm-panel-2)', border: '1px solid var(--adm-line)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--adm-ink)', marginBottom: 4 }}>
+                    {item.title}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--adm-ink-3)', lineHeight: 1.5 }}>
+                    {item.detail}
+                  </div>
+                </div>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '3px 8px', borderRadius: 10,
+                  background: (toneColor[item.tone] || 'var(--adm-ink-3)') + '22',
+                  color: toneColor[item.tone] || 'var(--adm-ink-3)',
+                  fontFamily: 'var(--adm-mono)', fontSize: 10, textTransform: 'uppercase',
+                  letterSpacing: '0.08em', whiteSpace: 'nowrap',
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: 999, background: 'currentColor' }} />
+                  {item.tone}
+                </span>
+              </div>
+              <div style={{ marginTop: 12, textAlign: 'right' }}>
+                <button onClick={() => onMarkRead(item)} style={{
+                  fontSize: 11, fontFamily: 'var(--adm-mono)', padding: '4px 10px',
+                  borderRadius: 10, border: '1px solid var(--adm-line)',
+                  background: 'var(--adm-panel)', color: 'var(--adm-ink-3)', cursor: 'pointer',
+                }}>
+                  DISMISS
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Main shell ──────────────────────────────────────────────────────────── */
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
   const router = useRouter();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const storageKey = useMemo(
-    () => buildAdminNotificationStorageKey(operator),
-    [operator]
-  );
-  const [readNotificationIds, setReadNotificationIds] = useState([]);
-  const [storageReady, setStorageReady] = useState(false);
   const [runtimeIssue, setRuntimeIssue] = useState(null);
-
-  async function handleSignOut() {
-    await signOut({ redirectUrl: '/' });
-  }
-
   const [shellState, setShellState] = useState({
     summary: { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
     jobs: [],
   });
   const shellStateRef = useRef(shellState);
 
+  const [theme, setTheme] = useState('dark');
   useEffect(() => {
-    shellStateRef.current = shellState;
-  }, [shellState]);
+    const stored = localStorage.getItem('adm-theme');
+    if (stored && stored !== 'dark') setTheme(stored);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem('adm-theme', theme);
+  }, [theme]);
+
+  const storageKey = useMemo(() => buildAdminNotificationStorageKey(operator), [operator]);
+  const [readNotificationIds, setReadNotificationIds] = useState([]);
+  const [storageReady, setStorageReady] = useState(false);
+
+  useEffect(() => { shellStateRef.current = shellState; }, [shellState]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
     setStorageReady(false);
     try {
       const stored = window.localStorage.getItem(storageKey);
@@ -181,483 +617,137 @@ export default function AdminShell({ operator, currentPath, children }) {
 
   useEffect(() => {
     let cancelled = false;
-
     async function loadShellData() {
       if (document.hidden) return;
       try {
-        const [registrationsResponse, jobsResponse] = await Promise.all([
+        const [regRes, jobsRes] = await Promise.all([
           fetch('/api/admin/registrations?pageSize=1', { cache: 'no-store' }),
           fetch('/api/admin/passes/jobs', { cache: 'no-store' }),
         ]);
-
-        const [registrationsData, jobsData] = await Promise.all([
-          registrationsResponse.json().catch(() => ({})),
-          jobsResponse.json().catch(() => ({})),
+        const [regData, jobsData] = await Promise.all([
+          regRes.json().catch(() => ({})),
+          jobsRes.json().catch(() => ({})),
         ]);
-
         if (cancelled) return;
-
-        const { nextState, runtimeIssue: nextRuntimeIssue } =
-          resolveAdminShellRuntimeState({
-            currentPath,
-            previousState: shellStateRef.current,
-            registrations: {
-              ok: registrationsResponse.ok,
-              status: registrationsResponse.status,
-              data: registrationsData,
-            },
-            jobs: {
-              ok: jobsResponse.ok,
-              status: jobsResponse.status,
-              data: jobsData,
-            },
-          });
-
+        const { nextState, runtimeIssue: nextIssue } = resolveAdminShellRuntimeState({
+          currentPath,
+          previousState: shellStateRef.current,
+          registrations: { ok: regRes.ok, status: regRes.status, data: regData },
+          jobs: { ok: jobsRes.ok, status: jobsRes.status, data: jobsData },
+        });
         setShellState(nextState);
-        setRuntimeIssue(nextRuntimeIssue);
+        setRuntimeIssue(nextIssue);
       } catch {
-        if (!cancelled) {
-          setRuntimeIssue({
-            kind: 'degraded',
-            message: 'Live admin stats are temporarily unavailable.',
-          });
-        }
+        if (!cancelled) setRuntimeIssue({ kind: 'degraded', message: 'Live admin stats temporarily unavailable.' });
       }
     }
-
     void loadShellData();
-    const timer = window.setInterval(() => {
-      void loadShellData();
-    }, 30000);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
+    const timer = window.setInterval(() => void loadShellData(), 30000);
+    return () => { cancelled = true; window.clearInterval(timer); };
   }, [currentPath]);
 
   useEffect(() => {
     if (!runtimeIssue || typeof window === 'undefined') return;
-
     if (runtimeIssue.kind === 'reauth') {
-      void signOut({ redirectUrl: runtimeIssue.redirectTo }).catch(() => {
-        window.location.assign(runtimeIssue.redirectTo);
-      });
+      void signOut({ redirectUrl: runtimeIssue.redirectTo }).catch(() => window.location.assign(runtimeIssue.redirectTo));
       return;
     }
-
-    if (runtimeIssue.kind === 'forbidden') {
-      window.location.assign(runtimeIssue.redirectTo);
-    }
+    if (runtimeIssue.kind === 'forbidden') window.location.assign(runtimeIssue.redirectTo);
   }, [runtimeIssue, signOut]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const leaderMap = {
-      r: '/admin/registrations',
-      c: '/admin/check-in',
-      d: '/admin/delivery',
-      e: '/admin/email-jobs',
-      t: '/admin/tickets',
-    };
-    let leaderArmed = false;
-    let leaderTimer = null;
-
-    const isTypingTarget = (target) => {
-      if (!target) return false;
-      const tag = target.tagName;
-      return (
-        tag === 'INPUT' ||
-        tag === 'TEXTAREA' ||
-        tag === 'SELECT' ||
-        target.isContentEditable
-      );
-    };
-
-    const onKey = (event) => {
-      const meta = event.metaKey || event.ctrlKey;
-      if (meta && event.key.toLowerCase() === 'k') {
-        event.preventDefault();
-        setPaletteOpen((open) => !open);
-        return;
-      }
-      if (isTypingTarget(event.target)) return;
-      if (event.key === 'g' && !meta && !event.altKey) {
-        leaderArmed = true;
-        window.clearTimeout(leaderTimer);
-        leaderTimer = window.setTimeout(() => {
-          leaderArmed = false;
-        }, 1200);
-        return;
-      }
-      if (leaderArmed) {
-        const dest = leaderMap[event.key.toLowerCase()];
-        leaderArmed = false;
-        window.clearTimeout(leaderTimer);
-        if (dest) {
-          event.preventDefault();
-          router.push(dest);
-        }
+    if (typeof window === 'undefined') return;
+    const leaderMap = { r: '/admin/registrations', c: '/admin/check-in', d: '/admin/delivery', e: '/admin/email-jobs', t: '/admin/tickets', g: '/admin' };
+    let armed = false; let timer = null;
+    const isInput = (t) => t && ['INPUT','TEXTAREA','SELECT'].includes(t.tagName) || t?.isContentEditable;
+    const onKey = (e) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (meta && e.key.toLowerCase() === 'k') { e.preventDefault(); setPaletteOpen((o) => !o); return; }
+      if (isInput(e.target)) return;
+      if (e.key === 'g' && !meta) { armed = true; window.clearTimeout(timer); timer = window.setTimeout(() => { armed = false; }, 1200); return; }
+      if (armed) {
+        const dest = leaderMap[e.key.toLowerCase()];
+        armed = false; window.clearTimeout(timer);
+        if (dest) { e.preventDefault(); router.push(dest); }
       }
     };
-
     window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      window.clearTimeout(leaderTimer);
-    };
+    return () => { window.removeEventListener('keydown', onKey); window.clearTimeout(timer); };
   }, [router]);
 
-  const navSections = useMemo(
-    () =>
-      buildAdminNavigation({
-        pathname: currentPath,
-        summary: shellState.summary,
-        jobs: shellState.jobs,
-      }),
-    [currentPath, shellState.jobs, shellState.summary]
-  );
-
-  const statPills = useMemo(
-    () =>
-      buildAdminStatPills({
-        summary: shellState.summary,
-        jobs: shellState.jobs,
-      }),
-    [shellState.jobs, shellState.summary]
-  );
-
-  const notifications = useMemo(
-    () =>
-      buildAdminNotifications({
-        summary: shellState.summary,
-        jobs: shellState.jobs,
-      }),
-    [shellState.jobs, shellState.summary]
-  );
-  const unreadNotifications = useMemo(
-    () =>
-      filterUnreadAdminNotifications(
-        notifications,
-        new Set(readNotificationIds)
-      ),
-    [notifications, readNotificationIds]
-  );
-
-  const pageTitle = PAGE_TITLES[currentPath] || 'Admin';
-  const attentionCount = unreadNotifications.filter((item) =>
-    ['warning', 'danger', 'accent'].includes(item.tone)
-  ).length;
-
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (!storageReady) return;
-    window.localStorage.setItem(
-      storageKey,
-      JSON.stringify(readNotificationIds)
-    );
+    if (!storageReady || typeof window === 'undefined') return;
+    window.localStorage.setItem(storageKey, JSON.stringify(readNotificationIds));
   }, [readNotificationIds, storageKey, storageReady]);
 
-  function markNotificationRead(notification) {
-    const id = buildAdminNotificationId(notification);
-    setReadNotificationIds((current) =>
-      current.includes(id) ? current : [...current, id]
-    );
-  }
+  const navSections = useMemo(() => buildAdminNavigation({ pathname: currentPath, summary: shellState.summary, jobs: shellState.jobs }), [currentPath, shellState]);
+  const statPills   = useMemo(() => buildAdminStatPills({ summary: shellState.summary, jobs: shellState.jobs }), [shellState]);
+  const notifications = useMemo(() => buildAdminNotifications({ summary: shellState.summary, jobs: shellState.jobs }), [shellState]);
+  const unreadNotifications = useMemo(() => filterUnreadAdminNotifications(notifications, new Set(readNotificationIds)), [notifications, readNotificationIds]);
+  const attentionCount = unreadNotifications.filter((item) => ['warning','danger','accent'].includes(item.tone)).length;
 
-  function markAllNotificationsRead() {
-    setReadNotificationIds(notifications.map(buildAdminNotificationId));
+  async function handleSignOut() { await signOut({ redirectUrl: '/' }); }
+
+  function markRead(n) {
+    const id = buildAdminNotificationId(n);
+    setReadNotificationIds((cur) => cur.includes(id) ? cur : [...cur, id]);
   }
+  function markAll() { setReadNotificationIds(notifications.map(buildAdminNotificationId)); }
 
   return (
-    <div className="admin-console admin-console--saas min-h-screen bg-[radial-gradient(circle_at_top,#eef4ff_0%,#f8fafc_36%,#eef2ff_100%)] text-zinc-900 dark:bg-[radial-gradient(circle_at_top,#12203f_0%,#08101f_36%,#050913_100%)] dark:text-zinc-100">
-      <div className="lg:grid lg:min-h-screen lg:grid-cols-[272px_minmax(0,1fr)]">
-        <aside className="hidden border-r border-white/70 bg-white/72 shadow-[0_24px_80px_rgba(99,102,241,0.08)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-zinc-950/30 lg:flex lg:flex-col">
-          <div className="px-6 py-5">
-            <Link href="/" className="inline-block">
-              <Image
-                src="/img/tasi-csr-logo.png"
-                alt="TASI"
-                width={120}
-                height={36}
-                className="object-contain dark:brightness-90"
-              />
-            </Link>
-          </div>
-
-          <div className="px-4">
-            <div className="flex items-center gap-2.5 rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-sm transition focus-within:border-purple-300 focus-within:ring-2 focus-within:ring-purple-200/40 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-purple-500/40 dark:focus-within:ring-purple-500/20">
-              <Search className="h-4 w-4 text-zinc-400 dark:text-zinc-500" />
-              <span className="text-sm text-zinc-400 dark:text-zinc-500">
-                Search...
-              </span>
-            </div>
-          </div>
-
-          <nav className="flex flex-1 flex-col gap-5 px-3 pb-4 pt-5">
-            {navSections.map((section) => (
-              <div key={section.key}>
-                <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-500">
-                  {section.label}
-                </p>
-                <div className="space-y-0.5">
-                  {section.items.map((item) => {
-                    const Icon = NAV_ICONS[item.href];
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`group relative flex items-center justify-between rounded-[10px] px-3 py-2.5 text-sm transition-all ${
-                          item.active
-                            ? 'bg-[linear-gradient(90deg,rgba(79,70,229,0.14),rgba(56,189,248,0.08),transparent)] font-semibold text-purple-700 shadow-sm dark:text-purple-300'
-                            : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-zinc-100'
-                        }`}
-                      >
-                        {item.active ? (
-                          <span className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-purple-500" />
-                        ) : null}
-                        <span className="flex items-center gap-2.5">
-                          {Icon ? (
-                            <Icon
-                              className={`h-[18px] w-[18px] shrink-0 ${
-                                item.active
-                                  ? 'text-purple-500'
-                                  : 'text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300'
-                              }`}
-                            />
-                          ) : null}
-                          {item.label}
-                        </span>
-                        {item.showBadge ? (
-                          <AdminStatusBadge tone={item.badgeTone}>
-                            {item.badgeCount}
-                          </AdminStatusBadge>
-                        ) : item.active ? (
-                          <ChevronRight className="h-3.5 w-3.5 text-purple-400/60" />
-                        ) : null}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-
-            <div className="flex-1" />
-
-            <div className="rounded-[10px] border border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(238,242,255,0.92))] p-4 shadow-[0_18px_40px_rgba(99,102,241,0.10)] dark:border-white/[0.06] dark:bg-[linear-gradient(145deg,rgba(15,23,42,0.88),rgba(30,41,59,0.54))]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-purple-500/80 dark:text-purple-400/70">
-                Event
-              </p>
-              <p className="mt-1.5 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-                Trust &amp; Safety India Festival
-              </p>
-              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-                13-14 October 2026
-              </p>
-              <div className="mt-4 flex items-center gap-2 text-[11px] text-zinc-500 dark:text-zinc-400">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                Final SaaS dashboard enabled
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 border-t border-zinc-200/70 pt-4 dark:border-white/[0.06]">
-              <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-500 text-xs font-bold text-white shadow-md shadow-purple-500/20">
-                  {getInitials(operator.displayName)}
-                </div>
-                <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 dark:border-[#0d1526]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-zinc-800 dark:text-zinc-100">
-                  {operator.displayName}
-                </p>
-                <p className="truncate text-[11px] text-zinc-400 dark:text-zinc-500">
-                  {operator.primaryEmail}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-zinc-400 transition hover:bg-rose-50 hover:text-rose-500 dark:text-zinc-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
-                aria-label="Log out"
-                title="Log out"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </div>
-          </nav>
-        </aside>
-
-        <div className="min-w-0 flex flex-col">
-          <header className="sticky top-0 z-40 border-b border-white/70 bg-white/72 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-zinc-950/42">
-            <div className="flex items-center justify-between gap-4 px-4 py-3 lg:px-6">
-              <div className="flex items-center gap-2 text-sm">
-                <LayoutDashboard className="hidden h-4 w-4 text-zinc-400 dark:text-zinc-500 sm:block" />
-                <span className="hidden text-zinc-400 dark:text-zinc-500 sm:inline">
-                  Admin
-                </span>
-                <ChevronRight className="hidden h-3 w-3 text-zinc-300 dark:text-zinc-600 sm:block" />
-                <span className="font-semibold text-zinc-800 dark:text-zinc-100">
-                  {pageTitle}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="hidden items-center gap-2 md:flex">
-                  {statPills.map((pill) => (
-                    <TopStatPill
-                      key={pill.key}
-                      label={pill.label}
-                      value={pill.value}
-                      tone={pill.tone}
-                    />
-                  ))}
-                </div>
-                <div className="flex items-center gap-1 border-l border-zinc-200 pl-2 dark:border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => setPaletteOpen(true)}
-                    className="hidden items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-500 shadow-sm transition hover:border-zinc-300 hover:text-zinc-700 md:flex dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:border-white/20 dark:hover:text-zinc-200"
-                    aria-label="Open command palette"
-                    title="Command palette"
-                  >
-                    <Search className="h-3.5 w-3.5" />
-                    <span>Search</span>
-                    <kbd className="rounded border border-zinc-200 bg-zinc-50 px-1 text-[10px] font-semibold dark:border-white/10 dark:bg-white/[0.06]">
-                      ⌘K
-                    </kbd>
-                  </button>
-                  <ThemeToggle />
-                  <button
-                    type="button"
-                    onClick={() => setNotificationsOpen(true)}
-                    className="relative flex h-8 w-8 items-center justify-center rounded-[10px] text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-200"
-                    aria-label="Notifications"
-                    title="Notifications"
-                  >
-                    <Bell className="h-4 w-4" />
-                    {attentionCount > 0 ? (
-                      <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#0a1128]" />
-                    ) : null}
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  className="flex h-8 w-8 items-center justify-center rounded-[10px] text-zinc-500 transition hover:bg-rose-50 hover:text-rose-500 dark:text-zinc-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 lg:hidden"
-                  aria-label="Log out"
-                  title="Log out"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex gap-1.5 overflow-x-auto px-3 pb-2.5 lg:hidden">
-              {navSections.flatMap((section) =>
-                section.items.map((item) => {
-                  const Icon = NAV_ICONS[item.href];
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-sm whitespace-nowrap transition ${
-                        item.active
-                          ? 'border-purple-200 bg-purple-50 font-semibold text-purple-600 dark:border-purple-500/20 dark:bg-purple-500/10 dark:text-purple-400'
-                          : 'border-zinc-200 bg-white text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400'
-                      }`}
-                    >
-                      {Icon ? <Icon className="h-3.5 w-3.5 shrink-0" /> : null}
-                      {item.label}
-                      {item.showBadge ? (
-                        <AdminStatusBadge tone={item.badgeTone}>
-                          {item.badgeCount}
-                        </AdminStatusBadge>
-                      ) : null}
-                    </Link>
-                  );
-                })
-              )}
-            </div>
-          </header>
-
-          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
-            {runtimeIssue?.kind === 'degraded' ? (
-              <div className="mb-4 rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
-                {runtimeIssue.message}
-              </div>
-            ) : null}
-            <section className="mb-6 border-l-[3px] border-purple-900 pl-5 py-1 dark:border-purple-500">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-purple-900 dark:text-purple-400">
-                Operations Overview
-              </p>
-              <h1 className="mt-1.5 font-heading text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-white">
-                {pageTitle}
-              </h1>
-            </section>
-            {children}
-          </main>
-        </div>
-      </div>
-
-      <SlideOverDrawer
-        open={notificationsOpen}
-        onClose={() => setNotificationsOpen(false)}
-        title="Notifications"
-      >
-        <div className="space-y-4">
-          <div className="rounded-[10px] border border-zinc-200 bg-white p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.04]">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
-                Live Summary
-              </p>
-              <button
-                type="button"
-                onClick={markAllNotificationsRead}
-                disabled={!unreadNotifications.length}
-                className="rounded-[10px] border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition hover:border-zinc-300 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:border-white/15 dark:hover:text-zinc-100"
-              >
-                Mark all as read
-              </button>
-            </div>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              {statPills.map((pill) => (
-                <TopStatPill
-                  key={pill.key}
-                  label={pill.label}
-                  value={pill.value}
-                  tone={pill.tone}
-                />
-              ))}
-            </div>
-          </div>
-          {unreadNotifications.length ? (
-            unreadNotifications.map((item) => (
-              <NotificationCard
-                key={buildAdminNotificationId(item)}
-                item={item}
-                onMarkRead={markNotificationRead}
-              />
-            ))
-          ) : (
-            <div className="rounded-[10px] border border-emerald-200 bg-emerald-50 p-5 shadow-sm dark:border-emerald-500/20 dark:bg-emerald-500/10">
-              <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-200">
-                No active notifications
-              </p>
-              <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-300">
-                You have read or dismissed the current admin alerts. New issues
-                will appear here automatically when the underlying status
-                changes.
-              </p>
+    <div
+      className="admin-v2"
+      data-adm-theme={theme}
+      style={{ minHeight: '100vh', display: 'flex', flexDirection: 'row', fontFamily: 'var(--adm-sans)' }}
+    >
+      <Sidebar
+        currentPath={currentPath}
+        navigate={router.push}
+        navSections={navSections}
+        operator={operator}
+        onSignOut={handleSignOut}
+      />
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <TopBar
+          currentPath={currentPath}
+          shellState={shellState}
+          theme={theme}
+          setTheme={setTheme}
+          attentionCount={attentionCount}
+          onNotifications={() => setNotificationsOpen(true)}
+          onPalette={() => setPaletteOpen(true)}
+          operator={operator}
+        />
+        <main
+          className="adm-page-content"
+          key={currentPath}
+          style={{ flex: 1, padding: '24px 28px 48px 28px' }}
+        >
+          {runtimeIssue?.kind === 'degraded' && (
+            <div style={{
+              marginBottom: 18, padding: '10px 16px', borderRadius: 10,
+              border: '1px solid var(--adm-warn-soft)', background: 'var(--adm-warn-soft)',
+              fontFamily: 'var(--adm-mono)', fontSize: 11, color: 'var(--adm-warn)',
+              letterSpacing: '0.04em',
+            }}>
+              ⚠ {runtimeIssue.message}
             </div>
           )}
-        </div>
-      </SlideOverDrawer>
-      <AdminCommandPalette
-        open={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
+          {children}
+        </main>
+      </div>
+
+      <NotificationsPanel
+        open={notificationsOpen}
+        onClose={() => setNotificationsOpen(false)}
+        notifications={notifications}
+        unread={unreadNotifications}
+        onMarkRead={markRead}
+        onMarkAll={markAll}
+        statPills={statPills}
       />
+      <AdminCommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      <Toaster richColors closeButton position="bottom-right" />
     </div>
   );
 }

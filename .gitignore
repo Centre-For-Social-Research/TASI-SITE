@@ -45,3 +45,6 @@ scripts/*.ndjson
 # Vercel and Supabase local runtimes
 .vercel/
 supabase/.temp/
+
+# Sentry Config File
+.env.sentry-build-plugin

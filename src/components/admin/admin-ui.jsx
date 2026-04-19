@@ -1,137 +1,90 @@
 'use client';
 
-import clsx from 'clsx';
 import { X } from 'lucide-react';
 import { Drawer } from 'vaul';
 
-/* ── Tone map: light + dark for every variant ──────────────────────────────── */
-const toneMap = {
-  default: {
-    badge:
-      'border-zinc-200 bg-zinc-50 text-zinc-600 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300',
-    dot: 'bg-zinc-400',
-    panel:
-      'border-zinc-200 bg-zinc-50 text-zinc-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-200',
-    card: 'border-zinc-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg: 'bg-zinc-100 text-zinc-500 dark:bg-white/10 dark:text-zinc-400',
-  },
-  warning: {
-    badge:
-      'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300',
-    dot: 'bg-amber-500',
-    panel:
-      'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/[0.08] dark:text-amber-200',
-    card: 'border-zinc-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg:
-      'bg-amber-50 text-amber-500 dark:bg-amber-500/15 dark:text-amber-400',
-  },
-  success: {
-    badge:
-      'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300',
-    dot: 'bg-emerald-500',
-    panel:
-      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/[0.08] dark:text-emerald-200',
-    card: 'border-zinc-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg:
-      'bg-emerald-50 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400',
-  },
-  danger: {
-    badge:
-      'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300',
-    dot: 'bg-rose-500',
-    panel:
-      'border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-500/20 dark:bg-rose-500/[0.08] dark:text-rose-200',
-    card: 'border-zinc-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg: 'bg-rose-50 text-rose-500 dark:bg-rose-500/15 dark:text-rose-400',
-  },
-  accent: {
-    badge:
-      'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-500/20 dark:bg-purple-500/10 dark:text-purple-300',
-    dot: 'bg-purple-500',
-    panel:
-      'border-purple-200 bg-purple-50 text-purple-800 dark:border-purple-500/20 dark:bg-purple-500/[0.08] dark:text-purple-200',
-    card: 'border-zinc-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg:
-      'bg-purple-50 text-purple-500 dark:bg-purple-500/15 dark:text-purple-400',
-  },
-  info: {
-    badge:
-      'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-300',
-    dot: 'bg-sky-500',
-    panel:
-      'border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-500/20 dark:bg-sky-500/[0.08] dark:text-sky-200',
-    card: 'border-zinc-200/70 bg-white dark:border-white/[0.06] dark:bg-white/[0.03]',
-    iconBg: 'bg-sky-50 text-sky-500 dark:bg-sky-500/15 dark:text-sky-400',
-  },
+/* ── Design-token tone map ─────────────────────────────────────────────── */
+const TONES = {
+  default: { fg: 'var(--adm-ink-3)',    bg: 'rgba(255,255,255,0.05)', dot: 'var(--adm-ink-3)' },
+  warning: { fg: 'var(--adm-warn)',     bg: 'var(--adm-warn-soft)',   dot: 'var(--adm-warn)'  },
+  success: { fg: 'var(--adm-ok)',       bg: 'var(--adm-ok-soft)',     dot: 'var(--adm-ok)'    },
+  danger:  { fg: 'var(--adm-bad)',      bg: 'var(--adm-bad-soft)',    dot: 'var(--adm-bad)'   },
+  accent:  { fg: 'var(--adm-accent)',   bg: 'var(--adm-accent-soft)', dot: 'var(--adm-accent)'},
+  info:    { fg: 'var(--adm-info)',     bg: 'var(--adm-info-soft)',   dot: 'var(--adm-info)'  },
 };
 
 export function getToneClasses(tone = 'default') {
-  return toneMap[tone] || toneMap.default;
+  // kept for backward compat — callers that use .badge/.dot/.panel/.card/.iconBg
+  const t = TONES[tone] || TONES.default;
+  return {
+    badge:  '',   // we now use inline styles
+    dot:    '',
+    panel:  '',
+    card:   '',
+    iconBg: '',
+    _tone:  t,    // expose resolved token set
+  };
 }
 
-export function AdminStatusBadge({
-  children,
-  tone = 'default',
-  className = '',
-}) {
-  const classes = getToneClasses(tone);
-
+/* ── Status badge ──────────────────────────────────────────────────────── */
+export function AdminStatusBadge({ children, tone = 'default', className = '', style: extraStyle = {} }) {
+  const t = TONES[tone] || TONES.default;
   return (
     <span
-      className={clsx(
-        'inline-flex items-center gap-1.5 rounded-[10px] border px-2.5 py-0.5 text-[11px] font-medium shadow-sm',
-        classes.badge,
-        className
-      )}
+      className={className}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        padding: '3px 8px', borderRadius: 10,
+        border: `1px solid ${t.fg}44`,
+        background: t.bg, color: t.fg,
+        fontFamily: 'var(--adm-mono)', fontSize: 10.5,
+        letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500,
+        whiteSpace: 'nowrap',
+        ...extraStyle,
+      }}
     >
-      <span className={clsx('h-1.5 w-1.5 rounded-full', classes.dot)} />
+      <span style={{ width: 6, height: 6, borderRadius: 999, background: t.dot, flexShrink: 0 }} />
       {children}
     </span>
   );
 }
 
-export function AdminStatCard({
-  label,
-  value,
-  tone = 'default',
-  detail,
-  icon: Icon,
-}) {
-  const classes = getToneClasses(tone);
-
+/* ── Stat card ─────────────────────────────────────────────────────────── */
+export function AdminStatCard({ label, value, tone = 'default', detail, icon: Icon }) {
+  const t = TONES[tone] || TONES.default;
   return (
-    <div
-      className={clsx(
-        'group relative overflow-hidden rounded-[10px] border p-5 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg',
-        classes.card
-      )}
+    <div style={{
+      position: 'relative', overflow: 'hidden', borderRadius: 10,
+      border: '1px solid var(--adm-line)', padding: '18px 20px',
+      background: 'var(--adm-panel)',
+      transition: 'transform .15s, box-shadow .15s',
+    }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,.35)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
     >
-      {/* Subtle gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent to-black/[0.02] dark:to-white/[0.02]" />
-      <div className="relative flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 dark:text-zinc-500">
-            {label}
-          </p>
-          <p className="mt-2 text-3xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">
-            {value}
-          </p>
-          {detail ? (
-            <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-              {detail}
-            </p>
-          ) : null}
-        </div>
-        <div
-          className={clsx(
-            'flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px]',
-            classes.iconBg
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+        <div style={{ minWidth: 0 }}>
+          <p style={{
+            fontFamily: 'var(--adm-mono)', fontSize: 10, letterSpacing: '0.12em',
+            textTransform: 'uppercase', color: 'var(--adm-ink-3)', fontWeight: 500, margin: 0,
+          }}>{label}</p>
+          <p style={{
+            fontFamily: 'var(--adm-mono)', fontSize: 30, fontWeight: 600,
+            letterSpacing: '-0.03em', color: 'var(--adm-ink)',
+            marginTop: 8, lineHeight: 1, tabularNums: true,
+          }}>{value}</p>
+          {detail && (
+            <p style={{ marginTop: 6, fontSize: 12, color: 'var(--adm-ink-3)', lineHeight: 1.4 }}>{detail}</p>
           )}
-        >
-          {Icon ? (
-            <Icon className="h-5 w-5" />
-          ) : (
-            <span className={clsx('h-2.5 w-2.5 rounded-full', classes.dot)} />
+        </div>
+        <div style={{
+          width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+          background: t.bg, color: t.fg,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: `1px solid ${t.fg}33`,
+        }}>
+          {Icon ? <Icon style={{ width: 18, height: 18 }} /> : (
+            <span style={{ width: 10, height: 10, borderRadius: 999, background: t.dot }} />
           )}
         </div>
       </div>
@@ -139,137 +92,138 @@ export function AdminStatCard({
   );
 }
 
-export function AdminAlert({
-  title,
-  description,
-  tone = 'default',
-  actions = null,
-  className = '',
-}) {
-  const classes = getToneClasses(tone);
-
+/* ── Alert / info panel ────────────────────────────────────────────────── */
+export function AdminAlert({ title, description, tone = 'default', actions = null, className = '' }) {
+  const t = TONES[tone] || TONES.default;
   return (
     <div
-      className={clsx(
-        'rounded-[10px] border px-5 py-4 shadow-sm backdrop-blur-sm',
-        classes.panel,
-        className
-      )}
+      className={className}
+      style={{
+        borderRadius: 10, padding: '14px 18px',
+        border: `1px solid ${t.fg}33`, background: t.bg,
+      }}
     >
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em]">
-            {title}
-          </p>
-          <p className="mt-1.5 text-sm leading-relaxed opacity-90">
-            {description}
-          </p>
+          {title && (
+            <p style={{
+              fontFamily: 'var(--adm-mono)', fontSize: 10, letterSpacing: '0.12em',
+              textTransform: 'uppercase', fontWeight: 600, color: t.fg, marginBottom: 6,
+            }}>{title}</p>
+          )}
+          {description && (
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--adm-ink-2)' }}>{description}</p>
+          )}
         </div>
-        {actions}
+        {actions && <div>{actions}</div>}
       </div>
     </div>
   );
 }
 
+/* ── Section heading ───────────────────────────────────────────────────── */
 export function AdminSectionHeading({ eyebrow, title, description, action }) {
   return (
-    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-      <div className="min-w-0">
-        {eyebrow ? (
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-purple-500 dark:text-purple-400">
-            {eyebrow}
-          </p>
-        ) : null}
-        <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
-          {title}
-        </h2>
-        {description ? (
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-            {description}
-          </p>
-        ) : null}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+        <div style={{ minWidth: 0 }}>
+          {eyebrow && (
+            <p style={{
+              fontFamily: 'var(--adm-mono)', fontSize: 10, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: 'var(--adm-accent)', fontWeight: 500, marginBottom: 6,
+            }}>{eyebrow}</p>
+          )}
+          <h2 style={{
+            fontFamily: 'var(--adm-sans)',
+            fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em',
+            color: 'var(--adm-ink)', margin: 0, lineHeight: 1.1,
+          }}>{title}</h2>
+          {description && (
+            <p style={{ marginTop: 6, fontSize: 13, color: 'var(--adm-ink-3)', lineHeight: 1.5 }}>{description}</p>
+          )}
+        </div>
+        {action && <div style={{ flexShrink: 0 }}>{action}</div>}
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
 }
 
-/** Slide-over drawer that opens from the right (powered by vaul for touch gesture support) */
+/* ── Slide-over drawer ─────────────────────────────────────────────────── */
 export function SlideOverDrawer({ open, onClose, title, children }) {
   return (
-    <Drawer.Root
-      open={open}
-      onOpenChange={(v) => !v && onClose()}
-      direction="right"
-    >
+    <Drawer.Root open={open} onOpenChange={(v) => !v && onClose()} direction="right">
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm dark:bg-black/60" />
-        <Drawer.Content className="fixed right-0 top-0 z-50 flex h-full w-full max-w-lg flex-col overflow-hidden border-l border-zinc-200 bg-white shadow-2xl focus:outline-none dark:border-white/[0.06] dark:bg-[#0d1526]">
-          <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-white/[0.06]">
-            <Drawer.Title className="text-sm font-bold text-zinc-800 dark:text-zinc-50">
-              {title}
-            </Drawer.Title>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl p-1.5 text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-white/10 dark:hover:text-zinc-200"
-              aria-label="Close"
-            >
-              <X className="h-4 w-4" />
+        <Drawer.Overlay style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }} />
+        <Drawer.Content style={{
+          position: 'fixed', right: 0, top: 0, zIndex: 50,
+          display: 'flex', height: '100%', width: '100%', maxWidth: 480,
+          flexDirection: 'column', overflow: 'hidden',
+          borderLeft: '1px solid var(--adm-line-strong)',
+          background: 'var(--adm-panel)',
+          color: 'var(--adm-ink)',
+          fontFamily: 'var(--adm-sans)',
+          boxShadow: '-40px 0 80px rgba(0,0,0,.4)',
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            borderBottom: '1px solid var(--adm-line)', padding: '14px 20px', flexShrink: 0,
+          }}>
+            <Drawer.Title style={{
+              fontFamily: 'var(--adm-mono)', fontSize: 11, letterSpacing: '0.14em',
+              textTransform: 'uppercase', color: 'var(--adm-accent)', fontWeight: 500, margin: 0,
+            }}>{title}</Drawer.Title>
+            <button type="button" onClick={onClose} style={{
+              width: 30, height: 30, borderRadius: 10,
+              border: '1px solid var(--adm-line)', background: 'var(--adm-panel-2)',
+              color: 'var(--adm-ink-2)', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <X style={{ width: 14, height: 14 }} />
             </button>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: 20 }}>{children}</div>
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
   );
 }
 
-/** Dismissible in-page toast for transient status / error feedback */
+/* ── Toast ─────────────────────────────────────────────────────────────── */
 export function AdminToast({ message, tone = 'default', onDismiss }) {
-  const classes = getToneClasses(tone);
-
+  const t = TONES[tone] || TONES.default;
   if (!message) return null;
-
   return (
-    <div
-      className={clsx(
-        'flex items-start justify-between gap-3 rounded-[10px] border px-4 py-3 shadow-sm',
-        classes.panel
-      )}
-    >
-      <p className="text-sm leading-relaxed">{message}</p>
-      {onDismiss ? (
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="mt-0.5 shrink-0 rounded p-0.5 opacity-60 transition hover:opacity-100"
-          aria-label="Dismiss"
-        >
-          <X className="h-3.5 w-3.5" />
+    <div style={{
+      display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
+      borderRadius: 10, border: `1px solid ${t.fg}33`, background: t.bg,
+      padding: '12px 16px',
+    }}>
+      <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--adm-ink-2)' }}>{message}</p>
+      {onDismiss && (
+        <button type="button" onClick={onDismiss} style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: 'var(--adm-ink-3)', flexShrink: 0, padding: 2,
+        }}>
+          <X style={{ width: 13, height: 13 }} />
         </button>
-      ) : null}
+      )}
     </div>
   );
 }
 
-/** Animated shimmer skeleton rows for table loading states */
+/* ── Loading skeleton rows ─────────────────────────────────────────────── */
 export function LoadingRows({ count = 6, cols = 7 }) {
   return (
     <>
-      {Array.from({ length: count }, (_, rowIndex) => (
-        <tr
-          key={rowIndex}
-          className="border-b border-zinc-100 dark:border-white/[0.04]"
-        >
-          {Array.from({ length: cols }, (_, colIndex) => (
-            <td key={colIndex} className="px-4 py-4">
-              <div
-                className="h-4 animate-pulse rounded-[10px] bg-zinc-100 dark:bg-white/[0.06]"
-                style={{
-                  width: `${55 + ((rowIndex * 3 + colIndex * 7) % 35)}%`,
-                }}
-              />
+      {Array.from({ length: count }, (_, r) => (
+        <tr key={r} style={{ borderBottom: '1px solid var(--adm-line)' }}>
+          {Array.from({ length: cols }, (_, c) => (
+            <td key={c} style={{ padding: '14px 16px' }}>
+              <div style={{
+                height: 14, borderRadius: 10, background: 'var(--adm-panel-2)',
+                width: `${55 + ((r * 3 + c * 7) % 35)}%`,
+                animation: 'adm-skeleton-pulse 1.6s ease-in-out infinite',
+              }} />
             </td>
           ))}
         </tr>

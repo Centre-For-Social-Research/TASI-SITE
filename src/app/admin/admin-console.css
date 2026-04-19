@@ -1,0 +1,508 @@
+/* TASI Operations Console — Admin Design System v2
+   Scoped to .admin-v2 so it doesn't bleed into the public site.
+   Font variables --font-admin-sans, --font-admin-mono, --font-admin-display
+   are injected by the root layout via next/font/google. */
+
+/* ── Base tokens (dark) ─────────────────────────────────────────────────── */
+.admin-v2 {
+  --adm-canvas:       #0a0c11;
+  --adm-canvas-2:     #0e1118;
+  --adm-panel:        #11141c;
+  --adm-panel-2:      #161a23;
+  --adm-line:         rgba(255,255,255,0.07);
+  --adm-line-strong:  rgba(255,255,255,0.14);
+  --adm-ink:          #f3f4f7;
+  --adm-ink-2:        #c9cdd7;
+  --adm-ink-3:        #8a8f9c;
+  --adm-ink-4:        #5d6271;
+
+  --adm-accent:       #f0a832;
+  --adm-accent-ink:   #0a0c11;
+  --adm-accent-soft:  rgba(240,168,50,0.14);
+  --adm-accent-line:  rgba(240,168,50,0.32);
+
+  --adm-ok:           #6ac98a;
+  --adm-ok-soft:      rgba(106,201,138,0.14);
+  --adm-warn:         #e8a445;
+  --adm-warn-soft:    rgba(232,164,69,0.14);
+  --adm-bad:          #e06060;
+  --adm-bad-soft:     rgba(224,96,96,0.14);
+  --adm-info:         #6ba5d8;
+  --adm-info-soft:    rgba(107,165,216,0.14);
+
+  --adm-sans:   var(--font-admin-sans, 'DM Sans', system-ui, sans-serif);
+  --adm-mono:   var(--font-admin-mono, 'DM Mono', ui-monospace, monospace);
+  --adm-serif:  var(--font-admin-display, 'Fraunces', serif);
+
+  font-family: var(--adm-sans);
+  -webkit-font-smoothing: antialiased;
+  background: var(--adm-canvas);
+  color: var(--adm-ink);
+}
+
+/* ── Light theme ────────────────────────────────────────────────────────── */
+.admin-v2[data-adm-theme="light"] {
+  --adm-canvas:       #f2f1ec;
+  --adm-canvas-2:     #ebeae3;
+  --adm-panel:        #fbfaf6;
+  --adm-panel-2:      #f5f3ec;
+  --adm-line:         rgba(12,14,20,0.09);
+  --adm-line-strong:  rgba(12,14,20,0.18);
+  --adm-ink:          #0b0d12;
+  --adm-ink-2:        #2a2e38;
+  --adm-ink-3:        #636874;
+  --adm-ink-4:        #9ea3af;
+  --adm-accent-ink:   #1a1205;
+}
+
+/* ── Typography helpers ─────────────────────────────────────────────────── */
+.admin-v2 .adm-mono   { font-family: var(--adm-mono); font-feature-settings:"zero","ss01"; }
+.admin-v2 .adm-serif  { font-family: var(--adm-serif); font-style: normal; }
+.admin-v2 .adm-eyebrow {
+  font-family: var(--adm-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--adm-ink-3);
+  font-weight: 500;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+@keyframes adm-pulse-ring {
+  0%   { transform: scale(1); opacity: 0.9; }
+  80%  { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@keyframes adm-pulse-dot {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.35; }
+}
+@keyframes adm-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes adm-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.admin-v2 .adm-pulse-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--adm-accent);
+  animation: adm-pulse-dot 1.6s ease-in-out infinite;
+}
+.admin-v2 .adm-pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--adm-accent);
+  animation: adm-pulse-ring 1.8s ease-out infinite;
+}
+
+.admin-v2 .adm-live-ticker { animation: adm-marquee 80s linear infinite; }
+
+.admin-v2 .adm-page-content {
+  animation: adm-fade-up 0.4s ease-out forwards;
+  opacity: 1;
+}
+
+/* ── Nav button hover ───────────────────────────────────────────────────── */
+.admin-v2 .adm-nav-btn { transition: background 0.12s, color 0.12s; }
+.admin-v2 .adm-nav-btn:hover {
+  background: var(--adm-panel) !important;
+  color: var(--adm-ink) !important;
+}
+
+/* ── Scrollbars ─────────────────────────────────────────────────────────── */
+.admin-v2 *::-webkit-scrollbar        { width: 8px; height: 8px; }
+.admin-v2 *::-webkit-scrollbar-track  { background: transparent; }
+.admin-v2 *::-webkit-scrollbar-thumb  { background: var(--adm-line-strong); border-radius: 10px; }
+
+/* ── Focus ring ─────────────────────────────────────────────────────────── */
+.admin-v2 :focus-visible { outline: 2px solid var(--adm-accent); outline-offset: 2px; border-radius: 10px; }
+
+/* ── Dashboard sparkline ────────────────────────────────────────────────── */
+.admin-v2 .adm-big-number-value {
+  font-family: var(--adm-mono);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--adm-ink);
+  font-feature-settings: "zero","ss01","tnum";
+}
+.admin-v2 .adm-big-number-value--accent { color: var(--adm-accent); }
+
+/* ── Row hover ──────────────────────────────────────────────────────────── */
+.admin-v2 .adm-row { transition: background 0.1s; }
+.admin-v2 .adm-row:hover { background: var(--adm-panel-2) !important; }
+
+/* ── Dashboard notification item ────────────────────────────────────────── */
+.admin-v2 .adm-notif-item { transition: background 0.1s; }
+.admin-v2 .adm-notif-item:hover { background: var(--adm-panel-2) !important; }
+
+/* ── Notifications slide-over (overrides vaul defaults in admin) ────────── */
+.admin-v2-drawer-content {
+  background: var(--adm-panel) !important;
+  border-left: 1px solid var(--adm-line-strong) !important;
+  color: var(--adm-ink) !important;
+  font-family: var(--adm-sans) !important;
+}
+
+/* ── Mobile nav tabs ────────────────────────────────────────────────────── */
+.admin-v2 .adm-mobile-nav { display: none; }
+@media (max-width: 1023px) {
+  .admin-v2 .adm-sidebar { display: none !important; }
+  .admin-v2 .adm-mobile-nav { display: flex; }
+}
+
+/* ── Skeleton pulse ─────────────────────────────────────────────────────── */
+@keyframes adm-skeleton-pulse {
+  0%,100% { opacity: 0.5; }
+  50%     { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PANEL COMPONENT OVERRIDES
+   All Tailwind-styled elements inside .admin-v2 get overridden here so the
+   dark design tokens apply without touching the panel JSX files.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Generic text colours ───────────────────────────────────────────────── */
+.admin-v2 { color: var(--adm-ink); }
+.admin-v2 p, .admin-v2 span, .admin-v2 div { color: inherit; }
+
+/* ── Cards / panels / sections ──────────────────────────────────────────── */
+.admin-v2 [class*="bg-white"],
+.admin-v2 [class*="bg-zinc-50"],
+.admin-v2 [class*="bg-zinc-100"] {
+  background-color: var(--adm-panel) !important;
+  border-color: var(--adm-line) !important;
+  color: var(--adm-ink) !important;
+}
+.admin-v2 [class*="bg-zinc-950"],
+.admin-v2 [class*="bg-zinc-900"],
+.admin-v2 [class*="bg-[#0d1526]"],
+.admin-v2 [class*="bg-[#0b0c0f]"],
+.admin-v2 [class*="bg-[#111318]"] {
+  background-color: var(--adm-canvas) !important;
+}
+.admin-v2 [class*="border-zinc-200"],
+.admin-v2 [class*="border-zinc-300"],
+.admin-v2 [class*="border-white/"] {
+  border-color: var(--adm-line) !important;
+}
+.admin-v2 [class*="border-white/[0.06]"],
+.admin-v2 [class*="border-white/[0.08]"] {
+  border-color: var(--adm-line) !important;
+}
+
+/* ── Text overrides ─────────────────────────────────────────────────────── */
+.admin-v2 [class*="text-zinc-900"],
+.admin-v2 [class*="text-zinc-950"],
+.admin-v2 [class*="text-zinc-800"] { color: var(--adm-ink) !important; }
+.admin-v2 [class*="text-zinc-700"],
+.admin-v2 [class*="text-zinc-600"] { color: var(--adm-ink-2) !important; }
+.admin-v2 [class*="text-zinc-500"],
+.admin-v2 [class*="text-zinc-400"] { color: var(--adm-ink-3) !important; }
+.admin-v2 [class*="text-white"]    { color: var(--adm-ink) !important; }
+
+/* Accent / purple → saffron */
+.admin-v2 [class*="text-purple-"] { color: var(--adm-accent) !important; }
+.admin-v2 [class*="bg-purple-"]   { background-color: var(--adm-accent-soft) !important; color: var(--adm-accent) !important; }
+.admin-v2 [class*="border-purple-"] { border-color: var(--adm-accent-line) !important; }
+
+/* ── Table ──────────────────────────────────────────────────────────────── */
+.admin-v2 table { background: transparent !important; width: 100%; border-collapse: collapse; }
+.admin-v2 thead tr,
+.admin-v2 [class*="bg-zinc-50"] thead tr {
+  background: var(--adm-canvas-2) !important;
+  border-bottom: 1px solid var(--adm-line) !important;
+}
+.admin-v2 thead th {
+  padding: 10px 14px !important;
+  font-family: var(--adm-mono) !important;
+  font-size: 10px !important; letter-spacing: 0.1em !important;
+  text-transform: uppercase !important; font-weight: 500 !important;
+  color: var(--adm-ink-3) !important; text-align: left !important;
+  border-bottom: 1px solid var(--adm-line) !important;
+  background: var(--adm-canvas-2) !important;
+}
+.admin-v2 tbody tr {
+  border-bottom: 1px solid var(--adm-line) !important;
+  background: transparent !important;
+  transition: background 0.1s;
+}
+.admin-v2 tbody tr:hover { background: var(--adm-panel-2) !important; }
+.admin-v2 tbody td {
+  padding: 12px 14px !important;
+  color: var(--adm-ink-2) !important;
+  font-size: 13px !important;
+  vertical-align: middle !important;
+  background: transparent !important;
+}
+.admin-v2 tbody td strong,
+.admin-v2 tbody td b,
+.admin-v2 tbody td [class*="font-semibold"],
+.admin-v2 tbody td [class*="font-medium"] { color: var(--adm-ink) !important; }
+
+/* ── Inputs / textareas / selects ───────────────────────────────────────── */
+.admin-v2 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.admin-v2 textarea,
+.admin-v2 select {
+  background: var(--adm-panel-2) !important;
+  border: 1px solid var(--adm-line-strong) !important;
+  border-radius: 10px !important;
+  color: var(--adm-ink) !important;
+  font-family: var(--adm-sans) !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+  transition: border-color 0.15s;
+}
+.admin-v2 input:focus,
+.admin-v2 textarea:focus,
+.admin-v2 select:focus {
+  border-color: var(--adm-accent) !important;
+  box-shadow: 0 0 0 3px var(--adm-accent-soft) !important;
+}
+.admin-v2 input::placeholder,
+.admin-v2 textarea::placeholder { color: var(--adm-ink-4) !important; }
+
+/* Checkboxes */
+.admin-v2 input[type="checkbox"],
+.admin-v2 input[type="radio"] {
+  accent-color: var(--adm-accent) !important;
+  background: var(--adm-panel-2) !important;
+  border-color: var(--adm-line-strong) !important;
+  padding: 0 !important;
+}
+
+/* ── Buttons (Tailwind-styled inside panels) ────────────────────────────── */
+.admin-v2 button:not([style]):not(.adm-nav-btn) {
+  font-family: var(--adm-sans) !important;
+}
+/* Ghost / outline buttons */
+.admin-v2 [class*="border"][class*="rounded"][class*="px"][class*="text-"]:not([style]):not(input):not(select):not(td):not(th):not(tr):not(thead):not(tbody):not(table) {
+  background: var(--adm-panel-2) !important;
+  border-color: var(--adm-line-strong) !important;
+  color: var(--adm-ink-2) !important;
+  border-radius: 10px !important;
+}
+.admin-v2 [class*="border"][class*="rounded"][class*="px"][class*="text-"]:not([style]):hover:not(input):not(select) {
+  background: var(--adm-panel) !important;
+  color: var(--adm-ink) !important;
+}
+/* Primary / filled buttons */
+.admin-v2 [class*="bg-purple"][class*="text-white"],
+.admin-v2 [class*="bg-indigo"][class*="text-white"] {
+  background: var(--adm-accent) !important;
+  color: var(--adm-accent-ink) !important;
+  border-color: transparent !important;
+}
+/* Danger buttons */
+.admin-v2 [class*="bg-rose"][class*="text-"],
+.admin-v2 [class*="text-rose-"] { color: var(--adm-bad) !important; }
+.admin-v2 [class*="bg-rose-"] { background: var(--adm-bad-soft) !important; }
+/* Success tones */
+.admin-v2 [class*="text-emerald-"] { color: var(--adm-ok) !important; }
+.admin-v2 [class*="bg-emerald-"]   { background: var(--adm-ok-soft) !important; }
+/* Warning tones */
+.admin-v2 [class*="text-amber-"]  { color: var(--adm-warn) !important; }
+.admin-v2 [class*="bg-amber-"]    { background: var(--adm-warn-soft) !important; }
+/* Solid amber-600/700 = primary action button → saffron accent */
+.admin-v2 [class*="bg-amber-600"],
+.admin-v2 [class*="bg-amber-700"] {
+  background-color: var(--adm-accent) !important;
+  color: var(--adm-accent-ink) !important;
+}
+/* Info / sky / cyan tones */
+.admin-v2 [class*="text-sky-"],
+.admin-v2 [class*="text-blue-"],
+.admin-v2 [class*="text-cyan-"]   { color: var(--adm-info) !important; }
+.admin-v2 [class*="bg-sky-"],
+.admin-v2 [class*="bg-blue-"],
+.admin-v2 [class*="bg-cyan-"]     { background: var(--adm-info-soft) !important; }
+
+/* ── Sonner toast (inside admin) ────────────────────────────────────────── */
+.admin-v2 [data-sonner-toast] {
+  background: var(--adm-panel) !important;
+  border: 1px solid var(--adm-line-strong) !important;
+  color: var(--adm-ink) !important;
+  font-family: var(--adm-sans) !important;
+}
+
+/* ── Progress bars (solid fill colours) ────────────────────────────────── */
+.admin-v2 [class*="bg-purple-500"],
+.admin-v2 [class*="bg-purple-600"],
+.admin-v2 [class*="bg-purple-700"],
+.admin-v2 [class*="bg-indigo-500"],
+.admin-v2 [class*="bg-indigo-600"]  { background-color: var(--adm-accent) !important; color: var(--adm-accent-ink) !important; }
+.admin-v2 [class*="bg-emerald-500"],
+.admin-v2 [class*="bg-emerald-600"] { background-color: var(--adm-ok) !important; }
+.admin-v2 [class*="bg-amber-500"],
+.admin-v2 [class*="bg-yellow-500"]  { background-color: var(--adm-warn) !important; }
+.admin-v2 [class*="bg-rose-500"],
+.admin-v2 [class*="bg-red-500"]     { background-color: var(--adm-bad) !important; }
+.admin-v2 [class*="bg-sky-500"],
+.admin-v2 [class*="bg-blue-500"],
+.admin-v2 [class*="bg-cyan-500"]    { background-color: var(--adm-info) !important; }
+
+/* ── Progress bar tracks ────────────────────────────────────────────────── */
+.admin-v2 [class*="bg-zinc-200"],
+.admin-v2 [class*="bg-white/10"]    { background-color: var(--adm-panel-2) !important; }
+
+/* ── Selected / active row highlight ────────────────────────────────────── */
+.admin-v2 [class*="bg-purple-50"],
+.admin-v2 [class*="bg-purple-950"] { background-color: var(--adm-accent-soft) !important; }
+
+/* ── LyteNyte data-grid: direct element overrides (bypass @layer ordering) ── */
+/* CSS variables on .admin-v2 alone aren't enough because the grid styles live
+   in @layer ln-grid. These !important rules target the actual rendered attrs. */
+.admin-v2 [data-ln-viewport="true"] {
+  background-color: var(--adm-panel) !important;
+  border-color: var(--adm-line) !important;
+  color: var(--adm-ink-2) !important;
+}
+.admin-v2 [data-ln-header-cell="true"],
+.admin-v2 [data-ln-header-group="true"] {
+  background-color: var(--adm-canvas-2) !important;
+  color: var(--adm-ink-3) !important;
+  border-color: var(--adm-line) !important;
+}
+.admin-v2 [data-ln-header-cell="true"]::before,
+.admin-v2 [data-ln-header-group="true"]::before {
+  background-color: var(--adm-line) !important;
+}
+.admin-v2 [data-ln-cell="true"] {
+  background-color: var(--adm-panel) !important;
+  color: var(--adm-ink-2) !important;
+  border-color: var(--adm-line) !important;
+}
+.admin-v2 [data-ln-row="true"][data-ln-alternate="true"] [data-ln-cell="true"] {
+  background-color: var(--adm-canvas-2) !important;
+}
+.admin-v2 [data-ln-row="true"]:hover::before {
+  background: rgba(255,255,255,0.04) !important;
+}
+.admin-v2 [data-ln-row="true"][data-ln-selected="true"]::before {
+  background: rgba(240,168,50,0.12) !important;
+}
+
+/* ── LyteNyte data-grid: override --ln-* tokens (dark theme always in admin) */
+/* The grid's dark theme activates on `.dark` class, which we don't use.
+   Instead, we map every --ln-* token to our adm design values here. */
+.admin-v2 {
+  --ln-gray-00: #0a0c11;
+  --ln-gray-01: #0a0c11;
+  --ln-gray-02: #0e1118;
+  --ln-gray-05: #11141c;
+  --ln-gray-10: #161a23;
+  --ln-gray-20: rgba(255,255,255,0.09);
+  --ln-gray-30: rgba(255,255,255,0.14);
+  --ln-gray-40: rgba(255,255,255,0.22);
+  --ln-gray-50: #5d6271;
+  --ln-gray-60: #8a8f9c;
+  --ln-gray-70: #8a8f9c;
+  --ln-gray-80: #c9cdd7;
+  --ln-gray-90: #f3f4f7;
+  --ln-gray-100: #f3f4f7;
+
+  --ln-bg:                #11141c;
+  --ln-bg-button-light:   #161a23;
+  --ln-bg-page:           #0a0c11;
+  --ln-bg-light:          #0e1118;
+  --ln-bg-strong:         #161a23;
+  --ln-bg-row-hover:      rgba(255,255,255,0.04);
+  --ln-bg-row-alternate:  #0e1118;
+  --ln-bg-ui-panel:       #11141c;
+  --ln-bg-form-field:     #161a23;
+  --ln-bg-floating-panel: #161a23;
+  --ln-bg-popover:        #161a23;
+
+  --ln-border:                        rgba(255,255,255,0.07);
+  --ln-border-row:                    rgba(255,255,255,0.07);
+  --ln-border-strong:                 rgba(255,255,255,0.14);
+  --ln-border-xstrong:                rgba(255,255,255,0.22);
+  --ln-border-icon:                   #8a8f9c;
+  --ln-border-ui-panel:               rgba(255,255,255,0.07);
+  --ln-border-button-light:           rgba(255,255,255,0.14);
+  --ln-border-field-and-button:       rgba(255,255,255,0.14);
+  --ln-border-field-and-button-shadow:rgba(0,0,0,0);
+  --ln-border-floating-panel:         rgba(255,255,255,0.14);
+  --ln-border-popover:                rgba(255,255,255,0.14);
+
+  --ln-text:        #c9cdd7;
+  --ln-text-dark:   #f3f4f7;
+  --ln-text-light:  #8a8f9c;
+  --ln-text-xlight: #5d6271;
+
+  --ln-primary-05: rgba(240,168,50,0.05);
+  --ln-primary-10: rgba(240,168,50,0.12);
+  --ln-primary-30: rgba(240,168,50,0.3);
+  --ln-primary-50: #f0a832;
+  --ln-primary-70: #d4922a;
+  --ln-primary-90: #b07820;
+}
+
+/* ── Radix / Vaul portal overlays inside admin ──────────────────────────── */
+.admin-v2 [data-radix-popper-content-wrapper] [class*="bg-white"],
+.admin-v2 [data-radix-popper-content-wrapper] [class*="bg-zinc"] {
+  background: var(--adm-panel) !important;
+  border-color: var(--adm-line-strong) !important;
+  color: var(--adm-ink) !important;
+}
+
+/* ── Scan / camera panel specific ───────────────────────────────────────── */
+.admin-v2 video { border-radius: 10px; }
+
+/* ── Tab / pill active states ───────────────────────────────────────────── */
+.admin-v2 [aria-selected="true"],
+.admin-v2 [data-state="active"] {
+  background: var(--adm-accent-soft) !important;
+  color: var(--adm-accent) !important;
+  border-color: var(--adm-accent-line) !important;
+}
+
+/* ── Dividers / horizontal rules ────────────────────────────────────────── */
+.admin-v2 hr,
+.admin-v2 [class*="border-t"],
+.admin-v2 [class*="border-b"] { border-color: var(--adm-line) !important; }
+
+/* ── Tooltip / popover ──────────────────────────────────────────────────── */
+.admin-v2 [role="tooltip"],
+.admin-v2 [data-radix-tooltip-content] {
+  background: var(--adm-panel-2) !important;
+  border: 1px solid var(--adm-line-strong) !important;
+  color: var(--adm-ink) !important;
+  font-family: var(--adm-mono) !important;
+  font-size: 11px !important;
+  border-radius: 10px !important;
+}
+
+/* ── Charts (recharts) ──────────────────────────────────────────────────── */
+.admin-v2 .recharts-cartesian-grid line { stroke: var(--adm-line) !important; }
+.admin-v2 .recharts-text { fill: var(--adm-ink-3) !important; font-family: var(--adm-mono) !important; font-size: 11px !important; }
+.admin-v2 .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: var(--adm-panel-2) !important;
+  border: 1px solid var(--adm-line-strong) !important;
+  border-radius: 10px !important;
+  color: var(--adm-ink) !important;
+}
+.admin-v2 .recharts-sector[fill*="#7e22ce"],
+.admin-v2 .recharts-sector[fill*="#4f46e5"] { fill: var(--adm-accent) !important; }
+
+/* ── Gradient backgrounds used in page sections ─────────────────────────── */
+.admin-v2 [class*="bg-[linear-gradient"],
+.admin-v2 [class*="bg-[radial-gradient"] {
+  background: var(--adm-panel) !important;
+}
+
+/* ── Shadow elevations ──────────────────────────────────────────────────── */
+.admin-v2 [class*="shadow-"] { box-shadow: 0 4px 24px rgba(0,0,0,0.35) !important; }
+.admin-v2 [class*="shadow-sm"] { box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important; }
+

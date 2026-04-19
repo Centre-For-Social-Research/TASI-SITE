@@ -140,26 +140,30 @@ export async function completeCheckIn({
   operator,
   deskLabel,
 }) {
-  const registration = await getCheckInRegistrationById(registrationId);
-  const alreadyCheckedIn = Boolean(registration.checked_in_at);
   const supabase = getSupabase();
+  const checkedInAt = new Date().toISOString();
 
-  if (!alreadyCheckedIn) {
-    const checkedInAt = new Date().toISOString();
-    const { error } = await supabase
-      .from('event_registrations')
-      .update({
-        checked_in_at: checkedInAt,
-        updated_at: checkedInAt,
-      })
-      .eq('id', registrationId);
+  const { data: updatedRows, error: updateError } = await supabase
+    .from('event_registrations')
+    .update({
+      checked_in_at: checkedInAt,
+      updated_at: checkedInAt,
+    })
+    .eq('id', registrationId)
+    .is('checked_in_at', null)
+    .select(
+      'id, registration_code, first_name, last_name, email, organization, attendee_category, status, checked_in_at'
+    );
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    registration.checked_in_at = checkedInAt;
+  if (updateError) {
+    throw new Error(updateError.message);
   }
+
+  const wonRace = Array.isArray(updatedRows) && updatedRows.length > 0;
+  const registration = wonRace
+    ? normalizeRegistration(updatedRows[0])
+    : await getCheckInRegistrationById(registrationId);
+  const alreadyCheckedIn = !wonRace;
 
   await recordEntryScan({
     registrationId,

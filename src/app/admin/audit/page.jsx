@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import AdminShell from '@/components/admin/admin-shell';
-import AdminDashboard from '@/components/admin/admin-dashboard';
+import AuditTrailPanel from '@/components/admin/audit-trail-panel';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
 
@@ -16,20 +16,17 @@ function AccessFallback() {
         <h1 style={{ fontSize: 28, fontWeight: 600, color: '#f3f4f7', margin: 0 }}>
           Admin access is temporarily unavailable.
         </h1>
-        <p style={{ marginTop: 16, fontSize: 13, color: '#8a8f9c', lineHeight: 1.6 }}>
-          Add the required environment variables and redeploy to enable operator sign-in.
-        </p>
       </div>
     </main>
   );
 }
 
-export default async function AdminIndexPage() {
-  const operator = await getAuthorizedOperator({ route: 'admin.index' });
-  logOperatorEvent('admin.index.entry', 'admin.index', operator);
+export default async function AdminAuditPage() {
+  const operator = await getAuthorizedOperator({ route: 'admin.audit' });
+  logOperatorEvent('admin.audit.entry', 'admin.audit', operator);
 
   if (!operator.authorized) {
-    if (operator.reason === 'unauthenticated') redirect('/sign-in?redirect_url=/admin');
+    if (operator.reason === 'unauthenticated') redirect('/sign-in?redirect_url=/admin/audit');
     if (operator.reason === 'unauthorized') redirect('/not-authorized');
     return <AccessFallback />;
   }
@@ -37,9 +34,8 @@ export default async function AdminIndexPage() {
   const sessionOperator = toOperatorSession(operator);
 
   return (
-    <AdminShell operator={sessionOperator} currentPath="/admin">
-      {logOperatorEvent('admin.index.shell', 'admin.index', operator)}
-      <AdminDashboard operator={sessionOperator} />
+    <AdminShell operator={sessionOperator} currentPath="/admin/audit">
+      <AuditTrailPanel />
     </AdminShell>
   );
 }

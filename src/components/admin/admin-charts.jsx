@@ -71,12 +71,12 @@ export function RegistrationTrendChart({ summary }) {
           >
             <defs>
               <linearGradient id="gradConfirmed" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7e22ce" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#7e22ce" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#f0a832" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#f0a832" stopOpacity={0.02} />
               </linearGradient>
               <linearGradient id="gradPending" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#6ac98a" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#6ac98a" stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -97,19 +97,20 @@ export function RegistrationTrendChart({ summary }) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'var(--admin-tooltip-bg, #fff)',
-                border: '1px solid var(--admin-tooltip-border, #e2e8f0)',
-                borderRadius: '12px',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                backgroundColor: 'var(--adm-panel-2, #161a23)',
+                border: '1px solid var(--adm-line-strong, rgba(255,255,255,0.14))',
+                borderRadius: '10px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                 fontSize: 13,
+                color: 'var(--adm-ink, #f3f4f7)',
               }}
-              labelStyle={{ fontWeight: 700, fontSize: 12 }}
+              labelStyle={{ fontWeight: 700, fontSize: 12, color: 'var(--adm-ink, #f3f4f7)' }}
             />
             <Area
               type="monotone"
               dataKey="confirmed"
               name="Confirmed"
-              stroke="#7e22ce"
+              stroke="#f0a832"
               strokeWidth={2.5}
               fill="url(#gradConfirmed)"
             />
@@ -117,7 +118,7 @@ export function RegistrationTrendChart({ summary }) {
               type="monotone"
               dataKey="pending"
               name="Pending"
-              stroke="#f59e0b"
+              stroke="#6ac98a"
               strokeWidth={2}
               fill="url(#gradPending)"
             />
@@ -128,7 +129,7 @@ export function RegistrationTrendChart({ summary }) {
   );
 }
 
-const DONUT_COLORS = ['#f59e0b', '#10b981', '#7e22ce', '#0ea5e9'];
+const DONUT_COLORS = ['#e8a445', '#6ac98a', '#f0a832', '#6ba5d8'];
 const DONUT_LABELS = ['Pending', 'Confirmed', 'QR Issued', 'Checked In'];
 
 export function StatusDonutChart({ summary }) {
@@ -184,11 +185,12 @@ export function StatusDonutChart({ summary }) {
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'var(--admin-tooltip-bg, #fff)',
-                  border: '1px solid var(--admin-tooltip-border, #e2e8f0)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  backgroundColor: 'var(--adm-panel-2, #161a23)',
+                  border: '1px solid var(--adm-line-strong, rgba(255,255,255,0.14))',
+                  borderRadius: '10px',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                   fontSize: 13,
+                  color: 'var(--adm-ink, #f3f4f7)',
                 }}
               />
             </PieChart>

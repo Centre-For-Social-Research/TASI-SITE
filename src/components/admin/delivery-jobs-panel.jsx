@@ -266,13 +266,13 @@ export default function DeliveryJobsPanel({ operator }) {
   return (
     <div className="space-y-5">
       <AdminPageIntro
-        eyebrow="Delivery Jobs"
-        title="Monitor QR mailings and retry failures"
-        description="Track throughput, process background chunks, and recover failed sends from one delivery-focused workspace."
+        eyebrow="Entry Pass Dispatch"
+        title="Issue QR passes and deliver PDF badges to attendees"
+        description="Generates a PDF entry badge with a QR code, uploads the QR image, and emails it as an attachment. Only runs for confirmed registrations — skips passes already issued unless in resend mode."
         chips={[
           `Handled by ${operator.displayName}`,
-          'Delivery queue status',
-          'Retry failed sends',
+          'PDF badge + QR attachment',
+          'Retry failed pass deliveries',
         ]}
       />
 
@@ -293,7 +293,7 @@ export default function DeliveryJobsPanel({ operator }) {
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <AdminStatCard
-          label="Queued Items"
+          label="Queued Passes"
           value={metrics.queued}
           tone="warning"
           detail="Waiting for the next worker pass"
@@ -302,13 +302,13 @@ export default function DeliveryJobsPanel({ operator }) {
           label="Processing"
           value={metrics.processing}
           tone="info"
-          detail="Currently being issued or mailed"
+          detail="Generating PDF or uploading QR"
         />
         <AdminStatCard
-          label="Sent"
+          label="Dispatched"
           value={metrics.sent}
           tone="success"
-          detail="Successfully delivered QR messages"
+          detail="PDF badge delivered to inbox"
         />
         <AdminStatCard
           label="Failed"
@@ -320,13 +320,23 @@ export default function DeliveryJobsPanel({ operator }) {
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
         <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <div className="border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
-              Recent Jobs
-            </p>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Select a job to inspect item-level failures and retry actions.
-            </p>
+          <div className="flex items-center justify-between gap-4 border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+                Recent Pass Dispatch Jobs
+              </p>
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                PDF badge + QR email jobs · Select a job to inspect item-level failures and retry.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void processJob()}
+              disabled={!jobsState.jobs.some((j) => ['queued', 'processing'].includes(j.status))}
+              className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-medium text-amber-900 transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
+            >
+              Process All
+            </button>
           </div>
 
           <div className="overflow-auto">
@@ -436,7 +446,7 @@ export default function DeliveryJobsPanel({ operator }) {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-amber-600">
-                Selected Job
+                Selected Dispatch Job
               </p>
               <h3 className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
                 {jobsState.selectedDetail?.job?.id

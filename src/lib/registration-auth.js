@@ -2,6 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { getClerkConfigDiagnostics } from '@/lib/clerk-config';
 import operatorAuthUi from '@/lib/operator-auth-ui.cjs';
 import operatorSession from '@/lib/operator-session.cjs';
+import { getStoredAdminEmails } from '@/lib/admin-email-store';
 
 const { getOperatorNavbarState } = operatorAuthUi;
 const { toOperatorSession, logOperatorEvent } = operatorSession;
@@ -76,8 +77,11 @@ export async function getAuthorizedOperator(context = {}) {
       entry.emailAddress.toLowerCase()
     );
     const primaryEmail = emails[0] || '';
-    const adminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
-    const reviewerEmails = parseEmailList(process.env.CLERK_REVIEWER_EMAILS);
+    const envAdminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
+    const envReviewerEmails = parseEmailList(process.env.CLERK_REVIEWER_EMAILS);
+    const stored = await getStoredAdminEmails();
+    const adminEmails = new Set([...envAdminEmails, ...stored.adminEmails.map((e) => e.toLowerCase())]);
+    const reviewerEmails = new Set([...envReviewerEmails, ...stored.reviewerEmails.map((e) => e.toLowerCase())]);
     const accessMode = getAccessMode();
     const metadataRole =
       user?.publicMetadata?.tasiRole ||

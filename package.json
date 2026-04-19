@@ -38,7 +38,7 @@
     "@react-pdf/renderer": "^4.3.2",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.22.0",
-    "@sentry/nextjs": "^10.46.0",
+    "@sentry/nextjs": "^10.49.0",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/supabase-js": "^2.99.2",
     "@tsparticles/engine": "^3.9.1",
@@ -90,8 +90,7 @@
     "eslint-config-next": "^16.1.6",
     "postcss": "^8.5.8",
     "prettier": "^3.6.2",
-    "tailwindcss": "^3.4.17",
-    "turbopack": "^0.0.1"
+    "tailwindcss": "^3.4.17"
   },
   "overrides": {
     "lodash": "4.18.1",

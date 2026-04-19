@@ -263,12 +263,12 @@ export default function EmailJobsPanel({ operator }) {
   return (
     <div className="space-y-5">
       <AdminPageIntro
-        eyebrow="Registration Emails"
-        title="Monitor confirmation emails and retry failures"
-        description="Track throughput of attendee acknowledgments, process background chunks, and recover failed sends."
+        eyebrow="Confirmation Emails"
+        title="Send plain-text acknowledgments after registration approval"
+        description="Sends a text-only confirmation email when a registration is approved. No attachments, no pass — just a notification to the attendee that their spot is confirmed."
         chips={[
           `Handled by ${operator.displayName}`,
-          'Email queue status',
+          'Text email · No attachment',
           'Retry failed confirmation emails',
         ]}
       />
@@ -292,13 +292,13 @@ export default function EmailJobsPanel({ operator }) {
           label="Processing"
           value={metrics.processing}
           tone="info"
-          detail="Currently being sent"
+          detail="Currently sending"
         />
         <AdminStatCard
           label="Sent"
           value={metrics.sent}
           tone="success"
-          detail="Successfully delivered acknowledgments"
+          detail="Confirmation delivered to inbox"
         />
         <AdminStatCard
           label="Failed"
@@ -310,13 +310,23 @@ export default function EmailJobsPanel({ operator }) {
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
         <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <div className="border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
-            <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
-              Recent Email Jobs
-            </p>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Select a job to inspect failures and retry actions.
-            </p>
+          <div className="flex items-center justify-between gap-4 border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
+                Confirmation Email Jobs
+              </p>
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                Text-only notification emails · Select a job to inspect failures and retry.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void processJob()}
+              disabled={!jobsState.jobs.some((j) => ['queued', 'processing'].includes(j.status))}
+              className="shrink-0 rounded-full border border-purple-200 bg-purple-50 px-4 py-1.5 text-xs font-medium text-purple-900 transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-purple-800 dark:bg-purple-950/50 dark:text-purple-300"
+            >
+              Process All
+            </button>
           </div>
 
           <div className="overflow-auto">

@@ -586,4 +586,13 @@ insert into storage.buckets (id, name, public)
 values ('festival-ticket-photos', 'festival-ticket-photos', false)
 on conflict (id) do nothing;
 
+-- Admin email overrides (managed via admin console Settings page)
+create table if not exists public.admin_email_overrides (
+  id bigint generated always as identity primary key,
+  email text not null unique,
+  role text not null check (role in ('admin', 'reviewer')),
+  added_by text not null,
+  created_at timestamptz not null default now()
+);
+
 notify pgrst, 'reload schema';

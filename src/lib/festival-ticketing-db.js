@@ -487,23 +487,24 @@ export async function completeFestivalCheckIn({
   deskLabel,
   token,
 }) {
-  const current = await getFestivalTicketById(ticketId);
-  const alreadyCheckedIn = Boolean(current.checked_in_at);
+  const supabase = getSupabase();
+  const checkedInAt = nowIso();
 
-  if (!alreadyCheckedIn) {
-    const supabase = getSupabase();
-    const checkedInAt = nowIso();
-    const { error } = await supabase
-      .from('festival_tickets')
-      .update({
-        status: 'checked_in',
-        checked_in_at: checkedInAt,
-        updated_at: checkedInAt,
-      })
-      .eq('id', ticketId);
+  const { data: updatedRows, error: updateError } = await supabase
+    .from('festival_tickets')
+    .update({
+      status: 'checked_in',
+      checked_in_at: checkedInAt,
+      updated_at: checkedInAt,
+    })
+    .eq('id', ticketId)
+    .is('checked_in_at', null)
+    .select('id');
 
-    if (error) throw new Error(error.message);
-  }
+  if (updateError) throw new Error(updateError.message);
+  const alreadyCheckedIn = !(
+    Array.isArray(updatedRows) && updatedRows.length > 0
+  );
 
   await recordFestivalAdminAudit({
     ticketId,
