@@ -124,7 +124,7 @@ function LivePulseHero({ summary }) {
             STREAM OK · 30s AUTO-REFRESH
           </span>
         </span>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div className="adm-dash-range-btns" style={{ display: 'flex', gap: 6 }}>
           {['Last 24h', 'Last 7d', 'T-178 → T-0'].map((label) => (
             <button key={label} style={{
               padding: '5px 10px', borderRadius: 10,
@@ -137,7 +137,7 @@ function LivePulseHero({ summary }) {
       </div>
 
       {/* 3 big numbers */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <div className="adm-dash-big-numbers" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
         <BigNumber label="PENDING · REVIEW QUEUE"  value={pending}  delta="-3 · 1h" deltaDir="up" spark={SPARK_PENDING}  accent sparkLive />
         <BigNumber label="LIVE · CHECK-INS TODAY"  value={checkins} delta="+27 · 5m" deltaDir="up" spark={SPARK_CHECKINS} sparkLive />
         <BigNumber label="PASSES · DELIVERY QUEUE" value={qrQueue}  delta="-6 · 1h" deltaDir="up" spark={SPARK_QUEUE} last />
@@ -331,7 +331,7 @@ function StatusGrid({ summary }) {
     { label: 'Checked in',       value: summary.checkedIn  || 0, color: 'var(--adm-ok)' },
   ];
   return (
-    <div style={{
+    <div className="adm-dash-status-grid" style={{
       display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12,
     }}>
       {items.map((item) => (
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       <LivePulseHero summary={summary} />
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 22 }}>
+      <div className="adm-dash-main-grid" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 22 }}>
         <ActionFeed summary={summary} jobs={jobs} />
         <Funnel summary={summary} />
       </div>

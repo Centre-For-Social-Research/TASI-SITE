@@ -160,6 +160,86 @@
   .admin-v2 .adm-mobile-nav { display: flex; }
 }
 
+/* ── Mobile responsive overrides ────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Ticker: hide stats, keep LIVE + time */
+  .admin-v2 .adm-ticker-right { display: none !important; }
+  .admin-v2 .adm-ticker-strip { padding: 5px 14px !important; }
+
+  /* Title row: tighten padding, hide search bar and operator card */
+  .admin-v2 .adm-topbar-title-row { padding: 10px 14px !important; gap: 10px !important; }
+  .admin-v2 .adm-topbar-search { display: none !important; }
+  .admin-v2 .adm-topbar-operator { display: none !important; }
+  .admin-v2 .adm-topbar-meta { display: none !important; }
+
+  /* Show icon-only search button instead */
+  .admin-v2 .adm-topbar-search-icon { display: flex !important; }
+
+  /* Smaller page title on tablet/mobile */
+  .admin-v2 .adm-topbar-h1 { font-size: 22px !important; letter-spacing: -0.01em !important; }
+
+  /* Notifications panel: full-width slide-over */
+  .admin-v2 .adm-notif-panel { width: 100% !important; }
+
+  /* Main content: reduce horizontal padding */
+  .admin-v2 .adm-page-content { padding: 16px 16px 40px !important; }
+
+  /* Dashboard big numbers: smaller on mobile */
+  .admin-v2 .adm-big-number-value { font-size: 38px !important; }
+
+  /* Table: enable horizontal scroll */
+  .admin-v2 table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+/* ── Dashboard grid responsive ───────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Big number tiles: stack vertically, swap border-right for border-bottom */
+  .admin-v2 .adm-dash-big-numbers { grid-template-columns: 1fr !important; }
+  .admin-v2 .adm-dash-big-numbers > div { border-right: none !important; border-bottom: 1px solid var(--adm-line) !important; }
+  .admin-v2 .adm-dash-big-numbers > div:last-child { border-bottom: none !important; }
+
+  /* ActionFeed + Funnel: stack vertically */
+  .admin-v2 .adm-dash-main-grid { grid-template-columns: 1fr !important; }
+
+  /* Status grid: 2 columns on tablet */
+  .admin-v2 .adm-dash-status-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Hide range-filter buttons on mobile */
+  .admin-v2 .adm-dash-range-btns { display: none !important; }
+
+  /* Sparklines: clamp to container width */
+  .admin-v2 .adm-dash-big-numbers svg { width: 100% !important; }
+}
+
+@media (max-width: 640px) {
+  .admin-v2 .adm-topbar-h1 { font-size: 20px !important; }
+  .admin-v2 .adm-ticker-strip { padding: 4px 12px !important; }
+  .admin-v2 .adm-topbar-title-row { padding: 8px 12px !important; gap: 8px !important; }
+  .admin-v2 .adm-page-content { padding: 12px 12px 32px !important; }
+  .admin-v2 .adm-topbar-kicker { display: none !important; }
+  .admin-v2 .adm-big-number-value { font-size: 32px !important; }
+  .admin-v2 .adm-dash-status-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 400px) {
+  .admin-v2 .adm-dash-status-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Settings page responsive ────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Rate Limits + Integrations + Event Config: stack to single column */
+  .admin-v2 .adm-settings-grid { grid-template-columns: 1fr !important; }
+
+  /* Admin + Reviewer email columns: stack vertically */
+  .admin-v2 .adm-settings-email-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+}
+
+@media (max-width: 640px) {
+  /* Add-email form: wrap buttons below the input */
+  .admin-v2 .adm-settings-add-form { flex-wrap: wrap !important; }
+  .admin-v2 .adm-settings-add-form input { width: 100% !important; flex: none !important; }
+}
+
 /* ── Skeleton pulse ─────────────────────────────────────────────────────── */
 @keyframes adm-skeleton-pulse {
   0%,100% { opacity: 0.5; }

@@ -153,7 +153,7 @@ function AddEmailForm({ role, onAdd, onCancel }) {
   }
 
   return (
-    <form onSubmit={submit} style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+    <form onSubmit={submit} className="adm-settings-add-form" style={{ display: 'flex', gap: 6, marginTop: 4 }}>
       <input
         ref={inputRef}
         value={email}
@@ -336,7 +336,7 @@ export default function SettingsPanel() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+      <div className="adm-settings-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
 
         {/* Access Control — spans full width on its own row */}
         <div style={{ gridColumn: '1 / -1' }}>
@@ -347,7 +347,7 @@ export default function SettingsPanel() {
                   {ACCESS_MODE_LABEL[data.access.mode] || data.access.mode}
                 </MonoRow>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 16 }}>
+                <div className="adm-settings-email-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 16 }}>
                   <EmailSection
                     label="ADMIN EMAILS"
                     emails={data.access.adminEmails}

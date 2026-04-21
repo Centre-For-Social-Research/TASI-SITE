@@ -297,13 +297,13 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
       borderBottom: '1px solid var(--adm-line)',
     }}>
       {/* Ticker strip */}
-      <div style={{
+      <div className="adm-ticker-strip" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '6px 22px', borderBottom: '1px solid var(--adm-line)',
         fontFamily: 'var(--adm-mono)', fontSize: 10.5, letterSpacing: '0.06em',
         color: 'var(--adm-ink-3)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="adm-ticker-left" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--adm-accent)' }}>
             <span className="adm-pulse-dot" />LIVE
           </span>
@@ -311,7 +311,7 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
           <span>·</span>
           <span>{fmtDate}</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="adm-ticker-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span>PENDING <span style={{ color: 'var(--adm-warn)' }}>{summary.pending || 0}</span></span>
           <span>·</span>
           <span>CONFIRMED {summary.confirmed || 0}</span>
@@ -325,13 +325,13 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
       </div>
 
       {/* Title row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 22px' }}>
+      <div className="adm-topbar-title-row" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 22px' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="adm-eyebrow" style={{ marginBottom: 4, color: 'var(--adm-accent)' }}>
+          <div className="adm-eyebrow adm-topbar-kicker" style={{ marginBottom: 4, color: 'var(--adm-accent)' }}>
             {titleDef.kicker}
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
-            <h1 style={{
+            <h1 className="adm-topbar-h1" style={{
               fontFamily: 'var(--adm-sans)',
               fontSize: 32, fontWeight: 600, margin: 0,
               letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--adm-ink)',
@@ -339,7 +339,7 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
               {titleDef.title}
             </h1>
             {titleDef.meta && (
-              <span className="adm-mono" style={{ fontSize: 11, color: 'var(--adm-ink-3)', letterSpacing: '0.06em' }}>
+              <span className="adm-mono adm-topbar-meta" style={{ fontSize: 11, color: 'var(--adm-ink-3)', letterSpacing: '0.06em' }}>
                 {titleDef.meta.toUpperCase()}
               </span>
             )}
@@ -348,6 +348,7 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
 
         {/* Search */}
         <button
+          className="adm-topbar-search"
           onClick={onPalette}
           style={{
             display: 'flex', alignItems: 'center', gap: 8,
@@ -365,6 +366,19 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
         </button>
 
         {/* Actions */}
+        <button
+          onClick={onPalette}
+          className="adm-topbar-search-icon"
+          title="Search (⌘K)"
+          style={{
+            width: 36, height: 36, borderRadius: 10,
+            border: '1px solid var(--adm-line)', background: 'var(--adm-panel)',
+            color: 'var(--adm-ink-2)', cursor: 'pointer',
+            display: 'none', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <Ico.search />
+        </button>
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           title="Toggle theme"
@@ -398,7 +412,7 @@ function TopBar({ currentPath, shellState, theme, setTheme, attentionCount, onNo
         </button>
 
         {/* Current user */}
-        <div style={{
+        <div className="adm-topbar-operator" style={{
           display: 'flex', alignItems: 'center', gap: 8,
           padding: '6px 10px', borderRadius: 10,
           border: '1px solid var(--adm-line)', background: 'var(--adm-panel)',
@@ -464,7 +478,7 @@ function NotificationsPanel({ open, onClose, notifications, unread, onMarkRead, 
         onClick={onClose}
         style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }}
       />
-      <div style={{
+      <div className="adm-notif-panel" style={{
         position: 'absolute', top: 0, right: 0, bottom: 0, width: 420,
         background: 'var(--adm-panel)', borderLeft: '1px solid var(--adm-line-strong)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
