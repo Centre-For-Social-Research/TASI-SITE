@@ -1,18 +1,53 @@
 import { withSentryConfig } from '@sentry/nextjs';
 
 /** @type {import('next').NextConfig} */
+function getClerkFrontendApiOrigin() {
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+  const encodedFrontendApi = publishableKey.replace(/^pk_(test|live)_/, '');
+
+  if (!encodedFrontendApi || encodedFrontendApi === publishableKey) {
+    return null;
+  }
+
+  try {
+    const padded = encodedFrontendApi.padEnd(
+      Math.ceil(encodedFrontendApi.length / 4) * 4,
+      '='
+    );
+    const frontendApi = Buffer.from(padded, 'base64')
+      .toString('utf8')
+      .replace(/\$$/, '');
+
+    if (!frontendApi || frontendApi.includes('/') || frontendApi.includes('\\')) {
+      return null;
+    }
+
+    return `https://${frontendApi}`;
+  } catch {
+    return null;
+  }
+}
+
+const clerkFrontendApiOrigin = getClerkFrontendApiOrigin();
+const clerkCspOrigins = [
+  'https://clerk.com',
+  'https://*.clerk.accounts.dev',
+  'https://img.clerk.com',
+  clerkFrontendApiOrigin,
+].filter(Boolean);
+
 const siteSecurityHeaders = [
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com https://checkout.razorpay.com https://static.cloudflareinsights.com",
+      `script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' ${clerkCspOrigins.join(' ')} https://challenges.cloudflare.com https://checkout.razorpay.com https://static.cloudflareinsights.com`,
       "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com https://*.clerk.com https://*.clerk.accounts.dev https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co",
-      "connect-src 'self' https://*.supabase.co https://api.resend.com https://clerk.com https://*.clerk.accounts.dev https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com https://api.razorpay.com https://checkout.razorpay.com",
-      'frame-src https://challenges.cloudflare.com https://clerk.com https://*.clerk.accounts.dev https://player.mux.com https://api.razorpay.com https://checkout.razorpay.com',
+      `img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com ${clerkCspOrigins.join(' ')} https://*.clerk.com https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co`,
+      `connect-src 'self' https://*.supabase.co https://api.resend.com ${clerkCspOrigins.join(' ')} https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com https://api.razorpay.com https://checkout.razorpay.com`,
+      `frame-src https://challenges.cloudflare.com ${clerkCspOrigins.join(' ')} https://player.mux.com https://api.razorpay.com https://checkout.razorpay.com`,
       "object-src 'none'",
       "base-uri 'self'",
     ].join('; '),
