@@ -31,8 +31,8 @@ function getClerkFrontendApiOrigin() {
 const clerkFrontendApiOrigin = getClerkFrontendApiOrigin();
 const clerkCspOrigins = [
   'https://clerk.com',
+  'https://*.clerk.com',
   'https://*.clerk.accounts.dev',
-  'https://img.clerk.com',
   clerkFrontendApiOrigin,
 ].filter(Boolean);
 
@@ -50,6 +50,7 @@ const siteSecurityHeaders = [
       `frame-src https://challenges.cloudflare.com ${clerkCspOrigins.join(' ')} https://player.mux.com https://api.razorpay.com https://checkout.razorpay.com`,
       "object-src 'none'",
       "base-uri 'self'",
+      "form-action 'self'",
     ].join('; '),
   },
   {
