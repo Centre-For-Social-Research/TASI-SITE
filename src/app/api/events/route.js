@@ -19,7 +19,12 @@ export async function GET(request) {
     const events = await listPublicTicketEvents();
     return Response.json(
       { success: true, events },
-      { headers: protection.headers }
+      {
+        headers: {
+          ...protection.headers,
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+        },
+      }
     );
   } catch (error) {
     const message =
@@ -34,7 +39,12 @@ export async function GET(request) {
           events: [DEMO_RECEPTION_EVENT],
           demoMode: true,
         },
-        { headers: protection.headers }
+        {
+          headers: {
+            ...protection.headers,
+            'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=600',
+          },
+        }
       );
     }
 

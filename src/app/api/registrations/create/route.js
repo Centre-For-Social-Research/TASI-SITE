@@ -2,6 +2,11 @@ import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { imageSize } from 'image-size';
 import { protectPublicRoute } from '@/lib/api-security';
+import {
+  getCompletedIdempotentResponse,
+  getIdempotencyKey,
+  storeIdempotentResponse,
+} from '@/lib/api-idempotency';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { isValidEmail } from '@/lib/input-sanitizers';
 import { REGISTRATION_SOURCE } from '@/lib/registration-constants';
@@ -67,6 +72,15 @@ export async function POST(request) {
         { error: 'Valid email is required.' },
         { status: 400, headers: protection.headers }
       );
+    }
+
+    const idempotencyKey = getIdempotencyKey(
+      request,
+      `registration:${registration.email}:${registration.first_name}:${registration.last_name}`
+    );
+    const cached = await getCompletedIdempotentResponse('registration-create', idempotencyKey);
+    if (cached) {
+      return Response.json(cached, { headers: protection.headers });
     }
 
     if (!(profilePhoto instanceof File) || !profilePhoto.size) {
@@ -179,16 +193,16 @@ export async function POST(request) {
       }
     });
 
-    return Response.json(
-      {
+    const response = {
         success: true,
         registrationId: createdRegistration.id,
         registrationCode: createdRegistration.registration_code,
         emailQueued: Boolean(emailResult.queued),
         emailError: emailResult.queued ? null : emailResult.error || null,
-      },
-      { headers: protection.headers }
-    );
+      };
+    await storeIdempotentResponse('registration-create', idempotencyKey, response, registration.email);
+
+    return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'Unable to submit registration.';

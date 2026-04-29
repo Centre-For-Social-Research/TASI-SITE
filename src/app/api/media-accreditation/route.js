@@ -1,7 +1,13 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
+import {
+  getCompletedIdempotentResponse,
+  getIdempotencyKey,
+  storeIdempotentResponse,
+} from '@/lib/api-idempotency';
 import { isValidEmail, sanitizeEmail } from '@/lib/input-sanitizers';
 import { sendInboundNotificationEmail } from '@/lib/resend';
+import { after } from 'next/server';
 
 export async function POST(request) {
   const protection = await protectPublicPostRoute(
@@ -33,6 +39,11 @@ export async function POST(request) {
       'Media accreditation request for TASI 2026',
       `Business email: ${email}`,
     ].join('\n');
+    const idempotencyKey = getIdempotencyKey(request, `media-accreditation:${email}`);
+    const cached = await getCompletedIdempotentResponse('media-accreditation', idempotencyKey);
+    if (cached) {
+      return Response.json(cached, { headers: protection.headers });
+    }
 
     const { error } = await supabase.from('contact_messages').insert({
       email,
@@ -45,20 +56,24 @@ export async function POST(request) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
-    try {
-      await sendInboundNotificationEmail({
+    after(async () => {
+      try {
+        await sendInboundNotificationEmail({
         subject: 'New media accreditation request',
         text: message,
         replyTo: email,
       });
-    } catch (emailError) {
-      console.error(
-        'Failed to send media accreditation notification email.',
-        emailError
-      );
-    }
+      } catch (emailError) {
+        console.error(
+          'Failed to send media accreditation notification email.',
+          emailError
+        );
+      }
+    });
 
-    return Response.json({ success: true }, { headers: protection.headers });
+    const response = { success: true };
+    await storeIdempotentResponse('media-accreditation', idempotencyKey, response, email);
+    return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =
       error instanceof Error

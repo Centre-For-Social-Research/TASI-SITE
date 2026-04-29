@@ -1,7 +1,13 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
+import {
+  getCompletedIdempotentResponse,
+  getIdempotencyKey,
+  storeIdempotentResponse,
+} from '@/lib/api-idempotency';
 import { isValidEmail, sanitizeEmail } from '@/lib/input-sanitizers';
 import { sendInboundNotificationEmail } from '@/lib/resend';
+import { after } from 'next/server';
 
 export async function POST(request) {
   const protection = await protectPublicPostRoute(
@@ -29,6 +35,11 @@ export async function POST(request) {
     }
 
     const supabase = getSupabaseAdmin();
+    const idempotencyKey = getIdempotencyKey(request, `newsletter:${email}`);
+    const cached = await getCompletedIdempotentResponse('newsletter-subscribe', idempotencyKey);
+    if (cached) {
+      return Response.json(cached, { headers: protection.headers });
+    }
 
     const { error } = await supabase.from('newsletter_subscribers').insert({
       email,
@@ -45,10 +56,9 @@ export async function POST(request) {
         error.message?.toLowerCase().includes('duplicate');
 
       if (isDuplicate) {
-        return Response.json(
-          { success: true, alreadySubscribed: true },
-          { headers: protection.headers }
-        );
+        const response = { success: true, alreadySubscribed: true };
+        await storeIdempotentResponse('newsletter-subscribe', idempotencyKey, response, email);
+        return Response.json(response, { headers: protection.headers });
       }
       return Response.json(
         { error: error.message },
@@ -56,8 +66,9 @@ export async function POST(request) {
       );
     }
 
-    try {
-      await sendInboundNotificationEmail({
+    after(async () => {
+      try {
+        await sendInboundNotificationEmail({
         subject: 'New TASI newsletter subscriber',
         text: [
           'A new newsletter subscriber joined through the website.',
@@ -66,14 +77,17 @@ export async function POST(request) {
         ].join('\n'),
         replyTo: email,
       });
-    } catch (emailError) {
-      console.error(
-        'Failed to send newsletter notification email.',
-        emailError
-      );
-    }
+      } catch (emailError) {
+        console.error(
+          'Failed to send newsletter notification email.',
+          emailError
+        );
+      }
+    });
 
-    return Response.json({ success: true }, { headers: protection.headers });
+    const response = { success: true };
+    await storeIdempotentResponse('newsletter-subscribe', idempotencyKey, response, email);
+    return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =
       error instanceof Error

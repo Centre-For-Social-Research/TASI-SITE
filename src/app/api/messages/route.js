@@ -1,11 +1,17 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
 import {
+  getCompletedIdempotentResponse,
+  getIdempotencyKey,
+  storeIdempotentResponse,
+} from '@/lib/api-idempotency';
+import {
   isValidEmail,
   sanitizeEmail,
   sanitizeMessage,
 } from '@/lib/input-sanitizers';
 import { sendInboundNotificationEmail } from '@/lib/resend';
+import { after } from 'next/server';
 
 export async function POST(request) {
   const protection = await protectPublicPostRoute(request, 'messages', {
@@ -48,6 +54,12 @@ export async function POST(request) {
       );
     }
 
+    const idempotencyKey = getIdempotencyKey(request, `${email}:${normalizedSource}:${message}`);
+    const cached = await getCompletedIdempotentResponse('contact-message', idempotencyKey);
+    if (cached) {
+      return Response.json(cached, { headers: protection.headers });
+    }
+
     const supabase = getSupabaseAdmin();
 
     const { error } = await supabase.from('contact_messages').insert({
@@ -61,8 +73,9 @@ export async function POST(request) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
-    try {
-      await sendInboundNotificationEmail({
+    after(async () => {
+      try {
+        await sendInboundNotificationEmail({
         subject: 'New TASI contact message',
         text: [
           'A new contact message was submitted on the website.',
@@ -74,11 +87,14 @@ export async function POST(request) {
         ].join('\n'),
         replyTo: email,
       });
-    } catch (emailError) {
-      console.error('Failed to send contact notification email.', emailError);
-    }
+      } catch (emailError) {
+        console.error('Failed to send contact notification email.', emailError);
+      }
+    });
 
-    return Response.json({ success: true }, { headers: protection.headers });
+    const response = { success: true };
+    await storeIdempotentResponse('contact-message', idempotencyKey, response, email);
+    return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'Unable to submit message.';
