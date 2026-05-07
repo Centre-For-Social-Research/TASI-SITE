@@ -17,7 +17,7 @@ function getEmailLogoUrl() {
   const siteUrl =
     process.env.SITE_URL?.trim() ||
     process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-    'https://jamsaq.in';
+    'https://trustandsafetyindia.org';
   const normalizedBase = siteUrl.replace(/\/+$/, '');
   return `${normalizedBase}/img/tasi-csr-logo.png`;
 }

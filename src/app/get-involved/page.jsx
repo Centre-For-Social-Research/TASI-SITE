@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 
@@ -307,7 +306,6 @@ export default function GetInvolvedPage() {
           </div>
         </section>
       </main>
-      <HomeFooter />
     </>
   );
 }

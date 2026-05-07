@@ -15,7 +15,6 @@ import {
   ShieldAlert,
   Users,
 } from 'lucide-react';
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import { themes2026 } from '@/data/themes-2026';
@@ -157,7 +156,6 @@ export default function ThemesPage() {
           </div>
         </section>
       </main>
-      <HomeFooter />
     </>
   );
 }

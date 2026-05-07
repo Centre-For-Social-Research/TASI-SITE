@@ -4,7 +4,7 @@ export default function robots() {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://jamsaq.in/sitemap.xml',
-    host: 'https://jamsaq.in',
+    sitemap: 'https://trustandsafetyindia.org/sitemap.xml',
+    host: 'https://trustandsafetyindia.org',
   };
 }

@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import SpeakerApplicationForm from '@/components/speakers/speaker-application-form';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
@@ -228,7 +227,6 @@ export default function SpeakerApplicationPage() {
           </div>
         </section>
       </main>
-      <HomeFooter />
     </>
   );
 }

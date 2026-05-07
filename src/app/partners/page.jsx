@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import HomeNavbar from '@/components/home/navbar';
-import HomeFooter from '@/components/home/footer';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import { partners } from '@/data/partners';
 
@@ -99,7 +98,6 @@ export default function PartnersPage() {
           </div>
         </section>
       </main>
-      <HomeFooter />
     </>
   );
 }

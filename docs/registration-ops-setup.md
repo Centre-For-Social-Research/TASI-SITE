@@ -42,7 +42,7 @@ If the file is moved later, update this env var only. No code changes are needed
 
 Create a webhook in Resend and point it to:
 
-- Production: `https://jamsaq.in/api/resend/webhooks`
+- Production: `https://trustandsafetyindia.org/api/resend/webhooks`
 - Local development: use a tunnel URL that forwards to `/api/resend/webhooks`
 
 Recommended events:
@@ -70,8 +70,8 @@ CLERK_ACCESS_MODE=both
 CLERK_ADMIN_EMAILS=saquib@csrindia.org
 CLERK_REVIEWER_EMAILS=reviewer1@csrindia.org,reviewer2@csrindia.org
 BADGE_LOGO_FILE_PATH=D:\TASI 2025 Sponsor Kit\Logos\Trust and Safety Festival Templates (3).png
-SITE_URL=https://jamsaq.in
-NEXT_PUBLIC_SITE_URL=https://jamsaq.in
+SITE_URL=https://trustandsafetyindia.org
+NEXT_PUBLIC_SITE_URL=https://trustandsafetyindia.org
 ```
 
 ## Launch checklist

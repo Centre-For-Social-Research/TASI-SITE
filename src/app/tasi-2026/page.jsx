@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import HomeFooter from '@/components/home/footer';
 import AudienceSection from '@/components/home/audience-section';
 import FormatGrid from '@/components/home/format-grid';
 import GlobalCta from '@/components/home/global-cta';
@@ -63,7 +62,6 @@ export default function Tasi2026EditionPage() {
         <AudienceSection />
         <GlobalCta />
       </main>
-      <HomeFooter />
     </>
   );
 }

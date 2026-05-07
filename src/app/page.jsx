@@ -1,6 +1,5 @@
 import NewsUpdatesSection from '@/components/home/news-updates-section';
 import SpeakerHighlightSection from '@/components/home/speaker-highlight-section';
-import HomeFooter from '@/components/home/footer';
 import GlobalCta from '@/components/home/global-cta';
 import FestivalHighlightsSection from '@/components/home/festival-highlights-section';
 import HighlightsGallery from '@/components/home/highlights-gallery';
@@ -29,7 +28,6 @@ export default function HomePage() {
         <HighlightsGallery />
         <GlobalCta />
       </main>
-      <HomeFooter />
     </>
   );
 }

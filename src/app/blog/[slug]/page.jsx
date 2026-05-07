@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import { Calendar, User, ArrowLeft, Tag } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
-import HomeFooter from '@/components/home/footer';
 import ShareButtons from '@/components/blog/share-buttons';
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/blog';
 
@@ -16,7 +15,8 @@ export default async function BlogPostPage({ params }) {
     notFound();
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jamsaq.in';
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://trustandsafetyindia.org';
   const postUrl = `${siteUrl}/blog/${slug}`;
   return (
     <>
@@ -156,7 +156,6 @@ export default async function BlogPostPage({ params }) {
           </div>
         </article>
       </main>
-      <HomeFooter />
     </>
   );
 }

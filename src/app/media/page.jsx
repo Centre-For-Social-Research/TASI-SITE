@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import HomeFooter from '@/components/home/footer';
 import MediaAccreditationSection from '@/components/media/media-accreditation-section';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
@@ -334,7 +333,6 @@ export default function MediaPage() {
 
         <MediaAccreditationSection />
       </main>
-      <HomeFooter />
     </>
   );
 }

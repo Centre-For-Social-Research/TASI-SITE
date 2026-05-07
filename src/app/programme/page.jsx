@@ -1,4 +1,3 @@
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import ProgrammeAgendaClient from '@/components/programme/programme-agenda-client';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
@@ -130,7 +129,6 @@ export default function ProgrammePage() {
           receptionNotes={receptionNotes}
         />
       </main>
-      <HomeFooter />
     </>
   );
 }

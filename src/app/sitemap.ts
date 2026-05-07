@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getBlogPosts } from '@/lib/blog';
 
-const BASE = 'https://jamsaq.in';
+const BASE = 'https://trustandsafetyindia.org';
 
 type Route = {
   path: string;

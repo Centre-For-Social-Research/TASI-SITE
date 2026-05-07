@@ -1,7 +1,6 @@
 'use client';
 
 import HomeNavbar from '@/components/home/navbar';
-import HomeFooter from '@/components/home/footer';
 import { SignOutButton } from '@clerk/nextjs';
 
 export default function NotAuthorizedPage() {
@@ -29,7 +28,6 @@ export default function NotAuthorizedPage() {
           </SignOutButton>
         </div>
       </main>
-      <HomeFooter />
     </>
   );
 }

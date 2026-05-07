@@ -5,7 +5,6 @@ import * as React from 'react';
 import Image from 'next/image';
 import { CalendarDays, MapPin, MoveRight, Sparkles } from 'lucide-react';
 
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import {
   MotionItem,
@@ -390,7 +389,6 @@ export default function ReceptionsPage({ initialMode = 'post' }) {
 
         {mode === 'post' ? <PostMode /> : <PreMode />}
       </main>
-      <HomeFooter />
     </>
   );
 }

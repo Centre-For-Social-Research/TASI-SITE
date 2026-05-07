@@ -35,7 +35,7 @@ export function getResendSenderDiagnostics() {
   } else if (domain === 'resend.dev') {
     senderMode = 'test';
     warnings.push(
-      "Using a Resend test sender. This only delivers to the Resend account owner's email address. Verify the jamsaq.in domain in Resend and switch RESEND_FROM_EMAIL to noreply@jamsaq.in for registration emails."
+      "Using a Resend test sender. This only delivers to the Resend account owner's email address. Verify the trustandsafetyindia.org domain in Resend and switch RESEND_FROM_EMAIL to noreply@trustandsafetyindia.org for registration emails."
     );
   }
 

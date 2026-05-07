@@ -2,7 +2,6 @@ import Image from 'next/image';
 import KeynoteVideoPlayer from '@/components/editions/keynote-video-player';
 import RadialOrbitalTimeline from '@/components/editions/radial-orbital-timeline';
 import AboutQuotes from '@/components/about/quotes';
-import HomeFooter from '@/components/home/footer';
 import GlobalCta from '@/components/home/global-cta';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
@@ -700,7 +699,6 @@ export default function Tasi2025Page() {
 
         <GlobalCta />
       </main>
-      <HomeFooter />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import HomeFooter from '@/components/home/footer';
 import GlobalCta from '@/components/home/global-cta';
 import HomeNavbar from '@/components/home/navbar';
 import ExhibitionEnquiryForm from '@/components/exhibition/exhibition-enquiry-form';
@@ -384,7 +383,6 @@ export default function ExhibitionPage() {
 
         <GlobalCta />
       </main>
-      <HomeFooter />
     </>
   );
 }

@@ -1,4 +1,3 @@
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import AttendeesDirectory from '@/components/attendees/attendees-directory';
@@ -35,7 +34,6 @@ export default function AttendeesPage() {
         </BrandedPageHero>
         <AttendeesDirectory attendees={publicAttendees} />
       </main>
-      <HomeFooter />
     </>
   );
 }

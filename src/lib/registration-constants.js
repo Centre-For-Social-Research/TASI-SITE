@@ -6,7 +6,7 @@ export const EVENT_CONFIG = {
   qrIssueDate: '2026-10-06',
   badgeFreezeDate: '2026-10-08',
   contactEmail: 'info1@csrindia.org',
-  senderEmail: 'noreply@jamsaq.in',
+  senderEmail: 'noreply@trustandsafetyindia.org',
 };
 
 export const REGISTRATION_SOURCE = 'tasi-site-register-page';

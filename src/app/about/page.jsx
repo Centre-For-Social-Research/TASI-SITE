@@ -2,7 +2,6 @@ import Link from 'next/link';
 import TeamGrid from '@/components/about/team-grid';
 import DiplomaticEndorsements from '@/components/about/diplomatic-endorsements';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 
 export const revalidate = 86400;
@@ -250,7 +249,6 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-      <HomeFooter />
     </>
   );
 }

@@ -1,5 +1,4 @@
 import HomeNavbar from '@/components/home/navbar';
-import HomeFooter from '@/components/home/footer';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import TravelTabNav from './travel-tab-nav';
 
@@ -25,7 +24,6 @@ export default function TravelShell({ children }) {
         <TravelTabNav />
         {children}
       </main>
-      <HomeFooter />
     </>
   );
 }

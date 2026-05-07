@@ -1,5 +1,4 @@
 import HomeNavbar from '@/components/home/navbar';
-import HomeFooter from '@/components/home/footer';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import FestivalTicketingSection from '@/components/register/festival-ticketing-section';
 import RegistrationForm from '@/components/register/registration-form';
@@ -177,7 +176,6 @@ export default function RegisterPage() {
 
         <FestivalTicketingSection />
       </main>
-      <HomeFooter />
     </>
   );
 }

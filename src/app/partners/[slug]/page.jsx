@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import HomeNavbar from '@/components/home/navbar';
-import HomeFooter from '@/components/home/footer';
 import { partners } from '@/data/partners';
 
 export function generateStaticParams() {
@@ -330,7 +329,6 @@ export default async function PartnerDetailPage({ params }) {
           <PartnerPagination currentSlug={slug} />
         </div>
       </main>
-      <HomeFooter />
     </>
   );
 }

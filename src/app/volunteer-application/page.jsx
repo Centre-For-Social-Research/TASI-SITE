@@ -1,4 +1,3 @@
-import HomeFooter from '@/components/home/footer';
 import HomeNavbar from '@/components/home/navbar';
 import Image from 'next/image';
 import VolunteerApplicationForm from '@/components/volunteers/volunteer-application-form';
@@ -262,7 +261,6 @@ export default function VolunteerApplicationPage() {
           </div>
         </section>
       </main>
-      <HomeFooter />
     </>
   );
 }

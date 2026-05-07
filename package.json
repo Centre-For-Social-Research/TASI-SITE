@@ -38,7 +38,7 @@
     "@react-pdf/renderer": "^4.3.2",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.22.0",
-    "@sentry/nextjs": "^10.49.0",
+    "@sentry/nextjs": "^10.52.0",
     "@supabase/supabase-js": "^2.99.2",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",

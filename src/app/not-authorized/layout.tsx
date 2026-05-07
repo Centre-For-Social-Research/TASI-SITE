@@ -1,3 +1,5 @@
+import { ClerkProvider } from '@clerk/nextjs';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
@@ -9,5 +11,5 @@ export default function NotAuthorizedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <ClerkProvider>{children}</ClerkProvider>;
 }

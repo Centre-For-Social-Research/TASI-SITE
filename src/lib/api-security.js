@@ -77,8 +77,8 @@ function getAllowedOrigins(request) {
   const configuredOrigins = [
     process.env.NEXT_PUBLIC_SITE_URL,
     process.env.SITE_URL,
-    'https://jamsaq.in',
-    'https://www.jamsaq.in',
+    'https://trustandsafetyindia.org',
+    'https://www.trustandsafetyindia.org',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
   ].filter(Boolean);

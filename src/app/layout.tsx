@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
 import ChatBot from '@/components/chatbot/ChatBot';
+import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
 const inter = Inter({
@@ -39,7 +40,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://jamsaq.in'),
+  metadataBase: new URL('https://trustandsafetyindia.org'),
   title: 'TASI 2026',
   description:
     "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     title: 'TASI 2026',
     description:
       "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
-    url: 'https://jamsaq.in',
+    url: 'https://trustandsafetyindia.org',
     siteName: 'TASI 2026',
     type: 'website',
     images: [
@@ -82,10 +83,12 @@ export default function RootLayout({
     >
       <body className="antialiased">
         <ClerkProvider>
-          <AppShell>{children}</AppShell>
-          <Analytics />
-          <SpeedInsights />
-          <ChatBot />
+          <ThemeProvider defaultTheme="system" enableSystem>
+            <AppShell>{children}</AppShell>
+            <Analytics />
+            <SpeedInsights />
+            <ChatBot />
+          </ThemeProvider>
         </ClerkProvider>
       </body>
     </html>

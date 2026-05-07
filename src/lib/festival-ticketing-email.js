@@ -15,7 +15,7 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-const EMAIL_LOGO_URL = 'https://jamsaq.in/img/tasi-csr-logo.png';
+const EMAIL_LOGO_URL = 'https://trustandsafetyindia.org/img/tasi-csr-logo.png';
 
 function renderTicketConfirmationEmailHtml({ ticket, user }) {
   const logoUrl = EMAIL_LOGO_URL;

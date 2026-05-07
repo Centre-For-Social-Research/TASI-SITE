@@ -25,7 +25,9 @@ export async function POST(request) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL?.trim() || 'noreply@jamsaq.in',
+      from:
+        process.env.RESEND_FROM_EMAIL?.trim() ||
+        'noreply@trustandsafetyindia.org',
       to: 'saquib@csrindia.org',
       subject: 'Hello World',
       html: '<p>Congrats on sending your <strong>first email</strong>!</p>',

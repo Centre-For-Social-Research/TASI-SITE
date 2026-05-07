@@ -106,7 +106,7 @@ function AgendaDocument({
               +91 11 2468 2556
             </Text>
             <Text style={{ fontSize: 7.5, color: AGENDA_LIGHT }}>
-              jamsaq.in
+              trustandsafetyindia.org
             </Text>
           </View>
           <Text
@@ -224,7 +224,9 @@ function AgendaDocument({
             >
               WEBSITE
             </Text>
-            <Text style={{ fontSize: 9, color: AGENDA_DARK }}>jamsaq.in</Text>
+            <Text style={{ fontSize: 9, color: AGENDA_DARK }}>
+              trustandsafetyindia.org
+            </Text>
           </View>
         </View>
 

@@ -18,7 +18,11 @@ function getClerkFrontendApiOrigin() {
       .toString('utf8')
       .replace(/\$$/, '');
 
-    if (!frontendApi || frontendApi.includes('/') || frontendApi.includes('\\')) {
+    if (
+      !frontendApi ||
+      frontendApi.includes('/') ||
+      frontendApi.includes('\\')
+    ) {
       return null;
     }
 
@@ -36,6 +40,11 @@ const clerkCspOrigins = [
   clerkFrontendApiOrigin,
 ].filter(Boolean);
 
+const sentryCspOrigins = [
+  'https://*.ingest.sentry.io',
+  'https://*.ingest.us.sentry.io',
+];
+
 const siteSecurityHeaders = [
   {
     key: 'Content-Security-Policy',
@@ -46,7 +55,7 @@ const siteSecurityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       `img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com ${clerkCspOrigins.join(' ')} https://*.clerk.com https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co`,
-      `connect-src 'self' https://*.supabase.co https://api.resend.com ${clerkCspOrigins.join(' ')} https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com https://api.razorpay.com https://checkout.razorpay.com`,
+      `connect-src 'self' https://*.supabase.co https://api.resend.com ${clerkCspOrigins.join(' ')} ${sentryCspOrigins.join(' ')} https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com https://api.razorpay.com https://checkout.razorpay.com`,
       `frame-src https://challenges.cloudflare.com ${clerkCspOrigins.join(' ')} https://player.mux.com https://api.razorpay.com https://checkout.razorpay.com`,
       "object-src 'none'",
       "base-uri 'self'",
