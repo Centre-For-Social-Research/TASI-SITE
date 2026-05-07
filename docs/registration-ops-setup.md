@@ -33,10 +33,10 @@ CLERK_REVIEWER_EMAILS=reviewer1@csrindia.org,reviewer2@csrindia.org
 The badge export and QR pass PDF use this local file path:
 
 ```env
-BADGE_LOGO_FILE_PATH=D:\TASI 2025 Sponsor Kit\Logos\Trust and Safety Festival Templates (3).png
+BADGE_LOGO_FILE_PATH=
 ```
 
-If the file is moved later, update this env var only. No code changes are needed.
+Leave this blank in Vercel unless you have uploaded a logo file into the deployment filesystem. When blank, badge generation uses `public/img/tasi-csr-logo.png`.
 
 ## Resend webhook
 
@@ -69,7 +69,7 @@ RESEND_WEBHOOK_SECRET=...
 CLERK_ACCESS_MODE=both
 CLERK_ADMIN_EMAILS=saquib@csrindia.org
 CLERK_REVIEWER_EMAILS=reviewer1@csrindia.org,reviewer2@csrindia.org
-BADGE_LOGO_FILE_PATH=D:\TASI 2025 Sponsor Kit\Logos\Trust and Safety Festival Templates (3).png
+BADGE_LOGO_FILE_PATH=
 SITE_URL=https://trustandsafetyindia.org
 NEXT_PUBLIC_SITE_URL=https://trustandsafetyindia.org
 ```

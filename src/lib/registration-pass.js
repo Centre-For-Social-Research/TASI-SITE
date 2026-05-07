@@ -36,6 +36,13 @@ async function fileToDataUrl(filePath, mimeType) {
   return `data:${mimeType};base64,${buffer.toString('base64')}`;
 }
 
+function getMimeTypeFromFilePath(filePath) {
+  const extension = path.extname(filePath).toLowerCase();
+  return extension === '.jpg' || extension === '.jpeg'
+    ? 'image/jpeg'
+    : 'image/png';
+}
+
 export async function getBadgeLogoDataUrl() {
   if (cachedLogoDataUrl) {
     return cachedLogoDataUrl;
@@ -48,11 +55,25 @@ export async function getBadgeLogoDataUrl() {
     'img',
     'tasi-csr-logo.png'
   );
-  const logoPath = customLogoPath || fallbackPath;
-  const extension = path.extname(logoPath).toLowerCase();
-  const mimeType =
-    extension === '.jpg' || extension === '.jpeg' ? 'image/jpeg' : 'image/png';
-  cachedLogoDataUrl = await fileToDataUrl(logoPath, mimeType);
+
+  if (customLogoPath) {
+    try {
+      cachedLogoDataUrl = await fileToDataUrl(
+        customLogoPath,
+        getMimeTypeFromFilePath(customLogoPath)
+      );
+      return cachedLogoDataUrl;
+    } catch (error) {
+      if (error?.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  cachedLogoDataUrl = await fileToDataUrl(
+    fallbackPath,
+    getMimeTypeFromFilePath(fallbackPath)
+  );
   return cachedLogoDataUrl;
 }
 
