@@ -19,12 +19,17 @@ function stableHash(value: unknown) {
 }
 
 function normalizeMessages(messages: unknown) {
-  if (!Array.isArray(messages) || messages.length === 0 || messages.length > MAX_MESSAGES) {
+  if (
+    !Array.isArray(messages) ||
+    messages.length === 0 ||
+    messages.length > MAX_MESSAGES
+  ) {
     throw new Error('Invalid messages format');
   }
 
   return messages.map((msg: any) => {
-    const role = msg?.role === 'assistant' || msg?.role === 'model' ? 'assistant' : 'user';
+    const role =
+      msg?.role === 'assistant' || msg?.role === 'model' ? 'assistant' : 'user';
     const content = typeof msg?.content === 'string' ? msg.content.trim() : '';
     if (!content || content.length > MAX_MESSAGE_CHARS) {
       throw new Error('Each message must be 1-2000 characters.');
@@ -61,6 +66,8 @@ export async function POST(req: Request) {
     return protection.response;
   }
 
+  const rateLimitHeaders = 'headers' in protection ? protection.headers : {};
+
   try {
     const { messages: rawMessages } = await req.json();
     const messages = normalizeMessages(rawMessages);
@@ -69,7 +76,12 @@ export async function POST(req: Request) {
     if (cachedReply) {
       return Response.json(
         { reply: cachedReply, cached: true },
-        { headers: { ...protection.headers, 'Cache-Control': 'private, max-age=300' } }
+        {
+          headers: {
+            ...rateLimitHeaders,
+            'Cache-Control': 'private, max-age=300',
+          },
+        }
       );
     }
 
@@ -126,7 +138,12 @@ ${tasiKnowledge}`;
 
     return Response.json(
       { reply, cached: false },
-      { headers: { ...protection.headers, 'Cache-Control': 'private, max-age=300' } }
+      {
+        headers: {
+          ...rateLimitHeaders,
+          'Cache-Control': 'private, max-age=300',
+        },
+      }
     );
   } catch (error) {
     console.error('Error in chat API:', error);
