@@ -17,20 +17,20 @@ test('public root layout does not mount Clerk', () => {
   assert.doesNotMatch(appShell, /useClerk/);
 });
 
-test('shared auth provider centralizes Clerk script loading', () => {
+test('shared auth provider lets Clerk load its matching client runtime', () => {
   const authProvider = readFile('src/components/auth/clerk-provider.jsx');
 
   assert.match(
     authProvider,
     /import \{ ClerkProvider \} from '@clerk\/nextjs'/
   );
-  assert.match(authProvider, /NEXT_PUBLIC_CLERK_JS_URL/);
   assert.match(
     authProvider,
-    /https:\/\/cdn\.jsdelivr\.net\/npm\/@clerk\/clerk-js@6\/dist\/clerk\.browser\.js/
+    /return <ClerkProvider>\{children\}<\/ClerkProvider>;/
   );
-  assert.match(authProvider, /__internal_clerkJSUrl=\{clerkJsUrl\}/);
-  assert.match(authProvider, /prefetchUI=\{false\}/);
+  assert.doesNotMatch(authProvider, /__internal_clerkJSUrl/);
+  assert.doesNotMatch(authProvider, /NEXT_PUBLIC_CLERK_JS_URL/);
+  assert.doesNotMatch(authProvider, /prefetchUI/);
 });
 
 test('auth-only layouts mount the shared Clerk provider', () => {
