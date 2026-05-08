@@ -5,6 +5,23 @@ import ScrollToTop from './scroll-to-top';
 
 const { getOperatorRedirectTarget } = operatorAuthUi;
 
+function ClerkSignInFallback() {
+  return (
+    <div className="w-full max-w-xl rounded-[10px] border border-slate-200 bg-white p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900/60">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600">
+        Auth Loading
+      </p>
+      <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-slate-50">
+        Preparing admin sign-in.
+      </h1>
+      <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+        If this stays on screen, verify that the Clerk publishable key is valid
+        and this domain is allowed for the Clerk instance.
+      </p>
+    </div>
+  );
+}
+
 export default async function Page({ searchParams }) {
   const resolvedSearchParams = await searchParams;
   const redirectTarget = getOperatorRedirectTarget(
@@ -38,6 +55,7 @@ export default async function Page({ searchParams }) {
         <SignIn
           forceRedirectUrl={redirectTarget}
           fallbackRedirectUrl={redirectTarget}
+          fallback={<ClerkSignInFallback />}
           withSignUp={false}
         />
       </div>

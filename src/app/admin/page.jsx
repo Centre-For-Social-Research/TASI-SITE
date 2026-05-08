@@ -1,37 +1,21 @@
 import { redirect } from 'next/navigation';
 import AdminShell from '@/components/admin/admin-shell';
 import AdminDashboard from '@/components/admin/admin-dashboard';
+import AdminAccessFallback from '@/components/admin/admin-access-fallback';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
 
 const { toOperatorSession, logOperatorEvent } = operatorSession;
-
-function AccessFallback() {
-  return (
-    <main style={{ minHeight: '100vh', background: '#0a0c11', padding: '96px 24px', color: '#f3f4f7' }}>
-      <div style={{ maxWidth: 640, margin: '0 auto', borderRadius: 10, border: '1px solid rgba(255,255,255,0.07)', background: '#11141c', padding: 32 }}>
-        <p style={{ fontFamily: 'monospace', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8a8f9c', marginBottom: 12 }}>
-          Access Required
-        </p>
-        <h1 style={{ fontSize: 28, fontWeight: 600, color: '#f3f4f7', margin: 0 }}>
-          Admin access is temporarily unavailable.
-        </h1>
-        <p style={{ marginTop: 16, fontSize: 13, color: '#8a8f9c', lineHeight: 1.6 }}>
-          Add the required environment variables and redeploy to enable operator sign-in.
-        </p>
-      </div>
-    </main>
-  );
-}
 
 export default async function AdminIndexPage() {
   const operator = await getAuthorizedOperator({ route: 'admin.index' });
   logOperatorEvent('admin.index.entry', 'admin.index', operator);
 
   if (!operator.authorized) {
-    if (operator.reason === 'unauthenticated') redirect('/sign-in?redirect_url=/admin');
+    if (operator.reason === 'unauthenticated')
+      redirect('/sign-in?redirect_url=/admin');
     if (operator.reason === 'unauthorized') redirect('/not-authorized');
-    return <AccessFallback />;
+    return <AdminAccessFallback operator={operator} />;
   }
 
   const sessionOperator = toOperatorSession(operator);

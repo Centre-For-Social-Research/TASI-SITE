@@ -17,19 +17,21 @@ test('public root layout does not mount Clerk', () => {
   assert.doesNotMatch(appShell, /useClerk/);
 });
 
-test('shared auth provider lets Clerk load its matching client runtime', () => {
+test('shared auth provider proxies Clerk runtime through the app', () => {
   const authProvider = readFile('src/components/auth/clerk-provider.jsx');
 
   assert.match(
     authProvider,
     /import \{ ClerkProvider \} from '@clerk\/nextjs'/
   );
-  assert.match(
-    authProvider,
-    /return <ClerkProvider>\{children\}<\/ClerkProvider>;/
-  );
-  assert.doesNotMatch(authProvider, /__internal_clerkJSUrl/);
-  assert.doesNotMatch(authProvider, /NEXT_PUBLIC_CLERK_JS_URL/);
+  assert.match(authProvider, /const CLERK_PROXY_PATH = '\/__clerk';/);
+  assert.match(authProvider, /NEXT_PUBLIC_CLERK_JS_VERSION/);
+  assert.match(authProvider, /NEXT_PUBLIC_CLERK_UI_VERSION/);
+  assert.match(authProvider, /process\.env\.NODE_ENV === 'development'/);
+  assert.match(authProvider, /proxyUrl: CLERK_PROXY_PATH/);
+  assert.match(authProvider, /__internal_clerkJSUrl/);
+  assert.match(authProvider, /__internal_clerkUIUrl/);
+  assert.match(authProvider, /<ClerkProvider \{\.\.\.localClerkRuntimeProps\}/);
   assert.doesNotMatch(authProvider, /prefetchUI/);
 });
 
@@ -67,14 +69,36 @@ test('sign-in page does not create a nested ClerkProvider', () => {
   assert.match(signInPage, /import \{ SignIn \} from '@clerk\/nextjs'/);
 });
 
-test('global proxy does not load Clerk middleware for public routing', () => {
+test('global proxy runs Clerk middleware only for auth-backed routing', () => {
   const proxy = readFile('src/proxy.ts');
 
-  assert.doesNotMatch(
+  assert.match(
     proxy,
     /import \{ clerkMiddleware, createRouteMatcher \} from '@clerk\/nextjs\/server'/
   );
-  assert.doesNotMatch(proxy, /@clerk\/nextjs\/server/);
+  assert.match(proxy, /createRouteMatcher\(\[/);
+  assert.match(proxy, /'\/__clerk\(\.\*\)'/);
+  assert.match(proxy, /'\/admin\(\.\*\)'/);
+  assert.match(proxy, /'\/sign-in\(\.\*\)'/);
+  assert.match(proxy, /'\/api\/admin\(\.\*\)'/);
+  assert.match(proxy, /'\/api\/me\(\.\*\)'/);
+  assert.match(proxy, /const CLERK_PROXY_PATH = '\/__clerk';/);
+  assert.match(proxy, /const clerkProxy = clerkMiddleware\(\{/);
+  assert.match(proxy, /frontendApiProxy/);
+  assert.match(proxy, /path: CLERK_PROXY_PATH/);
+  assert.match(proxy, /function normalizeSameRouteClerkRewrite/);
+  assert.match(proxy, /x-middleware-rewrite/);
+  assert.match(proxy, /x-middleware-next/);
+  assert.match(proxy, /if \(isClerkBackedRoute\(request\)\) \{/);
+  assert.match(
+    proxy,
+    /const response = \(await clerkProxy\(request, event\)\) \?\? NextResponse\.next\(\);/
+  );
+  assert.match(
+    proxy,
+    /return normalizeSameRouteClerkRewrite\(response, request\);/
+  );
+  assert.match(proxy, /'\/__clerk\/\(\.\*\)'/);
   assert.match(proxy, /NextResponse\.next\(\)/);
 });
 
