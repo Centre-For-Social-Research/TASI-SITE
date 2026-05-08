@@ -8,6 +8,74 @@ import ChatBot from '@/components/chatbot/ChatBot';
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
+const siteUrl = 'https://trustandsafetyindia.org';
+const siteName = 'Trust and Safety India Festival';
+const siteTitle = 'TASI 2026 | Trust and Safety India Festival';
+const siteDescription =
+  "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.";
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: siteName,
+      alternateName: 'TASI 2026',
+      description: siteDescription,
+      inLanguage: 'en-IN',
+      publisher: {
+        '@id': `${siteUrl}/#organization`,
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'Centre for Social Research',
+      alternateName: 'CSR India',
+      url: 'https://www.csrindia.org',
+      logo: `${siteUrl}/img/tasi-csr-logo.png`,
+      email: 'info1@csrindia.org',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'New Delhi',
+        addressCountry: 'IN',
+      },
+      sameAs: [
+        'https://www.facebook.com/csrindia.org',
+        'https://x.com/CSR_India',
+        'https://www.instagram.com/csr_india/',
+        'https://www.linkedin.com/company/centre-for-social-research-india/',
+      ],
+    },
+    {
+      '@type': 'Event',
+      '@id': `${siteUrl}/#event`,
+      name: 'TASI 2026 - Trust and Safety India Festival',
+      description: siteDescription,
+      startDate: '2026-10-13',
+      endDate: '2026-10-14',
+      eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+      eventStatus: 'https://schema.org/EventScheduled',
+      image: [`${siteUrl}/opengraph-image`],
+      url: siteUrl,
+      organizer: {
+        '@id': `${siteUrl}/#organization`,
+      },
+      location: {
+        '@type': 'Place',
+        name: 'India Habitat Centre',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'New Delhi',
+          addressCountry: 'IN',
+        },
+      },
+    },
+  ],
+};
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -40,17 +108,32 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://trustandsafetyindia.org'),
-  title: 'TASI 2026',
-  description:
-    "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
+  metadataBase: new URL(siteUrl),
+  applicationName: 'TASI 2026',
+  title: siteTitle,
+  description: siteDescription,
+  keywords: [
+    'TASI 2026',
+    'Trust and Safety India Festival',
+    'trust and safety',
+    'online safety',
+    'digital safety',
+    'responsible AI',
+    'Centre for Social Research',
+  ],
+  authors: [
+    { name: 'Centre for Social Research', url: 'https://www.csrindia.org' },
+  ],
+  creator: 'Centre for Social Research',
+  publisher: 'Centre for Social Research',
+  category: 'event',
   openGraph: {
-    title: 'TASI 2026',
-    description:
-      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
-    url: 'https://trustandsafetyindia.org',
-    siteName: 'TASI 2026',
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    siteName,
     type: 'website',
+    locale: 'en_IN',
     images: [
       {
         url: '/opengraph-image',
@@ -62,9 +145,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TASI 2026',
-    description:
-      "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.",
+    title: siteTitle,
+    description: siteDescription,
     images: ['/twitter-image'],
   },
 };
@@ -82,6 +164,12 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} ${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}
     >
       <body className="antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
+          }}
+        />
         <ClerkProvider>
           <ThemeProvider defaultTheme="system" enableSystem>
             <AppShell>{children}</AppShell>
