@@ -1,24 +1,17 @@
 import HomeNavbar from '@/components/home/navbar';
 import ProgrammeAgendaClient from '@/components/programme/programme-agenda-client';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
-
-export const revalidate = 3600;
 import { speakers } from '@/data/speakers';
 import {
   agendaSpeakerFallbackTitles2025,
   programmeSessions2025,
 } from '@/data/programme-2025';
+import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 
-function normalizePersonName(value) {
-  return String(value || '')
-    .toLowerCase()
-    .replace(/\(.*?\)/g, ' ')
-    .replace(/\b(dr|mr|mrs|ms|smt|shri|professor|prof|phd)\.?\b/g, ' ')
-    .replace(/^moderator:\s*/i, '')
-    .replace(/[^a-z0-9 ]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+const { normalizePersonName, shouldShowProgrammeSession } =
+  programmeAgendaUtils;
+
+export const revalidate = 3600;
 
 function buildSpeakerDesignationMap() {
   const fromSpeakersPage = Object.fromEntries(
@@ -90,17 +83,12 @@ const receptionNotes = [
   },
 ];
 
-function shouldShowSession(session) {
-  const title = String(session?.title || '')
-    .trim()
-    .toLowerCase();
-  return title !== 'emcee' && title !== 'registration + tea/coffee';
-}
-
 export default function ProgrammePage() {
   const speakerDesignationMap = buildSpeakerDesignationMap();
   const speakerPhotoMap = buildSpeakerPhotoMap();
-  const visibleSessions = programmeSessions2025.filter(shouldShowSession);
+  const visibleSessions = programmeSessions2025.filter(
+    shouldShowProgrammeSession
+  );
 
   return (
     <>

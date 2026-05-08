@@ -37,7 +37,7 @@ export default function HomeHero() {
           variants={fadeUp}
           custom={0}
         >
-          <span>Centre for Social Research</span>
+          <span>An Initiative by Centre For Social Research</span>
           <span
             className="hidden h-1 w-1 rounded-full md:block"
             style={{ backgroundColor: '#fff' }}

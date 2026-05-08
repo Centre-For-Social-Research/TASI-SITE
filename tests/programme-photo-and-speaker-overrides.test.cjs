@@ -51,3 +51,30 @@ test('programme Add to Calendar button targets Microsoft Calendar', () => {
     /download=\{session\.calendar\.downloadName\}/
   );
 });
+
+test('programme agenda styles are scoped to the programme component', () => {
+  const globalStyles = fs.readFileSync(
+    path.join(process.cwd(), 'src/app/globals.css'),
+    'utf8'
+  );
+  const agendaClientSource = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      'src/components/programme/programme-agenda-client.jsx'
+    ),
+    'utf8'
+  );
+  const agendaModuleStyles = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      'src/components/programme/programme-agenda.module.css'
+    ),
+    'utf8'
+  );
+
+  assert.doesNotMatch(globalStyles, /\.agenda-root/);
+  assert.match(agendaClientSource, /programme-agenda\.module\.css/);
+  assert.match(agendaModuleStyles, /\.agenda-root/);
+  assert.match(agendaModuleStyles, /\.agenda-root \.session-card/);
+  assert.match(agendaModuleStyles, /border-radius: 10px/);
+});

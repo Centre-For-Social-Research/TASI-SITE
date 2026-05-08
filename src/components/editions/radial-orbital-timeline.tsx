@@ -2,17 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import type { ElementType } from 'react';
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Building2,
-  Lightbulb,
-  Link,
-  Mic2,
-  Orbit,
-} from 'lucide-react';
+import { ArrowUpRight, Building2, Lightbulb, Mic2, Orbit } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const iconMap = {
@@ -28,7 +19,6 @@ interface TimelineItem {
   title: string;
   date: string;
   content: string;
-  category: string;
   icon: keyof typeof iconMap;
   relatedIds: number[];
   status: 'completed' | 'in-progress' | 'pending';
@@ -47,14 +37,10 @@ export default function RadialOrbitalTimeline({
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>(
     {}
   );
-  const [viewMode, setViewMode] = useState<'orbital'>('orbital');
   const [rotationAngle, setRotationAngle] = useState<number>(0);
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
   const [pulseEffect, setPulseEffect] = useState<Record<number, boolean>>({});
-  const [centerOffset, setCenterOffset] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
+  const centerOffset = { x: 0, y: 0 };
   const [activeNodeId, setActiveNodeId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const orbitRef = useRef<HTMLDivElement>(null);
@@ -106,7 +92,7 @@ export default function RadialOrbitalTimeline({
   useEffect(() => {
     let rotationTimer: NodeJS.Timeout;
 
-    if (autoRotate && viewMode === 'orbital') {
+    if (autoRotate) {
       rotationTimer = setInterval(() => {
         setRotationAngle((prev) => {
           const newAngle = (prev + 0.3) % 360;
@@ -120,10 +106,10 @@ export default function RadialOrbitalTimeline({
         clearInterval(rotationTimer);
       }
     };
-  }, [autoRotate, viewMode]);
+  }, [autoRotate]);
 
   const centerViewOnNode = (nodeId: number) => {
-    if (viewMode !== 'orbital' || !nodeRefs.current[nodeId]) return;
+    if (!nodeRefs.current[nodeId]) return;
 
     const nodeIndex = timelineData.findIndex((item) => item.id === nodeId);
     const totalNodes = timelineData.length;

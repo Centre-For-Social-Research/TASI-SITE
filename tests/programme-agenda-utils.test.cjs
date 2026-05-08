@@ -2,6 +2,10 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
+  buildProgrammeSessionViewModels,
+  normalizePersonName,
+  resolveMappedPersonValue,
+  shouldShowProgrammeSession,
   sortProgrammeSessionsForAgenda,
 } = require('../src/lib/programme-agenda-utils.cjs');
 
@@ -63,4 +67,63 @@ test('sortProgrammeSessionsForAgenda does not mutate the original sessions array
     sessions.map((session) => session.id),
     ['later', 'earlier']
   );
+});
+
+test('programme helper normalizes speaker names for shared page and client lookups', () => {
+  assert.equal(
+    normalizePersonName('Moderator: Dr. Yoel Roth, PhD'),
+    'yoel roth'
+  );
+  assert.equal(
+    resolveMappedPersonValue('Prof. Julie Inman Grant', {
+      julieinmangrant: '/img/speakers/Julie_Inman_Grant.jpg',
+    }),
+    '/img/speakers/Julie_Inman_Grant.jpg'
+  );
+});
+
+test('buildProgrammeSessionViewModels removes non-agenda rows and enriches speakers', () => {
+  const sessions = [
+    {
+      id: 'skip-registration',
+      title: 'Registration + Tea/Coffee',
+      speakers: [],
+    },
+    {
+      id: 'main-session',
+      title: 'Main Session',
+      description: 'Trust and safety discussion',
+      speakers: ['Dr. Ranjana Kumari'],
+    },
+  ];
+
+  assert.equal(shouldShowProgrammeSession(sessions[0]), false);
+
+  const viewModels = buildProgrammeSessionViewModels({
+    sessions,
+    speakerDesignationMap: {
+      'ranjana kumari': 'Director, Centre for Social Research',
+    },
+    speakerPhotoMap: {
+      'ranjana kumari': '/img/speakers/Ranjana Kumari.jpg',
+    },
+  });
+
+  assert.deepEqual(viewModels, [
+    {
+      id: 'main-session',
+      title: 'Main Session',
+      description: 'Trust and safety discussion',
+      topic: 'Trust and safety discussion',
+      speakers: ['Dr. Ranjana Kumari'],
+      speakersDetailed: [
+        {
+          name: 'Dr. Ranjana Kumari',
+          title: 'Director, Centre for Social Research',
+          photo: '/img/speakers/Ranjana Kumari.jpg',
+          mod: false,
+        },
+      ],
+    },
+  ]);
 });

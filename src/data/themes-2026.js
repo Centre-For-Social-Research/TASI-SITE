@@ -1,3 +1,36 @@
+export const themesPageMetadata = {
+  title: 'Themes | TASI 2026',
+  description:
+    'Explore the 14 strategic themes shaping TASI 2026, from AI governance and platform accountability to online safety, fraud prevention, and digital wellbeing.',
+};
+
+export const themesPageHero = {
+  eyebrow: 'Strategic Focus',
+  title: 'TASI 2026',
+  titleAccent: 'Themes',
+  description:
+    'TASI 2026 convenes leaders across government, industry, civil society, and academia to examine urgent questions shaping AI governance, digital trust, platform accountability, and safety outcomes.',
+  stats: [
+    { value: '14', label: 'Key Themes' },
+    { value: '50+', label: 'Sessions' },
+    { value: '2', label: 'Days' },
+    { value: '500+', label: 'Participants' },
+  ],
+};
+
+export const themesPageIntro = {
+  eyebrow: 'All Themes',
+  title: "What We'll Examine",
+  description:
+    'Fourteen interconnected themes spanning governance, platform accountability, digital wellbeing, and human safety, designed to move the conversation from dialogue to implementation.',
+};
+
+export const themesPageCta = {
+  title: 'Be Part of the Conversation',
+  href: '/register',
+  label: 'Register for TASI 2026',
+};
+
 export const themes2026 = [
   {
     num: '01',

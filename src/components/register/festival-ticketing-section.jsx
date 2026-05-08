@@ -31,6 +31,10 @@ import {
 } from 'lucide-react';
 import { AdminAlert } from '@/components/admin/admin-ui';
 import { GlowCard } from '@/components/ui/spotlight-card';
+import {
+  FESTIVAL_PAYMENTS_DISABLED_MESSAGE,
+  FESTIVAL_PAYMENTS_ENABLED,
+} from '@/lib/festival-ticketing-constants';
 import { festivalCreateOrderSchema } from '@/lib/festival-ticketing-validation';
 
 const COUNTRY_OPTIONS = [
@@ -524,6 +528,14 @@ export default function FestivalTicketingSection() {
   }
 
   function openTicketModal(country) {
+    if (!FESTIVAL_PAYMENTS_ENABLED) {
+      setStatus({
+        type: 'error',
+        message: FESTIVAL_PAYMENTS_DISABLED_MESSAGE,
+      });
+      return;
+    }
+
     const normalizedCountry = getSelectionForCountry(country);
 
     setSelectedCard(normalizedCountry);
@@ -562,6 +574,14 @@ export default function FestivalTicketingSection() {
   }
 
   async function preparePaymentStep() {
+    if (!FESTIVAL_PAYMENTS_ENABLED) {
+      setStatus({
+        type: 'error',
+        message: FESTIVAL_PAYMENTS_DISABLED_MESSAGE,
+      });
+      return;
+    }
+
     const validation = festivalCreateOrderSchema.safeParse(form);
 
     if (!validation.success) {
@@ -636,6 +656,7 @@ export default function FestivalTicketingSection() {
   }
 
   async function launchPreparedCheckout() {
+    if (!FESTIVAL_PAYMENTS_ENABLED) return;
     if (paymentSession.status !== 'ready' || !paymentSession.payload) return;
 
     setSubmitting(true);
@@ -711,6 +732,11 @@ export default function FestivalTicketingSection() {
           Choose your ticket
         </h3>
         <div className="mx-auto mt-4 h-[2px] w-28 bg-[#3a2c8f]" />
+        {!FESTIVAL_PAYMENTS_ENABLED ? (
+          <div className="mx-auto mt-6 max-w-2xl rounded-[10px] border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-semibold leading-relaxed text-amber-900">
+            {FESTIVAL_PAYMENTS_DISABLED_MESSAGE}
+          </div>
+        ) : null}
       </div>
 
       <div className="mx-auto mt-10 grid max-w-5xl gap-10 lg:grid-cols-2">
@@ -723,7 +749,13 @@ export default function FestivalTicketingSection() {
               <button
                 type="button"
                 onClick={() => openTicketModal(option.country)}
-                className="mx-auto block w-full max-w-[300px] text-left"
+                disabled={!FESTIVAL_PAYMENTS_ENABLED}
+                aria-disabled={!FESTIVAL_PAYMENTS_ENABLED}
+                className={`mx-auto block w-full max-w-[300px] text-left ${
+                  FESTIVAL_PAYMENTS_ENABLED
+                    ? ''
+                    : 'cursor-not-allowed opacity-60 grayscale'
+                }`}
               >
                 <GlowCard
                   customSize
@@ -790,13 +822,14 @@ export default function FestivalTicketingSection() {
               <button
                 type="button"
                 onClick={() => openTicketModal(option.country)}
-                className={`mt-6 inline-flex rounded-[10px] px-10 py-3 text-sm font-black uppercase tracking-[0.08em] transition ${
-                  isActive
+                disabled={!FESTIVAL_PAYMENTS_ENABLED}
+                className={`mt-6 inline-flex rounded-[10px] px-10 py-3 text-sm font-black uppercase tracking-[0.08em] transition disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600 ${
+                  isActive && FESTIVAL_PAYMENTS_ENABLED
                     ? 'bg-[#3e0d7d] text-[#ffd400]'
                     : 'bg-[#43107f] text-[#ffd400] hover:opacity-90'
                 }`}
               >
-                Register now
+                {FESTIVAL_PAYMENTS_ENABLED ? 'Register now' : 'Payments paused'}
               </button>
 
               <h3 className="mt-6 text-[1.75rem] font-black tracking-tight text-slate-900 dark:text-white">
@@ -809,9 +842,11 @@ export default function FestivalTicketingSection() {
                 {option.description}
               </p>
               <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-amber-600">
-                {isActive
-                  ? 'Modal ready to continue'
-                  : 'Tap register now to continue'}
+                {!FESTIVAL_PAYMENTS_ENABLED
+                  ? 'Temporarily unavailable'
+                  : isActive
+                    ? 'Modal ready to continue'
+                    : 'Tap register now to continue'}
               </p>
             </article>
           );

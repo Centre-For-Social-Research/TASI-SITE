@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import { Toaster } from 'sonner';
-import AdminRouteExitWatcher from '@/components/admin/admin-route-exit-watcher';
 import CookieConsentBanner from '@/components/ui/cookie-consent-banner';
 import { Footer } from '@/components/ui/demo';
 import LenisProvider from '@/components/lenis-provider';
@@ -18,7 +17,6 @@ export default function AppShell({ children }) {
 
   return (
     <>
-      <AdminRouteExitWatcher />
       <LenisProvider>
         <div className="flex min-h-screen flex-col">
           <div className="flex-1">{children}</div>

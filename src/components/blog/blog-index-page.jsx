@@ -1,0 +1,11 @@
+import BlogPageClient from '@/components/blog/blog-page-client';
+import { getBlogCategoryList, getBlogPosts } from '@/lib/blog';
+
+export default async function BlogIndexPage() {
+  const [posts, categories] = await Promise.all([
+    getBlogPosts(),
+    getBlogCategoryList(),
+  ]);
+
+  return <BlogPageClient posts={posts} categories={categories} />;
+}

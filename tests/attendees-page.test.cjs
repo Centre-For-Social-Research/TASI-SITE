@@ -2,98 +2,135 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 
-test('attendees page artifacts exist and expose public directory content', () => {
-  const pagePath = path.join(
-    process.cwd(),
-    'src',
-    'app',
-    'attendees',
-    'page.jsx'
+const repoPath = (...segments) => path.join(process.cwd(), ...segments);
+const read = (...segments) => fs.readFileSync(repoPath(...segments), 'utf8');
+
+test('attendees route delegates to the tracked page shell', () => {
+  const source = read('src', 'app', 'attendees', 'page.jsx');
+
+  assert.match(source, /@\/components\/attendees\/attendees-page/);
+  assert.match(source, /metadata = attendeesPageMetadata/);
+  assert.match(source, /export const revalidate = 3600/);
+  assert.match(source, /return <AttendeesPage \/>/);
+  assert.doesNotMatch(source, /HomeNavbar/);
+  assert.doesNotMatch(source, /BrandedPageHero/);
+  assert.doesNotMatch(source, /publicAttendees/);
+});
+
+test('attendees page shell composes the live hero and public directory data', () => {
+  const source = read('src', 'components', 'attendees', 'attendees-page.jsx');
+
+  assert.match(source, /attendeesHero/);
+  assert.match(source, /publicAttendees/);
+  assert.match(source, /<HomeNavbar \/>/);
+  assert.match(source, /<BrandedPageHero/);
+  assert.match(source, /<AttendeesDirectory attendees=\{publicAttendees\} \/>/);
+  assert.doesNotMatch(source, /Meet the TASI community/);
+  assert.doesNotMatch(source, /combined master, conference/);
+});
+
+test('attendees page data owns copy, filter config, and public curation lists', async () => {
+  const moduleUrl = pathToFileURL(repoPath('src', 'data', 'attendees-page.js'));
+  const data = await import(moduleUrl.href);
+
+  assert.equal(data.attendeesPageMetadata.title, 'Attendees | TASI 2026');
+  assert.equal(data.attendeesHero.eyebrow, 'Public Attendees');
+  assert.match(
+    data.attendeesDirectoryCopy.searchPlaceholder,
+    /Search attendees/
   );
-  const componentPath = path.join(
-    process.cwd(),
+  assert.equal(data.attendeesDirectoryCopy.emptyTitle, 'No attendees found');
+  assert.equal(data.attendeeDirectoryConfig.pageSize, 16);
+  assert.ok(
+    data.attendeeDirectoryConfig.hiddenCategoryFilters.includes('VIP/GoI')
+  );
+  assert.ok(data.hiddenPublicAttendeeIds.includes('meta-412'));
+  assert.ok(data.hiddenPublicAttendeeIds.includes('resolver-282'));
+  assert.equal(
+    data.publicAttendeeOverrides['yoel-roth-phd-463'].name,
+    'Yoel Roth'
+  );
+  assert.equal(
+    data.publicAttendeeOverrides['snigdha-bhardwaj-1'].organisation,
+    'Google'
+  );
+});
+
+test('public attendee module applies shared curation and keeps private fields out', () => {
+  const source = read('src', 'lib', 'public-attendees.js');
+
+  assert.match(source, /hiddenPublicAttendeeIds/);
+  assert.match(source, /publicAttendeeOverrides/);
+  assert.match(source, /const hiddenPublicAttendees = new Set/);
+  assert.match(
+    source,
+    /const \{ email, phone, \.\.\.publicFields \} = curatedAttendee/
+  );
+  assert.match(
+    source,
+    /\.filter\(\(attendee\) => attendee\.organisation \|\| attendee\.designation\)/
+  );
+  assert.doesNotMatch(source, /ATTENDEE_OVERRIDES/);
+  assert.doesNotMatch(source, /HIDDEN_ATTENDEE_IDS/);
+});
+
+test('attendees directory delegates card and modal UI instead of owning stale iterations', () => {
+  const source = read(
     'src',
     'components',
     'attendees',
     'attendees-directory.jsx'
   );
-  const dataPath = path.join(process.cwd(), 'src', 'data', 'attendees.js');
-  const utilsPath = path.join(process.cwd(), 'src', 'lib', 'attendees.js');
-  const publicDataPath = path.join(
-    process.cwd(),
-    'src',
-    'lib',
-    'public-attendees.js'
-  );
-  const navbarPath = path.join(
-    process.cwd(),
+
+  assert.match(source, /attendeesDirectoryCopy/);
+  assert.match(source, /attendeeDirectoryConfig/);
+  assert.match(source, /AttendeeCard/);
+  assert.match(source, /AttendeeProfileDialog/);
+  assert.match(source, /xl:grid-cols-4/);
+  assert.match(source, /Page \{activePage\} of \{totalPages\}/);
+  assert.doesNotMatch(source, /EXCLUDED_CATEGORY_FILTERS/);
+  assert.doesNotMatch(source, /categories\.slice\(0, 8\)/);
+  assert.doesNotMatch(source, /Source lists/);
+  assert.doesNotMatch(source, /Copy email/);
+  assert.doesNotMatch(source, /Email attendee/);
+  assert.doesNotMatch(source, /Email not listed/);
+  assert.doesNotMatch(source, /\bPhone\b/);
+});
+
+test('attendee card and profile dialog own reusable profile UI', () => {
+  const cardSource = read(
     'src',
     'components',
-    'home',
-    'navbar.jsx'
+    'attendees',
+    'attendee-card.jsx'
+  );
+  const dialogSource = read(
+    'src',
+    'components',
+    'attendees',
+    'attendee-profile-dialog.jsx'
   );
 
-  assert.ok(fs.existsSync(pagePath), 'Expected attendees page route to exist.');
-  assert.ok(
-    fs.existsSync(componentPath),
-    'Expected attendees directory component to exist.'
-  );
-  assert.ok(
-    fs.existsSync(dataPath),
-    'Expected attendees data module to exist.'
-  );
-  assert.ok(
-    fs.existsSync(utilsPath),
-    'Expected attendee utility module to exist.'
-  );
-  assert.ok(
-    fs.existsSync(publicDataPath),
-    'Expected public attendee data module to exist.'
-  );
+  assert.match(cardSource, /View profile/);
+  assert.match(cardSource, /AvatarFallback/);
+  assert.match(cardSource, /getAttendeeInitials/);
+  assert.match(cardSource, /rounded-\[10px\]/);
+  assert.match(dialogSource, /Close attendee profile/);
+  assert.match(dialogSource, /ProfileField/);
+  assert.match(dialogSource, /rounded-\[10px\]/);
+});
 
-  const pageSource = fs.readFileSync(pagePath, 'utf8');
-  const componentSource = fs.readFileSync(componentPath, 'utf8');
-  const dataSource = fs.readFileSync(dataPath, 'utf8');
-  const publicDataSource = fs.readFileSync(publicDataPath, 'utf8');
-  const navbarSource = fs.readFileSync(navbarPath, 'utf8');
+test('attendees data and navigation stay wired while stale cleanup script is removed', () => {
+  const navbarSource = read('src', 'components', 'home', 'navbar.jsx');
+  const dataSource = read('src', 'data', 'attendees.js');
 
-  assert.match(pageSource, /publicAttendees/);
-  assert.match(pageSource, /Public Attendees/);
-  assert.match(componentSource, /Search attendees/);
-  assert.match(componentSource, /View profile/);
-  assert.match(componentSource, /AvatarFallback/);
-  assert.match(componentSource, /getAttendeeInitials/);
-  assert.match(componentSource, /All categories/);
-  assert.match(componentSource, /EXCLUDED_CATEGORY_FILTERS/);
-  assert.match(componentSource, /'Industry'/);
-  assert.match(componentSource, /'GoI'/);
-  assert.match(componentSource, /'ACTS'/);
-  assert.match(componentSource, /'Panelist \/ Industry'/);
-  assert.match(componentSource, /'NGO'/);
-  assert.match(componentSource, /'Online Registrations'/);
-  assert.match(componentSource, /'VIP\/GoI'/);
-  assert.match(componentSource, /xl:grid-cols-4/);
-  assert.match(componentSource, /Page \{activePage\} of \{totalPages\}/);
-  assert.doesNotMatch(componentSource, /categories\.slice\(0, 8\)/);
-  assert.doesNotMatch(componentSource, /Source lists/);
-  assert.doesNotMatch(componentSource, /Copy email/);
-  assert.doesNotMatch(componentSource, /Email attendee/);
-  assert.doesNotMatch(componentSource, /Email not listed/);
-  assert.doesNotMatch(componentSource, /\bPhone\b/);
   assert.match(dataSource, /export const attendees = \[/);
-  assert.match(publicDataSource, /ATTENDEE_OVERRIDES/);
-  assert.match(publicDataSource, /'yoel-roth-phd-463'/);
-  assert.match(publicDataSource, /'meta-412'/);
-  assert.match(publicDataSource, /'resolver-282'/);
-  assert.match(publicDataSource, /'name-441'/);
-  assert.match(
-    publicDataSource,
-    /const \{ email, phone, \.\.\.publicFields \} = curatedAttendee/
-  );
-  assert.match(
-    publicDataSource,
-    /\.filter\(\(attendee\) => attendee\.organisation \|\| attendee\.designation\)/
-  );
   assert.match(navbarSource, /children:\s*\[[\s\S]*Attendees/);
+  assert.equal(
+    fs.existsSync(repoPath('scripts', 'clean-attendees.ps1')),
+    false,
+    'Expected unused attendee cleanup script to stay removed.'
+  );
 });

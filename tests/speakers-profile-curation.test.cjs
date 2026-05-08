@@ -5,16 +5,15 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
 test('speakers curation reflects removals, VIP list, and Prakshi Saha normalization', async () => {
-  const directoryPath = path.join(
+  const speakerUtilsPath = path.join(
     process.cwd(),
     'src',
-    'components',
-    'speakers',
-    'directory.jsx'
+    'lib',
+    'speaker-directory-utils.cjs'
   );
-  const directorySource = fs.readFileSync(directoryPath, 'utf8');
+  const speakerUtilsSource = fs.readFileSync(speakerUtilsPath, 'utf8');
 
-  const vipSetMatch = directorySource.match(
+  const vipSetMatch = speakerUtilsSource.match(
     /const VIP_SPEAKERS = new Set\(\[([\s\S]*?)\]\);/
   );
   assert.ok(vipSetMatch, 'Expected VIP speaker set to exist');
@@ -54,4 +53,18 @@ test('speakers curation reflects removals, VIP list, and Prakshi Saha normalizat
     )?.category,
     'International'
   );
+});
+
+test('unused legacy speaker image artifacts are removed', () => {
+  const removedFiles = [
+    'public/img/speakers/Aprajita Bharti.jpg',
+    'public/img/speakers/dr-s-jaishankar.webp',
+    'public/img/speakers/Jyoti Vadehra.png',
+    'public/img/speakers/Shri Ashwini Vaishnaw.jpg',
+    'public/img/speakers/Smt. Annapurna Devi.jpg',
+  ];
+
+  for (const file of removedFiles) {
+    assert.equal(fs.existsSync(path.join(process.cwd(), file)), false);
+  }
 });

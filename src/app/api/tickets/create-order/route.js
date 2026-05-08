@@ -12,6 +12,10 @@ import {
   upsertFestivalTicketUser,
 } from '@/lib/festival-ticketing-db';
 import { deriveFestivalTicketPurchaseDetails } from '@/lib/festival-ticketing-core';
+import {
+  FESTIVAL_PAYMENTS_DISABLED_MESSAGE,
+  FESTIVAL_PAYMENTS_ENABLED,
+} from '@/lib/festival-ticketing-constants';
 import { festivalCreateOrderSchema } from '@/lib/festival-ticketing-validation';
 import { sanitizeEmail } from '@/lib/input-sanitizers';
 import crypto from 'node:crypto';
@@ -40,6 +44,13 @@ export async function POST(request) {
 
   if (!protection.ok) {
     return protection.response;
+  }
+
+  if (!FESTIVAL_PAYMENTS_ENABLED) {
+    return Response.json(
+      { error: FESTIVAL_PAYMENTS_DISABLED_MESSAGE },
+      { status: 503, headers: protection.headers }
+    );
   }
 
   try {

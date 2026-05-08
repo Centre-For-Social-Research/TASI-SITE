@@ -1,0 +1,33 @@
+import {
+  Accessibility,
+  Baby,
+  BadgeAlert,
+  Bot,
+  BriefcaseBusiness,
+  Coins,
+  FileSearch,
+  Globe2,
+  HeartHandshake,
+  Plane,
+  Scale,
+  Shield,
+  ShieldAlert,
+  Users,
+} from 'lucide-react';
+
+export const themeIcons = {
+  accessibility: Accessibility,
+  baby: Baby,
+  badgeAlert: BadgeAlert,
+  bot: Bot,
+  briefcase: BriefcaseBusiness,
+  coins: Coins,
+  fileSearch: FileSearch,
+  globe: Globe2,
+  heartHandshake: HeartHandshake,
+  plane: Plane,
+  scale: Scale,
+  shield: Shield,
+  shieldAlert: ShieldAlert,
+  users: Users,
+};

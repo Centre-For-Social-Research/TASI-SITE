@@ -1,4 +1,4 @@
-import { ClerkProvider } from '@clerk/nextjs';
+import TasiClerkProvider from '@/components/auth/clerk-provider';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,5 +11,5 @@ export default function NotAuthorizedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ClerkProvider>{children}</ClerkProvider>;
+  return <TasiClerkProvider>{children}</TasiClerkProvider>;
 }

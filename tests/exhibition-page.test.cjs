@@ -2,12 +2,13 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 
 function readFile(relativePath) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
 
-test('exhibition page route uses the new flagship pavilion sales story', () => {
+test('exhibition page route delegates to the tracked exhibition page component', () => {
   const routePath = path.join(
     process.cwd(),
     'src',
@@ -20,6 +21,17 @@ test('exhibition page route uses the new flagship pavilion sales story', () => {
 
   const source = readFile('src/app/exhibition/page.jsx');
 
+  assert.match(source, /@\/components\/exhibition\/exhibition-page/);
+  assert.match(source, /metadata = exhibitionMetadata/);
+  assert.match(source, /return <ExhibitionPage \/>/);
+  assert.doesNotMatch(source, /BrandedPageHero/);
+  assert.doesNotMatch(source, /proofPoints/);
+  assert.doesNotMatch(source, /participationModes/);
+});
+
+test('exhibition page component uses the live flagship pavilion sales story', () => {
+  const source = readFile('src/components/exhibition/exhibition-page.jsx');
+
   assert.match(
     source,
     /import BrandedPageHero from ['"]@\/components\/ui\/branded-page-hero['"]/
@@ -29,7 +41,7 @@ test('exhibition page route uses the new flagship pavilion sales story', () => {
     /import GlobalCta from ['"]@\/components\/home\/global-cta['"]/
   );
   assert.match(source, /<BrandedPageHero/);
-  assert.match(source, /Participation & Exhibition/);
+  assert.match(source, /exhibitionHero\.title/);
   assert.match(source, /Flagship Pavilion/);
   assert.match(
     source,
@@ -67,34 +79,67 @@ test('exhibition page route uses the new flagship pavilion sales story', () => {
     source,
     /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/
   );
-  assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.09 PM\.webp/);
   assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.16 PM\.webp/);
-  assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.17 PM\.webp/);
-  assert.match(source, /WhatsApp Image 2026-04-14 at 8\.17\.18 PM\.webp/);
 });
 
-test('extended branding cards include custom image framing treatments', () => {
-  const source = readFile('src/app/exhibition/page.jsx');
+test('exhibition data keeps the live mode and branding datasets', async () => {
+  const moduleUrl = pathToFileURL(
+    path.join(process.cwd(), 'src', 'data', 'exhibition-page.js')
+  );
+  const data = await import(moduleUrl.href);
 
+  assert.equal(data.exhibitionHero.title, 'Participation & Exhibition');
+  assert.equal(data.exhibitionProofPoints.length, 3);
+  assert.equal(data.exhibitionParticipationModes.length, 3);
+  assert.equal(data.exhibitionExtendedBranding.length, 4);
+  assert.equal(data.exhibitionValueCards.length, 4);
+  assert.ok(
+    data.exhibitionParticipationModes.some(
+      (mode) => mode.title === 'Ecosystem Display Wall'
+    )
+  );
+  assert.ok(
+    data.exhibitionParticipationModes.some((mode) =>
+      mode.image.includes('8.17.09 PM.webp')
+    )
+  );
+  assert.ok(
+    data.exhibitionParticipationModes.some((mode) =>
+      mode.image.includes('8.17.17 PM.webp')
+    )
+  );
+  assert.ok(
+    data.exhibitionParticipationModes.some((mode) =>
+      mode.image.includes('8.17.18 PM.webp')
+    )
+  );
+  assert.ok(
+    data.exhibitionExtendedBranding.some(
+      (item) =>
+        item.title === 'Speaker & Delegate Kits' &&
+        item.imageClassName === 'object-cover'
+    )
+  );
+  assert.ok(
+    data.exhibitionExtendedBranding.some(
+      (item) =>
+        item.title === 'Venue Signage & Welcome Boards' &&
+        item.imageClassName === 'object-cover object-center'
+    )
+  );
+});
+
+test('exhibition component applies custom image framing treatments', () => {
+  const source = readFile('src/components/exhibition/exhibition-page.jsx');
+
+  assert.match(source, /exhibitionExtendedBranding\.map/);
   assert.match(
     source,
-    /title:\s*'Speaker & Delegate Kits'[\s\S]*imageClassName:\s*'object-cover'/
+    /className=\{`object-cover transition-transform duration-500 group-hover:scale-105 \$\{\s*item\.imageClassName \?\? ''\s*\}`\}/
   );
   assert.match(
     source,
-    /title:\s*'Venue Signage & Welcome Boards'[\s\S]*imageClassName:\s*'object-cover object-center'/
-  );
-  assert.match(
-    source,
-    /title:\s*'Digital Standees & Kiosks'[\s\S]*imageClassName:\s*'object-cover object-center'/
-  );
-  assert.match(
-    source,
-    /className=\{`object-cover transition-transform duration-500 group-hover:scale-105 \$\{item\.imageClassName \?\? ''\}`\}/
-  );
-  assert.match(
-    source,
-    /className=\{`group relative flex flex-col[\s\S]*overflow-hidden[\s\S]*\$\{item\.cardClassName \?\? ''\}`\}/
+    /className=\{`group relative flex flex-col[\s\S]*overflow-hidden[\s\S]*\$\{\s*item\.cardClassName \?\? ''\s*\}`\}/
   );
 });
 

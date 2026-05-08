@@ -13,8 +13,7 @@ const DAY_LABELS_FALLBACK = {
   oct8: 'Oct 15 - Conference Day 2',
 };
 
-// ── REACT PDF AGENDA DOCUMENT ─────────────────────────────────────────────
-// Colors (pt-based layout for A4)
+// PDF agenda colors and dimensions use pt-based values for A4 rendering.
 const AGENDA_ORANGE = '#c2410c';
 const AGENDA_NAVY = '#162447';
 const AGENDA_STONE = '#eeebe5';
@@ -24,7 +23,6 @@ const AGENDA_MID = '#5f5952';
 const AGENDA_LIGHT = '#a5a099';
 const AGENDA_RULE = '#d7d3cd';
 
-// Dimensions in pt (1mm = 2.835pt)
 const AG_MARGIN = 42.5; // 15mm
 const AG_STRIPE_H = 25.5; // 9mm
 const AG_TABLE_H = 31.2; // 11mm
@@ -77,7 +75,7 @@ function AgendaDocument({
               color: '#ffffff',
             }}
           >
-            TRUST &amp; SAFETY INDIA FESTIVAL 2026 · PERSONALIZED AGENDA
+            TRUST &amp; SAFETY INDIA FESTIVAL 2026 - PERSONALIZED AGENDA
           </Text>
         </View>
 
@@ -179,7 +177,7 @@ function AgendaDocument({
                 color: AGENDA_DARK,
               }}
             >
-              13 – 14 October 2026
+              13 - 14 October 2026
             </Text>
           </View>
           <View
@@ -202,7 +200,7 @@ function AgendaDocument({
               TIME
             </Text>
             <Text style={{ fontSize: 9, color: AGENDA_DARK }}>
-              9:00 am – 5:30 pm
+              9:00 am - 5:30 pm
             </Text>
           </View>
           <View
@@ -485,7 +483,6 @@ function AgendaDocument({
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 export default function BuildMyAgenda({
   sessions,
   isOpen,
@@ -566,7 +563,7 @@ export default function BuildMyAgenda({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/60 p-4 backdrop-blur-sm sm:p-6">
-      <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white text-stone-900 shadow-2xl dark:border-stone-800 dark:bg-stone-950 dark:text-stone-100">
+      <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white text-stone-900 shadow-2xl dark:border-stone-800 dark:bg-stone-950 dark:text-stone-100">
         <div className="flex items-center justify-between border-b border-stone-100 bg-stone-50 px-6 py-4 dark:border-stone-800 dark:bg-stone-900">
           <h2 className="text-xl font-bold tracking-tight">Build My Agenda</h2>
           <button
@@ -593,7 +590,7 @@ export default function BuildMyAgenda({
                 placeholder="Jane Doe"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                className="w-full rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:border-orange-600 focus:outline-none focus:ring-1 focus:ring-orange-600 dark:border-stone-800 dark:bg-stone-900"
+                className="w-full rounded-[10px] border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:border-orange-600 focus:outline-none focus:ring-1 focus:ring-orange-600 dark:border-stone-800 dark:bg-stone-900"
               />
             </div>
             <div>
@@ -605,13 +602,13 @@ export default function BuildMyAgenda({
                 placeholder="jane@example.com"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="w-full rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:border-orange-600 focus:outline-none focus:ring-1 focus:ring-orange-600 dark:border-stone-800 dark:bg-stone-900"
+                className="w-full rounded-[10px] border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:border-orange-600 focus:outline-none focus:ring-1 focus:ring-orange-600 dark:border-stone-800 dark:bg-stone-900"
               />
             </div>
           </div>
 
           {error && (
-            <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+            <div className="rounded-[10px] border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
               {error}
             </div>
           )}
@@ -633,7 +630,7 @@ export default function BuildMyAgenda({
                         <div
                           key={session.id}
                           onClick={() => handleToggle(session.id)}
-                          className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-all ${
+                          className={`flex cursor-pointer items-start gap-3 rounded-[10px] border p-3 transition-all ${
                             isSelected
                               ? 'border-orange-200 bg-orange-50/50 dark:border-orange-900/50 dark:bg-orange-950/20'
                               : 'border-stone-200 bg-white hover:border-orange-300 dark:border-stone-800 dark:bg-stone-950 dark:hover:border-stone-700'
@@ -651,7 +648,7 @@ export default function BuildMyAgenda({
                               <span className="shrink-0 text-xs font-bold text-stone-900 dark:text-stone-300">
                                 {session.time}
                               </span>
-                              <span className="shrink-0 rounded-md bg-stone-100 px-1.5 py-0.5 text-xs font-medium text-stone-500 dark:bg-stone-800">
+                              <span className="shrink-0 rounded-[10px] bg-stone-100 px-1.5 py-0.5 text-xs font-medium text-stone-500 dark:bg-stone-800">
                                 {session.venue || session.track}
                               </span>
                             </div>

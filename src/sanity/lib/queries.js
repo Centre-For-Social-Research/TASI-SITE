@@ -1,6 +1,4 @@
-import { defineQuery } from 'next-sanity';
-
-export const POSTS_QUERY = defineQuery(`
+export const POSTS_QUERY = `
   *[_type == "post"] | order(publishedAt desc) {
     _id,
     title,
@@ -14,9 +12,9 @@ export const POSTS_QUERY = defineQuery(`
     coverImageUrl,
     body
   }
-`);
+`;
 
-export const POST_BY_SLUG_QUERY = defineQuery(`
+export const POST_BY_SLUG_QUERY = `
   *[_type == "post" && slug.current == $slug][0] {
     _id,
     title,
@@ -30,4 +28,4 @@ export const POST_BY_SLUG_QUERY = defineQuery(`
     coverImageUrl,
     body
   }
-`);
+`;

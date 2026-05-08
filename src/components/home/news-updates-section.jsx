@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import CountUpNumber from '../ui/count-up-number';
-import SponsorsStripCarousel from './sponsors-strip-carousel';
+import CountUpNumber from '@/components/ui/count-up-number';
 import { getBlogPosts } from '@/lib/blog';
+import SponsorsStripCarousel from './sponsors-strip-carousel';
 
 const tasiStats = [
   { value: 500, suffix: '+', label: 'Participants Attended (2025)' },

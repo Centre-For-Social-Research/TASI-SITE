@@ -21,6 +21,57 @@ const pillars = [
   },
 ];
 
+const whyIndiaCards = [
+  {
+    number: '01',
+    title: 'Massive Digital Scale',
+    body: 'From multilingual communication to high-volume platform participation, India experiences trust and safety challenges at a scale that can inform global thinking.',
+  },
+  {
+    number: '02',
+    title: 'Connected Harms',
+    body: 'Online abuse, misinformation, child safety risks, and AI-enabled harms are deeply connected to offline inequalities and deserve locally grounded responses.',
+  },
+  {
+    number: '03',
+    title: 'Global Influence',
+    body: 'What is designed, regulated, and tested in India increasingly shapes digital governance conversations far beyond its borders, especially across the Global South.',
+    className: 'md:col-span-2',
+  },
+];
+
+const conveningPartners = [
+  {
+    name: 'Trust and Safety Festival',
+    body: [
+      'The Trust and Safety Festival is a global platform bringing together technology companies, policymakers, researchers, and civil society to advance safer digital ecosystems through collaboration.',
+      'Its partnership with TASI helps connect Indian priorities with international dialogue while keeping the work grounded in implementation and public interest.',
+    ],
+  },
+  {
+    name: 'Centre for Social Research',
+    body: [
+      "CSR has spent over four decades advancing gender justice, research, advocacy, and social change in India. Its digital safety work extends that mission into today's online realities.",
+      'Through programs on online safety and well-being, CSR brings deep field knowledge, policy insight, and community-centered practice to the TASI platform.',
+    ],
+  },
+];
+
+const aboutCtaLinks = [
+  {
+    href: '/register',
+    label: 'Register',
+    className:
+      'flex w-full items-center justify-center rounded-3xl bg-gradient-to-r from-[#55089e] via-[#9f0099] to-[#ff0080] px-8 py-2.5 text-[16px] font-bold leading-6 text-white transition-transform hover:scale-[1.02] hover:opacity-90 sm:min-w-[220px] sm:w-auto',
+  },
+  {
+    href: '/contact',
+    label: 'Contact us',
+    className:
+      'flex w-full items-center justify-center rounded-3xl border border-rc-primary bg-rc-primary px-8 py-2.5 text-[16px] font-bold leading-6 text-rc-primary-foreground transition-transform hover:scale-[1.02] hover:opacity-90 dark:border-white dark:bg-white dark:text-slate-950 sm:min-w-[220px] sm:w-auto',
+  },
+];
+
 export default function AboutPage() {
   return (
     <>
@@ -112,45 +163,22 @@ export default function AboutPage() {
 
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="grid gap-6 md:grid-cols-2">
-                <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
-                    01
-                  </p>
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                    Massive Digital Scale
-                  </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                    From multilingual communication to high-volume platform
-                    participation, India experiences trust and safety challenges
-                    at a scale that can inform global thinking.
-                  </p>
-                </article>
-                <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
-                    02
-                  </p>
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                    Connected Harms
-                  </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                    Online abuse, misinformation, child safety risks, and
-                    AI-enabled harms are deeply connected to offline
-                    inequalities and deserve locally grounded responses.
-                  </p>
-                </article>
-                <article className="rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50 md:col-span-2">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
-                    03
-                  </p>
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                    Global Influence
-                  </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                    What is designed, regulated, and tested in India
-                    increasingly shapes digital governance conversations far
-                    beyond its borders, especially across the Global South.
-                  </p>
-                </article>
+                {whyIndiaCards.map((card) => (
+                  <article
+                    key={card.title}
+                    className={`rounded-[10px] border border-gray-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 shadow-lg shadow-stone-200/30 dark:border-gray-800 dark:bg-gray-900/50 ${card.className || ''}`}
+                  >
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white">
+                      {card.number}
+                    </p>
+                    <h3 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                      {card.title}
+                    </h3>
+                    <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
+                      {card.body}
+                    </p>
+                  </article>
+                ))}
               </div>
 
               <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10">
@@ -178,45 +206,27 @@ export default function AboutPage() {
         <section className="relative overflow-hidden py-section-md text-white md:py-section-lg">
           <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(35,0,52,0.97)_6%,rgba(92,15,79,0.9)_34%,rgba(126,8,58,0.68)_52%,rgba(0,0,0,0.3)_100%)]" />
           <div className="relative mx-auto grid w-full max-w-[1300px] gap-6 px-4 md:px-6 lg:grid-cols-2">
-            <article className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
-              <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">
-                Convening Partner
-              </p>
-              <h2 className="text-3xl font-black tracking-tight text-white">
-                Trust and Safety Festival
-              </h2>
-              <p className="mt-5 text-base leading-relaxed text-white/85">
-                The Trust and Safety Festival is a global platform bringing
-                together technology companies, policymakers, researchers, and
-                civil society to advance safer digital ecosystems through
-                collaboration.
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-white/85">
-                Its partnership with TASI helps connect Indian priorities with
-                international dialogue while keeping the work grounded in
-                implementation and public interest.
-              </p>
-            </article>
-
-            <article className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
-              <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">
-                Convening Partner
-              </p>
-              <h2 className="text-3xl font-black tracking-tight text-white">
-                Centre for Social Research
-              </h2>
-              <p className="mt-5 text-base leading-relaxed text-white/85">
-                CSR has spent over four decades advancing gender justice,
-                research, advocacy, and social change in India. Its digital
-                safety work extends that mission into today&apos;s online
-                realities.
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-white/85">
-                Through programs on online safety and well-being, CSR brings
-                deep field knowledge, policy insight, and community-centered
-                practice to the TASI platform.
-              </p>
-            </article>
+            {conveningPartners.map((partner) => (
+              <article
+                key={partner.name}
+                className="rounded-[10px] border border-white/10 bg-white/10 p-8 backdrop-blur-sm"
+              >
+                <p className="mb-3 text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white">
+                  Convening Partner
+                </p>
+                <h2 className="text-3xl font-black tracking-tight text-white">
+                  {partner.name}
+                </h2>
+                {partner.body.map((paragraph, index) => (
+                  <p
+                    key={paragraph}
+                    className={`${index === 0 ? 'mt-5' : 'mt-4'} text-base leading-relaxed text-white/85`}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </article>
+            ))}
           </div>
         </section>
 
@@ -233,18 +243,15 @@ export default function AboutPage() {
               digital trust, safety, and AI governance in India and beyond.
             </p>
             <div className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
-              <Link
-                href="/register"
-                className="flex w-full items-center justify-center rounded-3xl bg-gradient-to-r from-[#55089e] via-[#9f0099] to-[#ff0080] px-8 py-2.5 text-[16px] font-bold leading-6 text-white transition-transform hover:scale-[1.02] hover:opacity-90 sm:min-w-[220px] sm:w-auto"
-              >
-                Register
-              </Link>
-              <Link
-                href="/contact"
-                className="flex w-full items-center justify-center rounded-3xl border border-rc-primary bg-rc-primary px-8 py-2.5 text-[16px] font-bold leading-6 text-rc-primary-foreground transition-transform hover:scale-[1.02] hover:opacity-90 dark:border-white dark:bg-white dark:text-slate-950 sm:min-w-[220px] sm:w-auto"
-              >
-                Contact us
-              </Link>
+              {aboutCtaLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={link.className}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
         </section>

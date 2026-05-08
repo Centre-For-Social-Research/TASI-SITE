@@ -1,6 +1,8 @@
 import { withSentryConfig } from '@sentry/nextjs';
 
 /** @type {import('next').NextConfig} */
+const workspaceRoot = process.cwd();
+
 function getClerkFrontendApiOrigin() {
   const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
   const encodedFrontendApi = publishableKey.replace(/^pk_(test|live)_/, '');
@@ -50,7 +52,7 @@ const siteSecurityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      `script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' ${clerkCspOrigins.join(' ')} https://challenges.cloudflare.com https://checkout.razorpay.com https://static.cloudflareinsights.com`,
+      `script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' ${clerkCspOrigins.join(' ')} https://cdn.jsdelivr.net https://challenges.cloudflare.com https://checkout.razorpay.com https://static.cloudflareinsights.com`,
       "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
@@ -118,6 +120,10 @@ const cacheHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
+  outputFileTracingRoot: workspaceRoot,
+  turbopack: {
+    root: workspaceRoot,
+  },
   serverExternalPackages: ['@react-pdf/renderer'],
   allowedDevOrigins: ['127.0.0.1', 'localhost'],
   images: {
@@ -164,7 +170,7 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
 };
 
-export default withSentryConfig(nextConfig, {
+const sentryConfig = {
   silent: true,
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
@@ -175,4 +181,8 @@ export default withSentryConfig(nextConfig, {
     },
     automaticVercelMonitors: true,
   },
-});
+};
+
+export default process.env.NODE_ENV === 'production'
+  ? withSentryConfig(nextConfig, sentryConfig)
+  : nextConfig;

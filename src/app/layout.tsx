@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { ClerkProvider } from '@clerk/nextjs';
 import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -170,14 +169,12 @@ export default function RootLayout({
             __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
           }}
         />
-        <ClerkProvider>
-          <ThemeProvider defaultTheme="system" enableSystem>
-            <AppShell>{children}</AppShell>
-            <Analytics />
-            <SpeedInsights />
-            <ChatBot />
-          </ThemeProvider>
-        </ClerkProvider>
+        <ThemeProvider defaultTheme="system" enableSystem>
+          <AppShell>{children}</AppShell>
+          <Analytics />
+          <SpeedInsights />
+          <ChatBot />
+        </ThemeProvider>
       </body>
     </html>
   );

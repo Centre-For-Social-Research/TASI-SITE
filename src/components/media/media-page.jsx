@@ -1,0 +1,281 @@
+import Image from 'next/image';
+
+import MediaAccreditationSection from '@/components/media/media-accreditation-section';
+import HomeNavbar from '@/components/home/navbar';
+import BrandedPageHero from '@/components/ui/branded-page-hero';
+import {
+  mediaCoverageEntries2025,
+  mediaLogoWall2025,
+} from '@/data/media-coverage-2025';
+import {
+  mediaHero,
+  mediaResources,
+  pressConferenceHighlights,
+} from '@/data/media-page';
+
+export default function MediaPage() {
+  return (
+    <>
+      <HomeNavbar />
+      <main className="bg-[#fdf6ef] dark:bg-stone-950">
+        <BrandedPageHero className="py-14 md:py-20">
+          <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+              {mediaHero.eyebrow}
+            </p>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+              {mediaHero.title}
+            </h1>
+            <p className="mx-auto mt-4 max-w-3xl text-white/90">
+              {mediaHero.description}
+            </p>
+            <div className="mt-7">
+              <div className="flex flex-wrap justify-center gap-3">
+                {mediaHero.actions.map((action, index) => (
+                  <a
+                    key={action.href}
+                    href={action.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={
+                      index === 0
+                        ? 'inline-flex rounded-full !bg-white px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] !text-[#140f26] transition hover:scale-[1.02] hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26]'
+                        : 'inline-flex rounded-full border border-white/25 bg-white/10 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-white transition hover:bg-white/15 dark:border-white/40 dark:hover:bg-white/20'
+                    }
+                  >
+                    {action.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </BrandedPageHero>
+
+        <section className="bg-[linear-gradient(180deg,#fff8ef_0%,#f5ece1_100%)] py-14 dark:bg-[linear-gradient(180deg,#171717_0%,#0f172a_100%)] md:py-20">
+          <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-[1.05fr_0.95fr] md:px-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <article className="relative min-h-[320px] overflow-hidden rounded-[10px] shadow-[0_22px_60px_-36px_rgba(15,23,42,0.22)] sm:col-span-2">
+                <Image
+                  src="/img/media-coverage/press-conference/gcv-06833.webp"
+                  alt="Speaker addressing the press conference before TASI 2025"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+              </article>
+              <article className="relative min-h-[220px] overflow-hidden rounded-[10px] shadow-[0_18px_50px_-34px_rgba(15,23,42,0.18)]">
+                <Image
+                  src="/img/media-coverage/press-conference/gcv-07061.webp"
+                  alt="Press interaction during the TASI 2025 pre-festival media briefing"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                />
+              </article>
+              <article className="relative min-h-[220px] overflow-hidden rounded-[10px] shadow-[0_18px_50px_-34px_rgba(15,23,42,0.18)]">
+                <Image
+                  src="/img/media-coverage/press-conference/gcv-07089.webp"
+                  alt="Interview moment captured at the TASI 2025 press conference"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                />
+              </article>
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
+                Press Conference
+              </p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-5xl">
+                The Media Briefing That Set Up TASI 2025
+              </h2>
+              <p className="mt-5 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
+                Ahead of the festival itself, TASI 2025 opened its media cycle
+                with a press conference that introduced the event, framed its
+                trust and safety agenda, and helped bring journalists into the
+                wider conversation before delegates convened.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
+                The session served as an early editorial moment for the
+                festival, giving the press a clearer view of the issues, voices,
+                and public-interest stakes that would define the gathering in
+                New Delhi.
+              </p>
+
+              <div className="mt-8 grid gap-3">
+                {pressConferenceHighlights.map((item) => (
+                  <article
+                    key={item.title}
+                    className="rounded-[10px] border border-stone-200 bg-white/90 p-4 shadow-[0_18px_44px_-34px_rgba(15,23,42,0.2)] dark:border-slate-800 dark:bg-slate-900"
+                  >
+                    <h3 className="text-sm font-black uppercase tracking-[0.14em] text-stone-900 dark:text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                      {item.description}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f3ece4_100%)] py-14 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-20">
+          <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
+                Coverage List
+              </p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-900 dark:text-white md:text-5xl">
+                Selected Report From Media House
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
+                Explore key highlights, articles, and insights directly
+                published by leading media outlets detailing the impact and
+                reach of TASI.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {mediaCoverageEntries2025.map((item) => (
+                <a
+                  key={`${item.publication}-${item.headline}`}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-[0_18px_50px_-32px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-[10px] bg-transparent px-3 py-2 dark:bg-white">
+                      <div className="relative h-9 w-[132px] md:w-[150px]">
+                        <Image
+                          src={item.logo}
+                          alt={item.publication}
+                          fill
+                          className="object-contain object-left"
+                          sizes="(min-width: 768px) 150px, 132px"
+                        />
+                      </div>
+                    </div>
+                    <span className="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-full bg-orange-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 md:px-3 md:text-[11px]">
+                      {item.category}
+                    </span>
+                  </div>
+                  <p className="mt-6 font-serif text-[1.12rem] font-medium leading-relaxed text-stone-900 dark:text-white md:text-[1.2rem]">
+                    {item.headline}
+                  </p>
+                  <div className="mt-5 flex items-center justify-between gap-3">
+                    <p className="text-sm font-medium text-stone-500 dark:text-slate-400">
+                      {item.publication}
+                    </p>
+                    <span className="text-xs font-black uppercase tracking-[0.14em] text-rc-primary dark:text-white">
+                      Open Source
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+          <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
+                Coverage Network
+              </p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-5xl">
+                They attend and report
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300 md:text-base">
+                A cross-section of publications, broadcasters, wires, and
+                digital outlets that covered TASI 2025.
+              </p>
+            </div>
+
+            <div className="mt-14 grid grid-cols-2 gap-x-10 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
+              {mediaLogoWall2025.map((item) => (
+                <div
+                  key={item.publication}
+                  className="flex min-h-[72px] items-center justify-center rounded-[10px] bg-transparent px-3 py-2 transition-transform duration-200 hover:-translate-y-1 dark:bg-white"
+                >
+                  <div className="relative h-12 w-full max-w-[190px]">
+                    <Image
+                      src={item.logo}
+                      alt={item.publication}
+                      fill
+                      className="object-contain"
+                      sizes="(min-width: 1024px) 180px, (min-width: 768px) 30vw, 40vw"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[linear-gradient(180deg,#fffdfa_0%,#f5efe7_100%)] py-12 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-16">
+          <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-5xl">
+                Resources
+              </h2>
+              <div className="mx-auto mt-5 h-1 w-28 rounded-full bg-gradient-to-r from-[#ff4d7a] via-[#d21f76] to-[#f05f32]" />
+              <p className="mx-auto mt-8 max-w-2xl text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-base">
+                Don&apos;t miss the latest TASI media material. Everything here
+                is designed to help journalists, editors, and event partners
+                prepare coverage quickly.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {mediaResources.map((item) => (
+                <article
+                  key={item.title}
+                  className="group mx-auto flex h-full w-full max-w-[280px] flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-[0_16px_42px_-30px_rgba(15,23,42,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_60px_-34px_rgba(15,23,42,0.22)] dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <div className="relative aspect-[1.45/1] w-full overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.imageAlt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(min-width: 1280px) 280px, (min-width: 768px) 50vw, 100vw"
+                    />
+                  </div>
+
+                  <div className="flex flex-1 flex-col px-4 pb-5 pt-4 text-center">
+                    <h3 className="text-lg font-black tracking-tight text-stone-950 dark:text-white md:text-[1.2rem]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-stone-700 dark:text-slate-300 md:text-[14px]">
+                      {item.description}
+                    </p>
+
+                    <div className="mt-5 flex flex-col items-center gap-2">
+                      {item.actions.map((action) => (
+                        <a
+                          key={action.label}
+                          href={action.href}
+                          target={action.external ? '_blank' : undefined}
+                          rel={action.external ? 'noreferrer' : undefined}
+                          className="inline-flex min-h-9 items-center justify-center rounded-full border border-stone-400 bg-white px-3.5 py-1.5 text-[13px] font-medium text-stone-800 transition hover:border-stone-700 hover:bg-stone-50 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:hover:border-slate-400 dark:hover:bg-slate-800"
+                        >
+                          {action.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <MediaAccreditationSection />
+      </main>
+    </>
+  );
+}

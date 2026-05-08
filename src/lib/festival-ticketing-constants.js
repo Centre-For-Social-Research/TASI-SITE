@@ -1,5 +1,8 @@
 export const FESTIVAL_TICKET_TYPES = ['domestic', 'international'];
 export const FESTIVAL_PAYMENT_STREAMS = ['domestic', 'fcra'];
+export const FESTIVAL_PAYMENTS_ENABLED = false;
+export const FESTIVAL_PAYMENTS_DISABLED_MESSAGE =
+  'Festival pass payments are temporarily paused. Please use general access registration for now.';
 export const FESTIVAL_TICKET_STATUSES = [
   'pending',
   'confirmed',

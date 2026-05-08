@@ -1,9 +1,17 @@
 ﻿'use client';
 
 import Image from 'next/image';
-import { CalendarPlus } from 'lucide-react';
+import { CalendarPlus, Clock, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import BuildMyAgenda from './build-my-agenda';
+import styles from './programme-agenda.module.css';
+
+const {
+  buildProgrammeSessionViewModels,
+  sortProgrammeSessionsForAgenda,
+  timeSortValue,
+} = programmeAgendaUtils;
 
 const FORMAT_LABELS = {
   opening: 'Opening',
@@ -16,62 +24,21 @@ const FORMAT_LABELS = {
   special: 'Special',
 };
 
-const DAY_ORDER = { oct6: 0, oct7: 1, oct8: 2 };
 const SESSIONS_PER_PAGE = 8;
 const DAY_DATE_MAP = {
   oct6: '20251006',
   oct7: '20251007',
   oct8: '20251008',
 };
-const EVENT_TIMEZONE = 'Asia/Kolkata';
 const EVENT_LOCATION = 'New Delhi, India';
 
-function normalizePersonName(value) {
-  return value
-    .toLowerCase()
-    .replace(/\(.*?\)/g, ' ')
-    .replace(/\b(dr|mr|mrs|ms|smt|shri|professor|prof)\.?\b/g, ' ')
-    .replace(/[^a-z0-9 ]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function resolveDesignation(name, designationMap) {
-  const normalized = normalizePersonName(name);
-  if (designationMap[normalized]) return designationMap[normalized];
-  const compressed = normalized.replace(/\s+/g, '');
-  const fallbackKey = Object.keys(designationMap).find(
-    (key) => key.replace(/\s+/g, '') === compressed
-  );
-  if (fallbackKey) return designationMap[fallbackKey];
-  return '';
-}
-
-function resolveSpeakerPhoto(name, photoMap) {
-  const normalized = normalizePersonName(name);
-  if (photoMap[normalized]) return photoMap[normalized];
-  const compressed = normalized.replace(/\s+/g, '');
-  const fallbackKey = Object.keys(photoMap).find(
-    (key) => key.replace(/\s+/g, '') === compressed
-  );
-  if (fallbackKey) return photoMap[fallbackKey];
-  return '';
-}
-
-function timeSortValue(time) {
-  const normalized = String(time).replace(/–/g, '-').trim();
-  const firstPart = normalized.split('-')[0].trim();
-  const parts = firstPart.split(':');
-  if (parts.length !== 2) return 0;
-  const h = Number(parts[0]);
-  const m = Number(parts[1]);
-  if (Number.isNaN(h) || Number.isNaN(m)) return 0;
-  return h * 60 + m;
+function cx(...classes) {
+  return classes.filter(Boolean).join(' ');
 }
 
 function parseTimeParts(time) {
   const normalized = String(time || '')
-    .replace(/â€“/g, '-')
+    .replace(/[\u2013\u2014]/g, '-')
     .trim();
   const firstPart = normalized.split('-')[0].trim();
   const match = firstPart.match(/^(\d{1,2}):(\d{2})$/);
@@ -192,23 +159,11 @@ export default function ProgrammeAgendaClient({
 
   const normalizedSessions = useMemo(
     () =>
-      sessions
-        .filter((session) => {
-          const title = String(session.title || '')
-            .trim()
-            .toLowerCase();
-          return title !== 'emcee' && title !== 'registration + tea/coffee';
-        })
-        .map((session) => ({
-          ...session,
-          topic: session.description || '',
-          speakersDetailed: session.speakers.map((speakerName) => ({
-            name: speakerName,
-            title: resolveDesignation(speakerName, speakerDesignationMap || {}),
-            photo: resolveSpeakerPhoto(speakerName, speakerPhotoMap || {}),
-            mod: false,
-          })),
-        })),
+      buildProgrammeSessionViewModels({
+        sessions,
+        speakerDesignationMap,
+        speakerPhotoMap,
+      }),
     [sessions, speakerDesignationMap, speakerPhotoMap]
   );
 
@@ -233,8 +188,8 @@ export default function ProgrammeAgendaClient({
   const filteredSessions = useMemo(() => {
     const q = query.trim().toLowerCase();
 
-    return normalizedSessions
-      .filter((session) => {
+    return sortProgrammeSessionsForAgenda(
+      normalizedSessions.filter((session) => {
         if (activeDay !== 'all' && session.day !== activeDay) return false;
         if (format && session.format !== format) return false;
         if (venue && (session.venue || session.track) !== venue) return false;
@@ -254,11 +209,7 @@ export default function ProgrammeAgendaClient({
 
         return searchText.includes(q);
       })
-      .sort(
-        (a, b) =>
-          (DAY_ORDER[a.day] || 0) - (DAY_ORDER[b.day] || 0) ||
-          timeSortValue(a.time) - timeSortValue(b.time)
-      );
+    );
   }, [activeDay, format, normalizedSessions, query, venue]);
 
   const sessionsWithCalendar = useMemo(
@@ -284,18 +235,18 @@ export default function ProgrammeAgendaClient({
   }, [currentPageSafe, sessionsWithCalendar]);
 
   return (
-    <section className="agenda-root">
+    <section className={styles['agenda-root']}>
       {receptionNotes.length > 0 && (
-        <div className="reception-wrap">
-          <div className="shell">
-            <div className="reception-head">About Our Receptions</div>
-            <div className="reception-grid">
+        <div className={styles['reception-wrap']}>
+          <div className={styles.shell}>
+            <div className={styles['reception-head']}>About Our Receptions</div>
+            <div className={styles['reception-grid']}>
               {receptionNotes.map((item) => (
-                <article key={item.day} className="reception-card">
-                  <p className="reception-day">{item.day}</p>
-                  <p className="reception-venue">{item.venue}</p>
-                  <p className="reception-access">{item.access}</p>
-                  <p className="reception-copy">{item.description}</p>
+                <article key={item.day} className={styles['reception-card']}>
+                  <p className={styles['reception-day']}>{item.day}</p>
+                  <p className={styles['reception-venue']}>{item.venue}</p>
+                  <p className={styles['reception-access']}>{item.access}</p>
+                  <p className={styles['reception-copy']}>{item.description}</p>
                 </article>
               ))}
             </div>
@@ -303,22 +254,12 @@ export default function ProgrammeAgendaClient({
         </div>
       )}
 
-      <div className="controls-bar">
-        <div className="shell controls-inner">
-          <div className="search-wrap">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
+      <div className={styles['controls-bar']}>
+        <div className={cx(styles.shell, styles['controls-inner'])}>
+          <div className={styles['search-wrap']}>
+            <Search className="h-3.5 w-3.5" aria-hidden="true" />
             <input
-              className="search-input"
+              className={styles['search-input']}
               type="text"
               value={query}
               onChange={(e) => {
@@ -330,7 +271,7 @@ export default function ProgrammeAgendaClient({
           </div>
 
           <select
-            className="filter-select"
+            className={styles['filter-select']}
             value={format}
             onChange={(e) => {
               setFormat(e.target.value);
@@ -346,7 +287,7 @@ export default function ProgrammeAgendaClient({
           </select>
 
           <select
-            className="filter-select"
+            className={styles['filter-select']}
             value={venue}
             onChange={(e) => {
               setVenue(e.target.value);
@@ -362,24 +303,29 @@ export default function ProgrammeAgendaClient({
           </select>
 
           <button
-            className="build-agenda-btn"
+            className={styles['build-agenda-btn']}
             onClick={() => setShowAgendaBuilder(true)}
           >
             <CalendarPlus className="h-4 w-4" />
             Build My Agenda
           </button>
 
-          <span className="results-info hidden md:inline-block">
+          <span
+            className={cx(styles['results-info'], 'hidden md:inline-block')}
+          >
             {sessionsWithCalendar.length} session
             {sessionsWithCalendar.length !== 1 ? 's' : ''}
           </span>
         </div>
       </div>
 
-      <div className="day-tabs">
-        <div className="shell day-tabs-inner">
+      <div className={styles['day-tabs']}>
+        <div className={cx(styles.shell, styles['day-tabs-inner'])}>
           <button
-            className={`day-tab ${activeDay === 'all' ? 'active' : ''}`}
+            className={cx(
+              styles['day-tab'],
+              activeDay === 'all' && styles.active
+            )}
             onClick={() => {
               setActiveDay('all');
               setCurrentPage(1);
@@ -388,7 +334,10 @@ export default function ProgrammeAgendaClient({
             All Days
           </button>
           <button
-            className={`day-tab ${activeDay === 'oct6' ? 'active' : ''}`}
+            className={cx(
+              styles['day-tab'],
+              activeDay === 'oct6' && styles.active
+            )}
             onClick={() => {
               setActiveDay('oct6');
               setCurrentPage(1);
@@ -397,7 +346,10 @@ export default function ProgrammeAgendaClient({
             {labels.oct6}
           </button>
           <button
-            className={`day-tab ${activeDay === 'oct7' ? 'active' : ''}`}
+            className={cx(
+              styles['day-tab'],
+              activeDay === 'oct7' && styles.active
+            )}
             onClick={() => {
               setActiveDay('oct7');
               setCurrentPage(1);
@@ -406,7 +358,10 @@ export default function ProgrammeAgendaClient({
             {labels.oct7}
           </button>
           <button
-            className={`day-tab ${activeDay === 'oct8' ? 'active' : ''}`}
+            className={cx(
+              styles['day-tab'],
+              activeDay === 'oct8' && styles.active
+            )}
             onClick={() => {
               setActiveDay('oct8');
               setCurrentPage(1);
@@ -417,65 +372,67 @@ export default function ProgrammeAgendaClient({
         </div>
       </div>
 
-      <div className="sessions-wrap">
-        <div className="shell">
+      <div className={styles['sessions-wrap']}>
+        <div className={styles.shell}>
           {sessionsWithCalendar.length === 0 ? (
-            <div className="no-results">No sessions match your filters.</div>
+            <div className={styles['no-results']}>
+              No sessions match your filters.
+            </div>
           ) : (
             <>
-              <div className="sessions-list">
+              <div className={styles['sessions-list']}>
                 {paginatedSessions.map((session) => (
                   <div
                     key={session.id}
-                    className={`session-card format-${session.format}`}
+                    className={cx(
+                      styles['session-card'],
+                      styles[`format-${session.format}`]
+                    )}
                   >
-                    <div className="card-content">
-                      <div className="card-top">
-                        <div className="venue-badge">
+                    <div className={styles['card-content']}>
+                      <div className={styles['card-top']}>
+                        <div className={styles['venue-badge']}>
                           {session.venue || session.track}
                         </div>
                         <span
-                          className={`format-badge badge-${session.format}`}
+                          className={cx(
+                            styles['format-badge'],
+                            styles[`badge-${session.format}`]
+                          )}
                         >
                           {FORMAT_LABELS[session.format]}
                         </span>
                       </div>
 
-                      <div className="card-meta">
-                        <div className="meta-item">
-                          <svg
-                            width="11"
-                            height="11"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                          </svg>
+                      <div className={styles['card-meta']}>
+                        <div className={styles['meta-item']}>
+                          <Clock aria-hidden="true" />
                           <span>{session.time}</span>
                         </div>
-                        <span className="meta-sep">•</span>
-                        <div className="meta-item">
+                        <span className={styles['meta-sep']}>•</span>
+                        <div className={styles['meta-item']}>
                           <span>{labels[session.day] || session.day}</span>
                         </div>
                       </div>
 
-                      <div className="session-title">{session.title}</div>
+                      <div className={styles['session-title']}>
+                        {session.title}
+                      </div>
 
                       {session.topic && (
-                        <div className="session-topic">{session.topic}</div>
+                        <div className={styles['session-topic']}>
+                          {session.topic}
+                        </div>
                       )}
 
-                      <div className="session-venue-line">
+                      <div className={styles['session-venue-line']}>
                         {session.venue || session.track}
                       </div>
 
                       {session.calendar && (
-                        <div className="session-actions">
+                        <div className={styles['session-actions']}>
                           <a
-                            className="calendar-btn"
+                            className={styles['calendar-btn']}
                             href={session.calendar.microsoftHref}
                             target="_blank"
                             rel="noreferrer"
@@ -484,7 +441,7 @@ export default function ProgrammeAgendaClient({
                             <span>Add to Calendar</span>
                           </a>
                           <a
-                            className="calendar-btn"
+                            className={styles['calendar-btn']}
                             href={session.calendar.googleHref}
                             target="_blank"
                             rel="noreferrer"
@@ -497,13 +454,21 @@ export default function ProgrammeAgendaClient({
 
                       {session.speakersDetailed &&
                         session.speakersDetailed.length > 0 && (
-                          <div className="speakers-section">
-                            <div className="speakers-label">Speakers</div>
-                            <div className="speakers-list">
+                          <div className={styles['speakers-section']}>
+                            <div className={styles['speakers-label']}>
+                              Speakers
+                            </div>
+                            <div className={styles['speakers-list']}>
                               {session.speakersDetailed.map((speaker, idx) => (
-                                <div key={idx} className="speaker-row">
+                                <div
+                                  key={idx}
+                                  className={styles['speaker-row']}
+                                >
                                   <div
-                                    className="speaker-avatar relative"
+                                    className={cx(
+                                      styles['speaker-avatar'],
+                                      'relative'
+                                    )}
                                     aria-hidden="true"
                                   >
                                     {speaker.photo ? (
@@ -517,12 +482,12 @@ export default function ProgrammeAgendaClient({
                                       <span>{speaker.name.charAt(0)}</span>
                                     )}
                                   </div>
-                                  <div className="speaker-info">
-                                    <div className="speaker-name">
+                                  <div className={styles['speaker-info']}>
+                                    <div className={styles['speaker-name']}>
                                       {speaker.name}
                                     </div>
                                     {speaker.title && (
-                                      <div className="speaker-title">
+                                      <div className={styles['speaker-title']}>
                                         {speaker.title}
                                       </div>
                                     )}
@@ -537,10 +502,10 @@ export default function ProgrammeAgendaClient({
                 ))}
               </div>
               {totalPages > 1 && (
-                <div className="pagination-wrap">
+                <div className={styles['pagination-wrap']}>
                   <button
                     type="button"
-                    className="pagination-btn"
+                    className={styles['pagination-btn']}
                     onClick={() =>
                       setCurrentPage((page) => Math.max(1, page - 1))
                     }
@@ -555,7 +520,10 @@ export default function ProgrammeAgendaClient({
                     <button
                       key={page}
                       type="button"
-                      className={`pagination-btn ${currentPageSafe === page ? 'active' : ''}`}
+                      className={cx(
+                        styles['pagination-btn'],
+                        currentPageSafe === page && styles.active
+                      )}
                       onClick={() => setCurrentPage(page)}
                     >
                       {page}
@@ -563,7 +531,7 @@ export default function ProgrammeAgendaClient({
                   ))}
                   <button
                     type="button"
-                    className="pagination-btn"
+                    className={styles['pagination-btn']}
                     onClick={() =>
                       setCurrentPage((page) => Math.min(totalPages, page + 1))
                     }

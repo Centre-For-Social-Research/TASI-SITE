@@ -1,5 +1,5 @@
-import { MotionReveal } from './motion-reveal';
 import Link from 'next/link';
+import { MotionReveal } from '@/components/ui/motion-reveal';
 
 const MUX_EMBED_URL =
   'https://player.mux.com/WOZbrSwPSYqEFylGFgp5Z8qUGGvCRmJ3eVptCQZ1YSg?autoplay=true&muted=true&metadata-video-title=Trust+and+Safety+India+Festival+2025&video-title=Trust+and+Safety+India+Festival+2025';

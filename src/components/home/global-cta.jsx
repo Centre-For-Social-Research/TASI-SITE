@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MotionReveal } from './motion-reveal';
+import { MotionReveal } from '@/components/ui/motion-reveal';
 
 export default function GlobalCta() {
   return (

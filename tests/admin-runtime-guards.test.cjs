@@ -75,12 +75,15 @@ test('resolveAdminShellRuntimeState preserves the previous live state for non-au
   );
 });
 
-test('AppShell mounts a route-level admin exit watcher so pathname changes can sign out admin sessions', () => {
-  const source = readFile('src/components/app-shell.jsx');
+test('admin layout owns the exit guard instead of mounting Clerk from the public shell', () => {
+  const appShell = readFile('src/components/app-shell.jsx');
+  const adminLayout = readFile('src/app/admin/layout.jsx');
 
+  assert.doesNotMatch(appShell, /AdminRouteExitWatcher/);
+  assert.doesNotMatch(appShell, /useClerk/);
   assert.match(
-    source,
-    /import AdminRouteExitWatcher from '@\/components\/admin\/admin-route-exit-watcher'/
+    adminLayout,
+    /import AdminExitGuard from '@\/components\/admin\/admin-exit-guard'/
   );
-  assert.match(source, /<AdminRouteExitWatcher \/>/);
+  assert.match(adminLayout, /<AdminExitGuard>\{children\}<\/AdminExitGuard>/);
 });

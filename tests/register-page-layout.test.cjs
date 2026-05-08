@@ -2,17 +2,36 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 
 function readFile(relativePath) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
 
-test('register page renders festival ticketing below the approval-based registration flow', () => {
+function loadModule(relativePath) {
+  return import(pathToFileURL(path.join(process.cwd(), relativePath)).href);
+}
+
+test('register route delegates to the tracked register page component', () => {
   const source = readFile('src/app/register/page.jsx');
-  const registrationFormIndex = source.indexOf('<RegistrationForm />');
-  const skipWaitIndex = source.indexOf(
-    'Skip the wait. Get full access to the festival.'
+
+  assert.match(
+    source,
+    /import RegisterPage from '@\/components\/register\/register-page'/
   );
+  assert.match(
+    source,
+    /import \{ registerPageMetadata \} from '@\/data\/register-page'/
+  );
+  assert.match(source, /export const metadata = registerPageMetadata;/);
+  assert.match(source, /return <RegisterPage \/>;/);
+  assert.doesNotMatch(source, /const\s+(steps|faqs)\s*=/);
+});
+
+test('register page renders festival ticketing below the approval-based registration flow', () => {
+  const source = readFile('src/components/register/register-page.jsx');
+  const registrationFormIndex = source.indexOf('<RegistrationForm />');
+  const skipWaitIndex = source.indexOf('paidTicketingIntro.title');
   const festivalSectionIndex = source.indexOf('<FestivalTicketingSection />');
 
   assert.notEqual(registrationFormIndex, -1);
@@ -28,14 +47,16 @@ test('register page renders festival ticketing below the approval-based registra
   );
 });
 
-test('register page uses the updated general access intro copy', () => {
-  const source = readFile('src/app/register/page.jsx');
+test('register page data owns the updated general access intro copy', async () => {
+  const data = await loadModule('src/data/register-page.js');
+  const source = readFile('src/components/register/register-page.jsx');
 
-  assert.match(source, /Apply for General Access/);
-  assert.match(
-    source,
-    /This is a manual review process\. Submit your application and our[\s\S]*You will receive a confirmation if[\s\S]*selected\./
+  assert.equal(data.generalAccessIntro.eyebrow, 'Apply for General Access');
+  assert.equal(
+    data.generalAccessIntro.description,
+    'This is a manual review process. Submit your application and our team will review your details. You will receive a confirmation if selected.'
   );
+  assert.match(source, /generalAccessIntro/);
   assert.doesNotMatch(source, /Delegate Applications/);
   assert.doesNotMatch(
     source,
@@ -43,11 +64,17 @@ test('register page uses the updated general access intro copy', () => {
   );
 });
 
-test('register page includes the OR divider before paid ticketing', () => {
-  const source = readFile('src/app/register/page.jsx');
+test('register page includes the OR divider before paid ticketing', async () => {
+  const data = await loadModule('src/data/register-page.js');
+  const source = readFile('src/components/register/register-page.jsx');
 
-  assert.match(source, />\s*OR\s*</);
-  assert.match(source, /Skip the wait\. Get full access to the festival\./);
+  assert.equal(data.paidTicketingIntro.dividerLabel, 'OR');
+  assert.equal(
+    data.paidTicketingIntro.title,
+    'Skip the wait. Get full access to the festival.'
+  );
+  assert.match(source, /paidTicketingIntro\.dividerLabel/);
+  assert.match(source, /paidTicketingIntro\.title/);
   assert.match(
     source,
     /bg-gradient-to-br from-\[#5c0f4f\] via-\[#360454\] to-\[#15002b\]/
@@ -70,7 +97,8 @@ test('festival ticketing cards use the redesigned centered ticket layout', () =>
   );
 
   assert.match(source, /Choose your ticket/);
-  assert.match(source, /Register now/);
+  assert.match(source, /Payments paused/);
+  assert.match(source, /FESTIVAL_PAYMENTS_ENABLED/);
   assert.match(
     source,
     /absolute inset-x-0 top-1\/2 -translate-y-1\/2 px-6 text-center/

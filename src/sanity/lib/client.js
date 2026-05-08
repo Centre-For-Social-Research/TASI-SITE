@@ -1,4 +1,4 @@
-import { createClient } from 'next-sanity';
+import { createClient } from '@sanity/client';
 import {
   apiVersion,
   dataset,
@@ -13,8 +13,9 @@ export const client = isSanityConfigured
       apiVersion,
       useCdn: false,
       stega: false,
+      timeout: 8000,
     })
   : null;
 
-/** Next.js fetch cache options – revalidate every 60 s */
+/** Next.js fetch cache options - revalidate every 60 s */
 export const sanityFetchOptions = { next: { revalidate: 60 } };

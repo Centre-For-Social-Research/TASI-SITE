@@ -1,24 +1,19 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-
-const tabs = [
-  { label: 'Overview', href: '/plan-your-travel' },
-  { label: 'General Info', href: '/plan-your-travel/general-info' },
-  { label: 'How to Reach', href: '/plan-your-travel/how-to-reach' },
-  { label: 'Visa Information', href: '/plan-your-travel/visa-information' },
-  { label: 'Accommodation', href: '/plan-your-travel/accommodation' },
-];
+import { usePathname } from 'next/navigation';
+import { travelTabs } from '@/data/plan-your-travel-page';
 
 export default function TravelTabNav() {
   const pathname = usePathname();
+
   return (
     <nav className="sticky top-[60px] z-30 border-b border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950">
       <div className="overflow-x-auto px-4 md:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="mx-auto flex w-max min-w-full justify-center gap-1">
-          {tabs.map((tab) => {
+          {travelTabs.map((tab) => {
             const isActive = pathname === tab.href;
+
             return (
               <Link
                 key={tab.href}
