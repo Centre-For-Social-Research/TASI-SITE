@@ -1,6 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Toaster } from 'sonner';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,6 +25,12 @@ import {
   resolveAdminShellRuntimeState,
 } from '@/lib/admin-runtime-guards.cjs';
 import AdminCommandPalette from '@/components/admin/admin-command-palette';
+
+const AdminShellDataContext = createContext(null);
+
+export function useAdminShellData() {
+  return useContext(AdminShellDataContext);
+}
 
 /* ── Inline SVG icons (thin stroke, 18×18) ───────────────────────────────── */
 const Ico = {
@@ -1409,7 +1422,7 @@ export default function AdminShell({ operator, currentPath, children }) {
       if (document.hidden) return;
       try {
         const [regRes, jobsRes] = await Promise.all([
-          fetch('/api/admin/registrations?pageSize=1', { cache: 'no-store' }),
+          fetch('/api/admin/registrations/summary', { cache: 'no-store' }),
           fetch('/api/admin/passes/jobs', { cache: 'no-store' }),
         ]);
         const [regData, jobsData] = await Promise.all([
@@ -1564,81 +1577,83 @@ export default function AdminShell({ operator, currentPath, children }) {
   }
 
   return (
-    <div
-      className="admin-v2"
-      data-adm-theme={theme}
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'row',
-        fontFamily: 'var(--adm-sans)',
-      }}
-    >
-      <Sidebar
-        currentPath={currentPath}
-        navigate={router.push}
-        navSections={navSections}
-        operator={operator}
-        onSignOut={handleSignOut}
-      />
+    <AdminShellDataContext.Provider value={{ shellState, runtimeIssue }}>
       <div
+        className="admin-v2"
+        data-adm-theme={theme}
         style={{
-          flex: 1,
-          minWidth: 0,
+          minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
+          fontFamily: 'var(--adm-sans)',
         }}
       >
-        <TopBar
+        <Sidebar
           currentPath={currentPath}
-          shellState={shellState}
-          theme={theme}
-          setTheme={setTheme}
-          attentionCount={attentionCount}
-          onNotifications={() => setNotificationsOpen(true)}
-          onPalette={() => setPaletteOpen(true)}
+          navigate={router.push}
+          navSections={navSections}
           operator={operator}
+          onSignOut={handleSignOut}
         />
-        <main
-          className="adm-page-content"
-          key={currentPath}
-          style={{ flex: 1, padding: '24px 28px 48px 28px' }}
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
         >
-          {runtimeIssue?.kind === 'degraded' && (
-            <div
-              style={{
-                marginBottom: 18,
-                padding: '10px 16px',
-                borderRadius: 10,
-                border: '1px solid var(--adm-warn-soft)',
-                background: 'var(--adm-warn-soft)',
-                fontFamily: 'var(--adm-mono)',
-                fontSize: 11,
-                color: 'var(--adm-warn)',
-                letterSpacing: '0.04em',
-              }}
-            >
-              ⚠ {runtimeIssue.message}
-            </div>
-          )}
-          {children}
-        </main>
-      </div>
+          <TopBar
+            currentPath={currentPath}
+            shellState={shellState}
+            theme={theme}
+            setTheme={setTheme}
+            attentionCount={attentionCount}
+            onNotifications={() => setNotificationsOpen(true)}
+            onPalette={() => setPaletteOpen(true)}
+            operator={operator}
+          />
+          <main
+            className="adm-page-content"
+            key={currentPath}
+            style={{ flex: 1, padding: '24px 28px 48px 28px' }}
+          >
+            {runtimeIssue?.kind === 'degraded' && (
+              <div
+                style={{
+                  marginBottom: 18,
+                  padding: '10px 16px',
+                  borderRadius: 10,
+                  border: '1px solid var(--adm-warn-soft)',
+                  background: 'var(--adm-warn-soft)',
+                  fontFamily: 'var(--adm-mono)',
+                  fontSize: 11,
+                  color: 'var(--adm-warn)',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                ⚠ {runtimeIssue.message}
+              </div>
+            )}
+            {children}
+          </main>
+        </div>
 
-      <NotificationsPanel
-        open={notificationsOpen}
-        onClose={() => setNotificationsOpen(false)}
-        notifications={notifications}
-        unread={unreadNotifications}
-        onMarkRead={markRead}
-        onMarkAll={markAll}
-        statPills={statPills}
-      />
-      <AdminCommandPalette
-        open={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
-      />
-      <Toaster richColors closeButton position="bottom-right" />
-    </div>
+        <NotificationsPanel
+          open={notificationsOpen}
+          onClose={() => setNotificationsOpen(false)}
+          notifications={notifications}
+          unread={unreadNotifications}
+          onMarkRead={markRead}
+          onMarkAll={markAll}
+          statPills={statPills}
+        />
+        <AdminCommandPalette
+          open={paletteOpen}
+          onClose={() => setPaletteOpen(false)}
+        />
+        <Toaster richColors closeButton position="bottom-right" />
+      </div>
+    </AdminShellDataContext.Provider>
   );
 }

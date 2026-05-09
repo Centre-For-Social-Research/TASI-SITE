@@ -1,11 +1,15 @@
 import { after } from 'next/server';
 import { requireAdminOperator } from '@/lib/registration-auth';
-import { updateRegistrationStatus } from '@/lib/registration-db';
+import {
+  StaleRegistrationUpdateError,
+  updateRegistrationStatus,
+} from '@/lib/registration-db';
 import {
   processNextAvailableRegistrationEmailJob,
   queueRegistrationEmailJob,
 } from '@/lib/registration-email-job-service';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
+import { adminJson } from '@/lib/admin-api-cache';
 
 export async function POST(request) {
   const authResult = await requireAdminOperator({
@@ -20,7 +24,7 @@ export async function POST(request) {
     const registrationId = String(body?.registrationId || '').trim();
 
     if (!registrationId) {
-      return Response.json(
+      return adminJson(
         { error: 'Registration ID is required.' },
         { status: 400 }
       );
@@ -33,6 +37,7 @@ export async function POST(request) {
       speakerFlag: Boolean(body?.speakerFlag),
       vipFlag: Boolean(body?.vipFlag),
       operator: authResult.operator,
+      expectedUpdatedAt: String(body?.expectedUpdatedAt || '').trim(),
     });
 
     const templateType = updatedRegistration.status;
@@ -58,7 +63,7 @@ export async function POST(request) {
       }
     });
 
-    return Response.json({
+    return adminJson({
       success: true,
       registration: updatedRegistration,
       emailResult: {
@@ -68,7 +73,18 @@ export async function POST(request) {
       },
     });
   } catch (error) {
-    return Response.json(
+    if (error instanceof StaleRegistrationUpdateError) {
+      return adminJson(
+        {
+          error:
+            'This registration was changed by another operator. Refresh the attendee and try again.',
+          code: error.code,
+        },
+        { status: 409 }
+      );
+    }
+
+    return adminJson(
       {
         error:
           error instanceof Error

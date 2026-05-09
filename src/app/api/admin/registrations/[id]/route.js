@@ -8,6 +8,7 @@ import {
 } from '@/lib/registration-ops-db';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { PROFILE_BUCKET } from '@/lib/registration-utils';
+import { adminJson } from '@/lib/admin-api-cache';
 
 export async function GET(_request, context) {
   const authResult = await requireAuthorizedOperator({
@@ -30,12 +31,12 @@ export async function GET(_request, context) {
         detail.registration.profilePhotoUrl = signedData.signedUrl;
       }
     }
-    return Response.json({
+    return adminJson({
       success: true,
       ...detail,
     });
   } catch (error) {
-    return Response.json(
+    return adminJson(
       {
         error:
           error instanceof Error
@@ -58,9 +59,9 @@ export async function DELETE(_request, context) {
   try {
     const params = await context.params;
     await deleteRegistration(params.id);
-    return Response.json({ success: true });
+    return adminJson({ success: true });
   } catch (error) {
-    return Response.json(
+    return adminJson(
       {
         error:
           error instanceof Error

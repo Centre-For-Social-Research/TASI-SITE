@@ -107,6 +107,7 @@ export async function listRegistrationQueue({
     qr_pass_issued_at,
     checked_in_at,
     created_at,
+    updated_at,
     reviewed_at
   `;
 
@@ -115,6 +116,59 @@ export async function listRegistrationQueue({
     filters
   ).range(from, to);
 
+  const [dataResult, summary] = await Promise.all([
+    dataQuery,
+    getRegistrationQueueSummary(filters),
+  ]);
+
+  const errors = [dataResult.error].filter(Boolean);
+
+  if (errors.length) {
+    throw new Error(errors[0].message);
+  }
+
+  const totalCount = summary.total || dataResult.count || 0;
+
+  return {
+    registrations: dataResult.data || [],
+    count: totalCount,
+    pagination: {
+      page: normalizedPage,
+      pageSize: normalizedPageSize,
+      totalPages: Math.max(Math.ceil(totalCount / normalizedPageSize), 1),
+    },
+    summary,
+  };
+}
+
+function normalizeSummaryRow(row = {}) {
+  return {
+    total: Number(row.total || 0),
+    pending: Number(row.pending || 0),
+    confirmed: Number(row.confirmed || 0),
+    waitlisted: Number(row.waitlisted || 0),
+    rejected: Number(row.rejected || 0),
+    qrIssued: Number(row.qr_issued || row.qrIssued || 0),
+    checkedIn: Number(row.checked_in || row.checkedIn || 0),
+    exceptionBadges: Number(row.exception_badges || row.exceptionBadges || 0),
+  };
+}
+
+function buildSummaryRpcArgs(filters = {}) {
+  return {
+    p_search: normalizeString(filters.search),
+    p_status: normalizeString(filters.status) || 'all',
+    p_category: normalizeString(filters.category) || 'all',
+    p_priority_tier: normalizeString(filters.priorityTier) || 'all',
+    p_country: normalizeString(filters.country),
+    p_city: normalizeString(filters.city),
+    p_organization: normalizeString(filters.organization),
+    p_speaker_flag: normalizeString(filters.speakerFlag),
+    p_late_confirmation: normalizeString(filters.lateConfirmation),
+  };
+}
+
+async function getRegistrationQueueSummaryFallback(filters = {}) {
   const countQuery = applyRegistrationFilters(
     buildQueueBaseQuery('id', { count: 'exact', head: true }),
     filters
@@ -142,7 +196,6 @@ export async function listRegistrationQueue({
   ).not('checked_in_at', 'is', null);
 
   const [
-    dataResult,
     countResult,
     pendingResult,
     confirmedResult,
@@ -152,7 +205,6 @@ export async function listRegistrationQueue({
     exceptionResult,
     checkedInResult,
   ] = await Promise.all([
-    dataQuery,
     countQuery,
     makeCountQuery('pending'),
     makeCountQuery('confirmed'),
@@ -164,7 +216,6 @@ export async function listRegistrationQueue({
   ]);
 
   const errors = [
-    dataResult.error,
     countResult.error,
     pendingResult.error,
     confirmedResult.error,
@@ -180,29 +231,39 @@ export async function listRegistrationQueue({
   }
 
   return {
-    registrations: dataResult.data || [],
-    count: countResult.count || dataResult.count || 0,
-    pagination: {
-      page: normalizedPage,
-      pageSize: normalizedPageSize,
-      totalPages: Math.max(
-        Math.ceil(
-          (countResult.count || dataResult.count || 0) / normalizedPageSize
-        ),
-        1
-      ),
-    },
-    summary: {
-      total: countResult.count || dataResult.count || 0,
-      pending: pendingResult.count || 0,
-      confirmed: confirmedResult.count || 0,
-      waitlisted: waitlistedResult.count || 0,
-      rejected: rejectedResult.count || 0,
-      qrIssued: qrIssuedResult.count || 0,
-      checkedIn: checkedInResult.count || 0,
-      exceptionBadges: exceptionResult.count || 0,
-    },
+    total: countResult.count || 0,
+    pending: pendingResult.count || 0,
+    confirmed: confirmedResult.count || 0,
+    waitlisted: waitlistedResult.count || 0,
+    rejected: rejectedResult.count || 0,
+    qrIssued: qrIssuedResult.count || 0,
+    checkedIn: checkedInResult.count || 0,
+    exceptionBadges: exceptionResult.count || 0,
   };
+}
+
+export async function getRegistrationQueueSummary(filters = {}) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase.rpc(
+    'get_registration_queue_summary',
+    buildSummaryRpcArgs(filters)
+  );
+
+  if (!error) {
+    return normalizeSummaryRow(Array.isArray(data) ? data[0] : data);
+  }
+
+  const message = String(error.message || '');
+  const isMissingRpc =
+    error.code === '42883' ||
+    error.code === 'PGRST202' ||
+    message.includes('get_registration_queue_summary');
+
+  if (!isMissingRpc) {
+    throw new Error(error.message);
+  }
+
+  return getRegistrationQueueSummaryFallback(filters);
 }
 
 export async function getRegistrationDetail(registrationId) {

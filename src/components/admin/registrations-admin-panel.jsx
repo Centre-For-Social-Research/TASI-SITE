@@ -19,6 +19,7 @@ import {
   Loader2,
   CheckCircle2,
   QrCode,
+  RefreshCw,
   UserCheck,
   Trash2,
 } from 'lucide-react';
@@ -39,6 +40,7 @@ import {
   StatusDonutChart,
   AdminProgressCard,
 } from '@/components/admin/admin-charts';
+import registrationCache from '@/lib/admin-registration-cache.cjs';
 
 const {
   buildDashboardQueryString,
@@ -48,6 +50,17 @@ const {
   prioritizeRegistrationQueue,
   summarizeSelection,
 } = dashboardUtils;
+
+const {
+  DEFAULT_LIST_TTL_MS,
+  DEFAULT_DETAIL_TTL_MS,
+  createMemoryCache,
+  applyRegistrationListCache,
+  readRegistrationListCache,
+  applyRegistrationDetailCache,
+  readRegistrationDetailCache,
+  invalidateRegistrationCaches,
+} = registrationCache;
 
 function formatDate(value) {
   if (!value) return 'Not yet';
@@ -667,6 +680,12 @@ function RegistrantDrawer({
 }
 
 export default function RegistrationsAdminPanel({ operator }) {
+  const listCacheRef = useRef(
+    createMemoryCache({ ttlMs: DEFAULT_LIST_TTL_MS })
+  );
+  const detailCacheRef = useRef(
+    createMemoryCache({ ttlMs: DEFAULT_DETAIL_TTL_MS })
+  );
   const [filters, setFilters] = useState({
     search: '',
     status: 'all',
@@ -736,9 +755,24 @@ export default function RegistrationsAdminPanel({ operator }) {
     else toast(message);
   };
   const clearToast = () => {};
+  const invalidateAdminCaches = (registrationIds = []) => {
+    invalidateRegistrationCaches({
+      listCache: listCacheRef.current,
+      detailCache: detailCacheRef.current,
+      registrationIds,
+    });
+  };
 
   const loadRegistrations = useCallback(
-    async ({ background = false } = {}) => {
+    async ({ background = false, force = false } = {}) => {
+      const cached = force
+        ? null
+        : readRegistrationListCache(listCacheRef.current, queryString);
+      if (cached) {
+        setState(cached);
+        return;
+      }
+
       if (!background)
         setState((current) => ({ ...current, loading: true, error: '' }));
       try {
@@ -758,14 +792,20 @@ export default function RegistrationsAdminPanel({ operator }) {
             count: 0,
             error: data.error || 'Unable to load registrations.',
           });
-        setState({
+        const nextState = {
           loading: false,
           registrations: data.registrations || [],
           summary: data.summary,
           pagination: data.pagination,
           count: data.count || 0,
           error: '',
-        });
+        };
+        applyRegistrationListCache(
+          listCacheRef.current,
+          queryString,
+          nextState
+        );
+        setState(nextState);
         setSelectedIds((current) =>
           current.filter((id) =>
             (data.registrations || []).some(
@@ -787,36 +827,58 @@ export default function RegistrationsAdminPanel({ operator }) {
     [queryString]
   );
 
-  const loadDetail = useCallback(async (registrationId) => {
-    if (!registrationId) return;
-    setDetailState((current) => ({ ...current, loading: true, error: '' }));
-    try {
-      const response = await fetch(
-        `/api/admin/registrations/${registrationId}`,
-        { cache: 'no-store' }
-      );
-      const data = await response.json();
-      if (!response.ok)
-        return setDetailState({
+  const loadDetail = useCallback(
+    async (registrationId, { force = false } = {}) => {
+      if (!registrationId) return;
+      const cached = force
+        ? null
+        : readRegistrationDetailCache(detailCacheRef.current, registrationId);
+      if (cached) {
+        setDetailState({ loading: false, data: cached, error: '' });
+        setDetailDraft({
+          status: cached.registration.status,
+          speakerFlag: Boolean(cached.registration.speaker_flag),
+          vipFlag: Boolean(cached.registration.vip_flag),
+          reviewNotes: cached.registration.review_notes || '',
+        });
+        return;
+      }
+
+      setDetailState((current) => ({ ...current, loading: true, error: '' }));
+      try {
+        const response = await fetch(
+          `/api/admin/registrations/${registrationId}`,
+          { cache: 'no-store' }
+        );
+        const data = await response.json();
+        if (!response.ok)
+          return setDetailState({
+            loading: false,
+            data: null,
+            error: data.error || 'Unable to load registration detail.',
+          });
+        applyRegistrationDetailCache(
+          detailCacheRef.current,
+          registrationId,
+          data
+        );
+        setDetailState({ loading: false, data, error: '' });
+        setDetailDraft({
+          status: data.registration.status,
+          speakerFlag: Boolean(data.registration.speaker_flag),
+          vipFlag: Boolean(data.registration.vip_flag),
+          reviewNotes: data.registration.review_notes || '',
+        });
+      } catch {
+        setDetailState({
           loading: false,
           data: null,
-          error: data.error || 'Unable to load registration detail.',
+          error: 'Network error while loading registration detail.',
         });
-      setDetailState({ loading: false, data, error: '' });
-      setDetailDraft({
-        status: data.registration.status,
-        speakerFlag: Boolean(data.registration.speaker_flag),
-        vipFlag: Boolean(data.registration.vip_flag),
-        reviewNotes: data.registration.review_notes || '',
-      });
-    } catch {
-      setDetailState({
-        loading: false,
-        data: null,
-        error: 'Network error while loading registration detail.',
-      });
-    }
-  }, []);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     void loadRegistrations();
@@ -848,6 +910,9 @@ export default function RegistrationsAdminPanel({ operator }) {
   };
 
   const openDrawerFor = (registrationId) => {
+    if (registrationId === activeRegistrationId) {
+      void loadDetail(registrationId);
+    }
     setActiveRegistrationId(registrationId);
     setDrawerOpen(true);
   };
@@ -892,9 +957,10 @@ export default function RegistrationsAdminPanel({ operator }) {
   const updateRegistrationStatus = async ({
     registrationId,
     status,
-    speakerFlag = false,
-    vipFlag = false,
+    speakerFlag,
+    vipFlag,
     reviewNotes = '',
+    expectedUpdatedAt = '',
   }) => {
     const response = await fetch('/api/admin/registrations/status', {
       method: 'POST',
@@ -905,6 +971,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         speakerFlag,
         vipFlag,
         reviewNotes,
+        expectedUpdatedAt,
       }),
     });
     const data = await response.json();
@@ -931,8 +998,11 @@ export default function RegistrationsAdminPanel({ operator }) {
           'danger'
         );
       showToast(data.message || 'QR email job queued.', 'success');
-      void loadRegistrations({ background: true });
-      if (activeRegistrationId) void loadDetail(activeRegistrationId);
+      invalidateAdminCaches(registrationIds);
+      void loadRegistrations({ background: true, force: true });
+      if (activeRegistrationId) {
+        void loadDetail(activeRegistrationId, { force: true });
+      }
     } catch {
       showToast('Network error while queueing QR email job.', 'danger');
     }
@@ -952,19 +1022,45 @@ export default function RegistrationsAdminPanel({ operator }) {
           : 'reject';
     setPendingBulk((p) => ({ ...p, [bulkKey]: true }));
     try {
-      await Promise.all(
-        selectedIds.map((registrationId) =>
-          updateRegistrationStatus({ registrationId, status: nextStatus })
-        )
-      );
+      const response = await fetch('/api/admin/registrations/status/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: nextStatus,
+          updates: selectedIds.map((registrationId) => {
+            const registration = state.registrations.find(
+              (item) => item.id === registrationId
+            );
+            return {
+              registrationId,
+              expectedUpdatedAt: registration?.updated_at || '',
+            };
+          }),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok && response.status !== 207)
+        throw new Error(data.error || 'Unable to update registrations.');
+      const updatedCount = data.updatedIds?.length || 0;
+      const conflictCount = data.conflictIds?.length || 0;
       showToast(
-        `Updated ${selectedIds.length} registrants to ${nextStatus}.`,
-        'success'
+        conflictCount
+          ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
+          : `Updated ${updatedCount} registrants to ${nextStatus}.`,
+        conflictCount ? 'warning' : 'success'
       );
-      void loadRegistrations({ background: true });
-      if (activeRegistrationId) void loadDetail(activeRegistrationId);
-    } catch {
-      showToast('Network error during bulk status update.', 'danger');
+      invalidateAdminCaches(selectedIds);
+      void loadRegistrations({ background: true, force: true });
+      if (activeRegistrationId) {
+        void loadDetail(activeRegistrationId, { force: true });
+      }
+    } catch (error) {
+      showToast(
+        error instanceof Error
+          ? error.message
+          : 'Network error during bulk status update.',
+        'danger'
+      );
     } finally {
       setPendingBulk((p) => ({ ...p, [bulkKey]: false }));
     }
@@ -997,6 +1093,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           await updateRegistrationStatus({
             registrationId: registration.id,
             status: 'confirmed',
+            expectedUpdatedAt: registration.updated_at || '',
           });
         await queueQrJob({ registrationIds: [registration.id] });
         return;
@@ -1010,24 +1107,28 @@ export default function RegistrationsAdminPanel({ operator }) {
         await updateRegistrationStatus({
           registrationId: registration.id,
           status: 'confirmed',
+          expectedUpdatedAt: registration.updated_at || '',
         });
       if (actionKey === 'waitlist')
         await updateRegistrationStatus({
           registrationId: registration.id,
           status: 'waitlisted',
+          expectedUpdatedAt: registration.updated_at || '',
         });
       if (actionKey === 'reject')
         await updateRegistrationStatus({
           registrationId: registration.id,
           status: 'rejected',
+          expectedUpdatedAt: registration.updated_at || '',
         });
       showToast(
         `${actionKey} completed for ${registration.first_name} ${registration.last_name}.`,
         'success'
       );
-      void loadRegistrations({ background: true });
+      invalidateAdminCaches([registration.id]);
+      void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId === registration.id)
-        void loadDetail(registration.id);
+        void loadDetail(registration.id, { force: true });
     } catch (error) {
       showToast(
         error instanceof Error
@@ -1055,6 +1156,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         speakerFlag: detailDraft.speakerFlag,
         vipFlag: detailDraft.vipFlag,
         reviewNotes: detailDraft.reviewNotes,
+        expectedUpdatedAt: detailState.data?.registration?.updated_at || '',
       });
       showToast(
         data.emailResult?.queued
@@ -1062,8 +1164,9 @@ export default function RegistrationsAdminPanel({ operator }) {
           : 'Notes saved.',
         'success'
       );
-      void loadRegistrations({ background: true });
-      void loadDetail(registrationId);
+      invalidateAdminCaches([registrationId]);
+      void loadRegistrations({ background: true, force: true });
+      void loadDetail(registrationId, { force: true });
     } catch (error) {
       showToast(
         error instanceof Error
@@ -1102,7 +1205,8 @@ export default function RegistrationsAdminPanel({ operator }) {
             : 'Attendee email action completed.',
         'success'
       );
-      void loadDetail(registrationId);
+      invalidateAdminCaches([registrationId]);
+      void loadDetail(registrationId, { force: true });
     } catch {
       showToast('Network error while resending attendee email.', 'danger');
     }
@@ -1127,7 +1231,8 @@ export default function RegistrationsAdminPanel({ operator }) {
       setDrawerOpen(false);
       setActiveRegistrationId('');
       showToast('Registration deleted.', 'success');
-      void loadRegistrations();
+      invalidateAdminCaches([registrationId]);
+      void loadRegistrations({ force: true });
     } catch {
       showToast('Network error while deleting registration.', 'danger');
     }
@@ -1158,6 +1263,22 @@ export default function RegistrationsAdminPanel({ operator }) {
         chips={['Review decisions', 'Bulk status updates', 'QR pass delivery']}
         actions={
           <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={state.loading || hasConfigError}
+              onClick={() => {
+                invalidateAdminCaches();
+                void loadRegistrations({ force: true });
+                if (activeRegistrationId) {
+                  detailCacheRef.current.delete(activeRegistrationId);
+                  void loadDetail(activeRegistrationId, { force: true });
+                }
+              }}
+              className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10 dark:hover:bg-white/10"
+            >
+              <RefreshCw className="h-3 w-3" />
+              Refresh
+            </button>
             {['csv', 'xlsx', 'pdf'].map((format) => (
               <button
                 key={format}

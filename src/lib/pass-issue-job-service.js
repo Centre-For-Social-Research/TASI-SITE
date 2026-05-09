@@ -7,6 +7,7 @@ import {
 import { buildPassAttachment } from '@/lib/registration-pass';
 import { uploadPassQrImage } from '@/lib/registration-pass-assets';
 import { deliverRegistrationEmail } from '@/lib/registration-email';
+import { deliverHighPriorityRegistrationWhatsApp } from '@/lib/registration-whatsapp-notifications';
 import {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
@@ -84,6 +85,12 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
   if (!emailResult.sent) {
     throw new Error(emailResult.error || 'Unable to deliver QR pass email.');
   }
+
+  await deliverHighPriorityRegistrationWhatsApp({
+    registration: issued.registration,
+    templateType: 'qr_pass_issued',
+    operator,
+  });
 
   return updatePassIssueEmailJobItem(item.id, {
     status: 'sent',

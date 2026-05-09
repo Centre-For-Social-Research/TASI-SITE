@@ -7,6 +7,7 @@ import {
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
 import { deliverRegistrationEmail } from '@/lib/registration-email';
 import { createPassIssueEmailJob } from '@/lib/pass-issue-job-service';
+import { adminJson } from '@/lib/admin-api-cache';
 
 const ALLOWED_TEMPLATES = new Set([
   'submission_received',
@@ -30,7 +31,7 @@ export async function POST(request) {
     const templateType = String(body?.templateType || '').trim();
 
     if (!registrationId || !ALLOWED_TEMPLATES.has(templateType)) {
-      return Response.json(
+      return adminJson(
         { error: 'Registration ID and valid template type are required.' },
         { status: 400 }
       );
@@ -43,7 +44,7 @@ export async function POST(request) {
         operator: authResult.operator,
       });
 
-      return Response.json({
+      return adminJson({
         success: true,
         result: {
           queued: true,
@@ -87,9 +88,9 @@ export async function POST(request) {
       });
     }
 
-    return Response.json({ success: true, result });
+    return adminJson({ success: true, result });
   } catch (error) {
-    return Response.json(
+    return adminJson(
       {
         error:
           error instanceof Error ? error.message : 'Unable to resend email.',

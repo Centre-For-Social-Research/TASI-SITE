@@ -12,6 +12,14 @@ function getSupabase() {
   return getSupabaseAdmin();
 }
 
+export class StaleRegistrationUpdateError extends Error {
+  constructor(message = 'Registration changed before this update could save.') {
+    super(message);
+    this.name = 'StaleRegistrationUpdateError';
+    this.code = 'STALE_REGISTRATION_UPDATE';
+  }
+}
+
 function baseRegistrationSelect() {
   return `
     id,
@@ -148,22 +156,31 @@ export async function createNotification({
   registrationId,
   templateType,
   recipientEmail,
+  recipientPhone = null,
+  deliveryChannel = 'email',
   actorClerkId = null,
   actorEmail = null,
 }) {
   const supabase = getSupabase();
+  const notification = {
+    registration_id: registrationId,
+    template_type: templateType,
+    recipient_email: recipientEmail,
+    delivery_status: 'queued',
+    actor_clerk_id: actorClerkId,
+    actor_email: actorEmail,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  if (deliveryChannel !== 'email' || recipientPhone) {
+    notification.delivery_channel = deliveryChannel;
+    notification.recipient_phone = recipientPhone;
+  }
+
   const { data, error } = await supabase
     .from('registration_notifications')
-    .insert({
-      registration_id: registrationId,
-      template_type: templateType,
-      recipient_email: recipientEmail,
-      delivery_status: 'queued',
-      actor_clerk_id: actorClerkId,
-      actor_email: actorEmail,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
+    .insert(notification)
     .select('id')
     .single();
 
@@ -288,25 +305,30 @@ export async function updateRegistrationStatus({
   registrationId,
   status,
   reviewNotes,
-  speakerFlag = false,
-  vipFlag = false,
+  speakerFlag,
+  vipFlag,
   operator,
+  expectedUpdatedAt,
 }) {
   const existing = await getRegistrationById(registrationId);
+  const nextSpeakerFlag =
+    typeof speakerFlag === 'boolean' ? speakerFlag : existing.speaker_flag;
+  const nextVipFlag =
+    typeof vipFlag === 'boolean' ? vipFlag : existing.vip_flag;
   const badgeColor = getBadgeColor({
     attendeeCategory: existing.attendee_category,
-    speakerFlag,
-    vipFlag,
+    speakerFlag: nextSpeakerFlag,
+    vipFlag: nextVipFlag,
   });
   const exceptionBadgeRequired = status === 'confirmed' && isAfterBadgeFreeze();
   const supabase = getSupabase();
-  const { data, error } = await supabase
+  let updateQuery = supabase
     .from('event_registrations')
     .update({
       status,
       review_notes: reviewNotes || null,
-      speaker_flag: speakerFlag,
-      vip_flag: vipFlag,
+      speaker_flag: nextSpeakerFlag,
+      vip_flag: nextVipFlag,
       badge_color_label: badgeColor.label,
       badge_color_hex: badgeColor.hex,
       reviewed_at: new Date().toISOString(),
@@ -315,12 +337,22 @@ export async function updateRegistrationStatus({
       exception_badge_required: exceptionBadgeRequired,
       updated_at: new Date().toISOString(),
     })
-    .eq('id', registrationId)
+    .eq('id', registrationId);
+
+  if (expectedUpdatedAt) {
+    updateQuery = updateQuery.eq('updated_at', expectedUpdatedAt);
+  }
+
+  const { data, error } = await updateQuery
     .select(baseRegistrationSelect())
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new StaleRegistrationUpdateError();
   }
 
   await appendStatusHistory({

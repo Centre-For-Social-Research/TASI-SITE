@@ -1,6 +1,7 @@
 import { requireAdminOperator } from '@/lib/registration-auth';
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
 import { createPassIssueEmailJob } from '@/lib/pass-issue-job-service';
+import { adminJson } from '@/lib/admin-api-cache';
 
 export async function POST(request) {
   const authResult = await requireAdminOperator({
@@ -15,7 +16,7 @@ export async function POST(request) {
     const registrationId = String(body?.registrationId || '').trim();
 
     if (!registrationId) {
-      return Response.json(
+      return adminJson(
         { error: 'Registration ID is required.' },
         { status: 400 }
       );
@@ -26,7 +27,7 @@ export async function POST(request) {
       operator: authResult.operator,
     });
 
-    return Response.json({
+    return adminJson({
       success: true,
       job: {
         ...job,
@@ -55,6 +56,6 @@ export async function POST(request) {
       ? 400
       : 500;
 
-    return Response.json({ error: message }, { status });
+    return adminJson({ error: message }, { status });
   }
 }

@@ -1,32 +1,101 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
-import { getStoredAdminEmails, addStoredEmail, removeStoredEmail } from '@/lib/admin-email-store';
+import {
+  getStoredAdminEmails,
+  addStoredEmail,
+  removeStoredEmail,
+} from '@/lib/admin-email-store';
+import {
+  getAzureWhatsAppConfig,
+  isAzureWhatsAppConfigured,
+} from '@/lib/azure-whatsapp';
 
 export async function GET() {
-  const authResult = await requireAuthorizedOperator({ route: 'api.admin.settings' });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.settings',
+  });
   if (!authResult.ok) return authResult.response;
 
   const accessMode = process.env.CLERK_ACCESS_MODE || 'both';
-  const envAdminEmails = (process.env.CLERK_ADMIN_EMAILS || '').split(',').map((s) => s.trim()).filter(Boolean);
-  const envReviewerEmails = (process.env.CLERK_REVIEWER_EMAILS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const envAdminEmails = (process.env.CLERK_ADMIN_EMAILS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const envReviewerEmails = (process.env.CLERK_REVIEWER_EMAILS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   const stored = await getStoredAdminEmails();
+  const azureWhatsApp = getAzureWhatsAppConfig();
 
   const allAdminEmails = [
     ...envAdminEmails.map((e) => ({ email: e, source: 'env' })),
-    ...stored.adminEmails.filter((e) => !envAdminEmails.includes(e)).map((e) => ({ email: e, source: 'db' })),
+    ...stored.adminEmails
+      .filter((e) => !envAdminEmails.includes(e))
+      .map((e) => ({ email: e, source: 'db' })),
   ];
   const allReviewerEmails = [
     ...envReviewerEmails.map((e) => ({ email: e, source: 'env' })),
-    ...stored.reviewerEmails.filter((e) => !envReviewerEmails.includes(e)).map((e) => ({ email: e, source: 'db' })),
+    ...stored.reviewerEmails
+      .filter((e) => !envReviewerEmails.includes(e))
+      .map((e) => ({ email: e, source: 'db' })),
   ];
 
   const integrations = [
-    { key: 'supabase',  label: 'Supabase',  ok: Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY), optional: false },
-    { key: 'clerk',     label: 'Clerk',     ok: Boolean(process.env.CLERK_SECRET_KEY), optional: false },
-    { key: 'razorpay',  label: 'Razorpay',  ok: Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET), optional: false },
-    { key: 'resend',    label: 'Resend',    ok: Boolean(process.env.RESEND_API_KEY), optional: false },
-    { key: 'upstash',   label: 'Upstash',   ok: Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN), optional: true },
-    { key: 'sentry',    label: 'Sentry',    ok: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN), optional: true },
+    {
+      key: 'supabase',
+      label: 'Supabase',
+      ok: Boolean(
+        process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+      ),
+      optional: false,
+    },
+    {
+      key: 'clerk',
+      label: 'Clerk',
+      ok: Boolean(process.env.CLERK_SECRET_KEY),
+      optional: false,
+    },
+    {
+      key: 'razorpay',
+      label: 'Razorpay',
+      ok: Boolean(
+        process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET
+      ),
+      optional: false,
+    },
+    {
+      key: 'resend',
+      label: 'Resend',
+      ok: Boolean(process.env.RESEND_API_KEY),
+      optional: false,
+    },
+    {
+      key: 'azure-whatsapp',
+      label: 'Azure WhatsApp',
+      ok:
+        isAzureWhatsAppConfigured(azureWhatsApp) &&
+        Boolean(
+          azureWhatsApp.templateByType.confirmed &&
+          azureWhatsApp.templateByType.qr_pass_issued
+        ),
+      optional: true,
+    },
+    {
+      key: 'upstash',
+      label: 'Upstash',
+      ok: Boolean(
+        process.env.UPSTASH_REDIS_REST_URL &&
+        process.env.UPSTASH_REDIS_REST_TOKEN
+      ),
+      optional: true,
+    },
+    {
+      key: 'sentry',
+      label: 'Sentry',
+      ok: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN),
+      optional: true,
+    },
   ];
 
   return Response.json({
@@ -58,10 +127,15 @@ export async function GET() {
 }
 
 export async function PATCH(request) {
-  const authResult = await requireAuthorizedOperator({ route: 'api.admin.settings' });
+  const authResult = await requireAuthorizedOperator({
+    route: 'api.admin.settings',
+  });
   if (!authResult.ok) return authResult.response;
   if (authResult.operator?.role !== 'admin') {
-    return Response.json({ ok: false, error: 'Admin role required' }, { status: 403 });
+    return Response.json(
+      { ok: false, error: 'Admin role required' },
+      { status: 403 }
+    );
   }
 
   let body;
@@ -75,24 +149,46 @@ export async function PATCH(request) {
   const actorEmail = authResult.operator?.primaryEmail || 'unknown';
 
   if (!email || typeof email !== 'string' || !email.includes('@')) {
-    return Response.json({ ok: false, error: 'Valid email required' }, { status: 400 });
+    return Response.json(
+      { ok: false, error: 'Valid email required' },
+      { status: 400 }
+    );
   }
 
-  const envAdminEmails = (process.env.CLERK_ADMIN_EMAILS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
-  const envReviewerEmails = (process.env.CLERK_REVIEWER_EMAILS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+  const envAdminEmails = (process.env.CLERK_ADMIN_EMAILS || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  const envReviewerEmails = (process.env.CLERK_REVIEWER_EMAILS || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
   const normalised = email.toLowerCase().trim();
 
   if (action === 'add') {
     if (!role || !['admin', 'reviewer'].includes(role)) {
-      return Response.json({ ok: false, error: 'Role must be admin or reviewer' }, { status: 400 });
+      return Response.json(
+        { ok: false, error: 'Role must be admin or reviewer' },
+        { status: 400 }
+      );
     }
     const ok = await addStoredEmail(normalised, role, actorEmail);
     return Response.json({ ok, error: ok ? undefined : 'Failed to save' });
   }
 
   if (action === 'remove') {
-    if (envAdminEmails.includes(normalised) || envReviewerEmails.includes(normalised)) {
-      return Response.json({ ok: false, error: 'Env-var emails cannot be removed here — update CLERK_ADMIN_EMAILS or CLERK_REVIEWER_EMAILS in your environment.' }, { status: 400 });
+    if (
+      envAdminEmails.includes(normalised) ||
+      envReviewerEmails.includes(normalised)
+    ) {
+      return Response.json(
+        {
+          ok: false,
+          error:
+            'Env-var emails cannot be removed here — update CLERK_ADMIN_EMAILS or CLERK_REVIEWER_EMAILS in your environment.',
+        },
+        { status: 400 }
+      );
     }
     const ok = await removeStoredEmail(normalised);
     return Response.json({ ok, error: ok ? undefined : 'Failed to remove' });

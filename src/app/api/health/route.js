@@ -13,6 +13,10 @@ import {
   studioPreviewUrl,
 } from '@/sanity/env';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
+import {
+  getAzureWhatsAppConfig,
+  isAzureWhatsAppConfigured,
+} from '@/lib/azure-whatsapp';
 
 export async function GET(request) {
   // Public callers only get a simple status response
@@ -57,6 +61,7 @@ export async function GET(request) {
   const resendFromEmail = getResendFromEmail();
   const resendSenderDiagnostics = getResendSenderDiagnostics();
   const inboundNotificationRecipients = getInboundNotificationRecipients();
+  const azureWhatsApp = getAzureWhatsAppConfig();
 
   return Response.json({
     status: 'ok',
@@ -86,6 +91,19 @@ export async function GET(request) {
           inboundNotificationRecipients.length > 0,
         inboundNotificationRecipientsCount:
           inboundNotificationRecipients.length,
+      },
+      azureWhatsApp: {
+        enabled: azureWhatsApp.enabled,
+        configured: isAzureWhatsAppConfigured(azureWhatsApp),
+        channelRegistrationConfigured: Boolean(
+          azureWhatsApp.channelRegistrationId
+        ),
+        confirmedTemplateConfigured: Boolean(
+          azureWhatsApp.templateByType.confirmed
+        ),
+        qrPassTemplateConfigured: Boolean(
+          azureWhatsApp.templateByType.qr_pass_issued
+        ),
       },
       sanity: {
         configured: isSanityConfigured,

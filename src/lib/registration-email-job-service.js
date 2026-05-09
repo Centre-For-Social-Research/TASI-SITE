@@ -4,6 +4,7 @@ import {
   markNotificationDelivery,
 } from './registration-db.js';
 import { deliverRegistrationEmail } from './registration-email.js';
+import { deliverHighPriorityRegistrationWhatsApp } from './registration-whatsapp-notifications.js';
 import {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
@@ -39,6 +40,7 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     updateJobItem = updateRegistrationEmailJobItem,
     getRegistration = getRegistrationById,
     sendRegistrationEmail = deliverRegistrationEmail,
+    sendRegistrationWhatsApp = deliverHighPriorityRegistrationWhatsApp,
     createRegistrationNotification = createNotification,
     updateNotificationDelivery = markNotificationDelivery,
     listJobItems = listRegistrationEmailJobItems,
@@ -99,6 +101,73 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     }
   }
 
+  async function queueRegistrationEmailBatchJob({
+    registrations = [],
+    templateType,
+    operator = null,
+  }) {
+    const normalizedRegistrations = registrations.filter(
+      (registration) => registration?.id
+    );
+
+    if (!normalizedRegistrations.length) {
+      return {
+        queued: false,
+        jobId: null,
+        notificationIds: [],
+        empty: true,
+      };
+    }
+
+    try {
+      const notifications = await Promise.all(
+        normalizedRegistrations.map(async (registration) => ({
+          registrationId: registration.id,
+          notificationId: await createRegistrationNotification({
+            registrationId: registration.id,
+            templateType,
+            recipientEmail:
+              registration.email ||
+              (await getRegistration(registration.id)).email,
+            actorClerkId: operator?.userId || null,
+            actorEmail: operator?.primaryEmail || null,
+          }),
+          templateType,
+        }))
+      );
+
+      const job = await createJobRecord({
+        templateType,
+        operator,
+      });
+
+      await insertJobItems({
+        jobId: job.id,
+        items: notifications,
+        maxAttempts: MAX_JOB_RETRIES,
+      });
+
+      const refreshedJob = await refreshJob(job.id);
+      return {
+        queued: true,
+        jobId: refreshedJob.id,
+        notificationIds: notifications.map((item) => item.notificationId),
+        totalItems: refreshedJob.total_items || notifications.length,
+      };
+    } catch (error) {
+      if (isQueueInfrastructureUnavailable(error)) {
+        return {
+          queued: false,
+          queueUnavailable: true,
+          error:
+            'Registration confirmation email queue is unavailable. Updates were saved but email was not queued.',
+        };
+      }
+
+      throw error;
+    }
+  }
+
   async function processRegistrationEmailJob({
     jobId,
     operator = createSystemOperator(),
@@ -122,6 +191,12 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
             emailResult.error || 'Unable to deliver registration email.'
           );
         }
+
+        await sendRegistrationWhatsApp({
+          registration,
+          templateType: item.template_type,
+          operator,
+        });
 
         await updateJobItem(item.id, {
           status: 'sent',
@@ -183,6 +258,7 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
 
   return {
     queueRegistrationEmailJob,
+    queueRegistrationEmailBatchJob,
     processRegistrationEmailJob,
     processNextAvailableRegistrationEmailJob,
     getRegistrationEmailJobDetail,
@@ -194,6 +270,8 @@ const defaultProcessor = createRegistrationEmailJobProcessor();
 
 export const queueRegistrationEmailJob =
   defaultProcessor.queueRegistrationEmailJob;
+export const queueRegistrationEmailBatchJob =
+  defaultProcessor.queueRegistrationEmailBatchJob;
 export const processRegistrationEmailJob =
   defaultProcessor.processRegistrationEmailJob;
 export const processNextAvailableRegistrationEmailJob =

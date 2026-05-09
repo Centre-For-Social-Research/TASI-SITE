@@ -1,7 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import path from 'node:path';
-import { imageSize } from 'image-size';
-import { protectPublicRoute } from '@/lib/api-security';
+import { protectPublicMultipartPostRoute } from '@/lib/api-security';
 import {
   getCompletedIdempotentResponse,
   getIdempotencyKey,
@@ -22,28 +20,23 @@ import {
   buildStoragePath,
   normalizeRegistrationPayload,
 } from '@/lib/registration-utils';
+import {
+  UploadValidationError,
+  validateUploadedImageFile,
+} from '@/lib/upload-validation';
 
-const ACCEPTED_MIME_TYPES = new Set(['image/jpeg', 'image/png']);
 const MAX_FILE_SIZE_BYTES = 100 * 1024;
 const MIN_IMAGE_SIZE = 200;
 
-function getFileExtension(file) {
-  const extension = path
-    .extname(file.name || '')
-    .replace('.', '')
-    .toLowerCase();
-  if (extension === 'jpeg') {
-    return 'jpg';
-  }
-
-  return extension || (file.type === 'image/png' ? 'png' : 'jpg');
-}
-
 export async function POST(request) {
-  const protection = await protectPublicRoute(request, 'registrations-create', {
-    windowMs: 15 * 60 * 1000,
-    maxRequests: 3,
-  });
+  const protection = await protectPublicMultipartPostRoute(
+    request,
+    'registrations-create',
+    {
+      windowMs: 15 * 60 * 1000,
+      maxRequests: 3,
+    }
+  );
 
   if (!protection.ok) {
     return protection.response;
@@ -78,7 +71,10 @@ export async function POST(request) {
       request,
       `registration:${registration.email}:${registration.first_name}:${registration.last_name}`
     );
-    const cached = await getCompletedIdempotentResponse('registration-create', idempotencyKey);
+    const cached = await getCompletedIdempotentResponse(
+      'registration-create',
+      idempotencyKey
+    );
     if (cached) {
       return Response.json(cached, { headers: protection.headers });
     }
@@ -90,49 +86,25 @@ export async function POST(request) {
       );
     }
 
-    if (!ACCEPTED_MIME_TYPES.has(profilePhoto.type)) {
-      return Response.json(
-        { error: 'Profile photo must be a JPG, JPEG, or PNG file.' },
-        { status: 400, headers: protection.headers }
-      );
-    }
-
-    if (profilePhoto.size > MAX_FILE_SIZE_BYTES) {
-      return Response.json(
-        { error: 'Profile photo must be 100KB or smaller.' },
-        { status: 400, headers: protection.headers }
-      );
-    }
-
-    const arrayBuffer = await profilePhoto.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const dimensions = imageSize(buffer);
-
-    if (
-      !dimensions.width ||
-      !dimensions.height ||
-      dimensions.width < MIN_IMAGE_SIZE ||
-      dimensions.height < MIN_IMAGE_SIZE
-    ) {
-      return Response.json(
-        { error: 'Profile photo must be at least 200 x 200 pixels.' },
-        { status: 400, headers: protection.headers }
-      );
-    }
+    const validatedPhoto = await validateUploadedImageFile(profilePhoto, {
+      fieldName: 'Profile photo',
+      maxBytes: MAX_FILE_SIZE_BYTES,
+      minWidth: MIN_IMAGE_SIZE,
+      minHeight: MIN_IMAGE_SIZE,
+    });
 
     const registrationId = randomUUID();
     const registrationCode = buildRegistrationCode();
-    const extension = getFileExtension(profilePhoto);
     const storagePath = buildStoragePath({
       registrationId,
-      extension,
+      extension: validatedPhoto.extension,
     });
     const supabase = getSupabaseAdmin();
 
     const { error: uploadError } = await supabase.storage
       .from(PROFILE_BUCKET)
-      .upload(storagePath, buffer, {
-        contentType: profilePhoto.type,
+      .upload(storagePath, validatedPhoto.buffer, {
+        contentType: validatedPhoto.contentType,
         upsert: false,
       });
 
@@ -150,18 +122,18 @@ export async function POST(request) {
         ...registration,
         source: REGISTRATION_SOURCE,
         profile_photo_path: storagePath,
-        profile_photo_size_bytes: profilePhoto.size,
-        profile_photo_width: dimensions.width,
-        profile_photo_height: dimensions.height,
+        profile_photo_size_bytes: validatedPhoto.sizeBytes,
+        profile_photo_width: validatedPhoto.dimensions.width,
+        profile_photo_height: validatedPhoto.dimensions.height,
       },
       profilePhoto: {
         bucket: PROFILE_BUCKET,
         path: storagePath,
         originalFilename: profilePhoto.name,
-        mimeType: profilePhoto.type,
-        sizeBytes: profilePhoto.size,
-        width: dimensions.width,
-        height: dimensions.height,
+        mimeType: validatedPhoto.contentType,
+        sizeBytes: validatedPhoto.sizeBytes,
+        width: validatedPhoto.dimensions.width,
+        height: validatedPhoto.dimensions.height,
       },
     });
 
@@ -194,21 +166,27 @@ export async function POST(request) {
     });
 
     const response = {
-        success: true,
-        registrationId: createdRegistration.id,
-        registrationCode: createdRegistration.registration_code,
-        emailQueued: Boolean(emailResult.queued),
-        emailError: emailResult.queued ? null : emailResult.error || null,
-      };
-    await storeIdempotentResponse('registration-create', idempotencyKey, response, registration.email);
+      success: true,
+      registrationId: createdRegistration.id,
+      registrationCode: createdRegistration.registration_code,
+      emailQueued: Boolean(emailResult.queued),
+      emailError: emailResult.queued ? null : emailResult.error || null,
+    };
+    await storeIdempotentResponse(
+      'registration-create',
+      idempotencyKey,
+      response,
+      registration.email
+    );
 
     return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'Unable to submit registration.';
+    const status = error instanceof UploadValidationError ? 400 : 500;
     return Response.json(
       { error: message },
-      { status: 500, headers: protection.headers }
+      { status, headers: protection.headers }
     );
   }
 }

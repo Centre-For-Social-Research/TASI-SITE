@@ -10,6 +10,15 @@ import {
 const FIELD_CLASS =
   'h-12 rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-amber-500/20';
 const ERROR_CLASS = 'mt-1 text-xs text-red-600 dark:text-red-400';
+const ALLOWED_PHOTO_TYPES = new Set(['image/jpeg', 'image/png']);
+const ALLOWED_PHOTO_EXTENSIONS = new Set(['jpg', 'jpeg', 'png']);
+
+function getFileExtension(fileName) {
+  return String(fileName || '')
+    .split('.')
+    .pop()
+    .toLowerCase();
+}
 
 async function readImageDimensions(file) {
   const imageUrl = URL.createObjectURL(file);
@@ -67,10 +76,15 @@ export default function RegistrationForm() {
       return;
     }
 
-    const allowedTypes = ['image/jpeg', 'image/png'];
-    if (!allowedTypes.includes(file.type)) {
+    if (!ALLOWED_PHOTO_TYPES.has(file.type)) {
       setProfilePhoto(null);
       setPhotoError('Only JPG, JPEG, and PNG files are supported.');
+      return;
+    }
+
+    if (!ALLOWED_PHOTO_EXTENSIONS.has(getFileExtension(file.name))) {
+      setProfilePhoto(null);
+      setPhotoError('Profile photo filename must end in .jpg, .jpeg, or .png.');
       return;
     }
 
@@ -336,7 +350,7 @@ export default function RegistrationForm() {
           </span>
           <input
             type="file"
-            accept=".jpg,.jpeg,.png"
+            accept="image/jpeg,image/png,.jpg,.jpeg,.png"
             onChange={handlePhotoChange}
             className="rounded-[10px] border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300"
           />

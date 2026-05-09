@@ -1,4 +1,5 @@
 create extension if not exists pgcrypto;
+create extension if not exists pg_trgm;
 
 create table if not exists public.newsletter_subscribers (
   id bigint generated always as identity primary key,
@@ -67,6 +68,74 @@ create index if not exists idx_event_registrations_created_at on public.event_re
 create index if not exists idx_event_registrations_status_created on public.event_registrations(status, created_at desc);
 create index if not exists idx_event_registrations_qr_issued on public.event_registrations(qr_pass_issued_at desc);
 create index if not exists idx_event_registrations_checked_in on public.event_registrations(checked_in_at desc);
+create index if not exists idx_event_registrations_country on public.event_registrations(country);
+create index if not exists idx_event_registrations_city on public.event_registrations(city);
+create index if not exists idx_event_registrations_organization on public.event_registrations(organization);
+create index if not exists idx_event_registrations_first_name_trgm on public.event_registrations using gin (first_name gin_trgm_ops);
+create index if not exists idx_event_registrations_last_name_trgm on public.event_registrations using gin (last_name gin_trgm_ops);
+create index if not exists idx_event_registrations_email_trgm on public.event_registrations using gin (email gin_trgm_ops);
+create index if not exists idx_event_registrations_registration_code_trgm on public.event_registrations using gin (registration_code gin_trgm_ops);
+create index if not exists idx_event_registrations_organization_trgm on public.event_registrations using gin (organization gin_trgm_ops);
+
+create or replace function public.get_registration_queue_summary(
+  p_search text default '',
+  p_status text default 'all',
+  p_category text default 'all',
+  p_priority_tier text default 'all',
+  p_country text default '',
+  p_city text default '',
+  p_organization text default '',
+  p_speaker_flag text default '',
+  p_late_confirmation text default ''
+)
+returns table (
+  total bigint,
+  pending bigint,
+  confirmed bigint,
+  waitlisted bigint,
+  rejected bigint,
+  qr_issued bigint,
+  checked_in bigint,
+  exception_badges bigint
+)
+language sql
+security invoker
+set search_path = public
+as $$
+  with filtered as (
+    select *
+    from public.event_registrations
+    where (coalesce(nullif(trim(p_status), ''), 'all') = 'all' or status = trim(p_status))
+      and (coalesce(nullif(trim(p_category), ''), 'all') = 'all' or attendee_category = trim(p_category))
+      and (coalesce(nullif(trim(p_priority_tier), ''), 'all') = 'all' or priority_tier = trim(p_priority_tier))
+      and (coalesce(trim(p_country), '') = '' or country ilike '%' || trim(p_country) || '%')
+      and (coalesce(trim(p_city), '') = '' or city ilike '%' || trim(p_city) || '%')
+      and (coalesce(trim(p_organization), '') = '' or organization ilike '%' || trim(p_organization) || '%')
+      and (trim(p_speaker_flag) <> 'yes' or speaker_flag is true)
+      and (trim(p_late_confirmation) <> 'yes' or exception_badge_required is true)
+      and (
+        coalesce(trim(p_search), '') = ''
+        or first_name ilike '%' || trim(p_search) || '%'
+        or last_name ilike '%' || trim(p_search) || '%'
+        or email ilike '%' || trim(p_search) || '%'
+        or registration_code ilike '%' || trim(p_search) || '%'
+        or organization ilike '%' || trim(p_search) || '%'
+      )
+  )
+  select
+    count(*)::bigint as total,
+    count(*) filter (where status = 'pending')::bigint as pending,
+    count(*) filter (where status = 'confirmed')::bigint as confirmed,
+    count(*) filter (where status = 'waitlisted')::bigint as waitlisted,
+    count(*) filter (where status = 'rejected')::bigint as rejected,
+    count(*) filter (where qr_pass_issued_at is not null)::bigint as qr_issued,
+    count(*) filter (where checked_in_at is not null)::bigint as checked_in,
+    count(*) filter (where exception_badge_required is true)::bigint as exception_badges
+  from filtered;
+$$;
+
+revoke all on function public.get_registration_queue_summary(text, text, text, text, text, text, text, text, text) from public, anon, authenticated;
+grant execute on function public.get_registration_queue_summary(text, text, text, text, text, text, text, text, text) to service_role;
 
 create table if not exists public.registration_assets (
   id uuid primary key default gen_random_uuid(),
@@ -102,8 +171,10 @@ create table if not exists public.registration_notifications (
   id uuid primary key default gen_random_uuid(),
   registration_id uuid not null references public.event_registrations(id) on delete cascade,
   template_type text not null,
-  recipient_email text not null,
-  delivery_status text not null default 'queued' check (delivery_status in ('queued', 'sent', 'delivered', 'bounced', 'complained', 'failed', 'resent')),
+  delivery_channel text not null default 'email' check (delivery_channel in ('email', 'whatsapp')),
+  recipient_email text,
+  recipient_phone text,
+  delivery_status text not null default 'queued' check (delivery_status in ('queued', 'sent', 'delivered', 'bounced', 'complained', 'failed', 'resent', 'skipped')),
   provider_message_id text,
   provider_payload jsonb,
   failure_reason text,
@@ -116,6 +187,29 @@ create table if not exists public.registration_notifications (
 create index if not exists idx_registration_notifications_registration on public.registration_notifications(registration_id, created_at desc);
 create index if not exists idx_registration_notifications_provider_message on public.registration_notifications(provider_message_id);
 create index if not exists idx_registration_notifications_status on public.registration_notifications(delivery_status, created_at desc);
+create index if not exists idx_registration_notifications_channel on public.registration_notifications(delivery_channel, delivery_status, created_at desc);
+
+alter table public.registration_notifications
+  add column if not exists delivery_channel text not null default 'email',
+  add column if not exists recipient_phone text;
+
+alter table public.registration_notifications
+  alter column recipient_email drop not null;
+
+do $$
+begin
+  alter table public.registration_notifications
+    drop constraint if exists registration_notifications_delivery_channel_check;
+  alter table public.registration_notifications
+    add constraint registration_notifications_delivery_channel_check
+    check (delivery_channel in ('email', 'whatsapp'));
+
+  alter table public.registration_notifications
+    drop constraint if exists registration_notifications_delivery_status_check;
+  alter table public.registration_notifications
+    add constraint registration_notifications_delivery_status_check
+    check (delivery_status in ('queued', 'sent', 'delivered', 'bounced', 'complained', 'failed', 'resent', 'skipped'));
+end $$;
 
 create table if not exists public.entry_passes (
   id uuid primary key default gen_random_uuid(),

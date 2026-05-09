@@ -75,6 +75,10 @@ const INITIAL_FORM = {
   privacyAccepted: false,
 };
 
+const ALLOWED_PHOTO_TYPES = new Set(['image/jpeg', 'image/png']);
+const ALLOWED_PHOTO_EXTENSIONS = new Set(['jpg', 'jpeg', 'png']);
+const MAX_PHOTO_SIZE_BYTES = 2 * 1024 * 1024;
+
 const FESTIVAL_PASS_OPTIONS = [
   {
     label: 'Domestic',
@@ -276,6 +280,29 @@ function getTicketSurfaceStyle(pattern) {
   return undefined;
 }
 
+function getFileExtension(fileName) {
+  return String(fileName || '')
+    .split('.')
+    .pop()
+    .toLowerCase();
+}
+
+function validateTicketPhotoFile(file) {
+  if (!ALLOWED_PHOTO_TYPES.has(file.type)) {
+    return 'Photo must be a JPG, JPEG, or PNG file.';
+  }
+
+  if (!ALLOWED_PHOTO_EXTENSIONS.has(getFileExtension(file.name))) {
+    return 'Photo filename must end in .jpg, .jpeg, or .png.';
+  }
+
+  if (file.size > MAX_PHOTO_SIZE_BYTES) {
+    return 'Photo must be 2 MB or smaller.';
+  }
+
+  return '';
+}
+
 function getSelectionForCountry(country) {
   return String(country || '')
     .trim()
@@ -448,6 +475,12 @@ export default function FestivalTicketingSection() {
     };
   }, [ticketModalOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+  }, [photoPreview]);
+
   const fieldClassName =
     'mt-2 h-12 w-full rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200';
 
@@ -485,7 +518,10 @@ export default function FestivalTicketingSection() {
     setSelectedCard(null);
     setStep('details');
     setSubmitting(false);
-    setPhotoPreview(null);
+    setPhotoPreview((currentPreview) => {
+      if (currentPreview) URL.revokeObjectURL(currentPreview);
+      return null;
+    });
     setPhotoUploadStatus('idle');
     setPaymentSession({
       status: 'idle',
@@ -502,7 +538,24 @@ export default function FestivalTicketingSection() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    setPhotoPreview(URL.createObjectURL(file));
+    const photoError = validateTicketPhotoFile(file);
+    if (photoError) {
+      setPhotoPreview((currentPreview) => {
+        if (currentPreview) URL.revokeObjectURL(currentPreview);
+        return null;
+      });
+      setPhotoUploadStatus('error');
+      updateField('profilePhotoPath', '');
+      setStatus({ type: 'error', message: photoError });
+      event.target.value = '';
+      return;
+    }
+
+    const nextPreview = URL.createObjectURL(file);
+    setPhotoPreview((currentPreview) => {
+      if (currentPreview) URL.revokeObjectURL(currentPreview);
+      return nextPreview;
+    });
     setPhotoUploadStatus('uploading');
     updateField('profilePhotoPath', '');
 
@@ -519,6 +572,8 @@ export default function FestivalTicketingSection() {
       updateField('profilePhotoPath', data.path);
       setPhotoUploadStatus('done');
     } catch (err) {
+      URL.revokeObjectURL(nextPreview);
+      setPhotoPreview(null);
       setPhotoUploadStatus('error');
       setStatus({
         type: 'error',

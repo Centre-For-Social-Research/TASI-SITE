@@ -1,6 +1,7 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { listRegistrationQueue } from '@/lib/registration-ops-db';
 import operatorSession from '@/lib/operator-session.cjs';
+import { adminJson } from '@/lib/admin-api-cache';
 
 const { logOperatorEvent } = operatorSession;
 
@@ -35,7 +36,7 @@ export async function GET(request) {
       },
     });
 
-    return Response.json({
+    return adminJson({
       success: true,
       ...data,
       operator: {
@@ -45,7 +46,7 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error('[admin.registrations.fetch.error]', error);
-    return Response.json(
+    return adminJson(
       {
         error:
           error instanceof Error

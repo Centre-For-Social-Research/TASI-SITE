@@ -232,6 +232,18 @@ export function enforceJsonRequest(request) {
   );
 }
 
+export function enforceMultipartRequest(request) {
+  const contentType = request.headers.get('content-type') || '';
+  if (contentType.toLowerCase().includes('multipart/form-data')) {
+    return null;
+  }
+
+  return Response.json(
+    { error: 'Content-Type must be multipart/form-data.' },
+    { status: 415 }
+  );
+}
+
 export async function protectPublicPostRoute(request, routeKey, options) {
   const protection = await protectPublicRoute(request, routeKey, options);
   if (!protection.ok) {
@@ -239,6 +251,24 @@ export async function protectPublicPostRoute(request, routeKey, options) {
   }
 
   const contentTypeResponse = enforceJsonRequest(request);
+  if (contentTypeResponse) {
+    return { ok: false, response: contentTypeResponse };
+  }
+
+  return protection;
+}
+
+export async function protectPublicMultipartPostRoute(
+  request,
+  routeKey,
+  options
+) {
+  const protection = await protectPublicRoute(request, routeKey, options);
+  if (!protection.ok) {
+    return protection;
+  }
+
+  const contentTypeResponse = enforceMultipartRequest(request);
   if (contentTypeResponse) {
     return { ok: false, response: contentTypeResponse };
   }
