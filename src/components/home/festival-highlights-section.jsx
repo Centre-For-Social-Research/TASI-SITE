@@ -45,19 +45,21 @@ export default function FestivalHighlightsSection() {
 
               <div className="space-y-6 text-base md:text-[17px] font-normal leading-[1.6] text-white/90">
                 <p>
-                  The 2nd edition of India&apos;s leading summit on Trust,
-                  Safety and AI Governance will take place on{' '}
+                  Trust and Safety India Festival returns as the 2nd edition of
+                  India&apos;s leading summit on Trust, Safety and AI Governance
+                  on{' '}
                   <span className="font-bold text-white">
                     13-14 October 2026
                   </span>{' '}
                   in New Delhi.
                 </p>
                 <p>
-                  We&apos;re incredibly excited to build on the momentum of TASI
-                  2026, which brought together 500+ participants from 15
-                  countries for two days of cross-sector dialogue, practical
-                  collaboration, and 30+ sessions spanning AI governance, child
-                  safety, policy, and digital wellbeing.
+                  We&apos;re incredibly excited to build on the momentum of the
+                  Trust and Safety India Festival 2025, which brought together
+                  500+ participants from 15 countries for two days of
+                  cross-sector dialogue, practical collaboration, and 30+
+                  sessions spanning AI governance, child safety, policy, and
+                  digital wellbeing.
                 </p>
                 <p>
                   Convened by the Centre for Social Research and Trust and

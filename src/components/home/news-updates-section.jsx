@@ -138,6 +138,12 @@ export default async function NewsUpdatesSection() {
                     innovation while centering safety and wellbeing, especially
                     for women, children, and marginalised communities.
                   </p>
+                  <Link
+                    href="/trust-and-safety-india-festival"
+                    className="mt-5 inline-flex text-sm font-bold text-white underline decoration-white/70 underline-offset-4 transition-colors hover:text-rc-secondary"
+                  >
+                    Read the Trust and Safety India Festival overview
+                  </Link>
                 </div>
               </div>
             </div>

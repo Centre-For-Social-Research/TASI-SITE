@@ -23,6 +23,11 @@ type Route = {
 const staticRoutes: Route[] = [
   // ── Core ────────────────────────────────────────────────────────────────────
   { path: '', changeFrequency: 'weekly', priority: 1.0 },
+  {
+    path: '/trust-and-safety-india-festival',
+    changeFrequency: 'weekly',
+    priority: 0.95,
+  },
   { path: '/about', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/themes', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/speakers', changeFrequency: 'weekly', priority: 0.8 },

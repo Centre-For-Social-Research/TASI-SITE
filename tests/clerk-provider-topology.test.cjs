@@ -22,12 +22,13 @@ test('root metadata prioritizes Trust and Safety India Festival search terms', (
 
   assert.match(
     rootLayout,
-    /const siteTitle = 'Trust and Safety India Festival 2026 \| TASI 2026'/
+    /const siteTitle = 'Trust and Safety India Festival \| TASI 2026'/
   );
   assert.match(
     rootLayout,
-    /Trust and Safety India Festival 2026 \(TASI 2026\)/
+    /Trust and Safety India Festival is India's first national convening/
   );
+  assert.match(rootLayout, /'Trust and Safety India Festival'/);
   assert.match(rootLayout, /'Trust and Safety India Festival 2026'/);
   assert.match(rootLayout, /'Trust & Safety India Festival'/);
   assert.match(rootLayout, /'Trust and Safety conference India'/);
@@ -38,7 +39,8 @@ test('root event structured data includes Google recommended fields', () => {
   const rootLayout = readFile('src/app/layout.tsx');
 
   assert.match(rootLayout, /'@type': 'Event'/);
-  assert.match(rootLayout, /name: 'Trust and Safety India Festival 2026'/);
+  assert.match(rootLayout, /name: 'Trust and Safety India Festival'/);
+  assert.match(rootLayout, /'Trust and Safety India Festival 2026'/);
   assert.match(rootLayout, /performer: \{/);
   assert.match(rootLayout, /name: 'TASI 2026 speakers and panelists'/);
   assert.match(rootLayout, /offers: \{/);

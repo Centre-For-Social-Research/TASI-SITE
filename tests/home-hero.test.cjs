@@ -20,6 +20,7 @@ test('home hero applies SparklesText only to 2026 and Delhi', () => {
   );
   assert.match(source, /<SparklesText[^>]*>\s*2026\s*<\/SparklesText>/);
   assert.match(source, /<SparklesText[^>]*>\s*Delhi\s*<\/SparklesText>/);
+  assert.match(source, /Trust and Safety India Festival/);
   assert.doesNotMatch(source, /<SparklesText[^>]*>\s*TASI\s*<\/SparklesText>/);
 });
 

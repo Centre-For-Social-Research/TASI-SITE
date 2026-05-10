@@ -55,7 +55,13 @@ export default function HomeHero() {
         >
           {/* Left Side: Logo equivalent */}
           <div className="flex-1 flex justify-center md:justify-end text-center md:text-right">
-            <h1 className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end">
+            <h1
+              className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end"
+              aria-label="Trust and Safety India Festival TASI 2026"
+            >
+              <span className="mb-3 text-sm font-extrabold uppercase leading-tight tracking-[0.16em] text-white/90 md:text-lg">
+                Trust and Safety India Festival
+              </span>
               <span className="leading-[0.8] mb-2">TASI</span>
               <SparklesText className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">
                 2026
@@ -101,9 +107,10 @@ export default function HomeHero() {
             People First. Safety Always.
           </p>
           <p className="mb-8 max-w-4xl text-sm leading-relaxed text-white/95 [text-shadow:0_2px_12px_rgba(0,0,0,0.45)] md:text-lg">
-            From AI to digital rights, regulations, tech policy and algorithms,
-            we invite the best of the industry to collaborate on emerging trends
-            and create solutions in digital spaces.
+            Trust and Safety India Festival brings leaders across AI, digital
+            rights, regulation, tech policy, and platform safety together to
+            collaborate on emerging trends and practical solutions for digital
+            spaces.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">

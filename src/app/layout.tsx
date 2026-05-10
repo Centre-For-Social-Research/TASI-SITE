@@ -8,10 +8,10 @@ import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
 const siteUrl = 'https://trustandsafetyindia.org';
-const siteName = 'Trust and Safety India Festival 2026';
-const siteTitle = 'Trust and Safety India Festival 2026 | TASI 2026';
+const siteName = 'Trust and Safety India Festival';
+const siteTitle = 'Trust and Safety India Festival | TASI 2026';
 const siteDescription =
-  "Trust and Safety India Festival 2026 (TASI 2026) is India's first national convening focused on trust and safety, digital safety, platform accountability, and responsible AI. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, it brings together government, industry, academia, and civil society.";
+  "Trust and Safety India Festival is India's first national convening focused on trust and safety, digital safety, platform accountability, and responsible AI. The 2026 edition, TASI 2026, is convened by the Centre for Social Research (CSR) and Trust and Safety Festival, bringing together government, industry, academia, and civil society.";
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -22,8 +22,8 @@ const structuredData = {
       url: siteUrl,
       name: siteName,
       alternateName: [
+        'Trust and Safety India Festival 2026',
         'TASI 2026',
-        'Trust and Safety India Festival',
         'Trust & Safety India Festival',
       ],
       description: siteDescription,
@@ -55,10 +55,10 @@ const structuredData = {
     {
       '@type': 'Event',
       '@id': `${siteUrl}/#event`,
-      name: 'Trust and Safety India Festival 2026',
+      name: 'Trust and Safety India Festival',
       alternateName: [
+        'Trust and Safety India Festival 2026',
         'TASI 2026',
-        'Trust and Safety India Festival',
         'Trust & Safety India Festival',
       ],
       description: siteDescription,
@@ -168,7 +168,7 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Trust and Safety India Festival 2026 - TASI 2026',
+        alt: 'Trust and Safety India Festival - TASI 2026',
       },
     ],
   },

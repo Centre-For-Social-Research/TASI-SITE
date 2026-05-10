@@ -61,6 +61,24 @@ test('about page exposes TASI organizer and team SEO schema', () => {
   assert.match(source, /BreadcrumbJsonLd/);
 });
 
+test('evergreen Trust and Safety India Festival page targets the unyeared search phrase', () => {
+  const source = readSource('src/app/trust-and-safety-india-festival/page.jsx');
+  const sitemap = readSource('src/app/sitemap.ts');
+  const homepageHero = readSource('src/components/home/hero.jsx');
+  const homepageUpdates = readSource(
+    'src/components/home/news-updates-section.jsx'
+  );
+
+  assert.match(source, /title: pageTitle/);
+  assert.match(source, /'Trust and Safety India Festival'/);
+  assert.match(source, /canonical: pagePath/);
+  assert.match(source, /'@type': 'Event'/);
+  assert.match(source, /BreadcrumbJsonLd/);
+  assert.match(sitemap, /\/trust-and-safety-india-festival/);
+  assert.match(homepageHero, /Trust and Safety India Festival/);
+  assert.match(homepageUpdates, /\/trust-and-safety-india-festival/);
+});
+
 test('remaining public pages expose reusable SEO JSON-LD surfaces', () => {
   const routes = [
     'src/app/register/page.jsx',
