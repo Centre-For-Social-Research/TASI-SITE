@@ -160,10 +160,11 @@ export default async function ProgrammeSessionPage({ params }) {
               {programmeDayLabels[session.day] || 'TASI Programme'}
             </p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
-              {session.title}
+              Programme Session Details
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-white/90">
-              {description}
+              Explore session timing, venue, speakers, and programme context
+              from the Trust and Safety India Festival agenda.
             </p>
           </div>
         </BrandedPageHero>
@@ -172,6 +173,12 @@ export default async function ProgrammeSessionPage({ params }) {
           <article className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#b33f2a]">
               Session Details
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 dark:text-white">
+              {session.title}
+            </h2>
+            <p className="mt-4 text-base leading-8 text-stone-700 dark:text-stone-300">
+              {description}
             </p>
             <dl className="mt-6 grid gap-4 text-sm text-stone-700 dark:text-stone-300 sm:grid-cols-2">
               <div>
