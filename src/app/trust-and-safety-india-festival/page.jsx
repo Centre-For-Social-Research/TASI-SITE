@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CalendarDays, Info, Mic, Ticket } from 'lucide-react';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
 import HomeNavbar from '@/components/home/navbar';
@@ -57,33 +57,61 @@ const focusAreas = [
   'Technology-facilitated gender-based violence',
 ];
 
-const audienceGroups = [
-  'Government and policy leaders shaping digital governance',
-  'Technology platforms, trust and safety teams, and product leaders',
-  'Civil society organizations working with women, children, and communities',
-  'Researchers, academics, journalists, creators, and safety advocates',
+const themeCardStyles = [
+  {
+    card: 'border-pink-200 bg-pink-50 shadow-pink-200/60 dark:border-pink-400/30 dark:bg-pink-950/30 dark:shadow-pink-950/20',
+    accent: 'bg-pink-500',
+  },
+  {
+    card: 'border-sky-200 bg-sky-50 shadow-sky-200/60 dark:border-sky-400/30 dark:bg-sky-950/30 dark:shadow-sky-950/20',
+    accent: 'bg-sky-500',
+  },
+  {
+    card: 'border-violet-200 bg-violet-50 shadow-violet-200/60 dark:border-violet-400/30 dark:bg-violet-950/30 dark:shadow-violet-950/20',
+    accent: 'bg-violet-500',
+  },
+  {
+    card: 'border-amber-200 bg-amber-50 shadow-amber-200/60 dark:border-amber-300/30 dark:bg-amber-950/25 dark:shadow-amber-950/20',
+    accent: 'bg-amber-400',
+  },
+  {
+    card: 'border-emerald-200 bg-emerald-50 shadow-emerald-200/60 dark:border-emerald-400/30 dark:bg-emerald-950/30 dark:shadow-emerald-950/20',
+    accent: 'bg-emerald-500',
+  },
+  {
+    card: 'border-orange-200 bg-orange-50 shadow-orange-200/60 dark:border-orange-400/30 dark:bg-orange-950/30 dark:shadow-orange-950/20',
+    accent: 'bg-orange-500',
+  },
 ];
 
 const exploreLinks = [
   {
     href: '/about',
     title: 'About the Festival',
+    eyebrow: 'Mission and organizers',
     body: 'Learn about the organizers, mission, and people behind the Trust and Safety India Festival.',
+    Icon: Info,
   },
   {
     href: '/programme',
     title: 'Programme',
+    eyebrow: 'Panels and workshops',
     body: 'Explore panels, workshops, keynotes, firesides, and session themes across the festival agenda.',
+    Icon: CalendarDays,
   },
   {
     href: '/speakers',
     title: 'Speakers',
+    eyebrow: 'Expert voices',
     body: 'Meet the experts, policymakers, platform leaders, researchers, and advocates featured at TASI.',
+    Icon: Mic,
   },
   {
     href: '/register',
     title: 'Register',
+    eyebrow: 'Attend TASI 2026',
     body: 'Apply to attend the 2026 edition of the Trust and Safety India Festival in New Delhi.',
+    Icon: Ticket,
   },
 ];
 
@@ -98,38 +126,17 @@ const heroPhotos = [
   {
     src: '/img/home-gallery/7T7A5237-new.webp',
     alt: 'Panel conversation at Trust and Safety India Festival',
-    className: 'col-span-2 aspect-[16/9]',
+    className: 'col-span-2',
   },
   {
     src: '/img/home-gallery/IMG_6768.webp',
     alt: 'Workshop participants at Trust and Safety India Festival',
-    className: 'aspect-[4/3]',
+    className: '',
   },
   {
     src: '/img/home-gallery/7T7A3087.webp',
     alt: 'Reception and networking moment at Trust and Safety India Festival',
-    className: 'aspect-[4/3]',
-  },
-];
-
-const visualMoments = [
-  {
-    src: '/img/home-gallery/7T7A5002.webp',
-    alt: 'Government and regulatory delegates at TASI',
-    label: 'Policy and Public Interest',
-    title: 'High-trust conversations with decision-makers',
-  },
-  {
-    src: '/img/home-gallery/7T7A5636.webp',
-    alt: 'Industry leaders and participants at TASI',
-    label: 'Industry and Platform Safety',
-    title: 'Practical exchange across product, policy, and operations',
-  },
-  {
-    src: '/img/home-gallery/7T7A9973.webp',
-    alt: 'International delegations and diplomatic guests at TASI',
-    label: 'Global South Leadership',
-    title: 'International dialogue grounded in Indian realities',
+    className: '',
   },
 ];
 
@@ -243,20 +250,22 @@ export default function TrustAndSafetyIndiaFestivalPage() {
           </div>
         </BrandedPageHero>
 
-        <section className="bg-[#15002b] px-4 py-section-sm text-white md:px-6 md:py-section-md">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-            <div>
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/60">
-                At a Glance
-              </p>
-              <h2 className="text-3xl font-black tracking-tight md:text-5xl">
-                A convening already in motion.
-              </h2>
-              <p className="mt-5 text-base leading-8 text-white/78">
-                The Trust and Safety India Festival connects panels, workshops,
-                receptions, and focused conversations into one national platform
-                for safer digital systems.
-              </p>
+        <section className="relative bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] px-6 py-section-sm text-white md:px-6 md:py-section-md lg:px-16 lg:py-section-lg">
+          <div className="mx-auto grid w-full max-w-[1300px] items-stretch gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
+            <div className="flex h-full flex-col justify-between">
+              <div>
+                <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/60">
+                  At a Glance
+                </p>
+                <h2 className="text-3xl font-black tracking-tight md:text-5xl">
+                  A convening already in motion.
+                </h2>
+                <p className="mt-5 text-base leading-8 text-white/78">
+                  The Trust and Safety India Festival connects panels,
+                  workshops, receptions, and focused conversations into one
+                  national platform for safer digital systems.
+                </p>
+              </div>
               <div className="mt-7 grid gap-4 sm:grid-cols-2">
                 {proofPoints.map((point) => (
                   <div
@@ -274,11 +283,11 @@ export default function TrustAndSafetyIndiaFestivalPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid h-full min-h-[430px] grid-cols-2 grid-rows-[1.15fr_0.85fr] gap-3 lg:min-h-0">
               {heroPhotos.map((photo, index) => (
                 <figure
                   key={photo.src}
-                  className={`relative overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl shadow-black/20 ${photo.className}`}
+                  className={`relative min-h-[160px] overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl shadow-black/20 lg:min-h-0 ${photo.className}`}
                 >
                   <Image
                     src={photo.src}
@@ -286,8 +295,8 @@ export default function TrustAndSafetyIndiaFestivalPage() {
                     fill
                     sizes={
                       index === 0
-                        ? '(max-width: 1024px) 100vw, 620px'
-                        : '(max-width: 1024px) 50vw, 300px'
+                        ? '(max-width: 1024px) 100vw, 720px'
+                        : '(max-width: 1024px) 50vw, 350px'
                     }
                     className="object-cover"
                   />
@@ -299,46 +308,51 @@ export default function TrustAndSafetyIndiaFestivalPage() {
         </section>
 
         <section className="px-4 py-section-md md:px-6 md:py-section-lg">
-          <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
-            <div>
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
-                What It Is
-              </p>
-              <h2 className="text-3xl font-black tracking-tight md:text-5xl">
-                A year-round signal for India&apos;s trust and safety community.
-              </h2>
-              <figure className="relative mt-8 aspect-[4/3] overflow-hidden rounded-[10px] bg-stone-200 shadow-xl shadow-stone-200/50 dark:bg-stone-900 dark:shadow-black/30">
-                <Image
-                  src="/img/home-gallery/7T7A2715.webp"
-                  alt="Trust and Safety India Festival audience and session hall"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 480px"
-                  className="object-cover"
-                />
-                <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.78)_100%)] px-5 pb-5 pt-14 text-sm font-semibold text-white">
-                  Convening India&apos;s trust and safety ecosystem in one
-                  shared room.
-                </figcaption>
-              </figure>
+          <div className="mx-auto grid w-full max-w-6xl items-stretch gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-10">
+            <div className="flex h-full flex-col justify-between">
+              <div>
+                <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-rc-secondary">
+                  What It Is
+                </p>
+                <h2 className="text-3xl font-black tracking-tight md:text-5xl">
+                  A year-round signal for India&apos;s trust and safety
+                  community.
+                </h2>
+              </div>
+              <div className="mt-7 space-y-5 text-base leading-8 text-stone-700 dark:text-stone-300">
+                <p>
+                  The Trust and Safety India Festival, also known as TASI,
+                  brings together government, industry, civil society, academia,
+                  media, and international partners to advance safer digital
+                  systems.
+                </p>
+                <p>
+                  The 2026 edition returns to New Delhi on October 13-14, 2026,
+                  but the festival identity is broader than one year. It is a
+                  shared platform for practical collaboration on online harms,
+                  platform governance, AI safety, and digital rights.
+                </p>
+                <p>
+                  Convened by the Centre for Social Research and Trust and
+                  Safety Festival, the event keeps Indian realities and Global
+                  South perspectives central to global trust and safety
+                  conversations.
+                </p>
+              </div>
             </div>
-            <div className="space-y-5 text-base leading-8 text-stone-700 dark:text-stone-300">
-              <p>
-                The Trust and Safety India Festival, also known as TASI, brings
-                together government, industry, civil society, academia, media,
-                and international partners to advance safer digital systems.
-              </p>
-              <p>
-                The 2026 edition returns to New Delhi on October 13-14, 2026,
-                but the festival identity is broader than one year. It is a
-                shared platform for practical collaboration on online harms,
-                platform governance, AI safety, and digital rights.
-              </p>
-              <p>
-                Convened by the Centre for Social Research and Trust and Safety
-                Festival, the event keeps Indian realities and Global South
-                perspectives central to global trust and safety conversations.
-              </p>
-            </div>
+            <figure className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-stone-200 shadow-xl shadow-stone-200/50 dark:bg-stone-900 dark:shadow-black/30 lg:min-h-0">
+              <Image
+                src="/img/home-gallery/7T7A2715.webp"
+                alt="Trust and Safety India Festival audience and session hall"
+                fill
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className="object-cover"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.78)_100%)] px-5 pb-5 pt-14 text-sm font-semibold text-white">
+                Convening India&apos;s trust and safety ecosystem in one shared
+                room.
+              </figcaption>
+            </figure>
           </div>
         </section>
 
@@ -351,133 +365,81 @@ export default function TrustAndSafetyIndiaFestivalPage() {
               What Trust and Safety India Festival covers
             </h2>
             <div className="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {focusAreas.map((area) => (
-                <article
-                  key={area}
-                  className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-950"
-                >
-                  <h3 className="text-xl font-black tracking-tight">{area}</h3>
-                  <p className="mt-4 text-sm leading-7 text-stone-600 dark:text-stone-300">
-                    A core part of the Trust and Safety India Festival
-                    conversation, connecting policy, product, research, and
-                    lived experience.
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+              {focusAreas.map((area, index) => {
+                const theme = themeCardStyles[index % themeCardStyles.length];
 
-        <section className="bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_46%,#ef5700_100%)] px-4 py-section-md text-white md:px-6 md:py-section-lg">
-          <div className="mx-auto w-full max-w-6xl">
-            <div className="max-w-3xl">
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/70">
-                Festival in Motion
-              </p>
-              <h2 className="text-3xl font-black tracking-tight md:text-5xl">
-                More than a conference page. A living convening.
-              </h2>
-              <p className="mt-5 text-base leading-8 text-white/85">
-                The Trust and Safety India Festival brings policy, platform,
-                research, civil society, and international voices into formats
-                built for exchange: panels, workshops, receptions, roundtables,
-                and practical collaboration.
-              </p>
-            </div>
-
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {visualMoments.map((moment) => (
-                <article
-                  key={moment.src}
-                  className="overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl shadow-black/20 backdrop-blur-sm"
-                >
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src={moment.src}
-                      alt={moment.alt}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover"
+                return (
+                  <article
+                    key={area}
+                    className={`rounded-[10px] border p-6 shadow-lg transition-transform duration-200 hover:-translate-y-1 ${theme.card}`}
+                  >
+                    <span
+                      className={`mb-5 block h-1.5 w-16 rounded-full ${theme.accent}`}
                     />
-                  </div>
-                  <div className="p-5">
-                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rc-secondary dark:text-white">
-                      {moment.label}
-                    </p>
-                    <h3 className="mt-3 text-xl font-black tracking-tight">
-                      {moment.title}
+                    <h3 className="text-xl font-black tracking-tight text-stone-950 dark:text-white">
+                      {area}
                     </h3>
-                  </div>
-                </article>
-              ))}
+                    <p className="mt-4 text-sm leading-7 text-stone-700 dark:text-stone-200">
+                      A core part of the Trust and Safety India Festival
+                      conversation, connecting policy, product, research, and
+                      lived experience.
+                    </p>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        <section className="px-4 py-section-md md:px-6 md:py-section-lg">
-          <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[1fr_1fr]">
-            <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white md:p-10">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">
-                Who It Brings Together
-              </p>
-              <h2 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-                A cross-sector platform for safer digital futures.
-              </h2>
-              <p className="mt-5 text-base leading-8 text-white/85">
-                Trust and Safety India Festival is built for the people and
-                organizations responsible for reducing online harm, improving
-                governance, and protecting users across digital ecosystems.
-              </p>
-              <figure className="relative mt-8 aspect-[16/10] overflow-hidden rounded-[10px] border border-white/15">
-                <Image
-                  src="/img/home-gallery/7T7A9837.webp"
-                  alt="Media and audience engagement at Trust and Safety India Festival"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 520px"
-                  className="object-cover"
-                />
-              </figure>
-            </div>
-
-            <div className="grid gap-4">
-              {audienceGroups.map((group) => (
-                <div
-                  key={group}
-                  className="rounded-[10px] border border-stone-200 bg-white p-5 text-base font-semibold leading-7 text-stone-800 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100"
-                >
-                  {group}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-stone-200 bg-white px-4 py-section-md dark:border-stone-800 dark:bg-stone-950 md:px-6 md:py-section-lg">
+        <section className="border-t border-white/10 bg-[linear-gradient(135deg,#15002b_0%,#360454_52%,#5c0f4f_100%)] px-4 py-section-md text-white md:px-6 md:py-section-lg">
           <div className="mx-auto w-full max-w-6xl">
-            <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/60">
               Explore TASI
             </p>
-            <h2 className="max-w-3xl text-3xl font-black tracking-tight md:text-5xl">
+            <h2 className="max-w-3xl text-3xl font-black tracking-tight text-white md:text-5xl">
               Continue through the Trust and Safety India Festival site
             </h2>
-            <div className="mt-9 grid gap-5 md:grid-cols-2">
-              {exploreLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="group rounded-[10px] border border-stone-200 bg-stone-50 p-6 transition-colors hover:border-rc-primary dark:border-stone-800 dark:bg-stone-900"
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-xl font-black tracking-tight">
-                      {link.title}
-                    </h3>
-                    <ArrowRight className="h-5 w-5 shrink-0 text-rc-primary transition-transform group-hover:translate-x-1 dark:text-rc-secondary" />
-                  </div>
-                  <p className="mt-4 text-sm leading-7 text-stone-600 dark:text-stone-300">
-                    {link.body}
-                  </p>
-                </Link>
-              ))}
+            <p className="mt-5 max-w-2xl text-base leading-8 text-white/72">
+              Move from the festival overview into the pages that carry the full
+              story: context, agenda, people, and registration.
+            </p>
+            <div className="mt-10 grid gap-5 md:grid-cols-2">
+              {exploreLinks.map((link, index) => {
+                const Icon = link.Icon;
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="group relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[10px] border border-white/10 bg-white/[0.055] p-6 text-white shadow-2xl shadow-black/20 backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:border-rc-secondary/70 hover:bg-white/[0.09]"
+                  >
+                    <span className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-rc-secondary/90 to-transparent" />
+                    <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_45%)] opacity-70" />
+                    <div className="relative flex items-start justify-between gap-5">
+                      <div>
+                        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white/70">
+                          0{index + 1} / {link.eyebrow}
+                        </p>
+                        <h3 className="mt-4 text-2xl font-black tracking-tight text-white">
+                          {link.title}
+                        </h3>
+                      </div>
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-white/15 bg-white/10 text-rc-secondary transition-colors group-hover:border-rc-secondary/60 group-hover:bg-rc-secondary group-hover:text-stone-950">
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <div className="relative mt-8">
+                      <p className="max-w-xl text-sm leading-7 text-white/74">
+                        {link.body}
+                      </p>
+                      <div className="mt-6 flex items-center gap-2 text-sm font-black uppercase tracking-[0.12em] text-white">
+                        <span>Open</span>
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
