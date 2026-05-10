@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { CalendarDays, Grid2X2, MapPin } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
@@ -169,46 +170,39 @@ export default async function ProgrammeSessionPage({ params }) {
           </div>
         </BrandedPageHero>
 
-        <section className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 md:grid-cols-[1fr_320px] md:px-6">
-          <article className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#b33f2a]">
-              Session Details
+        <section className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 md:-mt-20 md:grid-cols-[1fr_320px] md:px-6">
+          <article className="relative rounded-[10px] border border-stone-200 bg-white p-7 shadow-[0_26px_70px_rgba(28,25,23,0.12)] dark:border-stone-800 dark:bg-stone-900 md:p-10">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-stone-400">
+              {session.format} Session
             </p>
-            <h2 className="mt-4 text-3xl font-black tracking-tight text-stone-950 dark:text-white">
+            <h2 className="mt-6 max-w-3xl text-4xl font-black tracking-tight text-stone-950 dark:text-white md:text-6xl">
               {session.title}
             </h2>
-            <p className="mt-4 text-base leading-8 text-stone-700 dark:text-stone-300">
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-stone-600 dark:text-stone-300">
               {description}
             </p>
-            <dl className="mt-6 grid gap-4 text-sm text-stone-700 dark:text-stone-300 sm:grid-cols-2">
-              <div>
-                <dt className="font-bold text-stone-950 dark:text-white">
-                  Time
-                </dt>
-                <dd>{session.time}</dd>
-              </div>
-              <div>
-                <dt className="font-bold text-stone-950 dark:text-white">
-                  Venue
-                </dt>
-                <dd>{session.venue || session.track}</dd>
-              </div>
-              <div>
-                <dt className="font-bold text-stone-950 dark:text-white">
-                  Format
-                </dt>
-                <dd>{session.format}</dd>
-              </div>
-              <div>
-                <dt className="font-bold text-stone-950 dark:text-white">
-                  Festival
-                </dt>
-                <dd>Trust and Safety India Festival</dd>
-              </div>
-            </dl>
+            <div className="mt-14 border-t border-stone-200 pt-6 dark:border-stone-800">
+              <dl className="flex flex-wrap gap-x-8 gap-y-4 text-sm font-medium text-stone-500 dark:text-stone-300">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" aria-hidden="true" />
+                  <dt className="sr-only">Time</dt>
+                  <dd>{session.time}</dd>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
+                  <dt className="sr-only">Venue</dt>
+                  <dd>{session.venue || session.track}</dd>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Grid2X2 className="h-4 w-4" aria-hidden="true" />
+                  <dt className="sr-only">Festival</dt>
+                  <dd>Trust and Safety India Festival</dd>
+                </div>
+              </dl>
+            </div>
           </article>
 
-          <aside className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900">
+          <aside className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900 md:mt-20">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#b33f2a]">
               Speakers
             </p>
