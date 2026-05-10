@@ -226,31 +226,47 @@ export default function TrustAndSafetyIndiaFestivalPage() {
       />
       <HomeNavbar />
       <main className="bg-white text-stone-950 dark:bg-stone-950 dark:text-white">
-        <BrandedPageHero className="min-h-[520px] py-16 md:py-24">
-          <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="text-center lg:text-left">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
-                Evergreen Festival Overview
+        <BrandedPageHero className="min-h-[360px] py-16 md:min-h-[430px] md:py-24">
+          <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+              Evergreen Festival Overview
+            </p>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+              Trust and Safety India Festival
+            </h1>
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-white/90 md:text-lg">
+              Trust and Safety India Festival is India&apos;s national platform
+              for trust and safety, online safety, responsible AI, platform
+              accountability, child safety, digital rights, and safer technology
+              ecosystems.
+            </p>
+          </div>
+        </BrandedPageHero>
+
+        <section className="bg-[#15002b] px-4 py-section-sm text-white md:px-6 md:py-section-md">
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+            <div>
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/60">
+                At a Glance
               </p>
-              <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
-                Trust and Safety India Festival
-              </h1>
-              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-white/90 md:text-lg lg:mx-0">
-                Trust and Safety India Festival is India&apos;s national
-                platform for trust and safety, online safety, responsible AI,
-                platform accountability, child safety, digital rights, and safer
-                technology ecosystems.
+              <h2 className="text-3xl font-black tracking-tight md:text-5xl">
+                A convening already in motion.
+              </h2>
+              <p className="mt-5 text-base leading-8 text-white/78">
+                The Trust and Safety India Festival connects panels, workshops,
+                receptions, and focused conversations into one national platform
+                for safer digital systems.
               </p>
-              <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
-                {proofPoints.slice(0, 2).map((point) => (
+              <div className="mt-7 grid gap-4 sm:grid-cols-2">
+                {proofPoints.map((point) => (
                   <div
                     key={point.label}
-                    className="rounded-[10px] border border-white/25 bg-white/10 px-4 py-3 text-left backdrop-blur-sm"
+                    className="rounded-[10px] border border-white/10 bg-white/5 p-5"
                   >
-                    <p className="text-2xl font-black leading-none text-white">
+                    <p className="text-4xl font-black leading-none text-rc-secondary dark:text-white">
                       {point.value}
                     </p>
-                    <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white/70">
+                    <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-white/75">
                       {point.label}
                     </p>
                   </div>
@@ -262,13 +278,12 @@ export default function TrustAndSafetyIndiaFestivalPage() {
               {heroPhotos.map((photo, index) => (
                 <figure
                   key={photo.src}
-                  className={`relative overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl ${photo.className}`}
+                  className={`relative overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl shadow-black/20 ${photo.className}`}
                 >
                   <Image
                     src={photo.src}
                     alt={photo.alt}
                     fill
-                    priority={index === 0}
                     sizes={
                       index === 0
                         ? '(max-width: 1024px) 100vw, 620px'
@@ -280,24 +295,6 @@ export default function TrustAndSafetyIndiaFestivalPage() {
                 </figure>
               ))}
             </div>
-          </div>
-        </BrandedPageHero>
-
-        <section className="bg-[#15002b] px-4 py-6 text-white md:px-6">
-          <div className="mx-auto grid w-full max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {proofPoints.map((point) => (
-              <div
-                key={point.label}
-                className="rounded-[10px] border border-white/10 bg-white/5 p-5"
-              >
-                <p className="text-4xl font-black leading-none text-rc-secondary dark:text-white">
-                  {point.value}
-                </p>
-                <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-white/75">
-                  {point.label}
-                </p>
-              </div>
-            ))}
           </div>
         </section>
 
