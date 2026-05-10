@@ -31,18 +31,21 @@ export default function HomeHero() {
 
       <div className="relative z-20 w-full max-w-6xl mx-auto flex flex-col items-center justify-center text-center mt-4 md:mt-8">
         <motion.div
-          className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/85 md:mb-8"
+          className="mb-6 flex flex-col items-center justify-center gap-2 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-white/85 md:mb-8"
           initial="hidden"
           animate="visible"
           variants={fadeUp}
           custom={0}
         >
-          <span>An Initiative by Centre For Social Research</span>
-          <span
-            className="hidden h-1 w-1 rounded-full md:block"
-            style={{ backgroundColor: '#fff' }}
-          />
-          <span>Trust &amp; Safety Forum</span>
+          <span>Trust and Safety India Festival</span>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <span>An Initiative by Centre For Social Research</span>
+            <span
+              className="hidden h-1 w-1 rounded-full md:block"
+              style={{ backgroundColor: '#fff' }}
+            />
+            <span>Trust &amp; Safety Forum</span>
+          </div>
         </motion.div>
 
         {/* Logo and Date Section */}
@@ -59,9 +62,6 @@ export default function HomeHero() {
               className="text-[3.5rem] md:text-[5.5rem] font-bold leading-[0.9] text-white tracking-tighter w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-end"
               aria-label="Trust and Safety India Festival TASI 2026"
             >
-              <span className="mb-3 text-sm font-extrabold uppercase leading-tight tracking-[0.16em] text-white/90 md:text-lg">
-                Trust and Safety India Festival
-              </span>
               <span className="leading-[0.8] mb-2">TASI</span>
               <SparklesText className="text-[2.8rem] md:text-[4.2rem] font-black leading-[0.8] text-rc-secondary dark:text-white">
                 2026

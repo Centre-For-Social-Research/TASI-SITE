@@ -74,6 +74,10 @@ test('evergreen Trust and Safety India Festival page targets the unyeared search
   assert.match(source, /canonical: pagePath/);
   assert.match(source, /'@type': 'Event'/);
   assert.match(source, /BreadcrumbJsonLd/);
+  assert.match(source, /from 'next\/image'/);
+  assert.match(source, /heroPhotos/);
+  assert.match(source, /visualMoments/);
+  assert.match(source, /\/img\/home-gallery\/7T7A5237-new\.webp/);
   assert.match(sitemap, /\/trust-and-safety-india-festival/);
   assert.match(homepageHero, /Trust and Safety India Festival/);
   assert.match(homepageUpdates, /\/trust-and-safety-india-festival/);

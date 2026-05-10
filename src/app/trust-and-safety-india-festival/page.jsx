@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
@@ -86,6 +87,52 @@ const exploreLinks = [
   },
 ];
 
+const proofPoints = [
+  { value: '500+', label: 'participants in 2025' },
+  { value: '100+', label: 'expert speakers' },
+  { value: '15', label: 'countries represented' },
+  { value: '30+', label: 'sessions and workshops' },
+];
+
+const heroPhotos = [
+  {
+    src: '/img/home-gallery/7T7A5237-new.webp',
+    alt: 'Panel conversation at Trust and Safety India Festival',
+    className: 'col-span-2 aspect-[16/9]',
+  },
+  {
+    src: '/img/home-gallery/IMG_6768.webp',
+    alt: 'Workshop participants at Trust and Safety India Festival',
+    className: 'aspect-[4/3]',
+  },
+  {
+    src: '/img/home-gallery/7T7A3087.webp',
+    alt: 'Reception and networking moment at Trust and Safety India Festival',
+    className: 'aspect-[4/3]',
+  },
+];
+
+const visualMoments = [
+  {
+    src: '/img/home-gallery/7T7A5002.webp',
+    alt: 'Government and regulatory delegates at TASI',
+    label: 'Policy and Public Interest',
+    title: 'High-trust conversations with decision-makers',
+  },
+  {
+    src: '/img/home-gallery/7T7A5636.webp',
+    alt: 'Industry leaders and participants at TASI',
+    label: 'Industry and Platform Safety',
+    title: 'Practical exchange across product, policy, and operations',
+  },
+  {
+    src: '/img/home-gallery/7T7A9973.webp',
+    alt: 'International delegations and diplomatic guests at TASI',
+    label: 'Global South Leadership',
+    title: 'International dialogue grounded in Indian realities',
+  },
+];
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -120,7 +167,11 @@ const structuredData = {
       endDate: '2026-10-14',
       eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
       eventStatus: 'https://schema.org/EventScheduled',
-      image: [`${siteUrl}/opengraph-image`],
+      image: [
+        `${siteUrl}/opengraph-image`,
+        `${siteUrl}/img/home-gallery/7T7A5237-new.webp`,
+        `${siteUrl}/img/home-gallery/IMG_6768.webp`,
+      ],
       url: siteUrl,
       organizer: [
         {
@@ -175,22 +226,80 @@ export default function TrustAndSafetyIndiaFestivalPage() {
       />
       <HomeNavbar />
       <main className="bg-white text-stone-950 dark:bg-stone-950 dark:text-white">
-        <BrandedPageHero className="min-h-[360px] py-16 md:min-h-[430px] md:py-24">
-          <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center md:px-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
-              Evergreen Festival Overview
-            </p>
-            <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
-              Trust and Safety India Festival
-            </h1>
-            <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-white/90 md:text-lg">
-              Trust and Safety India Festival is India&apos;s national platform
-              for trust and safety, online safety, responsible AI, platform
-              accountability, child safety, digital rights, and safer technology
-              ecosystems.
-            </p>
+        <BrandedPageHero className="min-h-[520px] py-16 md:py-24">
+          <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="text-center lg:text-left">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+                Evergreen Festival Overview
+              </p>
+              <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
+                Trust and Safety India Festival
+              </h1>
+              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-white/90 md:text-lg lg:mx-0">
+                Trust and Safety India Festival is India&apos;s national
+                platform for trust and safety, online safety, responsible AI,
+                platform accountability, child safety, digital rights, and safer
+                technology ecosystems.
+              </p>
+              <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
+                {proofPoints.slice(0, 2).map((point) => (
+                  <div
+                    key={point.label}
+                    className="rounded-[10px] border border-white/25 bg-white/10 px-4 py-3 text-left backdrop-blur-sm"
+                  >
+                    <p className="text-2xl font-black leading-none text-white">
+                      {point.value}
+                    </p>
+                    <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white/70">
+                      {point.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {heroPhotos.map((photo, index) => (
+                <figure
+                  key={photo.src}
+                  className={`relative overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl ${photo.className}`}
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    priority={index === 0}
+                    sizes={
+                      index === 0
+                        ? '(max-width: 1024px) 100vw, 620px'
+                        : '(max-width: 1024px) 50vw, 300px'
+                    }
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_35%,rgba(0,0,0,0.58)_100%)]" />
+                </figure>
+              ))}
+            </div>
           </div>
         </BrandedPageHero>
+
+        <section className="bg-[#15002b] px-4 py-6 text-white md:px-6">
+          <div className="mx-auto grid w-full max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {proofPoints.map((point) => (
+              <div
+                key={point.label}
+                className="rounded-[10px] border border-white/10 bg-white/5 p-5"
+              >
+                <p className="text-4xl font-black leading-none text-rc-secondary dark:text-white">
+                  {point.value}
+                </p>
+                <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-white/75">
+                  {point.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="px-4 py-section-md md:px-6 md:py-section-lg">
           <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
@@ -201,6 +310,19 @@ export default function TrustAndSafetyIndiaFestivalPage() {
               <h2 className="text-3xl font-black tracking-tight md:text-5xl">
                 A year-round signal for India&apos;s trust and safety community.
               </h2>
+              <figure className="relative mt-8 aspect-[4/3] overflow-hidden rounded-[10px] bg-stone-200 shadow-xl shadow-stone-200/50 dark:bg-stone-900 dark:shadow-black/30">
+                <Image
+                  src="/img/home-gallery/7T7A2715.webp"
+                  alt="Trust and Safety India Festival audience and session hall"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 480px"
+                  className="object-cover"
+                />
+                <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.78)_100%)] px-5 pb-5 pt-14 text-sm font-semibold text-white">
+                  Convening India&apos;s trust and safety ecosystem in one
+                  shared room.
+                </figcaption>
+              </figure>
             </div>
             <div className="space-y-5 text-base leading-8 text-stone-700 dark:text-stone-300">
               <p>
@@ -249,6 +371,52 @@ export default function TrustAndSafetyIndiaFestivalPage() {
           </div>
         </section>
 
+        <section className="bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_46%,#ef5700_100%)] px-4 py-section-md text-white md:px-6 md:py-section-lg">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="max-w-3xl">
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/70">
+                Festival in Motion
+              </p>
+              <h2 className="text-3xl font-black tracking-tight md:text-5xl">
+                More than a conference page. A living convening.
+              </h2>
+              <p className="mt-5 text-base leading-8 text-white/85">
+                The Trust and Safety India Festival brings policy, platform,
+                research, civil society, and international voices into formats
+                built for exchange: panels, workshops, receptions, roundtables,
+                and practical collaboration.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {visualMoments.map((moment) => (
+                <article
+                  key={moment.src}
+                  className="overflow-hidden rounded-[10px] border border-white/15 bg-white/10 shadow-2xl shadow-black/20 backdrop-blur-sm"
+                >
+                  <div className="relative aspect-[4/3]">
+                    <Image
+                      src={moment.src}
+                      alt={moment.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rc-secondary dark:text-white">
+                      {moment.label}
+                    </p>
+                    <h3 className="mt-3 text-xl font-black tracking-tight">
+                      {moment.title}
+                    </h3>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="px-4 py-section-md md:px-6 md:py-section-lg">
           <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[1fr_1fr]">
             <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white md:p-10">
@@ -263,6 +431,15 @@ export default function TrustAndSafetyIndiaFestivalPage() {
                 organizations responsible for reducing online harm, improving
                 governance, and protecting users across digital ecosystems.
               </p>
+              <figure className="relative mt-8 aspect-[16/10] overflow-hidden rounded-[10px] border border-white/15">
+                <Image
+                  src="/img/home-gallery/7T7A9837.webp"
+                  alt="Media and audience engagement at Trust and Safety India Festival"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 520px"
+                  className="object-cover"
+                />
+              </figure>
             </div>
 
             <div className="grid gap-4">
