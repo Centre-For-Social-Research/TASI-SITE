@@ -7,6 +7,7 @@ import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import { programmeSessions2025 } from '@/data/programme-2025';
+import { programmeSessionDetailDescriptions } from '@/data/programme-session-details';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import {
   buildProgrammeSpeakerDesignationMap,
@@ -41,6 +42,7 @@ function getSessionBySlug(slug) {
 
 function buildSessionDescription(session) {
   return (
+    programmeSessionDetailDescriptions[session.id] ||
     session.topic ||
     `${session.title} at the Trust and Safety India Festival programme, featuring ${session.speakersDetailed
       ?.map((speaker) => speaker.name)

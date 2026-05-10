@@ -12,15 +12,24 @@ test('programme session pages expose crawlable event SEO surfaces', () => {
   const agendaSource = readSource(
     'src/components/programme/programme-agenda-client.jsx'
   );
+  const programmePageSource = readSource('src/app/programme/page.jsx');
+  const detailSource = readSource('src/data/programme-session-details.js');
 
   assert.match(routeSource, /generateStaticParams/);
   assert.match(routeSource, /'@type': 'Event'/);
   assert.match(routeSource, /superEvent/);
   assert.match(routeSource, /performer/);
   assert.match(routeSource, /BreadcrumbJsonLd/);
+  assert.match(routeSource, /programmeSessionDetailDescriptions/);
   assert.match(routeSource, /Trust and Safety India Festival Programme/);
   assert.match(agendaSource, /getProgrammeSessionPath/);
   assert.match(agendaSource, /getSpeakerProfilePath/);
+  assert.doesNotMatch(
+    programmePageSource,
+    /programmeSessionDetailDescriptions/
+  );
+  assert.match(detailSource, /global AI ecosystem/);
+  assert.match(detailSource, /AI-generated child sexual abuse material/);
 });
 
 test('blog post pages emit Article schema and breadcrumbs', () => {
