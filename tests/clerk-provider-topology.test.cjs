@@ -17,6 +17,18 @@ test('public root layout does not mount Clerk', () => {
   assert.doesNotMatch(appShell, /useClerk/);
 });
 
+test('root event structured data includes Google recommended fields', () => {
+  const rootLayout = readFile('src/app/layout.tsx');
+
+  assert.match(rootLayout, /'@type': 'Event'/);
+  assert.match(rootLayout, /performer: \{/);
+  assert.match(rootLayout, /name: 'TASI 2026 speakers and panelists'/);
+  assert.match(rootLayout, /offers: \{/);
+  assert.match(rootLayout, /'@type': 'Offer'/);
+  assert.match(rootLayout, /priceCurrency: 'INR'/);
+  assert.match(rootLayout, /url: `\$\{siteUrl\}\/register`/);
+});
+
 test('shared auth provider proxies Clerk runtime through the app', () => {
   const authProvider = readFile('src/components/auth/clerk-provider.jsx');
 
