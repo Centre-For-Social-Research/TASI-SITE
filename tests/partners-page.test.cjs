@@ -21,7 +21,8 @@ test('partners routes delegate to tracked list and detail components', () => {
     /import PartnersPage from '@\/components\/partners\/partners-page'/
   );
   assert.match(listRoute, /export const metadata = partnersPageMetadata;/);
-  assert.match(listRoute, /return <PartnersPage \/>;/);
+  assert.match(listRoute, /PageSeoJsonLd/);
+  assert.match(listRoute, /<PartnersPage \/>/);
 
   assert.match(
     detailRoute,
@@ -43,7 +44,10 @@ test('partners page data owns metadata, copy, and route helpers', async () => {
   const partnersData = await loadModule('src/data/partners.js');
   const pageData = await loadModule('src/data/partners-page.js');
 
-  assert.equal(pageData.partnersPageMetadata.title, 'Partners | TASI 2026');
+  assert.equal(
+    pageData.partnersPageMetadata.title,
+    'Trust and Safety India Festival Partners | TASI Organizations'
+  );
   assert.equal(pageData.partnersPageHero.title, 'Our Partners');
   assert.equal(
     pageData.getPartnerStaticParams().length,

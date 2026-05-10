@@ -41,3 +41,48 @@ test('partner pages emit Organization schema for sponsor and partner search', ()
   assert.match(source, /Trust and Safety India Festival partner/);
   assert.match(source, /BreadcrumbJsonLd/);
 });
+
+test('about page exposes TASI organizer and team SEO schema', () => {
+  const source = readSource('src/app/about/page.jsx');
+
+  assert.match(source, /About Trust and Safety India Festival/);
+  assert.match(source, /teamMembers/);
+  assert.match(source, /'@type': 'AboutPage'/);
+  assert.match(source, /Trust and Safety India Festival organizing team/);
+  assert.match(source, /BreadcrumbJsonLd/);
+});
+
+test('remaining public pages expose reusable SEO JSON-LD surfaces', () => {
+  const routes = [
+    'src/app/register/page.jsx',
+    'src/app/sponsor/page.jsx',
+    'src/app/media/page.jsx',
+    'src/app/media/press-kit/page.jsx',
+    'src/app/media/press-releases/page.jsx',
+    'src/app/get-involved/page.jsx',
+    'src/app/volunteer-application/page.jsx',
+    'src/app/speaker-application/page.jsx',
+    'src/app/attendees/page.jsx',
+    'src/app/blog/page.jsx',
+    'src/app/plan-your-travel/page.jsx',
+  ];
+
+  for (const route of routes) {
+    const source = readSource(route);
+    assert.match(source, /PageSeoJsonLd|JsonLdScript/);
+    assert.match(source, /Trust and Safety India Festival|TASI/);
+  }
+});
+
+test('registration page no longer displays public ticket prices', () => {
+  const source = readSource(
+    'src/components/register/festival-ticketing-section.jsx'
+  );
+
+  assert.doesNotMatch(source, /INR 11,800/);
+  assert.doesNotMatch(source, /USD 200/);
+  assert.doesNotMatch(source, /Total Payable/);
+  assert.doesNotMatch(source, /Base Price/);
+  assert.match(source, /Payment Channel/);
+  assert.match(source, /Invoice Treatment/);
+});

@@ -1,10 +1,39 @@
 import Link from 'next/link';
 import TeamGrid from '@/components/about/team-grid';
 import DiplomaticEndorsements from '@/components/about/diplomatic-endorsements';
+import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
+import JsonLdScript from '@/components/seo/json-ld-script';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import HomeNavbar from '@/components/home/navbar';
+import { teamMembers } from '@/data/team-members';
 
 export const revalidate = 86400;
+
+const siteUrl = 'https://trustandsafetyindia.org';
+
+export const metadata = {
+  title: 'About Trust and Safety India Festival | TASI Organizers',
+  description:
+    "Learn about Trust and Safety India Festival (TASI), the Centre for Social Research, Trust and Safety Festival, and the organizing team behind India's trust and safety convening.",
+  alternates: {
+    canonical: '/about',
+  },
+  openGraph: {
+    title: 'About Trust and Safety India Festival | TASI Organizers',
+    description:
+      "Meet the organizers and mission behind TASI, India's convening for trust and safety, online safety, platform governance, and responsible AI.",
+    url: '/about',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Trust and Safety India Festival | TASI Organizers',
+    description:
+      'Meet the organizers and mission behind Trust and Safety India Festival.',
+    images: ['/twitter-image'],
+  },
+};
 
 const pillars = [
   {
@@ -73,8 +102,64 @@ const aboutCtaLinks = [
 ];
 
 export default function AboutPage() {
+  const aboutJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'AboutPage',
+        '@id': `${siteUrl}/about#about`,
+        url: `${siteUrl}/about`,
+        name: 'About Trust and Safety India Festival',
+        description: metadata.description,
+        isPartOf: {
+          '@id': `${siteUrl}/#website`,
+        },
+        mainEntity: {
+          '@id': `${siteUrl}/#event`,
+        },
+      },
+      {
+        '@type': 'Event',
+        '@id': `${siteUrl}/#event`,
+        name: 'Trust and Safety India Festival 2026',
+        alternateName: ['TASI 2026', 'Trust and Safety India Festival'],
+        organizer: [
+          {
+            '@type': 'Organization',
+            name: 'Centre for Social Research',
+            url: 'https://www.csrindia.org',
+          },
+          {
+            '@type': 'Organization',
+            name: 'Trust and Safety Festival',
+            url: 'https://trustandsafetyfestival.org',
+          },
+        ],
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${siteUrl}/about#organizers`,
+        name: 'Trust and Safety India Festival organizing team',
+        itemListElement: teamMembers.map((member, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Person',
+            name: member.name,
+            jobTitle: member.designation,
+            description: member.bio,
+            image: `${siteUrl}/img/team/${member.photo}`,
+            sameAs: [member.linkedinUrl, member.twitterUrl].filter(Boolean),
+          },
+        })),
+      },
+    ],
+  };
+
   return (
     <>
+      <JsonLdScript data={aboutJsonLd} />
+      <BreadcrumbJsonLd items={[{ name: 'About', url: '/about' }]} />
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <BrandedPageHero className="min-h-[300px] py-14 md:min-h-[360px] md:py-20">

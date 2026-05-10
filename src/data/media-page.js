@@ -1,7 +1,25 @@
 export const mediaMetadata = {
-  title: 'Media Coverage | TASI 2026',
+  title: 'Trust and Safety India Festival Media | TASI Press Coverage',
   description:
-    'Explore TASI media coverage highlights, press resources, and accreditation details for journalists and editors.',
+    'Explore Trust and Safety India Festival media coverage, TASI press resources, media accreditation, press kit documents, releases, photos, and newsroom contacts.',
+  alternates: {
+    canonical: '/media',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Media | TASI Press Coverage',
+    description:
+      'TASI media coverage, press kit, press releases, accreditation, photos, and journalist resources.',
+    url: '/media',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Trust and Safety India Festival Media | TASI Press Coverage',
+    description:
+      'Media coverage and press resources for Trust and Safety India Festival.',
+    images: ['/twitter-image'],
+  },
 };
 
 export const mediaHero = {
@@ -81,9 +99,20 @@ export const pressConferenceHighlights = [
 ];
 
 export const mediaPressKitMetadata = {
-  title: 'Press Kit | TASI 2026',
+  title: 'Trust and Safety India Festival Press Kit | TASI Media Resources',
   description:
-    'Reference documents for journalists, editors, partners, and researchers covering TASI.',
+    'Download Trust and Safety India Festival press kit documents, organization profiles, speaker profiles, and reference material for journalists and editors covering TASI.',
+  alternates: {
+    canonical: '/media/press-kit',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Press Kit | TASI Media Resources',
+    description:
+      'Official press kit documents and background material for TASI media coverage.',
+    url: '/media/press-kit',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const pressKitPage = {
@@ -113,9 +142,20 @@ export const pressKitPage = {
 };
 
 export const mediaPressReleasesMetadata = {
-  title: 'Press Releases | TASI 2026',
+  title: 'Trust and Safety India Festival Press Releases | TASI News',
   description:
-    'Official TASI release documents, media invites, and press coordination material.',
+    'Read official Trust and Safety India Festival press releases, media invites, launch announcements, and TASI news for journalists, editors, and partners.',
+  alternates: {
+    canonical: '/media/press-releases',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Press Releases | TASI News',
+    description:
+      'Official TASI press releases, media invites, and festival announcements.',
+    url: '/media/press-releases',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const pressReleasesPage = {

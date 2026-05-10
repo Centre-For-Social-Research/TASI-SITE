@@ -51,7 +51,12 @@ test('get involved family routes delegate to tracked page components', () => {
 
   for (const route of routes) {
     const source = read(...route.path);
-    assert.match(source, new RegExp(`return <${route.component} \\/>`));
+    if (route.path.includes('exhibition')) {
+      assert.doesNotMatch(source, /PageSeoJsonLd/);
+    } else {
+      assert.match(source, /PageSeoJsonLd/);
+    }
+    assert.match(source, new RegExp(`<${route.component} \\/>`));
     assert.match(source, new RegExp(`metadata = ${route.metadata}`));
     for (const token of route.forbidden) {
       assert.doesNotMatch(source, new RegExp(`const ${token}`));
@@ -86,7 +91,10 @@ test('media resource subpages share one tracked resource-list component', () => 
 test('get involved data owns live parent-page participation paths', async () => {
   const data = await loadData(['src', 'data', 'get-involved-page.js']);
 
-  assert.equal(data.getInvolvedMetadata.title, 'Get Involved at TASI 2026');
+  assert.equal(
+    data.getInvolvedMetadata.title,
+    'Get Involved With Trust and Safety India Festival | TASI 2026'
+  );
   assert.equal(data.getInvolvedHero.eyebrow, 'Get Involved');
   assert.equal(data.getInvolvedQuickLinks.length, 4);
   assert.equal(data.involvementOptions.length, 12);

@@ -24,7 +24,8 @@ test('register route delegates to the tracked register page component', () => {
     /import \{ registerPageMetadata \} from '@\/data\/register-page'/
   );
   assert.match(source, /export const metadata = registerPageMetadata;/);
-  assert.match(source, /return <RegisterPage \/>;/);
+  assert.match(source, /PageSeoJsonLd/);
+  assert.match(source, /<RegisterPage \/>/);
   assert.doesNotMatch(source, /const\s+(steps|faqs)\s*=/);
 });
 

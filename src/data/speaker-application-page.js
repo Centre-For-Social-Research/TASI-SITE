@@ -1,7 +1,18 @@
 export const speakerApplicationMetadata = {
-  title: 'Apply to Speak at TASI 2026',
+  title: 'Apply to Speak at Trust and Safety India Festival | TASI 2026',
   description:
-    'Submit your speaker application for TASI 2026 and help shape conversations on trust and safety, AI governance, child safety, and digital wellbeing.',
+    'Submit your speaker application for Trust and Safety India Festival 2026 and help shape conversations on trust and safety, AI governance, child safety, platform accountability, and digital wellbeing.',
+  alternates: {
+    canonical: '/speaker-application',
+  },
+  openGraph: {
+    title: 'Apply to Speak at Trust and Safety India Festival | TASI 2026',
+    description:
+      'Speaker applications for TASI 2026 across online safety, platform governance, AI governance, child safety, and digital wellbeing.',
+    url: '/speaker-application',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const speakerApplicationHero = {

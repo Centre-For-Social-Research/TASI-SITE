@@ -23,7 +23,9 @@ test('sponsor route delegates to the tracked sponsor page component', () => {
     source,
     /import SponsorPage from ['"]@\/components\/sponsor\/sponsor-page['"]/
   );
-  assert.match(source, /return <SponsorPage \/>;/);
+  assert.match(source, /JsonLdScript/);
+  assert.match(source, /BreadcrumbJsonLd/);
+  assert.match(source, /<SponsorPage \/>/);
   assert.doesNotMatch(source, /sponsorMetrics/);
   assert.doesNotMatch(source, /PricingSection/);
   assert.doesNotMatch(source, /PartnersMarqueeStrip/);
@@ -51,6 +53,10 @@ test('sponsor page data exposes only the live sponsorship datasets', async () =>
   assert.equal(data.sponsorshipPillars.length, 3);
   assert.equal(data.sponsorPricingPlans.length, 5);
   assert.equal(data.sponsorPartnerOptions.length, 2);
+  assert.equal(
+    data.sponsorMetadata.title,
+    'Trust and Safety India Festival Sponsors | TASI Partnerships'
+  );
   assert.equal(data.sponsorHero.title, 'Sponsorship Opportunities');
   assert.deepEqual(
     data.sponsorPricingPlans.slice(0, 4).map((plan) => plan.name),

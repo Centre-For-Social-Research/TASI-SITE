@@ -13,7 +13,8 @@ test('attendees route delegates to the tracked page shell', () => {
   assert.match(source, /@\/components\/attendees\/attendees-page/);
   assert.match(source, /metadata = attendeesPageMetadata/);
   assert.match(source, /export const revalidate = 3600/);
-  assert.match(source, /return <AttendeesPage \/>/);
+  assert.match(source, /PageSeoJsonLd/);
+  assert.match(source, /<AttendeesPage \/>/);
   assert.doesNotMatch(source, /HomeNavbar/);
   assert.doesNotMatch(source, /BrandedPageHero/);
   assert.doesNotMatch(source, /publicAttendees/);
@@ -35,7 +36,10 @@ test('attendees page data owns copy, filter config, and public curation lists', 
   const moduleUrl = pathToFileURL(repoPath('src', 'data', 'attendees-page.js'));
   const data = await import(moduleUrl.href);
 
-  assert.equal(data.attendeesPageMetadata.title, 'Attendees | TASI 2026');
+  assert.equal(
+    data.attendeesPageMetadata.title,
+    'Trust and Safety India Festival Attendees | TASI Community'
+  );
   assert.equal(data.attendeesHero.eyebrow, 'Public Attendees');
   assert.match(
     data.attendeesDirectoryCopy.searchPlaceholder,

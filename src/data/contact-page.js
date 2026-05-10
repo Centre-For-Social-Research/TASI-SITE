@@ -1,7 +1,18 @@
 export const contactMetadata = {
-  title: 'Contact Us | TASI 2026',
+  title: 'Contact Trust and Safety India Festival | TASI 2026',
   description:
-    'Contact the TASI team for registration, delegate participation, partnerships, sponsorships, and general festival coordination.',
+    'Contact the Trust and Safety India Festival team for TASI 2026 registration, delegate participation, partnerships, sponsorships, media requests, and festival coordination.',
+  alternates: {
+    canonical: '/contact',
+  },
+  openGraph: {
+    title: 'Contact Trust and Safety India Festival | TASI 2026',
+    description:
+      'Reach TASI organizers for registration, sponsorship, media, partnerships, and festival coordination.',
+    url: '/contact',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const contactHero = {

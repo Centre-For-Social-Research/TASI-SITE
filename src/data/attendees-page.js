@@ -1,7 +1,18 @@
 export const attendeesPageMetadata = {
-  title: 'Attendees | TASI 2026',
+  title: 'Trust and Safety India Festival Attendees | TASI Community',
   description:
-    'Browse the public TASI attendee directory with consolidated participant details drawn from the festival guest lists.',
+    'Browse the public Trust and Safety India Festival attendee directory and explore the TASI community across policy, platforms, civil society, research, media, and partner organizations.',
+  alternates: {
+    canonical: '/attendees',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Attendees | TASI Community',
+    description:
+      'Explore public attendee profiles and organizations represented in the TASI community.',
+    url: '/attendees',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const attendeesHero = {

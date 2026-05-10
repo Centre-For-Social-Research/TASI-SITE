@@ -1,3 +1,27 @@
+export const sponsorMetadata = {
+  title: 'Trust and Safety India Festival Sponsors | TASI Partnerships',
+  description:
+    'Explore sponsorship and partnership opportunities for Trust and Safety India Festival 2026, connecting brands with policy, platform, civil society, research, and AI governance leaders.',
+  alternates: {
+    canonical: '/sponsor',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Sponsors | TASI Partnerships',
+    description:
+      'Partner with TASI 2026 to reach trust and safety, online safety, responsible AI, and platform governance decision-makers.',
+    url: '/sponsor',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Trust and Safety India Festival Sponsors | TASI Partnerships',
+    description:
+      'Sponsorship and partnership opportunities for Trust and Safety India Festival 2026.',
+    images: ['/twitter-image'],
+  },
+};
+
 export const sponsorHero = {
   eyebrow: 'Partner With TASI 2026',
   title: 'Sponsorship Opportunities',

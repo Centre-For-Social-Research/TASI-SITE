@@ -1,7 +1,18 @@
 export const blogIndexMetadata = {
-  title: 'News and Blogs | TASI 2026',
+  title: 'Trust and Safety India Festival News and Blogs | TASI 2026',
   description:
-    'Read TASI news, announcements, registration updates, community notes, and commentary on trust and safety.',
+    'Read Trust and Safety India Festival news, TASI announcements, registration updates, community notes, and commentary on online safety, AI governance, and platform accountability.',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival News and Blogs | TASI 2026',
+    description:
+      'TASI news, announcements, community updates, and commentary on trust and safety.',
+    url: '/blog',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const blogIndexHero = {

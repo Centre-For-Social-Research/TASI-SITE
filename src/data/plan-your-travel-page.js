@@ -14,33 +14,48 @@ export const travelTabs = [
 ];
 
 export const travelOverviewMetadata = {
-  title: 'Plan Your Travel - TASI 2026',
+  title: 'Plan Travel for Trust and Safety India Festival | TASI 2026',
   description:
-    'Everything you need to plan your trip to TASI 2026 in New Delhi - hotel recommendations, visa information, how to reach the venue, and general travel tips.',
+    'Plan your trip to Trust and Safety India Festival 2026 in New Delhi with venue travel guidance, hotels, visa information, transport, and delegate travel tips.',
+  alternates: {
+    canonical: '/plan-your-travel',
+  },
 };
 
 export const generalInfoMetadata = {
-  title: 'General Information - Plan Your Travel - TASI 2026',
+  title: 'General Information for TASI 2026 Travel | New Delhi',
   description:
-    'Currency, time zone, emergency contacts, dress code, and essential travel tips for your visit to TASI 2026 in New Delhi.',
+    'Currency, time zone, emergency contacts, dress code, local tips, and essential travel information for Trust and Safety India Festival delegates in New Delhi.',
+  alternates: {
+    canonical: '/plan-your-travel/general-info',
+  },
 };
 
 export const howToReachMetadata = {
-  title: 'How to Reach - Plan Your Travel - TASI 2026',
+  title: 'How to Reach Trust and Safety India Festival | TASI Venue Travel',
   description:
-    'Airports, railway stations, metro, and taxi options for reaching the TASI 2026 venue in New Delhi, India.',
+    'Find airport, railway, metro, taxi, and local transport options for reaching the Trust and Safety India Festival venue in New Delhi, India.',
+  alternates: {
+    canonical: '/plan-your-travel/how-to-reach',
+  },
 };
 
 export const visaInformationMetadata = {
-  title: 'Visa Information - Plan Your Travel - TASI 2026',
+  title: 'Visa Information for Trust and Safety India Festival | TASI 2026',
   description:
-    'Visa waiver agreements, conference visas, e-Visa pathways, OCI card requirements, and passport validity rules for TASI 2026 in New Delhi.',
+    'Review visa waiver agreements, conference visas, e-Visa pathways, OCI card requirements, and passport validity rules for TASI 2026 in New Delhi.',
+  alternates: {
+    canonical: '/plan-your-travel/visa-information',
+  },
 };
 
 export const accommodationMetadata = {
-  title: 'Accommodation - Plan Your Travel - TASI 2026',
+  title: 'Accommodation for Trust and Safety India Festival | TASI Hotels',
   description:
-    'Curated selection of 26 premier hotels near the TASI 2026 summit venue in New Delhi. Book independently to secure your stay.',
+    'Explore accommodation options and hotels near the Trust and Safety India Festival venue in New Delhi for TASI 2026 delegates and partners.',
+  alternates: {
+    canonical: '/plan-your-travel/accommodation',
+  },
 };
 
 export const travelOverviewSections = [

@@ -66,7 +66,8 @@ test('plan-your-travel routes delegate to tracked page components', () => {
       source,
       new RegExp(`export const metadata = ${route.metadata};`)
     );
-    assert.match(source, new RegExp(`return <${route.component} />;`));
+    assert.match(source, /PageSeoJsonLd/);
+    assert.match(source, new RegExp(`<${route.component} />`));
     assert.doesNotMatch(source, staleDatasetPattern);
     assertNoMojibake(source, route.file.join('/'));
   }
@@ -90,10 +91,12 @@ test('plan-your-travel shared data owns all live route datasets', async () => {
 
   assert.equal(
     data.travelOverviewMetadata.title,
-    'Plan Your Travel - TASI 2026'
+    'Plan Travel for Trust and Safety India Festival | TASI 2026'
   );
   assert.equal(
-    data.accommodationMetadata.description.includes('26 premier hotels'),
+    data.accommodationMetadata.description.includes(
+      'Trust and Safety India Festival venue'
+    ),
     true
   );
 

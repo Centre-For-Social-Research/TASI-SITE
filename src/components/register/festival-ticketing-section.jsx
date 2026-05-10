@@ -82,7 +82,6 @@ const MAX_PHOTO_SIZE_BYTES = 2 * 1024 * 1024;
 const FESTIVAL_PASS_OPTIONS = [
   {
     label: 'Domestic',
-    amount: 'INR 11,800',
     title: 'Domestic',
     description:
       'For attendees based in India, with tax-ready invoicing and domestic Razorpay routing.',
@@ -91,7 +90,6 @@ const FESTIVAL_PASS_OPTIONS = [
   },
   {
     label: 'International',
-    amount: 'USD 200',
     title: 'International',
     description:
       'For attendees joining from outside India, with export invoice support and international-compliant routing.',
@@ -216,7 +214,6 @@ function getTicketPreview(country) {
   if (country === 'IN') {
     return {
       label: 'Domestic Pass',
-      amount: 'INR 11,800',
       description:
         'Includes 18% GST and routes exclusively to the domestic NGO Razorpay account.',
       complianceLabel: 'GST invoice required',
@@ -226,7 +223,6 @@ function getTicketPreview(country) {
 
   return {
     label: 'International Pass',
-    amount: 'USD 200',
     description:
       'Zero-rated export invoice and exclusive routing to the FCRA Razorpay account.',
     complianceLabel: 'Export invoice and identity record required',
@@ -237,11 +233,7 @@ function getTicketPreview(country) {
 function getTicketBreakdown(country) {
   if (country === 'IN') {
     return {
-      baseLabel: 'Base Price',
-      baseAmount: '₹10,000',
-      taxLabel: 'GST Treatment',
-      taxAmount: '₹1,800 (18%)',
-      totalAmount: '₹11,800',
+      invoiceTreatment: 'GST invoice support for India-based attendees',
       paymentMessage:
         'By proceeding, you confirm that your country of residence is India. This determines the regulatory channel for your payment.',
       paymentGatewayLabel: 'Domestic payment gateway',
@@ -249,11 +241,7 @@ function getTicketBreakdown(country) {
   }
 
   return {
-    baseLabel: 'Base Price',
-    baseAmount: '$200',
-    taxLabel: 'GST Treatment',
-    taxAmount: 'Zero-rated export',
-    totalAmount: '$200',
+    invoiceTreatment: 'Export invoice support for attendees outside India',
     paymentMessage:
       'By proceeding, you confirm that your country of residence is outside India. This determines the regulatory channel for your payment.',
     paymentGatewayLabel: 'International payment gateway',
@@ -670,7 +658,7 @@ export default function FestivalTicketingSection() {
     setPaymentSession({
       status: 'loading',
       orderId: '',
-      amountLabel: preview.amount,
+      amountLabel: '',
       gatewayLabel: pricing.paymentGatewayLabel,
       payload: null,
     });
@@ -704,7 +692,7 @@ export default function FestivalTicketingSection() {
       setPaymentSession({
         status: 'ready',
         orderId: data.razorpayOrderId,
-        amountLabel: data.displayPrice || preview.amount,
+        amountLabel: '',
         gatewayLabel: pricing.paymentGatewayLabel,
         payload: data,
       });
@@ -718,7 +706,7 @@ export default function FestivalTicketingSection() {
       setPaymentSession({
         status: 'error',
         orderId: '',
-        amountLabel: preview.amount,
+        amountLabel: '',
         gatewayLabel: pricing.paymentGatewayLabel,
         payload: null,
       });
@@ -905,9 +893,6 @@ export default function FestivalTicketingSection() {
               <h3 className="mt-6 text-[1.75rem] font-black tracking-tight text-slate-900 dark:text-white">
                 {option.label}
               </h3>
-              <p className="mt-3 text-base font-semibold text-slate-700 dark:text-slate-200">
-                {option.amount}
-              </p>
               <p className="mx-auto mt-4 max-w-sm text-base leading-relaxed text-slate-600 dark:text-slate-300">
                 {option.description}
               </p>
@@ -1565,24 +1550,15 @@ export default function FestivalTicketingSection() {
                     </div>
                     <div className="mt-6 space-y-4 text-slate-600">
                       <div className="flex items-center justify-between gap-4">
-                        <span>{pricing.baseLabel}</span>
+                        <span>Payment Channel</span>
                         <span className="font-semibold text-slate-900">
-                          {pricing.baseAmount}
+                          {pricing.paymentGatewayLabel}
                         </span>
                       </div>
                       <div className="flex items-center justify-between gap-4">
-                        <span>{pricing.taxLabel}</span>
+                        <span>Invoice Treatment</span>
                         <span className="font-semibold text-slate-900">
-                          {pricing.taxAmount}
-                        </span>
-                      </div>
-                      <div className="h-px bg-slate-200" />
-                      <div className="flex items-center justify-between gap-4">
-                        <span className="text-xl font-black text-slate-900">
-                          Total Payable
-                        </span>
-                        <span className="text-4xl font-black tracking-tight text-[#2563eb]">
-                          {pricing.totalAmount}
+                          {pricing.invoiceTreatment}
                         </span>
                       </div>
                     </div>
@@ -1648,12 +1624,6 @@ export default function FestivalTicketingSection() {
                       <span>Order ID</span>
                       <span className="font-mono text-slate-900">
                         {paymentSession.orderId || 'Preparing...'}
-                      </span>
-                    </div>
-                    <div className="mt-4 flex items-center justify-between gap-4 text-sm text-slate-500">
-                      <span>Amount</span>
-                      <span className="font-semibold text-slate-900">
-                        {paymentSession.amountLabel || preview.amount}
                       </span>
                     </div>
                   </div>

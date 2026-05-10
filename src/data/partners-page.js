@@ -1,9 +1,20 @@
 import { partners } from './partners.js';
 
 export const partnersPageMetadata = {
-  title: 'Partners | TASI 2026',
+  title: 'Trust and Safety India Festival Partners | TASI Organizations',
   description:
-    'Meet the organisations that partnered with TASI 2025 to advance trust and safety conversations in India and globally.',
+    'Meet Trust and Safety India Festival partners, sponsors, platforms, civil society organizations, diplomatic missions, research groups, and ecosystem collaborators.',
+  alternates: {
+    canonical: '/partners',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Partners | TASI Organizations',
+    description:
+      'Organizations and partners supporting TASI across trust and safety, online safety, platform governance, and AI accountability.',
+    url: '/partners',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
 };
 
 export const partnersPageHero = {

@@ -4,9 +4,27 @@ import {
 } from '../lib/registration-constants.js';
 
 export const registerPageMetadata = {
-  title: 'Register | TASI 2026',
+  title: 'Trust and Safety India Festival Registration | TASI 2026',
   description:
-    'Apply for general access to TASI 2026 or choose a paid festival ticket for confirmed access, hospitality, and reception benefits.',
+    'Register for Trust and Safety India Festival 2026, the TASI convening for online safety, platform accountability, responsible AI, policy, research, and civil society leaders.',
+  alternates: {
+    canonical: '/register',
+  },
+  openGraph: {
+    title: 'Trust and Safety India Festival Registration | TASI 2026',
+    description:
+      'Apply to attend TASI 2026 and join leaders working on online safety, platform accountability, responsible AI, and digital rights in India.',
+    url: '/register',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Trust and Safety India Festival Registration | TASI 2026',
+    description:
+      "Apply to attend TASI 2026 and join India's trust and safety community.",
+    images: ['/twitter-image'],
+  },
 };
 
 export const registerPageHero = {

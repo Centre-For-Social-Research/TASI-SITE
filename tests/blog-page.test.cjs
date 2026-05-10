@@ -14,7 +14,8 @@ test('blog routes delegate to tracked page components', () => {
   const postRoute = read('src', 'app', 'blog', '[slug]', 'page.jsx');
 
   assert.match(indexRoute, /metadata = blogIndexMetadata/);
-  assert.match(indexRoute, /return <BlogIndexPage \/>/);
+  assert.match(indexRoute, /PageSeoJsonLd/);
+  assert.match(indexRoute, /<BlogIndexPage \/>/);
   assert.doesNotMatch(indexRoute, /getBlogPosts/);
   assert.doesNotMatch(indexRoute, /BlogPageClient/);
 
@@ -59,7 +60,10 @@ test('blog post component owns article rendering and fallback copy', () => {
 test('blog data owns page metadata and copy', async () => {
   const data = await loadData(['src', 'data', 'blog-page.js']);
 
-  assert.equal(data.blogIndexMetadata.title, 'News and Blogs | TASI 2026');
+  assert.equal(
+    data.blogIndexMetadata.title,
+    'Trust and Safety India Festival News and Blogs | TASI 2026'
+  );
   assert.equal(data.blogIndexHero.eyebrow, 'Blog & News');
   assert.equal(data.blogIndexCopy.allPostsLabel, 'All Posts');
   assert.equal(data.blogIndexCta.href, '/register');
