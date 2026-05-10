@@ -170,18 +170,18 @@ export default async function ProgrammeSessionPage({ params }) {
           </div>
         </BrandedPageHero>
 
-        <section className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 md:-mt-20 md:grid-cols-[1fr_320px] md:px-6">
-          <article className="relative rounded-[10px] border border-stone-200 bg-white p-7 shadow-[0_26px_70px_rgba(28,25,23,0.12)] dark:border-stone-800 dark:bg-stone-900 md:p-10">
+        <section className="mx-auto grid w-full max-w-6xl items-stretch gap-8 px-4 py-12 md:grid-cols-[1fr_320px] md:px-6">
+          <article className="flex flex-col rounded-[10px] border border-stone-200 bg-white p-7 shadow-sm dark:border-stone-800 dark:bg-stone-900 md:p-8">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-stone-400">
               {session.format} Session
             </p>
-            <h2 className="mt-6 max-w-3xl text-4xl font-black tracking-tight text-stone-950 dark:text-white md:text-6xl">
+            <h2 className="mt-5 max-w-3xl text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-4xl">
               {session.title}
             </h2>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+            <p className="mt-5 max-w-3xl text-base leading-8 text-stone-600 dark:text-stone-300">
               {description}
             </p>
-            <div className="mt-14 border-t border-stone-200 pt-6 dark:border-stone-800">
+            <div className="mt-auto pt-8">
               <dl className="flex flex-wrap gap-x-8 gap-y-4 text-sm font-medium text-stone-500 dark:text-stone-300">
                 <div className="flex items-center gap-2">
                   <CalendarDays className="h-4 w-4" aria-hidden="true" />
@@ -202,7 +202,7 @@ export default async function ProgrammeSessionPage({ params }) {
             </div>
           </article>
 
-          <aside className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900 md:mt-20">
+          <aside className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#b33f2a]">
               Speakers
             </p>
