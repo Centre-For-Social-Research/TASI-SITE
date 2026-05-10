@@ -111,13 +111,13 @@ export default async function SpeakerProfilePage({ params }) {
       <HomeNavbar />
       <main>
         <BrandedPageHero className="py-14 md:py-20">
-          <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-8 px-4 md:grid-cols-[220px_1fr] md:items-center md:px-6">
+          <div className="relative z-10 mx-auto grid w-full max-w-5xl gap-8 px-4 md:grid-cols-[224px_1fr] md:items-center md:px-6">
             {photoSrc ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={photoSrc}
                 alt={`${speaker.name}, ${speaker.designation}`}
-                className="mx-auto aspect-square w-44 rounded-[10px] object-cover ring-4 ring-white/25 md:w-56"
+                className="mx-auto aspect-square w-44 rounded-[10px] object-cover ring-4 ring-white/25 md:mx-0 md:w-56"
               />
             ) : null}
             <div className="text-center md:text-left">
