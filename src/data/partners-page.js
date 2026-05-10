@@ -62,10 +62,28 @@ export function getPartnerBySlug(slug) {
 export function getPartnerMetadata(slug) {
   const partner = getPartnerBySlug(slug);
   if (!partner) return {};
+  const title = `${partner.name} | Trust and Safety India Festival Partner`;
+  const description = `${partner.description} ${partner.name} is listed as a ${partner.type} for Trust and Safety India Festival.`;
 
   return {
-    title: `${partner.name} | Partners | TASI 2026`,
-    description: partner.description,
+    title,
+    description,
+    alternates: {
+      canonical: `/partners/${partner.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `/partners/${partner.slug}`,
+      type: 'profile',
+      images: partner.logo ? [partner.logo] : ['/opengraph-image'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: partner.logo ? [partner.logo] : ['/twitter-image'],
+    },
   };
 }
 

@@ -19,17 +19,17 @@ test('programme data reflects speaker/session curation requests', async () => {
   assert.ok(!allSpeakers.includes('Shri Ashwini Vaishnaw'));
   assert.ok(!allSpeakers.includes('Smt. Annapurna Devi'));
 
-  const programmePageSource = fs.readFileSync(
-    path.join(process.cwd(), 'src/app/programme/page.jsx'),
+  const programmePageDataSource = fs.readFileSync(
+    path.join(process.cwd(), 'src/lib/programme-page-data.js'),
     'utf8'
   );
 
   assert.match(
-    programmePageSource,
+    programmePageDataSource,
     /'delphine o':\s*'\/img\/speakers\/Delphine O\.jpg'/
   );
   assert.match(
-    programmePageSource,
+    programmePageDataSource,
     /'julie inman grant':\s*'\/img\/speakers\/Julie_Inman_Grant\.jpg'/
   );
 });

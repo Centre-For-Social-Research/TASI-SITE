@@ -1,7 +1,18 @@
 import { MetadataRoute } from 'next';
 import { getBlogPosts } from '@/lib/blog';
+import { partners } from '@/data/partners';
+import { speakers } from '@/data/speakers';
+import { programmeSessions2025 } from '@/data/programme-2025';
+import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
+import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 
 const BASE = 'https://trustandsafetyindia.org';
+const {
+  getProgrammeSessionPath,
+  shouldShowProgrammeSession,
+  sortProgrammeSessionsForAgenda,
+} = programmeAgendaUtils;
+const { buildSpeakerSlug } = speakerDirectoryUtils;
 
 type Route = {
   path: string;
@@ -18,6 +29,7 @@ const staticRoutes: Route[] = [
   { path: '/programme', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/register', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/sponsor', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/partners', changeFrequency: 'monthly', priority: 0.7 },
   // ── Get Involved ────────────────────────────────────────────────────────────
   { path: '/get-involved', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/speaker-application', changeFrequency: 'monthly', priority: 0.7 },
@@ -97,5 +109,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // silently skip dynamic blog entries if data is unavailable
   }
 
-  return [...staticEntries, ...blogEntries];
+  const speakerEntries: MetadataRoute.Sitemap = speakers
+    .map((speaker) => buildSpeakerSlug(speaker.name))
+    .filter(Boolean)
+    .map((slug) => ({
+      url: `${BASE}/speakers/${slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    }));
+
+  const programmeSessionEntries: MetadataRoute.Sitemap =
+    sortProgrammeSessionsForAgenda(
+      programmeSessions2025.filter(shouldShowProgrammeSession)
+    ).map((session) => ({
+      url: `${BASE}${getProgrammeSessionPath(session)}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    }));
+
+  const partnerEntries: MetadataRoute.Sitemap = partners.map((partner) => ({
+    url: `${BASE}/partners/${partner.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticEntries,
+    ...speakerEntries,
+    ...programmeSessionEntries,
+    ...partnerEntries,
+    ...blogEntries,
+  ];
 }

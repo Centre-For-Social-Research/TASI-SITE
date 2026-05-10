@@ -69,6 +69,33 @@ function sortProgrammeSessionsForAgenda(sessions = []) {
   return [...sessions].sort(compareProgrammeSessions);
 }
 
+function buildProgrammeSessionSlug(session = {}) {
+  const titleSlug = String(session.title || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  const idSlug = String(session.id || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return [idSlug, titleSlug].filter(Boolean).join('-');
+}
+
+function getProgrammeSessionPath(session = {}) {
+  const slug = buildProgrammeSessionSlug(session);
+  return slug ? `/programme/session/${slug}` : '/programme';
+}
+
+function findProgrammeSessionBySlug(sessions = [], slug) {
+  return sessions.find(
+    (session) => buildProgrammeSessionSlug(session) === slug
+  );
+}
+
 function buildProgrammeSessionViewModels({
   sessions = [],
   speakerDesignationMap = {},
@@ -89,8 +116,11 @@ function buildProgrammeSessionViewModels({
 module.exports = {
   DAY_ORDER,
   buildProgrammeSessionViewModels,
+  buildProgrammeSessionSlug,
   timeSortValue,
   compareProgrammeSessions,
+  findProgrammeSessionBySlug,
+  getProgrammeSessionPath,
   normalizePersonName,
   resolveMappedPersonValue,
   shouldShowProgrammeSession,

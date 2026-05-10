@@ -17,10 +17,28 @@ test('public root layout does not mount Clerk', () => {
   assert.doesNotMatch(appShell, /useClerk/);
 });
 
+test('root metadata prioritizes Trust and Safety India Festival search terms', () => {
+  const rootLayout = readFile('src/app/layout.tsx');
+
+  assert.match(
+    rootLayout,
+    /const siteTitle = 'Trust and Safety India Festival 2026 \| TASI 2026'/
+  );
+  assert.match(
+    rootLayout,
+    /Trust and Safety India Festival 2026 \(TASI 2026\)/
+  );
+  assert.match(rootLayout, /'Trust and Safety India Festival 2026'/);
+  assert.match(rootLayout, /'Trust & Safety India Festival'/);
+  assert.match(rootLayout, /'Trust and Safety conference India'/);
+  assert.match(rootLayout, /'India trust and safety conference'/);
+});
+
 test('root event structured data includes Google recommended fields', () => {
   const rootLayout = readFile('src/app/layout.tsx');
 
   assert.match(rootLayout, /'@type': 'Event'/);
+  assert.match(rootLayout, /name: 'Trust and Safety India Festival 2026'/);
   assert.match(rootLayout, /performer: \{/);
   assert.match(rootLayout, /name: 'TASI 2026 speakers and panelists'/);
   assert.match(rootLayout, /offers: \{/);

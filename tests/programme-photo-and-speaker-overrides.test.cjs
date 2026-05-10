@@ -17,17 +17,17 @@ test('programme speaker overrides cover Christopher Cooter, Suhel Daud, and Trip
   assert.ok(allSpeakers.includes('Legal Attache Suhel Daud'));
   assert.ok(!allSpeakers.includes('Ms. Tripti Gurha'));
 
-  const programmePageSource = fs.readFileSync(
-    path.join(process.cwd(), 'src/app/programme/page.jsx'),
+  const programmePageDataSource = fs.readFileSync(
+    path.join(process.cwd(), 'src/lib/programme-page-data.js'),
     'utf8'
   );
 
   assert.match(
-    programmePageSource,
+    programmePageDataSource,
     /'high commissioner of canada to india':\s*'\/img\/Speaker Highlights\/Christopher Cooter\.png'/
   );
   assert.match(
-    programmePageSource,
+    programmePageDataSource,
     /'legal attache suhel daud':\s*'\/img\/speakers\/Suhel Daud\.jpg'/
   );
 });

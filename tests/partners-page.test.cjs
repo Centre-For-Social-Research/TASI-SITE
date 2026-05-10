@@ -30,10 +30,9 @@ test('partners routes delegate to tracked list and detail components', () => {
   assert.match(detailRoute, /getPartnerStaticParams/);
   assert.match(detailRoute, /getPartnerMetadata/);
   assert.match(detailRoute, /getPartnerBySlug/);
-  assert.match(
-    detailRoute,
-    /return <PartnerDetailPage partner=\{partner\} \/>;/
-  );
+  assert.match(detailRoute, /JsonLdScript/);
+  assert.match(detailRoute, /BreadcrumbJsonLd/);
+  assert.match(detailRoute, /<PartnerDetailPage partner=\{partner\} \/>/);
   assert.doesNotMatch(
     detailRoute,
     /function\s+(LinkedInIcon|InstagramIcon|XIcon|YouTubeIcon)/
@@ -53,7 +52,11 @@ test('partners page data owns metadata, copy, and route helpers', async () => {
   assert.equal(pageData.getPartnerBySlug('booking-com').name, 'Booking.com');
   assert.equal(
     pageData.getPartnerMetadata('booking-com').title,
-    'Booking.com | Partners | TASI 2026'
+    'Booking.com | Trust and Safety India Festival Partner'
+  );
+  assert.equal(
+    pageData.getPartnerMetadata('booking-com').alternates.canonical,
+    '/partners/booking-com'
   );
   assert.equal(pageData.getPartnerNavigation('booking-com').previous, null);
   assert.equal(

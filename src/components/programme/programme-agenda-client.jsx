@@ -1,17 +1,21 @@
 ﻿'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { CalendarPlus, Clock, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
+import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 import BuildMyAgenda from './build-my-agenda';
 import styles from './programme-agenda.module.css';
 
 const {
   buildProgrammeSessionViewModels,
+  getProgrammeSessionPath,
   sortProgrammeSessionsForAgenda,
   timeSortValue,
 } = programmeAgendaUtils;
+const { getSpeakerProfilePath } = speakerDirectoryUtils;
 
 const FORMAT_LABELS = {
   opening: 'Opening',
@@ -415,9 +419,12 @@ export default function ProgrammeAgendaClient({
                         </div>
                       </div>
 
-                      <div className={styles['session-title']}>
+                      <Link
+                        className={styles['session-title']}
+                        href={getProgrammeSessionPath(session)}
+                      >
                         {session.title}
-                      </div>
+                      </Link>
 
                       {session.topic && (
                         <div className={styles['session-topic']}>
@@ -483,9 +490,12 @@ export default function ProgrammeAgendaClient({
                                     )}
                                   </div>
                                   <div className={styles['speaker-info']}>
-                                    <div className={styles['speaker-name']}>
+                                    <Link
+                                      className={styles['speaker-name']}
+                                      href={getSpeakerProfilePath(speaker)}
+                                    >
                                       {speaker.name}
-                                    </div>
+                                    </Link>
                                     {speaker.title && (
                                       <div className={styles['speaker-title']}>
                                         {speaker.title}

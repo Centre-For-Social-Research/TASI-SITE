@@ -42,6 +42,25 @@ function getSpeakerPhotoSrc(speaker = {}) {
     : `/img/speakers/${speaker.photo}`;
 }
 
+function buildSpeakerSlug(name = '') {
+  return String(name)
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function getSpeakerProfilePath(speaker = {}) {
+  const slug = buildSpeakerSlug(speaker.name);
+  return slug ? `/speakers/${slug}` : '/speakers';
+}
+
+function findSpeakerBySlug(speakers = [], slug = '') {
+  return speakers.find((speaker) => buildSpeakerSlug(speaker.name) === slug);
+}
+
 function isVipSpeaker(speakerOrName) {
   const name =
     typeof speakerOrName === 'string' ? speakerOrName : speakerOrName?.name;
@@ -103,9 +122,12 @@ module.exports = {
   VIP_SPEAKERS,
   buildSpeakerCategories,
   filterSpeakers,
+  buildSpeakerSlug,
+  findSpeakerBySlug,
   getSpeakerInitials,
   getSpeakerLinkedInUrl,
   getSpeakerPhotoSrc,
+  getSpeakerProfilePath,
   isVipSpeaker,
   paginateSpeakers,
   speakerMatchesQuery,

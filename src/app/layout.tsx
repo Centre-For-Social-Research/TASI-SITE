@@ -8,10 +8,10 @@ import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
 const siteUrl = 'https://trustandsafetyindia.org';
-const siteName = 'Trust and Safety India Festival';
-const siteTitle = 'TASI 2026 | Trust and Safety India Festival';
+const siteName = 'Trust and Safety India Festival 2026';
+const siteTitle = 'Trust and Safety India Festival 2026 | TASI 2026';
 const siteDescription =
-  "TASI is India's first national convening focused on trust and safety, led by civil society. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, TASI creates a collaborative space for dialogue across government, industry, academia, and civil society.";
+  "Trust and Safety India Festival 2026 (TASI 2026) is India's first national convening focused on trust and safety, digital safety, platform accountability, and responsible AI. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, it brings together government, industry, academia, and civil society.";
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -21,7 +21,11 @@ const structuredData = {
       '@id': `${siteUrl}/#website`,
       url: siteUrl,
       name: siteName,
-      alternateName: 'TASI 2026',
+      alternateName: [
+        'TASI 2026',
+        'Trust and Safety India Festival',
+        'Trust & Safety India Festival',
+      ],
       description: siteDescription,
       inLanguage: 'en-IN',
       publisher: {
@@ -51,7 +55,12 @@ const structuredData = {
     {
       '@type': 'Event',
       '@id': `${siteUrl}/#event`,
-      name: 'TASI 2026 - Trust and Safety India Festival',
+      name: 'Trust and Safety India Festival 2026',
+      alternateName: [
+        'TASI 2026',
+        'Trust and Safety India Festival',
+        'Trust & Safety India Festival',
+      ],
       description: siteDescription,
       startDate: '2026-10-13',
       endDate: '2026-10-14',
@@ -122,16 +131,23 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  applicationName: 'TASI 2026',
+  applicationName: siteName,
   title: siteTitle,
   description: siteDescription,
   keywords: [
-    'TASI 2026',
     'Trust and Safety India Festival',
+    'Trust and Safety India Festival 2026',
+    'Trust & Safety India Festival',
+    'TASI 2026',
+    'TASI India',
+    'Trust and Safety conference India',
+    'India trust and safety conference',
     'trust and safety',
     'online safety',
     'digital safety',
+    'platform accountability',
     'responsible AI',
+    'AI governance India',
     'Centre for Social Research',
   ],
   authors: [
@@ -152,7 +168,7 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'TASI 2026 - Trust and Safety India Festival',
+        alt: 'Trust and Safety India Festival 2026 - TASI 2026',
       },
     ],
   },

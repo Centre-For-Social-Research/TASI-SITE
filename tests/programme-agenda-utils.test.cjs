@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 
 const {
   buildProgrammeSessionViewModels,
+  buildProgrammeSessionSlug,
+  getProgrammeSessionPath,
   normalizePersonName,
   resolveMappedPersonValue,
   shouldShowProgrammeSession,
@@ -51,6 +53,22 @@ test('sortProgrammeSessionsForAgenda returns sessions in agenda day and time ord
   assert.deepEqual(
     sorted.map((session) => session.id),
     ['oct6-tbd', 'oct6-opening', 'tango-early', 'dome-early', 'dome-late']
+  );
+});
+
+test('programme helpers build crawlable session slugs and paths', () => {
+  const session = {
+    id: 'tasi25-12',
+    title: 'Trust & Safety: Platform Accountability',
+  };
+
+  assert.equal(
+    buildProgrammeSessionSlug(session),
+    'tasi25-12-trust-and-safety-platform-accountability'
+  );
+  assert.equal(
+    getProgrammeSessionPath(session),
+    '/programme/session/tasi25-12-trust-and-safety-platform-accountability'
   );
 });
 

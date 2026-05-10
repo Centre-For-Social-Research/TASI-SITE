@@ -412,12 +412,18 @@
 }
 
 .agenda-root .session-title {
+  display: block;
   font-family: inherit;
   font-size: 1.65rem;
   font-weight: 800;
   color: var(--brown);
   line-height: 1.2;
   margin-bottom: 0.7rem;
+  text-decoration: none;
+}
+
+.agenda-root .session-title:hover {
+  color: var(--coral-deep);
 }
 
 .agenda-root .session-topic {
@@ -524,10 +530,16 @@
 }
 
 .agenda-root .speaker-name {
+  display: inline-block;
   font-weight: 800;
   color: var(--brown);
   font-size: 0.8rem;
   line-height: 1.35;
+  text-decoration: none;
+}
+
+.agenda-root .speaker-name:hover {
+  color: var(--coral-deep);
 }
 
 .agenda-root .speaker-title {

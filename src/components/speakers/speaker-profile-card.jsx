@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, useState } from 'react';
+import Link from 'next/link';
 import { Linkedin } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
@@ -12,6 +13,7 @@ const {
   getSpeakerInitials,
   getSpeakerLinkedInUrl,
   getSpeakerPhotoSrc,
+  getSpeakerProfilePath,
   isVipSpeaker,
 } = speakerDirectoryUtils;
 
@@ -23,6 +25,7 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
   const avatarInitials = getSpeakerInitials(speaker.name);
   const linkedInUrl = getSpeakerLinkedInUrl(speaker);
   const photoSrc = getSpeakerPhotoSrc(speaker);
+  const profilePath = getSpeakerProfilePath(speaker);
   const isFeaturedSpeaker = isVipSpeaker(speaker);
 
   return (
@@ -98,6 +101,17 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
                 {isFeaturedSpeaker ? VIP_LABEL : speaker.category}
               </p>
               <div className="flex items-center justify-center gap-3 pt-1">
+                <Link
+                  href={profilePath}
+                  className={cn(
+                    'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
+                    isFeaturedSpeaker
+                      ? 'border-stone-300/60 text-stone-200 hover:border-stone-200 hover:text-stone-100'
+                      : 'border-stone-300 text-stone-600 hover:border-orange-300 hover:text-orange-700'
+                  )}
+                >
+                  Profile
+                </Link>
                 <a
                   href={linkedInUrl}
                   target="_blank"
@@ -210,6 +224,17 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
                   </p>
                 </div>
               </div>
+              <Link
+                href={profilePath}
+                className={cn(
+                  'mt-4 inline-flex rounded-[10px] border px-3 py-2 text-xs font-semibold transition-colors',
+                  isFeaturedSpeaker
+                    ? 'border-stone-300/60 text-stone-200 hover:border-stone-200 hover:text-stone-100'
+                    : 'border-stone-300 text-stone-600 hover:border-orange-300 hover:text-orange-700'
+                )}
+              >
+                Open speaker profile
+              </Link>
             </div>
           </div>
         </Card>
