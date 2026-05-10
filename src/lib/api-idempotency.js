@@ -26,7 +26,12 @@ export async function getCompletedIdempotentResponse(scope, key) {
   return data.response ?? null;
 }
 
-export async function storeIdempotentResponse(scope, key, response, requester = null) {
+export async function storeIdempotentResponse(
+  scope,
+  key,
+  response,
+  requester = null
+) {
   if (!key) return;
   const supabase = getSupabaseAdmin();
   await supabase.from('app_idempotency_keys').upsert({

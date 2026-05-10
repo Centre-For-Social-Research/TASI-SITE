@@ -54,8 +54,14 @@ export async function POST(request) {
       );
     }
 
-    const idempotencyKey = getIdempotencyKey(request, `${email}:${normalizedSource}:${message}`);
-    const cached = await getCompletedIdempotentResponse('contact-message', idempotencyKey);
+    const idempotencyKey = getIdempotencyKey(
+      request,
+      `${email}:${normalizedSource}:${message}`
+    );
+    const cached = await getCompletedIdempotentResponse(
+      'contact-message',
+      idempotencyKey
+    );
     if (cached) {
       return Response.json(cached, { headers: protection.headers });
     }
@@ -76,24 +82,29 @@ export async function POST(request) {
     after(async () => {
       try {
         await sendInboundNotificationEmail({
-        subject: 'New TASI contact message',
-        text: [
-          'A new contact message was submitted on the website.',
-          `Source: ${normalizedSource}`,
-          `Email: ${email}`,
-          '',
-          'Message:',
-          message,
-        ].join('\n'),
-        replyTo: email,
-      });
+          subject: 'New TASI contact message',
+          text: [
+            'A new contact message was submitted on the website.',
+            `Source: ${normalizedSource}`,
+            `Email: ${email}`,
+            '',
+            'Message:',
+            message,
+          ].join('\n'),
+          replyTo: email,
+        });
       } catch (emailError) {
         console.error('Failed to send contact notification email.', emailError);
       }
     });
 
     const response = { success: true };
-    await storeIdempotentResponse('contact-message', idempotencyKey, response, email);
+    await storeIdempotentResponse(
+      'contact-message',
+      idempotencyKey,
+      response,
+      email
+    );
     return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =

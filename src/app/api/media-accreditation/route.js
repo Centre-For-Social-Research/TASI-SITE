@@ -39,8 +39,14 @@ export async function POST(request) {
       'Media accreditation request for TASI 2026',
       `Business email: ${email}`,
     ].join('\n');
-    const idempotencyKey = getIdempotencyKey(request, `media-accreditation:${email}`);
-    const cached = await getCompletedIdempotentResponse('media-accreditation', idempotencyKey);
+    const idempotencyKey = getIdempotencyKey(
+      request,
+      `media-accreditation:${email}`
+    );
+    const cached = await getCompletedIdempotentResponse(
+      'media-accreditation',
+      idempotencyKey
+    );
     if (cached) {
       return Response.json(cached, { headers: protection.headers });
     }
@@ -59,10 +65,10 @@ export async function POST(request) {
     after(async () => {
       try {
         await sendInboundNotificationEmail({
-        subject: 'New media accreditation request',
-        text: message,
-        replyTo: email,
-      });
+          subject: 'New media accreditation request',
+          text: message,
+          replyTo: email,
+        });
       } catch (emailError) {
         console.error(
           'Failed to send media accreditation notification email.',
@@ -72,7 +78,12 @@ export async function POST(request) {
     });
 
     const response = { success: true };
-    await storeIdempotentResponse('media-accreditation', idempotencyKey, response, email);
+    await storeIdempotentResponse(
+      'media-accreditation',
+      idempotencyKey,
+      response,
+      email
+    );
     return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =

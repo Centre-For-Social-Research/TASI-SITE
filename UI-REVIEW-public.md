@@ -9,14 +9,14 @@
 
 ## Pillar Scores
 
-| Pillar | Score | Key Finding |
-|--------|-------|-------------|
-| 1. Copywriting | 3/4 | Strong, specific copy on registration; public information architecture is weakened by 2025/2026 messaging overlap |
-| 2. Visuals | 2/4 | Energetic brand treatment, but several pages end abruptly because the shared footer is missing |
-| 3. Color | 3/4 | Bold event palette is memorable; repeated hero gradients flatten page distinction and create sameness |
-| 4. Typography | 2/4 | Good scale ambition, but the loaded font system is not actually expressed in the public shell |
-| 5. Spacing | 3/4 | Most public sections use disciplined spacing; a few dense data views feel compressed on mobile/tablet |
-| 6. Experience Design | 2/4 | Key task flows exist, but discoverability and continuity are hurt by missing global structure and interaction inconsistencies |
+| Pillar               | Score | Key Finding                                                                                                                   |
+| -------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------- |
+| 1. Copywriting       | 3/4   | Strong, specific copy on registration; public information architecture is weakened by 2025/2026 messaging overlap             |
+| 2. Visuals           | 2/4   | Energetic brand treatment, but several pages end abruptly because the shared footer is missing                                |
+| 3. Color             | 3/4   | Bold event palette is memorable; repeated hero gradients flatten page distinction and create sameness                         |
+| 4. Typography        | 2/4   | Good scale ambition, but the loaded font system is not actually expressed in the public shell                                 |
+| 5. Spacing           | 3/4   | Most public sections use disciplined spacing; a few dense data views feel compressed on mobile/tablet                         |
+| 6. Experience Design | 2/4   | Key task flows exist, but discoverability and continuity are hurt by missing global structure and interaction inconsistencies |
 
 **Overall: 15/24**
 

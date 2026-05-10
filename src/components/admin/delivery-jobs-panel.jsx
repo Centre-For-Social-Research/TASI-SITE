@@ -326,13 +326,18 @@ export default function DeliveryJobsPanel({ operator }) {
                 Recent Pass Dispatch Jobs
               </p>
               <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                PDF badge + QR email jobs · Select a job to inspect item-level failures and retry.
+                PDF badge + QR email jobs · Select a job to inspect item-level
+                failures and retry.
               </p>
             </div>
             <button
               type="button"
               onClick={() => void processJob()}
-              disabled={!jobsState.jobs.some((j) => ['queued', 'processing'].includes(j.status))}
+              disabled={
+                !jobsState.jobs.some((j) =>
+                  ['queued', 'processing'].includes(j.status)
+                )
+              }
               className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-medium text-amber-900 transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
             >
               Process All

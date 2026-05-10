@@ -98,13 +98,18 @@ export function RegistrationTrendChart({ summary }) {
             <Tooltip
               contentStyle={{
                 backgroundColor: 'var(--adm-panel-2, #161a23)',
-                border: '1px solid var(--adm-line-strong, rgba(255,255,255,0.14))',
+                border:
+                  '1px solid var(--adm-line-strong, rgba(255,255,255,0.14))',
                 borderRadius: '10px',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                 fontSize: 13,
                 color: 'var(--adm-ink, #f3f4f7)',
               }}
-              labelStyle={{ fontWeight: 700, fontSize: 12, color: 'var(--adm-ink, #f3f4f7)' }}
+              labelStyle={{
+                fontWeight: 700,
+                fontSize: 12,
+                color: 'var(--adm-ink, #f3f4f7)',
+              }}
             />
             <Area
               type="monotone"
@@ -186,7 +191,8 @@ export function StatusDonutChart({ summary }) {
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'var(--adm-panel-2, #161a23)',
-                  border: '1px solid var(--adm-line-strong, rgba(255,255,255,0.14))',
+                  border:
+                    '1px solid var(--adm-line-strong, rgba(255,255,255,0.14))',
                   borderRadius: '10px',
                   boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                   fontSize: 13,

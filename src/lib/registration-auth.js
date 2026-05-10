@@ -80,8 +80,14 @@ export async function getAuthorizedOperator(context = {}) {
     const envAdminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
     const envReviewerEmails = parseEmailList(process.env.CLERK_REVIEWER_EMAILS);
     const stored = await getStoredAdminEmails();
-    const adminEmails = new Set([...envAdminEmails, ...stored.adminEmails.map((e) => e.toLowerCase())]);
-    const reviewerEmails = new Set([...envReviewerEmails, ...stored.reviewerEmails.map((e) => e.toLowerCase())]);
+    const adminEmails = new Set([
+      ...envAdminEmails,
+      ...stored.adminEmails.map((e) => e.toLowerCase()),
+    ]);
+    const reviewerEmails = new Set([
+      ...envReviewerEmails,
+      ...stored.reviewerEmails.map((e) => e.toLowerCase()),
+    ]);
     const accessMode = getAccessMode();
     const metadataRole =
       user?.publicMetadata?.tasiRole ||

@@ -13,25 +13,37 @@ const SELECT = `
   created_at
 `;
 
-const CONFIRMED_STATUS_ALIASES = new Set(['confirmed', 'approved', 'accepted', 'paid']);
+const CONFIRMED_STATUS_ALIASES = new Set([
+  'confirmed',
+  'approved',
+  'accepted',
+  'paid',
+]);
 
 function normalizeEmail(value) {
-  return String(value || '').trim().toLowerCase();
+  return String(value || '')
+    .trim()
+    .toLowerCase();
 }
 
 function normalizeStatus(row) {
-  const status = String(row?.status || '').trim().toLowerCase();
-  if (CONFIRMED_STATUS_ALIASES.has(status) || row?.qr_pass_issued_at) return 'confirmed';
+  const status = String(row?.status || '')
+    .trim()
+    .toLowerCase();
+  if (CONFIRMED_STATUS_ALIASES.has(status) || row?.qr_pass_issued_at)
+    return 'confirmed';
   if (['pending', 'waitlisted', 'rejected'].includes(status)) return status;
   return 'unregistered';
 }
 
 function chooseRegistration(rows) {
-  return rows.find((row) => normalizeStatus(row) === 'confirmed')
-    || rows.find((row) => normalizeStatus(row) === 'pending')
-    || rows.find((row) => normalizeStatus(row) === 'waitlisted')
-    || rows[0]
-    || null;
+  return (
+    rows.find((row) => normalizeStatus(row) === 'confirmed') ||
+    rows.find((row) => normalizeStatus(row) === 'pending') ||
+    rows.find((row) => normalizeStatus(row) === 'waitlisted') ||
+    rows[0] ||
+    null
+  );
 }
 
 export async function GET() {
@@ -46,12 +58,19 @@ export async function GET() {
     .filter(Boolean);
 
   if (emails.length === 0) {
-    return Response.json({ success: true, state: 'unregistered', registration: null });
+    return Response.json({
+      success: true,
+      state: 'unregistered',
+      registration: null,
+    });
   }
 
   const supabase = getSupabaseAdmin();
   const emailFilter = emails
-    .map((email) => `email.ilike.${email.replaceAll(',', '').replaceAll('%', '\\%').replaceAll('*', '\\*')}`)
+    .map(
+      (email) =>
+        `email.ilike.${email.replaceAll(',', '').replaceAll('%', '\\%').replaceAll('*', '\\*')}`
+    )
     .join(',');
   const { data, error } = await supabase
     .from('event_registrations')

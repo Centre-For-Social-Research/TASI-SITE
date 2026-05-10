@@ -9,14 +9,14 @@
 
 ## Pillar Scores
 
-| Pillar | Score | Key Finding |
-|--------|-------|-------------|
-| 1. Copywriting | 3/4 | Mostly specific and contextual; minor generic labels ("Search", "Process") and awkward empty states |
-| 2. Visuals | 3/4 | Clear hierarchy, good iconography; cluttered hero section duplicates sidebar stats |
-| 3. Color | 3/4 | Coherent indigo/violet accent system; `check-in` + `email-jobs` inconsistently use `amber-600` as primary accent |
-| 4. Typography | 3/4 | Consistent scale; heavy mix of `font-bold`/`font-extrabold`/`font-black` dilutes emphasis |
-| 5. Spacing | 3/4 | Standard Tailwind scale used throughout; no arbitrary pixel gaps |
-| 6. Experience Design | 2/4 | **Widespread `rounded-2xl`/`rounded-xl`/`rounded-lg` violations of the 10px corner radius rule** (34 × `rounded-2xl`, plus `rounded-xl` and `rounded-lg` on non-button panels) |
+| Pillar               | Score | Key Finding                                                                                                                                                                    |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1. Copywriting       | 3/4   | Mostly specific and contextual; minor generic labels ("Search", "Process") and awkward empty states                                                                            |
+| 2. Visuals           | 3/4   | Clear hierarchy, good iconography; cluttered hero section duplicates sidebar stats                                                                                             |
+| 3. Color             | 3/4   | Coherent indigo/violet accent system; `check-in` + `email-jobs` inconsistently use `amber-600` as primary accent                                                               |
+| 4. Typography        | 3/4   | Consistent scale; heavy mix of `font-bold`/`font-extrabold`/`font-black` dilutes emphasis                                                                                      |
+| 5. Spacing           | 3/4   | Standard Tailwind scale used throughout; no arbitrary pixel gaps                                                                                                               |
+| 6. Experience Design | 2/4   | **Widespread `rounded-2xl`/`rounded-xl`/`rounded-lg` violations of the 10px corner radius rule** (34 × `rounded-2xl`, plus `rounded-xl` and `rounded-lg` on non-button panels) |
 
 **Overall: 17/24**
 
@@ -35,8 +35,10 @@
 ## Detailed Findings
 
 ### Pillar 1: Copywriting (3/4)
+
 **Strengths:** Empty states are mostly contextual — `registrations-admin-panel.jsx:1418` "No registrations match the current filters", `email-jobs-panel.jsx:416` "No registration email jobs yet", `delivery-jobs-panel.jsx:429` "Queue-backed jobs are unavailable in this environment...". Loading labels are specific: "Validating...", "Searching..." (`check-in-panel.jsx:474, 498`).
 **Minor issues:**
+
 - `admin-shell.jsx:332` — placeholder "Search..." with no scoping hint (search what?). Should read "Search registrations, jobs, tokens".
 - `check-in-panel.jsx:496` button label is just "Search" — prefer "Find Attendee".
 - `email-jobs-panel.jsx:391` button labelled "Process" is ambiguous outside context; "Run Job" or "Dispatch" is clearer.
@@ -44,6 +46,7 @@
 - `admin-shell.jsx:526–530` hero paragraph reads marketing-flavoured ("Review queue health, delivery progress, and check-in status from one central admin workspace...") — not actionable on the review-queue page.
 
 ### Pillar 2: Visuals (3/4)
+
 - Icon + label pairing is consistent throughout the sidebar; every icon-only button (theme toggle, notifications, log-out) has `aria-label` and `title`. Good.
 - The stat cards (`AdminStatCard`) have a readable hierarchy (eyebrow → big number → detail + icon).
 - **Hero duplication:** see Priority Fix #2. The notification bell dot (`admin-shell.jsx:467`) and the "Open Alerts" tile restate the same count.
@@ -51,23 +54,28 @@
 - Dark-mode class `dark:bg-white/[0.06]/60` (e.g. `email-jobs-panel.jsx:324, 340`) contains a double opacity suffix (`/0.06]/60`) — this is an invalid Tailwind class and will silently drop the overlay in dark mode. Repeated across ~25 locations in registrations, delivery, email-jobs panels. Visual bug.
 
 ### Pillar 3: Color (3/4)
+
 - Primary accent: indigo/violet in shell + registrations + tickets. Coherent.
 - Hardcoded hex usage is localised: `admin-shell.jsx:313, 408`, the access-fallback cards on each subpage (`#0b0c0f`, `#edf0f6`, `#23262d`, `#111318`, `#f5f6f8`, `#9ca3b5`, `#8d93a5`), and `admin-charts.jsx` (chart palette — acceptable, Recharts needs hex). The fallback-card hex set is not on the same scale as the authenticated console (which uses slate/indigo Tailwind tokens), so unauthenticated operators see a jarringly different brand.
 - Accent/warning overlap: amber is used both as a "warning" tone in `AdminStatusBadge` and as the primary accent on check-in and email-jobs pages. See Priority Fix #3.
 - 98 tone-keyword hits (indigo/violet/cyan/sky/emerald/amber/rose) — within range, but the palette is wide; a consolidation pass would help.
 
 ### Pillar 4: Typography (3/4)
+
 - Size scale: nine distinct Tailwind sizes (`xs`–`5xl`) across admin components plus bracket sizes `text-[10px]` and `text-[11px]` for eyebrows. That is 11 sizes total — at the edge of acceptable for a dense admin UI.
 - Weight scale: `font-medium`, `font-semibold`, `font-bold`, `font-extrabold`, `font-black` all appear (102 matches across 9 files). `font-black` on stat pills and section eyebrows (`ticketing-admin-panel.jsx:29, 68, 300`) is heavier than the h1 hero (which is `font-black` on `admin-shell.jsx:523`) — when an 11px uppercase eyebrow visually out-weights the 3xl page title in local contrast, hierarchy suffers. Recommend: eyebrows at `font-bold` max, reserve `font-black` for the page h1 only.
 - Good use of `tabular-nums` on numerics (stat pills, stat cards).
 
 ### Pillar 5: Spacing (3/4)
+
 - Spacing uses the standard Tailwind scale (`p-3`, `p-4`, `p-5`, `p-8`, `gap-2`, `gap-3`, `gap-5`, `space-y-3`, `space-y-4`). No arbitrary px spacing in the admin components.
 - Grid breakpoints are sensible: `xl:grid-cols-[minmax(0,1fr)_380px]` for the jobs/detail split (`email-jobs-panel.jsx:311`), `lg:grid-cols-[272px_minmax(0,1fr)]` for shell.
 - Minor: stat-card grid at `sm:grid-cols-3` (`admin-shell.jsx:532`) becomes cramped on tablets around 640–780px; consider `md:grid-cols-3` with `sm:grid-cols-2`.
 
 ### Pillar 6: Experience Design (2/4)
+
 The 2/4 score is driven almost entirely by systematic violation of the project's single hard design rule (10px corner radius). Absent that, the experience pillars are solid:
+
 - **Loading states:** `LoadingRows` skeleton is used in email-jobs, delivery, registrations. `scanSubmitting`/`lookupLoading` pending labels in check-in. Good.
 - **Error states:** `AdminAlert` + `AdminToast` components; `configWarning` displayed in check-in; runtime `degraded` banner on the shell (`admin-shell.jsx:512–516`); auto-reauth on 401 and redirect on 403 (`admin-shell.jsx:236–249`). Strong.
 - **Empty states:** covered (see Pillar 1).
@@ -79,6 +87,7 @@ The 2/4 score is driven almost entirely by systematic violation of the project's
 ---
 
 ## Files Audited
+
 - `src/app/admin/layout.jsx`
 - `src/app/admin/page.jsx`
 - `src/app/admin/registrations/page.jsx`

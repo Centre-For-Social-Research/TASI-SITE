@@ -36,7 +36,10 @@ export async function POST(request) {
 
     const supabase = getSupabaseAdmin();
     const idempotencyKey = getIdempotencyKey(request, `newsletter:${email}`);
-    const cached = await getCompletedIdempotentResponse('newsletter-subscribe', idempotencyKey);
+    const cached = await getCompletedIdempotentResponse(
+      'newsletter-subscribe',
+      idempotencyKey
+    );
     if (cached) {
       return Response.json(cached, { headers: protection.headers });
     }
@@ -57,7 +60,12 @@ export async function POST(request) {
 
       if (isDuplicate) {
         const response = { success: true, alreadySubscribed: true };
-        await storeIdempotentResponse('newsletter-subscribe', idempotencyKey, response, email);
+        await storeIdempotentResponse(
+          'newsletter-subscribe',
+          idempotencyKey,
+          response,
+          email
+        );
         return Response.json(response, { headers: protection.headers });
       }
       return Response.json(
@@ -69,14 +77,14 @@ export async function POST(request) {
     after(async () => {
       try {
         await sendInboundNotificationEmail({
-        subject: 'New TASI newsletter subscriber',
-        text: [
-          'A new newsletter subscriber joined through the website.',
-          `Source: site-footer`,
-          `Email: ${email}`,
-        ].join('\n'),
-        replyTo: email,
-      });
+          subject: 'New TASI newsletter subscriber',
+          text: [
+            'A new newsletter subscriber joined through the website.',
+            `Source: site-footer`,
+            `Email: ${email}`,
+          ].join('\n'),
+          replyTo: email,
+        });
       } catch (emailError) {
         console.error(
           'Failed to send newsletter notification email.',
@@ -86,7 +94,12 @@ export async function POST(request) {
     });
 
     const response = { success: true };
-    await storeIdempotentResponse('newsletter-subscribe', idempotencyKey, response, email);
+    await storeIdempotentResponse(
+      'newsletter-subscribe',
+      idempotencyKey,
+      response,
+      email
+    );
     return Response.json(response, { headers: protection.headers });
   } catch (error) {
     const message =

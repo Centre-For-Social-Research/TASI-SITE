@@ -8,8 +8,12 @@ export async function getStoredAdminEmails() {
       .select('email, role')
       .order('created_at', { ascending: true });
     if (error) return { adminEmails: [], reviewerEmails: [] };
-    const adminEmails = (data || []).filter((r) => r.role === 'admin').map((r) => r.email);
-    const reviewerEmails = (data || []).filter((r) => r.role === 'reviewer').map((r) => r.email);
+    const adminEmails = (data || [])
+      .filter((r) => r.role === 'admin')
+      .map((r) => r.email);
+    const reviewerEmails = (data || [])
+      .filter((r) => r.role === 'reviewer')
+      .map((r) => r.email);
     return { adminEmails, reviewerEmails };
   } catch {
     return { adminEmails: [], reviewerEmails: [] };

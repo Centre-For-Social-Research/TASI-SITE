@@ -316,13 +316,18 @@ export default function EmailJobsPanel({ operator }) {
                 Confirmation Email Jobs
               </p>
               <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                Text-only notification emails · Select a job to inspect failures and retry.
+                Text-only notification emails · Select a job to inspect failures
+                and retry.
               </p>
             </div>
             <button
               type="button"
               onClick={() => void processJob()}
-              disabled={!jobsState.jobs.some((j) => ['queued', 'processing'].includes(j.status))}
+              disabled={
+                !jobsState.jobs.some((j) =>
+                  ['queued', 'processing'].includes(j.status)
+                )
+              }
               className="shrink-0 rounded-full border border-purple-200 bg-purple-50 px-4 py-1.5 text-xs font-medium text-purple-900 transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-purple-800 dark:bg-purple-950/50 dark:text-purple-300"
             >
               Process All
