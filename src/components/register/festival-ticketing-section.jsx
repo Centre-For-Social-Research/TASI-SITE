@@ -429,6 +429,17 @@ function StepIndicator({ currentStep }) {
   );
 }
 
+function getSafePhotoPreviewUrl(previewUrl) {
+  if (typeof previewUrl !== 'string') return null;
+
+  try {
+    const parsedUrl = new URL(previewUrl);
+    return parsedUrl.protocol === 'blob:' ? parsedUrl.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function FestivalTicketingSection() {
   const router = useRouter();
   const [form, setForm] = useState(INITIAL_FORM);
@@ -449,6 +460,10 @@ export default function FestivalTicketingSection() {
   const [billingSameAsProfile, setBillingSameAsProfile] = useState(false);
 
   const preview = useMemo(() => getTicketPreview(form.country), [form.country]);
+  const safePhotoPreview = useMemo(
+    () => getSafePhotoPreviewUrl(photoPreview),
+    [photoPreview]
+  );
   const pricing = useMemo(
     () => getTicketBreakdown(form.country),
     [form.country]
@@ -1263,22 +1278,22 @@ export default function FestivalTicketingSection() {
                       hint="JPG or PNG, min 150×150 px, max 2 MB. Will appear on your badge."
                     >
                       <div className="mt-2 flex items-center gap-4">
-                        {photoPreview ? (
+                        {safePhotoPreview ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={photoPreview}
+                            src={safePhotoPreview}
                             alt="Profile preview"
-                            className="h-14 w-14 rounded-xl object-cover ring-2 ring-slate-200"
+                            className="h-14 w-14 rounded-[10px] object-cover ring-2 ring-slate-200"
                           />
                         ) : (
-                          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-[10px] bg-slate-100 text-slate-400">
                             <Camera className="h-6 w-6" />
                           </div>
                         )}
                         <div className="flex-1">
                           <label className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
                             <Camera className="h-4 w-4" />
-                            {photoPreview ? 'Change photo' : 'Upload photo'}
+                            {safePhotoPreview ? 'Change photo' : 'Upload photo'}
                             <input
                               type="file"
                               accept="image/jpeg,image/png"
@@ -1510,14 +1525,14 @@ export default function FestivalTicketingSection() {
               {step === 'review' ? (
                 <div>
                   {/* Profile snapshot (photo + LinkedIn) */}
-                  {photoPreview || form.linkedinUrl ? (
+                  {safePhotoPreview || form.linkedinUrl ? (
                     <div className="mb-5 flex items-center gap-4 rounded-[10px] border border-slate-200 bg-slate-50 px-5 py-4">
-                      {photoPreview ? (
+                      {safePhotoPreview ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={photoPreview}
+                          src={safePhotoPreview}
                           alt="Profile"
-                          className="h-14 w-14 shrink-0 rounded-xl object-cover ring-2 ring-slate-200"
+                          className="h-14 w-14 shrink-0 rounded-[10px] object-cover ring-2 ring-slate-200"
                         />
                       ) : null}
                       <div className="min-w-0">

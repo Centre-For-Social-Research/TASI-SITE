@@ -304,6 +304,8 @@ test('sanitizeMessage strips HTML/script injection from 10,000 textarea submissi
   const start = performance.now();
   for (let i = 0; i < N; i++) {
     const result = sanitizeMessage(xssMessages[i % xssMessages.length]);
+    assert.ok(!result.includes('<'), `< delimiter survived at ${i}`);
+    assert.ok(!result.includes('>'), `> delimiter survived at ${i}`);
     assert.ok(!result.includes('<script'), `<script> not stripped at ${i}`);
     assert.ok(!result.includes('<img'), `<img> not stripped at ${i}`);
     assert.ok(!result.includes('<style'), `<style> not stripped at ${i}`);
@@ -538,6 +540,7 @@ test('normalizeRegistrationPayload rejects non-LinkedIn and malformed URLs', asy
     'https://facebook.com/in/alice',
     'not-a-url',
     'https://evil.com/linkedin.com/in/alice',
+    'https://linkedin.com.evil.example/in/alice',
     'ftp://linkedin.com/in/alice',
   ];
   for (const url of badUrls) {

@@ -1,6 +1,6 @@
 const CONTROL_CHARS_REGEX = /[\u0000-\u001F\u007F]/g;
 const MULTISPACE_REGEX = /\s+/g;
-const HTML_TAG_REGEX = /<[^>]*>/g;
+const HTML_DELIMITER_REGEX = /[<>]/g;
 
 const BASIC_EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -40,7 +40,7 @@ export function isValidEmail(email) {
 export function sanitizeMessage(value) {
   const normalized = normalizeText(value)
     .replace(/\r\n?/g, '\n')
-    .replace(HTML_TAG_REGEX, '')
+    .replace(HTML_DELIMITER_REGEX, '')
     .replace(/\n{3,}/g, '\n\n');
 
   return normalized;
@@ -51,7 +51,7 @@ export function sanitizeShortText(
   { maxLength = 255, fieldName = 'Field', required = true } = {}
 ) {
   const normalized = normalizeText(value)
-    .replace(HTML_TAG_REGEX, '')
+    .replace(HTML_DELIMITER_REGEX, '')
     .replace(MULTISPACE_REGEX, ' ');
 
   if (required && !normalized) {

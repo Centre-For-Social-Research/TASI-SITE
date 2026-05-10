@@ -120,13 +120,20 @@ export function normalizeRegistrationPayload(input) {
   let parsedLinkedinUrl;
   try {
     parsedLinkedinUrl = new URL(
-      linkedinUrl.startsWith('http') ? linkedinUrl : `https://${linkedinUrl}`
+      /^https?:\/\//i.test(linkedinUrl) ? linkedinUrl : `https://${linkedinUrl}`
     );
   } catch {
     throw new Error('Please enter a valid LinkedIn profile URL.');
   }
 
-  if (!parsedLinkedinUrl.hostname.toLowerCase().includes('linkedin.com')) {
+  const linkedinHostname = parsedLinkedinUrl.hostname.toLowerCase();
+  const isLinkedinHost =
+    linkedinHostname === 'linkedin.com' ||
+    linkedinHostname.endsWith('.linkedin.com');
+  if (
+    !['http:', 'https:'].includes(parsedLinkedinUrl.protocol) ||
+    !isLinkedinHost
+  ) {
     throw new Error('LinkedIn profile must be a linkedin.com URL.');
   }
 

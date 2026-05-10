@@ -80,8 +80,7 @@ export async function POST(request) {
     console.error('Error sending sample email:', err);
     return new Response(
       JSON.stringify({
-        error: err.message,
-        stack: err.stack,
+        error: err instanceof Error ? err.message : 'Sample email failed.',
       }),
       {
         status: 500,
