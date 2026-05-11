@@ -1,5 +1,13 @@
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'Ticket Confirmation | TASI 2026',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 function TicketLookupForm() {
   return (
     <form

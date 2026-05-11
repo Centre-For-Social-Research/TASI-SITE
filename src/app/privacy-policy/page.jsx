@@ -10,6 +10,9 @@ export const metadata = {
   title: 'Privacy Policy | TASI 2026',
   description:
     'How TASI 2026 and Centre for Social Research handle personal data collected through this website.',
+  alternates: {
+    canonical: '/privacy-policy',
+  },
 };
 
 export default function PrivacyPolicyPage() {

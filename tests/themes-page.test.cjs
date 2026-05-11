@@ -38,6 +38,7 @@ test('themes data owns page copy and all live theme records', async () => {
   assert.equal(data.themesPageHero.titleAccent, 'Themes');
   assert.equal(data.themesPageCta.href, '/register');
   assert.equal(data.themesPageMetadata.title, 'Themes | TASI 2026');
+  assert.equal(data.themesPageMetadata.alternates.canonical, '/themes');
 });
 
 test('themes component consumes tracked data and icon registry', () => {

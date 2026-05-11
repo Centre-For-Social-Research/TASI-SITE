@@ -153,6 +153,21 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.trustandsafetyindia.org',
+          },
+        ],
+        destination: 'https://trustandsafetyindia.org/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

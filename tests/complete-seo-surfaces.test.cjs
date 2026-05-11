@@ -64,6 +64,7 @@ test('about page exposes TASI organizer and team SEO schema', () => {
 test('evergreen Trust and Safety India Festival page targets the unyeared search phrase', () => {
   const source = readSource('src/app/trust-and-safety-india-festival/page.jsx');
   const sitemap = readSource('src/app/sitemap.ts');
+  const nextConfig = readSource('next.config.mjs');
   const homepageHero = readSource('src/components/home/hero.jsx');
   const homepageUpdates = readSource(
     'src/components/home/news-updates-section.jsx'
@@ -81,6 +82,9 @@ test('evergreen Trust and Safety India Festival page targets the unyeared search
   assert.match(source, /Explore TASI/);
   assert.match(source, /\/img\/home-gallery\/7T7A5237-new\.webp/);
   assert.match(sitemap, /\/trust-and-safety-india-festival/);
+  assert.doesNotMatch(sitemap, /\/past-editions/);
+  assert.match(nextConfig, /www\.trustandsafetyindia\.org/);
+  assert.match(nextConfig, /https:\/\/trustandsafetyindia\.org\/:path\*/);
   assert.match(homepageHero, /Trust and Safety India Festival/);
   assert.match(homepageUpdates, /\/trust-and-safety-india-festival/);
 });
@@ -92,6 +96,7 @@ test('remaining public pages expose reusable SEO JSON-LD surfaces', () => {
     'src/app/media/page.jsx',
     'src/app/media/press-kit/page.jsx',
     'src/app/media/press-releases/page.jsx',
+    'src/app/exhibition/page.jsx',
     'src/app/get-involved/page.jsx',
     'src/app/volunteer-application/page.jsx',
     'src/app/speaker-application/page.jsx',
@@ -104,6 +109,32 @@ test('remaining public pages expose reusable SEO JSON-LD surfaces', () => {
     const source = readSource(route);
     assert.match(source, /PageSeoJsonLd|JsonLdScript/);
     assert.match(source, /Trust and Safety India Festival|TASI/);
+  }
+});
+
+test('utility and private routes are not offered as indexable search pages', () => {
+  const sitemap = readSource('src/app/sitemap.ts');
+  const adminLayout = readSource('src/app/admin/layout.jsx');
+  const signInLayout = readSource('src/app/sign-in/layout.jsx');
+  const signUpPage = readSource('src/app/sign-up/[[...sign-up]]/page.jsx');
+  const studioLayout = readSource('src/app/studio/[[...tool]]/layout.jsx');
+  const cookieLayout = readSource('src/app/cookie-settings/layout.jsx');
+  const ticketSuccessPage = readSource('src/app/tickets/success/page.jsx');
+
+  assert.doesNotMatch(sitemap, /\/cookie-settings/);
+  assert.match(sitemap, /\/exhibition/);
+
+  for (const source of [
+    adminLayout,
+    signInLayout,
+    signUpPage,
+    studioLayout,
+    cookieLayout,
+    ticketSuccessPage,
+  ]) {
+    assert.match(source, /robots/);
+    assert.match(source, /index: false/);
+    assert.match(source, /follow: false/);
   }
 });
 

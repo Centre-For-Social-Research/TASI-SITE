@@ -2,6 +2,9 @@ export const themesPageMetadata = {
   title: 'Themes | TASI 2026',
   description:
     'Explore the 14 strategic themes shaping TASI 2026, from AI governance and platform accountability to online safety, fraud prevention, and digital wellbeing.',
+  alternates: {
+    canonical: '/themes',
+  },
 };
 
 export const themesPageHero = {

@@ -35,6 +35,7 @@ const staticRoutes: Route[] = [
   { path: '/register', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/sponsor', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/partners', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/exhibition', changeFrequency: 'monthly', priority: 0.6 },
   // ── Get Involved ────────────────────────────────────────────────────────────
   { path: '/get-involved', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/speaker-application', changeFrequency: 'monthly', priority: 0.7 },
@@ -73,13 +74,11 @@ const staticRoutes: Route[] = [
   { path: '/receptions/2025', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/receptions/2026', changeFrequency: 'monthly', priority: 0.6 },
   // ── Past editions ────────────────────────────────────────────────────────────
-  { path: '/past-editions', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/tasi-2025', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/tasi-2026', changeFrequency: 'monthly', priority: 0.5 },
   // ── Legal ────────────────────────────────────────────────────────────────────
   { path: '/privacy-policy', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/terms-of-service', changeFrequency: 'yearly', priority: 0.3 },
-  { path: '/cookie-settings', changeFrequency: 'yearly', priority: 0.3 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

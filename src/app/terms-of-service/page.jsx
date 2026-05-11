@@ -11,6 +11,9 @@ export const metadata = {
   title: 'Terms of Service | TASI 2026',
   description:
     'Terms governing use of the TASI 2026 website and participation processes.',
+  alternates: {
+    canonical: '/terms-of-service',
+  },
 };
 
 export default function TermsOfServicePage() {
