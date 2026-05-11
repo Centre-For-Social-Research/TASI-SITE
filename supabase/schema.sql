@@ -227,11 +227,64 @@ create table if not exists public.entry_passes (
 create index if not exists idx_entry_passes_token on public.entry_passes(token);
 create index if not exists idx_entry_passes_registration_status on public.entry_passes(registration_id, status);
 
+create table if not exists public.registration_daily_check_ins (
+  id uuid primary key default gen_random_uuid(),
+  registration_id uuid not null references public.event_registrations(id) on delete cascade,
+  event_day smallint not null check (event_day in (1, 2)),
+  checked_in_at timestamptz not null default now(),
+  entry_pass_id uuid references public.entry_passes(id) on delete set null,
+  token text,
+  desk_label text,
+  notes text,
+  actor_clerk_id text,
+  actor_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (registration_id, event_day)
+);
+
+create index if not exists idx_registration_daily_check_ins_registration
+on public.registration_daily_check_ins(registration_id, event_day);
+
+create index if not exists idx_registration_daily_check_ins_day_checked
+on public.registration_daily_check_ins(event_day, checked_in_at desc);
+
+insert into public.registration_daily_check_ins (
+  registration_id,
+  event_day,
+  checked_in_at,
+  entry_pass_id,
+  desk_label,
+  notes,
+  created_at,
+  updated_at
+)
+select
+  registration.id,
+  1,
+  registration.checked_in_at,
+  pass.id,
+  null,
+  'Imported from legacy checked_in_at value.',
+  registration.checked_in_at,
+  registration.checked_in_at
+from public.event_registrations registration
+left join lateral (
+  select id
+  from public.entry_passes
+  where registration_id = registration.id
+  order by issued_at desc
+  limit 1
+) pass on true
+where registration.checked_in_at is not null
+on conflict (registration_id, event_day) do nothing;
+
 create table if not exists public.entry_scans (
   id uuid primary key default gen_random_uuid(),
   registration_id uuid not null references public.event_registrations(id) on delete cascade,
   entry_pass_id uuid references public.entry_passes(id) on delete set null,
   token text,
+  event_day smallint not null default 1 check (event_day in (1, 2)),
   scan_result text not null,
   desk_label text,
   notes text,
@@ -240,8 +293,21 @@ create table if not exists public.entry_scans (
   created_at timestamptz not null default now()
 );
 
+alter table public.entry_scans
+  add column if not exists event_day smallint not null default 1;
+
+do $$
+begin
+  alter table public.entry_scans
+    drop constraint if exists entry_scans_event_day_check;
+  alter table public.entry_scans
+    add constraint entry_scans_event_day_check
+    check (event_day in (1, 2));
+end $$;
+
 create index if not exists idx_entry_scans_registration on public.entry_scans(registration_id, created_at desc);
 create index if not exists idx_entry_scans_created_at on public.entry_scans(created_at desc);
+create index if not exists idx_entry_scans_event_day_created on public.entry_scans(event_day, created_at desc);
 
 create table if not exists public.pass_issue_email_jobs (
   id uuid primary key default gen_random_uuid(),
@@ -406,6 +472,48 @@ on public.festival_tickets(status, created_at desc);
 create index if not exists idx_festival_tickets_stream
 on public.festival_tickets(payment_stream, status, created_at desc);
 
+create table if not exists public.festival_ticket_daily_check_ins (
+  id uuid primary key default gen_random_uuid(),
+  ticket_id uuid not null references public.festival_tickets(id) on delete cascade,
+  event_day smallint not null check (event_day in (1, 2)),
+  checked_in_at timestamptz not null default now(),
+  token text,
+  desk_label text,
+  notes text,
+  actor_clerk_id text,
+  actor_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (ticket_id, event_day)
+);
+
+create index if not exists idx_festival_ticket_daily_check_ins_ticket
+on public.festival_ticket_daily_check_ins(ticket_id, event_day);
+
+create index if not exists idx_festival_ticket_daily_check_ins_day_checked
+on public.festival_ticket_daily_check_ins(event_day, checked_in_at desc);
+
+insert into public.festival_ticket_daily_check_ins (
+  ticket_id,
+  event_day,
+  checked_in_at,
+  desk_label,
+  notes,
+  created_at,
+  updated_at
+)
+select
+  id,
+  1,
+  checked_in_at,
+  null,
+  'Imported from legacy checked_in_at value.',
+  checked_in_at,
+  checked_in_at
+from public.festival_tickets
+where checked_in_at is not null
+on conflict (ticket_id, event_day) do nothing;
+
 create table if not exists public.festival_payment_audit_log (
   id uuid primary key default gen_random_uuid(),
   ticket_id uuid references public.festival_tickets(id) on delete set null,
@@ -440,6 +548,7 @@ alter table public.registration_assets enable row level security;
 alter table public.registration_status_history enable row level security;
 alter table public.registration_notifications enable row level security;
 alter table public.entry_passes enable row level security;
+alter table public.registration_daily_check_ins enable row level security;
 alter table public.entry_scans enable row level security;
 alter table public.pass_issue_email_jobs enable row level security;
 alter table public.pass_issue_email_job_items enable row level security;
@@ -449,6 +558,7 @@ alter table public.badge_exports enable row level security;
 alter table public.review_notes enable row level security;
 alter table public.festival_ticket_users enable row level security;
 alter table public.festival_tickets enable row level security;
+alter table public.festival_ticket_daily_check_ins enable row level security;
 alter table public.festival_payment_audit_log enable row level security;
 alter table public.festival_admin_audit_log enable row level security;
 

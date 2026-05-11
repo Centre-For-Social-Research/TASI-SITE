@@ -27,6 +27,7 @@ import {
 import { toast } from 'sonner';
 import { ATTENDEE_CATEGORIES } from '@/lib/registration-constants';
 import dashboardUtils from '@/lib/admin-dashboard-utils.cjs';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 import {
   AdminAlert,
   AdminSectionHeading,
@@ -62,6 +63,7 @@ const {
   readRegistrationDetailCache,
   invalidateRegistrationCaches,
 } = registrationCache;
+const { getCheckInForDay } = checkInDayUtils;
 
 function formatDate(value) {
   if (!value) return 'Not yet';
@@ -225,14 +227,21 @@ function QRStatusCell({ row }) {
 function CheckInCell({ row }) {
   const ctx = useContext(RegistrationGridCtx);
   if (!row.data || !ctx) return null;
+  const day1 = getCheckInForDay(row.data, 'day_1')?.checked_in_at;
+  const day2 = getCheckInForDay(row.data, 'day_2')?.checked_in_at;
   return (
     <div
       className="flex h-full cursor-pointer items-center"
       onClick={() => ctx.openDrawerFor(row.data.id)}
     >
-      <AdminStatusBadge tone={row.data.checked_in_at ? 'success' : 'default'}>
-        {row.data.checked_in_at ? 'Checked In' : 'Pending'}
-      </AdminStatusBadge>
+      <div className="flex flex-wrap gap-1">
+        <AdminStatusBadge tone={day1 ? 'success' : 'default'}>
+          Day 1
+        </AdminStatusBadge>
+        <AdminStatusBadge tone={day2 ? 'success' : 'default'}>
+          Day 2
+        </AdminStatusBadge>
+      </div>
     </div>
   );
 }
@@ -273,7 +282,7 @@ const REGISTRATION_COLUMNS = [
   { id: 'status', name: 'Status', width: 130, cellRenderer: RegStatusCell },
   { id: 'location', name: 'Location', width: 160, cellRenderer: LocationCell },
   { id: 'qr', name: 'QR', width: 110, cellRenderer: QRStatusCell },
-  { id: 'checkin', name: 'Check-In', width: 130, cellRenderer: CheckInCell },
+  { id: 'checkin', name: 'Check-In', width: 160, cellRenderer: CheckInCell },
   { id: 'actions', name: 'Actions', width: 320, cellRenderer: ActionsCell },
 ];
 // ─────────────────────────────────────────────────────────────────────────────
@@ -505,6 +514,26 @@ function RegistrantDrawer({
               </p>
               <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                 {formatDate(activeRegistration.checked_in_at)}
+              </p>
+            </div>
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Day 1 Check-In
+              </p>
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
+                {formatDate(
+                  getCheckInForDay(activeRegistration, 'day_1')?.checked_in_at
+                )}
+              </p>
+            </div>
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Day 2 Check-In
+              </p>
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
+                {formatDate(
+                  getCheckInForDay(activeRegistration, 'day_2')?.checked_in_at
+                )}
               </p>
             </div>
           </div>

@@ -1,3 +1,5 @@
+const { normalizeCheckIns } = require('./check-in-day-utils.cjs');
+
 function normalizeEntryPasses(entryPasses) {
   if (Array.isArray(entryPasses)) {
     return entryPasses.filter(Boolean);
@@ -23,9 +25,17 @@ function normalizeRegistrationRecord(registration) {
     return registration;
   }
 
+  const dailyCheckIns = Array.isArray(registration.registration_daily_check_ins)
+    ? registration.registration_daily_check_ins.filter(Boolean)
+    : registration.registration_daily_check_ins
+      ? [registration.registration_daily_check_ins]
+      : [];
+
   return {
     ...registration,
     entry_passes: normalizeEntryPasses(registration.entry_passes),
+    registration_daily_check_ins: dailyCheckIns,
+    check_ins: normalizeCheckIns(dailyCheckIns, registration.checked_in_at),
   };
 }
 

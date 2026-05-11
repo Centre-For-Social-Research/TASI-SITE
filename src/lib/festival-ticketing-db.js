@@ -12,6 +12,21 @@ import {
   sanitizeShortText,
 } from '@/lib/input-sanitizers';
 import { verifyFestivalQrPayload } from '@/lib/festival-ticketing-qr';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
+
+const { getCheckInDayNumber, normalizeCheckInDay, normalizeCheckIns } =
+  checkInDayUtils;
+
+const FESTIVAL_TICKET_CHECK_IN_SELECT = `
+  *,
+  user:festival_ticket_users(*),
+  festival_ticket_daily_check_ins (
+    event_day,
+    checked_in_at,
+    desk_label,
+    actor_email
+  )
+`;
 
 function nowIso() {
   return new Date().toISOString();
@@ -19,6 +34,10 @@ function nowIso() {
 
 function getSupabase() {
   return getSupabaseAdmin();
+}
+
+function isUniqueViolation(error) {
+  return error?.code === '23505' || /duplicate key/i.test(error?.message || '');
 }
 
 function buildTicketNumber(ticketType) {
@@ -82,6 +101,17 @@ function normalizeTicketRow(row) {
         qr_payload: row.qr_payload,
         idempotency_key: row.idempotency_key,
         checked_in_at: row.checked_in_at,
+        festival_ticket_daily_check_ins: Array.isArray(
+          row.festival_ticket_daily_check_ins
+        )
+          ? row.festival_ticket_daily_check_ins.filter(Boolean)
+          : row.festival_ticket_daily_check_ins
+            ? [row.festival_ticket_daily_check_ins]
+            : [],
+        check_ins: normalizeCheckIns(
+          row.festival_ticket_daily_check_ins,
+          row.checked_in_at
+        ),
         created_at: row.created_at,
         updated_at: row.updated_at,
       }
@@ -94,6 +124,18 @@ function mapTicketWithUser(row) {
     ...normalizeTicketRow(row),
     user: normalizeUserRow(user),
   };
+}
+
+export async function getFestivalTicketForCheckInById(ticketId) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('festival_tickets')
+    .select(FESTIVAL_TICKET_CHECK_IN_SELECT)
+    .eq('id', ticketId)
+    .single();
+
+  if (error) throw new Error(error.message);
+  return mapTicketWithUser(data);
 }
 
 export async function upsertFestivalTicketUser(input) {
@@ -429,7 +471,7 @@ export async function getFestivalTicketByQrPayload(payload) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('festival_tickets')
-    .select('*, user:festival_ticket_users(*)')
+    .select(FESTIVAL_TICKET_CHECK_IN_SELECT)
     .eq('id', ticketId)
     .maybeSingle();
 
@@ -444,7 +486,7 @@ export async function searchFestivalTickets(query) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('festival_tickets')
-    .select('*, user:festival_ticket_users(*)')
+    .select(FESTIVAL_TICKET_CHECK_IN_SELECT)
     .or(`ticket_number.ilike.%${sanitized}%,status.ilike.%${sanitized}%`)
     .order('created_at', { ascending: false })
     .limit(20);
@@ -470,14 +512,21 @@ export function buildFestivalCheckInRecord(ticket) {
     .split(/\s+/);
   return {
     id: ticket.id,
+    check_in_kind: 'festival_ticket',
     registration_code: ticket.ticket_number,
     first_name: parts[0] || 'Festival',
     last_name: parts.slice(1).join(' '),
     email: ticket.user?.email || '',
     organization: ticket.user?.organization || 'Festival Attendee',
     attendee_category: ticket.ticket_type,
-    status: ticket.status === 'pending' ? 'pending' : 'confirmed',
+    status:
+      ticket.status === 'pending'
+        ? 'pending'
+        : ticket.status === 'cancelled'
+          ? 'rejected'
+          : 'confirmed',
     checked_in_at: ticket.checked_in_at,
+    check_ins: ticket.check_ins || normalizeCheckIns([], ticket.checked_in_at),
   };
 }
 
@@ -486,25 +535,48 @@ export async function completeFestivalCheckIn({
   operator,
   deskLabel,
   token,
+  eventDay,
 }) {
   const supabase = getSupabase();
   const checkedInAt = nowIso();
+  const normalizedDay = normalizeCheckInDay(eventDay);
+  const eventDayNumber = getCheckInDayNumber(normalizedDay);
 
-  const { data: updatedRows, error: updateError } = await supabase
-    .from('festival_tickets')
-    .update({
-      status: 'checked_in',
+  const { error: insertError } = await supabase
+    .from('festival_ticket_daily_check_ins')
+    .insert({
+      ticket_id: ticketId,
+      event_day: eventDayNumber,
       checked_in_at: checkedInAt,
+      token,
+      desk_label: deskLabel || null,
+      actor_clerk_id: operator.userId,
+      actor_email: operator.primaryEmail,
+      notes: `Checked in for ${normalizedDay.replace('_', ' ')}.`,
+      created_at: checkedInAt,
       updated_at: checkedInAt,
     })
-    .eq('id', ticketId)
-    .is('checked_in_at', null)
     .select('id');
 
-  if (updateError) throw new Error(updateError.message);
-  const alreadyCheckedIn = !(
-    Array.isArray(updatedRows) && updatedRows.length > 0
-  );
+  if (insertError && !isUniqueViolation(insertError)) {
+    throw new Error(insertError.message);
+  }
+
+  const alreadyCheckedIn = Boolean(insertError);
+
+  if (!alreadyCheckedIn) {
+    const { error: updateError } = await supabase
+      .from('festival_tickets')
+      .update({
+        status: 'checked_in',
+        checked_in_at: checkedInAt,
+        updated_at: checkedInAt,
+      })
+      .eq('id', ticketId)
+      .is('checked_in_at', null);
+
+    if (updateError) throw new Error(updateError.message);
+  }
 
   await recordFestivalAdminAudit({
     ticketId,
@@ -515,11 +587,13 @@ export async function completeFestivalCheckIn({
     payload: {
       deskLabel,
       token,
+      eventDay: normalizedDay,
     },
   });
 
   return {
-    ticket: await getFestivalTicketById(ticketId),
+    ticket: await getFestivalTicketForCheckInById(ticketId),
     alreadyCheckedIn,
+    eventDay: normalizedDay,
   };
 }

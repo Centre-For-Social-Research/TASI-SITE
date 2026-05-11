@@ -1,5 +1,8 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { getRegistrationById } from '@/lib/registration-db';
+import passUtils from '@/lib/registration-pass-utils.cjs';
+
+const { normalizeRegistrationRecord } = passUtils;
 
 function getSupabase() {
   return getSupabaseAdmin();
@@ -106,6 +109,12 @@ export async function listRegistrationQueue({
     badge_color_hex,
     qr_pass_issued_at,
     checked_in_at,
+    registration_daily_check_ins (
+      event_day,
+      checked_in_at,
+      desk_label,
+      actor_email
+    ),
     created_at,
     updated_at,
     reviewed_at
@@ -130,7 +139,7 @@ export async function listRegistrationQueue({
   const totalCount = summary.total || dataResult.count || 0;
 
   return {
-    registrations: dataResult.data || [],
+    registrations: (dataResult.data || []).map(normalizeRegistrationRecord),
     count: totalCount,
     pagination: {
       page: normalizedPage,

@@ -8,8 +8,11 @@ import {
   getCheckInRecordByToken,
   searchCheckInCandidatesLight,
 } from '@/lib/check-in-operations';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
-function buildStatusPayload(registration, tokenValid = true) {
+const { isCheckedInForDay, normalizeCheckInDay } = checkInDayUtils;
+
+function buildStatusPayload(registration, tokenValid = true, eventDay) {
   if (!registration) {
     return { result: 'invalid' };
   }
@@ -26,7 +29,7 @@ function buildStatusPayload(registration, tokenValid = true) {
     return { result: 'not_confirmed', registration };
   }
 
-  if (registration.checked_in_at) {
+  if (isCheckedInForDay(registration, eventDay)) {
     return { result: 'already_checked_in', registration };
   }
 
@@ -45,6 +48,7 @@ export async function POST(request) {
     const body = await request.json();
     const token = String(body?.token || '').trim();
     const query = String(body?.query || '').trim();
+    const eventDay = normalizeCheckInDay(body?.eventDay || body?.event_day);
 
     if (token) {
       const festivalTicket = await getFestivalTicketByQrPayload(token);
@@ -53,15 +57,18 @@ export async function POST(request) {
           success: true,
           ...buildStatusPayload(
             buildFestivalCheckInRecord(festivalTicket),
-            true
+            true,
+            eventDay
           ),
+          eventDay,
         });
       }
 
       const { registration } = await getCheckInRecordByToken(token);
       return Response.json({
         success: true,
-        ...buildStatusPayload(registration, true),
+        ...buildStatusPayload(registration, true, eventDay),
+        eventDay,
       });
     }
 
@@ -77,6 +84,7 @@ export async function POST(request) {
           ...registrations,
           ...festivalTickets.map(buildFestivalCheckInRecord),
         ],
+        eventDay,
       });
     }
 

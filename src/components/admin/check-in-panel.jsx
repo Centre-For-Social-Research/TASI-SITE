@@ -4,6 +4,7 @@ import jsQR from 'jsqr';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 import { AdminStatCard, AdminStatusBadge } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
 
@@ -15,6 +16,12 @@ const {
   shouldRetryCameraRequest,
 } = checkInUtils;
 const { createScanSession } = scanSessionUtils;
+const {
+  CHECK_IN_DAYS,
+  getCheckInDayShortLabel,
+  getDefaultCheckInDay,
+  isCheckedInForDay,
+} = checkInDayUtils;
 
 function ResultCard({ title, description, tone = 'default' }) {
   const toneMap = {
@@ -49,6 +56,9 @@ function formatDate(value) {
 
 export default function CheckInPanel({ operator }) {
   const [deskLabel, setDeskLabel] = useState('Main Desk');
+  const [selectedEventDay, setSelectedEventDay] = useState(() =>
+    getDefaultCheckInDay()
+  );
   const [query, setQuery] = useState('');
   const [lookupResults, setLookupResults] = useState([]);
   const [scanMessage, setScanMessage] = useState(null);
@@ -67,6 +77,10 @@ export default function CheckInPanel({ operator }) {
   const cameraMessage = useMemo(
     () => getCameraStateMessage(cameraState),
     [cameraState]
+  );
+  const selectedEventDayLabel = useMemo(
+    () => getCheckInDayShortLabel(selectedEventDay),
+    [selectedEventDay]
   );
   const activityStats = useMemo(() => {
     const valid = recentScans.filter(
@@ -113,6 +127,7 @@ export default function CheckInPanel({ operator }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             deskLabel,
+            eventDay: selectedEventDay,
             ...payload,
           }),
         });
@@ -137,9 +152,9 @@ export default function CheckInPanel({ operator }) {
           tone: getCheckInFeedbackTone(data.result),
           title:
             data.result === 'valid'
-              ? 'Attendee approved'
+              ? `Attendee approved for ${selectedEventDayLabel}`
               : data.result === 'already_checked_in'
-                ? 'Already checked in'
+                ? `Already checked in for ${selectedEventDayLabel}`
                 : data.result === 'waitlisted'
                   ? 'Attendee waitlisted'
                   : 'Entry blocked',
@@ -156,7 +171,7 @@ export default function CheckInPanel({ operator }) {
         setScanSubmitting(false);
       }
     },
-    [deskLabel]
+    [deskLabel, selectedEventDay, selectedEventDayLabel]
   );
 
   async function startCamera() {
@@ -256,7 +271,7 @@ export default function CheckInPanel({ operator }) {
       const response = await fetch('/api/check-in/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, eventDay: selectedEventDay }),
       });
       const data = await response.json();
 
@@ -331,9 +346,12 @@ export default function CheckInPanel({ operator }) {
 
     async function loadRecentScans() {
       try {
-        const response = await fetch('/api/check-in/recent', {
-          cache: 'no-store',
-        });
+        const response = await fetch(
+          `/api/check-in/recent?eventDay=${encodeURIComponent(selectedEventDay)}`,
+          {
+            cache: 'no-store',
+          }
+        );
         const data = await response.json();
 
         if (!active || !response.ok) {
@@ -351,7 +369,7 @@ export default function CheckInPanel({ operator }) {
     return () => {
       active = false;
     };
-  }, []);
+  }, [selectedEventDay]);
 
   useEffect(
     () => () => {
@@ -369,20 +387,51 @@ export default function CheckInPanel({ operator }) {
           description="Keep the camera running during live operations, fall back to manual lookup when needed, and keep the latest scan outcomes visible for the whole desk team."
           chips={[
             `Desk lead: ${operator.displayName}`,
+            selectedEventDayLabel,
             'Live QR scanning',
             'Manual attendee lookup',
           ]}
         />
-        <label className="mt-5 flex max-w-sm flex-col gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-          Desk Label
-          <input
-            id="deskLabel"
-            name="deskLabel"
-            value={deskLabel}
-            onChange={(event) => setDeskLabel(event.target.value)}
-            className="h-11 rounded-[10px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
-          />
-        </label>
+        <div className="mt-5 flex flex-wrap gap-4">
+          <label className="flex min-w-64 flex-col gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            Desk Label
+            <input
+              id="deskLabel"
+              name="deskLabel"
+              value={deskLabel}
+              onChange={(event) => setDeskLabel(event.target.value)}
+              className="h-11 rounded-[10px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
+            />
+          </label>
+          <fieldset className="flex flex-col gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <legend>Event Day</legend>
+            <div className="inline-flex h-11 rounded-[10px] border border-zinc-200 bg-zinc-50 p-1 dark:border-white/10 dark:bg-white/[0.06]">
+              {CHECK_IN_DAYS.map((day) => {
+                const selected = selectedEventDay === day.value;
+                return (
+                  <label
+                    key={day.value}
+                    className={`flex cursor-pointer items-center rounded-[10px] px-4 text-sm transition ${
+                      selected
+                        ? 'bg-purple-600 text-white'
+                        : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="eventDay"
+                      value={day.value}
+                      checked={selected}
+                      onChange={() => setSelectedEventDay(day.value)}
+                      className="sr-only"
+                    />
+                    {day.shortLabel}
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+        </div>
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -390,25 +439,25 @@ export default function CheckInPanel({ operator }) {
           label="Recent Valid"
           value={activityStats.valid}
           tone="success"
-          detail="Fresh successful entry approvals"
+          detail={`${selectedEventDayLabel} successful approvals`}
         />
         <AdminStatCard
           label="Duplicates"
           value={activityStats.duplicates}
           tone="warning"
-          detail="Already checked in attendees"
+          detail={`${selectedEventDayLabel} repeat attempts`}
         />
         <AdminStatCard
           label="Blocked"
           value={activityStats.blocked}
           tone="danger"
-          detail="Rejected or waitlisted entries"
+          detail={`${selectedEventDayLabel} rejected or waitlisted entries`}
         />
         <AdminStatCard
           label="Recent Total"
           value={activityStats.total}
           tone="info"
-          detail="Rows shown in recent desk activity"
+          detail={`${selectedEventDayLabel} rows shown below`}
         />
       </section>
 
@@ -500,47 +549,58 @@ export default function CheckInPanel({ operator }) {
           </div>
 
           <div className="mt-4 space-y-3">
-            {lookupResults.map((registration) => (
-              <div
-                key={registration.id}
-                className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.04]"
-              >
-                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                  {registration.first_name} {registration.last_name}
-                </p>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {registration.organization} | {registration.registration_code}
-                </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <AdminStatusBadge
-                    tone={
-                      registration.status === 'confirmed'
-                        ? 'success'
-                        : registration.status === 'pending'
-                          ? 'warning'
-                          : 'danger'
-                    }
-                  >
-                    {registration.status}
-                  </AdminStatusBadge>
-                  {registration.checked_in_at ? (
-                    <AdminStatusBadge tone="warning">
-                      already checked in
-                    </AdminStatusBadge>
-                  ) : null}
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    completeCheckIn({ registrationId: registration.id })
-                  }
-                  disabled={scanSubmitting}
-                  className="mt-3 h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
+            {lookupResults.map((registration) => {
+              const checkedInForSelectedDay = isCheckedInForDay(
+                registration,
+                selectedEventDay
+              );
+              return (
+                <div
+                  key={registration.id}
+                  className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.04]"
                 >
-                  Check In This Attendee
-                </button>
-              </div>
-            ))}
+                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                    {registration.first_name} {registration.last_name}
+                  </p>
+                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                    {registration.organization} |{' '}
+                    {registration.registration_code}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <AdminStatusBadge
+                      tone={
+                        registration.status === 'confirmed'
+                          ? 'success'
+                          : registration.status === 'pending'
+                            ? 'warning'
+                            : 'danger'
+                      }
+                    >
+                      {registration.status}
+                    </AdminStatusBadge>
+                    {checkedInForSelectedDay ? (
+                      <AdminStatusBadge tone="warning">
+                        checked in {selectedEventDayLabel}
+                      </AdminStatusBadge>
+                    ) : null}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      completeCheckIn(
+                        registration.check_in_kind === 'festival_ticket'
+                          ? { festivalTicketId: registration.id }
+                          : { registrationId: registration.id }
+                      )
+                    }
+                    disabled={scanSubmitting}
+                    className="mt-3 h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
+                  >
+                    Check In For {selectedEventDayLabel}
+                  </button>
+                </div>
+              );
+            })}
             {!lookupLoading && !lookupResults.length ? (
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Search results will appear here for manual fallback check-in.
@@ -565,9 +625,12 @@ export default function CheckInPanel({ operator }) {
             onClick={() => {
               void (async () => {
                 try {
-                  const response = await fetch('/api/check-in/recent', {
-                    cache: 'no-store',
-                  });
+                  const response = await fetch(
+                    `/api/check-in/recent?eventDay=${encodeURIComponent(selectedEventDay)}`,
+                    {
+                      cache: 'no-store',
+                    }
+                  );
                   const data = await response.json();
                   if (response.ok) {
                     setRecentScans(data.scans || []);
@@ -605,6 +668,7 @@ export default function CheckInPanel({ operator }) {
               </p>
               <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
                 {scan.desk_label || 'Desk not set'} |{' '}
+                {getCheckInDayShortLabel(scan.event_day)} |{' '}
                 {formatDate(scan.created_at)}
               </p>
             </div>

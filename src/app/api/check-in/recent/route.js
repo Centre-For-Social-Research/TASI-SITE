@@ -1,7 +1,10 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { listRecentEntryScans } from '@/lib/check-in-operations';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
-export async function GET() {
+const { normalizeCheckInDay } = checkInDayUtils;
+
+export async function GET(request) {
   const authResult = await requireAuthorizedOperator({
     route: 'api.checkin.recent',
   });
@@ -10,10 +13,15 @@ export async function GET() {
   }
 
   try {
-    const scans = await listRecentEntryScans();
+    const { searchParams } = new URL(request.url);
+    const eventDay = normalizeCheckInDay(
+      searchParams.get('eventDay') || searchParams.get('event_day')
+    );
+    const scans = await listRecentEntryScans({ eventDay });
     return Response.json({
       success: true,
       scans,
+      eventDay,
     });
   } catch (error) {
     return Response.json(

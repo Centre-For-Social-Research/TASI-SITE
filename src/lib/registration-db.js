@@ -5,11 +5,18 @@ import {
   isAfterBadgeFreeze,
 } from '@/lib/registration-utils';
 import passUtils from '@/lib/registration-pass-utils.cjs';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
 const { normalizeRegistrationRecord, getIssuedEntryPass } = passUtils;
+const { getCheckInDayNumber, isCheckedInForDay, normalizeCheckInDay } =
+  checkInDayUtils;
 
 function getSupabase() {
   return getSupabaseAdmin();
+}
+
+function isUniqueViolation(error) {
+  return error?.code === '23505' || /duplicate key/i.test(error?.message || '');
 }
 
 export class StaleRegistrationUpdateError extends Error {
@@ -62,6 +69,12 @@ function baseRegistrationSelect() {
       status,
       issued_at,
       revoked_at
+    ),
+    registration_daily_check_ins (
+      event_day,
+      checked_in_at,
+      desk_label,
+      actor_email
     )
   `;
 }
@@ -627,12 +640,14 @@ export async function recordScan({
   operator,
   deskLabel,
   notes,
+  eventDay,
 }) {
   const supabase = getSupabase();
   const { error } = await supabase.from('entry_scans').insert({
     registration_id: registrationId,
     entry_pass_id: passId,
     token,
+    event_day: getCheckInDayNumber(eventDay),
     scan_result: result,
     desk_label: deskLabel || null,
     notes: notes || null,
@@ -652,19 +667,54 @@ export async function markCheckedIn({
   deskLabel,
   passId = null,
   token = null,
+  eventDay,
 }) {
   const registration = await getRegistrationById(registrationId);
   const supabase = getSupabase();
-  const alreadyCheckedIn = Boolean(registration.checked_in_at);
+  const normalizedDay = normalizeCheckInDay(eventDay);
+  const checkedInAt = new Date().toISOString();
+  const alreadyCheckedInBeforeInsert = isCheckedInForDay(
+    registration,
+    normalizedDay
+  );
+
+  let alreadyCheckedIn = alreadyCheckedInBeforeInsert;
+
+  if (!alreadyCheckedInBeforeInsert) {
+    const { error: insertError } = await supabase
+      .from('registration_daily_check_ins')
+      .insert({
+        registration_id: registrationId,
+        event_day: getCheckInDayNumber(normalizedDay),
+        checked_in_at: checkedInAt,
+        entry_pass_id: passId,
+        token,
+        desk_label: deskLabel || null,
+        actor_clerk_id: operator.userId,
+        actor_email: operator.primaryEmail,
+        notes: `Checked in for ${normalizedDay.replace('_', ' ')}.`,
+        created_at: checkedInAt,
+        updated_at: checkedInAt,
+      })
+      .select('id')
+      .maybeSingle();
+
+    if (insertError && !isUniqueViolation(insertError)) {
+      throw new Error(insertError.message);
+    }
+
+    alreadyCheckedIn = Boolean(insertError);
+  }
 
   if (!alreadyCheckedIn) {
     const { error } = await supabase
       .from('event_registrations')
       .update({
-        checked_in_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        checked_in_at: checkedInAt,
+        updated_at: checkedInAt,
       })
-      .eq('id', registrationId);
+      .eq('id', registrationId)
+      .is('checked_in_at', null);
 
     if (error) {
       throw new Error(error.message);
@@ -679,13 +729,15 @@ export async function markCheckedIn({
     operator,
     deskLabel,
     notes: alreadyCheckedIn
-      ? 'Duplicate check-in attempt.'
-      : 'Checked in successfully.',
+      ? `Duplicate ${normalizedDay.replace('_', ' ')} check-in attempt.`
+      : `Checked in successfully for ${normalizedDay.replace('_', ' ')}.`,
+    eventDay: normalizedDay,
   });
 
   return {
-    registration,
+    registration: await getRegistrationById(registrationId),
     alreadyCheckedIn,
+    eventDay: normalizedDay,
   };
 }
 

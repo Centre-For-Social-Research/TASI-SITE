@@ -2,6 +2,7 @@ import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import {
   buildFestivalCheckInRecord,
   completeFestivalCheckIn,
+  getFestivalTicketForCheckInById,
   getFestivalTicketByQrPayload,
 } from '@/lib/festival-ticketing-db';
 import {
@@ -11,6 +12,9 @@ import {
   listRecentEntryScans,
   recordEntryScan,
 } from '@/lib/check-in-operations';
+import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
+
+const { normalizeCheckInDay } = checkInDayUtils;
 
 export async function POST(request) {
   const authResult = await requireAuthorizedOperator({
@@ -24,7 +28,9 @@ export async function POST(request) {
     const body = await request.json();
     const token = String(body?.token || '').trim();
     const registrationId = String(body?.registrationId || '').trim();
+    const festivalTicketId = String(body?.festivalTicketId || '').trim();
     const deskLabel = String(body?.deskLabel || '').trim();
+    const eventDay = normalizeCheckInDay(body?.eventDay || body?.event_day);
     let registration = null;
     let pass = null;
 
@@ -39,7 +45,8 @@ export async function POST(request) {
             success: false,
             result: 'not_confirmed',
             registration: buildFestivalCheckInRecord(festivalTicket),
-            recentScans: await listRecentEntryScans(),
+            eventDay,
+            recentScans: await listRecentEntryScans({ eventDay }),
           });
         }
 
@@ -48,24 +55,58 @@ export async function POST(request) {
           operator: authResult.operator,
           deskLabel,
           token,
+          eventDay,
         });
 
         return Response.json({
           success: true,
           result: checkedIn.alreadyCheckedIn ? 'already_checked_in' : 'valid',
           registration: buildFestivalCheckInRecord(checkedIn.ticket),
-          recentScans: await listRecentEntryScans(),
+          eventDay,
+          recentScans: await listRecentEntryScans({ eventDay }),
         });
       } else {
         const result = await getCheckInRecordByToken(token);
         registration = result.registration;
         pass = result.pass;
       }
+    } else if (festivalTicketId) {
+      const festivalTicket =
+        await getFestivalTicketForCheckInById(festivalTicketId);
+
+      if (
+        festivalTicket.status === 'pending' ||
+        festivalTicket.status === 'cancelled'
+      ) {
+        return Response.json({
+          success: false,
+          result: 'not_confirmed',
+          registration: buildFestivalCheckInRecord(festivalTicket),
+          eventDay,
+          recentScans: await listRecentEntryScans({ eventDay }),
+        });
+      }
+
+      const checkedIn = await completeFestivalCheckIn({
+        ticketId: festivalTicket.id,
+        operator: authResult.operator,
+        deskLabel,
+        token: null,
+        eventDay,
+      });
+
+      return Response.json({
+        success: true,
+        result: checkedIn.alreadyCheckedIn ? 'already_checked_in' : 'valid',
+        registration: buildFestivalCheckInRecord(checkedIn.ticket),
+        eventDay,
+        recentScans: await listRecentEntryScans({ eventDay }),
+      });
     } else if (registrationId) {
       registration = await getCheckInRegistrationById(registrationId);
     } else {
       return Response.json(
-        { error: 'Token or registration ID is required.' },
+        { error: 'Token, registration ID, or ticket ID is required.' },
         { status: 400 }
       );
     }
@@ -88,6 +129,7 @@ export async function POST(request) {
         operator: authResult.operator,
         deskLabel,
         notes: 'Check-in blocked due to registration status.',
+        eventDay,
       });
 
       return Response.json({
@@ -99,7 +141,8 @@ export async function POST(request) {
               ? 'rejected'
               : 'not_confirmed',
         registration,
-        recentScans: await listRecentEntryScans(),
+        eventDay,
+        recentScans: await listRecentEntryScans({ eventDay }),
       });
     }
 
@@ -109,13 +152,15 @@ export async function POST(request) {
       deskLabel,
       passId: pass?.id || null,
       token: token || null,
+      eventDay,
     });
 
     return Response.json({
       success: true,
       result: checkedIn.alreadyCheckedIn ? 'already_checked_in' : 'valid',
       registration: checkedIn.registration,
-      recentScans: await listRecentEntryScans(),
+      eventDay,
+      recentScans: await listRecentEntryScans({ eventDay }),
     });
   } catch (error) {
     return Response.json(
