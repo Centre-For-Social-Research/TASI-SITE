@@ -16,3 +16,18 @@ test('does not allow direct public inserts into contact and newsletter intake ta
     /create policy "Allow registration confirmation insert"/
   );
 });
+
+test('schema explicitly exposes server-side tables to the service role only', () => {
+  assert.match(
+    schemaSql,
+    /grant select, insert, update, delete on all tables in schema public to service_role/
+  );
+  assert.match(
+    schemaSql,
+    /grant usage, select on all sequences in schema public to service_role/
+  );
+  assert.doesNotMatch(
+    schemaSql,
+    /grant select, insert, update, delete on all tables in schema public to (anon|authenticated)/
+  );
+});

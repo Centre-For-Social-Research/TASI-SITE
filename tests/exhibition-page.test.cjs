@@ -22,8 +22,9 @@ test('exhibition page route delegates to the tracked exhibition page component',
   const source = readFile('src/app/exhibition/page.jsx');
 
   assert.match(source, /@\/components\/exhibition\/exhibition-page/);
+  assert.match(source, /PageSeoJsonLd/);
   assert.match(source, /metadata = exhibitionMetadata/);
-  assert.match(source, /return <ExhibitionPage \/>/);
+  assert.match(source, /<ExhibitionPage \/>/);
   assert.doesNotMatch(source, /BrandedPageHero/);
   assert.doesNotMatch(source, /proofPoints/);
   assert.doesNotMatch(source, /participationModes/);

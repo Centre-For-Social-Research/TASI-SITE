@@ -799,4 +799,12 @@ create table if not exists public.admin_email_overrides (
   created_at timestamptz not null default now()
 );
 
+alter table public.admin_email_overrides enable row level security;
+
+-- Supabase Data API access is now opt-in via grants. This app uses
+-- server-side supabase-js with SUPABASE_SERVICE_ROLE_KEY, not direct
+-- browser access, so only expose tables and identity sequences to service_role.
+grant select, insert, update, delete on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to service_role;
+
 notify pgrst, 'reload schema';
