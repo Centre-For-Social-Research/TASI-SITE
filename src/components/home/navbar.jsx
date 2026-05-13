@@ -20,17 +20,16 @@ const navItems = [
   },
   { label: 'Sponsors', href: '/sponsor' },
   {
-    label: 'Media & More',
-    href: '/media',
+    label: 'More',
     children: [
       { label: 'Attendees', href: '/attendees' },
       { label: 'Get Involved', href: '/get-involved' },
       { label: 'Media', href: '/media' },
       { label: 'News and Blogs', href: '/blog' },
       { label: 'Plan Your Travel', href: '/plan-your-travel' },
+      { label: 'Contact', href: '/contact' },
     ],
   },
-  { label: 'Contact', href: '/contact' },
 ];
 
 export default function HomeNavbar({
@@ -40,6 +39,7 @@ export default function HomeNavbar({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [openDesktopMenu, setOpenDesktopMenu] = useState(null);
   const [openMobileMenu, setOpenMobileMenu] = useState(null);
 
   useEffect(() => {
@@ -86,33 +86,74 @@ export default function HomeNavbar({
           />
         </Link>
 
-        <div className="hidden items-center justify-center gap-8 text-base font-bold lg:flex lg:justify-self-center">
-          {navItems.map((item) =>
-            item.children ? (
-              <div key={item.label} className="group relative">
-                <Link
-                  href={item.href}
-                  className="flex items-center gap-2 transition-opacity hover:opacity-75 dark:text-white"
-                >
-                  {item.label}
-                  <svg
-                    className="h-4 w-4 transition-transform group-hover:rotate-180"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
+        <div className="hidden items-center justify-center gap-5 text-base font-bold xl:gap-8 lg:flex lg:justify-self-center">
+          {navItems.map((item) => {
+            const isDesktopMenuOpen = openDesktopMenu === item.label;
+
+            return item.children ? (
+              <div
+                key={item.label}
+                className="group relative"
+                onMouseLeave={() => setOpenDesktopMenu(null)}
+              >
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-2 transition-opacity hover:opacity-75 dark:text-white"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m6 9 6 6 6-6"
-                    />
-                  </svg>
-                </Link>
-                <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                    {item.label}
+                    <svg
+                      className="h-4 w-4 transition-transform group-hover:rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    aria-label="Open more site sections menu"
+                    aria-expanded={isDesktopMenuOpen}
+                    onClick={() =>
+                      setOpenDesktopMenu((current) =>
+                        current === item.label ? null : item.label
+                      )
+                    }
+                    className="flex items-center gap-2 transition-opacity hover:opacity-75 dark:text-white"
+                  >
+                    {item.label}
+                    <svg
+                      className="h-4 w-4 transition-transform group-hover:rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </button>
+                )}
+                <div
+                  className={`absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 transition-all duration-200 group-hover:visible group-hover:opacity-100 ${
+                    isDesktopMenuOpen
+                      ? 'visible opacity-100'
+                      : 'invisible opacity-0'
+                  }`}
+                >
                   <div className="rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_18px_50px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-950">
                     <div className="mb-2 px-3 pt-1 text-[10px] font-black uppercase tracking-[0.22em] text-stone-500 dark:text-slate-400">
-                      {item.href === '/media' ? 'Explore' : 'Editions'}
+                      {item.label === 'More' ? 'Explore' : 'Editions'}
                     </div>
                     {item.children.map((child) => (
                       <Link
@@ -137,8 +178,8 @@ export default function HomeNavbar({
               >
                 {item.label}
               </Link>
-            )
-          )}
+            );
+          })}
         </div>
 
         <div className="hidden items-center gap-3 lg:flex lg:justify-self-end">
