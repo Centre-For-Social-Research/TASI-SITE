@@ -20,7 +20,7 @@ const navItems = [
   },
   { label: 'Sponsors', href: '/sponsor' },
   {
-    label: 'More',
+    label: 'Media & More',
     href: '/media',
     children: [
       { label: 'Attendees', href: '/attendees' },
@@ -112,7 +112,7 @@ export default function HomeNavbar({
                 <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <div className="rounded-[10px] border border-stone-200 bg-white p-3 shadow-[0_18px_50px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-950">
                     <div className="mb-2 px-3 pt-1 text-[10px] font-black uppercase tracking-[0.22em] text-stone-500 dark:text-slate-400">
-                      {item.label === 'More' ? 'Explore' : 'Editions'}
+                      {item.href === '/media' ? 'Explore' : 'Editions'}
                     </div>
                     {item.children.map((child) => (
                       <Link

@@ -156,6 +156,24 @@ export const metadata: Metadata = {
   creator: 'Centre for Social Research',
   publisher: 'Centre for Social Research',
   category: 'event',
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      {
+        url: '/icons/favicon-96x96.png',
+        sizes: '96x96',
+        type: 'image/png',
+      },
+      {
+        url: '/icons/favicon-48x48.png',
+        sizes: '48x48',
+        type: 'image/png',
+      },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: [{ url: '/icons/favicon-48x48.png', type: 'image/png' }],
+  },
   openGraph: {
     title: siteTitle,
     description: siteDescription,
