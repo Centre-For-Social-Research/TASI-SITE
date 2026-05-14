@@ -11,6 +11,7 @@ function AdminLoginButton() {
   return (
     <Link
       href="/sign-in?redirect_url=/admin/registrations"
+      rel="nofollow"
       className="block w-full rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#140f26] transition hover:bg-white/90 dark:bg-white dark:text-[#140f26] dark:hover:bg-white/90"
     >
       Log In

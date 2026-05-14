@@ -21,6 +21,28 @@ export const metadata = {
   alternates: {
     canonical: '/programme',
   },
+  openGraph: {
+    title: 'Trust and Safety India Festival Programme | TASI Agenda',
+    description:
+      'Explore Trust and Safety India Festival programme sessions, speakers, panels, workshops, keynotes, and reception agenda from TASI.',
+    url: '/programme',
+    type: 'website',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Trust and Safety India Festival - TASI 2026 Programme',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Trust and Safety India Festival Programme | TASI Agenda',
+    description:
+      'Explore Trust and Safety India Festival programme sessions, speakers, panels, workshops, keynotes, and reception agenda from TASI.',
+    images: ['/twitter-image'],
+  },
 };
 
 export default function ProgrammePage() {
