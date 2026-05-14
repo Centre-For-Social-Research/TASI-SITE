@@ -481,7 +481,7 @@ export default function ProgrammeAgendaClient({
                                     {speaker.photo ? (
                                       <Image
                                         src={speaker.photo}
-                                        alt={speaker.name}
+                                        alt=""
                                         fill
                                         sizes="58px"
                                       />
