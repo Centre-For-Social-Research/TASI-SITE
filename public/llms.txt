@@ -1,0 +1,65 @@
+# Trust and Safety India Festival (TASI)
+
+> The Trust and Safety India Festival (TASI) is a national summit in New Delhi convening government, industry, academia, and civil‑society to discuss trust, safety, and AI governance.
+
+The festival runs both in‑person and online, organized by the Centre for Social Research (CSR) in partnership with the Trust and Safety Festival, and includes panels, workshops, and networking sessions on topics such as child safety, digital wellbeing, platform policy, and AI ethics.
+
+## Overview
+- [Home](https://trustandsafetyindia.org): main landing page for the festival.  
+- [About](https://trustandsafetyindia.org/about): background, mission, and organizers.  
+- [Themes](https://trustandsafetyindia.org/themes): key thematic areas covered at the event.  
+- [Get Involved](https://trustandsafetyindia.org/get-involved): ways for participants to contribute.  
+- [Contact](https://trustandsafetyindia.org/contact): contact information and inquiry form.  
+- [Media](https://trustandsafetyindia.org/media): media resources and assets.  
+- [Press Kit](https://trustandsafetyindia.org/media/press-kit): downloadable press materials.  
+- [Press Releases](https://trustandsafetyindia.org/media/press-releases): official announcements.  
+- [TASI 2025](https://trustandsafetyindia.org/tasi-2025): information for the 2025 edition.  
+- [TASI 2026](https://trustandsafetyindia.org/tasi-2026): information for the 2026 edition.  
+
+## Programme
+- [Programme Overview](https://trustandsafetyindia.org/programme): full schedule of sessions and activities.  
+- [Opening Remarks (Session 1)](https://trustandsafetyindia.org/programme/session/tasi25-1-opening-remarks): inaugural address for the first day.  
+- [Keynote Speech (Session 9)](https://trustandsafetyindia.org/programme/session/tasi25-9-keynote-speech): featured keynote presentation.  
+- [Panel: AI for Safety (Session 13)](https://trustandsafetyindia.org/programme/session/tasi25-13-panel-ai-for-safety): discussion on AI applications for safety.  
+- [Closing Remarks (Session 52)](https://trustandsafetyindia.org/programme/session/tasi25-52-closing-remarks): final remarks for the conference.  
+
+## Speakers
+- [Speakers Index](https://trustandsafetyindia.org/speakers): list of all confirmed speakers.  
+- [Abby Roberts](https://trustandsafetyindia.org/speakers/abby-roberts): profile of speaker Abby Roberts.  
+- [Barkha Dutt](https://trustandsafetyindia.org/speakers/barkha-dutt): profile of journalist Barkha Dutt.  
+- [Henry Adams](https://trustandsafetyindia.org/speakers/henry-adams): profile of speaker Henry Adams.  
+- [Yannick Ragonneau](https://trustandsafetyindia.org/speakers/yannick-ragonneau): profile of speaker Yannick Ragonneau.  
+
+## Registration & Participation
+- [Register](https://trustandsafetyindia.org/register): registration portal for attendees.  
+- [Sponsor](https://trustandsafetyindia.org/sponsor): sponsorship opportunities and packages.  
+- [Exhibition](https://trustandsafetyindia.org/exhibition): exhibition details and exhibitor information.  
+- [Speaker Application](https://trustandsafetyindia.org/speaker-application): form to propose speaking slots.  
+- [Volunteer Application](https://trustandsafetyindia.org/volunteer-application): volunteer sign‑up form.  
+
+## Travel
+- [Plan Your Travel](https://trustandsafetyindia.org/plan-your-travel): travel guidance for visitors.  
+- [General Info](https://trustandsafetyindia.org/plan-your-travel/general-info): overview of travel logistics.  
+- [How to Reach](https://trustandsafetyindia.org/plan-your-travel/how-to-reach): directions to the venue.  
+- [Visa Information](https://trustandsafetyindia.org/plan-your-travel/visa-information): visa requirements for international guests.  
+- [Accommodation](https://trustandsafetyindia.org/plan-your-travel/accommodation): recommended hotels and lodging options.  
+
+## Blog
+- [Blog Home](https://trustandsafetyindia.org/blog): collection of festival‑related posts.  
+- [Early‑Bird Registration](https://trustandsafetyindia.org/blog/early-bird-registration): announcement of early registration discounts.  
+- [Call for Proposals Open](https://trustandsafetyindia.org/blog/call-for-proposals-open): invitation to submit session proposals.  
+- [Tackling Harms of Non‑Consensual Intimate Images](https://trustandsafetyindia.org/blog/tackling-harms-of-non-consensual-intimate-images): article on addressing image‑based abuse.  
+
+## Legal
+- [Privacy Policy](https://trustandsafetyindia.org/privacy-policy): privacy practices and data handling.  
+- [Terms of Service](https://trustandsafetyindia.org/terms-of-service): terms governing site use.  
+
+## Optional
+- [All Speakers](https://trustandsafetyindia.org/speakers): full directory of over 100 speaker profiles.  
+- [All Programme Sessions](https://trustandsafetyindia.org/programme): complete list of session pages.  
+- [Receptions](https://trustandsafetyindia.org/receptions): information on networking receptions (2025 & 2026).  
+- [Partner: Meta](https://trustandsafetyindia.org/partners/meta): partnership details with Meta.  
+- [Partner: YouTube](https://trustandsafetyindia.org/partners/youtube): partnership details with YouTube.  
+- [Partner: Booking.com](https://trustandsafetyindia.org/partners/booking-com): partnership details with Booking.com.  
+- [Attendees](https://trustandsafetyindia.org/attendees): attendee resources and information.  
+- [Sitemap](https://trustandsafetyindia.org/sitemap.xml): XML sitemap for the site.
