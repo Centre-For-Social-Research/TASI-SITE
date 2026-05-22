@@ -20,11 +20,11 @@ test('normalizes supported check-in day inputs', () => {
 
 test('defaults to the matching TASI event day in India time', () => {
   assert.equal(
-    getDefaultCheckInDay(new Date('2026-10-13T04:00:00.000Z')),
+    getDefaultCheckInDay(new Date('2026-10-14T04:00:00.000Z')),
     'day_1'
   );
   assert.equal(
-    getDefaultCheckInDay(new Date('2026-10-14T04:00:00.000Z')),
+    getDefaultCheckInDay(new Date('2026-10-15T04:00:00.000Z')),
     'day_2'
   );
 });
@@ -33,7 +33,7 @@ test('keeps day 1 and day 2 check-ins independent', () => {
   const checkIns = normalizeCheckIns([
     {
       event_day: 1,
-      checked_in_at: '2026-10-13T04:00:00.000Z',
+      checked_in_at: '2026-10-14T04:00:00.000Z',
       desk_label: 'Main Desk',
     },
   ]);
@@ -45,13 +45,13 @@ test('keeps day 1 and day 2 check-ins independent', () => {
 });
 
 test('treats legacy checked_in_at as day 1 only when no daily rows exist', () => {
-  const legacy = normalizeCheckIns([], '2026-10-13T04:00:00.000Z');
+  const legacy = normalizeCheckIns([], '2026-10-14T04:00:00.000Z');
   assert.equal(Boolean(legacy.day_1?.checked_in_at), true);
   assert.equal(Boolean(legacy.day_2?.checked_in_at), false);
 
   const withDailyRows = normalizeCheckIns(
-    [{ event_day: 2, checked_in_at: '2026-10-14T04:00:00.000Z' }],
-    '2026-10-14T04:00:00.000Z'
+    [{ event_day: 2, checked_in_at: '2026-10-15T04:00:00.000Z' }],
+    '2026-10-15T04:00:00.000Z'
   );
   assert.equal(Boolean(withDailyRows.day_1?.checked_in_at), false);
   assert.equal(Boolean(withDailyRows.day_2?.checked_in_at), true);

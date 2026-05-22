@@ -37,5 +37,5 @@ export const FESTIVAL_EVENT_COPY = {
   title: 'Trust and Safety India Festival 2026',
   description: 'Full Access Pass (2 Days + 3 Receptions)',
   venue: 'New Delhi, India',
-  datesLabel: '13-14 October 2026',
+  datesLabel: '14-15 October 2026',
 };

@@ -36,7 +36,7 @@ export default function LegalLayout({
           >
             <Image
               src="/img/tasi-csr-logo.png"
-              alt="TASI 2026"
+              alt="Trust and Safety India Festival (TASI) Logo - Convened by Centre for Social Research"
               width={176}
               height={48}
               className="h-11 w-auto"

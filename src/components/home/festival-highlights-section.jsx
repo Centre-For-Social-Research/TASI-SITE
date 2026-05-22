@@ -49,7 +49,7 @@ export default function FestivalHighlightsSection() {
                   India&apos;s leading summit on Trust, Safety and AI Governance
                   on{' '}
                   <span className="font-bold text-white">
-                    13-14 October 2026
+                    14-15 October 2026
                   </span>{' '}
                   in New Delhi.
                 </p>

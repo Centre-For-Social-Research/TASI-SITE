@@ -1,4 +1,4 @@
-﻿import { readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import React from 'react';
 import {
@@ -214,7 +214,7 @@ const FestivalTicketDocument = ({
 
           {/* Pill row */}
           <View style={{ flexDirection: 'row', gap: 7 }}>
-            {['OCT 13-14', '08:00-17:00', priceLabel].map((label, i) => (
+            {['OCT 14-15', '08:00-17:00', priceLabel].map((label, i) => (
               <View
                 key={i}
                 style={{
@@ -449,7 +449,7 @@ const FestivalBadgeDocument = ({
             color: '#fde68a',
           }}
         >
-          13â€“14 OCTOBER 2026 â€¢ NEW DELHI, INDIA
+          14â€“15 OCTOBER 2026 â€¢ NEW DELHI, INDIA
         </Text>
 
         {/* "ATTENDEE BADGE" subtitle */}

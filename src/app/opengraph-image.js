@@ -58,7 +58,7 @@ export default function OpenGraphImage() {
       </div>
 
       <div style={{ display: 'flex', fontSize: 24, opacity: 0.92 }}>
-        13-14 October 2026 • New Delhi, India
+        14-15 October 2026 • New Delhi, India
       </div>
     </div>,
     {

@@ -78,7 +78,7 @@ export default function HomeNavbar({
         <Link href="/" className="flex items-center lg:justify-self-start">
           <Image
             src="/img/tasi-csr-logo.png"
-            alt="TASI Logo"
+            alt="Trust and Safety India Festival (TASI) Logo - Convened by Centre for Social Research"
             width={160}
             height={60}
             className="h-9 w-auto object-contain md:h-11"

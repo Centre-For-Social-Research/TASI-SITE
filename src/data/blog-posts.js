@@ -43,12 +43,12 @@ export const blogPosts = [
     slug: 'tasi-2026-dates-announced',
     title: 'Dates for TASI 2026 Announced',
     excerpt:
-      "The 2nd edition of India's leading summit on Trust, Safety and AI Governance will take place on 13-14 October 2026 in New Delhi.",
+      "The 2nd edition of India's leading summit on Trust, Safety and AI Governance will take place on 14-15 October 2026 in New Delhi.",
     date: 'Mar 15, 2026',
     author: 'TASI Team',
     category: 'ANNOUNCEMENT',
     content:
-      "The 2nd edition of India's leading summit on Trust, Safety and AI Governance will take place on 13-14 October 2026 in New Delhi.",
+      "The 2nd edition of India's leading summit on Trust, Safety and AI Governance will take place on 14-15 October 2026 in New Delhi.",
     image: '/img/home-gallery/7T7A0646.webp',
   },
   {

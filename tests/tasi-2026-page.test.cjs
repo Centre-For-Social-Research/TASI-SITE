@@ -49,7 +49,7 @@ test('TASI 2026 edition data keeps only live page datasets', async () => {
   const data = await importModule('src/data/tasi-2026-edition.js');
 
   assert.deepEqual(data.tasi2026HeroPills, [
-    '13-14 October 2026',
+    '14-15 October 2026',
     'New Delhi',
     'In person and online',
   ]);
