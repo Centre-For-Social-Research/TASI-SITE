@@ -231,7 +231,7 @@ function InstitutionalBadgePage({
     30
   );
   const categoryLabel = registration.attendee_category || 'Delegate';
-  const eventDatesLabel = '13-14 Oct 2026';
+  const eventDatesLabel = '14-15 Oct 2026';
   const compactHeaderLabel = normalizeBadgeSingleLine(headerLabel, 24);
   const lowerSectionLayout = getBadgeLowerSectionLayout();
   const policyRules = [
@@ -342,7 +342,7 @@ function InstitutionalBadgePage({
         TASI 2026
       </Text>
 
-      {/* 13-14 October 2026 */}
+      {/* 14-15 October 2026 */}
       <Text
         style={{
           position: 'absolute',
@@ -353,7 +353,7 @@ function InstitutionalBadgePage({
           color: '#d6ab41',
         }}
       >
-        13-14 October 2026
+        14-15 October 2026
       </Text>
 
       {/* New Delhi, India */}

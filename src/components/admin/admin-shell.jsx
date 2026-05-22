@@ -367,7 +367,7 @@ const ADM_NAV_GROUPS = [
 ];
 
 function daysToEvent() {
-  const event = new Date('2026-10-13T00:00:00+05:30');
+  const event = new Date('2026-10-14T00:00:00+05:30');
   const diff = Math.ceil(
     (event.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   );
@@ -598,7 +598,7 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
               letterSpacing: '0.04em',
             }}
           >
-            13–14 OCT 2026
+            14–15 OCT 2026
           </div>
           <div
             className="adm-mono"

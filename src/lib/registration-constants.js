@@ -1,10 +1,10 @@
 export const EVENT_CONFIG = {
   name: 'Trust and Safety India Festival 2026',
   shortName: 'TASI 2026',
-  startDate: '2026-10-13',
-  endDate: '2026-10-14',
-  qrIssueDate: '2026-10-06',
-  badgeFreezeDate: '2026-10-08',
+  startDate: '2026-10-14',
+  endDate: '2026-10-15',
+  qrIssueDate: '2026-10-07',
+  badgeFreezeDate: '2026-10-09',
   contactEmail: 'info1@csrindia.org',
   senderEmail: 'noreply@trustandsafetyindia.org',
 };

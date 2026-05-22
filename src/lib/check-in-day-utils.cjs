@@ -5,15 +5,15 @@ const CHECK_IN_DAYS = [
     value: 'day_1',
     eventDay: 1,
     label: 'Day 1',
-    shortLabel: 'Day 1 - Oct 13',
-    date: '2026-10-13',
+    shortLabel: 'Day 1 - Oct 14',
+    date: '2026-10-14',
   },
   {
     value: 'day_2',
     eventDay: 2,
     label: 'Day 2',
-    shortLabel: 'Day 2 - Oct 14',
-    date: '2026-10-14',
+    shortLabel: 'Day 2 - Oct 15',
+    date: '2026-10-15',
   },
 ];
 
@@ -70,8 +70,8 @@ function normalizeCheckInDay(value, fallback = getDefaultCheckInDay()) {
       'day_1',
       'event_day_1',
       'eventday1',
-      '2026_10_13',
-      '2026_10_13t00:00:00_05:30',
+      '2026_10_14',
+      '2026_10_14t00:00:00_05:30',
     ].includes(normalized)
   ) {
     return 'day_1';
@@ -84,8 +84,8 @@ function normalizeCheckInDay(value, fallback = getDefaultCheckInDay()) {
       'day_2',
       'event_day_2',
       'eventday2',
-      '2026_10_14',
-      '2026_10_14t00:00:00_05:30',
+      '2026_10_15',
+      '2026_10_15t00:00:00_05:30',
     ].includes(normalized)
   ) {
     return 'day_2';

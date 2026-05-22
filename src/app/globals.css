@@ -324,7 +324,13 @@ a {
   background-image: url('/img/hero-bg-2.webp');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
+}
+
+@media (min-width: 1024px) {
+  .hero-bg-image {
+    background-attachment: fixed;
+  }
 }
 
 .hero-vignette {

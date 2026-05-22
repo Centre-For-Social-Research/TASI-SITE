@@ -800,8 +800,8 @@ test('createTicketEventSchema validates 500 valid event payloads across all 3 ti
       title: `Event Title ${i}`,
       description: `A description for event number ${i}.`,
       venue: `Conference Hall ${i % 10}`,
-      startsAt: '2026-10-13T09:00:00.000Z',
-      endsAt: '2026-10-14T18:00:00.000Z',
+      startsAt: '2026-10-14T09:00:00.000Z',
+      endsAt: '2026-10-15T18:00:00.000Z',
       timezone: 'Asia/Kolkata',
       status: statuses[i % 3],
       ticketTypes: [
@@ -838,7 +838,7 @@ test('createTicketEventSchema rejects invalid slug, title, description, and date
   const validBase = {
     slug: 'valid-event',
     title: 'Valid Event Title',
-    startsAt: '2026-10-13T09:00:00.000Z',
+    startsAt: '2026-10-14T09:00:00.000Z',
     timezone: 'Asia/Kolkata',
     ticketTypes: [freeTicket],
   };
@@ -870,7 +870,7 @@ test('createTicketEventSchema enforces ticket-type field constraints', async () 
   const eventBase = {
     slug: 'test-event',
     title: 'Test Event',
-    startsAt: '2026-10-13T09:00:00.000Z',
+    startsAt: '2026-10-14T09:00:00.000Z',
     timezone: 'Asia/Kolkata',
   };
   // paid ticket with no pricePaise

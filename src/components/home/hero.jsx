@@ -89,7 +89,7 @@ export default function HomeHero() {
                 IN PERSON & ONLINE
               </p>
               <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white">
-                OCT 13 - 14, 2026
+                OCT 14 - 15, 2026
               </p>
             </div>
           </div>

@@ -116,7 +116,7 @@ export async function GET() {
       event: {
         name: 'Trust & Safety India Festival',
         shortName: 'TASI 2026',
-        dates: 'Oct 13–14, 2026',
+        dates: 'Oct 14–15, 2026',
         venue: 'India Habitat Centre, New Delhi',
         capacity: 450,
         waitlistOpen: true,

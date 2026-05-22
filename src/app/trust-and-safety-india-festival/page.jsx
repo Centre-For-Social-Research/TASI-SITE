@@ -170,8 +170,8 @@ const structuredData = {
         'TASI India',
       ],
       description: pageDescription,
-      startDate: '2026-10-13',
-      endDate: '2026-10-14',
+      startDate: '2026-10-14',
+      endDate: '2026-10-15',
       eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
       eventStatus: 'https://schema.org/EventScheduled',
       image: [
@@ -327,7 +327,7 @@ export default function TrustAndSafetyIndiaFestivalPage() {
                   systems.
                 </p>
                 <p>
-                  The 2026 edition returns to New Delhi on October 13-14, 2026,
+                  The 2026 edition returns to New Delhi on October 14-15, 2026,
                   but the festival identity is broader than one year. It is a
                   shared platform for practical collaboration on online harms,
                   platform governance, AI safety, and digital rights.

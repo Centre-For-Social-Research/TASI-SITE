@@ -4,7 +4,7 @@
 export const tasiKnowledge = `
 ABOUT TASI 2026:
 TASI (Trust and Safety India Festival) is India's foremost trust and safety convening, bringing together government, industry, civil society, and international organizations. It is India's first national convening focused on trust and safety, led by civil society.
-- Dates: 13–14 October 2026
+- Dates: 14–15 October 2026
 - Location: New Delhi, India (in-person and online)
 - Format: 2-day policy forum and convening
 - Expected Participants: 500+ delegates, 14 key themes, 50+ sessions

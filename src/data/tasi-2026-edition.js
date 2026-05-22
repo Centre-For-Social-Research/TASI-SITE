@@ -1,5 +1,5 @@
 export const tasi2026HeroPills = [
-  '13-14 October 2026',
+  '14-15 October 2026',
   'New Delhi',
   'In person and online',
 ];

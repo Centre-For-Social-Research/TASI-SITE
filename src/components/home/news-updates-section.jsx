@@ -32,12 +32,12 @@ export default async function NewsUpdatesSection() {
       <div className="container px-4 md:px-6 mx-auto max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div className="max-w-2xl">
-            <h2 className="text-sm font-bold tracking-widest text-rc-primary dark:text-white uppercase mb-3">
+            <span className="block text-sm font-bold tracking-widest text-rc-primary dark:text-white uppercase mb-3">
               News & Updates
-            </h2>
-            <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
               The Latest from TASI
-            </h3>
+            </h2>
           </div>
           <Link
             href="/blog"
@@ -124,9 +124,9 @@ export default async function NewsUpdatesSection() {
           <div className="absolute inset-0 z-10 flex items-center">
             <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
               <div className="w-full max-w-xl">
-                <p className="mb-6 text-[46px] font-black leading-[51px] tracking-tight text-white">
+                <h2 className="mb-6 text-[46px] font-black leading-[51px] tracking-tight text-white">
                   About Us
-                </p>
+                </h2>
                 <div className="max-w-lg text-sm leading-relaxed text-white/95 md:text-base">
                   <p>
                     The Trust and Safety India Festival (TASI) is India&apos;s
