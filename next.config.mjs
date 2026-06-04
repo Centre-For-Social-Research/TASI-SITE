@@ -127,6 +127,7 @@ const nextConfig = {
   serverExternalPackages: ['@react-pdf/renderer'],
   allowedDevOrigins: ['127.0.0.1', 'localhost'],
   images: {
+    unoptimized: true,
     formats: ['image/webp'],
     deviceSizes: [640, 1080, 1920, 3840],
     imageSizes: [32, 64, 96, 128, 256, 384],
