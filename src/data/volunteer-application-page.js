@@ -72,7 +72,7 @@ export const volunteerGallery = [
     title: 'Warm, quick, and organised',
   },
   {
-    src: '/img/volunteers/IMG_5787.JPG',
+    src: '/img/volunteers/IMG_5787.webp',
     alt: 'Volunteer team members standing behind a TASI partner display',
     eyebrow: 'Front Of House',
     title: 'Visible, reliable support',

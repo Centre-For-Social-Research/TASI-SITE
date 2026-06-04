@@ -18,7 +18,7 @@ export const partners = [
   },
   {
     name: 'Teleperformance',
-    logo: '/img/Logo/TP.jpg',
+    logo: '/img/Logo/TP.webp',
     slug: 'teleperformance',
     type: 'Corporate Partner',
     description:
@@ -183,7 +183,7 @@ export const partners = [
   },
   {
     name: 'GirlEffect',
-    logo: '/img/Logo/GirlEffect.jpg',
+    logo: '/img/Logo/GirlEffect.webp',
     slug: 'girl-effect',
     type: 'Civil Society Partner',
     description:
@@ -330,7 +330,7 @@ export const partners = [
   },
   {
     name: 'Dhirubhai Ambani University',
-    logo: '/img/Logo/Dhirubhai Ambani University.jpg',
+    logo: '/img/Logo/Dhirubhai Ambani University.webp',
     slug: 'dhirubhai-ambani-university',
     type: 'Academic Partner',
     description:
@@ -462,7 +462,7 @@ export const partners = [
   },
   {
     name: 'COR Sandbox',
-    logo: '/img/Logo/COR Sandbox.jpg',
+    logo: '/img/Logo/COR Sandbox.webp',
     slug: 'cor-sandbox',
     type: 'Research Partner',
     description:

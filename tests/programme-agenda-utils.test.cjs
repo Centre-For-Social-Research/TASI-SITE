@@ -94,9 +94,9 @@ test('programme helper normalizes speaker names for shared page and client looku
   );
   assert.equal(
     resolveMappedPersonValue('Prof. Julie Inman Grant', {
-      julieinmangrant: '/img/speakers/Julie_Inman_Grant.jpg',
+      julieinmangrant: '/img/speakers/Julie_Inman_Grant.webp',
     }),
-    '/img/speakers/Julie_Inman_Grant.jpg'
+    '/img/speakers/Julie_Inman_Grant.webp'
   );
 });
 
@@ -123,7 +123,7 @@ test('buildProgrammeSessionViewModels removes non-agenda rows and enriches speak
       'ranjana kumari': 'Director, Centre for Social Research',
     },
     speakerPhotoMap: {
-      'ranjana kumari': '/img/speakers/Ranjana Kumari.jpg',
+      'ranjana kumari': '/img/speakers/Ranjana Kumari.webp',
     },
   });
 
@@ -138,7 +138,7 @@ test('buildProgrammeSessionViewModels removes non-agenda rows and enriches speak
         {
           name: 'Dr. Ranjana Kumari',
           title: 'Director, Centre for Social Research',
-          photo: '/img/speakers/Ranjana Kumari.jpg',
+          photo: '/img/speakers/Ranjana Kumari.webp',
           mod: false,
         },
       ],

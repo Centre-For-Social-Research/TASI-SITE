@@ -23,5 +23,5 @@ test('programme uses Yoel Roth name without suffix so speaker page photo can res
 
   const yoelProfile = speakers.find((speaker) => speaker.name === 'Yoel Roth');
   assert.ok(yoelProfile, 'Expected Yoel Roth speaker profile to exist');
-  assert.equal(yoelProfile.photo, 'Yoel Roth.jpg');
+  assert.equal(yoelProfile.photo, 'Yoel Roth.webp');
 });

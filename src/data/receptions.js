@@ -28,7 +28,7 @@ export const receptions = [
       {
         name: 'Jyoti Vadehra',
         role: 'Head, Online Safety and Wellbeing, CSR',
-        photo: '/img/speakers/Jyoti Vadehra.jpg',
+        photo: '/img/speakers/Jyoti Vadehra.webp',
       },
       {
         name: 'Thierry Mathou',
@@ -38,42 +38,42 @@ export const receptions = [
       {
         name: 'Dr. Ranjana Kumari',
         role: 'Director, Centre for Social Research',
-        photo: '/img/speakers/Dr. Ranjana Kumari.jpg',
+        photo: '/img/speakers/Dr. Ranjana Kumari.webp',
       },
       {
         name: 'Delphine O',
         role: 'Ambassador and Secretary General, Generation Equality Forum',
-        photo: '/img/speakers/Delphine O.jpg',
+        photo: '/img/speakers/Delphine O.webp',
       },
       {
         name: 'Jean-Christophe Le Toquin',
         role: 'Co-Founder, Trust and Safety Forum',
-        photo: '/img/speakers/JC Le Toquin.jpg',
+        photo: '/img/speakers/JC Le Toquin.webp',
       },
       {
         name: 'Dylan Schouten',
         role: 'Project Manager, GroSafe',
-        photo: '/img/speakers/Dylan Schouten.jpg',
+        photo: '/img/speakers/Dylan Schouten.webp',
       },
       {
         name: 'Ioanna Noula',
         role: 'Founder and Project Lead, COR Sandbox',
-        photo: '/img/speakers/Ioanna Noula.jpg',
+        photo: '/img/speakers/Ioanna Noula.webp',
       },
       {
         name: 'Abby Roberts',
         role: 'Project Manager, INHOPE',
-        photo: '/img/speakers/Abby Roberts.jpg',
+        photo: '/img/speakers/Abby Roberts.webp',
       },
       {
         name: 'Nick Dale',
         role: 'Director of Intelligence, Stop The Traffik',
-        photo: '/img/speakers/Nick Dale.jpg',
+        photo: '/img/speakers/Nick Dale.webp',
       },
       {
         name: 'Sophie Mortimer',
         role: 'Revenge Porn Helpline / StopNCII.org',
-        photo: '/img/speakers/Sophie Mortimer.jpg',
+        photo: '/img/speakers/Sophie Mortimer.webp',
       },
       {
         name: 'Garima Saxena',
@@ -104,7 +104,7 @@ export const receptions = [
       {
         name: 'Caroline Humer',
         role: 'Co Founder, Trust & Safety Festival',
-        photo: '/img/speakers/Caroline Humer.jpg',
+        photo: '/img/speakers/Caroline Humer.webp',
       },
       {
         name: 'H.E. Marisa Gerards',
@@ -114,7 +114,7 @@ export const receptions = [
       {
         name: 'Dr. Ranjana Kumari',
         role: 'Director, Centre for Social Research',
-        photo: '/img/speakers/Dr. Ranjana Kumari.jpg',
+        photo: '/img/speakers/Dr. Ranjana Kumari.webp',
       },
       {
         name: 'Farshida Zafar',
@@ -124,17 +124,17 @@ export const receptions = [
       {
         name: 'Dr. Subi Chaturvedi',
         role: 'SVP and Chief Corporate Affairs and Public Policy Officer, InMobi',
-        photo: '/img/speakers/Subi Chaturvedi.jpg',
+        photo: '/img/speakers/Subi Chaturvedi.webp',
       },
       {
         name: 'Major General K Narayanan',
         role: 'Head of Security Law and Strategic Programs, NITI Aayog',
-        photo: '/img/speakers/Major General K Narayanan.jpg',
+        photo: '/img/speakers/Major General K Narayanan.webp',
       },
       {
         name: 'Jyoti Vadehra',
         role: 'Head, Online Safety and Wellbeing, CSR',
-        photo: '/img/speakers/Jyoti Vadehra.jpg',
+        photo: '/img/speakers/Jyoti Vadehra.webp',
       },
     ],
   },
@@ -160,7 +160,7 @@ export const receptions = [
       {
         name: 'Jyoti Vadehra',
         role: 'Head, Online Safety and Wellbeing, CSR',
-        photo: '/img/speakers/Jyoti Vadehra.jpg',
+        photo: '/img/speakers/Jyoti Vadehra.webp',
       },
       {
         name: 'H.E. Jan Thesleff',
@@ -170,17 +170,17 @@ export const receptions = [
       {
         name: 'Dr. Ranjana Kumari',
         role: 'Director, Centre for Social Research',
-        photo: '/img/speakers/Dr. Ranjana Kumari.jpg',
+        photo: '/img/speakers/Dr. Ranjana Kumari.webp',
       },
       {
         name: 'Agnes Julin',
         role: 'Moderator, Deputy Head of Mission, Embassy of Sweden',
-        photo: '/img/speakers/Agnes Julin.jpg',
+        photo: '/img/speakers/Agnes Julin.webp',
       },
       {
         name: 'Karuna Nain',
         role: 'Online Safety Expert/ Advisor, Centre for Social Research',
-        photo: '/img/speakers/Karuna Nain.jpg',
+        photo: '/img/speakers/Karuna Nain.webp',
       },
     ],
   },

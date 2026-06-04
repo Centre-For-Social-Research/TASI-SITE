@@ -28,7 +28,7 @@ test('programme speaker overrides cover Christopher Cooter, Suhel Daud, and Trip
   );
   assert.match(
     programmePageDataSource,
-    /'legal attache suhel daud':\s*'\/img\/speakers\/Suhel Daud\.jpg'/
+    /'legal attache suhel daud':\s*'\/img\/speakers\/Suhel Daud\.webp'/
   );
 });
 

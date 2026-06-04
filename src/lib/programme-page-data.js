@@ -65,11 +65,11 @@ export function buildProgrammeSpeakerPhotoMap() {
   );
 
   return {
-    'delphine o': '/img/speakers/Delphine O.jpg',
-    'julie inman grant': '/img/speakers/Julie_Inman_Grant.jpg',
+    'delphine o': '/img/speakers/Delphine O.webp',
+    'julie inman grant': '/img/speakers/Julie_Inman_Grant.webp',
     'high commissioner of canada to india':
       '/img/Speaker Highlights/Christopher Cooter.png',
-    'legal attache suhel daud': '/img/speakers/Suhel Daud.jpg',
+    'legal attache suhel daud': '/img/speakers/Suhel Daud.webp',
     ...fromSpeakersPage,
   };
 }

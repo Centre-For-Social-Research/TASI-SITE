@@ -26,7 +26,7 @@ test('speaker directory helpers build categories, initials, links, and photos', 
       name: 'Yoel Roth',
       designation: 'Trust and safety expert',
       category: 'International',
-      photo: 'Yoel Roth.jpg',
+      photo: 'Yoel Roth.webp',
     },
   ];
 
@@ -38,7 +38,7 @@ test('speaker directory helpers build categories, initials, links, and photos', 
   assert.equal(getSpeakerInitials('Yoel Roth'), 'YR');
   assert.equal(getSpeakerInitials(''), 'SP');
   assert.equal(getSpeakerPhotoSrc(speakers[0]), speakers[0].photo);
-  assert.equal(getSpeakerPhotoSrc(speakers[1]), '/img/speakers/Yoel Roth.jpg');
+  assert.equal(getSpeakerPhotoSrc(speakers[1]), '/img/speakers/Yoel Roth.webp');
   assert.equal(buildSpeakerSlug('Dr. S Jaishankar'), 'dr-s-jaishankar');
   assert.equal(getSpeakerProfilePath(speakers[1]), '/speakers/yoel-roth');
   assert.equal(isVipSpeaker(speakers[0]), true);
