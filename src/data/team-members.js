@@ -2,7 +2,7 @@ export const teamMembers = [
   {
     name: 'Dr. Ranjana Kumari',
     designation: 'Director, Centre for Social Research',
-    photo: 'Ranjana Kumari.jpg',
+    photo: 'Ranjana Kumari.webp',
     linkedinUrl: 'https://www.linkedin.com/in/rkumari/',
     email: 'ranjanakumari@csrindia.org',
     twitterUrl: 'https://x.com/CSR_India',
@@ -11,7 +11,7 @@ export const teamMembers = [
   {
     name: 'Jyoti Vadehra',
     designation: 'Head, Online Safety and Wellbeing, CSR',
-    photo: 'Jyoti Vadehra.jpg',
+    photo: 'Jyoti Vadehra.webp',
     linkedinUrl: 'https://www.linkedin.com/in/jyoti-vadehra-78972a182/',
     email: 'jyoti@csrindia.org',
     twitterUrl: '',
@@ -20,7 +20,7 @@ export const teamMembers = [
   {
     name: 'Karuna Nain',
     designation: 'Online Safety Expert and Advisor, Centre for Social Research',
-    photo: 'Karuna Nain.jpg',
+    photo: 'Karuna Nain.webp',
     linkedinUrl: 'https://www.linkedin.com/in/karunanain/',
     email: 'karunanain@googlemail.com',
     twitterUrl: '',
@@ -29,7 +29,7 @@ export const teamMembers = [
   {
     name: 'Jean-Christophe Le Toquin',
     designation: 'Co-Founder, Trust and Safety Festival',
-    photo: 'JC Le Toquin.jpg',
+    photo: 'JC Le Toquin.webp',
     linkedinUrl: 'https://www.linkedin.com/in/letoquin/',
     email: 'jc.letoquin@trustandsafetyforum.org',
     twitterUrl: '',
@@ -38,7 +38,7 @@ export const teamMembers = [
   {
     name: 'Caroline Humer',
     designation: 'Co-Founder, Trust and Safety Festival',
-    photo: 'Caroline Humer.jpg',
+    photo: 'Caroline Humer.webp',
     linkedinUrl: 'https://www.linkedin.com/in/caroline-humer-669bb71/',
     email: 'c.humer@trustandsafetyforum.org',
     twitterUrl: '',
@@ -47,7 +47,7 @@ export const teamMembers = [
   {
     name: 'Saquib Jamil',
     designation: 'Project Coordinator, Centre for Social Research',
-    photo: 'Saquib Jamil.jpg',
+    photo: 'Saquib Jamil.webp',
     linkedinUrl: 'https://www.linkedin.com/in/saquibjamil/',
     email: 'Saquib@csrindia.org',
     twitterUrl: 'https://x.com/saquibjamil1',
@@ -57,7 +57,7 @@ export const teamMembers = [
     name: 'Akankshya Acharya',
     designation:
       'Project Coordinator, Digital Safety and Online Wellbeing, Centre for Social Research',
-    photo: 'Akankshya.jpeg',
+    photo: 'Akankshya.webp',
     linkedinUrl: 'https://www.linkedin.com/in/akankshya-acharya-b3314b173/',
     email: 'akankshya@csrindia.org',
     twitterUrl: '',

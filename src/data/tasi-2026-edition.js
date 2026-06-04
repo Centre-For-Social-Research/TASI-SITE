@@ -83,14 +83,14 @@ export const tasi2026AudienceSegments = [
     tag: 'Policy',
     title: 'Government & Regulators',
     text: 'Senior officials and regulatory authorities shaping AI governance, digital policy, cybersecurity strategy and platform compliance.',
-    image: '/img/home-gallery/7T7A5002.JPG',
+    image: '/img/home-gallery/7T7A5002.webp',
     imageAlt: 'Government and regulatory delegates at TASI',
   },
   {
     tag: 'Industry',
     title: 'Industry Leaders',
     text: 'Delegations from global technology companies, AI developers, platforms and startups working on safety by design and transparency.',
-    image: '/img/home-gallery/7T7A5636.JPG',
+    image: '/img/home-gallery/7T7A5636.webp',
     imageAlt: 'Industry leaders and participants at TASI',
   },
   {

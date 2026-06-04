@@ -26,10 +26,10 @@ test('programme data reflects speaker/session curation requests', async () => {
 
   assert.match(
     programmePageDataSource,
-    /'delphine o':\s*'\/img\/speakers\/Delphine O\.jpg'/
+    /'delphine o':\s*'\/img\/speakers\/Delphine O\.webp'/
   );
   assert.match(
     programmePageDataSource,
-    /'julie inman grant':\s*'\/img\/speakers\/Julie_Inman_Grant\.jpg'/
+    /'julie inman grant':\s*'\/img\/speakers\/Julie_Inman_Grant\.webp'/
   );
 });

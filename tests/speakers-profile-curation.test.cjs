@@ -33,7 +33,7 @@ test('speakers curation reflects removals, VIP list, and Prakshi Saha normalizat
   assert.ok(!names.has('Smt. Annapurna Devi'));
 
   const prakshi = speakers.find(
-    (speaker) => speaker.photo === 'Prakshi Saha.jpg'
+    (speaker) => speaker.photo === 'Prakshi Saha.webp'
   );
   assert.ok(prakshi, 'Expected Prakshi Saha profile to exist');
   assert.equal(prakshi.name, 'Prakshi Saha');

@@ -159,12 +159,12 @@ export const tasi2025Quotes = [
   {
     text: 'To address Technology Facilitated Gender Based Violence, there is a need for a multipronged approach by improving digital literacy and security, content moderation, and law enforcement capacities.',
     author: 'Kanta Singh, Country Representative, UN Women India',
-    photo: '/img/speakers/Kanta Singh.jpg',
+    photo: '/img/speakers/Kanta Singh.webp',
   },
   {
     text: 'As one of the largest and fastest-growing digital populations, India is a natural centre for this gathering of key stakeholders and leading trust and safety experts.',
     author: 'Sophie Mortimer, Manager, UK Revenge Porn Helpline, SWGfL',
-    photo: '/img/speakers/Sophie Mortimer.jpg',
+    photo: '/img/speakers/Sophie Mortimer.webp',
   },
 ];
 

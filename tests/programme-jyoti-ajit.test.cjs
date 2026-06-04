@@ -25,7 +25,7 @@ test('programme replaces Jyoti CSR with Jyoti Vadehra and removes Ajit Kumar', a
     (speaker) => speaker.name === 'Jyoti Vadehra'
   );
   assert.ok(jyotiProfile, 'Expected Jyoti Vadehra speaker profile to exist');
-  assert.equal(jyotiProfile.photo, 'Jyoti Vadehra.jpg');
+  assert.equal(jyotiProfile.photo, 'Jyoti Vadehra.webp');
 
   const welcomeBackSession = programmeSessions2025.find(
     (session) => session.id === 'tasi25-32'

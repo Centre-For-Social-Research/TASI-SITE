@@ -75,7 +75,7 @@ export const blogPosts = [
     category: 'COMMENTARY',
     content:
       'Dr. Ranjana Kumari calls for human-centered policy, platform accountability, and stronger support systems that respond to the lived realities of people facing harm online.',
-    image: '/img/home-gallery/dr-ranjana-kumari.jpg',
+    image: '/img/home-gallery/dr-ranjana-kumari.webp',
     sourceUrl:
       'https://news.abplive.com/infotainment/human-centered-solutions-are-key-to-fixing-social-media-harms-1817659',
   },
