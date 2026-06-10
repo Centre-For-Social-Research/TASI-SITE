@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import { processNextAvailablePassIssueEmailJob } from '@/lib/pass-issue-job-service';
 import { processNextAvailableRegistrationEmailJob } from '@/lib/registration-email-job-service';
 
@@ -7,9 +8,18 @@ const MAX_DRAIN_PASSES = 6;
 
 function isAuthorizedCronRequest(request) {
   const cronSecret = process.env.CRON_SECRET?.trim();
-  const authorization = request.headers.get('authorization');
+  const authorization = request.headers.get('authorization') || '';
 
-  return Boolean(cronSecret && authorization === `Bearer ${cronSecret}`);
+  if (!cronSecret) {
+    return false;
+  }
+
+  const expected = Buffer.from(`Bearer ${cronSecret}`);
+  const provided = Buffer.from(authorization);
+
+  return (
+    expected.length === provided.length && timingSafeEqual(expected, provided)
+  );
 }
 
 function buildSystemOperator() {

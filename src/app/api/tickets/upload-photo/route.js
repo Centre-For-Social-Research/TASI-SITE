@@ -1,7 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { protectPublicMultipartPostRoute } from '@/lib/api-security';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { validateUploadedImageFile } from '@/lib/upload-validation';
+import {
+  UploadValidationError,
+  validateUploadedImageFile,
+} from '@/lib/upload-validation';
 
 const TICKET_PHOTO_BUCKET = 'festival-ticket-photos';
 const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
@@ -63,12 +66,17 @@ export async function POST(request) {
       { headers: protection.headers }
     );
   } catch (error) {
+    if (error instanceof UploadValidationError) {
+      return Response.json(
+        { error: error.message },
+        { status: 400, headers: protection.headers }
+      );
+    }
+
+    console.error('Ticket photo upload failed.', error);
     return Response.json(
-      {
-        error:
-          error instanceof Error ? error.message : 'Unable to upload photo.',
-      },
-      { status: 400, headers: protection.headers }
+      { error: 'Unable to upload photo.' },
+      { status: 500, headers: protection.headers }
     );
   }
 }

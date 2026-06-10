@@ -115,7 +115,8 @@ test('global proxy runs Clerk middleware only for auth-backed routing', () => {
   assert.match(proxy, /'\/api\/admin\(\.\*\)'/);
   assert.match(proxy, /'\/api\/me\(\.\*\)'/);
   assert.match(proxy, /const CLERK_PROXY_PATH = '\/__clerk';/);
-  assert.match(proxy, /const clerkProxy = clerkMiddleware\(\{/);
+  assert.match(proxy, /const clerkProxy = clerkMiddleware\(/);
+  assert.match(proxy, /await auth\.protect\(\)/);
   assert.match(proxy, /frontendApiProxy/);
   assert.match(proxy, /path: CLERK_PROXY_PATH/);
   assert.match(proxy, /function normalizeSameRouteClerkRewrite/);

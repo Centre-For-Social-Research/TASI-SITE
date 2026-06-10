@@ -66,16 +66,10 @@ export async function GET() {
   }
 
   const supabase = getSupabaseAdmin();
-  const emailFilter = emails
-    .map(
-      (email) =>
-        `email.ilike.${email.replaceAll(',', '').replaceAll('%', '\\%').replaceAll('*', '\\*')}`
-    )
-    .join(',');
   const { data, error } = await supabase
     .from('event_registrations')
     .select(SELECT)
-    .or(emailFilter)
+    .in('email', emails)
     .order('qr_pass_issued_at', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(10);
