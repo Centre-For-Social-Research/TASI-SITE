@@ -834,7 +834,7 @@ export function buildBadgeExportRows(registrations) {
     category: registration.attendee_category,
     badge_color: registration.badge_color_label,
     badge_color_hex: registration.badge_color_hex,
-    qr_token: registration.qr_token || '',
+    qr_pass_issued: registration.qr_token ? 'Yes' : 'No',
     status: registration.status,
     issue_date: registration.qr_pass_issued_at || '',
     print_batch_id: registration.last_badge_export_batch_id || '',

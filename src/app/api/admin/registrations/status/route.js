@@ -84,13 +84,9 @@ export async function POST(request) {
       );
     }
 
+    console.error('Failed to update registration status.', error);
     return adminJson(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Unable to update registration.',
-      },
+      { error: 'Unable to update registration.' },
       { status: 500 }
     );
   }

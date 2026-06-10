@@ -20,14 +20,41 @@ const isClerkBackedRoute = createRouteMatcher([
   '/api/resend/test(.*)',
 ]);
 
+// Edge-level auth boundary: these routes require a signed-in Clerk session
+// before any handler runs. Per-route role checks (admin vs reviewer) remain
+// the authorization layer. Webhooks and /api/internal are excluded — they
+// authenticate via signatures/secrets, not Clerk sessions.
+const isProtectedRoute = createRouteMatcher([
+  '/admin(.*)',
+  '/api/admin(.*)',
+  '/api/check-in(.*)',
+  '/api/me(.*)',
+  '/api/operator(.*)',
+]);
+
+// Job-processor endpoints are also called by cron/system with a shared
+// secret header (no Clerk session); their handlers enforce the secret or
+// an admin session via authorizeJobProcessorRequest().
+const isJobProcessorRoute = createRouteMatcher([
+  '/api/admin/email-jobs/process',
+  '/api/admin/passes/jobs/process',
+]);
+
 const CLERK_PROXY_PATH = '/__clerk';
 
-const clerkProxy = clerkMiddleware({
-  frontendApiProxy: {
-    enabled: true,
-    path: CLERK_PROXY_PATH,
+const clerkProxy = clerkMiddleware(
+  async (auth, request) => {
+    if (isProtectedRoute(request) && !isJobProcessorRoute(request)) {
+      await auth.protect();
+    }
   },
-});
+  {
+    frontendApiProxy: {
+      enabled: true,
+      path: CLERK_PROXY_PATH,
+    },
+  }
+);
 
 function normalizeSameRouteClerkRewrite(
   response: Response,

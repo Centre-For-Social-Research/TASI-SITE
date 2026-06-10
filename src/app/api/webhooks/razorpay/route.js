@@ -83,11 +83,9 @@ export async function POST(request) {
 
     return Response.json({ success: true });
   } catch (error) {
+    console.error('Razorpay webhook processing failed.', error);
     return Response.json(
-      {
-        error:
-          error instanceof Error ? error.message : 'Webhook processing failed.',
-      },
+      { error: 'Webhook processing failed.' },
       { status: 500 }
     );
   }

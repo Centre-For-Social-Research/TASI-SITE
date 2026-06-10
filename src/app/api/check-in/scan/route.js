@@ -1,4 +1,4 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import {
   buildFestivalCheckInRecord,
   completeFestivalCheckIn,
@@ -17,7 +17,7 @@ import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 const { normalizeCheckInDay } = checkInDayUtils;
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.checkin.scan',
   });
   if (!authResult.ok) {
@@ -163,13 +163,9 @@ export async function POST(request) {
       recentScans: await listRecentEntryScans({ eventDay }),
     });
   } catch (error) {
+    console.error('Check-in scan failed.', error);
     return Response.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Unable to complete check-in.',
-      },
+      { error: 'Unable to complete check-in.' },
       { status: 500 }
     );
   }

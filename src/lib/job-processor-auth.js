@@ -1,4 +1,14 @@
+import { timingSafeEqual } from 'node:crypto';
 import { requireAdminOperator } from '@/lib/registration-auth';
+
+function secretsMatch(provided, configured) {
+  const providedBuf = Buffer.from(provided);
+  const configuredBuf = Buffer.from(configured);
+  if (providedBuf.length !== configuredBuf.length) {
+    return false;
+  }
+  return timingSafeEqual(providedBuf, configuredBuf);
+}
 
 function buildSystemProcessorOperator() {
   return {
@@ -17,7 +27,7 @@ export async function authorizeJobProcessorRequest(request, context = {}) {
     request.headers.get('x-job-processor-secret') ||
     '';
 
-  if (configuredSecret && providedSecret === configuredSecret) {
+  if (configuredSecret && secretsMatch(providedSecret, configuredSecret)) {
     return {
       ok: true,
       operator: buildSystemProcessorOperator(),

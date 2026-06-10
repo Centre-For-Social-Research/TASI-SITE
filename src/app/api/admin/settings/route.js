@@ -98,13 +98,16 @@ export async function GET() {
     },
   ];
 
+  // Reviewers get a read-only view without the operator email lists.
+  const isAdmin = authResult.operator?.role === 'admin';
+
   return Response.json({
     ok: true,
     data: {
       access: {
         mode: accessMode,
-        adminEmails: allAdminEmails,
-        reviewerEmails: allReviewerEmails,
+        adminEmails: isAdmin ? allAdminEmails : [],
+        reviewerEmails: isAdmin ? allReviewerEmails : [],
       },
       rateLimits: [
         { label: 'Public POST', value: '5 req / 10 min per IP' },

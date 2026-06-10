@@ -13,6 +13,17 @@ const useRedis = Boolean(
   process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
 );
 
+// In serverless production, the in-memory fallback is per-instance and
+// provides effectively no cross-instance rate limiting. Make that loud.
+if (!useRedis && process.env.NODE_ENV === 'production') {
+  console.error(
+    'SECURITY: Upstash Redis is not configured in production. ' +
+      'Rate limiting is falling back to per-instance memory and will not ' +
+      'protect against distributed abuse. Set UPSTASH_REDIS_REST_URL and ' +
+      'UPSTASH_REDIS_REST_TOKEN.'
+  );
+}
+
 let redis;
 if (useRedis) {
   redis = new Redis({
@@ -141,8 +152,12 @@ async function rateLimit(
       }
 
       return { ok: true, headers };
-    } catch (_redisError) {
+    } catch (redisError) {
       // Fall through to in-memory if Redis is unreachable
+      console.error(
+        'Rate limiter: Upstash Redis unreachable, using in-memory fallback.',
+        redisError
+      );
     }
   }
 

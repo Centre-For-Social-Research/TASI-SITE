@@ -89,11 +89,10 @@ export async function getAuthorizedOperator(context = {}) {
       ...stored.reviewerEmails.map((e) => e.toLowerCase()),
     ]);
     const accessMode = getAccessMode();
+    // Only trust publicMetadata — it is server-set. unsafeMetadata is
+    // user-writable from the browser and must never grant roles.
     const metadataRole =
-      user?.publicMetadata?.tasiRole ||
-      user?.publicMetadata?.role ||
-      user?.unsafeMetadata?.tasiRole ||
-      user?.unsafeMetadata?.role;
+      user?.publicMetadata?.tasiRole || user?.publicMetadata?.role;
 
     const hasAdminEmail = emails.some((email) => adminEmails.has(email));
     const hasReviewerEmail = emails.some((email) => reviewerEmails.has(email));
