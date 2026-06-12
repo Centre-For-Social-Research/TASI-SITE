@@ -4,7 +4,10 @@ const env = Object.fromEntries(
   readFileSync('.env.local', 'utf8')
     .split(/\r?\n/)
     .filter((l) => l.includes('='))
-    .map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()])
+    .map((l) => [
+      l.slice(0, l.indexOf('=')).trim(),
+      l.slice(l.indexOf('=') + 1).trim(),
+    ])
 );
 
 const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
@@ -85,7 +88,8 @@ const body = [
 const doc = {
   _id: 'post-what-is-trust-and-safety',
   _type: 'post',
-  title: 'What is Trust and Safety? Apple, Meta, and Two Governments Just Showed Us',
+  title:
+    'What is Trust and Safety? Apple, Meta, and Two Governments Just Showed Us',
   slug: { _type: 'slug', current: 'what-is-trust-and-safety' },
   excerpt:
     'Apple’s new child safety features, a Meta AI flaw that hijacked 20,000 Instagram accounts, the US Take It Down Act, and the UK’s scanning order: four stories that explain what trust and safety really means.',
