@@ -608,7 +608,7 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
               letterSpacing: '0.04em',
             }}
           >
-            INDIA HABITAT CENTRE
+            INDIA INTERNATIONAL CENTRE
           </div>
         </div>
 

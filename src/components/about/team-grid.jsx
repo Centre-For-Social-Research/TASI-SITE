@@ -241,6 +241,7 @@ export default function TeamGrid() {
           {teamMembers.map((member) => (
             <div
               key={member.name}
+              id={member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
               data-team-card
               className="min-w-0 shrink-0 basis-[88%] sm:basis-[70%] lg:basis-[calc((100%-3rem)/4)]"
             >

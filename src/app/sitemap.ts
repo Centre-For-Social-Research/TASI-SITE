@@ -82,12 +82,11 @@ const staticRoutes: Route[] = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
+  // Omit lastModified for routes without a real modification date — a fresh
+  // timestamp on every build teaches crawlers to distrust the lastmod signal.
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map(
     ({ path, changeFrequency, priority }) => ({
       url: `${BASE}${path}`,
-      lastModified: now,
       changeFrequency,
       priority,
     })
@@ -101,11 +100,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       posts as Array<{ slug: string; updatedAt?: string; publishedAt?: string }>
     ).map((post) => ({
       url: `${BASE}/blog/${post.slug}`,
-      lastModified: post.updatedAt
-        ? new Date(post.updatedAt)
-        : post.publishedAt
-          ? new Date(post.publishedAt)
-          : now,
+      ...(post.updatedAt || post.publishedAt
+        ? {
+            lastModified: new Date(post.updatedAt || post.publishedAt!),
+          }
+        : {}),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     }));
@@ -118,7 +117,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter(Boolean)
     .map((slug) => ({
       url: `${BASE}/speakers/${slug}`,
-      lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.5,
     }));
@@ -128,14 +126,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       programmeSessions2025.filter(shouldShowProgrammeSession)
     ).map((session) => ({
       url: `${BASE}${getProgrammeSessionPath(session)}`,
-      lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.5,
     }));
 
   const partnerEntries: MetadataRoute.Sitemap = partners.map((partner) => ({
     url: `${BASE}/partners/${partner.slug}`,
-    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.5,
   }));
