@@ -4,6 +4,16 @@ import { ArrowLeft, Calendar, Tag, User } from 'lucide-react';
 import ShareButtons from '@/components/blog/share-buttons';
 import HomeNavbar from '@/components/home/navbar';
 import { blogPostFallbackCopy } from '@/data/blog-page';
+import { teamMembers } from '@/data/team-members';
+
+function getAuthorProfileUrl(author) {
+  const member = teamMembers.find((m) => m.name === author);
+  if (!member) {
+    return null;
+  }
+
+  return `/about#${member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+}
 
 function getBlockText(block) {
   return block.children?.map((child) => child.text).join('') || '';
@@ -132,7 +142,16 @@ export default function BlogPostPage({ post, slug }) {
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
                     <User className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-base text-white">{post.author}</span>
+                  {getAuthorProfileUrl(post.author) ? (
+                    <Link
+                      href={getAuthorProfileUrl(post.author)}
+                      className="text-base text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white"
+                    >
+                      {post.author}
+                    </Link>
+                  ) : (
+                    <span className="text-base text-white">{post.author}</span>
+                  )}
                 </div>
                 <div className="hidden h-4 w-px bg-white/30 md:block" />
                 <div className="flex items-center gap-2">

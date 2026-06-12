@@ -194,7 +194,7 @@ const structuredData = {
       ],
       location: {
         '@type': 'Place',
-        name: 'India Habitat Centre',
+        name: 'India International Centre',
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'New Delhi',

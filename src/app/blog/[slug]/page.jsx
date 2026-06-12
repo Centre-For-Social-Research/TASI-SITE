@@ -29,6 +29,8 @@ export async function generateMetadata({ params }) {
       description,
       url: `/blog/${slug}`,
       type: 'article',
+      publishedTime: post.publishedAt || post.date,
+      modifiedTime: post.updatedAt || post.publishedAt || post.date,
       images: post.image ? [post.image] : [],
     },
     twitter: {
@@ -62,8 +64,8 @@ export default async function BlogPostRoute({ params }) {
     headline: post.title,
     description,
     image: [imageUrl],
-    datePublished: post.date,
-    dateModified: post.date,
+    datePublished: post.publishedAt || post.date,
+    dateModified: post.updatedAt || post.publishedAt || post.date,
     author: {
       '@type': 'Person',
       name: post.author || 'TASI Team',
