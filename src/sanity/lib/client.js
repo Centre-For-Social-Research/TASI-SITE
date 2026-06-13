@@ -18,4 +18,6 @@ export const client = isSanityConfigured
   : null;
 
 /** Next.js fetch cache options - revalidate every 60 s, tagged for on-demand invalidation */
-export const sanityFetchOptions = { next: { revalidate: 60, tags: ['sanity-posts'] } };
+export const sanityFetchOptions = {
+  next: { revalidate: 60, tags: ['sanity-posts'] },
+};
