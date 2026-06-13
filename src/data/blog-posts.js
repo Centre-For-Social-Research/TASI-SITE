@@ -80,6 +80,65 @@ export const blogPosts = [
       'https://news.abplive.com/infotainment/human-centered-solutions-are-key-to-fixing-social-media-harms-1817659',
   },
   {
+    id: 8,
+    slug: 'who-governs-ai-fable-5-shutdown',
+    title:
+      'Who Governs the Frontier? What the Fable 5 Shutdown Means for Trust, Safety, and the Global South',
+    excerpt:
+      'On 12 June 2026, a single government letter switched off one of the world’s most capable AI models for hundreds of millions of users overnight. Beneath the headlines about sovereignty sits a question TASI exists to ask: who holds authority over AI, and what does fair, accountable governance of it actually look like?',
+    date: 'Jun 13, 2026',
+    author: 'TASI Team',
+    category: 'COMMENTARY',
+    content: `Friday, 12 June 2026. 5:21 PM.
+
+A letter from the US Commerce Secretary arrives at Anthropic. By evening, Fable 5 and Mythos 5 — two of the most capable AI models ever deployed publicly — are switched off for every user outside the United States. No warning. No transition period. No published technical justification. The access simply ends.
+
+In the hours that followed, the conversation online split into familiar camps: founders worrying about their products, nationalists declaring vindication, safety researchers arguing over whether the trigger was real. All of it matters. But for a community built around trust, safety, and the governance of technology, the most important story is not who won the argument. It is what the episode reveals about how the most consequential technology of our time is actually governed — and who is in the room when the decisions are made.
+
+**What happened, briefly**
+
+Anthropic released Fable 5 on 9 June. It is powerful, particularly in cybersecurity. Three days later, the US government cited a jailbreak demonstrated by a third party, invoked national security authority, and ordered access suspended for all foreign nationals — including Anthropic’s own non-citizen employees inside the United States, under the “deemed export” rule that treats showing controlled technology to a foreign national as exporting it. Unable to cleanly separate US from non-US users on live infrastructure, Anthropic pulled the models for everyone.
+
+Anthropic complied within hours, then pushed back: the jailbreak was narrow, the same capability exists in other public models, and the model had shipped with additional safeguards and a 30-day retention window built specifically to catch misuse. The company’s public statement asked for something specific — that government intervention be “part of a statutory process that is transparent, fair, clear, and grounded in technical facts,” and noted this action did not meet that bar.
+
+That sentence is the heart of it. This is a governance failure as much as a geopolitical event.
+
+**The safety paradox trust & safety teams should sit with**
+
+There is an uncomfortable irony here that anyone working in trust and safety will recognise. Anthropic invested heavily in framing its models as potentially dangerous, built elaborate safeguards, and published its risks openly. That very framing appears to have handed a government the legal language to treat the model as a munition and pull it from the public.
+
+This is the double bind of safety work. Name a harm clearly enough and you create the justification for heavy-handed control; stay quiet and you abandon accountability. The lesson is not that safety messaging is a mistake — it is that safety claims need to be paired with governance processes robust enough to handle them. A risk disclosure without due process attached becomes a lever anyone can pull. For platforms, regulators, and researchers thinking about how to talk about online harms, this is a live cautionary tale.
+
+**Due process is the missing infrastructure**
+
+Strip away the national-security framing and what is left is an action taken with no published evidence, no technical review shared with the affected company, no notice, and no appeal. A capability used daily by hundreds of millions of people vanished on the say-so of one office.
+
+Whatever one thinks of the decision’s merits, the absence of process is the part that should worry anyone who cares about how AI is governed. The governance question TASI keeps returning to is not “should the state be able to act on dangerous AI?” — a credible case exists that it should. It is: by what transparent, fair, evidence-based, and contestable process? On 12 June, the answer was none. That vacuum is the actual risk, because a process this unpredictable can be applied to anyone, for any reason, at any time.
+
+**The Global South is now “foreign national”**
+
+The word that should stop every reader in Delhi, Lagos, or Jakarta is “foreign national.” Not a geography. Not a sanctioned entity. A category that places 1.4 billion Indians — and most of humanity — in the same bucket by default, regardless of relationship or intent. Anthropic’s own CEO had been in New Delhi only months earlier discussing AI for India. The goodwill did not matter when the order came.
+
+This is precisely the asymmetry TASI was built to confront. If the most capable AI becomes a credentialed export — available to US persons and US-aligned entities, withheld from everyone else — then the Global South does not merely risk being a consumer of AI. It risks structurally second-tier access to the tools that will shape its economies, its public services, and its information environments. Building broader, more meaningful Global South representation in these conversations is no longer an equity nicety. It is a precondition for not being governed by rules made entirely elsewhere.
+
+**What this means for builders and institutions**
+
+For the people building on these tools from Bengaluru, Pune, or anywhere outside the US, the immediate disruption is limited — only Fable 5 and Mythos 5 went dark; other models still run. But the structural lessons are not optional:
+
+- **Model access is permission, not property.** An API subscription is a revocable license inside a stack governed by another country. Treat frontier access the way a supply chain professional treats a single-source component: keep fallbacks, abstract your prompts, plan for an outage you do not control.
+- **Critical systems need contingency.** A hospital, a bank, a welfare delivery platform, or a content-moderation pipeline cannot rest on a capability that can be switched off from a capital where its users have no vote. Resilience and provider-diversity are now governance requirements, not engineering niceties.
+- **Sovereign capability is a trust-and-safety issue, not just an industrial one.** The case for domestic and regional AI capacity is usually made in the language of economics and pride. The sharper argument is accountability: you cannot demand transparency, redress, or human-centred safeguards from a system whose access rules are set beyond your jurisdiction.
+
+**The question TASI 2026 will carry into the room**
+
+This episode will be litigated for months — the legal authority is contested, and access may well be restored. But the precedent is set: a frontier AI model can now be recalled like a controlled strategic asset, by one government, on contested evidence, with global effect and no due process.
+
+That is the conversation the trust and safety community has to lead, not follow. Who governs the frontier? On what evidence? With what right of appeal, for whom, and with whose voices at the table? These are not abstractions. On a Friday evening in June, they became the difference between a tool working and a tool disappearing.
+
+As we prepare for TASI 2026 under the theme “People First. Safety Always.”, this is exactly the territory we intend to hold: governance that is transparent and contestable, safety that does not collapse into control, and a seat at the table for the Global South in the decisions that will define the next decade of AI. The frontier will be governed by someone. The only question is whether the rest of us help write the rules.`,
+    image: '/img/home-gallery/fable-5-anthropic.webp',
+  },
+  {
     id: 7,
     slug: 'tackling-harms-of-non-consensual-intimate-images',
     title: 'Tackling the harms of non-consensual intimate images',
