@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { verifySanityWebhookSignature } from '@/lib/sanity-webhook';
 
 // Needs the Node runtime (crypto) and must never be statically cached.
@@ -48,6 +48,10 @@ export async function POST(request) {
 
   const slug =
     typeof body?.slug === 'string' ? body.slug : body?.slug?.current || null;
+
+  // Purge the Data Cache for all Sanity post fetches first, so page
+  // regeneration picks up fully fresh content from the CMS.
+  revalidateTag('sanity-posts');
 
   // Homepage "Latest from TASI" section and the blog index.
   revalidatePath('/');
