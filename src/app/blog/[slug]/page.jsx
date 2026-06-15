@@ -6,6 +6,14 @@ import { getBlogPostBySlug, getBlogPosts } from '@/lib/blog';
 
 const SITE_URL = 'https://trustandsafetyindia.org';
 
+function absoluteUrl(pathOrUrl) {
+  if (!pathOrUrl) {
+    return `${SITE_URL}/opengraph-image`;
+  }
+
+  return pathOrUrl.startsWith('http') ? pathOrUrl : `${SITE_URL}${pathOrUrl}`;
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
@@ -17,27 +25,42 @@ export async function generateMetadata({ params }) {
   }
 
   const description = post.excerpt || post.content?.slice(0, 160);
+  const pagePath = `/blog/${slug}`;
+  const pageUrl = `${SITE_URL}${pagePath}`;
+  const imageUrl = absoluteUrl(post.image);
+  const publishedTime = post.publishedAt || post.date;
+  const modifiedTime = post.updatedAt || publishedTime;
 
   return {
     title: `${post.title} | TASI 2026`,
     description,
+    authors: [{ name: post.author || 'TASI Team' }],
     alternates: {
-      canonical: `/blog/${slug}`,
+      canonical: pagePath,
     },
     openGraph: {
       title: post.title,
       description,
-      url: `/blog/${slug}`,
+      url: pageUrl,
       type: 'article',
-      publishedTime: post.publishedAt || post.date,
-      modifiedTime: post.updatedAt || post.publishedAt || post.date,
-      images: post.image ? [post.image] : [],
+      publishedTime,
+      modifiedTime,
+      authors: [post.author || 'TASI Team'],
+      section: post.category,
+      images: [
+        {
+          url: imageUrl,
+          width: 1600,
+          height: 900,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description,
-      images: post.image ? [post.image] : ['/twitter-image'],
+      images: [imageUrl],
     },
   };
 }
@@ -52,24 +75,27 @@ export default async function BlogPostRoute({ params }) {
 
   const description = post.excerpt || post.content?.slice(0, 160);
   const pageUrl = `${SITE_URL}/blog/${slug}`;
-  const imageUrl = post.image?.startsWith('http')
-    ? post.image
-    : post.image
-      ? `${SITE_URL}${post.image}`
-      : `${SITE_URL}/opengraph-image`;
+  const imageUrl = absoluteUrl(post.image);
+  const publishedAt = post.publishedAt || post.date;
+  const updatedAt = post.updatedAt || publishedAt;
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
+    additionalType: 'https://schema.org/BlogPosting',
     '@id': `${pageUrl}#article`,
+    isPartOf: {
+      '@id': `${SITE_URL}/blog#blog`,
+    },
     headline: post.title,
     description,
     image: [imageUrl],
-    datePublished: post.publishedAt || post.date,
-    dateModified: post.updatedAt || post.publishedAt || post.date,
+    datePublished: publishedAt,
+    dateModified: updatedAt,
     author: {
-      '@type': 'Person',
+      '@type': post.author === 'TASI Team' ? 'Organization' : 'Person',
       name: post.author || 'TASI Team',
     },
+    articleSection: post.category,
     publisher: {
       '@type': 'Organization',
       name: 'Centre for Social Research',

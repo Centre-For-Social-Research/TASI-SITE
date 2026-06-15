@@ -17,6 +17,27 @@ function formatDate(dateValue) {
   }).format(new Date(dateValue));
 }
 
+function toIsoDate(dateValue) {
+  if (!dateValue) {
+    return null;
+  }
+
+  const date = new Date(dateValue);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function normalizePostDates(post) {
+  const publishedAt = toIsoDate(post.publishedAt || post.date);
+  const updatedAt = toIsoDate(post.updatedAt || post._updatedAt) || publishedAt;
+
+  return {
+    ...post,
+    date: post.date || formatDate(publishedAt),
+    publishedAt,
+    updatedAt,
+  };
+}
+
 function portableTextToPlainText(blocks = []) {
   return blocks
     .filter(
@@ -36,6 +57,8 @@ function normalizeSanityPost(post) {
     title: post.title,
     excerpt,
     date: formatDate(post.publishedAt),
+    publishedAt: toIsoDate(post.publishedAt),
+    updatedAt: toIsoDate(post._updatedAt) || toIsoDate(post.publishedAt),
     author: post.author || 'TASI Team',
     category: post.category || 'ANNOUNCEMENT',
     content: plainTextContent,
@@ -72,10 +95,12 @@ async function fetchSanityPostBySlug(slug) {
 export const getBlogPosts = cache(async () => {
   try {
     const sanityPosts = await fetchSanityPosts();
-    return sanityPosts.length > 0 ? sanityPosts : blogPosts;
+    return (sanityPosts.length > 0 ? sanityPosts : blogPosts).map(
+      normalizePostDates
+    );
   } catch (error) {
     console.error('Failed to fetch Sanity posts, using local fallback.', error);
-    return blogPosts;
+    return blogPosts.map(normalizePostDates);
   }
 });
 
@@ -89,7 +114,8 @@ export const getBlogPostBySlug = cache(async (slug) => {
     console.error(`Failed to fetch Sanity post for slug "${slug}".`, error);
   }
 
-  return blogPosts.find((post) => post.slug === slug) || null;
+  const fallbackPost = blogPosts.find((post) => post.slug === slug);
+  return fallbackPost ? normalizePostDates(fallbackPost) : null;
 });
 
 export const getBlogCategoryList = cache(async () => {
