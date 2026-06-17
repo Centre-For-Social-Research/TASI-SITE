@@ -103,7 +103,7 @@ export default function RegistrationForm() {
       }
       setProfilePhoto(file);
       setPhotoNote(
-        `Selected ${file.name} â€¢ ${dimensions.width} x ${dimensions.height} â€¢ ${Math.ceil(file.size / 1024)}KB`
+        `Photo uploaded — ${dimensions.width} x ${dimensions.height}px, ${Math.ceil(file.size / 1024)}KB`
       );
     } catch {
       setProfilePhoto(null);
@@ -135,10 +135,18 @@ export default function RegistrationForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        setStatus({
-          type: 'error',
-          message: result.error || 'Unable to submit registration.',
-        });
+        if (response.status === 409 || result.error === 'duplicate_email') {
+          setStatus({
+            type: 'error',
+            message:
+              'This email address has already been used to register. If you believe this is a mistake or need to update your registration, please contact the TASI team.',
+          });
+        } else {
+          setStatus({
+            type: 'error',
+            message: result.error || 'Unable to submit registration.',
+          });
+        }
         return;
       }
 
@@ -356,6 +364,23 @@ export default function RegistrationForm() {
           />
           {photoError ? (
             <span className={ERROR_CLASS}>{photoError}</span>
+          ) : profilePhoto ? (
+            <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 dark:bg-emerald-950/40">
+              <svg
+                className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                {photoNote}
+              </p>
+            </div>
           ) : (
             <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
               {photoNote}
