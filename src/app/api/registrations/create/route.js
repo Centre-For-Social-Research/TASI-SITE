@@ -183,6 +183,19 @@ export async function POST(request) {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'Unable to submit registration.';
+
+    const isDuplicate =
+      error?.code === '23505' ||
+      /duplicate key/i.test(message) ||
+      /already registered/i.test(message);
+
+    if (isDuplicate) {
+      return Response.json(
+        { error: 'duplicate_email' },
+        { status: 409, headers: protection.headers }
+      );
+    }
+
     const status = error instanceof UploadValidationError ? 400 : 500;
     return Response.json(
       { error: message },
