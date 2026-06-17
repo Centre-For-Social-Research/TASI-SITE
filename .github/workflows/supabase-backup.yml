@@ -1,17 +1,27 @@
 name: Supabase Backup & Keep-Alive
 
-# Runs a daily pg_dump of the Supabase database and stores it as a GitHub
-# Actions artifact. This single job serves two purposes on the free tier:
+# Runs a daily backup of the Supabase database AND storage buckets, stored as a
+# GitHub Actions artifact. This single job serves two purposes on the free tier:
 #   1. Backup     — the free tier has NO automatic backups, so we keep our own.
+#                   The database dump captures all tables; the storage sync
+#                   captures the actual uploaded files (profile photos, pass
+#                   images, chat attachments) which pg_dump does NOT include.
 #   2. Keep-alive — the dump reads the database, which resets the 7-day
 #                   inactivity timer that would otherwise pause the project.
 #
-# Required repository secret (Settings > Secrets and variables > Actions):
-#   SUPABASE_DB_URL   Session Pooler connection string (IPv4). NOT the Direct
-#                     connection (IPv6) — GitHub runners are IPv4 only and the
-#                     Direct connection fails silently. Find it in: Supabase
-#                     Dashboard > Project Settings > Database > Connection
-#                     string > "Session pooler".
+# Required repository secrets (Settings > Secrets and variables > Actions):
+#   SUPABASE_DB_URL              Session Pooler connection string (IPv4). NOT the
+#                                Direct connection (IPv6) — GitHub runners are
+#                                IPv4 only. Supabase Dashboard > Project Settings
+#                                > Database > Connect > "Session pooler".
+#   SUPABASE_S3_ENDPOINT         Storage S3 endpoint, e.g.
+#                                https://<project-ref>.storage.supabase.co/storage/v1/s3
+#   SUPABASE_S3_REGION           Storage region, e.g. ap-northeast-2
+#   SUPABASE_S3_ACCESS_KEY_ID    Storage S3 access key id
+#   SUPABASE_S3_SECRET_ACCESS_KEY  Storage S3 secret access key
+#
+# Enable S3 access and create the keys at:
+#   Supabase Dashboard > Project Settings > Storage > S3 Access Keys.
 #
 # Retention: artifacts are kept for 90 days (the GitHub maximum), then deleted
 # automatically. Download a backup from the run's "Artifacts" section.
@@ -30,9 +40,9 @@ concurrency:
 
 jobs:
   backup:
-    name: Dump & store artifact
+    name: Dump database & storage, store artifact
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Install PostgreSQL 17 client
         # The Supabase database runs Postgres 17, and pg_dump must be >= the
@@ -44,28 +54,55 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client-17
 
-      - name: Create database dump
+      - name: Prepare backup folder
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y-%m-%d_%H%M%S)"
+          echo "STAMP=${STAMP}" >> "$GITHUB_ENV"
+          echo "BACKUP_DIR=backup-${STAMP}" >> "$GITHUB_ENV"
+          mkdir -p "backup-${STAMP}/storage"
+
+      - name: Dump database
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           set -euo pipefail
-          STAMP="$(date -u +%Y-%m-%d_%H%M%S)"
-          echo "BACKUP_FILE=tasi-supabase-${STAMP}.sql.gz" >> "$GITHUB_ENV"
           /usr/lib/postgresql/17/bin/pg_dump "$SUPABASE_DB_URL" \
             --no-owner \
             --no-privileges \
-            | gzip > "tasi-supabase-${STAMP}.sql.gz"
-          ls -lh "tasi-supabase-${STAMP}.sql.gz"
+            | gzip > "${BACKUP_DIR}/database-${STAMP}.sql.gz"
+          ls -lh "${BACKUP_DIR}/database-${STAMP}.sql.gz"
+
+      - name: Sync storage buckets
+        # Supabase Storage is S3-compatible. We mirror each bucket's files into
+        # the backup folder. pg_dump only stores file *metadata*, not the binary
+        # files themselves, so this step is what protects the actual photos.
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.SUPABASE_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SUPABASE_S3_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.SUPABASE_S3_REGION }}
+          S3_ENDPOINT: ${{ secrets.SUPABASE_S3_ENDPOINT }}
+        run: |
+          set -euo pipefail
+          for bucket in registration-profile-photos registration-pass-images chat-attachments; do
+            echo "Syncing bucket: ${bucket}"
+            mkdir -p "${BACKUP_DIR}/storage/${bucket}"
+            aws s3 sync "s3://${bucket}" "${BACKUP_DIR}/storage/${bucket}" \
+              --endpoint-url "$S3_ENDPOINT"
+          done
+          echo "Storage contents:"
+          find "${BACKUP_DIR}/storage" -type f | wc -l
+          du -sh "${BACKUP_DIR}/storage"
 
       - name: Upload backup artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.BACKUP_FILE }}
-          path: ${{ env.BACKUP_FILE }}
+          name: tasi-backup-${{ env.STAMP }}
+          path: ${{ env.BACKUP_DIR }}
           retention-days: 90
           if-no-files-found: error
 
       - name: Notify on failure
         if: failure()
         run: |
-          echo "::error::Supabase backup failed. The database was NOT backed up and the keep-alive ping did not run. Check that SUPABASE_DB_URL is the Session Pooler (IPv4) connection string."
+          echo "::error::Supabase backup failed. The database/storage was NOT backed up and the keep-alive ping did not run. Check SUPABASE_DB_URL (Session Pooler / IPv4) and the SUPABASE_S3_* secrets."
