@@ -1,0 +1,71 @@
+name: Supabase Backup & Keep-Alive
+
+# Runs a daily pg_dump of the Supabase database and stores it as a GitHub
+# Actions artifact. This single job serves two purposes on the free tier:
+#   1. Backup     — the free tier has NO automatic backups, so we keep our own.
+#   2. Keep-alive — the dump reads the database, which resets the 7-day
+#                   inactivity timer that would otherwise pause the project.
+#
+# Required repository secret (Settings > Secrets and variables > Actions):
+#   SUPABASE_DB_URL   Session Pooler connection string (IPv4). NOT the Direct
+#                     connection (IPv6) — GitHub runners are IPv4 only and the
+#                     Direct connection fails silently. Find it in: Supabase
+#                     Dashboard > Project Settings > Database > Connection
+#                     string > "Session pooler".
+#
+# Retention: artifacts are kept for 90 days (the GitHub maximum), then deleted
+# automatically. Download a backup from the run's "Artifacts" section.
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Daily at 02:00 UTC
+  workflow_dispatch: {} # Allow manual runs from the Actions tab
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: Dump & store artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install PostgreSQL 17 client
+        # The Supabase database runs Postgres 17, and pg_dump must be >= the
+        # server version. The runner's default client is older, so we install
+        # the matching client from the official PGDG apt repository.
+        run: |
+          sudo sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Create database dump
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y-%m-%d_%H%M%S)"
+          echo "BACKUP_FILE=tasi-supabase-${STAMP}.sql.gz" >> "$GITHUB_ENV"
+          /usr/lib/postgresql/17/bin/pg_dump "$SUPABASE_DB_URL" \
+            --no-owner \
+            --no-privileges \
+            | gzip > "tasi-supabase-${STAMP}.sql.gz"
+          ls -lh "tasi-supabase-${STAMP}.sql.gz"
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BACKUP_FILE }}
+          path: ${{ env.BACKUP_FILE }}
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Supabase backup failed. The database was NOT backed up and the keep-alive ping did not run. Check that SUPABASE_DB_URL is the Session Pooler (IPv4) connection string."
