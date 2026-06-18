@@ -23,8 +23,11 @@ name: Supabase Backup & Keep-Alive
 # Enable S3 access and create the keys at:
 #   Supabase Dashboard > Project Settings > Storage > S3 Access Keys.
 #
-# Retention: artifacts are kept for 90 days (the GitHub maximum), then deleted
-# automatically. Download a backup from the run's "Artifacts" section.
+# Retention: artifacts are kept for 14 days, then deleted automatically. This
+# keeps the accumulated backup size within GitHub's included storage quota
+# (~33 MB/day x 14 ≈ 0.5 GB). Download a backup from the run's "Artifacts"
+# section. For longer retention, move the upload to off-GitHub storage (Azure
+# Blob / R2) instead of raising this number.
 
 on:
   schedule:
@@ -99,7 +102,7 @@ jobs:
         with:
           name: tasi-backup-${{ env.STAMP }}
           path: ${{ env.BACKUP_DIR }}
-          retention-days: 90
+          retention-days: 14
           if-no-files-found: error
 
       - name: Notify on failure
