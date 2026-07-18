@@ -94,7 +94,7 @@ const ProfileCard = React.forwardRef(function ProfileCard(
                   </a>
                 )}
                 <a
-                  href={`mailto:${email || 'info1@csrindia.org'}`}
+                  href={`mailto:${email || 'info@trustandsafetyfestival.org'}`}
                   aria-label={`Email ${name}`}
                   className="rounded-full border border-stone-300 bg-stone-100 p-1.5 text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-200 hover:text-stone-900 dark:border-white/20 dark:bg-white/10 dark:text-white/85 dark:hover:border-white dark:hover:bg-white/20 dark:hover:text-white"
                 >
