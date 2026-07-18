@@ -8,26 +8,8 @@ function readFile(relativePath) {
 }
 
 const {
-  buildAdminNotificationStorageKey,
   resolveAdminShellRuntimeState,
 } = require('../src/lib/admin-runtime-guards.cjs');
-
-test('buildAdminNotificationStorageKey scopes dismissed alerts to the active operator', () => {
-  assert.equal(
-    buildAdminNotificationStorageKey({
-      userId: 'user_123',
-      primaryEmail: 'Admin@CSRIndia.org',
-    }),
-    'tasi-admin-read-notifications:user_123'
-  );
-
-  assert.equal(
-    buildAdminNotificationStorageKey({
-      primaryEmail: 'Reviewer@CSRIndia.org',
-    }),
-    'tasi-admin-read-notifications:reviewer-csrindia-org'
-  );
-});
 
 test('resolveAdminShellRuntimeState requests re-auth instead of masking protected fetch failures as zero state', () => {
   const previousState = {

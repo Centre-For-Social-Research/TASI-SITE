@@ -1,14 +1,7 @@
 'use client';
 
 import React from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Linkedin,
-  Mail,
-  MoveHorizontal,
-  Twitter,
-} from 'lucide-react';
+import { Linkedin, Mail, Twitter } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -166,37 +159,12 @@ const ProfileCard = React.forwardRef(function ProfileCard(
 ProfileCard.displayName = 'ProfileCard';
 
 export default function TeamGrid() {
-  const carouselRef = React.useRef(null);
-
-  const scrollByCards = React.useCallback((direction = 1) => {
-    if (!carouselRef.current) return;
-
-    const track = carouselRef.current;
-
-    const card = track.querySelector('[data-team-card]');
-    // Scroll intentionally slightly more than one card to ensure snap target updates
-    const step = card ? card.offsetWidth + 24 : track.clientWidth * 0.5;
-
-    track.scrollBy({
-      left: direction * step,
-      behavior: 'smooth',
-    });
-  }, []);
-
-  const handlePrev = React.useCallback(() => {
-    scrollByCards(-1);
-  }, [scrollByCards]);
-
-  const handleNext = React.useCallback(() => {
-    scrollByCards(1);
-  }, [scrollByCards]);
-
   return (
     <section
       className="bg-white py-section-md dark:bg-[#121212] md:py-section-lg"
       id="team"
     >
-      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
+      <div className="container mx-auto max-w-[1300px] px-4 md:px-6">
         <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl">
             <p className="mb-2 text-body-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
@@ -209,41 +177,15 @@ export default function TeamGrid() {
               A cross-sector team advancing research, convening, digital safety
               practice, and partnership-building across the festival.
             </p>
-            <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-stone-500 dark:text-white/60">
-              <MoveHorizontal className="h-4 w-4" />
-              Scroll or drag to explore the full organizing team.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              aria-label="Previous team member"
-              onClick={handlePrev}
-              className="tasi-team-prev rounded-full border border-stone-300 bg-white p-3 text-stone-700 shadow-sm transition hover:border-stone-400 hover:text-stone-900 dark:border-white/15 dark:bg-white/5 dark:text-white/80 dark:hover:border-white/30 dark:hover:text-white"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              aria-label="Next team member"
-              onClick={handleNext}
-              className="tasi-team-next rounded-full border border-stone-300 bg-white p-3 text-stone-700 shadow-sm transition hover:border-stone-400 hover:text-stone-900 dark:border-white/15 dark:bg-white/5 dark:text-white/80 dark:hover:border-white/30 dark:hover:text-white"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
           </div>
         </div>
 
-        <div
-          ref={carouselRef}
-          className="flex gap-6 overflow-x-auto px-1 pb-2 overscroll-x-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden"
-        >
+        <div className="flex flex-wrap justify-center gap-6 pb-2">
           {teamMembers.map((member) => (
             <div
               key={member.name}
               id={member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
-              data-team-card
-              className="min-w-0 shrink-0 basis-[88%] sm:basis-[70%] lg:basis-[calc((100%-3rem)/4)]"
+              className="w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)]"
             >
               <ProfileCard
                 name={member.name}
@@ -253,7 +195,7 @@ export default function TeamGrid() {
                 linkedinUrl={member.linkedinUrl}
                 email={member.email}
                 twitterUrl={member.twitterUrl}
-                className="max-w-[20rem]"
+                className="max-w-none"
               />
             </div>
           ))}

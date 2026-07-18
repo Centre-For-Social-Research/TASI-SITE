@@ -31,7 +31,7 @@ export const sponsorHero = {
 
 export const sponsorMetrics = [
   {
-    value: '1,000+',
+    value: '500+',
     label:
       'Policymakers, platform leaders, and civil society participants in the room',
   },
@@ -154,10 +154,10 @@ export const sponsorPricingPlans = [
 ];
 
 export const sponsorshipProspectus = {
-  href: '/downloads/tasi-2026-sponsorship-prospectus.txt',
-  label: 'Download Prospectus',
+  href: 'https://drive.google.com/file/d/1oG8biMtiPTBxKnABevMPAOsqx2paykwS/view?usp=sharing',
+  label: 'Download Brochure',
   description:
-    'Download the sponsorship prospectus for package details, benefits, deliverables, and engagement options.',
+    'Download the sponsorship brochure for package details, benefits, deliverables, and engagement options.',
 };
 
 export const sponsorPartnerOptions = [

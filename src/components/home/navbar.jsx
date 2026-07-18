@@ -22,7 +22,6 @@ const navItems = [
   {
     label: 'More',
     children: [
-      { label: 'Attendees', href: '/attendees' },
       { label: 'Get Involved', href: '/get-involved' },
       { label: 'Media', href: '/media' },
       { label: 'News and Blogs', href: '/blog' },

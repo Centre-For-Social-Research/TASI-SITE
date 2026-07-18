@@ -7,7 +7,7 @@ import BrandedPageHero from '@/components/ui/branded-page-hero';
 
 import Reception2025Content from './reception-2025-content';
 import Reception2026Update from './reception-2026-update';
-import { ReceptionModeToggle } from './reception-ui';
+import EditionYearToggle from '@/components/ui/edition-year-toggle';
 
 const heroContent = {
   post: {
@@ -59,7 +59,10 @@ export default function ReceptionsPage({ initialMode = 'post' }) {
             </p>
 
             <div className="mt-8">
-              <ReceptionModeToggle mode={mode} onChange={setMode} />
+              <EditionYearToggle
+                year={mode === 'post' ? '2025' : '2026'}
+                onChange={(year) => setMode(year === '2025' ? 'post' : 'pre')}
+              />
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">

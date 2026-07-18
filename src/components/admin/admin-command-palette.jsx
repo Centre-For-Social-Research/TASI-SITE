@@ -2,29 +2,24 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTheme } from '@/components/theme-provider';
 import { useClerk } from '@clerk/nextjs';
 import {
   Users,
   Send,
   ScanLine,
-  Ticket,
   Mail,
-  Moon,
-  Sun,
   LogOut,
   Search,
   CornerDownLeft,
 } from 'lucide-react';
 
-function buildCommands({ router, setTheme, theme, signOut }) {
+function buildCommands({ router, signOut }) {
   const go = (href) => () => router.push(href);
   return [
     {
       id: 'nav-registrations',
       label: 'Go to Registrations',
       group: 'Navigate',
-      hint: 'g r',
       icon: Users,
       run: go('/admin/registrations'),
     },
@@ -32,7 +27,6 @@ function buildCommands({ router, setTheme, theme, signOut }) {
       id: 'nav-check-in',
       label: 'Go to Check-In Console',
       group: 'Navigate',
-      hint: 'g c',
       icon: ScanLine,
       run: go('/admin/check-in'),
     },
@@ -40,7 +34,6 @@ function buildCommands({ router, setTheme, theme, signOut }) {
       id: 'nav-delivery',
       label: 'Go to Delivery Jobs',
       group: 'Navigate',
-      hint: 'g d',
       icon: Send,
       run: go('/admin/delivery'),
     },
@@ -48,24 +41,8 @@ function buildCommands({ router, setTheme, theme, signOut }) {
       id: 'nav-email-jobs',
       label: 'Go to Registration Emails',
       group: 'Navigate',
-      hint: 'g e',
       icon: Mail,
       run: go('/admin/email-jobs'),
-    },
-    {
-      id: 'nav-tickets',
-      label: 'Go to Ticketing',
-      group: 'Navigate',
-      hint: 'g t',
-      icon: Ticket,
-      run: go('/admin/tickets'),
-    },
-    {
-      id: 'theme-toggle',
-      label: theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-      group: 'Preferences',
-      icon: theme === 'dark' ? Sun : Moon,
-      run: () => setTheme(theme === 'dark' ? 'light' : 'dark'),
     },
     {
       id: 'sign-out',
@@ -79,15 +56,14 @@ function buildCommands({ router, setTheme, theme, signOut }) {
 
 export default function AdminCommandPalette({ open, onClose }) {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
   const { signOut } = useClerk();
   const inputRef = useRef(null);
   const [query, setQuery] = useState('');
   const [cursor, setCursor] = useState(0);
 
   const commands = useMemo(
-    () => buildCommands({ router, setTheme, theme, signOut }),
-    [router, setTheme, theme, signOut]
+    () => buildCommands({ router, signOut }),
+    [router, signOut]
   );
 
   const filtered = useMemo(() => {
@@ -189,11 +165,7 @@ export default function AdminCommandPalette({ open, onClose }) {
                     <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-400 dark:text-zinc-500">
                       {cmd.group}
                     </span>
-                    {cmd.hint ? (
-                      <kbd className="hidden shrink-0 rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500 sm:inline dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-400">
-                        {cmd.hint}
-                      </kbd>
-                    ) : active ? (
+                    {active ? (
                       <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-purple-500" />
                     ) : null}
                   </button>

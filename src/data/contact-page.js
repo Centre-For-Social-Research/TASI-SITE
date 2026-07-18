@@ -22,12 +22,22 @@ export const contactHero = {
 
 export const generalContact = {
   phone: '+91 011 46131929',
-  email: 'info1@csrindia.org',
+  email: 'info@trustandsafetyfestival.org',
   website: 'https://www.csrindia.org',
   websiteLabel: 'www.csrindia.org',
 };
 
 export const sponsorshipContacts = [
+  {
+    name: 'JC Le Toquin',
+    email: 'jc@trustandsafetyfestival.com',
+    role: 'Co Founder, Trust & Safety Festival',
+  },
+  {
+    name: 'Caroline Humer',
+    email: 'caroline@trustandsafetyfestival.com',
+    role: 'Co Founder, Trust & Safety Festival',
+  },
   {
     name: 'Jyoti Vadehra',
     email: 'jyoti@csrindia.org',
@@ -37,16 +47,6 @@ export const sponsorshipContacts = [
     name: 'Karuna Nain',
     email: 'karunanain@googlemail.com',
     role: 'Online Safety Expert / Advisor, Centre for Social Research',
-  },
-  {
-    name: 'Caroline Humer',
-    email: 'c.humer@trustandsafetyforum.org',
-    role: 'Co Founder, Trust & Safety Festival',
-  },
-  {
-    name: 'JC Le Toquin',
-    email: 'jc.letoquin@trustandsafetyforum.org',
-    role: 'Co Founder, Trust & Safety Festival',
   },
 ];
 

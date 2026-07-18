@@ -1,10 +1,5 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import {
-  buildFestivalCheckInRecord,
-  getFestivalTicketByQrPayload,
-  searchFestivalTickets,
-} from '@/lib/festival-ticketing-db';
-import {
   getCheckInRecordByToken,
   searchCheckInCandidatesLight,
 } from '@/lib/check-in-operations';
@@ -51,19 +46,6 @@ export async function POST(request) {
     const eventDay = normalizeCheckInDay(body?.eventDay || body?.event_day);
 
     if (token) {
-      const festivalTicket = await getFestivalTicketByQrPayload(token);
-      if (festivalTicket) {
-        return Response.json({
-          success: true,
-          ...buildStatusPayload(
-            buildFestivalCheckInRecord(festivalTicket),
-            true,
-            eventDay
-          ),
-          eventDay,
-        });
-      }
-
       const { registration } = await getCheckInRecordByToken(token);
       return Response.json({
         success: true,
@@ -73,17 +55,11 @@ export async function POST(request) {
     }
 
     if (query) {
-      const [registrations, festivalTickets] = await Promise.all([
-        searchCheckInCandidatesLight(query),
-        searchFestivalTickets(query),
-      ]);
+      const registrations = await searchCheckInCandidatesLight(query);
       return Response.json({
         success: true,
         result: 'lookup',
-        registrations: [
-          ...registrations,
-          ...festivalTickets.map(buildFestivalCheckInRecord),
-        ],
+        registrations,
         eventDay,
       });
     }

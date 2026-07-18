@@ -13,12 +13,7 @@ const SELECT = `
   created_at
 `;
 
-const CONFIRMED_STATUS_ALIASES = new Set([
-  'confirmed',
-  'approved',
-  'accepted',
-  'paid',
-]);
+const CONFIRMED_STATUS_ALIASES = new Set(['confirmed', 'approved', 'accepted']);
 
 function normalizeEmail(value) {
   return String(value || '')

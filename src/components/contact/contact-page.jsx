@@ -81,7 +81,7 @@ export default function ContactPage() {
                   <h3 className="mt-3 text-xl font-black tracking-tight text-stone-900 dark:text-white">
                     {contact.name}
                   </h3>
-                  <p className="mt-3 break-all text-sm font-semibold">
+                  <p className="mt-3 whitespace-nowrap text-sm font-semibold">
                     <a
                       href={`mailto:${contact.email}`}
                       className="text-amber-800 transition-colors hover:text-amber-700 dark:text-amber-300 dark:hover:text-amber-200"

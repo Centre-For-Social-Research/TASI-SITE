@@ -100,7 +100,6 @@ test('remaining public pages expose reusable SEO JSON-LD surfaces', () => {
     'src/app/get-involved/page.jsx',
     'src/app/volunteer-application/page.jsx',
     'src/app/speaker-application/page.jsx',
-    'src/app/attendees/page.jsx',
     'src/app/blog/page.jsx',
     'src/app/plan-your-travel/page.jsx',
   ];
@@ -119,7 +118,6 @@ test('utility and private routes are not offered as indexable search pages', () 
   const signUpPage = readSource('src/app/sign-up/[[...sign-up]]/page.jsx');
   const studioLayout = readSource('src/app/studio/[[...tool]]/layout.jsx');
   const cookieLayout = readSource('src/app/cookie-settings/layout.jsx');
-  const ticketSuccessPage = readSource('src/app/tickets/success/page.jsx');
 
   assert.doesNotMatch(sitemap, /\/cookie-settings/);
   assert.match(sitemap, /\/exhibition/);
@@ -130,23 +128,9 @@ test('utility and private routes are not offered as indexable search pages', () 
     signUpPage,
     studioLayout,
     cookieLayout,
-    ticketSuccessPage,
   ]) {
     assert.match(source, /robots/);
     assert.match(source, /index: false/);
     assert.match(source, /follow: false/);
   }
-});
-
-test('registration page no longer displays public ticket prices', () => {
-  const source = readSource(
-    'src/components/register/festival-ticketing-section.jsx'
-  );
-
-  assert.doesNotMatch(source, /INR 11,800/);
-  assert.doesNotMatch(source, /USD 200/);
-  assert.doesNotMatch(source, /Total Payable/);
-  assert.doesNotMatch(source, /Base Price/);
-  assert.match(source, /Payment Channel/);
-  assert.match(source, /Invoice Treatment/);
 });

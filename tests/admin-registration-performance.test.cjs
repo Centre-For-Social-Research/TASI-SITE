@@ -68,9 +68,9 @@ test('admin shell and dashboard use summary endpoint instead of heavy list polli
   const dashboard = readSource('src/components/admin/admin-dashboard.jsx');
 
   assert.match(shell, /\/api\/admin\/registrations\/summary/);
-  assert.match(dashboard, /\/api\/admin\/registrations\/summary/);
   assert.doesNotMatch(shell, /\/api\/admin\/registrations\?pageSize=1/);
-  assert.doesNotMatch(dashboard, /\/api\/admin\/registrations\?pageSize=1/);
+  // Dashboard performs no fetches of its own — it relies on shell data.
+  assert.doesNotMatch(dashboard, /fetch\(/);
   assert.match(dashboard, /useAdminShellData/);
 });
 

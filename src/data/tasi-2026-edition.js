@@ -1,19 +1,13 @@
 export const tasi2026HeroPills = [
   '14-15 October 2026',
-  'New Delhi',
-  'In person and online',
+  'India International Centre, New Delhi',
 ];
 
 export const tasi2026HeroActions = [
   {
-    label: 'Buy Festival Pass',
-    href: '/register',
-    variant: 'primary',
-  },
-  {
     label: 'Register For TASI 2026',
     href: '/register',
-    variant: 'secondary',
+    variant: 'primary',
   },
 ];
 

@@ -57,17 +57,12 @@ test('upload validator rejects unsupported extensions and GIF content in source'
 
 test('public upload endpoints use shared multipart upload validation', () => {
   const registrationRoute = read('src/app/api/registrations/create/route.js');
-  const ticketRoute = read('src/app/api/tickets/upload-photo/route.js');
 
-  for (const route of [registrationRoute, ticketRoute]) {
-    assert.match(route, /protectPublicMultipartPostRoute/);
-    assert.match(route, /validateUploadedImageFile/);
-    assert.doesNotMatch(route, /imageSize\(buffer\)/);
-    assert.doesNotMatch(route, /ACCEPTED_MIME_TYPES/);
-  }
-
+  assert.match(registrationRoute, /protectPublicMultipartPostRoute/);
+  assert.match(registrationRoute, /validateUploadedImageFile/);
+  assert.doesNotMatch(registrationRoute, /imageSize\(buffer\)/);
+  assert.doesNotMatch(registrationRoute, /ACCEPTED_MIME_TYPES/);
   assert.match(registrationRoute, /UploadValidationError/);
-  assert.doesNotMatch(ticketRoute, /protectPublicPostRoute/);
 });
 
 test('multipart protection is separate from JSON-only protection', () => {
@@ -83,12 +78,7 @@ test('public upload form inputs advertise the same JPEG and PNG allowlist', () =
   const registrationForm = read(
     'src/components/register/registration-form.jsx'
   );
-  const ticketingSection = read(
-    'src/components/register/festival-ticketing-section.jsx'
-  );
 
-  for (const source of [registrationForm, ticketingSection]) {
-    assert.match(source, /image\/jpeg,image\/png/);
-    assert.match(source, /jpg', 'jpeg', 'png/);
-  }
+  assert.match(registrationForm, /image\/jpeg,image\/png/);
+  assert.match(registrationForm, /jpg', 'jpeg', 'png/);
 });

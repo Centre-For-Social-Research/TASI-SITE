@@ -48,7 +48,6 @@ The festival runs both in‑person and online, organized by the Centre for Socia
 - [Blog Home](https://trustandsafetyindia.org/blog): collection of festival‑related posts.  
 - [Early‑Bird Registration](https://trustandsafetyindia.org/blog/early-bird-registration): announcement of early registration discounts.  
 - [Call for Proposals Open](https://trustandsafetyindia.org/blog/call-for-proposals-open): invitation to submit session proposals.  
-- [Tackling Harms of Non‑Consensual Intimate Images](https://trustandsafetyindia.org/blog/tackling-harms-of-non-consensual-intimate-images): article on addressing image‑based abuse.  
 
 ## Legal
 - [Privacy Policy](https://trustandsafetyindia.org/privacy-policy): privacy practices and data handling.  
@@ -61,5 +60,4 @@ The festival runs both in‑person and online, organized by the Centre for Socia
 - [Partner: Meta](https://trustandsafetyindia.org/partners/meta): partnership details with Meta.  
 - [Partner: YouTube](https://trustandsafetyindia.org/partners/youtube): partnership details with YouTube.  
 - [Partner: Booking.com](https://trustandsafetyindia.org/partners/booking-com): partnership details with Booking.com.  
-- [Attendees](https://trustandsafetyindia.org/attendees): attendee resources and information.  
 - [Sitemap](https://trustandsafetyindia.org/sitemap.xml): XML sitemap for the site.

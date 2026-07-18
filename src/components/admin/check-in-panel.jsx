@@ -587,11 +587,7 @@ export default function CheckInPanel({ operator }) {
                   <button
                     type="button"
                     onClick={() =>
-                      completeCheckIn(
-                        registration.check_in_kind === 'festival_ticket'
-                          ? { festivalTicketId: registration.id }
-                          : { registrationId: registration.id }
-                      )
+                      completeCheckIn({ registrationId: registration.id })
                     }
                     disabled={scanSubmitting}
                     className="mt-3 h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"

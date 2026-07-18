@@ -73,7 +73,7 @@ const conveningPartners = [
   {
     name: 'Trust and Safety Festival',
     body: [
-      'The Trust and Safety Festival is a global platform bringing together technology companies, policymakers, researchers, and civil society to advance safer digital ecosystems through collaboration.',
+      'The Trust & Safety Festival is a global platform bringing together technology companies, policymakers, researchers, and civil society across continents to advance safer digital ecosystems through collaboration.',
       'Its partnership with TASI helps connect Indian priorities with international dialogue while keeping the work grounded in implementation and public interest.',
     ],
   },
@@ -188,7 +188,7 @@ export default function AboutPage() {
                 <span className="text-rc-secondary dark:text-white">
                   trust and safety
                 </span>{' '}
-                platform built for action.
+                convening built for action.
               </h2>
               <div className="mt-8 space-y-6 text-base leading-[1.65] text-white/90 md:text-[17px]">
                 <p>

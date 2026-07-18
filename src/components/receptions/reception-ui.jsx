@@ -3,31 +3,6 @@
 import Image from 'next/image';
 import { MoveRight } from 'lucide-react';
 
-export function ReceptionModeToggle({ mode, onChange }) {
-  return (
-    <div className="inline-flex rounded-full border border-white/20 bg-white/10 p-1 backdrop-blur-sm">
-      {['post', 'pre'].map((value) => {
-        const active = mode === value;
-
-        return (
-          <button
-            key={value}
-            type="button"
-            onClick={() => onChange(value)}
-            className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-[0.18em] transition ${
-              active
-                ? 'bg-[#fff] text-[#140f26]'
-                : 'text-white/80 hover:text-white'
-            }`}
-          >
-            {value === 'post' ? '2025' : '2026'}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 export function ReceptionSpeakerBadge({ person }) {
   return (
     <article className="rounded-[10px] border border-white/10 bg-white/[0.08] p-4 backdrop-blur-sm">

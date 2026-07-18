@@ -13,17 +13,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
-import {
-  buildAdminNavigation,
-  buildAdminNotificationId,
-  buildAdminNotifications,
-  buildAdminStatPills,
-  filterUnreadAdminNotifications,
-} from '@/lib/admin-shell-utils.cjs';
-import {
-  buildAdminNotificationStorageKey,
-  resolveAdminShellRuntimeState,
-} from '@/lib/admin-runtime-guards.cjs';
+import { buildAdminNavigation } from '@/lib/admin-shell-utils.cjs';
+import { resolveAdminShellRuntimeState } from '@/lib/admin-runtime-guards.cjs';
 import AdminCommandPalette from '@/components/admin/admin-command-palette';
 
 const AdminShellDataContext = createContext(null);
@@ -120,22 +111,6 @@ const Ico = {
       <path d="M14 14h3v3h-3zM20 14v3M14 20h7" />
     </svg>
   ),
-  ticket: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-      strokeLinecap="round"
-      {...p}
-    >
-      <path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z" />
-      <path d="M13 6v12" strokeDasharray="2 2" />
-    </svg>
-  ),
   search: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -150,53 +125,6 @@ const Ico = {
     >
       <circle cx="11" cy="11" r="6" />
       <path d="M20 20l-3.5-3.5" />
-    </svg>
-  ),
-  bell: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...p}
-    >
-      <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z" />
-      <path d="M10 20a2 2 0 0 0 4 0" />
-    </svg>
-  ),
-  sun: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...p}
-    >
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5" />
-    </svg>
-  ),
-  moon: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...p}
-    >
-      <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
     </svg>
   ),
   logout: (p) => (
@@ -214,53 +142,6 @@ const Ico = {
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <polyline points="16 17 21 12 16 7" />
       <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
-  ),
-  sliders: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...p}
-    >
-      <path d="M4 7h10M4 12h6M4 17h14" />
-      <circle cx="17" cy="7" r="1.5" />
-      <circle cx="13" cy="12" r="1.5" />
-      <circle cx="19" cy="17" r="1.5" />
-    </svg>
-  ),
-  x: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      {...p}
-    >
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  ),
-  check: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...p}
-    >
-      <path d="M5 12l5 5L20 7" />
     </svg>
   ),
   audit: (p) => (
@@ -303,7 +184,6 @@ const NAV_ICONS = {
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
   '/admin/check-in': Ico.qr,
-  '/admin/tickets': Ico.ticket,
   '/admin/audit': Ico.audit,
   '/admin/settings': Ico.gear,
 };
@@ -334,11 +214,6 @@ const PAGE_TITLES = {
     title: 'Check-in',
     meta: 'QR scanner ready',
   },
-  '/admin/tickets': {
-    kicker: 'FESTIVAL · TICKETS',
-    title: 'Orders',
-    meta: 'Razorpay · live',
-  },
   '/admin/audit': {
     kicker: 'SYSTEM · AUDIT',
     title: 'Audit Trail',
@@ -358,7 +233,7 @@ const ADM_NAV_GROUPS = [
   },
   {
     group: 'Day-of',
-    keys: ['/admin/check-in', '/admin/tickets'],
+    keys: ['/admin/check-in'],
   },
   {
     group: 'System',
@@ -562,18 +437,6 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
           }}
         >
           <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              width: 120,
-              background:
-                'radial-gradient(circle at 100% 0%, var(--adm-accent-soft), transparent 70%)',
-              pointerEvents: 'none',
-            }}
-          />
-          <div
             className="adm-eyebrow"
             style={{ color: 'var(--adm-accent)', marginBottom: 6 }}
           >
@@ -689,16 +552,7 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
 }
 
 /* ── TopBar ──────────────────────────────────────────────────────────────── */
-function TopBar({
-  currentPath,
-  shellState,
-  theme,
-  setTheme,
-  attentionCount,
-  onNotifications,
-  onPalette,
-  operator,
-}) {
+function TopBar({ currentPath, shellState, onPalette, operator }) {
   const now = useClock();
   const titleDef =
     PAGE_TITLES[currentPath] || PAGE_TITLES['/admin/registrations'];
@@ -919,58 +773,6 @@ function TopBar({
         >
           <Ico.search />
         </button>
-        <button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          title="Toggle theme"
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            border: '1px solid var(--adm-line)',
-            background: 'var(--adm-panel)',
-            color: 'var(--adm-ink-2)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {theme === 'dark' ? <Ico.sun /> : <Ico.moon />}
-        </button>
-        <button
-          onClick={onNotifications}
-          title="Notifications"
-          style={{
-            position: 'relative',
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            border: '1px solid var(--adm-line)',
-            background: 'var(--adm-panel)',
-            color: 'var(--adm-ink-2)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Ico.bell />
-          {attentionCount > 0 && (
-            <span
-              style={{
-                position: 'absolute',
-                top: 7,
-                right: 8,
-                width: 7,
-                height: 7,
-                borderRadius: 999,
-                background: 'var(--adm-bad)',
-                border: '2px solid var(--adm-panel)',
-              }}
-            />
-          )}
-        </button>
-
         {/* Current user */}
         <div
           className="adm-topbar-operator"
@@ -1083,282 +885,10 @@ function TopBar({
   );
 }
 
-/* ── Notifications panel ─────────────────────────────────────────────────── */
-function NotificationsPanel({
-  open,
-  onClose,
-  notifications,
-  unread,
-  onMarkRead,
-  onMarkAll,
-  statPills,
-}) {
-  if (!open) return null;
-  const toneColor = {
-    warning: 'var(--adm-warn)',
-    danger: 'var(--adm-bad)',
-    success: 'var(--adm-ok)',
-    accent: 'var(--adm-accent)',
-    default: 'var(--adm-ink-3)',
-    info: 'var(--adm-info)',
-  };
-  return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50 }}>
-      <div
-        onClick={onClose}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'rgba(0,0,0,0.5)',
-        }}
-      />
-      <div
-        className="adm-notif-panel"
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: 420,
-          background: 'var(--adm-panel)',
-          borderLeft: '1px solid var(--adm-line-strong)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          boxShadow: '-40px 0 80px rgba(0,0,0,0.35)',
-        }}
-      >
-        {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderBottom: '1px solid var(--adm-line)',
-          }}
-        >
-          <div className="adm-eyebrow" style={{ color: 'var(--adm-accent)' }}>
-            NOTIFICATIONS
-          </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            {unread.length > 0 && (
-              <button
-                onClick={onMarkAll}
-                style={{
-                  fontSize: 11,
-                  fontFamily: 'var(--adm-mono)',
-                  padding: '4px 10px',
-                  borderRadius: 10,
-                  border: '1px solid var(--adm-line)',
-                  background: 'transparent',
-                  color: 'var(--adm-ink-3)',
-                  cursor: 'pointer',
-                }}
-              >
-                MARK ALL READ
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 10,
-                border: '1px solid var(--adm-line)',
-                background: 'var(--adm-panel-2)',
-                color: 'var(--adm-ink-2)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Ico.x />
-            </button>
-          </div>
-        </div>
-
-        {/* Live summary pills */}
-        <div
-          style={{
-            padding: '14px 20px',
-            borderBottom: '1px solid var(--adm-line)',
-            display: 'flex',
-            gap: 8,
-            flexWrap: 'wrap',
-          }}
-        >
-          {statPills.map((pill) => (
-            <span
-              key={pill.key}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '4px 10px',
-                borderRadius: 10,
-                background: 'var(--adm-panel-2)',
-                border: '1px solid var(--adm-line)',
-                fontFamily: 'var(--adm-mono)',
-                fontSize: 10.5,
-              }}
-            >
-              <span
-                style={{
-                  color: toneColor[pill.tone] || 'var(--adm-ink-3)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
-              >
-                {pill.label}
-              </span>
-              <span style={{ color: 'var(--adm-ink)', fontWeight: 600 }}>
-                {pill.value}
-              </span>
-            </span>
-          ))}
-        </div>
-
-        {/* Items */}
-        <div
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: '12px 20px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 10,
-          }}
-        >
-          {unread.length === 0 ? (
-            <div
-              style={{
-                padding: '20px',
-                borderRadius: 10,
-                border: '1px solid var(--adm-ok-soft)',
-                background: 'var(--adm-ok-soft)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: 'var(--adm-ok)',
-                  marginBottom: 4,
-                }}
-              >
-                All clear
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--adm-ink-3)',
-                  lineHeight: 1.5,
-                }}
-              >
-                No active alerts. New issues will surface here automatically.
-              </div>
-            </div>
-          ) : (
-            unread.map((item) => (
-              <div
-                key={buildAdminNotificationId(item)}
-                style={{
-                  padding: 16,
-                  borderRadius: 10,
-                  background: 'var(--adm-panel-2)',
-                  border: '1px solid var(--adm-line)',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: 'var(--adm-ink)',
-                        marginBottom: 4,
-                      }}
-                    >
-                      {item.title}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: 'var(--adm-ink-3)',
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {item.detail}
-                    </div>
-                  </div>
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 5,
-                      padding: '3px 8px',
-                      borderRadius: 10,
-                      background:
-                        (toneColor[item.tone] || 'var(--adm-ink-3)') + '22',
-                      color: toneColor[item.tone] || 'var(--adm-ink-3)',
-                      fontFamily: 'var(--adm-mono)',
-                      fontSize: 10,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 5,
-                        height: 5,
-                        borderRadius: 999,
-                        background: 'currentColor',
-                      }}
-                    />
-                    {item.tone}
-                  </span>
-                </div>
-                <div style={{ marginTop: 12, textAlign: 'right' }}>
-                  <button
-                    onClick={() => onMarkRead(item)}
-                    style={{
-                      fontSize: 11,
-                      fontFamily: 'var(--adm-mono)',
-                      padding: '4px 10px',
-                      borderRadius: 10,
-                      border: '1px solid var(--adm-line)',
-                      background: 'var(--adm-panel)',
-                      color: 'var(--adm-ink-3)',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    DISMISS
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ── Main shell ──────────────────────────────────────────────────────────── */
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
   const router = useRouter();
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [runtimeIssue, setRuntimeIssue] = useState(null);
   const [shellState, setShellState] = useState({
@@ -1367,54 +897,9 @@ export default function AdminShell({ operator, currentPath, children }) {
   });
   const shellStateRef = useRef(shellState);
 
-  const [theme, setTheme] = useState('dark');
-  useEffect(() => {
-    const stored = localStorage.getItem('adm-theme');
-    if (stored && stored !== 'dark') setTheme(stored);
-  }, []);
-  useEffect(() => {
-    localStorage.setItem('adm-theme', theme);
-  }, [theme]);
-  useEffect(() => {
-    if (typeof document === 'undefined') return undefined;
-
-    const root = document.documentElement;
-    const previousTheme = root.getAttribute('data-adm-portal-theme');
-    root.setAttribute('data-adm-portal-theme', theme);
-
-    return () => {
-      if (previousTheme) {
-        root.setAttribute('data-adm-portal-theme', previousTheme);
-      } else {
-        root.removeAttribute('data-adm-portal-theme');
-      }
-    };
-  }, [theme]);
-
-  const storageKey = useMemo(
-    () => buildAdminNotificationStorageKey(operator),
-    [operator]
-  );
-  const [readNotificationIds, setReadNotificationIds] = useState([]);
-  const [storageReady, setStorageReady] = useState(false);
-
   useEffect(() => {
     shellStateRef.current = shellState;
   }, [shellState]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    setStorageReady(false);
-    try {
-      const stored = window.localStorage.getItem(storageKey);
-      const parsed = stored ? JSON.parse(stored) : [];
-      setReadNotificationIds(Array.isArray(parsed) ? parsed : []);
-    } catch {
-      setReadNotificationIds([]);
-    } finally {
-      setStorageReady(true);
-    }
-  }, [storageKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1473,59 +958,18 @@ export default function AdminShell({ operator, currentPath, children }) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const leaderMap = {
-      r: '/admin/registrations',
-      c: '/admin/check-in',
-      d: '/admin/delivery',
-      e: '/admin/email-jobs',
-      t: '/admin/tickets',
-      g: '/admin',
-    };
-    let armed = false;
-    let timer = null;
-    const isInput = (t) =>
-      (t && ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName)) ||
-      t?.isContentEditable;
     const onKey = (e) => {
       const meta = e.metaKey || e.ctrlKey;
       if (meta && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setPaletteOpen((o) => !o);
-        return;
-      }
-      if (isInput(e.target)) return;
-      if (e.key === 'g' && !meta) {
-        armed = true;
-        window.clearTimeout(timer);
-        timer = window.setTimeout(() => {
-          armed = false;
-        }, 1200);
-        return;
-      }
-      if (armed) {
-        const dest = leaderMap[e.key.toLowerCase()];
-        armed = false;
-        window.clearTimeout(timer);
-        if (dest) {
-          e.preventDefault();
-          router.push(dest);
-        }
       }
     };
     window.addEventListener('keydown', onKey);
     return () => {
       window.removeEventListener('keydown', onKey);
-      window.clearTimeout(timer);
     };
-  }, [router]);
-
-  useEffect(() => {
-    if (!storageReady || typeof window === 'undefined') return;
-    window.localStorage.setItem(
-      storageKey,
-      JSON.stringify(readNotificationIds)
-    );
-  }, [readNotificationIds, storageKey, storageReady]);
+  }, []);
 
   const navSections = useMemo(
     () =>
@@ -1536,51 +980,14 @@ export default function AdminShell({ operator, currentPath, children }) {
       }),
     [currentPath, shellState]
   );
-  const statPills = useMemo(
-    () =>
-      buildAdminStatPills({
-        summary: shellState.summary,
-        jobs: shellState.jobs,
-      }),
-    [shellState]
-  );
-  const notifications = useMemo(
-    () =>
-      buildAdminNotifications({
-        summary: shellState.summary,
-        jobs: shellState.jobs,
-      }),
-    [shellState]
-  );
-  const unreadNotifications = useMemo(
-    () =>
-      filterUnreadAdminNotifications(
-        notifications,
-        new Set(readNotificationIds)
-      ),
-    [notifications, readNotificationIds]
-  );
-  const attentionCount = unreadNotifications.filter((item) =>
-    ['warning', 'danger', 'accent'].includes(item.tone)
-  ).length;
-
   async function handleSignOut() {
     await signOut({ redirectUrl: '/' });
-  }
-
-  function markRead(n) {
-    const id = buildAdminNotificationId(n);
-    setReadNotificationIds((cur) => (cur.includes(id) ? cur : [...cur, id]));
-  }
-  function markAll() {
-    setReadNotificationIds(notifications.map(buildAdminNotificationId));
   }
 
   return (
     <AdminShellDataContext.Provider value={{ shellState, runtimeIssue }}>
       <div
         className="admin-v2"
-        data-adm-theme={theme}
         style={{
           minHeight: '100vh',
           display: 'flex',
@@ -1606,10 +1013,6 @@ export default function AdminShell({ operator, currentPath, children }) {
           <TopBar
             currentPath={currentPath}
             shellState={shellState}
-            theme={theme}
-            setTheme={setTheme}
-            attentionCount={attentionCount}
-            onNotifications={() => setNotificationsOpen(true)}
             onPalette={() => setPaletteOpen(true)}
             operator={operator}
           />
@@ -1639,15 +1042,6 @@ export default function AdminShell({ operator, currentPath, children }) {
           </main>
         </div>
 
-        <NotificationsPanel
-          open={notificationsOpen}
-          onClose={() => setNotificationsOpen(false)}
-          notifications={notifications}
-          unread={unreadNotifications}
-          onMarkRead={markRead}
-          onMarkAll={markAll}
-          statPills={statPills}
-        />
         <AdminCommandPalette
           open={paletteOpen}
           onClose={() => setPaletteOpen(false)}

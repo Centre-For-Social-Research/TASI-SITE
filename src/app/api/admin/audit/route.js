@@ -17,7 +17,6 @@ export async function GET(request) {
     statusHistoryResult,
     emailJobsResult,
     passJobsResult,
-    paymentAuditResult,
     emailOverridesResult,
   ] = await Promise.allSettled([
     supabase
@@ -41,12 +40,6 @@ export async function GET(request) {
       .select(
         'id, status, total_items, sent_items, failed_items, created_by_email, completed_at, created_at'
       )
-      .order('created_at', { ascending: false })
-      .limit(20),
-
-    supabase
-      .from('festival_payment_audit_log')
-      .select('id, event_type, payment_stream, payload, created_at')
       .order('created_at', { ascending: false })
       .limit(20),
 
@@ -125,23 +118,6 @@ export async function GET(request) {
         action = `pass job · ${j.status} · ${j.total_items || 0} queued`;
       }
       entries.push({ actor, action, ts: when, kind: 'pass_job', ref: j.id });
-    }
-  }
-
-  if (
-    paymentAuditResult.status === 'fulfilled' &&
-    !paymentAuditResult.value.error
-  ) {
-    for (const p of paymentAuditResult.value.data || []) {
-      const stream = p.payment_stream ? ` · ${p.payment_stream}` : '';
-      const action = `razorpay · ${p.event_type || 'event'}${stream}`;
-      entries.push({
-        actor: 'system',
-        action,
-        ts: p.created_at,
-        kind: 'payment',
-        ref: p.id,
-      });
     }
   }
 
