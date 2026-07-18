@@ -7,6 +7,7 @@ import {
 } from '@/lib/api-idempotency';
 import { isValidEmail, sanitizeEmail } from '@/lib/input-sanitizers';
 import { sendInboundNotificationEmail } from '@/lib/resend';
+import { sendNewsletterWelcomeEmail } from '@/lib/newsletter-email';
 import { after } from 'next/server';
 
 export async function POST(request) {
@@ -76,12 +77,18 @@ export async function POST(request) {
 
     after(async () => {
       try {
+        await sendNewsletterWelcomeEmail(email);
+      } catch (emailError) {
+        console.error('Failed to send newsletter welcome email.', emailError);
+      }
+      try {
         await sendInboundNotificationEmail({
-          subject: 'New TASI newsletter subscriber',
+          subject: 'New newsletter subscriber',
           text: [
-            'A new newsletter subscriber joined through the website.',
-            `Source: site-footer`,
+            'A new subscriber just joined the TASI mailing list.',
             `Email: ${email}`,
+            'Source: website footer',
+            'They have already received the welcome email. No action needed.',
           ].join('\n'),
           replyTo: email,
         });
