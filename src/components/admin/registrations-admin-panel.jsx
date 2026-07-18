@@ -281,6 +281,36 @@ const REGISTRATION_COLUMNS = [
   { id: 'checkin', name: 'Check-In', width: 160, cellRenderer: CheckInCell },
   { id: 'actions', name: 'Actions', width: 320, cellRenderer: ActionsCell },
 ];
+
+// Columns hidden below the wide breakpoint. Core review columns (select,
+// registrant, email, status, actions) always stay visible; the hidden data
+// remains available through the registrant detail drawer.
+const COMPACT_HIDDEN_COLUMN_IDS = new Set(['location', 'qr', 'checkin']);
+const WIDE_GRID_MEDIA_QUERY = '(min-width: 1400px)';
+
+function useResponsiveRegistrationColumns() {
+  const [isWide, setIsWide] = useState(true);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(WIDE_GRID_MEDIA_QUERY);
+    const sync = () => setIsWide(mediaQuery.matches);
+    sync();
+    mediaQuery.addEventListener('change', sync);
+    return () => mediaQuery.removeEventListener('change', sync);
+  }, []);
+
+  return useMemo(
+    () =>
+      isWide
+        ? REGISTRATION_COLUMNS
+        : REGISTRATION_COLUMNS.map((column) =>
+            COMPACT_HIDDEN_COLUMN_IDS.has(column.id)
+              ? { ...column, hide: true }
+              : column
+          ),
+    [isWide]
+  );
+}
 // ─────────────────────────────────────────────────────────────────────────────
 
 function ReviewSummary({ summary }) {
@@ -494,6 +524,16 @@ function RegistrantDrawer({
               </p>
               <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
                 {activeRegistration.priority_tier || 'Standard'}
+              </p>
+            </div>
+            <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Location
+              </p>
+              <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
+                {[activeRegistration.city, activeRegistration.country]
+                  .filter(Boolean)
+                  .join(', ') || 'Not provided'}
               </p>
             </div>
             <div className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]">
@@ -773,6 +813,7 @@ export default function RegistrationsAdminPanel({ operator }) {
     [state.registrations]
   );
   const ds = useClientDataSource({ data: orderedRegistrations });
+  const gridColumns = useResponsiveRegistrationColumns();
 
   const showToast = (message, tone = 'default') => {
     if (tone === 'success') toast.success(message);
@@ -1546,11 +1587,7 @@ export default function RegistrationsAdminPanel({ operator }) {
               className="admin-grid-navy ln-grid"
               style={{ height: '560px' }}
             >
-              <Grid
-                columns={REGISTRATION_COLUMNS}
-                rowSource={ds}
-                rowHeight={72}
-              />
+              <Grid columns={gridColumns} rowSource={ds} rowHeight={72} />
             </div>
           )}
         </RegistrationGridCtx.Provider>

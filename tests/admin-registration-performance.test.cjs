@@ -63,6 +63,22 @@ test('admin registration client keeps attendee cache in memory only', () => {
   assert.doesNotMatch(source, /sessionStorage/);
 });
 
+test('registrations grid hides low-value columns on narrow screens while keeping core columns', () => {
+  const source = readSource(
+    'src/components/admin/registrations-admin-panel.jsx'
+  );
+
+  assert.match(source, /COMPACT_HIDDEN_COLUMN_IDS/);
+  assert.match(source, /\(min-width: 1400px\)/);
+  assert.match(source, /matchMedia/);
+  assert.match(source, /'location', 'qr', 'checkin'/);
+  // Core review columns remain unconditional.
+  assert.match(source, /id: 'registrant'/);
+  assert.match(source, /id: 'email'/);
+  assert.match(source, /id: 'status'/);
+  assert.match(source, /id: 'actions'/);
+});
+
 test('admin shell and dashboard use summary endpoint instead of heavy list polling', () => {
   const shell = readSource('src/components/admin/admin-shell.jsx');
   const dashboard = readSource('src/components/admin/admin-dashboard.jsx');
