@@ -502,6 +502,7 @@ export default function SettingsPanel() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount; state updates resolve after await
     load();
   }, []);
 
