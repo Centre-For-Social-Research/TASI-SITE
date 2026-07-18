@@ -56,7 +56,7 @@ export default async function Page({ searchParams }) {
           forceRedirectUrl={redirectTarget}
           fallbackRedirectUrl={redirectTarget}
           fallback={<ClerkSignInFallback />}
-          withSignUp={false}
+          withSignUp
         />
       </div>
     </>
