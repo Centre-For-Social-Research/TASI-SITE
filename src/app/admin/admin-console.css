@@ -167,7 +167,12 @@
   background: #fffdf8 !important;
   border-left: 1px solid rgba(41, 37, 36, 0.22) !important;
   color: #1c1917 !important;
-  font-family: var(--font-admin-sans, 'DM Sans', system-ui, sans-serif) !important;
+  font-family: var(
+    --font-admin-sans,
+    'DM Sans',
+    system-ui,
+    sans-serif
+  ) !important;
 }
 
 /* ── Mobile nav tabs ────────────────────────────────────────────────────── */

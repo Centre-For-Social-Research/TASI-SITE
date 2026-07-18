@@ -9,8 +9,8 @@ export default function GlobalCta() {
           Be Part of the Conversation
         </h2>
         <p className="mx-auto mt-4 max-w-3xl text-lg md:text-[22px] text-gray-800 dark:text-gray-200 font-normal leading-relaxed text-center">
-          Join 500+ delegates shaping the future of digital trust, safety and
-          AI governance in India and beyond.
+          Join 500+ delegates shaping the future of digital trust, safety and AI
+          governance in India and beyond.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row w-full sm:w-auto">
           {/* Primary Button - Accent Orange */}
