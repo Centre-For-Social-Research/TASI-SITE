@@ -289,10 +289,10 @@ export default function ExhibitionPage() {
                 <p className="mt-6 text-sm leading-relaxed text-stone-500 dark:text-stone-400">
                   Prefer to reach out directly? Write to{' '}
                   <a
-                    href="mailto:info1@csrindia.org"
+                    href="mailto:info@trustandsafetyfestival.org"
                     className="font-semibold text-[#5c0f4f] underline underline-offset-4 dark:text-rc-secondary"
                   >
-                    info1@csrindia.org
+                    info@trustandsafetyfestival.org
                   </a>{' '}
                   and the team will route your enquiry with the same context.
                 </p>
