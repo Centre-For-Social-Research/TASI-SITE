@@ -155,10 +155,10 @@ export default function TermsOfServicePage() {
           </strong>
           Email:{' '}
           <a
-            href="mailto:info1@csrindia.org"
+            href="mailto:info@trustandsafetyfestival.org"
             className="text-orange-700 underline dark:text-orange-300"
           >
-            info1@csrindia.org
+            info@trustandsafetyfestival.org
           </a>
           <br />
           Phone: +91 011 46131929

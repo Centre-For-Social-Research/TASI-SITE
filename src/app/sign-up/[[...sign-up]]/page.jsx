@@ -17,5 +17,14 @@ export default async function Page({ searchParams }) {
     resolvedSearchParams?.redirect_url
   );
 
-  redirect(`/sign-in?redirect_url=${encodeURIComponent(redirectTarget)}`);
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(resolvedSearchParams || {})) {
+    if (key === 'redirect_url') continue;
+    for (const item of Array.isArray(value) ? value : [value]) {
+      if (typeof item === 'string') params.append(key, item);
+    }
+  }
+  params.set('redirect_url', redirectTarget);
+
+  redirect(`/sign-in?${params.toString()}`);
 }
