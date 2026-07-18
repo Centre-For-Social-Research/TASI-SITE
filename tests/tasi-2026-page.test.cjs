@@ -50,12 +50,11 @@ test('TASI 2026 edition data keeps only live page datasets', async () => {
 
   assert.deepEqual(data.tasi2026HeroPills, [
     '14-15 October 2026',
-    'New Delhi',
-    'In person and online',
+    'India International Centre, New Delhi',
   ]);
   assert.deepEqual(
     data.tasi2026HeroActions.map((action) => action.label),
-    ['Buy Festival Pass', 'Register For TASI 2026']
+    ['Register For TASI 2026']
   );
   assert.equal(data.tasi2026FormatItems.length, 4);
   assert.equal(data.tasi2026StructureStats.length, 3);

@@ -57,14 +57,6 @@ export async function GET() {
       optional: false,
     },
     {
-      key: 'razorpay',
-      label: 'Razorpay',
-      ok: Boolean(
-        process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET
-      ),
-      optional: false,
-    },
-    {
       key: 'resend',
       label: 'Resend',
       ok: Boolean(process.env.RESEND_API_KEY),

@@ -25,17 +25,9 @@ test('schema stores registration check-ins separately for each event day', () =>
   );
 });
 
-test('schema stores festival ticket check-ins separately for each event day', () => {
-  assert.match(
-    schemaSql,
-    /create table if not exists public\.festival_ticket_daily_check_ins/
-  );
-  assert.match(schemaSql, /unique \(ticket_id, event_day\)/);
-  assert.match(schemaSql, /idx_festival_ticket_daily_check_ins_day_checked/);
-  assert.match(
-    schemaSql,
-    /alter table public\.festival_ticket_daily_check_ins enable row level security/
-  );
+test('schema keeps removed festival ticketing tables out', () => {
+  assert.doesNotMatch(schemaSql, /festival_ticket/);
+  assert.doesNotMatch(schemaSql, /ticket_orders/);
 });
 
 test('scan log records the selected event day for separate activity datasets', () => {

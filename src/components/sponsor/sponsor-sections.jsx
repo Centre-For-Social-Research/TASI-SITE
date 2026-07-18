@@ -146,7 +146,7 @@ export function SponsorPartnerOptionsSection() {
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="max-w-2xl">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-700 dark:!text-orange-700">
-                Prospectus
+                Brochure
               </p>
               <p className="mt-3 text-base leading-relaxed text-stone-700 dark:!text-stone-700 md:text-lg">
                 {sponsorshipProspectus.description}
@@ -154,7 +154,8 @@ export function SponsorPartnerOptionsSection() {
             </div>
             <a
               href={sponsorshipProspectus.href}
-              download
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center rounded-full !bg-white px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] !text-[#140f26] transition hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26] dark:hover:!bg-white/90"
             >
               {sponsorshipProspectus.label}

@@ -3,14 +3,12 @@ import BrandedPageHero from '@/components/ui/branded-page-hero';
 import {
   formatRegistrationReviewCopy,
   generalAccessIntro,
-  paidTicketingIntro,
   registerPageHero,
   registerSupport,
   registrationFaqs,
   registrationOverview,
   registrationSteps,
 } from '@/data/register-page';
-import FestivalTicketingSection from './festival-ticketing-section';
 import RegistrationForm from './registration-form';
 
 export default function RegisterPage() {
@@ -111,27 +109,6 @@ export default function RegisterPage() {
             <RegistrationForm />
           </div>
         </section>
-
-        <section className="relative mt-14 overflow-hidden bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] py-14 text-center md:py-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,217,25,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.08),transparent_30%)]" />
-          <div className="relative mx-auto max-w-6xl px-6 sm:px-8">
-            <div className="flex items-center gap-4 text-white/75">
-              <div className="h-px flex-1 bg-white/20" />
-              <span className="text-[1.75rem] font-black uppercase tracking-[0.18em] text-amber-200">
-                {paidTicketingIntro.dividerLabel}
-              </span>
-              <div className="h-px flex-1 bg-white/20" />
-            </div>
-            <h2 className="mt-10 text-3xl font-black tracking-tight text-white md:text-5xl">
-              {paidTicketingIntro.title}
-            </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-white/80 md:text-base">
-              {paidTicketingIntro.description}
-            </p>
-          </div>
-        </section>
-
-        <FestivalTicketingSection />
       </main>
     </>
   );

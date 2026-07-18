@@ -3,96 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAdminShellData } from '@/components/admin/admin-shell';
 
-/* ── Seeded mini-sparkline generator (deterministic for hydration) ─────── */
-function makeSpark(seed, points = 48, base = 8, amp = 6) {
-  let s = seed >>> 0;
-  const rng = () => {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    return s / 0xffffffff;
-  };
-  return Array.from({ length: points }, (_, i) => {
-    const t = i / points;
-    return Math.max(
-      0,
-      Math.floor(
-        base + Math.sin(t * Math.PI * 2) * amp * 0.4 + (rng() - 0.5) * amp
-      )
-    );
-  });
-}
-
-const SPARK_PENDING = makeSpark(1013, 48, 10, 6);
-const SPARK_CHECKINS = makeSpark(2026, 60, 5, 4);
-const SPARK_QUEUE = makeSpark(3141, 40, 12, 8);
-
-/* ── Sparkline SVG ──────────────────────────────────────────────────────── */
-function Sparkline({
-  data,
-  width = 200,
-  height = 36,
-  stroke = 'var(--adm-accent)',
-  fill = 'var(--adm-accent-soft)',
-  live = false,
-}) {
-  const path = useMemo(() => {
-    if (!data?.length) return { d: '', area: '', last: [0, 0] };
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const span = max - min || 1;
-    const step = width / (data.length - 1);
-    const pts = data.map((v, i) => [
-      i * step,
-      height - ((v - min) / span) * (height - 4) - 2,
-    ]);
-    const d = pts
-      .map(([x, y], i) => (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1))
-      .join(' ');
-    return {
-      d,
-      area: d + ` L ${width} ${height} L 0 ${height} Z`,
-      last: pts[pts.length - 1],
-    };
-  }, [data, width, height]);
-
-  return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      width={width}
-      height={height}
-      style={{ display: 'block' }}
-    >
-      <path d={path.area} fill={fill} />
-      <path
-        d={path.d}
-        fill="none"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-      {live && path.last && (
-        <g transform={`translate(${path.last[0]} ${path.last[1]})`}>
-          <circle r="6" fill={stroke} opacity="0.18">
-            <animate
-              attributeName="r"
-              values="3;8;3"
-              dur="1.8s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="opacity"
-              values="0.5;0;0.5"
-              dur="1.8s"
-              repeatCount="indefinite"
-            />
-          </circle>
-          <circle r="2.2" fill={stroke} />
-        </g>
-      )}
-    </svg>
-  );
-}
-
 /* ── Rolling counter ────────────────────────────────────────────────────── */
 function Counter({ value, duration = 800 }) {
   const [display, setDisplay] = useState(value);
@@ -116,16 +26,7 @@ function Counter({ value, duration = 800 }) {
 }
 
 /* ── Big number tile ─────────────────────────────────────────────────────── */
-function BigNumber({
-  label,
-  value,
-  spark,
-  sparkLive = false,
-  accent = false,
-  delta,
-  deltaDir = 'up',
-  last = false,
-}) {
+function BigNumber({ label, value, accent = false, last = false }) {
   return (
     <div
       style={{
@@ -137,29 +38,7 @@ function BigNumber({
         minWidth: 0,
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div className="adm-eyebrow">{label}</div>
-        {delta && (
-          <span
-            className="adm-mono"
-            style={{
-              fontSize: 10,
-              color: deltaDir === 'up' ? 'var(--adm-ok)' : 'var(--adm-bad)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 3,
-            }}
-          >
-            {deltaDir === 'up' ? '↑' : '↓'} {delta}
-          </span>
-        )}
-      </div>
+      <div className="adm-eyebrow">{label}</div>
       <div
         className="adm-mono"
         style={{
@@ -172,16 +51,6 @@ function BigNumber({
         }}
       >
         <Counter value={value} />
-      </div>
-      <div style={{ marginTop: 'auto' }}>
-        <Sparkline
-          data={spark}
-          width={200}
-          height={36}
-          live={sparkLive}
-          stroke={accent ? 'var(--adm-accent)' : 'var(--adm-ink-2)'}
-          fill={accent ? 'var(--adm-accent-soft)' : 'rgba(255,255,255,0.04)'}
-        />
       </div>
     </div>
   );
@@ -233,29 +102,6 @@ function LivePulseHero({ summary }) {
             STREAM OK · 30s AUTO-REFRESH
           </span>
         </span>
-        <div
-          className="adm-dash-range-btns"
-          style={{ display: 'flex', gap: 6 }}
-        >
-          {['Last 24h', 'Last 7d', 'T-178 → T-0'].map((label) => (
-            <button
-              key={label}
-              style={{
-                padding: '5px 10px',
-                borderRadius: 10,
-                border: '1px solid var(--adm-line)',
-                background: 'var(--adm-panel-2)',
-                color: 'var(--adm-ink-2)',
-                fontFamily: 'var(--adm-mono)',
-                fontSize: 10,
-                letterSpacing: '0.06em',
-                cursor: 'pointer',
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* 3 big numbers */}
@@ -263,31 +109,9 @@ function LivePulseHero({ summary }) {
         className="adm-dash-big-numbers"
         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
       >
-        <BigNumber
-          label="PENDING · REVIEW QUEUE"
-          value={pending}
-          delta="-3 · 1h"
-          deltaDir="up"
-          spark={SPARK_PENDING}
-          accent
-          sparkLive
-        />
-        <BigNumber
-          label="LIVE · CHECK-INS TODAY"
-          value={checkins}
-          delta="+27 · 5m"
-          deltaDir="up"
-          spark={SPARK_CHECKINS}
-          sparkLive
-        />
-        <BigNumber
-          label="PASSES · DELIVERY QUEUE"
-          value={qrQueue}
-          delta="-6 · 1h"
-          deltaDir="up"
-          spark={SPARK_QUEUE}
-          last
-        />
+        <BigNumber label="PENDING · REVIEW QUEUE" value={pending} accent />
+        <BigNumber label="LIVE · CHECK-INS TODAY" value={checkins} />
+        <BigNumber label="PASSES · DELIVERY QUEUE" value={qrQueue} last />
       </div>
 
       {/* Scrolling ticker */}
@@ -935,87 +759,16 @@ function JobsPanel({ jobs }) {
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 export default function AdminDashboard() {
   const shellData = useAdminShellData();
-  const [data, setData] = useState({
-    summary: {
-      pending: 0,
-      confirmed: 0,
-      qrIssued: 0,
-      checkedIn: 0,
-      waitlisted: 0,
-      rejected: 0,
-    },
-    jobs: [],
-    loading: true,
-    error: null,
-  });
-
-  useEffect(() => {
-    if (shellData) return undefined;
-
-    let cancelled = false;
-    async function load() {
-      try {
-        const [regRes, jobsRes] = await Promise.all([
-          fetch('/api/admin/registrations/summary', { cache: 'no-store' }),
-          fetch('/api/admin/passes/jobs', { cache: 'no-store' }),
-        ]);
-        const [regJson, jobsJson] = await Promise.all([
-          regRes.json().catch(() => ({})),
-          jobsRes.json().catch(() => ({})),
-        ]);
-        if (cancelled) return;
-        setData({
-          summary:
-            regJson?.summary ||
-            regJson?.data?.summary ||
-            regJson?.meta?.summary ||
-            {},
-          jobs: Array.isArray(jobsJson?.jobs)
-            ? jobsJson.jobs
-            : Array.isArray(jobsJson?.data)
-              ? jobsJson.data
-              : [],
-          loading: false,
-          error: null,
-        });
-      } catch (e) {
-        if (!cancelled)
-          setData((d) => ({ ...d, loading: false, error: e.message }));
-      }
-    }
-    void load();
-    const timer = setInterval(() => void load(), 30000);
-    return () => {
-      cancelled = true;
-      clearInterval(timer);
-    };
-  }, [shellData]);
-
   const shellState = shellData?.shellState;
-  const summary = shellState?.summary || data.summary;
-  const jobs = shellState?.jobs || data.jobs;
-  const loading = shellData ? false : data.loading;
-
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        {[280, 200, 160].map((h, i) => (
-          <div
-            key={i}
-            style={{
-              height: h,
-              borderRadius: 10,
-              background: 'var(--adm-panel)',
-              border: '1px solid var(--adm-line)',
-              animation: 'adm-fade-up 0.4s ease-out forwards',
-              opacity: 0,
-              animationDelay: i * 60 + 'ms',
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+  const summary = shellState?.summary || {
+    pending: 0,
+    confirmed: 0,
+    qrIssued: 0,
+    checkedIn: 0,
+    waitlisted: 0,
+    rejected: 0,
+  };
+  const jobs = shellState?.jobs || [];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>

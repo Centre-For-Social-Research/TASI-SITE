@@ -5,7 +5,7 @@ export const tasiKnowledge = `
 ABOUT TASI 2026:
 TASI (Trust and Safety India Festival) is India's foremost trust and safety convening, bringing together government, industry, civil society, and international organizations. It is India's first national convening focused on trust and safety, led by civil society.
 - Dates: 14–15 October 2026
-- Location: New Delhi, India (in-person and online)
+- Venue: India International Centre, New Delhi, India (in-person and online)
 - Format: 2-day policy forum and convening
 - Expected Participants: 500+ delegates, 14 key themes, 50+ sessions
 
@@ -22,8 +22,8 @@ ORGANIZERS & LEADERSHIP:
 - Co-Convening Partner: Trust and Safety Festival
 - Jyoti Vadehra — Head of Online Safety and Wellbeing, CSR; Founding secretariat of ACTS; Email: jyoti@csrindia.org
 - Karuna Nain — Online Safety Expert/Advisor (20+ years experience, formerly Meta Global Safety Policy Director); Email: karunanain@googlemail.com
-- Jean-Christophe Le Toquin — Co-Founder, Trust & Safety Festival; Email: jc.letoquin@trustandsafetyforum.org
-- Caroline Humer — Co-Founder, Trust & Safety Festival (20+ years child protection expertise); Email: c.humer@trustandsafetyforum.org
+- Jean-Christophe Le Toquin — Co-Founder, Trust & Safety Festival; Email: jc@trustandsafetyfestival.com
+- Caroline Humer — Co-Founder, Trust & Safety Festival (20+ years child protection expertise); Email: caroline@trustandsafetyfestival.com
 
 CENTRE FOR SOCIAL RESEARCH (CSR):
 - Address: 2, Nelson Mandela Marg, Vasant Kunj, New Delhi - 110070, India
@@ -101,8 +101,6 @@ TASI 2026 follows an approval-based delegate process:
 - Non-transferable: Registrations are strictly non-transferable, valid only for the approved individual
 - On event day: Carry your QR pass and valid government-issued ID
 - Email for support: info1@csrindia.org
-
-Festival Pass Option: For those not selected through application process — provides full access to festival including paid entry, hospitality, and reception access.
 
 REGISTRATION FAQs:
 - Will I be confirmed immediately? No. Submission acknowledged first, then status email later.

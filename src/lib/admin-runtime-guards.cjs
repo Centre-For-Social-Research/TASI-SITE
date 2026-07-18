@@ -1,20 +1,3 @@
-const ADMIN_NOTIFICATION_READ_KEY = 'tasi-admin-read-notifications';
-
-function sanitizeIdentitySegment(value) {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-function buildAdminNotificationStorageKey(operator = {}) {
-  const userId = String(operator.userId || '').trim();
-  const emailSegment = sanitizeIdentitySegment(operator.primaryEmail);
-  const identity = userId || emailSegment || 'anonymous';
-  return `${ADMIN_NOTIFICATION_READ_KEY}:${identity}`;
-}
-
 function getRuntimeIssueFromStatuses(statuses = [], currentPath = '/admin') {
   if (statuses.includes(403)) {
     return {
@@ -97,6 +80,5 @@ function resolveAdminShellRuntimeState({
 }
 
 module.exports = {
-  buildAdminNotificationStorageKey,
   resolveAdminShellRuntimeState,
 };

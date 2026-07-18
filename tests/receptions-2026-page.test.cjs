@@ -49,7 +49,7 @@ test('receptions page is composed from tracked 2025, 2026, and shared UI modules
 
   assert.match(pageSource, /Reception2025Content/);
   assert.match(pageSource, /Reception2026Update/);
-  assert.match(pageSource, /ReceptionModeToggle/);
+  assert.match(pageSource, /EditionYearToggle/);
   assert.equal(
     fs.existsSync(
       absolutePath('src/components/receptions/reception-ticketing-2026.jsx')

@@ -37,11 +37,7 @@ import {
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
-import {
-  RegistrationTrendChart,
-  StatusDonutChart,
-  AdminProgressCard,
-} from '@/components/admin/admin-charts';
+import { AdminProgressCard } from '@/components/admin/admin-charts';
 import registrationCache from '@/lib/admin-registration-cache.cjs';
 
 const {
@@ -1379,12 +1375,6 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Summary stats */}
       <ReviewSummary summary={state.summary} />
-
-      {/* Registration trend chart + donut */}
-      <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <RegistrationTrendChart summary={state.summary} />
-        <StatusDonutChart summary={state.summary} />
-      </section>
 
       {/* Progress cards */}
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

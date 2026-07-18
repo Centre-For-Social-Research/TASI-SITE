@@ -159,11 +159,7 @@ function getCheckInForDay(record, day) {
     return direct[normalizedDay];
   }
 
-  const rows =
-    direct ||
-    record.registration_daily_check_ins ||
-    record.festival_ticket_daily_check_ins ||
-    [];
+  const rows = direct || record.registration_daily_check_ins || [];
   const normalized = normalizeCheckIns(rows, record.checked_in_at);
   return normalized[normalizedDay] || null;
 }

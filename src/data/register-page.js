@@ -97,13 +97,6 @@ export const registerSupport = {
   email: EVENT_CONFIG.contactEmail,
 };
 
-export const paidTicketingIntro = {
-  dividerLabel: 'OR',
-  title: 'Skip the wait. Get full access to the festival.',
-  description:
-    'Move from application-only access to the full festival experience, including paid entry, hospitality, and reception access.',
-};
-
 export function formatRegistrationReviewCopy() {
   return registrationOverview.review.replace(
     '{{QR_PASS_RELEASE_TIMING}}',
