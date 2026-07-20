@@ -162,9 +162,9 @@ export const sponsorshipProspectus = {
 
 export const sponsorPartnerOptions = [
   {
-    title: 'Media or Association Partner',
-    eyebrow: 'Amplification',
-    body: 'Collaborate with TASI as a media platform, trade body, association, or ecosystem network to amplify key conversations and reach the communities that matter most.',
+    title: 'Media Partner',
+    eyebrow: 'Media',
+    body: 'Partner with TASI as a media platform to cover the festival, amplify key conversations, and reach the trust and safety community in India and beyond.',
     href: '/media',
     cta: 'Enquire Now',
   },

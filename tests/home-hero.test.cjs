@@ -31,9 +31,7 @@ test('home hero highlights the conveners above the CTA row', () => {
   assert.match(source, /Centre for Social Research/);
   assert.match(source, /Trust &amp; Safety Festival/);
   assert.doesNotMatch(source, /Trust &amp; Safety Forum/);
-  assert.ok(
-    source.indexOf('Convened by') < source.indexOf('Become a Sponsor')
-  );
+  assert.ok(source.indexOf('Convened by') < source.indexOf('Become a Sponsor'));
 });
 
 test('home hero keeps both divider accents explicitly white', () => {
