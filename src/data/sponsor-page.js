@@ -137,7 +137,7 @@ export const sponsorPricingPlans = [
     features: tier.features.map((feature) => ({ text: feature })),
     btn: {
       text: tier.cta,
-      href: 'mailto:india@trustandsafetyfestival.org',
+      href: 'mailto:india@trustandsafetyfestival.com',
     },
   })),
   {
@@ -174,6 +174,6 @@ export const sponsorPartnerOptions = [
     body: 'If you want a bespoke package, hosted side event, or a partnership aligned to a specific audience segment, we can shape that with you directly.',
     href: '/contact',
     cta: 'View Contact Page',
-    email: 'india@trustandsafetyfestival.org',
+    email: 'india@trustandsafetyfestival.com',
   },
 ];
