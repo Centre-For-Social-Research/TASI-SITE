@@ -21,20 +21,24 @@ test('home hero applies SparklesText only to 2026 and Delhi', () => {
   assert.match(source, /<SparklesText[^>]*>\s*2026\s*<\/SparklesText>/);
   assert.match(source, /<SparklesText[^>]*>\s*Delhi\s*<\/SparklesText>/);
   assert.match(source, /Trust and Safety India Festival/);
-  assert.ok(
-    source.indexOf('Trust and Safety India Festival') <
-      source.indexOf('An Initiative by Centre For Social Research')
-  );
   assert.doesNotMatch(source, /<SparklesText[^>]*>\s*TASI\s*<\/SparklesText>/);
+});
+
+test('home hero highlights the conveners above the CTA row', () => {
+  const source = fs.readFileSync(heroPath, 'utf8');
+
+  assert.match(source, /Convened by/);
+  assert.match(source, /Centre for Social Research/);
+  assert.match(source, /Trust &amp; Safety Festival/);
+  assert.doesNotMatch(source, /Trust &amp; Safety Forum/);
+  assert.ok(
+    source.indexOf('Convened by') < source.indexOf('Become a Sponsor')
+  );
 });
 
 test('home hero keeps both divider accents explicitly white', () => {
   const source = fs.readFileSync(heroPath, 'utf8');
 
-  assert.match(
-    source,
-    /<span\s+className="hidden h-1 w-1 rounded-full md:block"\s+style=\{\{ backgroundColor: '#fff' \}\}\s*\/>/
-  );
   assert.match(
     source,
     /<div\s+className="hidden md:block w-\[2px\] h-24"\s+style=\{\{ backgroundColor: '#fff' \}\}\s*><\/div>/
