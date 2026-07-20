@@ -211,10 +211,10 @@ export default function VolunteerApplicationForm() {
         <p className="text-sm text-stone-500 dark:text-slate-400">
           Prefer email? Write to{' '}
           <a
-            href="mailto:info@trustandsafetyfestival.org?subject=TASI%202026%20Volunteer%20Application"
+            href="mailto:info@trustandsafetyfestival.com?subject=TASI%202026%20Volunteer%20Application"
             className="font-semibold text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200"
           >
-            info@trustandsafetyfestival.org
+            info@trustandsafetyfestival.com
           </a>
         </p>
       </div>

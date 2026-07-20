@@ -154,7 +154,7 @@ test('application page data owns speaker, volunteer, media, and contact datasets
   );
 
   assert.equal(contact.sponsorshipContacts.length, 4);
-  assert.equal(contact.generalContact.email, 'info@trustandsafetyfestival.org');
+  assert.equal(contact.generalContact.email, 'info@trustandsafetyfestival.com');
 });
 
 test('get involved components consume shared data without reintroducing inline lists', () => {

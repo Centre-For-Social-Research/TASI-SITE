@@ -5,7 +5,7 @@ export const EVENT_CONFIG = {
   endDate: '2026-10-15',
   qrIssueDate: '2026-10-07',
   badgeFreezeDate: '2026-10-09',
-  contactEmail: 'info@trustandsafetyfestival.org',
+  contactEmail: 'info@trustandsafetyfestival.com',
   senderEmail: 'noreply@trustandsafetyindia.org',
 };
 

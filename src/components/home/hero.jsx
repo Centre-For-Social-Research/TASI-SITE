@@ -38,14 +38,6 @@ export default function HomeHero() {
           custom={0}
         >
           <span>Trust and Safety India Festival</span>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <span>An Initiative by Centre For Social Research</span>
-            <span
-              className="hidden h-1 w-1 rounded-full md:block"
-              style={{ backgroundColor: '#fff' }}
-            />
-            <span>Trust &amp; Safety Forum</span>
-          </div>
         </motion.div>
 
         {/* Logo and Date Section */}
@@ -111,6 +103,17 @@ export default function HomeHero() {
             rights, regulation, tech policy, and platform safety together to
             collaborate on emerging trends and practical solutions for digital
             spaces.
+          </p>
+
+          <p className="mb-8 text-sm font-semibold uppercase tracking-[0.14em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] md:text-base">
+            Convened by{' '}
+            <span className="font-black text-rc-secondary dark:text-white">
+              Centre for Social Research
+            </span>{' '}
+            &amp;{' '}
+            <span className="font-black text-rc-secondary dark:text-white">
+              Trust &amp; Safety Festival
+            </span>
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">

@@ -81,14 +81,14 @@ export const involvementOptions = [
     eyebrow: 'Media',
   },
   {
-    title: 'Become a Media or Association Partner',
+    title: 'Become a Media Partner',
     description:
-      'Collaborate with TASI as a media platform, association, or ecosystem organisation to amplify key conversations and reach relevant communities.',
+      'Partner with TASI as a media platform to cover the festival, amplify key conversations, and reach relevant communities.',
     href: '/sponsor#partner-options',
     cta: 'Explore Partner Options',
     image: '/img/home-gallery/IMG_6646.webp',
     imageAlt: 'Audience and conference engagement at TASI',
-    eyebrow: 'Amplification',
+    eyebrow: 'Media',
   },
   {
     title: 'Join as an Ecosystem Partner',

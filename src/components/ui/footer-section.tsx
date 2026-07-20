@@ -24,17 +24,8 @@ function Footerdemo() {
   const [newsletterStatus, setNewsletterStatus] = React.useState('');
   const [isNewsletterSubmitting, setIsNewsletterSubmitting] =
     React.useState(false);
-  const [messageEmail, setMessageEmail] = React.useState('');
-  const [messageText, setMessageText] = React.useState('');
-  const [messageStatus, setMessageStatus] = React.useState('');
-  const [isMessageSubmitting, setIsMessageSubmitting] = React.useState(false);
-
   const normalizeEmailInput = React.useCallback(
     (value: string) => value.trim().toLowerCase(),
-    []
-  );
-  const normalizeMessageInput = React.useCallback(
-    (value: string) => value.replace(/\r\n?/g, '\n').trim(),
     []
   );
 
@@ -66,56 +57,6 @@ function Footerdemo() {
     }
   }
 
-  async function handleMessageSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setMessageStatus('');
-    setIsMessageSubmitting(true);
-
-    try {
-      const response = await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: normalizeEmailInput(messageEmail),
-          message: normalizeMessageInput(messageText),
-          source: 'site-footer',
-        }),
-      });
-
-      let data: { error?: string } | null = null;
-      const contentType = response.headers.get('content-type') || '';
-
-      if (contentType.includes('application/json')) {
-        data = await response.json();
-      } else {
-        const text = await response.text();
-        if (text) {
-          data = { error: text };
-        }
-      }
-
-      if (!response.ok) {
-        setMessageStatus(data?.error || `Request failed (${response.status}).`);
-      } else {
-        setMessageStatus('Message sent.');
-        setMessageEmail('');
-        setMessageText('');
-      }
-    } catch (error: unknown) {
-      const errorMessage =
-        typeof error === 'object' &&
-        error !== null &&
-        'message' in error &&
-        typeof (error as { message?: unknown }).message === 'string'
-          ? (error as { message: string }).message
-          : 'Network error while sending message. Please try again.';
-
-      setMessageStatus(errorMessage);
-    } finally {
-      setIsMessageSubmitting(false);
-    }
-  }
-
   return (
     <footer className="relative overflow-hidden border-t border-t-8 border-[#ff6900] bg-[linear-gradient(120deg,#55089e_-7.06%,#9f0099_16.19%,#ff0080_39.45%,#ef5700_85.96%,#ffff00_109.21%)] text-white transition-colors duration-300 dark:border-t-[#ffd919]">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,20,0.28)_0%,rgba(8,8,18,0.58)_65%,rgba(5,5,12,0.82)_100%)] dark:bg-[linear-gradient(180deg,rgba(2,6,23,0.42)_0%,rgba(2,6,23,0.74)_58%,rgba(2,6,23,0.92)_100%)]" />
@@ -124,7 +65,7 @@ function Footerdemo() {
       <div className="pointer-events-none absolute -top-20 left-[-8%] h-64 w-64 rounded-full bg-[#5547ec]/45 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-28 right-[-8%] h-72 w-72 rounded-full bg-[#ff2bbf]/35 blur-3xl" />
       <div className="relative z-10 mx-auto w-full max-w-screen-xl px-10 py-8">
-        <div className="grid gap-x-10 gap-y-10 items-start md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-x-10 gap-y-10 items-start md:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
             <h3 className="mb-3 text-lg font-semibold">Stay Connected</h3>
             <p className="mb-4 text-sm text-white/85">
@@ -199,48 +140,11 @@ function Footerdemo() {
             </nav>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Quick Message</h3>
-            <form
-              className="rounded-md border border-white/30 bg-black/20 p-3 backdrop-blur-sm dark:border-white/35 dark:bg-black/30"
-              onSubmit={handleMessageSubmit}
-            >
-              <div className="space-y-2">
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  className="h-8 border-white/35 bg-black/20 text-xs text-white placeholder:text-white/90 dark:border-white/45 dark:bg-black/35 dark:text-white dark:placeholder:text-white/90"
-                  value={messageEmail}
-                  onChange={(event) => setMessageEmail(event.target.value)}
-                  required
-                />
-                <textarea
-                  placeholder="Message"
-                  className="min-h-[68px] w-full rounded-md border border-white/35 bg-black/20 px-2 py-1.5 text-xs text-white outline-none placeholder:text-white/90 focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent dark:border-white/45 dark:bg-black/35 dark:text-white dark:placeholder:text-white/90"
-                  value={messageText}
-                  onChange={(event) => setMessageText(event.target.value)}
-                  minLength={10}
-                  required
-                />
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="h-8 w-full !bg-white !text-[#140f26] text-xs hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26] dark:hover:!bg-white/90"
-                  disabled={isMessageSubmitting}
-                >
-                  {isMessageSubmitting ? 'Sending...' : 'Send'}
-                </Button>
-              </div>
-            </form>
-            {messageStatus ? (
-              <p className="mt-2 text-xs text-white/80">{messageStatus}</p>
-            ) : null}
-          </div>
-          <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
             <address className="space-y-2 text-sm text-white/90 not-italic">
               <p>Centre for Social Research</p>
               <p>New Delhi, India</p>
-              <p>Email: info@trustandsafetyfestival.org</p>
+              <p>Email: info@trustandsafetyfestival.com</p>
             </address>
             <div className="mt-5 space-y-2 text-sm text-white/90">
               <a

@@ -39,7 +39,7 @@ const structuredData = {
       alternateName: 'CSR India',
       url: 'https://www.csrindia.org',
       logo: `${siteUrl}/img/tasi-csr-logo.png`,
-      email: 'info@trustandsafetyfestival.org',
+      email: 'info@trustandsafetyfestival.com',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'New Delhi',

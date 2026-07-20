@@ -155,10 +155,10 @@ export default function TermsOfServicePage() {
           </strong>
           Email:{' '}
           <a
-            href="mailto:info@trustandsafetyfestival.org"
+            href="mailto:info@trustandsafetyfestival.com"
             className="text-orange-700 underline dark:text-orange-300"
           >
-            info@trustandsafetyfestival.org
+            info@trustandsafetyfestival.com
           </a>
           <br />
           Phone: +91 011 46131929
