@@ -44,7 +44,7 @@ export default function HomeHero() {
               className="hidden h-1 w-1 rounded-full md:block"
               style={{ backgroundColor: '#fff' }}
             />
-            <span>Trust &amp; Safety Forum</span>
+            <span>Trust &amp; Safety Festival</span>
           </div>
         </motion.div>
 
