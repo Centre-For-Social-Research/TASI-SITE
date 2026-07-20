@@ -185,10 +185,8 @@ test('shared messages route uses stricter abuse protection and source metadata f
   assert.match(routeSource, /source:\s*normalizedSource/);
   assert.match(routeSource, /`Source: \$\{normalizedSource\}`/);
 
-  assert.match(footerSource, /fetch\('\/api\/messages'/);
-  assert.match(footerSource, /source:\s*'site-footer'/);
-  assert.match(
-    footerSource,
-    /setMessageStatus\(data\?\.error \|\| `Request failed \(\$\{response\.status\}\)\.`\)/
-  );
+  // The footer quick-message form was removed; contact goes through /contact
+  // and the exhibition enquiry form instead.
+  assert.doesNotMatch(footerSource, /fetch\('\/api\/messages'/);
+  assert.doesNotMatch(footerSource, /Quick Message/);
 });
