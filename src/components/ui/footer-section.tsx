@@ -240,7 +240,7 @@ function Footerdemo() {
             <address className="space-y-2 text-sm text-white/90 not-italic">
               <p>Centre for Social Research</p>
               <p>New Delhi, India</p>
-              <p>Email: info@trustandsafetyfestival.org</p>
+              <p>Email: info@trustandsafetyfestival.com</p>
             </address>
             <div className="mt-5 space-y-2 text-sm text-white/90">
               <a

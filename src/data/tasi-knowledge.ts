@@ -28,7 +28,7 @@ ORGANIZERS & LEADERSHIP:
 CENTRE FOR SOCIAL RESEARCH (CSR):
 - Address: 2, Nelson Mandela Marg, Vasant Kunj, New Delhi - 110070, India
 - Phone: +91 011 46131929
-- Email: info@trustandsafetyfestival.org
+- Email: info@trustandsafetyfestival.com
 - Website: www.csrindia.org
 
 14 STRATEGIC THEMES FOR 2026:
@@ -100,12 +100,12 @@ TASI 2026 follows an approval-based delegate process:
 - Step 3: Confirmed attendees receive QR-based entry pass; collect pre-printed badge at venue
 - Non-transferable: Registrations are strictly non-transferable, valid only for the approved individual
 - On event day: Carry your QR pass and valid government-issued ID
-- Email for support: info@trustandsafetyfestival.org
+- Email for support: info@trustandsafetyfestival.com
 
 REGISTRATION FAQs:
 - Will I be confirmed immediately? No. Submission acknowledged first, then status email later.
 - Can I transfer registration? No. Strictly non-transferable.
-- What if I cannot attend? Inform the team in advance at info@trustandsafetyfestival.org
+- What if I cannot attend? Inform the team in advance at info@trustandsafetyfestival.com
 
 SPONSORSHIP TIERS:
 - Platinum ($30,000, exclusive/1): Keynote + panel + spotlight + workshop; 10 passes; exhibit booth; strategic co-creation
@@ -135,7 +135,7 @@ MEDIA & PRESS:
 - 50+ news outlets covered TASI 2025
 - Media Partners: The Hindu, The Print, Business Standard, Financial Express, ANI, DD News
 - Resources: Press releases, press kit, photo gallery, media accreditation
-- Apply for media access: info@trustandsafetyfestival.org
+- Apply for media access: info@trustandsafetyfestival.com
 
 PARTNERS & SPONSORS:
 Technology Platforms: Booking.com, Meta, Snapchat, YouTube, Truecaller, Match Group, X, Resolver, Google, Roblox
@@ -183,7 +183,7 @@ RECEPTIONS (2025 reference; 2026 TBA):
 - Closing Reception: Swedish Embassy — forward-looking panel, informal dinner
 
 CONTACT & GENERAL ENQUIRIES:
-- Email: info@trustandsafetyfestival.org
+- Email: info@trustandsafetyfestival.com
 - Phone: +91 011 46131929
 - Address: 2, Nelson Mandela Marg, Vasant Kunj, New Delhi - 110070, India
 - Website: www.csrindia.org
