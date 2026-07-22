@@ -42,18 +42,29 @@ const isJobProcessorRoute = createRouteMatcher([
 
 const CLERK_PROXY_PATH = '/__clerk';
 
+// The production Clerk instance uses a custom Frontend API domain
+// (clerk.trustandsafetyindia.org, encoded in the publishable key), so the
+// browser and the handshake talk to Clerk directly. The first-party
+// /__clerk proxy is only used in development, matching TasiClerkProvider.
+// Enabling frontendApiProxy in production routes the sign-in handshake
+// through /__clerk, which Clerk cannot attribute to the instance and
+// rejects with `host_invalid`.
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const clerkProxy = clerkMiddleware(
   async (auth, request) => {
     if (isProtectedRoute(request) && !isJobProcessorRoute(request)) {
       await auth.protect();
     }
   },
-  {
-    frontendApiProxy: {
-      enabled: true,
-      path: CLERK_PROXY_PATH,
-    },
-  }
+  isDevelopment
+    ? {
+        frontendApiProxy: {
+          enabled: true,
+          path: CLERK_PROXY_PATH,
+        },
+      }
+    : {}
 );
 
 function normalizeSameRouteClerkRewrite(
