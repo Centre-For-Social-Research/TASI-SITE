@@ -23,8 +23,8 @@ export const contactHero = {
 export const generalContact = {
   phone: '+91 011 46131929',
   email: 'info@trustandsafetyfestival.com',
-  website: 'https://www.csrindia.org',
-  websiteLabel: 'www.csrindia.org',
+  website: 'https://trustandsafetyindia.org',
+  websiteLabel: 'trustandsafetyindia.org',
 };
 
 export const sponsorshipContacts = [
@@ -43,14 +43,11 @@ export const sponsorshipContacts = [
     email: 'jyoti@csrindia.org',
     role: 'Lead, Digital Trust and Safety | Head, Media & Communications, Centre For Social Research',
   },
-  {
-    name: 'Karuna Nain',
-    email: 'karunanain@googlemail.com',
-    role: 'Online Safety Expert / Advisor, Centre for Social Research',
-  },
 ];
 
 export const officeAddress = {
   name: 'Centre for Social Research',
   lines: ['2, Nelson Mandela Marg, Vasant Kunj,', 'New Delhi - 110070, India'],
+  website: 'https://www.csrindia.org',
+  websiteLabel: 'www.csrindia.org',
 };

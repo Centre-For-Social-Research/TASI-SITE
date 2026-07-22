@@ -114,6 +114,14 @@ export default function ContactPage() {
                 </span>
               ))}
             </p>
+            <a
+              href={officeAddress.website}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-block rounded-[10px] border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm font-semibold text-stone-700 transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+            >
+              {officeAddress.websiteLabel}
+            </a>
           </div>
         </section>
       </main>

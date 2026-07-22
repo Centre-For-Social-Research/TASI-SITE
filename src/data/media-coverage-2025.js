@@ -47,7 +47,10 @@ export const mediaLogoWall2025 = [
   { publication: 'Zee Business', logo: '/img/media-coverage/zee-business.png' },
   { publication: 'CXO Today', logo: '/img/media-coverage/cxo-today.png' },
   { publication: 'DD News', logo: '/img/media-coverage/dd-news.png' },
-  { publication: 'IANS', logo: '/img/media-coverage/ians.png' },
+  {
+    publication: 'The Statesman',
+    logo: '/img/media-coverage/the-statesman.png',
+  },
   { publication: 'PTI', logo: '/img/media-coverage/pti.png' },
   {
     publication: 'The Daily Guardian',
@@ -136,12 +139,11 @@ export const mediaCoverageEntries2025 = [
     href: 'https://x.com/PTI_News/status/1975439172292026379',
   },
   {
-    publication: 'IANS',
-    logo: '/img/media-coverage/ians.png',
-    headline:
-      'EAM S Jaishankar calls for balanced approach to AI, says trust and safety must guide innovation',
-    category: 'Wire Service',
-    href: 'https://ians.in/english-wire-detail/jaishankar-calls-for-balanced-approach-to-ai-says-trust-and-safety-must-guide-innovation--20251007114834',
+    publication: 'The Statesman',
+    logo: '/img/media-coverage/the-statesman.png',
+    headline: 'Jaishankar calls for implementation of ‘Responsible AI’',
+    category: 'National Daily',
+    href: 'https://www.thestatesman.com/india/jaishankar-calls-for-implementation-of-responsible-ai-1503495979.html',
   },
   {
     publication: 'DD News',
