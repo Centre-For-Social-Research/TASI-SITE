@@ -68,33 +68,31 @@ export default function ContactPage() {
             Each contact below can help route sponsorship, partnership, and
             strategic collaboration conversations to the right team.
           </p>
-          <div className="mt-6 flex justify-center">
-            <div className="grid max-w-7xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {sponsorshipContacts.map((contact) => (
-                <article
-                  key={contact.email}
-                  className="flex h-full flex-col items-center justify-center rounded-[10px] border border-stone-200/80 bg-white/85 p-6 text-center shadow-[0_12px_40px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900/90"
-                >
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
-                    Sponsor Desk
-                  </p>
-                  <h3 className="mt-3 text-xl font-black tracking-tight text-stone-900 dark:text-white">
-                    {contact.name}
-                  </h3>
-                  <p className="mt-3 whitespace-nowrap text-sm font-semibold">
-                    <a
-                      href={`mailto:${contact.email}`}
-                      className="text-amber-800 transition-colors hover:text-amber-700 dark:text-amber-300 dark:hover:text-amber-200"
-                    >
-                      {contact.email}
-                    </a>
-                  </p>
-                  <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-                    {contact.role}
-                  </p>
-                </article>
-              ))}
-            </div>
+          <div className="mt-6 flex flex-wrap justify-center gap-5">
+            {sponsorshipContacts.map((contact) => (
+              <article
+                key={contact.email}
+                className="flex w-full max-w-sm flex-col items-center justify-center rounded-[10px] border border-stone-200/80 bg-white/85 p-6 text-center shadow-[0_12px_40px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900/90 sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.834rem)]"
+              >
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
+                  Sponsor Desk
+                </p>
+                <h3 className="mt-3 text-xl font-black tracking-tight text-stone-900 dark:text-white">
+                  {contact.name}
+                </h3>
+                <p className="mt-3 whitespace-nowrap text-sm font-semibold">
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="text-amber-800 transition-colors hover:text-amber-700 dark:text-amber-300 dark:hover:text-amber-200"
+                  >
+                    {contact.email}
+                  </a>
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+                  {contact.role}
+                </p>
+              </article>
+            ))}
           </div>
         </section>
 
