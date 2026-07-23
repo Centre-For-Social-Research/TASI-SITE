@@ -270,7 +270,7 @@ export const speakers = [
     name: 'Japleen Pasricha',
     designation: 'Founder, CEO and Editor-in-Chief, Feminism in India',
     category: 'Civil Society',
-    photo: 'Japleen Pasricha.webp',
+    photo: 'japleen-pasricha-2026.webp',
     linkedinUrl: 'https://www.linkedin.com/in/japleen-pasricha-8864b348/',
     bio: 'Japleen Pasricha is the founder, CEO, and editor-in-chief of Feminism in India, an intersectional feminist media platform that explores the intricacies of culture, politics, society, and media through a feminist lens. She has previously worked with women’s rights NGOs, including Breakthrough India and Point of View, before founding FII in 2014. She is a public speaker and has represented FII on platforms such as the UNCSW, Rights Con, Amnesty International, and the UNHRC, among others. Japleen works to strategically shape FII into a space that presents intersectional feminist information in an accessible way to people of varied palettes and backgrounds, smashing the patriarchy with a vision that emboldens the modern Indian youth.',
   },
