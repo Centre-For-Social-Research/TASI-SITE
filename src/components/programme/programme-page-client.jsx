@@ -5,7 +5,6 @@ import { useState } from 'react';
 import ProgrammeAgendaClient from '@/components/programme/programme-agenda-client';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import EditionYearToggle from '@/components/ui/edition-year-toggle';
-import { MotionReveal } from '@/components/ui/motion-reveal';
 
 const heroContent = {
   2025: {
@@ -16,39 +15,9 @@ const heroContent = {
   2026: {
     title: 'TASI 2026 Agenda',
     description:
-      'The TASI 2026 programme is being curated around the theme "People First. Safety Always." Session details will be published here.',
+      'The working programme for 14-15 October 2026, curated around the theme "People First. Safety Always." Session titles are live and speakers are still being confirmed, so sessions, timings, and rooms may change.',
   },
 };
-
-function Programme2026Update() {
-  return (
-    <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
-      <div className="mx-auto w-full max-w-[900px] px-4 md:px-8 lg:px-16">
-        <MotionReveal>
-          <article className="rounded-[10px] border border-stone-200 bg-white p-8 text-center shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-10">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-amber-300">
-              Update
-            </p>
-            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-4xl">
-              The 2026 programme will be announced soon.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-stone-600 dark:text-slate-300">
-              We are curating sessions across 14 strategic themes for 14-15
-              October 2026 at the India International Centre, New Delhi. Check
-              back here for the full agenda, or propose a session of your own.
-            </p>
-            <a
-              href="/speaker-application"
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-rc-primary px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white transition hover:opacity-90"
-            >
-              Propose a Session
-            </a>
-          </article>
-        </MotionReveal>
-      </div>
-    </section>
-  );
-}
 
 export default function ProgrammePageClient({
   sessions,
@@ -56,8 +25,12 @@ export default function ProgrammePageClient({
   speakerDesignationMap,
   speakerPhotoMap,
   receptionNotes,
+  sessions2026 = [],
+  dayLabels2026,
+  receptionNotes2026 = [],
+  dayDateMap2026,
 }) {
-  const [year, setYear] = useState('2025');
+  const [year, setYear] = useState('2026');
   const hero = heroContent[year];
 
   return (
@@ -81,6 +54,7 @@ export default function ProgrammePageClient({
 
       {year === '2025' ? (
         <ProgrammeAgendaClient
+          key="agenda-2025"
           sessions={sessions}
           dayLabels={dayLabels}
           speakerDesignationMap={speakerDesignationMap}
@@ -88,7 +62,15 @@ export default function ProgrammePageClient({
           receptionNotes={receptionNotes}
         />
       ) : (
-        <Programme2026Update />
+        <ProgrammeAgendaClient
+          key="agenda-2026"
+          sessions={sessions2026}
+          dayLabels={dayLabels2026}
+          speakerDesignationMap={{}}
+          speakerPhotoMap={{}}
+          receptionNotes={receptionNotes2026}
+          dayDateMap={dayDateMap2026}
+        />
       )}
     </main>
   );

@@ -29,10 +29,15 @@ const FORMAT_LABELS = {
 };
 
 const SESSIONS_PER_PAGE = 8;
-const DAY_DATE_MAP = {
+const DEFAULT_DAY_DATE_MAP = {
   oct6: '20251006',
   oct7: '20251007',
   oct8: '20251008',
+};
+const DEFAULT_DAY_LABELS = {
+  oct6: 'Oct 6 - Opening Reception',
+  oct7: 'Oct 7 - Day 1',
+  oct8: 'Oct 8 - Day 2',
 };
 const EVENT_LOCATION = 'New Delhi, India';
 
@@ -40,12 +45,12 @@ function cx(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-function parseTimeParts(time) {
+function parseTimeAt(time, index) {
   const normalized = String(time || '')
     .replace(/[\u2013\u2014]/g, '-')
     .trim();
-  const firstPart = normalized.split('-')[0].trim();
-  const match = firstPart.match(/^(\d{1,2}):(\d{2})$/);
+  const part = normalized.split('-')[index]?.trim();
+  const match = part?.match(/^(\d{1,2}):(\d{2})$/);
   if (!match) return null;
 
   const hours = Number(match[1]);
@@ -53,6 +58,17 @@ function parseTimeParts(time) {
   if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
 
   return { hours, minutes };
+}
+
+function parseTimeParts(time) {
+  return parseTimeAt(time, 0);
+}
+
+// Sessions may declare an explicit range ("10:00-10:15"). When they do, that
+// end time is authoritative for calendar links; otherwise we fall back to the
+// next session in the same room, then to a per-format default.
+function parseEndTimeParts(time) {
+  return parseTimeAt(time, 1);
 }
 
 function addMinutes(timeParts, minutesToAdd) {
@@ -63,15 +79,15 @@ function addMinutes(timeParts, minutesToAdd) {
   };
 }
 
-function formatCalendarDateTime(day, timeParts) {
-  const date = DAY_DATE_MAP[day];
+function formatCalendarDateTime(day, timeParts, dayDateMap) {
+  const date = dayDateMap[day];
   if (!date || !timeParts) return '';
 
   return `${date}T${String(timeParts.hours).padStart(2, '0')}${String(timeParts.minutes).padStart(2, '0')}00`;
 }
 
-function formatMicrosoftCalendarDateTime(day, timeParts) {
-  const date = DAY_DATE_MAP[day];
+function formatMicrosoftCalendarDateTime(day, timeParts, dayDateMap) {
+  const date = dayDateMap[day];
   if (!date || !timeParts) return '';
 
   return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}T${String(timeParts.hours).padStart(2, '0')}:${String(timeParts.minutes).padStart(2, '0')}:00`;
@@ -91,9 +107,9 @@ function fallbackDurationMinutes(session) {
   return 60;
 }
 
-function buildCalendarMetadata(session, allSessions, labels) {
+function buildCalendarMetadata(session, allSessions, labels, dayDateMap) {
   const startParts = parseTimeParts(session.time);
-  if (!startParts || !DAY_DATE_MAP[session.day]) return null;
+  if (!startParts || !dayDateMap[session.day]) return null;
 
   const nextSession = allSessions
     .filter(
@@ -105,18 +121,27 @@ function buildCalendarMetadata(session, allSessions, labels) {
     )
     .sort((a, b) => timeSortValue(a.time) - timeSortValue(b.time))[0];
 
+  const explicitEndParts = parseEndTimeParts(session.time);
   const nextStartParts = nextSession ? parseTimeParts(nextSession.time) : null;
   const endParts =
-    nextStartParts || addMinutes(startParts, fallbackDurationMinutes(session));
-  const startDateTime = formatCalendarDateTime(session.day, startParts);
-  const endDateTime = formatCalendarDateTime(session.day, endParts);
+    explicitEndParts ||
+    nextStartParts ||
+    addMinutes(startParts, fallbackDurationMinutes(session));
+  const startDateTime = formatCalendarDateTime(
+    session.day,
+    startParts,
+    dayDateMap
+  );
+  const endDateTime = formatCalendarDateTime(session.day, endParts, dayDateMap);
   const microsoftStartDateTime = formatMicrosoftCalendarDateTime(
     session.day,
-    startParts
+    startParts,
+    dayDateMap
   );
   const microsoftEndDateTime = formatMicrosoftCalendarDateTime(
     session.day,
-    endParts
+    endParts,
+    dayDateMap
   );
   const speakersLine = session.speakersDetailed?.length
     ? `Speakers: ${session.speakersDetailed.map((speaker) => speaker.name).join(', ')}`
@@ -153,6 +178,7 @@ export default function ProgrammeAgendaClient({
   speakerDesignationMap,
   speakerPhotoMap = {},
   receptionNotes = [],
+  dayDateMap = DEFAULT_DAY_DATE_MAP,
 }) {
   const [showAgendaBuilder, setShowAgendaBuilder] = useState(false);
   const [activeDay, setActiveDay] = useState('all');
@@ -181,13 +207,13 @@ export default function ProgrammeAgendaClient({
     [normalizedSessions]
   );
   const labels = useMemo(
-    () => ({
-      oct6: dayLabels?.oct6 || 'Oct 6 - Opening Reception',
-      oct7: dayLabels?.oct7 || 'Oct 7 - Day 1',
-      oct8: dayLabels?.oct8 || 'Oct 8 - Day 2',
-    }),
+    () =>
+      dayLabels && Object.keys(dayLabels).length > 0
+        ? dayLabels
+        : DEFAULT_DAY_LABELS,
     [dayLabels]
   );
+  const dayKeys = useMemo(() => Object.keys(labels), [labels]);
 
   const filteredSessions = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -220,9 +246,14 @@ export default function ProgrammeAgendaClient({
     () =>
       filteredSessions.map((session) => ({
         ...session,
-        calendar: buildCalendarMetadata(session, normalizedSessions, labels),
+        calendar: buildCalendarMetadata(
+          session,
+          normalizedSessions,
+          labels,
+          dayDateMap
+        ),
       })),
-    [filteredSessions, labels, normalizedSessions]
+    [dayDateMap, filteredSessions, labels, normalizedSessions]
   );
 
   const totalPages = Math.max(
@@ -337,42 +368,21 @@ export default function ProgrammeAgendaClient({
           >
             All Days
           </button>
-          <button
-            className={cx(
-              styles['day-tab'],
-              activeDay === 'oct6' && styles.active
-            )}
-            onClick={() => {
-              setActiveDay('oct6');
-              setCurrentPage(1);
-            }}
-          >
-            {labels.oct6}
-          </button>
-          <button
-            className={cx(
-              styles['day-tab'],
-              activeDay === 'oct7' && styles.active
-            )}
-            onClick={() => {
-              setActiveDay('oct7');
-              setCurrentPage(1);
-            }}
-          >
-            {labels.oct7}
-          </button>
-          <button
-            className={cx(
-              styles['day-tab'],
-              activeDay === 'oct8' && styles.active
-            )}
-            onClick={() => {
-              setActiveDay('oct8');
-              setCurrentPage(1);
-            }}
-          >
-            {labels.oct8}
-          </button>
+          {dayKeys.map((dayKey) => (
+            <button
+              key={dayKey}
+              className={cx(
+                styles['day-tab'],
+                activeDay === dayKey && styles.active
+              )}
+              onClick={() => {
+                setActiveDay(dayKey);
+                setCurrentPage(1);
+              }}
+            >
+              {labels[dayKey]}
+            </button>
+          ))}
         </div>
       </div>
 

@@ -8,9 +8,9 @@ import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 const { sortProgrammeSessionsForAgenda } = programmeAgendaUtils;
 
 const DAY_LABELS_FALLBACK = {
-  oct6: 'Oct 14 - Opening Reception',
-  oct7: 'Oct 15 - Conference Day 1',
-  oct8: 'Oct 16 - Conference Day 2',
+  oct6: 'Oct 6 - Opening Reception',
+  oct7: 'Oct 7 - Conference Day 1',
+  oct8: 'Oct 8 - Conference Day 2',
 };
 
 // PDF agenda colors and dimensions use pt-based values for A4 rendering.
@@ -614,7 +614,7 @@ export default function BuildMyAgenda({
           )}
 
           <div className="mt-2 space-y-8">
-            {['oct6', 'oct7', 'oct8'].map((dayKey) => {
+            {Object.keys(effectiveDayLabels).map((dayKey) => {
               const daySessions = groupedSessions[dayKey];
               if (!daySessions || daySessions.length === 0) return null;
 

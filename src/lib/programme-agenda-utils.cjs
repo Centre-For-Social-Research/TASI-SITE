@@ -2,6 +2,9 @@ const DAY_ORDER = {
   oct6: 0,
   oct7: 1,
   oct8: 2,
+  oct13: 3,
+  oct14: 4,
+  oct15: 5,
 };
 
 function normalizePersonName(value) {
