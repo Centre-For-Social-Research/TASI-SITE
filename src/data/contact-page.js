@@ -22,7 +22,7 @@ export const contactHero = {
 
 export const generalContact = {
   phone: '+91 011 46131929',
-  email: 'info@trustandsafetyfestival.com',
+  email: 'india@trustandsafetyfestival.com',
   website: 'https://trustandsafetyindia.org',
   websiteLabel: 'trustandsafetyindia.org',
 };

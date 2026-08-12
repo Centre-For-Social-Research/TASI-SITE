@@ -10,6 +10,36 @@ export const programmeDayLabels = {
   oct8: 'October 8 - Conference Day 2',
 };
 
+export const programmeDayLabels2026 = {
+  oct13: 'October 13 - Opening Reception',
+  oct14: 'October 14 - Conference Day 1',
+  oct15: 'October 15 - Conference Day 2',
+};
+
+// Used to build "Add to Calendar" links for the 2026 agenda.
+export const programmeDayDateMap2026 = {
+  oct13: '20261013',
+  oct14: '20261014',
+  oct15: '20261015',
+};
+
+export const programmeReceptionNotes2026 = [
+  {
+    day: 'October 13',
+    venue: 'German High Commission, New Delhi',
+    access: 'Invite only',
+    description:
+      'Opening evening reception hosted with the Embassy of France, with safety spotlight conversations to launch TASI 2026.',
+  },
+  {
+    day: 'October 14',
+    venue: 'Offsite embassy reception, New Delhi',
+    access: 'Invite only',
+    description:
+      'Evening reception for delegates and partners after the first conference day. Venue to be announced.',
+  },
+];
+
 export const programmeReceptionNotes = [
   {
     day: 'October 6',

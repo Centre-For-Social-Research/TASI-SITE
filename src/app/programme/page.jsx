@@ -1,11 +1,15 @@
 import HomeNavbar from '@/components/home/navbar';
 import ProgrammePageClient from '@/components/programme/programme-page-client';
 import { programmeSessions2025 } from '@/data/programme-2025';
+import { programmeSessions2026 } from '@/data/programme-2026';
 import {
   buildProgrammeSpeakerDesignationMap,
   buildProgrammeSpeakerPhotoMap,
+  programmeDayDateMap2026,
   programmeDayLabels,
+  programmeDayLabels2026,
   programmeReceptionNotes,
+  programmeReceptionNotes2026,
 } from '@/lib/programme-page-data';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 
@@ -50,6 +54,9 @@ export default function ProgrammePage() {
   const visibleSessions = programmeSessions2025.filter(
     shouldShowProgrammeSession
   );
+  const visibleSessions2026 = programmeSessions2026.filter(
+    shouldShowProgrammeSession
+  );
 
   return (
     <>
@@ -60,6 +67,10 @@ export default function ProgrammePage() {
         speakerDesignationMap={speakerDesignationMap}
         speakerPhotoMap={speakerPhotoMap}
         receptionNotes={programmeReceptionNotes}
+        sessions2026={visibleSessions2026}
+        dayLabels2026={programmeDayLabels2026}
+        receptionNotes2026={programmeReceptionNotes2026}
+        dayDateMap2026={programmeDayDateMap2026}
       />
     </>
   );
