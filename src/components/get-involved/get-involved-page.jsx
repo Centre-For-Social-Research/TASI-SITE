@@ -83,7 +83,10 @@ export default function GetInvolvedPage() {
               </div>
             </div>
 
-            <div className="rounded-[10px] border border-stone-200 bg-[linear-gradient(145deg,#111827,#1f2937,#7c2d12)] px-6 py-8 text-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] sm:px-8">
+            {/* Flex column so the actions can sit at the bottom of the card.
+                This panel has less copy than the Best Fits card beside it, and
+                the grid stretches both to the same height. */}
+            <div className="flex flex-col rounded-[10px] border border-stone-200 bg-[linear-gradient(145deg,#111827,#1f2937,#7c2d12)] px-6 py-8 text-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] sm:px-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-200">
                 {getInvolvedTailoredCta.eyebrow}
               </p>
@@ -93,7 +96,7 @@ export default function GetInvolvedPage() {
               <p className="mt-4 text-base leading-relaxed text-white/80">
                 {getInvolvedTailoredCta.description}
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-auto flex flex-wrap gap-3 pt-7">
                 {getInvolvedTailoredCta.actions.map((action) => (
                   <Link
                     key={action.href}

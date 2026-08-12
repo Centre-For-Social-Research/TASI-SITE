@@ -88,7 +88,8 @@ export default function FestivalHighlightsSection() {
                     src={MUX_EMBED_URL}
                     title="Trust and Safety India Festival Highlights"
                     className="absolute inset-0 h-full w-full border-0 object-cover"
-                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
+                    allowFullScreen
                     loading="lazy"
                   />
                 </div>
