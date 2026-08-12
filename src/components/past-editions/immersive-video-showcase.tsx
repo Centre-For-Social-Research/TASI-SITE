@@ -156,7 +156,8 @@ export default function ImmersiveVideoShowcase() {
                   title={activeClip.title}
                   className="absolute inset-0 h-full w-full md:left-1/2 md:top-1/2 md:h-[120vh] md:w-[120vw] md:max-w-none md:-translate-x-1/2 md:-translate-y-1/2"
                   loading="lazy"
-                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
+                  allowFullScreen
                 />
               </div>
             ) : (

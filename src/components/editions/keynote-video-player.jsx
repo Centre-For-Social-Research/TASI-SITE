@@ -15,7 +15,7 @@ export default function KeynoteVideoPlayer({
           src={iframeSrc}
           title={title}
           className="absolute inset-0 h-full w-full border-0"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
           allowFullScreen
         />
       </div>
