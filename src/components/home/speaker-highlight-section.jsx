@@ -22,14 +22,14 @@ export default function SpeakerHighlightSection() {
     { name: 'Abhishek Singh', file: 'Abhishek Singh.png' },
     // 4. Ambassadors / High Commissioner
     {
-      name: 'Jan Thesleff',
-      file: 'Jan Thesleff.png',
-      defaultRole: 'Ambassador of Sweden to India',
-    },
-    {
       name: 'Marisa Gerards',
       file: 'Marisa Gerards.png',
       defaultRole: 'Ambassador of the Netherlands to India',
+    },
+    {
+      name: 'Jan Thesleff',
+      file: 'Jan Thesleff.png',
+      defaultRole: 'Ambassador of Sweden to India',
     },
     {
       name: 'Thierry Mathou',
