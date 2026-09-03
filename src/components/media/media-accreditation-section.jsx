@@ -5,11 +5,34 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  MEDIA_COVERAGE_DAYS,
+  MEDIA_OUTLET_TYPES,
+} from '@/data/media-accreditation';
+
+const initialFormState = {
+  name: '',
+  publication: '',
+  outletType: '',
+  email: '',
+  phone: '',
+  coverageDays: '',
+};
+
+const fieldClassName =
+  'h-11 rounded-[10px] border-0 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-500 focus-visible:ring-2 focus-visible:ring-white';
+const labelClassName =
+  'mb-2 block text-xs font-black uppercase tracking-[0.12em] text-white';
 
 export default function MediaAccreditationSection() {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function updateField(event) {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -20,7 +43,14 @@ export default function MediaAccreditationSection() {
       const response = await fetch('/api/media-accreditation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          publication: formData.publication.trim(),
+          outletType: formData.outletType,
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          coverageDays: formData.coverageDays,
+        }),
       });
 
       let data = null;
@@ -39,9 +69,9 @@ export default function MediaAccreditationSection() {
         setStatus(data?.error || `Request failed (${response.status}).`);
       } else {
         setStatus(
-          'Application received. The TASI team will review your accreditation request.'
+          'Application received. We have emailed you a confirmation, and the TASI team will review your accreditation request.'
         );
-        setEmail('');
+        setFormData(initialFormState);
       }
     } catch (error) {
       const errorMessage =
@@ -100,21 +130,128 @@ export default function MediaAccreditationSection() {
           </p>
 
           <form className="mt-6 max-w-xl" onSubmit={handleSubmit}>
-            <label
-              htmlFor="media-business-email"
-              className="mb-2 block text-xs font-black uppercase tracking-[0.12em] text-white"
-            >
-              Business email address *
-            </label>
-            <Input
-              id="media-business-email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="user@example.com"
-              className="h-11 rounded-[10px] border-0 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-500 focus-visible:ring-2 focus-visible:ring-white"
-              required
-            />
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="media-name" className={labelClassName}>
+                  Full name *
+                </label>
+                <Input
+                  id="media-name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  value={formData.name}
+                  onChange={updateField}
+                  placeholder="Priya Sharma"
+                  className={fieldClassName}
+                  maxLength={120}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="media-publication" className={labelClassName}>
+                  Publication *
+                </label>
+                <Input
+                  id="media-publication"
+                  name="publication"
+                  type="text"
+                  autoComplete="organization"
+                  value={formData.publication}
+                  onChange={updateField}
+                  placeholder="The Daily Chronicle"
+                  className={fieldClassName}
+                  maxLength={160}
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="media-business-email"
+                  className={labelClassName}
+                >
+                  Business email address *
+                </label>
+                <Input
+                  id="media-business-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={updateField}
+                  placeholder="user@example.com"
+                  className={fieldClassName}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="media-phone" className={labelClassName}>
+                  Contact number *
+                </label>
+                <Input
+                  id="media-phone"
+                  name="phone"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  value={formData.phone}
+                  onChange={updateField}
+                  placeholder="+91 98765 43210"
+                  className={fieldClassName}
+                  maxLength={24}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="media-outlet-type" className={labelClassName}>
+                  Outlet type *
+                </label>
+                <select
+                  id="media-outlet-type"
+                  name="outletType"
+                  value={formData.outletType}
+                  onChange={updateField}
+                  className={`${fieldClassName} w-full appearance-none bg-[url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2357534e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")] bg-[right_1rem_center] bg-no-repeat pr-10`}
+                  required
+                >
+                  <option value="" disabled>
+                    Select outlet type
+                  </option>
+                  {MEDIA_OUTLET_TYPES.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="media-coverage-days" className={labelClassName}>
+                  Covering{' '}
+                  <span className="font-bold normal-case tracking-normal text-white/60">
+                    (optional)
+                  </span>
+                </label>
+                <select
+                  id="media-coverage-days"
+                  name="coverageDays"
+                  value={formData.coverageDays}
+                  onChange={updateField}
+                  className={`${fieldClassName} w-full appearance-none bg-[url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2357534e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")] bg-[right_1rem_center] bg-no-repeat pr-10`}
+                >
+                  <option value="">Select a day</option>
+                  {MEDIA_COVERAGE_DAYS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
             <div className="mt-6">
               <Button
