@@ -15,7 +15,8 @@ const isClerkBackedRoute = createRouteMatcher([
   '/api/check-in(.*)',
   '/api/events(.*)',
   '/api/health',
-  '/api/me(.*)',
+  '/api/me',
+  '/api/me/(.*)',
   '/api/operator(.*)',
   '/api/resend/test(.*)',
 ]);
@@ -28,7 +29,8 @@ const isProtectedRoute = createRouteMatcher([
   '/admin(.*)',
   '/api/admin(.*)',
   '/api/check-in(.*)',
-  '/api/me(.*)',
+  '/api/me',
+  '/api/me/(.*)',
   '/api/operator(.*)',
 ]);
 
