@@ -113,7 +113,11 @@ test('global proxy runs Clerk middleware only for auth-backed routing', () => {
   assert.match(proxy, /'\/admin\(\.\*\)'/);
   assert.match(proxy, /'\/sign-in\(\.\*\)'/);
   assert.match(proxy, /'\/api\/admin\(\.\*\)'/);
-  assert.match(proxy, /'\/api\/me\(\.\*\)'/);
+  assert.match(proxy, /'\/api\/me',/);
+  assert.match(proxy, /'\/api\/me\/\(\.\*\)'/);
+  // '/api/me(.*)' would prefix-match public routes such as
+  // /api/media-accreditation and /api/messages, protecting them by accident.
+  assert.doesNotMatch(proxy, /'\/api\/me\(\.\*\)'/);
   assert.match(proxy, /const CLERK_PROXY_PATH = '\/__clerk';/);
   assert.match(proxy, /const clerkProxy = clerkMiddleware\(/);
   assert.match(proxy, /await auth\.protect\(\)/);
