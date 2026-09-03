@@ -102,3 +102,38 @@ export async function sendInboundNotificationEmail({ subject, text, replyTo }) {
     providerMessageId: data?.id || null,
   };
 }
+
+export async function sendApplicantConfirmationEmail({
+  to,
+  subject,
+  text,
+  replyTo,
+}) {
+  const resend = getResendClient();
+
+  if (!resend || !to) {
+    return {
+      sent: false,
+      skipped: true,
+      error: !resend ? 'Missing RESEND_API_KEY.' : 'Missing recipient.',
+    };
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: getResendFromEmail(),
+    to: [to],
+    subject,
+    text,
+    html: renderBrandedEmailHtml(text),
+    replyTo: [replyTo || EVENT_CONFIG.contactEmail],
+  });
+
+  if (error) {
+    throw new Error(error.message || 'Failed to send email.');
+  }
+
+  return {
+    sent: true,
+    providerMessageId: data?.id || null,
+  };
+}
