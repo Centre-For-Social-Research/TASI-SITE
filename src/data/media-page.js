@@ -44,7 +44,7 @@ export const mediaResources = [
     title: 'Press Releases',
     description:
       'Follow TASI announcements, festival updates, and major media moments from the latest event cycle.',
-    image: '/img/home-gallery/tasi-2026-brochure-3.png',
+    image: '/img/home-gallery/tasi-2026-brochure-3.webp',
     imageAlt: 'TASI brochure and press material',
     actions: [{ label: 'Open Press Releases', href: '/media/press-releases' }],
   },

@@ -275,7 +275,7 @@ export default function MediaAccreditationSection() {
 
         <div className="relative min-h-[220px] lg:min-h-[40vh]">
           <Image
-            src="/img/hero-bg-2.png"
+            src="/img/hero-bg-2.webp"
             alt="TASI media placeholder"
             fill
             className="object-cover opacity-80"

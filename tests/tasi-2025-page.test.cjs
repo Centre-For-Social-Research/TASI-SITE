@@ -72,7 +72,7 @@ test('TASI 2025 sections preserve the reviewed content flow and key media', () =
     source,
     /<RadialOrbitalTimeline\s+timelineData=\{tasi2025JourneyTimeline\}\s+variant="compact"\s+\/>/
   );
-  assert.match(source, /tasi-2025-jaishankar-keynote\.png/);
+  assert.match(source, /tasi-2025-jaishankar-keynote\.webp/);
   assert.match(source, /md:grid-cols-\[0\.94fr_1\.06fr\] md:items-stretch/);
   assert.match(
     source,
