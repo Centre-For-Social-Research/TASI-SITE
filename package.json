@@ -10,6 +10,7 @@
     "lint": "eslint . --max-warnings 0",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "assets:optimize": "node scripts/optimize-static-images.mjs",
     "test": "node --test \"tests/*.test.cjs\"",
     "loadtest:messages:prod-safe": "k6 run load-tests/messages-production-safe.js"
   },

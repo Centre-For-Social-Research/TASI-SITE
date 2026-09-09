@@ -196,7 +196,7 @@ export function Tasi2025InauguralKeynoteSection() {
           >
             <div className="relative aspect-[3/2] md:h-full md:min-h-[100%] md:aspect-auto">
               <Image
-                src="/img/home-gallery/tasi-2025-jaishankar-keynote.png"
+                src="/img/home-gallery/tasi-2025-jaishankar-keynote.webp"
                 alt="Dr. S. Jaishankar speaking at TASI 2025"
                 fill
                 className="object-cover transition duration-300 group-hover:scale-[1.02]"

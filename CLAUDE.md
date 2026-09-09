@@ -11,6 +11,7 @@ npm run lint         # ESLint (zero warnings allowed)
 npm run format       # Prettier (write)
 npm run format:check # Prettier (check only)
 npm run test         # Run all tests
+npx tsc --noEmit     # Type check (no dedicated npm script; CI runs this)
 ```
 
 **Run a single test file:**
@@ -26,6 +27,8 @@ npm run loadtest:messages:prod-safe
 ```
 
 **Environment:** Copy `.env.example` to `.env.local` and fill in all values before running locally.
+
+**CI (`.github/workflows/ci.yml`, Node 24):** PRs to `main` must pass lint, `format:check`, `tsc --noEmit`, tests, `npm audit --audit-level=high`, and build — run these before pushing.
 
 ## Architecture
 
@@ -84,6 +87,15 @@ Tests live in `/tests/*.test.cjs` and use the Node.js native test runner (`node:
 ### Static Data vs. Database
 
 Speaker bios, programme agenda, partner logos, and reception details are stored as static JS/TS files under `/src/data/`. Only transactional data (registrations, tickets, check-ins) lives in Supabase.
+
+### Database Schema & Docs
+
+- `supabase/schema.sql` is the canonical reference for the Supabase table definitions.
+- Operational runbooks (load testing, registration-ops peak readiness) live in `docs/runbooks/`; registration-ops setup is documented in `docs/registration-ops-setup.md`.
+
+### Mixed JS/TS
+
+The codebase mixes JavaScript and TypeScript (`jsconfig.json` + `tsconfig.json` both present). Match the language of the file/module you are editing; new Sanity and data modules tend to be TS, most `src/lib/` server modules are JS with `.cjs` test siblings.
 
 ### Chatbot
 
