@@ -11,11 +11,19 @@ import {
   LogOut,
   Search,
   CornerDownLeft,
+  Inbox,
 } from 'lucide-react';
 
 function buildCommands({ router, signOut }) {
   const go = (href) => () => router.push(href);
   return [
+    {
+      id: 'nav-submissions',
+      label: 'Go to Submissions',
+      group: 'Navigate',
+      icon: Inbox,
+      run: go('/admin/submissions'),
+    },
     {
       id: 'nav-registrations',
       label: 'Go to Registrations',

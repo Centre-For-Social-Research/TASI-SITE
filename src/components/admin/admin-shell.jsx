@@ -181,6 +181,7 @@ const Ico = {
 const NAV_ICONS = {
   '/admin': Ico.gauge,
   '/admin/registrations': Ico.users,
+  '/admin/submissions': Ico.audit,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
   '/admin/check-in': Ico.qr,
@@ -198,6 +199,11 @@ const PAGE_TITLES = {
     kicker: 'REGISTRATIONS · REVIEW',
     title: 'Review Queue',
     meta: 'Pending decisions',
+  },
+  '/admin/submissions': {
+    kicker: 'SUBMISSIONS · INBOX',
+    title: 'Submissions',
+    meta: 'Applications and enquiries',
   },
   '/admin/email-jobs': {
     kicker: 'EMAILS · CONFIRMATION',
@@ -230,6 +236,10 @@ const ADM_NAV_GROUPS = [
   {
     group: 'Registrations',
     keys: ['/admin/registrations', '/admin/email-jobs', '/admin/delivery'],
+  },
+  {
+    group: 'Submissions',
+    keys: ['/admin/submissions'],
   },
   {
     group: 'Day-of',

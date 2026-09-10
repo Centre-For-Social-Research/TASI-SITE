@@ -16,6 +16,14 @@ function buildAdminNavigation({ pathname = '', summary = {}, jobs = [] } = {}) {
       label: 'Operations',
       items: [
         {
+          href: '/admin/submissions',
+          label: 'Submissions',
+          active: normalizedPath === '/admin/submissions',
+          badgeCount: 0,
+          badgeTone: 'default',
+          showBadge: false,
+        },
+        {
           href: '/admin/registrations',
           label: 'Review Queue',
           active:

@@ -10,9 +10,19 @@ test('buildAdminNavigation marks the active route and hides zero-value delivery 
     jobs: [{ failed_items: 0 }],
   });
 
+  assert.equal(sections[0].items[0].href, '/admin/submissions');
   assert.equal(sections[0].items[0].active, false);
-  assert.equal(sections[0].items[0].badgeCount, 9);
-  assert.equal(sections[0].items[1].badgeCount, 0);
-  assert.equal(sections[0].items[1].showBadge, false);
-  assert.equal(sections[0].items[2].active, true);
+  assert.equal(sections[0].items[1].badgeCount, 9);
+  assert.equal(sections[0].items[2].badgeCount, 0);
+  assert.equal(sections[0].items[2].showBadge, false);
+  assert.equal(sections[0].items[3].active, true);
+});
+
+test('buildAdminNavigation exposes and activates the submissions route', () => {
+  const sections = buildAdminNavigation({ pathname: '/admin/submissions' });
+  const item = sections[0].items.find(
+    ({ href }) => href === '/admin/submissions'
+  );
+  assert.equal(item.label, 'Submissions');
+  assert.equal(item.active, true);
 });
