@@ -8,6 +8,7 @@ import {
   mediaLogoWall2025,
 } from '@/data/media-coverage-2025';
 import {
+  mediaCoverageDownloads,
   mediaHero,
   mediaResources,
   pressConferenceHighlights,
@@ -136,6 +137,20 @@ export default function MediaPage() {
                 published by leading media outlets detailing the impact and
                 reach of TASI.
               </p>
+
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                {mediaCoverageDownloads.map((action) => (
+                  <a
+                    key={action.href}
+                    href={action.href}
+                    target={action.external ? '_blank' : undefined}
+                    rel={action.external ? 'noreferrer' : undefined}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#4d116d] bg-transparent px-6 py-2.5 text-sm font-bold uppercase tracking-[0.12em] text-[#4d116d] transition hover:bg-[#4d116d] hover:text-white dark:border-fuchsia-400/60 dark:text-fuchsia-300 dark:hover:bg-fuchsia-400 dark:hover:text-[#2d1748]"
+                  >
+                    {action.label}
+                  </a>
+                ))}
+              </div>
             </div>
 
             <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
