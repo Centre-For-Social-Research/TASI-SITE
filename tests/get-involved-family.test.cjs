@@ -106,9 +106,7 @@ test('get involved data owns live parent-page participation paths', async () => 
     data.involvementOptions.some((item) => item.href === '/exhibition')
   );
   assert.ok(
-    data.involvementOptions.some(
-      (item) => item.href === '/media#media-accreditation'
-    )
+    data.involvementOptions.some((item) => item.href === '/media/accreditation')
   );
   assert.ok(
     data.involvementOptions.some(
@@ -193,7 +191,7 @@ test('get involved components consume shared data without reintroducing inline l
   assert.match(volunteerPage, /VolunteerApplicationForm/);
   assert.doesNotMatch(volunteerPage, /const volunteerBenefits/);
 
-  assert.match(mediaPage, /MediaAccreditationSection/);
+  assert.match(mediaPage, /MediaAccreditationCallout/);
   assert.match(mediaPage, /mediaResources\.map/);
   assert.doesNotMatch(mediaPage, /const mediaResources/);
 });
