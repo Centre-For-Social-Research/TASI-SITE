@@ -46,7 +46,7 @@ export const involvementOptions = [
       'Put your organisation in front of policymakers, platform teams, researchers, and civil society leaders through tailored TASI partnership opportunities.',
     href: '/sponsor#sponsorship-tiers',
     cta: 'Explore Sponsorships',
-    image: '/img/home-gallery/tasi-2026-brochure-3.webp',
+    image: '/img/home-gallery/tasi-2026-brochure-3.png',
     imageAlt: 'TASI sponsorship brochure material',
     eyebrow: 'Partnership',
   },
@@ -74,7 +74,7 @@ export const involvementOptions = [
     title: 'Attend as Press',
     description:
       'Apply for media accreditation to cover TASI, receive updates from the team, and access festival resources for newsroom planning.',
-    href: '/media#media-accreditation',
+    href: '/media/accreditation',
     cta: 'Get Media Access',
     image: '/img/home-gallery/7T7A9837.webp',
     imageAlt: 'Press and audience coverage at TASI',

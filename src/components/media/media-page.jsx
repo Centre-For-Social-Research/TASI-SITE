@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import MediaAccreditationSection from '@/components/media/media-accreditation-section';
+import MediaAccreditationCallout from '@/components/media/media-accreditation-callout';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import {
@@ -35,8 +35,8 @@ export default function MediaPage() {
                   <a
                     key={action.href}
                     href={action.href}
-                    target="_blank"
-                    rel="noreferrer"
+                    target={action.external ? '_blank' : undefined}
+                    rel={action.external ? 'noreferrer' : undefined}
                     className={
                       index === 0
                         ? 'inline-flex rounded-full !bg-white px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] !text-[#140f26] transition hover:scale-[1.02] hover:!bg-white/90 dark:!bg-white dark:!text-[#140f26]'
@@ -274,7 +274,7 @@ export default function MediaPage() {
           </div>
         </section>
 
-        <MediaAccreditationSection />
+        <MediaAccreditationCallout />
       </main>
     </>
   );

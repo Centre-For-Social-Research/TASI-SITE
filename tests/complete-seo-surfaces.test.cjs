@@ -94,6 +94,7 @@ test('remaining public pages expose reusable SEO JSON-LD surfaces', () => {
     'src/app/register/page.jsx',
     'src/app/sponsor/page.jsx',
     'src/app/media/page.jsx',
+    'src/app/media/accreditation/page.jsx',
     'src/app/media/press-kit/page.jsx',
     'src/app/media/press-releases/page.jsx',
     'src/app/exhibition/page.jsx',

@@ -90,28 +90,25 @@ export default function MediaAccreditationSection() {
 
   return (
     <section
-      id="media-accreditation"
-      className="bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_52%,#141c56_100%)] text-white"
+      aria-labelledby="media-accreditation-form-title"
+      className="w-full min-w-0 overflow-hidden rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_52%,#141c56_100%)] text-white shadow-[0_28px_80px_-42px_rgba(53,2,101,0.72)]"
     >
-      <div className="mx-auto grid w-full max-w-7xl overflow-hidden lg:grid-cols-[1.04fr_1.06fr]">
-        <div className="flex flex-col justify-center px-6 py-8 md:px-10 md:py-10 lg:px-12">
+      <div className="flex flex-col overflow-hidden">
+        <div className="order-2 flex flex-col justify-center px-6 py-8 md:px-10 md:py-10 lg:px-12">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-white/65">
-            TASI 2026 Media
+            Application form
           </p>
-          <h2 className="mt-3 text-2xl font-black tracking-tight text-white md:text-4xl">
-            Media accreditation
+          <h2
+            id="media-accreditation-form-title"
+            className="mt-3 text-2xl font-black tracking-tight text-white md:text-4xl"
+          >
+            Submit your accreditation request
           </h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-white md:text-[1.05rem] md:leading-[1.55]">
-            Journalists, editors, and industry reporters covering digital trust,
-            safety, public policy, and emerging technology are invited to apply
-            for TASI 2026 media access.
+          <p className="mt-4 text-base leading-relaxed text-white md:text-[1.05rem] md:leading-[1.55]">
+            Complete the form below to request press access for TASI 2026. All
+            applications are reviewed by the TASI media team.
           </p>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/82 md:text-[15px]">
-            Applications for accreditation are reviewed by the TASI team. Please
-            make sure you apply with a valid business email address linked to
-            your publication or newsroom.
-          </p>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/82 md:text-[15px]">
+          <p className="mt-4 text-sm leading-relaxed text-white/82 md:text-[15px]">
             Your personal data will be processed in line with our{' '}
             <a
               className="font-semibold underline underline-offset-4"
@@ -129,7 +126,7 @@ export default function MediaAccreditationSection() {
             .
           </p>
 
-          <form className="mt-6 max-w-xl" onSubmit={handleSubmit}>
+          <form className="mt-6 w-full" onSubmit={handleSubmit}>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label htmlFor="media-name" className={labelClassName}>
@@ -266,22 +263,25 @@ export default function MediaAccreditationSection() {
             </div>
 
             {status ? (
-              <p className="mt-3 text-sm leading-relaxed text-white/88">
+              <p
+                className="mt-3 text-sm leading-relaxed text-white/88"
+                role="status"
+                aria-live="polite"
+              >
                 {status}
               </p>
             ) : null}
           </form>
         </div>
 
-        <div className="relative min-h-[220px] lg:min-h-[40vh]">
+        <div className="relative order-1 min-h-[220px] md:min-h-[260px]">
           <Image
-            src="/img/hero-bg-2.webp"
-            alt="TASI media placeholder"
+            src="/img/hero-bg-2.png"
+            alt="Delegates and media professionals at a TASI gathering"
             fill
-            className="object-cover opacity-80"
-            sizes="(min-width: 1024px) 55vw, 100vw"
+            className="object-cover"
+            sizes="(min-width: 1024px) 62vw, 100vw"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(53,2,101,0.18),rgba(20,28,86,0.08))]" />
         </div>
       </div>
     </section>

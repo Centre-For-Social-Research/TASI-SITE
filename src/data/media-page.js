@@ -29,12 +29,18 @@ export const mediaHero = {
     'Coverage highlights from the Trust and Safety Festival India 2025 report, spanning national press, digital outlets, broadcast, wires, and social platforms.',
   actions: [
     {
+      label: 'Apply for TASI 2026 Media Accreditation',
+      href: '/media/accreditation',
+    },
+    {
       label: 'Open Coverage Report',
       href: '/downloads/tasi-2025-media-coverage-report.pdf',
+      external: true,
     },
     {
       label: 'Open Coverage Dossier',
       href: '/downloads/tasi-2025-media-coverage-dossier.pdf',
+      external: true,
     },
   ],
 };
@@ -44,7 +50,7 @@ export const mediaResources = [
     title: 'Press Releases',
     description:
       'Follow TASI announcements, festival updates, and major media moments from the latest event cycle.',
-    image: '/img/home-gallery/tasi-2026-brochure-3.webp',
+    image: '/img/home-gallery/tasi-2026-brochure-3.png',
     imageAlt: 'TASI brochure and press material',
     actions: [{ label: 'Open Press Releases', href: '/media/press-releases' }],
   },
@@ -62,7 +68,7 @@ export const mediaResources = [
       'Reach the TASI team for interviews, speaking requests, and on-site media coordination ahead of the event.',
     image: '/img/home-gallery/7T7A9837.webp',
     imageAlt: 'Conference session at TASI',
-    actions: [{ label: 'Media Accreditation', href: '#media-accreditation' }],
+    actions: [{ label: 'Media Accreditation', href: '/media/accreditation' }],
   },
   {
     title: 'Photo Gallery',

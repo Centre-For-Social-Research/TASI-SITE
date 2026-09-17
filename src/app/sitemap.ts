@@ -43,6 +43,7 @@ const staticRoutes: Route[] = [
   { path: '/contact', changeFrequency: 'monthly', priority: 0.6 },
   // ── Media ────────────────────────────────────────────────────────────────────
   { path: '/media', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/media/accreditation', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/media/press-kit', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/media/press-releases', changeFrequency: 'weekly', priority: 0.6 },
   // ── Blog ─────────────────────────────────────────────────────────────────────
