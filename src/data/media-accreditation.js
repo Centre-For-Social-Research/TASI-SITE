@@ -40,7 +40,7 @@ export const mediaAccreditationMetadata = {
 
 export const mediaAccreditationHero = {
   eyebrow: 'TASI 2026 Media',
-  title: 'Apply for media accreditation',
+  title: 'Apply For Media Accreditation',
   description:
     'Request press access for the Trust and Safety India Festival on 14 and 15 October 2026 in New Delhi.',
 };

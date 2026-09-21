@@ -24,7 +24,7 @@ export const mediaMetadata = {
 
 export const mediaHero = {
   eyebrow: 'Media Coverage',
-  title: 'TASI 2025 In The Media',
+  title: 'TASI In The Media',
   description:
     'Coverage highlights from the Trust and Safety Festival India 2025 report, spanning national press, digital outlets, broadcast, wires, and social platforms.',
   actions: [
@@ -32,18 +32,21 @@ export const mediaHero = {
       label: 'Apply for TASI 2026 Media Accreditation',
       href: '/media/accreditation',
     },
-    {
-      label: 'Open Coverage Report',
-      href: '/downloads/tasi-2025-media-coverage-report.pdf',
-      external: true,
-    },
-    {
-      label: 'Open Coverage Dossier',
-      href: '/downloads/tasi-2025-media-coverage-dossier.pdf',
-      external: true,
-    },
   ],
 };
+
+export const mediaCoverageDownloads = [
+  {
+    label: 'Open Coverage Report',
+    href: '/downloads/tasi-2025-media-coverage-report.pdf',
+    external: true,
+  },
+  {
+    label: 'Open Coverage Dossier',
+    href: '/downloads/tasi-2025-media-coverage-dossier.pdf',
+    external: true,
+  },
+];
 
 export const mediaResources = [
   {
