@@ -2,6 +2,7 @@ import {
   createNotification,
   getRegistrationById,
   issuePassForRegistration,
+  markQrPassIssued,
   markNotificationDelivery,
 } from '@/lib/registration-db';
 import { buildPassAttachment } from '@/lib/registration-pass';
@@ -85,6 +86,11 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
   if (!emailResult.sent) {
     throw new Error(emailResult.error || 'Unable to deliver QR pass email.');
   }
+
+  await markQrPassIssued({
+    registrationId: issued.registration.id,
+    operator,
+  });
 
   await deliverHighPriorityRegistrationWhatsApp({
     registration: issued.registration,
