@@ -7,6 +7,7 @@ import {
   View,
   Text,
   Image,
+  Font,
   renderToBuffer,
 } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
@@ -14,6 +15,7 @@ import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { EVENT_CONFIG } from '@/lib/registration-constants';
 import badgeLayoutUtils from '@/lib/registration-badge-layout.cjs';
 import badgeExportUtils from '@/lib/badge-export-utils.cjs';
+import qrPassTemplateUtils from '@/lib/qr-pass-template.cjs';
 import {
   buildBadgeDisplayName,
   PROFILE_BUCKET,
@@ -25,11 +27,24 @@ const {
   normalizeBadgeSingleLine,
 } = badgeLayoutUtils;
 const { buildCsvExport, buildExcelExport } = badgeExportUtils;
+const { isInvitationQrPassTemplateEnabled } = qrPassTemplateUtils;
 
 export { buildCsvExport, buildExcelExport };
 
 let cachedLogoDataUrl = null;
 let cachedHeaderBackgroundDataUrl = null;
+let cachedInvitationBackgroundDataUrl = null;
+
+Font.register({
+  family: 'Inter',
+  src: path.join(
+    process.cwd(),
+    'public',
+    'fonts',
+    'inter',
+    'Inter-Regular.ttf'
+  ),
+});
 
 async function fileToDataUrl(filePath, mimeType) {
   const buffer = await fs.readFile(filePath);
@@ -111,6 +126,35 @@ export async function buildQrDataUrl(token) {
       light: '#FFFFFF',
     },
   });
+}
+
+async function buildInvitationQrDataUrl(token) {
+  return QRCode.toDataURL(token, {
+    errorCorrectionLevel: 'M',
+    margin: 4,
+    width: 420,
+    color: {
+      dark: '#000000',
+      light: '#FFFFFF',
+    },
+  });
+}
+
+async function getInvitationBackgroundDataUrl() {
+  if (cachedInvitationBackgroundDataUrl) {
+    return cachedInvitationBackgroundDataUrl;
+  }
+
+  cachedInvitationBackgroundDataUrl = await fileToDataUrl(
+    path.join(
+      process.cwd(),
+      'public',
+      'img',
+      'tasi-pass-invitation-background.jpg'
+    ),
+    'image/jpeg'
+  );
+  return cachedInvitationBackgroundDataUrl;
 }
 
 export async function buildQrPngBuffer(token) {
@@ -211,6 +255,56 @@ const toHexReg = (r, g, b) =>
 // Page size: 101.6mm × 152.4mm → 287.9pt × 432.0pt
 const BADGE_PAGE_W = MM(101.6);
 const BADGE_PAGE_H = MM(152.4);
+
+function InvitationPassPage({ registration, qrDataUrl, backgroundDataUrl }) {
+  const firstName = String(registration?.first_name || 'Participant').trim();
+  const greetingFontSize = firstName.length > 24 ? 7.6 : 9.1;
+
+  return (
+    <Page
+      size={[BADGE_PAGE_W, BADGE_PAGE_H]}
+      style={{ backgroundColor: '#49112f' }}
+    >
+      <Image
+        alt=""
+        src={backgroundDataUrl}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: BADGE_PAGE_W,
+          height: BADGE_PAGE_H,
+        }}
+      />
+      <Text
+        style={{
+          position: 'absolute',
+          top: 99.5,
+          left: 20,
+          width: BADGE_PAGE_W - 40,
+          fontFamily: 'Inter',
+          fontSize: greetingFontSize,
+          lineHeight: 1.4,
+          color: '#ffffff',
+          textAlign: 'center',
+        }}
+      >
+        {`Dear ${firstName},`}
+      </Text>
+      <Image
+        alt="TASI 2026 QR entry pass"
+        src={qrDataUrl}
+        style={{
+          position: 'absolute',
+          top: 247.5,
+          left: (BADGE_PAGE_W - 42) / 2,
+          width: 42,
+          height: 42,
+        }}
+      />
+    </Page>
+  );
+}
 
 function InstitutionalBadgePage({
   registration,
@@ -798,6 +892,30 @@ function InstitutionalBadgePage({
 }
 
 export async function buildPassAttachment({ token, registration }) {
+  const usesInvitationTemplate = isInvitationQrPassTemplateEnabled();
+
+  if (usesInvitationTemplate) {
+    const [qrDataUrl, backgroundDataUrl] = await Promise.all([
+      buildInvitationQrDataUrl(token),
+      getInvitationBackgroundDataUrl(),
+    ]);
+    const pdfBuffer = await renderToBuffer(
+      <Document>
+        <InvitationPassPage
+          registration={registration}
+          qrDataUrl={qrDataUrl}
+          backgroundDataUrl={backgroundDataUrl}
+        />
+      </Document>
+    );
+
+    return {
+      qrDataUrl,
+      pdfBuffer,
+      filename: `${registration.registration_code}-entry-pass.pdf`,
+    };
+  }
+
   const qrDataUrl = await buildQrDataUrl(token);
   const logoDataUrl = await getBadgeLogoDataUrl();
   const headerBackgroundDataUrl = await getBadgeHeaderBackgroundDataUrl();

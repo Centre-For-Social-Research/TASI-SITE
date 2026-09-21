@@ -444,7 +444,6 @@ export async function issuePassForRegistration({ registrationId, operator }) {
   const { data, error } = await supabase
     .from('event_registrations')
     .update({
-      qr_pass_issued_at: new Date().toISOString(),
       exception_badge_required:
         registration.exception_badge_required || exceptionBadgeRequired,
       updated_at: new Date().toISOString(),
@@ -457,16 +456,6 @@ export async function issuePassForRegistration({ registrationId, operator }) {
     throw new Error(error.message);
   }
 
-  await appendStatusHistory({
-    registrationId,
-    previousStatus: registration.status,
-    nextStatus: registration.status,
-    actorClerkId: operator.userId,
-    actorEmail: operator.primaryEmail,
-    actionType: 'qr_pass_issued',
-    notes: 'QR pass issued.',
-  });
-
   return {
     registration: {
       ...normalizeRegistrationRecord(data),
@@ -476,6 +465,41 @@ export async function issuePassForRegistration({ registrationId, operator }) {
     passId: createdPass?.id || null,
     token,
   };
+}
+
+export async function markQrPassIssued({ registrationId, operator }) {
+  const supabase = getSupabase();
+  const issuedAt = new Date().toISOString();
+  const { data, error } = await supabase
+    .from('event_registrations')
+    .update({
+      qr_pass_issued_at: issuedAt,
+      updated_at: issuedAt,
+    })
+    .eq('id', registrationId)
+    .is('qr_pass_issued_at', null)
+    .select('id, status, qr_pass_issued_at')
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return { updated: false, issuedAt: null };
+  }
+
+  await appendStatusHistory({
+    registrationId,
+    previousStatus: data.status,
+    nextStatus: data.status,
+    actorClerkId: operator.userId,
+    actorEmail: operator.primaryEmail,
+    actionType: 'qr_pass_issued',
+    notes: 'QR pass issued and email accepted for delivery.',
+  });
+
+  return { updated: true, issuedAt: data.qr_pass_issued_at || issuedAt };
 }
 
 export async function listBadgeExportRegistrations() {
