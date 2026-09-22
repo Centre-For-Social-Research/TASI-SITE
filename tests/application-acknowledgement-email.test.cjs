@@ -8,6 +8,10 @@ const {
   buildExhibitionAcknowledgementEmail,
   buildMediaAcknowledgementEmail,
   buildNewsletterAcknowledgementEmail,
+  buildRegistrationAcknowledgementEmail,
+  buildRegistrationConfirmedEmail,
+  buildRegistrationRejectedEmail,
+  buildRegistrationWaitlistedEmail,
   buildSpeakerAcknowledgementEmail,
   buildVolunteerAcknowledgementEmail,
 } = require('../src/lib/application-acknowledgement-email.cjs');
@@ -96,6 +100,70 @@ test('exhibition and newsletter acknowledgements use the external design', () =>
     /programme announcements, speaker news, and registration updates/
   );
   assert.match(newsletter.html, /cid:tasi-delhi-footer/);
+});
+
+test('registration acknowledgement and confirmation use the external design', () => {
+  const acknowledgement = buildRegistrationAcknowledgementEmail({
+    firstName: 'Saquib',
+  });
+  const confirmed = buildRegistrationConfirmedEmail({ firstName: 'Saquib' });
+
+  assert.equal(acknowledgement.subject, 'TASI 2026 registration received');
+  assert.match(acknowledgement.html, /Dear Saquib,/);
+  assert.match(
+    acknowledgement.text,
+    /does not confirm participation in the festival/
+  );
+  assert.match(acknowledgement.html, /cid:tasi-delhi-footer/);
+  assert.doesNotMatch(
+    acknowledgement.html,
+    /india@trustandsafetyfestival\.com/
+  );
+
+  assert.equal(
+    confirmed.subject,
+    'Your TASI 2026 participation is confirmed'
+  );
+  assert.match(confirmed.html, /Dear Saquib,/);
+  assert.match(confirmed.text, /Your QR entry pass and practical event details/);
+  assert.match(confirmed.html, /cid:tasi-logo/);
+  assert.doesNotMatch(confirmed.html, /india@trustandsafetyfestival\.com/);
+});
+
+test('registration waitlist and rejection updates use the external design', () => {
+  const waitlisted = buildRegistrationWaitlistedEmail({ firstName: 'Saquib' });
+  const rejected = buildRegistrationRejectedEmail({ firstName: 'Saquib' });
+
+  assert.equal(waitlisted.subject, 'TASI 2026 waitlist update');
+  assert.match(waitlisted.html, /Dear Saquib,/);
+  assert.match(waitlisted.text, /currently on the waitlist/);
+  assert.match(
+    waitlisted.text,
+    /does not confirm participation in the festival/
+  );
+  assert.match(waitlisted.html, /cid:tasi-logo/);
+
+  assert.equal(rejected.subject, 'TASI 2026 registration update');
+  assert.match(rejected.html, /Dear Saquib,/);
+  assert.match(rejected.text, /unable to offer you a place at the festival/);
+  assert.match(rejected.html, /cid:tasi-delhi-footer/);
+  assert.doesNotMatch(rejected.html, /india@trustandsafetyfestival\.com/);
+});
+
+test('registration acknowledgement and confirmation render through the external template only', () => {
+  const source = readSource('src/lib/registration-email.js');
+
+  assert.match(source, /templateType === 'submission_received'/);
+  assert.match(source, /buildRegistrationAcknowledgementEmail/);
+  assert.match(source, /templateType === 'confirmed'/);
+  assert.match(source, /buildRegistrationConfirmedEmail/);
+  assert.match(source, /templateType === 'waitlisted'/);
+  assert.match(source, /buildRegistrationWaitlistedEmail/);
+  assert.match(source, /templateType === 'rejected'/);
+  assert.match(source, /buildRegistrationRejectedEmail/);
+  assert.match(source, /registrationStatusCopy\?\.html/);
+  assert.match(source, /getTasiEmailInlineAttachments/);
+  assert.match(source, /registrationStatusCopy[\s\S]*\? \[replyEmail\]/);
 });
 
 test('application routes send acknowledgements only to the submitted applicant', () => {

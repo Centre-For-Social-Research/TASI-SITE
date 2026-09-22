@@ -188,6 +188,126 @@ function buildNewsletterAcknowledgementEmail({
   };
 }
 
+function buildRegistrationAcknowledgementEmail({
+  firstName,
+  replyEmail = DEFAULT_COMMS_EMAIL,
+}) {
+  const name = firstName || 'there';
+  const paragraphs = [
+    'Thank you for registering for the Trust & Safety India Festival 2026. We have received your registration and our team is reviewing your application.',
+    'There is nothing further you need to do at this stage. We will write to you once there is an update on your registration status, or if we need any additional information.',
+    'This email confirms receipt of your registration. It does not confirm participation in the festival.',
+  ];
+
+  return {
+    subject: 'TASI 2026 registration received',
+    text: [
+      `Dear ${name},`,
+      '',
+      ...paragraphs.flatMap((paragraph) => [paragraph, '']),
+      `Questions or corrections? Reply to this email or write to ${replyEmail}.`,
+      '',
+      'Trust & Safety India Festival 2026',
+      'People First. Safety Always.',
+    ].join('\n'),
+    html: renderAcknowledgementHtml({
+      firstName: name,
+      paragraphs,
+      replyEmail,
+    }),
+  };
+}
+
+function buildRegistrationConfirmedEmail({
+  firstName,
+  replyEmail = DEFAULT_COMMS_EMAIL,
+}) {
+  const name = firstName || 'there';
+  const paragraphs = [
+    'We are pleased to confirm your participation in the Trust & Safety India Festival 2026.',
+    'Your QR entry pass and practical event details will be shared closer to the festival. Please keep an eye on this email address for the next update.',
+    'We look forward to welcoming you in New Delhi.',
+  ];
+
+  return {
+    subject: 'Your TASI 2026 participation is confirmed',
+    text: [
+      `Dear ${name},`,
+      '',
+      ...paragraphs.flatMap((paragraph) => [paragraph, '']),
+      `Questions or corrections? Reply to this email or write to ${replyEmail}.`,
+      '',
+      'Trust & Safety India Festival 2026',
+      'People First. Safety Always.',
+    ].join('\n'),
+    html: renderAcknowledgementHtml({
+      firstName: name,
+      paragraphs,
+      replyEmail,
+    }),
+  };
+}
+
+function buildRegistrationWaitlistedEmail({
+  firstName,
+  replyEmail = DEFAULT_COMMS_EMAIL,
+}) {
+  const name = firstName || 'there';
+  const paragraphs = [
+    'Thank you for your interest in the Trust & Safety India Festival 2026. Due to limited capacity, your registration is currently on the waitlist.',
+    'If a place becomes available, we will contact you directly. There is nothing further you need to do at this stage.',
+    'This email confirms your waitlist status. It does not confirm participation in the festival.',
+  ];
+
+  return {
+    subject: 'TASI 2026 waitlist update',
+    text: [
+      `Dear ${name},`,
+      '',
+      ...paragraphs.flatMap((paragraph) => [paragraph, '']),
+      `Questions or corrections? Reply to this email or write to ${replyEmail}.`,
+      '',
+      'Trust & Safety India Festival 2026',
+      'People First. Safety Always.',
+    ].join('\n'),
+    html: renderAcknowledgementHtml({
+      firstName: name,
+      paragraphs,
+      replyEmail,
+    }),
+  };
+}
+
+function buildRegistrationRejectedEmail({
+  firstName,
+  replyEmail = DEFAULT_COMMS_EMAIL,
+}) {
+  const name = firstName || 'there';
+  const paragraphs = [
+    'Thank you for taking the time to register for the Trust & Safety India Festival 2026.',
+    'Due to limited capacity and the volume of registrations received, we are unable to offer you a place at the festival this year.',
+    'We appreciate your interest in the festival and hope to stay connected through future Trust & Safety India initiatives.',
+  ];
+
+  return {
+    subject: 'TASI 2026 registration update',
+    text: [
+      `Dear ${name},`,
+      '',
+      ...paragraphs.flatMap((paragraph) => [paragraph, '']),
+      `Questions or corrections? Reply to this email or write to ${replyEmail}.`,
+      '',
+      'Trust & Safety India Festival 2026',
+      'People First. Safety Always.',
+    ].join('\n'),
+    html: renderAcknowledgementHtml({
+      firstName: name,
+      paragraphs,
+      replyEmail,
+    }),
+  };
+}
+
 module.exports = {
   DEFAULT_COMMS_EMAIL,
   buildExhibitionAcknowledgementEmail,
@@ -195,5 +315,9 @@ module.exports = {
   buildVolunteerAcknowledgementEmail,
   buildMediaAcknowledgementEmail,
   buildNewsletterAcknowledgementEmail,
+  buildRegistrationAcknowledgementEmail,
+  buildRegistrationConfirmedEmail,
+  buildRegistrationWaitlistedEmail,
+  buildRegistrationRejectedEmail,
   escapeHtml,
 };
