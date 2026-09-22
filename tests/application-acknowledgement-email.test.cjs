@@ -167,9 +167,11 @@ test('guest invitation uses the fixed premium template without registration or Q
   assert.match(invitation.text, /14-15 October/);
   assert.match(
     invitation.text,
-    /people working across government, industry, civil society, research, policy, and technology/
+    /two-day gathering for people working across government, industry, civil society, research, policy, and technology/
   );
-  assert.match(invitation.text, /Please save the date\./);
+  assert.match(invitation.text, /online safety, digital rights/);
+  assert.match(invitation.text, /Please save the date and use the links below/);
+  assert.match(invitation.text, /Team TASI/);
   assert.match(invitation.html, /Venue map/);
   assert.match(invitation.html, /Google Calendar/);
   assert.match(invitation.html, /Outlook Calendar/);

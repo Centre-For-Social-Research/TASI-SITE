@@ -53,7 +53,7 @@ export async function POST(_request, context) {
         },
         {
           filename: invitationPoster.filename,
-          content: invitationPoster.pdfBuffer,
+          content: invitationPoster.imageBuffer,
         },
       ],
     });
