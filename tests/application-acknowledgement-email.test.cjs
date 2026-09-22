@@ -5,7 +5,9 @@ const path = require('node:path');
 
 const {
   DEFAULT_COMMS_EMAIL,
+  buildExhibitionAcknowledgementEmail,
   buildMediaAcknowledgementEmail,
+  buildNewsletterAcknowledgementEmail,
   buildSpeakerAcknowledgementEmail,
   buildVolunteerAcknowledgementEmail,
 } = require('../src/lib/application-acknowledgement-email.cjs');
@@ -74,11 +76,34 @@ test('media acknowledgement uses the external acknowledgement design', () => {
   assert.doesNotMatch(email.html, /india@trustandsafetyfestival\.com/);
 });
 
-test('speaker and volunteer routes send acknowledgements only to the submitted applicant', () => {
+test('exhibition and newsletter acknowledgements use the external design', () => {
+  const exhibition = buildExhibitionAcknowledgementEmail({
+    firstName: 'Saquib',
+    company: 'CSR',
+  });
+  const newsletter = buildNewsletterAcknowledgementEmail({});
+
+  assert.match(exhibition.html, /Dear Saquib,/);
+  assert.match(exhibition.text, /enquiry from CSR/);
+  assert.match(
+    exhibition.text,
+    /does not confirm an exhibition space or partnership/
+  );
+  assert.match(exhibition.html, /cid:tasi-logo/);
+  assert.match(newsletter.html, /Hello,/);
+  assert.match(
+    newsletter.text,
+    /programme announcements, speaker news, and registration updates/
+  );
+  assert.match(newsletter.html, /cid:tasi-delhi-footer/);
+});
+
+test('application routes send acknowledgements only to the submitted applicant', () => {
   for (const relativePath of [
     'src/app/api/speaker-application/route.js',
     'src/app/api/volunteer-application/route.js',
     'src/app/api/media-accreditation/route.js',
+    'src/app/api/messages/route.js',
   ]) {
     const source = readSource(relativePath);
 

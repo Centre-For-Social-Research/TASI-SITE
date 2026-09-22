@@ -10,8 +10,35 @@ import {
   sanitizeEmail,
   sanitizeMessage,
 } from '@/lib/input-sanitizers';
-import { sendInboundNotificationEmail } from '@/lib/resend';
+import {
+  getApplicationCommsEmail,
+  sendApplicantConfirmationEmail,
+  sendInboundNotificationEmail,
+} from '@/lib/resend';
+import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
 import { after } from 'next/server';
+
+const { buildExhibitionAcknowledgementEmail } = applicationAcknowledgementEmail;
+
+function getExhibitionApplicantDetails(message) {
+  const fields = Object.fromEntries(
+    message
+      .split('\n')
+      .map((line) => {
+        const separator = line.indexOf(':');
+        if (separator === -1) return null;
+        return [line.slice(0, separator).trim(), line.slice(separator + 1).trim()];
+      })
+      .filter(Boolean)
+  );
+  const firstName = fields.Name?.split(/\s+/)[0] || 'there';
+
+  return {
+    firstName,
+    company: fields.Company || 'your organisation',
+  };
+}
 
 export async function POST(request) {
   const protection = await protectPublicPostRoute(request, 'messages', {
@@ -95,6 +122,30 @@ export async function POST(request) {
         });
       } catch (emailError) {
         console.error('Failed to send contact notification email.', emailError);
+      }
+
+      if (normalizedSource === 'exhibition-enquiry') {
+        try {
+          const replyEmail = getApplicationCommsEmail();
+          const applicant = getExhibitionApplicantDetails(message);
+          const acknowledgement = buildExhibitionAcknowledgementEmail({
+            ...applicant,
+            replyEmail,
+          });
+          await sendApplicantConfirmationEmail({
+            to: email,
+            subject: acknowledgement.subject,
+            text: acknowledgement.text,
+            html: acknowledgement.html,
+            replyTo: replyEmail,
+            attachments: await getTasiEmailInlineAttachments(),
+          });
+        } catch (emailError) {
+          console.error(
+            'Failed to send exhibition enquiry acknowledgement email.',
+            emailError
+          );
+        }
       }
     });
 

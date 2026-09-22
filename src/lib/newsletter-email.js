@@ -1,19 +1,12 @@
-import { renderBrandedEmailHtml } from '@/lib/email-branding';
-import { getResendClient, getResendFromEmail } from '@/lib/resend';
+import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import {
+  getApplicationCommsEmail,
+  getResendClient,
+  getResendFromEmail,
+} from '@/lib/resend';
+import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
 
-export const NEWSLETTER_WELCOME_COPY = {
-  subject: "You're on the TASI 2026 mailing list",
-  text: `Hi,
-
-Thanks for subscribing to updates from the Trust and Safety India Festival.
-
-We'll write when there is something worth your time: programme announcements, speaker news, and registration updates for TASI 2026, happening 14-15 October at the India International Centre, New Delhi.
-
-If this wasn't you, reply to this email and we'll take you off the list.
-
-Warm regards,
-TASI Team`,
-};
+const { buildNewsletterAcknowledgementEmail } = applicationAcknowledgementEmail;
 
 export async function sendNewsletterWelcomeEmail(email) {
   const resend = getResendClient();
@@ -22,13 +15,18 @@ export async function sendNewsletterWelcomeEmail(email) {
     return { sent: false, skipped: true, error: 'Missing RESEND_API_KEY.' };
   }
 
-  const { subject, text } = NEWSLETTER_WELCOME_COPY;
+  const replyEmail = getApplicationCommsEmail();
+  const { subject, text, html } = buildNewsletterAcknowledgementEmail({
+    replyEmail,
+  });
   const { data, error } = await resend.emails.send({
     from: getResendFromEmail(),
     to: [email],
     subject,
     text,
-    html: renderBrandedEmailHtml(text),
+    html,
+    replyTo: [replyEmail],
+    attachments: await getTasiEmailInlineAttachments(),
   });
 
   if (error) {
