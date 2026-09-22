@@ -15,9 +15,7 @@ import {
   MEDIA_COVERAGE_DAYS,
   MEDIA_OUTLET_TYPES,
 } from '@/data/media-accreditation';
-import {
-  buildTeamNotificationEmail,
-} from '@/lib/media-accreditation-email';
+import { buildTeamNotificationEmail } from '@/lib/media-accreditation-email';
 import {
   getApplicationCommsEmail,
   sendApplicantConfirmationEmail,

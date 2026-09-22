@@ -6,6 +6,7 @@ const path = require('node:path');
 const {
   DEFAULT_COMMS_EMAIL,
   buildExhibitionAcknowledgementEmail,
+  buildGuestInvitationEmail,
   buildMediaAcknowledgementEmail,
   buildNewsletterAcknowledgementEmail,
   buildRegistrationAcknowledgementEmail,
@@ -33,8 +34,14 @@ test('speaker acknowledgement uses the premium layout and private comms reply ad
   assert.doesNotMatch(email.html, /Speaker application received/);
   assert.match(email.html, /Dear Saquib &amp; Team,/);
   assert.match(email.html, /Safety &lt;by design&gt;/);
-  assert.match(email.text, /submissions alongside the wider festival programme/);
-  assert.match(email.text, /There is nothing further you need to do at this stage/);
+  assert.match(
+    email.text,
+    /submissions alongside the wider festival programme/
+  );
+  assert.match(
+    email.text,
+    /There is nothing further you need to do at this stage/
+  );
   assert.match(email.text, /does not confirm a place in the programme/);
   assert.match(email.html, /cid:tasi-logo/);
   assert.match(email.html, /cid:tasi-delhi-footer/);
@@ -120,12 +127,12 @@ test('registration acknowledgement and confirmation use the external design', ()
     /india@trustandsafetyfestival\.com/
   );
 
-  assert.equal(
-    confirmed.subject,
-    'Your TASI 2026 participation is confirmed'
-  );
+  assert.equal(confirmed.subject, 'Your TASI 2026 participation is confirmed');
   assert.match(confirmed.html, /Dear Saquib,/);
-  assert.match(confirmed.text, /Your QR entry pass and practical event details/);
+  assert.match(
+    confirmed.text,
+    /Your QR entry pass and practical event details/
+  );
   assert.match(confirmed.html, /cid:tasi-logo/);
   assert.doesNotMatch(confirmed.html, /india@trustandsafetyfestival\.com/);
 });
@@ -148,6 +155,20 @@ test('registration waitlist and rejection updates use the external design', () =
   assert.match(rejected.text, /unable to offer you a place at the festival/);
   assert.match(rejected.html, /cid:tasi-delhi-footer/);
   assert.doesNotMatch(rejected.html, /india@trustandsafetyfestival\.com/);
+});
+
+test('guest invitation uses the fixed premium template without registration or QR language', () => {
+  const invitation = buildGuestInvitationEmail({
+    name: 'Saquib & Team',
+  });
+
+  assert.equal(invitation.subject, 'A personal invitation to TASI 2026');
+  assert.match(invitation.html, /Dear Saquib &amp; Team,/);
+  assert.match(invitation.text, /14–15 October/);
+  assert.match(invitation.html, /cid:tasi-logo/);
+  assert.match(invitation.html, /cid:tasi-delhi-footer/);
+  assert.match(invitation.html, new RegExp(DEFAULT_COMMS_EMAIL));
+  assert.doesNotMatch(invitation.text, /QR|register|RSVP|VIP/i);
 });
 
 test('registration acknowledgement and confirmation render through the external template only', () => {

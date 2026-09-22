@@ -26,3 +26,15 @@ test('buildAdminNavigation exposes and activates the submissions route', () => {
   assert.equal(item.label, 'Submissions');
   assert.equal(item.active, true);
 });
+
+test('buildAdminNavigation exposes the isolated guest invitations route', () => {
+  const sections = buildAdminNavigation({
+    pathname: '/admin/guest-invitations',
+  });
+  const item = sections[0].items.find(
+    ({ href }) => href === '/admin/guest-invitations'
+  );
+  assert.equal(item.label, 'Guest Invitations');
+  assert.equal(item.active, true);
+  assert.equal(item.showBadge, false);
+});

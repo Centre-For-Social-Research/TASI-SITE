@@ -57,6 +57,14 @@ function buildAdminNavigation({ pathname = '', summary = {}, jobs = [] } = {}) {
           badgeTone: 'warning',
           showBadge: false,
         },
+        {
+          href: '/admin/guest-invitations',
+          label: 'Guest Invitations',
+          active: normalizedPath === '/admin/guest-invitations',
+          badgeCount: 0,
+          badgeTone: 'default',
+          showBadge: false,
+        },
       ],
     },
   ];

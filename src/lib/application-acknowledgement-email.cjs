@@ -14,9 +14,7 @@ function renderAcknowledgementHtml({
   paragraphs,
   replyEmail = DEFAULT_COMMS_EMAIL,
 }) {
-  const greeting = firstName
-    ? `Dear ${escapeHtml(firstName)},`
-    : 'Hello,';
+  const greeting = firstName ? `Dear ${escapeHtml(firstName)},` : 'Hello,';
   const safeReplyEmail = escapeHtml(replyEmail);
   const body = paragraphs
     .map(
@@ -112,8 +110,7 @@ function buildMediaAcknowledgementEmail({
   ];
 
   return {
-    subject:
-      'We have received your TASI 2026 media accreditation request',
+    subject: 'We have received your TASI 2026 media accreditation request',
     text: [
       `Dear ${name},`,
       '',
@@ -308,6 +305,33 @@ function buildRegistrationRejectedEmail({
   };
 }
 
+function buildGuestInvitationEmail({ name, replyEmail = DEFAULT_COMMS_EMAIL }) {
+  const guestName = name || 'there';
+  const paragraphs = [
+    'We are pleased to invite you to the Trust & Safety India Festival 2026.',
+    'Taking place on 14–15 October at India International Centre, New Delhi, the festival brings together people working across safety, policy, technology, research, and civil society.',
+    'Your arrival and entry arrangements will be coordinated separately by the TASI team. We look forward to welcoming you.',
+  ];
+
+  return {
+    subject: 'A personal invitation to TASI 2026',
+    text: [
+      `Dear ${guestName},`,
+      '',
+      ...paragraphs.flatMap((paragraph) => [paragraph, '']),
+      `Questions or corrections? Reply to this email or write to ${replyEmail}.`,
+      '',
+      'Trust & Safety India Festival 2026',
+      'People First. Safety Always.',
+    ].join('\n'),
+    html: renderAcknowledgementHtml({
+      firstName: guestName,
+      paragraphs,
+      replyEmail,
+    }),
+  };
+}
+
 module.exports = {
   DEFAULT_COMMS_EMAIL,
   buildExhibitionAcknowledgementEmail,
@@ -319,5 +343,6 @@ module.exports = {
   buildRegistrationConfirmedEmail,
   buildRegistrationWaitlistedEmail,
   buildRegistrationRejectedEmail,
+  buildGuestInvitationEmail,
   escapeHtml,
 };

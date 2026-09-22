@@ -65,7 +65,7 @@ export async function deliverRegistrationEmail({
                 firstName: registration.first_name,
                 replyEmail,
               })
-        : null;
+            : null;
   const invitationCopy = usesInvitationQrPassTemplate
     ? buildQrPassEmail({
         firstName: registration.first_name,
@@ -77,7 +77,8 @@ export async function deliverRegistrationEmail({
           'https://trustandsafetyindia.org',
       })
     : null;
-  const { subject, text } = invitationCopy || registrationStatusCopy || defaultCopy;
+  const { subject, text } =
+    invitationCopy || registrationStatusCopy || defaultCopy;
   const resend = getResendClient();
 
   if (!resend) {

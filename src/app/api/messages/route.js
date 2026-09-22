@@ -28,7 +28,10 @@ function getExhibitionApplicantDetails(message) {
       .map((line) => {
         const separator = line.indexOf(':');
         if (separator === -1) return null;
-        return [line.slice(0, separator).trim(), line.slice(separator + 1).trim()];
+        return [
+          line.slice(0, separator).trim(),
+          line.slice(separator + 1).trim(),
+        ];
       })
       .filter(Boolean)
   );
