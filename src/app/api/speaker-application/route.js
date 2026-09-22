@@ -5,7 +5,15 @@ import {
   sanitizeEmail,
   sanitizeMessage,
 } from '@/lib/input-sanitizers';
-import { sendInboundNotificationEmail } from '@/lib/resend';
+import {
+  getApplicationCommsEmail,
+  sendApplicantConfirmationEmail,
+  sendInboundNotificationEmail,
+} from '@/lib/resend';
+import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
+
+const { buildSpeakerAcknowledgementEmail } = applicationAcknowledgementEmail;
 
 function sanitizeShortText(value, maxLength, fieldName) {
   const sanitized = sanitizeMessage(value).replace(/\n+/g, ' ').trim();
@@ -104,6 +112,28 @@ export async function POST(request) {
     } catch (emailError) {
       console.error(
         'Failed to send speaker application notification email.',
+        emailError
+      );
+    }
+
+    try {
+      const replyEmail = getApplicationCommsEmail();
+      const acknowledgement = buildSpeakerAcknowledgementEmail({
+        firstName,
+        topic,
+        replyEmail,
+      });
+      await sendApplicantConfirmationEmail({
+        to: email,
+        subject: acknowledgement.subject,
+        text: acknowledgement.text,
+        html: acknowledgement.html,
+        replyTo: replyEmail,
+        attachments: await getTasiEmailInlineAttachments(),
+      });
+    } catch (emailError) {
+      console.error(
+        'Failed to send speaker application acknowledgement email.',
         emailError
       );
     }
