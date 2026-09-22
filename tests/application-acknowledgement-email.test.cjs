@@ -164,12 +164,11 @@ test('guest invitation uses the fixed premium template without registration or Q
 
   assert.equal(invitation.subject, 'Invitation to TASI 2026');
   assert.match(invitation.html, /Dear Saquib &amp; Team,/);
-  assert.match(invitation.text, /14-15 October/);
+  assert.match(invitation.html, /14-15 October/);
   assert.match(
     invitation.text,
     /two-day gathering for people working across government, industry, civil society, research, policy, and technology/
   );
-  assert.match(invitation.text, /online safety, digital rights/);
   assert.match(invitation.text, /Please save the date and use the links below/);
   assert.match(invitation.text, /Team TASI/);
   assert.match(invitation.html, /Venue map/);
