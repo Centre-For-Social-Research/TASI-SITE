@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Mono, DM_Sans, Fraunces, Inter, Outfit } from 'next/font/google';
+import { Inter, JetBrains_Mono, Outfit, Source_Sans_3 } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
@@ -110,22 +110,16 @@ const outfit = Outfit({
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
+const adminSans = Source_Sans_3({
   subsets: ['latin'],
   variable: '--font-admin-sans',
   display: 'swap',
 });
 
-const dmMono = DM_Mono({
+const adminMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-admin-mono',
   weight: ['400', '500'],
-  display: 'swap',
-});
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-admin-display',
   display: 'swap',
 });
 
@@ -208,7 +202,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${inter.variable} ${outfit.variable} ${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}
+      className={`${inter.variable} ${outfit.variable} ${adminSans.variable} ${adminMono.variable}`}
     >
       <body className="antialiased">
         <script
