@@ -10,6 +10,7 @@ import {
   getApplicationCommsEmail,
   sendApplicantConfirmationEmail,
 } from '@/lib/resend';
+import { buildGuestInvitationPoster } from '@/lib/guest-invitation-poster';
 import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
 
 const { buildGuestInvitationEmail } = applicationAcknowledgementEmail;
@@ -35,6 +36,9 @@ export async function POST(_request, context) {
         process.env.NEXT_PUBLIC_SITE_URL ||
         'https://trustandsafetyindia.org',
     });
+    const invitationPoster = await buildGuestInvitationPoster({
+      name: invitation.name,
+    });
     const delivery = await sendApplicantConfirmationEmail({
       to: invitation.email,
       subject: email.subject,
@@ -46,6 +50,10 @@ export async function POST(_request, context) {
         {
           filename: 'tasi-2026-calendar.ics',
           content: Buffer.from(email.calendarContent, 'utf8'),
+        },
+        {
+          filename: invitationPoster.filename,
+          content: invitationPoster.pdfBuffer,
         },
       ],
     });

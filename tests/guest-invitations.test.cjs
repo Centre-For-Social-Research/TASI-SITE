@@ -125,3 +125,17 @@ test('guest invitation routes require admin authorization for mutations and use 
   );
   assert.doesNotMatch(panel, /bulk send/i);
 });
+
+test('guest invitation send attaches the no-QR guest poster', () => {
+  const source = readSource(
+    'src/app/api/admin/guest-invitations/[id]/send/route.js'
+  );
+  const poster = readSource('src/lib/guest-invitation-poster.js');
+
+  assert.match(source, /buildGuestInvitationPoster/);
+  assert.match(source, /invitationPoster\.pdfBuffer/);
+  assert.match(source, /invitationPoster\.filename/);
+  assert.match(poster, /tasi-guest-invitation-background\.png/);
+  assert.match(poster, /special guest/);
+  assert.doesNotMatch(poster, /QRCode|qrDataUrl|QR entry pass/);
+});
