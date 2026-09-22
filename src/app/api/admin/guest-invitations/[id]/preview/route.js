@@ -18,6 +18,10 @@ export async function GET(_request, context) {
     const email = buildGuestInvitationEmail({
       name: invitation.name,
       replyEmail: getApplicationCommsEmail(),
+      siteUrl:
+        process.env.SITE_URL ||
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        'https://trustandsafetyindia.org',
     });
     return adminJson({
       success: true,

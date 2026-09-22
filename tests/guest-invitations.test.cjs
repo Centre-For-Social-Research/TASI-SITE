@@ -113,6 +113,8 @@ test('guest invitation routes require admin authorization for mutations and use 
   assert.match(sendRoute, /requireAdminOperator/);
   assert.match(sendRoute, /claimGuestInvitationSend/);
   assert.match(sendRoute, /markGuestInvitationSent/);
+  assert.match(sendRoute, /tasi-2026-calendar\.ics/);
+  assert.match(sendRoute, /email\.calendarContent/);
   assert.doesNotMatch(
     sendRoute,
     /event_registrations|entry_passes|createPassIssueEmailJob|QR/

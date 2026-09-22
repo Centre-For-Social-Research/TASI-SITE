@@ -162,13 +162,31 @@ test('guest invitation uses the fixed premium template without registration or Q
     name: 'Saquib & Team',
   });
 
-  assert.equal(invitation.subject, 'A personal invitation to TASI 2026');
+  assert.equal(invitation.subject, 'Invitation to TASI 2026');
   assert.match(invitation.html, /Dear Saquib &amp; Team,/);
   assert.match(invitation.text, /14–15 October/);
+  assert.match(
+    invitation.text,
+    /people working across government, industry, civil society, research, policy, and technology/
+  );
+  assert.match(
+    invitation.text,
+    /Practical festival information will be shared separately/
+  );
+  assert.match(invitation.html, /Venue map/);
+  assert.match(invitation.html, /Google Calendar/);
+  assert.match(invitation.html, /Outlook Calendar/);
+  assert.match(invitation.html, /Attached \.ics/);
+  assert.match(invitation.html, /Explore TASI/);
+  assert.match(invitation.html, /Speakers/);
+  assert.match(invitation.calendarContent, /BEGIN:VCALENDAR/);
   assert.match(invitation.html, /cid:tasi-logo/);
   assert.match(invitation.html, /cid:tasi-delhi-footer/);
   assert.match(invitation.html, new RegExp(DEFAULT_COMMS_EMAIL));
-  assert.doesNotMatch(invitation.text, /QR|register|RSVP|VIP/i);
+  assert.doesNotMatch(
+    invitation.text,
+    /QR|register|RSVP|VIP|arrival and entry/i
+  );
 });
 
 test('registration acknowledgement and confirmation render through the external template only', () => {

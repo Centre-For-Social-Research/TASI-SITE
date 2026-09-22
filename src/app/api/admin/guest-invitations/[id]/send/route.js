@@ -23,13 +23,17 @@ export async function POST(_request, context) {
   let invitation;
   let providerAccepted = false;
   try {
-    const attachments = await getTasiEmailInlineAttachments();
+    const inlineAttachments = await getTasiEmailInlineAttachments();
     const { id } = await context.params;
     invitation = await claimGuestInvitationSend({ id });
     const replyEmail = getApplicationCommsEmail();
     const email = buildGuestInvitationEmail({
       name: invitation.name,
       replyEmail,
+      siteUrl:
+        process.env.SITE_URL ||
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        'https://trustandsafetyindia.org',
     });
     const delivery = await sendApplicantConfirmationEmail({
       to: invitation.email,
@@ -37,7 +41,13 @@ export async function POST(_request, context) {
       text: email.text,
       html: email.html,
       replyTo: replyEmail,
-      attachments,
+      attachments: [
+        ...inlineAttachments,
+        {
+          filename: 'tasi-2026-calendar.ics',
+          content: Buffer.from(email.calendarContent, 'utf8'),
+        },
+      ],
     });
 
     if (!delivery.sent) {
