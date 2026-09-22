@@ -56,36 +56,27 @@ function buildPosterTextOverlay(name) {
       y: 455,
       fontSize: 36,
       lines: [
-        'We would be delighted to welcome you',
+        'It would be our privilege to welcome you',
         'as a special guest at the Trust & Safety India',
         'Festival 2026.',
       ],
     })}
     ${centeredText({
-      y: 640,
+      y: 650,
       fontSize: 34,
       lines: [
-        'Join us in New Delhi on 14-15 October 2026',
-        'for two days of thoughtful conversations,',
-        'new perspectives, and a shared commitment',
-        'to safer digital spaces.',
+        'Your voice and perspective would add meaning',
+        'to the conversations we hope to create.',
+        'We would be honoured to have you with us.',
       ],
     })}
     ${centeredText({
-      y: 875,
-      fontSize: 36,
-      lines: [
-        'Your presence would make the festival',
-        'all the more meaningful.',
-      ],
-    })}
-    ${centeredText({
-      y: 980,
+      y: 880,
       fontSize: 34,
       lines: ['With warm regards,'],
     })}
     ${centeredText({
-      y: 1035,
+      y: 935,
       fontSize: 38,
       fontWeight: 600,
       lines: ['Team TASI'],
