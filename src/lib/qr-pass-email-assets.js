@@ -3,7 +3,7 @@ import path from 'node:path';
 
 let cachedInlineAttachments = null;
 
-export async function getQrPassEmailInlineAttachments() {
+export async function getTasiEmailInlineAttachments() {
   if (cachedInlineAttachments) {
     return cachedInlineAttachments;
   }
@@ -29,3 +29,5 @@ export async function getQrPassEmailInlineAttachments() {
 
   return cachedInlineAttachments;
 }
+
+export const getQrPassEmailInlineAttachments = getTasiEmailInlineAttachments;

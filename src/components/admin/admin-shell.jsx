@@ -182,6 +182,7 @@ const NAV_ICONS = {
   '/admin': Ico.gauge,
   '/admin/registrations': Ico.users,
   '/admin/submissions': Ico.audit,
+  '/admin/guest-invitations': Ico.mail,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
   '/admin/check-in': Ico.qr,
@@ -204,6 +205,11 @@ const PAGE_TITLES = {
     kicker: 'SUBMISSIONS · INBOX',
     title: 'Submissions',
     meta: 'Applications and enquiries',
+  },
+  '/admin/guest-invitations': {
+    kicker: 'GUESTS · INVITATIONS',
+    title: 'Guest Invitations',
+    meta: 'Manual · No QR credential',
   },
   '/admin/email-jobs': {
     kicker: 'EMAILS · CONFIRMATION',
@@ -240,6 +246,10 @@ const ADM_NAV_GROUPS = [
   {
     group: 'Submissions',
     keys: ['/admin/submissions'],
+  },
+  {
+    group: 'Guests',
+    keys: ['/admin/guest-invitations'],
   },
   {
     group: 'Day-of',

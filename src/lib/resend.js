@@ -23,6 +23,12 @@ export function getResendFromEmail() {
   return process.env.RESEND_FROM_EMAIL?.trim() || EVENT_CONFIG.senderEmail;
 }
 
+export function getApplicationCommsEmail() {
+  return (
+    process.env.APPLICATION_COMMS_EMAIL?.trim() || 'tasi.comms@csrindia.org'
+  );
+}
+
 export function getResendSenderDiagnostics() {
   const fromEmail = getResendFromEmail();
   const normalizedFromEmail = fromEmail.toLowerCase();
@@ -89,7 +95,7 @@ export async function sendInboundNotificationEmail({ subject, text, replyTo }) {
     to: recipients,
     subject,
     text,
-    html: renderBrandedEmailHtml(text),
+    html: renderBrandedEmailHtml(text, { showSupportFooter: false }),
     replyTo: replyTo ? [replyTo] : undefined,
   });
 
@@ -108,6 +114,8 @@ export async function sendApplicantConfirmationEmail({
   subject,
   text,
   replyTo,
+  html,
+  attachments,
 }) {
   const resend = getResendClient();
 
@@ -119,13 +127,15 @@ export async function sendApplicantConfirmationEmail({
     };
   }
 
+  const replyEmail = replyTo || getApplicationCommsEmail();
   const { data, error } = await resend.emails.send({
     from: getResendFromEmail(),
     to: [to],
     subject,
     text,
-    html: renderBrandedEmailHtml(text),
-    replyTo: [replyTo || EVENT_CONFIG.contactEmail],
+    html: html || renderBrandedEmailHtml(text, { supportEmail: replyEmail }),
+    replyTo: [replyEmail],
+    attachments: attachments?.length ? attachments : undefined,
   });
 
   if (error) {

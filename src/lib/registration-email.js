@@ -3,14 +3,28 @@ import {
   REGISTRATION_EMAIL_COPY,
 } from '@/lib/registration-constants';
 import { renderBrandedEmailHtml } from '@/lib/email-branding';
-import { getQrPassEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
-import { getResendClient, getResendFromEmail } from '@/lib/resend';
+import {
+  getQrPassEmailInlineAttachments,
+  getTasiEmailInlineAttachments,
+} from '@/lib/qr-pass-email-assets';
+import {
+  getApplicationCommsEmail,
+  getResendClient,
+  getResendFromEmail,
+} from '@/lib/resend';
+import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
 import qrPassEmailUtils from '@/lib/qr-pass-email.cjs';
 import qrPassTemplateUtils from '@/lib/qr-pass-template.cjs';
 
 const renderEmailHtml = renderBrandedEmailHtml;
 const { buildQrPassEmail } = qrPassEmailUtils;
 const { isInvitationQrPassTemplateEnabled } = qrPassTemplateUtils;
+const {
+  buildRegistrationAcknowledgementEmail,
+  buildRegistrationConfirmedEmail,
+  buildRegistrationWaitlistedEmail,
+  buildRegistrationRejectedEmail,
+} = applicationAcknowledgementEmail;
 
 export async function deliverRegistrationEmail({
   registration,
@@ -29,6 +43,29 @@ export async function deliverRegistrationEmail({
   const usesInvitationQrPassTemplate =
     templateType === 'qr_pass_issued' && isInvitationQrPassTemplateEnabled();
   const defaultCopy = templateFactory({ firstName: registration.first_name });
+  const replyEmail = getApplicationCommsEmail();
+  const registrationStatusCopy =
+    templateType === 'submission_received'
+      ? buildRegistrationAcknowledgementEmail({
+          firstName: registration.first_name,
+          replyEmail,
+        })
+      : templateType === 'confirmed'
+        ? buildRegistrationConfirmedEmail({
+            firstName: registration.first_name,
+            replyEmail,
+          })
+        : templateType === 'waitlisted'
+          ? buildRegistrationWaitlistedEmail({
+              firstName: registration.first_name,
+              replyEmail,
+            })
+          : templateType === 'rejected'
+            ? buildRegistrationRejectedEmail({
+                firstName: registration.first_name,
+                replyEmail,
+              })
+            : null;
   const invitationCopy = usesInvitationQrPassTemplate
     ? buildQrPassEmail({
         firstName: registration.first_name,
@@ -40,7 +77,8 @@ export async function deliverRegistrationEmail({
           'https://trustandsafetyindia.org',
       })
     : null;
-  const { subject, text } = invitationCopy || defaultCopy;
+  const { subject, text } =
+    invitationCopy || registrationStatusCopy || defaultCopy;
   const resend = getResendClient();
 
   if (!resend) {
@@ -69,6 +107,10 @@ export async function deliverRegistrationEmail({
       });
     }
 
+    if (registrationStatusCopy) {
+      attachments.push(...(await getTasiEmailInlineAttachments()));
+    }
+
     if (pdfAttachment) {
       attachments.push({
         filename: pdfAttachment.filename,
@@ -83,13 +125,16 @@ export async function deliverRegistrationEmail({
       text,
       html:
         invitationCopy?.html ||
+        registrationStatusCopy?.html ||
         renderEmailHtml(text, {
           qrImageUrl,
           registrationCode: registration.registration_code,
         }),
       replyTo: usesInvitationQrPassTemplate
         ? [EVENT_CONFIG.contactEmail]
-        : undefined,
+        : registrationStatusCopy
+          ? [replyEmail]
+          : undefined,
       attachments: attachments.length ? attachments : undefined,
     });
 

@@ -43,9 +43,9 @@ function buildQrPassEmail({
   const safeQrImageUrl = escapeHtml(qrImageUrl);
   const safeRegistrationCode = escapeHtml(registrationCode || '-');
   const normalizedSiteUrl = normalizeSiteUrl(siteUrl);
-  const festivalUrl = `${normalizedSiteUrl}/trust-and-safety-india-festival`;
+  const festivalUrl = `${normalizedSiteUrl}/`;
   const programmeUrl = `${normalizedSiteUrl}/programme`;
-  const speakersUrl = `${normalizedSiteUrl}/speakers`;
+  const speakersUrl = `${normalizedSiteUrl}/speakers?year=2026`;
   const venueMapUrl =
     'https://www.google.com/maps/search/?api=1&query=India+International+Centre+New+Delhi';
   const googleCalendarUrl =

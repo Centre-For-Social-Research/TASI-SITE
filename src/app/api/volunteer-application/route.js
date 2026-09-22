@@ -5,7 +5,15 @@ import {
   sanitizeEmail,
   sanitizeMessage,
 } from '@/lib/input-sanitizers';
-import { sendInboundNotificationEmail } from '@/lib/resend';
+import {
+  getApplicationCommsEmail,
+  sendApplicantConfirmationEmail,
+  sendInboundNotificationEmail,
+} from '@/lib/resend';
+import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
+
+const { buildVolunteerAcknowledgementEmail } = applicationAcknowledgementEmail;
 
 function sanitizeShortText(
   value,
@@ -126,6 +134,29 @@ export async function POST(request) {
     } catch (emailError) {
       console.error(
         'Failed to send volunteer application notification email.',
+        emailError
+      );
+    }
+
+    try {
+      const replyEmail = getApplicationCommsEmail();
+      const acknowledgement = buildVolunteerAcknowledgementEmail({
+        firstName,
+        interestArea,
+        availability,
+        replyEmail,
+      });
+      await sendApplicantConfirmationEmail({
+        to: email,
+        subject: acknowledgement.subject,
+        text: acknowledgement.text,
+        html: acknowledgement.html,
+        replyTo: replyEmail,
+        attachments: await getTasiEmailInlineAttachments(),
+      });
+    } catch (emailError) {
+      console.error(
+        'Failed to send volunteer application acknowledgement email.',
         emailError
       );
     }

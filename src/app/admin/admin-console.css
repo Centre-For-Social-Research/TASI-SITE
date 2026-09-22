@@ -474,6 +474,9 @@
 .admin-v2 textarea::placeholder {
   color: var(--adm-ink-4) !important;
 }
+.admin-v2 input.adm-submission-search-input {
+  padding-left: 36px !important;
+}
 
 /* Checkboxes */
 .admin-v2 input[type='checkbox'],

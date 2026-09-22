@@ -297,14 +297,17 @@ export default function SubmissionsPanel() {
                 left: 12,
                 top: 13,
                 color: 'var(--adm-ink-3)',
+                pointerEvents: 'none',
+                zIndex: 1,
               }}
             />
             <input
+              className="adm-submission-search-input"
               aria-label="Search submissions"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
               placeholder="Search name, email, organisation…"
-              style={{ ...inputStyle(), width: '100%', paddingLeft: 36 }}
+              style={{ ...inputStyle(), width: '100%' }}
             />
           </label>
           <input

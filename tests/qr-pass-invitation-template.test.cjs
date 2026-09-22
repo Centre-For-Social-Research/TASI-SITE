@@ -43,9 +43,34 @@ test('approved QR email uses the requested subject, greeting, logo size and regi
       email.html.indexOf('Registration ID: TASI26-TEST01')
   );
   assert.match(email.html, /Attached \.ics/);
-  assert.match(email.html, />Programme</);
-  assert.match(email.html, />Speakers</);
+  assert.match(
+    email.html,
+    /href="https:\/\/trustandsafetyindia\.org\/"[^>]*>TASI 2026<\/a>/
+  );
+  assert.match(
+    email.html,
+    /href="https:\/\/trustandsafetyindia\.org\/programme"[^>]*>Programme<\/a>/
+  );
+  assert.match(
+    email.html,
+    /href="https:\/\/trustandsafetyindia\.org\/speakers\?year=2026"[^>]*>Speakers<\/a>/
+  );
   assert.doesNotMatch(email.html, /TASI-2026-PREVIEW/);
+});
+
+test('2026 speaker email link opens the 2026 speakers view', () => {
+  const speakersPage = readSource('src/app/speakers/page.jsx');
+  const speakersClient = readSource(
+    'src/components/speakers/speakers-page-client.jsx'
+  );
+
+  assert.match(speakersPage, /resolvedSearchParams\?\.year === '2026'/);
+  assert.match(speakersPage, /<SpeakersPageClient initialYear=\{initialYear\}/);
+  assert.match(
+    speakersClient,
+    /function SpeakersPageClient\(\{ initialYear = '2025' \}\)/
+  );
+  assert.match(speakersClient, /useState\(initialYear\)/);
 });
 
 test('calendar attachment covers both event days', () => {

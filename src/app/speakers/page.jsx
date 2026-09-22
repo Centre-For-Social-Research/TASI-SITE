@@ -12,11 +12,14 @@ export const metadata = {
   },
 };
 
-export default function SpeakersPage() {
+export default async function SpeakersPage({ searchParams }) {
+  const resolvedSearchParams = await searchParams;
+  const initialYear = resolvedSearchParams?.year === '2026' ? '2026' : '2025';
+
   return (
     <>
       <HomeNavbar />
-      <SpeakersPageClient />
+      <SpeakersPageClient initialYear={initialYear} />
     </>
   );
 }

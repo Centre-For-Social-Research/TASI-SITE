@@ -20,7 +20,12 @@ function getEmailLogoUrl() {
 
 export function renderBrandedEmailHtml(
   text,
-  { qrImageUrl, registrationCode } = {}
+  {
+    qrImageUrl,
+    registrationCode,
+    supportEmail = EVENT_CONFIG.contactEmail,
+    showSupportFooter = true,
+  } = {}
 ) {
   const paragraphs = text.split('\n').filter(Boolean);
   const body = paragraphs
@@ -53,7 +58,7 @@ export function renderBrandedEmailHtml(
         <div style="padding:28px 30px;">
           ${body}
           ${qrBlock}
-          <p style="margin:24px 0 0;color:#64748b;font-size:13px;line-height:1.6;">For registration support, contact ${escapeHtml(EVENT_CONFIG.contactEmail)}.</p>
+          ${showSupportFooter ? `<p style="margin:24px 0 0;color:#64748b;font-size:13px;line-height:1.6;">For support, contact ${escapeHtml(supportEmail)}.</p>` : ''}
         </div>
       </div>
     </div>
