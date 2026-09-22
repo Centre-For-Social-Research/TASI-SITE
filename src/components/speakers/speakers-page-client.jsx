@@ -50,8 +50,8 @@ function Speakers2026Update() {
   );
 }
 
-export default function SpeakersPageClient() {
-  const [year, setYear] = useState('2025');
+export default function SpeakersPageClient({ initialYear = '2025' }) {
+  const [year, setYear] = useState(initialYear);
   const hero = heroContent[year];
 
   return (
