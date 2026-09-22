@@ -90,6 +90,20 @@ function buildPosterTextOverlay(name) {
       fontWeight: 600,
       lines: ['Team TASI'],
     })}
+    <circle cx="${POSTER_CENTER_X}" cy="1118" r="48" fill="#d9b45c" fill-opacity="0.18" stroke="#f7df9d" stroke-opacity="0.78" stroke-width="2"/>
+    <circle cx="${POSTER_CENTER_X}" cy="1118" r="40" fill="none" stroke="#ffffff" stroke-opacity="0.32" stroke-width="1"/>
+    ${centeredText({
+      y: 1114,
+      fontSize: 20,
+      fontWeight: 600,
+      lines: ['TASI'],
+    })}
+    ${centeredText({
+      y: 1135,
+      fontSize: 13,
+      fontWeight: 600,
+      lines: ['2026'],
+    })}
   </svg>`);
 }
 

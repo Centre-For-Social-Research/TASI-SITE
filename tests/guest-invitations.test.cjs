@@ -138,6 +138,8 @@ test('guest invitation send attaches the no-QR guest poster image', () => {
   assert.match(poster, /tasi-guest-invitation-background\.png/);
   assert.match(poster, /special guest/);
   assert.match(poster, /Team TASI/);
+  assert.match(poster, /TASI/);
+  assert.match(poster, /2026/);
   assert.match(poster, /TASI-2026-guest-invitation\.jpg/);
   assert.doesNotMatch(
     poster,
