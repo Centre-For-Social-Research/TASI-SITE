@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const {
   DEFAULT_COMMS_EMAIL,
+  buildMediaAcknowledgementEmail,
   buildSpeakerAcknowledgementEmail,
   buildVolunteerAcknowledgementEmail,
 } = require('../src/lib/application-acknowledgement-email.cjs');
@@ -23,9 +24,12 @@ test('speaker acknowledgement uses the premium layout and private comms reply ad
     email.subject,
     'We have received your TASI 2026 speaker application'
   );
-  assert.match(email.html, /Speaker application received/);
+  assert.doesNotMatch(email.html, /Speaker application received/);
   assert.match(email.html, /Dear Saquib &amp; Team,/);
   assert.match(email.html, /Safety &lt;by design&gt;/);
+  assert.match(email.text, /submissions alongside the wider festival programme/);
+  assert.match(email.text, /There is nothing further you need to do at this stage/);
+  assert.match(email.text, /does not confirm a place in the programme/);
   assert.match(email.html, /cid:tasi-logo/);
   assert.match(email.html, /cid:tasi-delhi-footer/);
   assert.match(email.html, new RegExp(DEFAULT_COMMS_EMAIL));
@@ -44,7 +48,7 @@ test('volunteer acknowledgement confirms receipt without promising placement', (
     email.subject,
     'We have received your TASI 2026 volunteer application'
   );
-  assert.match(email.html, /Volunteer application received/);
+  assert.doesNotMatch(email.html, /Volunteer application received/);
   assert.match(email.text, /Speaker support/);
   assert.match(email.text, /Both event days/);
   assert.match(email.text, /does not confirm a volunteer placement/);
@@ -52,10 +56,29 @@ test('volunteer acknowledgement confirms receipt without promising placement', (
   assert.doesNotMatch(email.html, /india@trustandsafetyfestival\.com/);
 });
 
+test('media acknowledgement uses the external acknowledgement design', () => {
+  const email = buildMediaAcknowledgementEmail({
+    firstName: 'Saquib',
+    publication: 'CSR News',
+    coverageDays: 'both festival days',
+  });
+
+  assert.equal(
+    email.subject,
+    'We have received your TASI 2026 media accreditation request'
+  );
+  assert.match(email.html, /Dear Saquib,/);
+  assert.match(email.text, /on behalf of CSR News/);
+  assert.match(email.text, /does not confirm media accreditation/);
+  assert.match(email.html, /cid:tasi-logo/);
+  assert.doesNotMatch(email.html, /india@trustandsafetyfestival\.com/);
+});
+
 test('speaker and volunteer routes send acknowledgements only to the submitted applicant', () => {
   for (const relativePath of [
     'src/app/api/speaker-application/route.js',
     'src/app/api/volunteer-application/route.js',
+    'src/app/api/media-accreditation/route.js',
   ]) {
     const source = readSource(relativePath);
 
@@ -80,4 +103,5 @@ test('internal notifications and applicant replies use the private comms setting
   );
   assert.match(resendSource, /getApplicationCommsEmail/);
   assert.match(resendSource, /replyTo: \[replyEmail\]/);
+  assert.match(resendSource, /showSupportFooter: false/);
 });

@@ -24,6 +24,7 @@ export function renderBrandedEmailHtml(
     qrImageUrl,
     registrationCode,
     supportEmail = EVENT_CONFIG.contactEmail,
+    showSupportFooter = true,
   } = {}
 ) {
   const paragraphs = text.split('\n').filter(Boolean);
@@ -57,7 +58,7 @@ export function renderBrandedEmailHtml(
         <div style="padding:28px 30px;">
           ${body}
           ${qrBlock}
-          <p style="margin:24px 0 0;color:#64748b;font-size:13px;line-height:1.6;">For support, contact ${escapeHtml(supportEmail)}.</p>
+          ${showSupportFooter ? `<p style="margin:24px 0 0;color:#64748b;font-size:13px;line-height:1.6;">For support, contact ${escapeHtml(supportEmail)}.</p>` : ''}
         </div>
       </div>
     </div>

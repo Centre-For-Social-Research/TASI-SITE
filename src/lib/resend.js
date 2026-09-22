@@ -95,7 +95,7 @@ export async function sendInboundNotificationEmail({ subject, text, replyTo }) {
     to: recipients,
     subject,
     text,
-    html: renderBrandedEmailHtml(text),
+    html: renderBrandedEmailHtml(text, { showSupportFooter: false }),
     replyTo: replyTo ? [replyTo] : undefined,
   });
 

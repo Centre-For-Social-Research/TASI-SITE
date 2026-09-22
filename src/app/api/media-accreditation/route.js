@@ -16,14 +16,18 @@ import {
   MEDIA_OUTLET_TYPES,
 } from '@/data/media-accreditation';
 import {
-  buildApplicantConfirmationEmail,
   buildTeamNotificationEmail,
 } from '@/lib/media-accreditation-email';
 import {
+  getApplicationCommsEmail,
   sendApplicantConfirmationEmail,
   sendInboundNotificationEmail,
 } from '@/lib/resend';
+import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
 import { after } from 'next/server';
+
+const { buildMediaAcknowledgementEmail } = applicationAcknowledgementEmail;
 
 // Digits only, so "+91 98765 43210" and "098765-43210" both pass.
 function hasEnoughDigits(phone) {
@@ -148,11 +152,20 @@ export async function POST(request) {
       }
 
       try {
-        const applicantEmail = buildApplicantConfirmationEmail(application);
+        const replyEmail = getApplicationCommsEmail();
+        const applicantEmail = buildMediaAcknowledgementEmail({
+          firstName: application.name.split(' ')[0],
+          publication: application.publication,
+          coverageDays: application.coverageDays,
+          replyEmail,
+        });
         await sendApplicantConfirmationEmail({
           to: email,
           subject: applicantEmail.subject,
           text: applicantEmail.text,
+          html: applicantEmail.html,
+          replyTo: replyEmail,
+          attachments: await getTasiEmailInlineAttachments(),
         });
       } catch (emailError) {
         console.error(
