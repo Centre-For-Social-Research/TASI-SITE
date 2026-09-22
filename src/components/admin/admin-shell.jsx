@@ -509,8 +509,7 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
               width: 30,
               height: 30,
               borderRadius: 999,
-              background:
-                'linear-gradient(135deg, var(--adm-accent), rgba(240,168,50,0.4))',
+              background: 'var(--adm-accent)',
               color: 'var(--adm-accent-ink)',
               display: 'flex',
               alignItems: 'center',
@@ -812,8 +811,7 @@ function TopBar({ currentPath, shellState, onPalette, operator }) {
               height: 26,
               borderRadius: 999,
               flexShrink: 0,
-              background:
-                'linear-gradient(135deg, var(--adm-accent), rgba(240,168,50,0.4))',
+              background: 'var(--adm-accent)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

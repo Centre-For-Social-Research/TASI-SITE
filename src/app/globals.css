@@ -222,7 +222,7 @@ a {
 }
 
 .font-admin-display {
-  font-family: var(--font-admin-display), Georgia, serif;
+  font-family: var(--font-admin-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 .font-admin-sans {

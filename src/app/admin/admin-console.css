@@ -1,43 +1,58 @@
 /* TASI Operations Console — Admin Design System v2
    Scoped to .admin-v2 so it doesn't bleed into the public site.
-   Light-only theme built on the public site palette: warm cream canvas,
-   brand orange accent, brand purple secondary, stone ink.
-   Font variables --font-admin-sans, --font-admin-mono, --font-admin-display
-   are injected by the root layout via next/font/google. */
+   Midnight navy sidebar, cool white canvas, and restrained teal accent.
+   Admin font variables are injected by the root layout via next/font/google. */
 
 /* ── Tokens (light, single theme) ───────────────────────────────────────── */
 .admin-v2 {
-  --adm-canvas: #fdf6ef;
-  --adm-canvas-2: #f6efe6;
-  --adm-panel: #fffdf8;
-  --adm-panel-2: #f8f1e7;
-  --adm-line: rgba(41, 37, 36, 0.12);
-  --adm-line-strong: rgba(41, 37, 36, 0.22);
-  --adm-ink: #1c1917;
-  --adm-ink-2: #44403c;
-  --adm-ink-3: #78716c;
-  --adm-ink-4: #a8a29e;
+  --adm-canvas: #f4f7f7;
+  --adm-canvas-2: #edf2f4;
+  --adm-panel: #ffffff;
+  --adm-panel-2: #edf5f5;
+  --adm-line: rgba(31, 48, 56, 0.12);
+  --adm-line-strong: rgba(31, 48, 56, 0.22);
+  --adm-ink: #1f3038;
+  --adm-ink-2: #354b55;
+  --adm-ink-3: #607682;
+  --adm-ink-4: #83949b;
 
-  --adm-accent: #d14c00;
-  --adm-accent-ink: #fffdf8;
-  --adm-accent-soft: rgba(239, 87, 0, 0.1);
-  --adm-accent-line: rgba(239, 87, 0, 0.32);
+  --adm-accent: #0b6d69;
+  --adm-accent-ink: #ffffff;
+  --adm-accent-soft: rgba(11, 109, 105, 0.1);
+  --adm-accent-line: rgba(11, 109, 105, 0.32);
 
-  --adm-purple: #350265;
-  --adm-purple-soft: rgba(53, 2, 101, 0.08);
+  --adm-purple: #37627a;
+  --adm-purple-soft: rgba(55, 98, 122, 0.1);
 
-  --adm-ok: #1a7f4e;
-  --adm-ok-soft: rgba(26, 127, 78, 0.12);
-  --adm-warn: #b45309;
-  --adm-warn-soft: rgba(180, 83, 9, 0.12);
-  --adm-bad: #b42318;
-  --adm-bad-soft: rgba(180, 35, 24, 0.1);
-  --adm-info: #1d5fae;
-  --adm-info-soft: rgba(29, 95, 174, 0.1);
+  --adm-ok: #087956;
+  --adm-ok-soft: rgba(8, 121, 86, 0.11);
+  --adm-warn: #a06711;
+  --adm-warn-soft: rgba(160, 103, 17, 0.12);
+  --adm-bad: #b23a40;
+  --adm-bad-soft: rgba(178, 58, 64, 0.1);
+  --adm-info: #315d83;
+  --adm-info-soft: rgba(49, 93, 131, 0.1);
 
-  --adm-sans: var(--font-admin-sans, 'DM Sans', system-ui, sans-serif);
-  --adm-mono: var(--font-admin-mono, 'DM Mono', ui-monospace, monospace);
-  --adm-serif: var(--font-admin-display, 'Fraunces', serif);
+  --adm-sans: var(--font-admin-sans, 'Source Sans 3', system-ui, sans-serif);
+  --adm-mono: var(--font-admin-mono, 'JetBrains Mono', ui-monospace, monospace);
+  --adm-serif: var(--adm-sans);
+}
+
+.admin-v2 .adm-sidebar {
+  --adm-canvas-2: #172b3b;
+  --adm-panel: #203b4e;
+  --adm-panel-2: #214657;
+  --adm-line: rgba(222, 238, 244, 0.14);
+  --adm-line-strong: rgba(222, 238, 244, 0.23);
+  --adm-ink: #f6fbfc;
+  --adm-ink-2: #d4e2e8;
+  --adm-ink-3: #a9c0cb;
+  --adm-ink-4: #8ea8b5;
+  --adm-accent: #79cfc6;
+  --adm-accent-ink: #172b3b;
+  --adm-accent-soft: rgba(121, 207, 198, 0.12);
+  --adm-accent-line: rgba(121, 207, 198, 0.32);
+  background: #172b3b !important;
 }
 
 .admin-v2 {
@@ -159,17 +174,17 @@
 
 /* ── Slide-over drawer (vaul portal renders outside .admin-v2) ──────────── */
 .admin-v2-drawer-overlay {
-  background: rgba(28, 25, 23, 0.45) !important;
+  background: rgba(23, 43, 59, 0.45) !important;
   backdrop-filter: blur(4px) !important;
 }
 
 .admin-v2-drawer-content {
-  background: #fffdf8 !important;
-  border-left: 1px solid rgba(41, 37, 36, 0.22) !important;
-  color: #1c1917 !important;
+  background: #ffffff !important;
+  border-left: 1px solid rgba(31, 48, 56, 0.22) !important;
+  color: #1f3038 !important;
   font-family: var(
     --font-admin-sans,
-    'DM Sans',
+    'Source Sans 3',
     system-ui,
     sans-serif
   ) !important;
@@ -393,7 +408,7 @@
   color: var(--adm-ink) !important;
 }
 
-/* Purple utility classes → brand purple */
+/* Purple utility classes → secondary slate-blue */
 .admin-v2 [class*='text-purple-'] {
   color: var(--adm-purple) !important;
 }
@@ -514,7 +529,7 @@
 .admin-v2 [class*='bg-purple'][class*='text-white'],
 .admin-v2 [class*='bg-indigo'][class*='text-white'] {
   background: var(--adm-purple) !important;
-  color: #fffdf8 !important;
+  color: var(--adm-accent-ink) !important;
   border-color: transparent !important;
 }
 /* Danger buttons */
@@ -539,7 +554,7 @@
 .admin-v2 [class*='bg-amber-'] {
   background: var(--adm-warn-soft) !important;
 }
-/* Solid amber-600/700 = primary action button → brand orange accent */
+/* Solid amber-600/700 = primary action button → admin accent */
 .admin-v2 [class*='bg-amber-600'],
 .admin-v2 [class*='bg-amber-700'] {
   background-color: var(--adm-accent) !important;
@@ -572,7 +587,7 @@
 .admin-v2 [class*='bg-indigo-500'],
 .admin-v2 [class*='bg-indigo-600'] {
   background-color: var(--adm-purple) !important;
-  color: #fffdf8 !important;
+  color: var(--adm-accent-ink) !important;
 }
 .admin-v2 [class*='bg-emerald-500'],
 .admin-v2 [class*='bg-emerald-600'] {
@@ -631,65 +646,65 @@
   background-color: var(--adm-canvas-2) !important;
 }
 .admin-v2 [data-ln-row='true']:hover::before {
-  background: rgba(41, 37, 36, 0.04) !important;
+  background: rgba(31, 48, 56, 0.04) !important;
 }
 .admin-v2 [data-ln-row='true'][data-ln-selected='true']::before {
-  background: rgba(239, 87, 0, 0.1) !important;
+  background: var(--adm-accent-soft) !important;
 }
 
 /* ── LyteNyte data-grid: override --ln-* tokens (light theme in admin) ──── */
 /* We map every --ln-* token to our adm design values here. */
 .admin-v2 {
-  --ln-gray-00: #fdf6ef;
-  --ln-gray-01: #fdf6ef;
-  --ln-gray-02: #f6efe6;
-  --ln-gray-05: #fffdf8;
-  --ln-gray-10: #f8f1e7;
-  --ln-gray-20: rgba(41, 37, 36, 0.1);
-  --ln-gray-30: rgba(41, 37, 36, 0.16);
-  --ln-gray-40: rgba(41, 37, 36, 0.24);
-  --ln-gray-50: #a8a29e;
-  --ln-gray-60: #78716c;
-  --ln-gray-70: #78716c;
-  --ln-gray-80: #44403c;
-  --ln-gray-90: #1c1917;
-  --ln-gray-100: #1c1917;
+  --ln-gray-00: var(--adm-canvas);
+  --ln-gray-01: var(--adm-canvas);
+  --ln-gray-02: var(--adm-canvas-2);
+  --ln-gray-05: var(--adm-panel);
+  --ln-gray-10: var(--adm-panel-2);
+  --ln-gray-20: rgba(31, 48, 56, 0.1);
+  --ln-gray-30: rgba(31, 48, 56, 0.16);
+  --ln-gray-40: rgba(31, 48, 56, 0.24);
+  --ln-gray-50: var(--adm-ink-4);
+  --ln-gray-60: var(--adm-ink-3);
+  --ln-gray-70: var(--adm-ink-3);
+  --ln-gray-80: var(--adm-ink-2);
+  --ln-gray-90: var(--adm-ink);
+  --ln-gray-100: var(--adm-ink);
 
-  --ln-bg: #fffdf8;
-  --ln-bg-button-light: #f8f1e7;
-  --ln-bg-page: #fdf6ef;
-  --ln-bg-light: #f6efe6;
-  --ln-bg-strong: #f8f1e7;
-  --ln-bg-row-hover: rgba(41, 37, 36, 0.04);
-  --ln-bg-row-alternate: #f6efe6;
-  --ln-bg-ui-panel: #fffdf8;
-  --ln-bg-form-field: #fffdf8;
-  --ln-bg-floating-panel: #fffdf8;
-  --ln-bg-popover: #fffdf8;
+  --ln-bg: var(--adm-panel);
+  --ln-bg-button-light: var(--adm-panel-2);
+  --ln-bg-page: var(--adm-canvas);
+  --ln-bg-light: var(--adm-canvas-2);
+  --ln-bg-strong: var(--adm-panel-2);
+  --ln-bg-row-hover: rgba(31, 48, 56, 0.04);
+  --ln-bg-row-alternate: var(--adm-canvas-2);
+  --ln-bg-ui-panel: var(--adm-panel);
+  --ln-bg-form-field: var(--adm-panel);
+  --ln-bg-floating-panel: var(--adm-panel);
+  --ln-bg-popover: var(--adm-panel);
 
-  --ln-border: rgba(41, 37, 36, 0.12);
-  --ln-border-row: rgba(41, 37, 36, 0.12);
-  --ln-border-strong: rgba(41, 37, 36, 0.22);
-  --ln-border-xstrong: rgba(41, 37, 36, 0.3);
-  --ln-border-icon: #78716c;
-  --ln-border-ui-panel: rgba(41, 37, 36, 0.12);
-  --ln-border-button-light: rgba(41, 37, 36, 0.22);
-  --ln-border-field-and-button: rgba(41, 37, 36, 0.22);
+  --ln-border: var(--adm-line);
+  --ln-border-row: var(--adm-line);
+  --ln-border-strong: var(--adm-line-strong);
+  --ln-border-xstrong: rgba(31, 48, 56, 0.3);
+  --ln-border-icon: var(--adm-ink-3);
+  --ln-border-ui-panel: var(--adm-line);
+  --ln-border-button-light: var(--adm-line-strong);
+  --ln-border-field-and-button: var(--adm-line-strong);
   --ln-border-field-and-button-shadow: rgba(0, 0, 0, 0);
-  --ln-border-floating-panel: rgba(41, 37, 36, 0.22);
-  --ln-border-popover: rgba(41, 37, 36, 0.22);
+  --ln-border-floating-panel: var(--adm-line-strong);
+  --ln-border-popover: var(--adm-line-strong);
 
-  --ln-text: #44403c;
-  --ln-text-dark: #1c1917;
-  --ln-text-light: #78716c;
-  --ln-text-xlight: #a8a29e;
+  --ln-text: var(--adm-ink-2);
+  --ln-text-dark: var(--adm-ink);
+  --ln-text-light: var(--adm-ink-3);
+  --ln-text-xlight: var(--adm-ink-4);
 
-  --ln-primary-05: rgba(239, 87, 0, 0.05);
-  --ln-primary-10: rgba(239, 87, 0, 0.1);
-  --ln-primary-30: rgba(239, 87, 0, 0.3);
-  --ln-primary-50: #ef5700;
-  --ln-primary-70: #d14c00;
-  --ln-primary-90: #a83d00;
+  --ln-primary-05: rgba(11, 109, 105, 0.05);
+  --ln-primary-10: var(--adm-accent-soft);
+  --ln-primary-30: var(--adm-accent-line);
+  --ln-primary-50: #14827d;
+  --ln-primary-70: var(--adm-accent);
+  --ln-primary-90: #075753;
 }
 
 /* ── Radix / Vaul portal overlays inside admin ──────────────────────────── */
@@ -739,8 +754,8 @@
 
 /* ── Shadow elevations ──────────────────────────────────────────────────── */
 .admin-v2 [class*='shadow-'] {
-  box-shadow: 0 4px 24px rgba(41, 37, 36, 0.08) !important;
+  box-shadow: 0 4px 24px rgba(31, 48, 56, 0.08) !important;
 }
 .admin-v2 [class*='shadow-sm'] {
-  box-shadow: 0 2px 8px rgba(41, 37, 36, 0.06) !important;
+  box-shadow: 0 2px 8px rgba(31, 48, 56, 0.06) !important;
 }
