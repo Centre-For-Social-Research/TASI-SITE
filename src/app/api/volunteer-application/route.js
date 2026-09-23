@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
+import { storeIdempotentResponse } from '@/lib/api-idempotency';
 import {
   isValidEmail,
   sanitizeEmail,
@@ -12,8 +13,14 @@ import {
 } from '@/lib/resend';
 import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
 import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
+import volunteerDedupe from '@/lib/volunteer-application-dedupe.cjs';
 
 const { buildVolunteerAcknowledgementEmail } = applicationAcknowledgementEmail;
+const {
+  CLAIM_SCOPE,
+  reserveVolunteerApplication,
+  releaseVolunteerApplicationClaim,
+} = volunteerDedupe;
 
 function sanitizeShortText(
   value,
@@ -114,6 +121,20 @@ export async function POST(request) {
       motivation,
     ].join('\n');
 
+    const reservation = await reserveVolunteerApplication(supabase, email);
+    if (reservation.state === 'existing') {
+      return Response.json(
+        { success: true, alreadySubmitted: true },
+        { headers: protection.headers }
+      );
+    }
+    if (reservation.state === 'processing') {
+      return Response.json(
+        { error: 'This volunteer application is being processed.' },
+        { status: 409, headers: protection.headers }
+      );
+    }
+
     const { error } = await supabase.from('contact_messages').insert({
       email,
       message,
@@ -122,8 +143,16 @@ export async function POST(request) {
     });
 
     if (error) {
+      await releaseVolunteerApplicationClaim(supabase, reservation.key);
       return Response.json({ error: error.message }, { status: 500 });
     }
+
+    await storeIdempotentResponse(
+      CLAIM_SCOPE,
+      reservation.key,
+      { success: true },
+      email
+    );
 
     try {
       await sendInboundNotificationEmail({

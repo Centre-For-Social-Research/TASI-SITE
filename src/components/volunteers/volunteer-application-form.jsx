@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const initialFormState = {
   firstName: '',
@@ -18,6 +18,7 @@ export default function VolunteerApplicationForm() {
   const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   function updateField(event) {
     const { name, value } = event.target;
@@ -26,6 +27,8 @@ export default function VolunteerApplicationForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setIsSubmitting(true);
     setStatus({ type: '', message: '' });
 
@@ -44,11 +47,14 @@ export default function VolunteerApplicationForm() {
         );
       }
 
-      setFormData(initialFormState);
+      if (!payload?.alreadySubmitted) {
+        setFormData(initialFormState);
+      }
       setStatus({
         type: 'success',
-        message:
-          'Volunteer interest received. The TASI team will review it and reach out with next steps.',
+        message: payload?.alreadySubmitted
+          ? 'We already have a volunteer application for this email. Please email the team if you need to update it.'
+          : 'Volunteer interest received. The TASI team will review it and reach out with next steps.',
       });
     } catch (error) {
       setStatus({
@@ -59,6 +65,7 @@ export default function VolunteerApplicationForm() {
             : 'Unable to submit your volunteer application.',
       });
     } finally {
+      submittingRef.current = false;
       setIsSubmitting(false);
     }
   }
