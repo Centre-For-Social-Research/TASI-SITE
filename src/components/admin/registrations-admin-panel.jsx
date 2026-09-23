@@ -1169,12 +1169,17 @@ export default function RegistrationsAdminPanel({ operator }) {
       const updatedCount = data.updatedIds?.length || 0;
       const conflictCount = data.conflictIds?.length || 0;
       showToast(
-        !data.emailResult?.queued && updatedCount
-          ? `Updated ${updatedCount} registrants, but emails were not queued. Check delivery jobs.`
-          : conflictCount
-            ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
-            : `Updated ${updatedCount} registrants to ${nextStatus}.`,
-        conflictCount || (!data.emailResult?.queued && updatedCount)
+        data.emailResult?.notRequired
+          ? `Updated ${updatedCount} registrations; no status emails needed.`
+          : !data.emailResult?.queued && updatedCount
+            ? `Updated ${updatedCount} registrants, but emails were not queued. Check delivery jobs.`
+            : conflictCount
+              ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
+              : `Updated ${updatedCount} registrants to ${nextStatus}.`,
+        conflictCount ||
+          (!data.emailResult?.queued &&
+            !data.emailResult?.notRequired &&
+            updatedCount)
           ? 'warning'
           : 'success'
       );
@@ -1265,10 +1270,15 @@ export default function RegistrationsAdminPanel({ operator }) {
           expectedUpdatedAt: registration.updated_at || '',
         });
       showToast(
-        statusResult?.emailResult?.queued
-          ? `${actionKey} completed for ${registration.first_name} ${registration.last_name}; email queued.`
-          : `${actionKey} saved for ${registration.first_name} ${registration.last_name}, but email was not queued. Check delivery jobs.`,
-        statusResult?.emailResult?.queued ? 'success' : 'warning'
+        statusResult?.emailResult?.notRequired
+          ? `Review saved for ${registration.first_name} ${registration.last_name}; no status email needed.`
+          : statusResult?.emailResult?.queued
+            ? `${actionKey} completed for ${registration.first_name} ${registration.last_name}; email queued.`
+            : `${actionKey} saved for ${registration.first_name} ${registration.last_name}, but email was not queued. Check delivery jobs.`,
+        statusResult?.emailResult?.queued ||
+          statusResult?.emailResult?.notRequired
+          ? 'success'
+          : 'warning'
       );
       invalidateAdminCaches([registration.id]);
       void loadRegistrations({ background: true, force: true });
@@ -1304,10 +1314,14 @@ export default function RegistrationsAdminPanel({ operator }) {
         expectedUpdatedAt: detailState.data?.registration?.updated_at || '',
       });
       showToast(
-        data.emailResult?.queued
-          ? 'Notes saved; email queued for delivery.'
-          : 'Review saved, but email was not queued. Check delivery jobs.',
-        data.emailResult?.queued ? 'success' : 'warning'
+        data.emailResult?.notRequired
+          ? 'Review saved; no status email needed.'
+          : data.emailResult?.queued
+            ? 'Notes saved; email queued for delivery.'
+            : 'Review saved, but email was not queued. Check delivery jobs.',
+        data.emailResult?.queued || data.emailResult?.notRequired
+          ? 'success'
+          : 'warning'
       );
       invalidateAdminCaches([registrationId]);
       void loadRegistrations({ background: true, force: true });

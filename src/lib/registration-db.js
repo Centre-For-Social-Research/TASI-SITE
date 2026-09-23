@@ -383,7 +383,10 @@ export async function updateRegistrationStatus({
     notes: typeof reviewNotes === 'string' ? reviewNotes.trim() || null : null,
   });
 
-  return normalizeRegistrationRecord(data);
+  return {
+    ...normalizeRegistrationRecord(data),
+    previousStatus: existing.status,
+  };
 }
 
 export async function getConfirmedRegistrationsForPassIssue() {
