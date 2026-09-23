@@ -47,7 +47,9 @@ export async function PATCH(request, context) {
       ? 400
       : /not found/i.test(message)
         ? 404
-        : 500;
+        : /already being sent/i.test(message)
+          ? 409
+          : 500;
     return adminJson({ error: message }, { status });
   }
 }

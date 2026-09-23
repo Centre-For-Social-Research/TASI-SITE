@@ -191,6 +191,7 @@ export async function updateGuestInvitation({ id, input }) {
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)
+    .neq('status', 'sending')
     .select(INVITATION_SELECT)
     .maybeSingle();
 
@@ -198,7 +199,13 @@ export async function updateGuestInvitation({ id, input }) {
     if (isDuplicate(error)) throw new GuestInvitationDuplicateEmailError();
     throw new Error(error.message);
   }
-  if (!data) throw new GuestInvitationNotFoundError();
+  if (!data) {
+    const current = await getGuestInvitationById(id);
+    if (current.status === 'sending') {
+      throw new GuestInvitationAlreadySendingError();
+    }
+    throw new GuestInvitationNotFoundError();
+  }
   return normalizeGuestInvitationRow(data);
 }
 
@@ -226,6 +233,50 @@ export async function claimGuestInvitationSend({ id }) {
   if (error) throw new Error(error.message);
   if (!data) throw new GuestInvitationAlreadySendingError();
   return normalizeGuestInvitationRow(data);
+}
+
+// When Resend accepted an email but the final invitation update failed, the
+// accepted delivery row is enough to finish the existing send without mailing
+// the guest again. An in-flight send with no accepted row stays protected.
+export async function reconcileGuestInvitationSend({ id }) {
+  const invitation = await getGuestInvitationById(id);
+  if (invitation.status !== 'sending') return null;
+
+  const supabase = getSupabase();
+  const { data: delivery, error: deliveryError } = await supabase
+    .from('guest_invitation_deliveries')
+    .select('created_at,provider_message_id,actor_clerk_id,actor_email')
+    .eq('guest_invitation_id', id)
+    .eq('delivery_status', 'accepted')
+    .gte('created_at', invitation.updatedAt)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (deliveryError) throw new Error(deliveryError.message);
+  if (!delivery) return null;
+
+  const { data, error } = await supabase
+    .from('guest_invitations')
+    .update({
+      status: 'sent',
+      send_count: invitation.sendCount + 1,
+      first_sent_at: invitation.firstSentAt || delivery.created_at,
+      last_sent_at: delivery.created_at,
+      last_provider_message_id: delivery.provider_message_id,
+      last_error: null,
+      last_sent_by_clerk_id: delivery.actor_clerk_id,
+      last_sent_by_email: delivery.actor_email,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .eq('status', 'sending')
+    .eq('send_count', invitation.sendCount)
+    .select(INVITATION_SELECT)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? normalizeGuestInvitationRow(data) : getGuestInvitationById(id);
 }
 
 export async function markGuestInvitationSent({
@@ -264,6 +315,7 @@ export async function markGuestInvitationSent({
     })
     .eq('id', invitation.id)
     .eq('status', 'sending')
+    .eq('send_count', invitation.sendCount)
     .select(INVITATION_SELECT)
     .maybeSingle();
 

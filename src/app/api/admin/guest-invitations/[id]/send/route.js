@@ -2,9 +2,12 @@ import { requireAdminOperator } from '@/lib/registration-auth';
 import { adminJson } from '@/lib/admin-api-cache';
 import {
   claimGuestInvitationSend,
+  getGuestInvitationById,
   markGuestInvitationFailed,
   markGuestInvitationSent,
+  reconcileGuestInvitationSend,
 } from '@/lib/guest-invitation-db';
+import guestInvitationUtils from '@/lib/guest-invitation-utils.cjs';
 import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
 import {
   getApplicationCommsEmail,
@@ -14,6 +17,7 @@ import { buildGuestInvitationPoster } from '@/lib/guest-invitation-poster';
 import applicationAcknowledgementEmail from '@/lib/application-acknowledgement-email.cjs';
 
 const { buildGuestInvitationEmail } = applicationAcknowledgementEmail;
+const { guestInvitationSendKey } = guestInvitationUtils;
 
 export async function POST(_request, context) {
   const authResult = await requireAdminOperator({
@@ -23,9 +27,29 @@ export async function POST(_request, context) {
 
   let invitation;
   let providerAccepted = false;
+  let providerAttempted = false;
   try {
-    const inlineAttachments = await getTasiEmailInlineAttachments();
     const { id } = await context.params;
+    const current = await getGuestInvitationById(id);
+    if (current.status === 'sending') {
+      const reconciled = await reconcileGuestInvitationSend({ id });
+      if (!reconciled) {
+        return adminJson(
+          {
+            error:
+              'No accepted email record is available yet. Check Resend before trying again; this send remains protected from duplicates.',
+          },
+          { status: 409 }
+        );
+      }
+      return adminJson({
+        success: true,
+        reconciled: true,
+        invitation: reconciled,
+      });
+    }
+
+    const inlineAttachments = await getTasiEmailInlineAttachments();
     invitation = await claimGuestInvitationSend({ id });
     const replyEmail = getApplicationCommsEmail();
     const email = buildGuestInvitationEmail({
@@ -39,12 +63,14 @@ export async function POST(_request, context) {
     const invitationPoster = await buildGuestInvitationPoster({
       name: invitation.name,
     });
+    providerAttempted = true;
     const delivery = await sendApplicantConfirmationEmail({
       to: invitation.email,
       subject: email.subject,
       text: email.text,
       html: email.html,
       replyTo: replyEmail,
+      idempotencyKey: guestInvitationSendKey(invitation),
       attachments: [
         ...inlineAttachments,
         {
@@ -57,6 +83,7 @@ export async function POST(_request, context) {
         },
       ],
     });
+    if (delivery.skipped) providerAttempted = false;
 
     if (!delivery.sent) {
       throw new Error(delivery.error || 'Email delivery could not start.');
@@ -76,11 +103,13 @@ export async function POST(_request, context) {
         : 'Unable to send guest invitation.';
     const message = providerAccepted
       ? 'The email was accepted by the provider, but its invitation record needs reconciliation before it can be resent.'
-      : originalMessage;
+      : providerAttempted
+        ? 'The provider outcome is unclear. This invitation remains protected from another send; check Resend before taking further action.'
+        : originalMessage;
 
     // A provider-accepted email must stay in the protected sending state if
     // recording it failed. Retrying blindly could duplicate an invitation.
-    if (invitation && !providerAccepted) {
+    if (invitation && !providerAttempted) {
       try {
         await markGuestInvitationFailed({
           invitation,

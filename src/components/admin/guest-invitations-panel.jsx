@@ -340,8 +340,11 @@ export default function GuestInvitationsPanel({ canManage }) {
 
   async function sendInvitation(invitation) {
     const isResend = invitation.status === 'sent';
+    const isReconcile = invitation.status === 'sending';
     const confirmed = window.confirm(
-      `${isResend ? 'Resend' : 'Send'} the fixed invitation to ${invitation.email}?\n\nThis does not create a registration, QR pass, or check-in credential.`
+      isReconcile
+        ? `Check the recorded delivery for ${invitation.email}? This will not send another email.`
+        : `${isResend ? 'Resend' : 'Send'} the fixed invitation to ${invitation.email}?\n\nThis does not create a registration, QR pass, or check-in credential.`
     );
     if (!confirmed) return;
 
@@ -357,7 +360,9 @@ export default function GuestInvitationsPanel({ canManage }) {
       }
       setToast({
         tone: 'success',
-        message: `Invitation accepted for delivery to ${json.invitation.email}.`,
+        message: json.reconciled
+          ? `The accepted send to ${json.invitation.email} is now recorded.`
+          : `Invitation accepted for delivery to ${json.invitation.email}.`,
       });
       setSelected(json.invitation);
       setDetail((current) =>
@@ -937,19 +942,18 @@ export default function GuestInvitationsPanel({ canManage }) {
               {canManage ? (
                 <button
                   type="button"
-                  disabled={
-                    currentInvitation.status === 'sending' ||
-                    sendingId === currentInvitation.id
-                  }
+                  disabled={sendingId === currentInvitation.id}
                   onClick={() => sendInvitation(currentInvitation)}
                   style={buttonStyle(true)}
                 >
                   <Send size={14} />
                   {sendingId === currentInvitation.id
-                    ? 'Sending…'
-                    : currentInvitation.status === 'sent'
-                      ? 'Resend invitation'
-                      : 'Send invitation'}
+                    ? 'Working…'
+                    : currentInvitation.status === 'sending'
+                      ? 'Check send record'
+                      : currentInvitation.status === 'sent'
+                        ? 'Resend invitation'
+                        : 'Send invitation'}
                 </button>
               ) : null}
             </div>
@@ -958,7 +962,7 @@ export default function GuestInvitationsPanel({ canManage }) {
               <AdminAlert
                 tone="warning"
                 title="Delivery needs confirmation"
-                description="This send is protected from automatic retry to prevent a duplicate invitation. Confirm the provider outcome before changing it."
+                description="Check the recorded send. If there is no accepted record, confirm the outcome in Resend before any further action."
               />
             ) : null}
 
