@@ -106,17 +106,23 @@ test('guest invitation routes require admin authorization for mutations and use 
   const sendRoute = readSource(
     'src/app/api/admin/guest-invitations/[id]/send/route.js'
   );
+  const retryRoute = readSource(
+    'src/app/api/admin/guest-invitations/[id]/retry/route.js'
+  );
+  const sendService = readSource('src/lib/guest-invitation-send.js');
   const panel = readSource('src/components/admin/guest-invitations-panel.jsx');
 
   assert.match(collectionRoute, /requireAdminOperator/);
   assert.match(itemRoute, /requireAdminOperator/);
   assert.match(sendRoute, /requireAdminOperator/);
-  assert.match(sendRoute, /claimGuestInvitationSend/);
-  assert.match(sendRoute, /markGuestInvitationSent/);
-  assert.match(sendRoute, /tasi-2026-calendar\.ics/);
-  assert.match(sendRoute, /email\.calendarContent/);
+  assert.match(retryRoute, /requireAdminOperator/);
+  assert.match(sendService, /claimGuestInvitationSend/);
+  assert.match(sendService, /markGuestInvitationSent/);
+  assert.match(sendService, /tasi-2026-calendar\.ics/);
+  assert.match(sendService, /email\.calendarContent/);
+  assert.match(sendService, /guestSendIdempotencyKey\(attempt\.id\)/);
   assert.doesNotMatch(
-    sendRoute,
+    sendService,
     /event_registrations|entry_passes|createPassIssueEmailJob|QR/
   );
   assert.match(
@@ -127,9 +133,7 @@ test('guest invitation routes require admin authorization for mutations and use 
 });
 
 test('guest invitation send attaches the no-QR guest poster image', () => {
-  const source = readSource(
-    'src/app/api/admin/guest-invitations/[id]/send/route.js'
-  );
+  const source = readSource('src/lib/guest-invitation-send.js');
   const poster = readSource('src/lib/guest-invitation-poster.js');
 
   assert.match(source, /buildGuestInvitationPoster/);

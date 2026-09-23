@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Eye, Mail, Pencil, Plus, Send, X } from 'lucide-react';
+import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
 import {
   AdminAlert,
   AdminStatusBadge,
@@ -15,6 +16,7 @@ const EMPTY_FORM = {
   designation: '',
   organization: '',
 };
+const { canRetryGuestSend } = guestSendAttempt;
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All invitations' },
@@ -178,6 +180,7 @@ export default function GuestInvitationsPanel({ canManage }) {
   const [preview, setPreview] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [sendingId, setSendingId] = useState(null);
+  const [clockNow, setClockNow] = useState(0);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -368,12 +371,53 @@ export default function GuestInvitationsPanel({ canManage }) {
     } catch (sendError) {
       setToast({ tone: 'danger', message: sendError.message });
       await load();
+      await openDetail(invitation);
+    } finally {
+      setSendingId(null);
+    }
+  }
+
+  async function retryInvitation(invitation) {
+    if (
+      !window.confirm(
+        `Retry the same invitation attempt for ${invitation.email}? Resend will use the original attempt ID to prevent a duplicate.`
+      )
+    )
+      return;
+    setSendingId(invitation.id);
+    try {
+      const response = await fetch(
+        `/api/admin/guest-invitations/${invitation.id}/retry`,
+        { method: 'POST' }
+      );
+      const json = await response.json();
+      if (!response.ok || !json.success) {
+        throw new Error(
+          json.error || 'Unable to retry this invitation safely.'
+        );
+      }
+      setToast({
+        tone: 'success',
+        message: 'The original invitation attempt was confirmed by Resend.',
+      });
+      await load();
+      await openDetail(json.invitation);
+    } catch (retryError) {
+      setToast({ tone: 'danger', message: retryError.message });
+      await load();
+      await openDetail(invitation);
     } finally {
       setSendingId(null);
     }
   }
 
   const currentInvitation = detail?.invitation || selected;
+  useEffect(() => {
+    if (currentInvitation?.status !== 'sending') return undefined;
+    const timer = window.setInterval(() => setClockNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [currentInvitation?.id, currentInvitation?.status]);
+  const retryReady = canRetryGuestSend(detail?.activeAttempt, clockNow);
   const firstRow = (result.meta.page - 1) * (result.meta.pageSize || 50) + 1;
   const lastRow = Math.min(
     result.meta.total || 0,
@@ -791,7 +835,7 @@ export default function GuestInvitationsPanel({ canManage }) {
               </p>
             </div>
 
-            {canManage ? (
+            {canManage && currentInvitation.status !== 'sending' ? (
               <form
                 className="adm-guest-detail-section"
                 onSubmit={saveInvitation}
@@ -895,7 +939,11 @@ export default function GuestInvitationsPanel({ canManage }) {
                   >
                     <AdminStatusBadge
                       tone={
-                        delivery.status === 'accepted' ? 'success' : 'danger'
+                        delivery.status === 'accepted'
+                          ? 'success'
+                          : delivery.status === 'sending'
+                            ? 'warning'
+                            : 'danger'
                       }
                     >
                       {delivery.status}
@@ -903,6 +951,9 @@ export default function GuestInvitationsPanel({ canManage }) {
                     <div style={{ marginTop: 7 }}>
                       {formatDate(delivery.createdAt)}
                       {delivery.actorEmail ? ` · ${delivery.actorEmail}` : ''}
+                    </div>
+                    <div style={{ marginTop: 2 }}>
+                      Attempt ID: {delivery.id}
                     </div>
                     <div style={{ marginTop: 2 }}>
                       To: {delivery.recipientEmail}
@@ -968,8 +1019,27 @@ export default function GuestInvitationsPanel({ canManage }) {
               <AdminAlert
                 tone="warning"
                 title="Delivery needs confirmation"
-                description="This send is protected from automatic retry to prevent a duplicate invitation. Confirm the provider outcome before changing it."
+                description={
+                  detail?.activeAttempt
+                    ? retryReady
+                      ? 'The send has been pending for 10 minutes. Retry the same attempt below. Resend will use its original ID to avoid a duplicate.'
+                      : 'This send is locked while its outcome is uncertain. A safe retry becomes available after 10 minutes and expires before Resend’s 24-hour protection window. If it is older, check Resend manually.'
+                    : 'This is an older send without an attempt ID. Check its outcome in Resend before making any change.'
+                }
               />
+            ) : null}
+
+            {canManage && retryReady ? (
+              <button
+                type="button"
+                disabled={sendingId === currentInvitation.id}
+                onClick={() => retryInvitation(currentInvitation)}
+                style={buttonStyle()}
+              >
+                {sendingId === currentInvitation.id
+                  ? 'Retrying…'
+                  : 'Retry same invitation safely'}
+              </button>
             ) : null}
 
             {currentInvitation.lastError ? (

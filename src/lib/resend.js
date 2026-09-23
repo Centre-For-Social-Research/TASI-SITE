@@ -121,6 +121,7 @@ export async function sendApplicantConfirmationEmail({
   replyTo,
   html,
   attachments,
+  idempotencyKey,
 }) {
   const resend = getResendClient();
 
@@ -133,7 +134,7 @@ export async function sendApplicantConfirmationEmail({
   }
 
   const replyEmail = replyTo || getApplicationCommsEmail();
-  const { data, error } = await resend.emails.send({
+  const payload = {
     from: getResendFromEmail(),
     to: [to],
     subject,
@@ -141,7 +142,10 @@ export async function sendApplicantConfirmationEmail({
     html: html || renderBrandedEmailHtml(text, { supportEmail: replyEmail }),
     replyTo: [replyEmail],
     attachments: attachments?.length ? attachments : undefined,
-  });
+  };
+  const { data, error } = idempotencyKey
+    ? await resend.emails.send(payload, { idempotencyKey })
+    : await resend.emails.send(payload);
 
   if (error) {
     throw new Error(error.message || 'Failed to send email.');
