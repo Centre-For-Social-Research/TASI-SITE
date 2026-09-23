@@ -1048,8 +1048,10 @@ export default function RegistrationsAdminPanel({ operator }) {
     []
   );
 
-  const setFilterValue = (key, value) =>
+  const setFilterValue = (key, value) => {
+    setSelectedIds([]);
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
+  };
   const toggleSelection = (registrationId) =>
     setSelectedIds((current) =>
       current.includes(registrationId)
@@ -1577,7 +1579,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
           <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
-            Review Queue
+            Registrations
             {!state.loading && state.count > 0 ? (
               <span className="ml-2 text-xs font-normal text-zinc-400 dark:text-zinc-500">
                 {state.count} registrants
@@ -1616,12 +1618,13 @@ export default function RegistrationsAdminPanel({ operator }) {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  setSelectedIds([]);
                   setFilters((current) => ({
                     ...current,
                     page: Math.max(current.page - 1, 1),
-                  }))
-                }
+                  }));
+                }}
                 disabled={state.pagination.page <= 1}
                 className="h-8 rounded-full border border-zinc-200 bg-white px-3 text-xs text-zinc-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
               >
@@ -1629,15 +1632,16 @@ export default function RegistrationsAdminPanel({ operator }) {
               </button>
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  setSelectedIds([]);
                   setFilters((current) => ({
                     ...current,
                     page: Math.min(
                       current.page + 1,
                       state.pagination.totalPages
                     ),
-                  }))
-                }
+                  }));
+                }}
                 disabled={state.pagination.page >= state.pagination.totalPages}
                 className="h-8 rounded-full border border-zinc-200 bg-white px-3 text-xs text-zinc-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
               >
@@ -1667,7 +1671,7 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Sticky bulk actions bar */}
       {selectedIds.length > 1 ? (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]/95">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur md:left-[248px] dark:border-white/[0.06] dark:bg-zinc-950/95">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
               {selectedIds.length} selected
