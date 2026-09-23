@@ -15,8 +15,11 @@ function escapeHtml(value) {
 }
 
 function splitField(line) {
-  const match = /^([^:]{1,40}):\s*(.*)$/.exec(line);
-  return match ? { label: match[1].trim(), value: match[2].trim() } : null;
+  const separator = line.indexOf(':');
+  if (separator < 1 || separator > 40) return null;
+  const label = line.slice(0, separator).trim();
+  if (!label) return null;
+  return { label, value: line.slice(separator + 1).trim() };
 }
 
 function renderParagraphs(lines) {

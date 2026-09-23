@@ -27,13 +27,15 @@ test('internal notifications use the festival design and left-align long submiss
 test('internal notification text and subject are HTML escaped', () => {
   const html = renderInternalNotificationHtml({
     subject: 'New <script> & application',
-    text: 'Name: <img src=x onerror=alert(1)> & details\n\nMessage:\n<script>alert(1)</script>',
+    text: 'Name: <img src=x onerror=alert(1)> & details\n\nMessage:\n<SCRIPT>alert(1)</SCRIPT>',
   });
 
   assert.match(html, /New &lt;script&gt; &amp; application/);
   assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt; &amp; details/);
-  assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
-  assert.doesNotMatch(html, /<script>|<img src=x/);
+  assert.match(html, /&lt;SCRIPT&gt;alert\(1\)&lt;\/SCRIPT&gt;/);
+  assert.equal(html.includes('<script'), false);
+  assert.equal(html.includes('<SCRIPT'), false);
+  assert.equal(html.includes('<img src=x'), false);
 });
 
 test('short notifications keep follow-up notes below their details', () => {
