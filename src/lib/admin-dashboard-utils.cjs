@@ -43,22 +43,22 @@ function buildDashboardQueryString(filters = {}) {
   return params.toString();
 }
 
-function getQrActionTarget(scope, selectedIds = [], matchedCount = 0) {
-  if (scope === 'selected') {
-    if (!selectedIds.length) return null;
-    return {
-      registrationIds: [...selectedIds],
-      label: `${selectedIds.length} selected registrant${selectedIds.length === 1 ? '' : 's'}`,
-    };
-  }
-  if (scope === 'filtered') {
-    if (!matchedCount) return null;
-    return {
-      registrationIds: [],
-      label: `registrants matching the current filters (up to 2,000)`,
-    };
-  }
-  throw new Error('Choose selected or filtered QR delivery scope.');
+function summarizeQrSelection(selectedIds = [], registrations = []) {
+  const selected = new Set(selectedIds);
+  const confirmed = registrations.filter(
+    (registration) =>
+      selected.has(registration.id) && registration.status === 'confirmed'
+  );
+  return {
+    registrationIds: confirmed.map((registration) => registration.id),
+    firstSendCount: confirmed.filter(
+      (registration) => !registration.qr_pass_issued_at
+    ).length,
+    repeatCount: confirmed.filter((registration) =>
+      Boolean(registration.qr_pass_issued_at)
+    ).length,
+    ineligibleCount: selectedIds.length - confirmed.length,
+  };
 }
 
 function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
@@ -68,10 +68,6 @@ function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
   return {
     selectedLabel: `${normalizedSelected} selected`,
     matchedLabel: `${normalizedMatched} matched`,
-    actionScopeLabel:
-      normalizedSelected > 0
-        ? 'Send to selected attendees'
-        : 'Send to all matched attendees',
   };
 }
 
@@ -126,8 +122,8 @@ function getQuickActionOptions(registration = {}) {
   if (registration.status === 'confirmed') {
     return [
       {
-        key: registration.qr_pass_issued_at ? 'resendQr' : 'sendQr',
-        label: registration.qr_pass_issued_at ? 'Resend QR' : 'Send QR',
+        key: 'sendQr',
+        label: 'Send QR',
         kind: 'info',
       },
       { key: 'waitlist', label: 'Waitlist', kind: 'warning' },
@@ -143,7 +139,7 @@ function getQuickActionOptions(registration = {}) {
 
 module.exports = {
   buildDashboardQueryString,
-  getQrActionTarget,
+  summarizeQrSelection,
   summarizeSelection,
   isSupabaseAdminConfigError,
   getBatchStatusTone,

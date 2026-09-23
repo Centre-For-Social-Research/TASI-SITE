@@ -1,26 +1,49 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const {
   getBatchStatusTone,
   buildDashboardQueryString,
-  getQrActionTarget,
+  summarizeQrSelection,
   summarizeSelection,
   prioritizeRegistrationQueue,
   getQuickActionOptions,
 } = require('../src/lib/admin-dashboard-utils.cjs');
 
-test('QR delivery keeps selected and filtered recipients explicit', () => {
-  assert.deepEqual(getQrActionTarget('selected', ['one', 'two'], 100), {
-    registrationIds: ['one', 'two'],
-    label: '2 selected registrants',
-  });
-  assert.deepEqual(getQrActionTarget('filtered', ['one', 'two'], 100), {
-    registrationIds: [],
-    label: 'registrants matching the current filters (up to 2,000)',
-  });
-  assert.equal(getQrActionTarget('selected', [], 100), null);
-  assert.equal(getQrActionTarget('filtered', ['one'], 0), null);
+test('QR selection counts first sends, repeats and ineligible people without broadening scope', () => {
+  assert.deepEqual(
+    summarizeQrSelection(
+      ['new', 'issued', 'pending'],
+      [
+        { id: 'new', status: 'confirmed', qr_pass_issued_at: null },
+        { id: 'issued', status: 'confirmed', qr_pass_issued_at: '2026-09-23' },
+        { id: 'pending', status: 'pending', qr_pass_issued_at: null },
+        { id: 'unselected', status: 'confirmed', qr_pass_issued_at: null },
+      ]
+    ),
+    {
+      registrationIds: ['new', 'issued'],
+      firstSendCount: 1,
+      repeatCount: 1,
+      ineligibleCount: 1,
+    }
+  );
+});
+
+test('bulk QR control appears only with multiple selections and has no filter-wide send action', () => {
+  const panel = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      'src/components/admin/registrations-admin-panel.jsx'
+    ),
+    'utf8'
+  );
+  assert.match(panel, /selectedIds\.length > 1/);
+  assert.match(panel, /Send QR to selected/);
+  assert.doesNotMatch(panel, /handleSendQr\('filtered'\)/);
+  assert.doesNotMatch(panel, /handleResendQr/);
 });
 
 test('buildDashboardQueryString omits empty filter values', () => {
@@ -44,7 +67,6 @@ test('summarizeSelection reports selected and matched counts for bulk actions', 
     {
       selectedLabel: '12 selected',
       matchedLabel: '48 matched',
-      actionScopeLabel: 'Send to selected attendees',
     }
   );
 
@@ -56,7 +78,6 @@ test('summarizeSelection reports selected and matched counts for bulk actions', 
     {
       selectedLabel: '0 selected',
       matchedLabel: '48 matched',
-      actionScopeLabel: 'Send to all matched attendees',
     }
   );
 });
@@ -124,8 +145,16 @@ test('getQuickActionOptions adapts row actions to registrant state', () => {
   assert.deepEqual(
     getQuickActionOptions({
       status: 'confirmed',
+      qr_pass_issued_at: '2026-09-23',
+    }).map((action) => action.key),
+    ['sendQr', 'waitlist', 'reject']
+  );
+
+  assert.deepEqual(
+    getQuickActionOptions({
+      status: 'confirmed',
       qr_pass_issued_at: '2026-03-01T10:00:00.000Z',
     }).map((action) => action.key),
-    ['resendQr', 'waitlist', 'reject']
+    ['sendQr', 'waitlist', 'reject']
   );
 });

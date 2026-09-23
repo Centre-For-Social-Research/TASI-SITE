@@ -42,7 +42,7 @@ import registrationCache from '@/lib/admin-registration-cache.cjs';
 const {
   buildDashboardQueryString,
   getBatchStatusTone,
-  getQrActionTarget,
+  summarizeQrSelection,
   getQuickActionOptions,
   isSupabaseAdminConfigError,
   summarizeSelection,
@@ -844,7 +844,7 @@ export default function RegistrationsAdminPanel({ operator }) {
     waitlist: false,
     reject: false,
   });
-  const [qrLoading, setQrLoading] = useState({ send: false, resend: false });
+  const [qrLoading, setQrLoading] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(filters.search), 300);
@@ -1156,11 +1156,20 @@ export default function RegistrationsAdminPanel({ operator }) {
   };
 
   const bulkUpdateStatus = async (nextStatus) => {
-    if (!selectedIds.length)
-      return showToast(
-        'Select at least one registrant before running a bulk status update.',
-        'warning'
-      );
+    const registrationsToUpdate = state.registrations.filter(
+      (registration) =>
+        selectedIds.includes(registration.id) &&
+        registration.status !== nextStatus
+    );
+    if (!registrationsToUpdate.length)
+      return showToast(`Selected people are already ${nextStatus}.`, 'warning');
+    const skippedCount = selectedIds.length - registrationsToUpdate.length;
+    if (
+      !window.confirm(
+        `Change ${registrationsToUpdate.length} selected registration${registrationsToUpdate.length === 1 ? '' : 's'} to ${nextStatus}?\n\nStatus emails will be queued for those people. ${skippedCount} already have this status and will be skipped.`
+      )
+    )
+      return;
     const bulkKey =
       nextStatus === 'confirmed'
         ? 'confirm'
@@ -1174,15 +1183,10 @@ export default function RegistrationsAdminPanel({ operator }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: nextStatus,
-          updates: selectedIds.map((registrationId) => {
-            const registration = state.registrations.find(
-              (item) => item.id === registrationId
-            );
-            return {
-              registrationId,
-              expectedUpdatedAt: registration?.updated_at || '',
-            };
-          }),
+          updates: registrationsToUpdate.map((registration) => ({
+            registrationId: registration.id,
+            expectedUpdatedAt: registration.updated_at || '',
+          })),
         }),
       });
       const data = await response.json();
@@ -1222,35 +1226,25 @@ export default function RegistrationsAdminPanel({ operator }) {
     }
   };
 
-  const handleSendQr = async (scope) => {
-    const target = getQrActionTarget(scope, selectedIds, state.count);
-    if (!target) return;
+  const handleSendQr = async () => {
+    const target = summarizeQrSelection(selectedIds, state.registrations);
+    if (!target.registrationIds.length)
+      return showToast(
+        'Select confirmed registrants to send QR emails.',
+        'warning'
+      );
     if (
       !window.confirm(
-        `Queue QR pass emails for ${target.label}? Only confirmed registrants without an issued pass will be sent a new QR pass.`
+        `Send QR emails to ${target.registrationIds.length} selected people?\n\n${target.firstSendCount} first sends. ${target.repeatCount} already have a pass and will receive another email. ${target.ineligibleCount} ineligible people will be skipped.`
       )
     )
       return;
-    setQrLoading((p) => ({ ...p, send: true }));
-    await queueQrJob({ registrationIds: target.registrationIds });
-    setQrLoading((p) => ({ ...p, send: false }));
-  };
-
-  const handleResendQr = async (scope) => {
-    const target = getQrActionTarget(scope, selectedIds, state.count);
-    if (!target) return;
-    if (
-      !window.confirm(
-        `Queue QR pass emails for ${target.label}, including passes already issued? Confirmed registrants may receive another email.`
-      )
-    )
-      return;
-    setQrLoading((p) => ({ ...p, resend: true }));
+    setQrLoading(true);
     await queueQrJob({
       registrationIds: target.registrationIds,
-      resendExisting: true,
+      resendExisting: target.repeatCount > 0,
     });
-    setQrLoading((p) => ({ ...p, resend: false }));
+    setQrLoading(false);
   };
 
   const handleQuickAction = async (registration, actionKey) => {
@@ -1259,19 +1253,23 @@ export default function RegistrationsAdminPanel({ operator }) {
     try {
       if (actionKey === 'sendQr') {
         if (registration.status !== 'confirmed')
-          await updateRegistrationStatus({
-            registrationId: registration.id,
-            status: 'confirmed',
-            expectedUpdatedAt: registration.updated_at || '',
-          });
-        await queueQrJob({ registrationIds: [registration.id] });
+          throw new Error(
+            'Confirm this registration before sending a QR pass.'
+          );
+        if (
+          !window.confirm(
+            registration.qr_pass_issued_at
+              ? `Send another QR email to ${registration.first_name} ${registration.last_name}? This person already has an issued pass.`
+              : `Send a QR email to ${registration.first_name} ${registration.last_name}?`
+          )
+        )
+          return;
+        await queueQrJob({
+          registrationIds: [registration.id],
+          resendExisting: Boolean(registration.qr_pass_issued_at),
+        });
         return;
       }
-      if (actionKey === 'resendQr')
-        return void (await queueQrJob({
-          registrationIds: [registration.id],
-          resendExisting: true,
-        }));
       let statusResult;
       if (actionKey === 'confirm')
         statusResult = await updateRegistrationStatus({
@@ -1467,88 +1465,6 @@ export default function RegistrationsAdminPanel({ operator }) {
         CSV and Excel include all registrations, regardless of selection or
         filters.
       </p>
-      <section
-        className="mt-4 rounded-[10px] border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]"
-        aria-label="QR pass email actions"
-      >
-        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-          QR pass emails
-        </h2>
-        <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-          Select names in the queue to email those people. Only confirmed
-          registrants are eligible. The first action skips passes already
-          issued. The repeat action also includes issued passes.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => handleSendQr('selected')}
-            disabled={
-              !selectedIds.length ||
-              state.loading ||
-              hasConfigError ||
-              qrLoading.send ||
-              qrLoading.resend
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
-          >
-            {qrLoading.send ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : null}
-            Send new QR to {selectedIds.length} selected
-          </button>
-          <button
-            type="button"
-            onClick={() => handleResendQr('selected')}
-            disabled={
-              !selectedIds.length ||
-              state.loading ||
-              hasConfigError ||
-              qrLoading.send ||
-              qrLoading.resend
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-          >
-            {qrLoading.resend ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : null}
-            Send again, including issued ({selectedIds.length} selected)
-          </button>
-        </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-zinc-100 pt-3 dark:border-white/10">
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
-            Filtered queue ({state.count} matching; job limit 2,000):
-          </span>
-          <button
-            type="button"
-            onClick={() => handleSendQr('filtered')}
-            disabled={
-              !state.count ||
-              state.loading ||
-              hasConfigError ||
-              qrLoading.send ||
-              qrLoading.resend
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-          >
-            Send new QR to matching filters
-          </button>
-          <button
-            type="button"
-            onClick={() => handleResendQr('filtered')}
-            disabled={
-              !state.count ||
-              state.loading ||
-              hasConfigError ||
-              qrLoading.send ||
-              qrLoading.resend
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-          >
-            Send again, including issued, to matching filters
-          </button>
-        </div>
-      </section>
       {hasConfigError ? (
         <AdminAlert
           title="Supabase Configuration Required"
@@ -1797,7 +1713,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       />
 
       {/* Sticky bulk actions bar */}
-      {selectedIds.length > 0 ? (
+      {selectedIds.length > 1 ? (
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]/95">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
@@ -1807,7 +1723,7 @@ export default function RegistrationsAdminPanel({ operator }) {
               <QuickActionButton
                 action={{
                   key: 'confirm',
-                  label: 'Mark Confirmed',
+                  label: 'Confirm selected',
                   kind: 'success',
                 }}
                 onClick={() => bulkUpdateStatus('confirmed')}
@@ -1816,7 +1732,7 @@ export default function RegistrationsAdminPanel({ operator }) {
               <QuickActionButton
                 action={{
                   key: 'waitlist',
-                  label: 'Mark Waitlisted',
+                  label: 'Waitlist selected',
                   kind: 'warning',
                 }}
                 onClick={() => bulkUpdateStatus('waitlisted')}
@@ -1825,11 +1741,26 @@ export default function RegistrationsAdminPanel({ operator }) {
               <QuickActionButton
                 action={{
                   key: 'reject',
-                  label: 'Mark Rejected',
+                  label: 'Reject selected',
                   kind: 'danger',
                 }}
                 onClick={() => bulkUpdateStatus('rejected')}
                 loading={pendingBulk.reject}
+              />
+              <QuickActionButton
+                action={{
+                  key: 'sendQr',
+                  label: 'Send QR to selected',
+                  kind: 'info',
+                }}
+                onClick={handleSendQr}
+                loading={qrLoading}
+                disabled={
+                  state.loading ||
+                  hasConfigError ||
+                  !summarizeQrSelection(selectedIds, state.registrations)
+                    .registrationIds.length
+                }
               />
             </div>
             <button
