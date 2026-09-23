@@ -18,15 +18,11 @@ const DELIVERY_JOBS_CONFIG = {
     retry: 'Unable to retry failed QR delivery items.',
   },
   intro: {
-    eyebrow: 'Entry Pass Dispatch',
-    title: 'Issue QR passes and deliver PDF badges to attendees',
+    eyebrow: 'Email delivery',
+    title: 'QR Pass Emails',
     description:
-      'Generates a PDF entry badge with a QR code, uploads the QR image, and emails it as an attachment. Only runs for confirmed registrations — skips passes already issued unless in resend mode.',
-    chips: (operator) => [
-      `Handled by ${operator.displayName}`,
-      'PDF badge + QR attachment',
-      'Retry failed pass deliveries',
-    ],
+      'Track QR pass emails and their v2 PDF entry passes. Open a job to inspect recipients or retry failed delivery.',
+    chips: () => [],
   },
   alertTitle: 'Delivery Error',
   trackQueueUnavailable: true,
@@ -63,8 +59,7 @@ const DELIVERY_JOBS_CONFIG = {
   ],
   listHeader: {
     eyebrow: 'Recent Pass Dispatch Jobs',
-    description:
-      'PDF badge + QR email jobs · Select a job to inspect item-level failures and retry.',
+    description: 'Select a job to inspect recipients, failures, and retries.',
   },
   accent: {
     eyebrow: 'text-amber-600',

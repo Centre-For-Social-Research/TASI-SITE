@@ -40,7 +40,7 @@ function buildCommands({ router, signOut }) {
     },
     {
       id: 'nav-delivery',
-      label: 'Go to Delivery Jobs',
+      label: 'Go to QR Pass Emails',
       group: 'Navigate',
       icon: Send,
       run: go('/admin/delivery'),

@@ -76,7 +76,19 @@ test('registrations grid hides low-value columns on narrow screens while keeping
   assert.match(source, /id: 'registrant'/);
   assert.match(source, /id: 'email'/);
   assert.match(source, /id: 'status'/);
+  assert.match(source, /id: 'notes'/);
   assert.match(source, /id: 'actions'/);
+});
+
+test('queue returns only note presence to the list while detail retains note text', () => {
+  const queue = readSource('src/lib/registration-ops-db.js');
+  const panel = readSource(
+    'src/components/admin/registrations-admin-panel.jsx'
+  );
+
+  assert.match(queue, /has_review_note: Boolean\(reviewNotes\?\.trim\(\)\)/);
+  assert.match(panel, /row\.data\.has_review_note/);
+  assert.match(panel, /detailDraft\.reviewNotes/);
 });
 
 test('admin shell and dashboard use summary endpoint instead of heavy list polling', () => {

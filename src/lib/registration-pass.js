@@ -969,34 +969,3 @@ export function buildBadgeExportRows(registrations) {
       : 'No',
   }));
 }
-
-export async function buildPdfMergeExport(registrations) {
-  const logoDataUrl = await getBadgeLogoDataUrl();
-  const headerBackgroundDataUrl = await getBadgeHeaderBackgroundDataUrl();
-
-  const pages = await Promise.all(
-    registrations.map(async (registration) => {
-      const qrDataUrl = registration.qr_token
-        ? await buildQrDataUrl(registration.qr_token)
-        : null;
-      const photoDataUrl = await getBadgePhotoDataUrl(registration);
-      return { registration, qrDataUrl, photoDataUrl };
-    })
-  );
-
-  return renderToBuffer(
-    <Document>
-      {pages.map(({ registration, qrDataUrl, photoDataUrl }, i) => (
-        <InstitutionalBadgePage
-          key={registration.id || i}
-          registration={registration}
-          qrDataUrl={qrDataUrl}
-          logoDataUrl={logoDataUrl}
-          photoDataUrl={photoDataUrl}
-          headerLabel="BADGE EXPORT PROOF"
-          headerBackgroundDataUrl={headerBackgroundDataUrl}
-        />
-      ))}
-    </Document>
-  );
-}

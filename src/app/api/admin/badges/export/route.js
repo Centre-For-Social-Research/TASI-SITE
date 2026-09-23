@@ -8,7 +8,6 @@ import {
   buildBadgeExportRows,
   buildCsvExport,
   buildExcelExport,
-  buildPdfMergeExport,
 } from '@/lib/registration-pass';
 
 function contentDisposition(filename) {
@@ -26,6 +25,12 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'csv';
+    if (format !== 'csv' && format !== 'xlsx') {
+      return Response.json(
+        { error: 'Unsupported export format.' },
+        { status: 400 }
+      );
+    }
     const registrations = await listBadgeExportRegistrations();
     const frozenAt = new Date().toISOString();
     const batchId = await recordBadgeExport({
@@ -53,18 +58,6 @@ export async function GET(request) {
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           'Content-Disposition': contentDisposition(
             `tasi-2026-badges-${batchId}.xlsx`
-          ),
-        },
-      });
-    }
-
-    if (format === 'pdf') {
-      const pdf = await buildPdfMergeExport(registrations);
-      return new Response(pdf, {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': contentDisposition(
-            `tasi-2026-badges-${batchId}.pdf`
           ),
         },
       });

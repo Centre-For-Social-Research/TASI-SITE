@@ -102,6 +102,7 @@ export async function listRegistrationQueue({
     linkedin_url,
     priority_tier,
     status,
+    review_notes,
     speaker_flag,
     vip_flag,
     exception_badge_required,
@@ -139,7 +140,14 @@ export async function listRegistrationQueue({
   const totalCount = summary.total || dataResult.count || 0;
 
   return {
-    registrations: (dataResult.data || []).map(normalizeRegistrationRecord),
+    registrations: (dataResult.data || []).map((record) => {
+      const { review_notes: reviewNotes, ...registration } =
+        normalizeRegistrationRecord(record);
+      return {
+        ...registration,
+        has_review_note: Boolean(reviewNotes?.trim()),
+      };
+    }),
     count: totalCount,
     pagination: {
       page: normalizedPage,

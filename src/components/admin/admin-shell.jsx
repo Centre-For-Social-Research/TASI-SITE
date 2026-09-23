@@ -212,14 +212,14 @@ const PAGE_TITLES = {
     meta: 'Manual · No QR credential',
   },
   '/admin/email-jobs': {
-    kicker: 'EMAILS · CONFIRMATION',
-    title: 'Confirmation Emails',
-    meta: 'Text-only · No attachment',
+    kicker: 'EMAILS · REGISTRATION',
+    title: 'Registration Emails',
+    meta: 'Status updates and acknowledgements',
   },
   '/admin/delivery': {
-    kicker: 'PASSES · DISPATCH',
-    title: 'Entry Pass Dispatch',
-    meta: 'PDF badge + QR delivery',
+    kicker: 'EMAILS · QR PASSES',
+    title: 'QR Pass Emails',
+    meta: 'QR and v2 entry pass delivery',
   },
   '/admin/check-in': {
     kicker: 'DAY-OF · LIVE',

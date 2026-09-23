@@ -17,9 +17,9 @@ import {
   Download,
   ExternalLink,
   Loader2,
+  MessageSquare,
   CheckCircle2,
   QrCode,
-  RefreshCw,
   UserCheck,
   Trash2,
 } from 'lucide-react';
@@ -91,7 +91,7 @@ function getPriorityTone(priorityTier) {
 
 function statusHint(status) {
   if (status === 'confirmed')
-    return 'Confirmation email is sent on save. QR pass stays available from row actions.';
+    return 'A new confirmation decision queues an email. Saving notes alone does not resend it.';
   if (status === 'waitlisted')
     return 'Waitlisted registrants are held out of the QR queue until re-confirmed.';
   if (status === 'rejected')
@@ -189,6 +189,31 @@ function RegStatusCell({ row }) {
   );
 }
 
+function NotesCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <button
+      type="button"
+      className="flex h-full items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-300"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+      aria-label={
+        row.data.has_review_note
+          ? `Read note for ${row.data.first_name} ${row.data.last_name}`
+          : `Open ${row.data.first_name} ${row.data.last_name}; no note added`
+      }
+    >
+      {row.data.has_review_note ? (
+        <>
+          <MessageSquare className="h-3.5 w-3.5" /> Note added
+        </>
+      ) : (
+        'None'
+      )}
+    </button>
+  );
+}
+
 function LocationCell({ row }) {
   const ctx = useContext(RegistrationGridCtx);
   if (!row.data || !ctx) return null;
@@ -275,6 +300,7 @@ const REGISTRATION_COLUMNS = [
   },
   { id: 'email', name: 'Email', width: 220, cellRenderer: EmailCell },
   { id: 'status', name: 'Status', width: 130, cellRenderer: RegStatusCell },
+  { id: 'notes', name: 'Notes', width: 115, cellRenderer: NotesCell },
   { id: 'location', name: 'Location', width: 160, cellRenderer: LocationCell },
   { id: 'qr', name: 'QR', width: 110, cellRenderer: QRStatusCell },
   { id: 'checkin', name: 'Check-In', width: 160, cellRenderer: CheckInCell },
@@ -811,7 +837,6 @@ export default function RegistrationsAdminPanel({ operator }) {
   const [exportLoading, setExportLoading] = useState({
     csv: false,
     xlsx: false,
-    pdf: false,
   });
   const [pendingActions, setPendingActions] = useState(new Set());
   const [pendingBulk, setPendingBulk] = useState({
@@ -1060,10 +1085,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download =
-        format === 'pdf'
-          ? 'tasi-2026-badge-export.pdf'
-          : `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : 'csv'}`;
+      a.download = `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : 'csv'}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1422,23 +1444,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         chips={['Review decisions', 'Bulk status updates', 'QR pass delivery']}
         actions={
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={state.loading || hasConfigError}
-              onClick={() => {
-                invalidateAdminCaches();
-                void loadRegistrations({ force: true });
-                if (activeRegistrationId) {
-                  detailCacheRef.current.delete(activeRegistrationId);
-                  void loadDetail(activeRegistrationId, { force: true });
-                }
-              }}
-              className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10 dark:hover:bg-white/10"
-            >
-              <RefreshCw className="h-3 w-3" />
-              Refresh
-            </button>
-            {['csv', 'xlsx', 'pdf'].map((format) => (
+            {['csv', 'xlsx'].map((format) => (
               <button
                 key={format}
                 type="button"
@@ -1451,20 +1457,15 @@ export default function RegistrationsAdminPanel({ operator }) {
                 ) : (
                   <Download className="h-3 w-3" />
                 )}
-                {format === 'csv'
-                  ? 'Export CSV'
-                  : format === 'xlsx'
-                    ? 'Export Excel'
-                    : 'Create badge export PDF'}
+                {format === 'csv' ? 'Export CSV' : 'Export Excel'}
               </button>
             ))}
           </div>
         }
       />
       <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-        Exports cover all registrations, regardless of selection or filters. The
-        PDF is one combined badge proof for printing, separate from the QR
-        email. Each export records a badge batch.
+        CSV and Excel include all registrations, regardless of selection or
+        filters.
       </p>
       <section
         className="mt-4 rounded-[10px] border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]"
@@ -1548,21 +1549,6 @@ export default function RegistrationsAdminPanel({ operator }) {
           </button>
         </div>
       </section>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <a
-          href="/admin/delivery"
-          className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-        >
-          Delivery Jobs
-        </a>
-        <a
-          href="/admin/check-in"
-          className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-        >
-          Check-In Console
-        </a>
-      </div>
-
       {hasConfigError ? (
         <AdminAlert
           title="Supabase Configuration Required"

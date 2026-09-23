@@ -18,15 +18,11 @@ const EMAIL_JOBS_CONFIG = {
     retry: 'Unable to retry failed registration email items.',
   },
   intro: {
-    eyebrow: 'Confirmation Emails',
-    title: 'Send plain-text acknowledgments after registration approval',
+    eyebrow: 'Email delivery',
+    title: 'Registration Emails',
     description:
-      'Sends a text-only confirmation email when a registration is approved. No attachments, no pass — just a notification to the attendee that their spot is confirmed.',
-    chips: (operator) => [
-      `Handled by ${operator.displayName}`,
-      'Text email · No attachment',
-      'Retry failed confirmation emails',
-    ],
+      'Track registration and status emails. Open a job to see who received it, why it failed, or retry a failed item.',
+    chips: () => [],
   },
   alertTitle: 'Email Queue Error',
   statCards: [
