@@ -42,6 +42,7 @@ import registrationCache from '@/lib/admin-registration-cache.cjs';
 const {
   buildDashboardQueryString,
   getBatchStatusTone,
+  getQrActionTarget,
   getQuickActionOptions,
   isSupabaseAdminConfigError,
   summarizeSelection,
@@ -817,7 +818,6 @@ export default function RegistrationsAdminPanel({ operator }) {
     confirm: false,
     waitlist: false,
     reject: false,
-    sendQr: false,
   });
   const [qrLoading, setQrLoading] = useState({ send: false, resend: false });
   const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
@@ -1192,22 +1192,35 @@ export default function RegistrationsAdminPanel({ operator }) {
     }
   };
 
-  const handleSendQr = async () => {
+  const handleSendQr = async (scope) => {
+    const target = getQrActionTarget(scope, selectedIds, state.count);
+    if (!target) return;
+    if (
+      !window.confirm(
+        `Queue QR pass emails for ${target.label}? Only confirmed registrants without an issued pass will be sent a new QR pass.`
+      )
+    )
+      return;
     setQrLoading((p) => ({ ...p, send: true }));
-    await queueQrJob({ registrationIds: selectedIds });
+    await queueQrJob({ registrationIds: target.registrationIds });
     setQrLoading((p) => ({ ...p, send: false }));
   };
 
-  const handleResendQr = async () => {
+  const handleResendQr = async (scope) => {
+    const target = getQrActionTarget(scope, selectedIds, state.count);
+    if (!target) return;
+    if (
+      !window.confirm(
+        `Queue QR pass emails for ${target.label}, including passes already issued? Confirmed registrants may receive another email.`
+      )
+    )
+      return;
     setQrLoading((p) => ({ ...p, resend: true }));
-    await queueQrJob({ registrationIds: selectedIds, resendExisting: true });
+    await queueQrJob({
+      registrationIds: target.registrationIds,
+      resendExisting: true,
+    });
     setQrLoading((p) => ({ ...p, resend: false }));
-  };
-
-  const bulkSendQrQueue = async () => {
-    setPendingBulk((p) => ({ ...p, sendQr: true }));
-    await queueQrJob({ registrationIds: selectedIds });
-    setPendingBulk((p) => ({ ...p, sendQr: false }));
   };
 
   const handleQuickAction = async (registration, actionKey) => {
@@ -1425,35 +1438,100 @@ export default function RegistrationsAdminPanel({ operator }) {
                   ? 'Export CSV'
                   : format === 'xlsx'
                     ? 'Export Excel'
-                    : 'Export PDF'}
+                    : 'Download badge PDFs'}
               </button>
             ))}
           </div>
         }
       />
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={handleSendQr}
-          disabled={state.loading || hasConfigError || qrLoading.send}
-          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
-        >
-          {qrLoading.send ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : null}
-          {selectedIds.length ? 'Send QR To Selected' : 'Send QR To Filtered'}
-        </button>
-        <button
-          type="button"
-          onClick={handleResendQr}
-          disabled={state.loading || hasConfigError || qrLoading.resend}
-          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-        >
-          {qrLoading.resend ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : null}
-          Resend Issued QR
-        </button>
+      <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+        Exports cover all registrations, regardless of selection or filters.
+        Download badge PDFs creates one combined badge proof for printing; it
+        does not download the QR email.
+      </p>
+      <section
+        className="mt-4 rounded-[10px] border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]"
+        aria-label="QR pass email actions"
+      >
+        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+          QR pass emails
+        </h2>
+        <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+          Select names in the queue to email those people. Only confirmed
+          registrants are eligible. The first action skips passes already
+          issued. The repeat action also includes issued passes.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => handleSendQr('selected')}
+            disabled={
+              !selectedIds.length ||
+              state.loading ||
+              hasConfigError ||
+              qrLoading.send ||
+              qrLoading.resend
+            }
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
+          >
+            {qrLoading.send ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : null}
+            Send new QR to {selectedIds.length} selected
+          </button>
+          <button
+            type="button"
+            onClick={() => handleResendQr('selected')}
+            disabled={
+              !selectedIds.length ||
+              state.loading ||
+              hasConfigError ||
+              qrLoading.send ||
+              qrLoading.resend
+            }
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
+          >
+            {qrLoading.resend ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : null}
+            Send again, including issued ({selectedIds.length} selected)
+          </button>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-zinc-100 pt-3 dark:border-white/10">
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            Filtered queue ({state.count} matching; job limit 2,000):
+          </span>
+          <button
+            type="button"
+            onClick={() => handleSendQr('filtered')}
+            disabled={
+              !state.count ||
+              state.loading ||
+              hasConfigError ||
+              qrLoading.send ||
+              qrLoading.resend
+            }
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
+          >
+            Send new QR to matching filters
+          </button>
+          <button
+            type="button"
+            onClick={() => handleResendQr('filtered')}
+            disabled={
+              !state.count ||
+              state.loading ||
+              hasConfigError ||
+              qrLoading.send ||
+              qrLoading.resend
+            }
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
+          >
+            Send again, including issued, to matching filters
+          </button>
+        </div>
+      </section>
+      <div className="mt-3 flex flex-wrap gap-2">
         <a
           href="/admin/delivery"
           className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
@@ -1749,12 +1827,6 @@ export default function RegistrationsAdminPanel({ operator }) {
                 }}
                 onClick={() => bulkUpdateStatus('rejected')}
                 loading={pendingBulk.reject}
-              />
-              <QuickActionButton
-                action={{ key: 'sendQr', label: 'Send QR', kind: 'info' }}
-                onClick={bulkSendQrQueue}
-                disabled={state.loading || hasConfigError}
-                loading={pendingBulk.sendQr}
               />
             </div>
             <button

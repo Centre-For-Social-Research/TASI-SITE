@@ -4,10 +4,24 @@ const assert = require('node:assert/strict');
 const {
   getBatchStatusTone,
   buildDashboardQueryString,
+  getQrActionTarget,
   summarizeSelection,
   prioritizeRegistrationQueue,
   getQuickActionOptions,
 } = require('../src/lib/admin-dashboard-utils.cjs');
+
+test('QR delivery keeps selected and filtered recipients explicit', () => {
+  assert.deepEqual(getQrActionTarget('selected', ['one', 'two'], 100), {
+    registrationIds: ['one', 'two'],
+    label: '2 selected registrants',
+  });
+  assert.deepEqual(getQrActionTarget('filtered', ['one', 'two'], 100), {
+    registrationIds: [],
+    label: 'registrants matching the current filters (up to 2,000)',
+  });
+  assert.equal(getQrActionTarget('selected', [], 100), null);
+  assert.equal(getQrActionTarget('filtered', ['one'], 0), null);
+});
 
 test('buildDashboardQueryString omits empty filter values', () => {
   const query = buildDashboardQueryString({

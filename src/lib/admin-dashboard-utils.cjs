@@ -43,6 +43,24 @@ function buildDashboardQueryString(filters = {}) {
   return params.toString();
 }
 
+function getQrActionTarget(scope, selectedIds = [], matchedCount = 0) {
+  if (scope === 'selected') {
+    if (!selectedIds.length) return null;
+    return {
+      registrationIds: [...selectedIds],
+      label: `${selectedIds.length} selected registrant${selectedIds.length === 1 ? '' : 's'}`,
+    };
+  }
+  if (scope === 'filtered') {
+    if (!matchedCount) return null;
+    return {
+      registrationIds: [],
+      label: `registrants matching the current filters (up to 2,000)`,
+    };
+  }
+  throw new Error('Choose selected or filtered QR delivery scope.');
+}
+
 function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
   const normalizedSelected = Number(selectedCount || 0);
   const normalizedMatched = Number(matchedCount || 0);
@@ -125,6 +143,7 @@ function getQuickActionOptions(registration = {}) {
 
 module.exports = {
   buildDashboardQueryString,
+  getQrActionTarget,
   summarizeSelection,
   isSupabaseAdminConfigError,
   getBatchStatusTone,
