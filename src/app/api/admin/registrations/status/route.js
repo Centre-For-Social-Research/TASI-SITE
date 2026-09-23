@@ -33,35 +33,49 @@ export async function POST(request) {
     const updatedRegistration = await updateRegistrationStatus({
       registrationId,
       status: normalizeRegistrationStatus(body?.status),
-      reviewNotes: String(body?.reviewNotes || '').trim(),
-      speakerFlag: Boolean(body?.speakerFlag),
-      vipFlag: Boolean(body?.vipFlag),
+      reviewNotes:
+        typeof body?.reviewNotes === 'string'
+          ? body.reviewNotes.trim()
+          : undefined,
+      speakerFlag:
+        typeof body?.speakerFlag === 'boolean' ? body.speakerFlag : undefined,
+      vipFlag: typeof body?.vipFlag === 'boolean' ? body.vipFlag : undefined,
       operator: authResult.operator,
       expectedUpdatedAt: String(body?.expectedUpdatedAt || '').trim(),
     });
 
     const templateType = updatedRegistration.status;
-    const queueResult = await queueRegistrationEmailJob({
-      registrationId: updatedRegistration.id,
-      templateType,
-      operator: authResult.operator,
-    });
+    let queueResult;
+    try {
+      queueResult = await queueRegistrationEmailJob({
+        registrationId: updatedRegistration.id,
+        templateType,
+        operator: authResult.operator,
+      });
+    } catch (error) {
+      console.error(
+        'Status saved but registration email could not be queued.',
+        error
+      );
+      queueResult = { queued: false, error: 'Email could not be queued.' };
+    }
 
-    after(async () => {
-      try {
-        await processNextAvailableRegistrationEmailJob({
-          operator: {
-            userId: 'system-after-trigger',
-            primaryEmail: 'system-after-trigger@local',
-          },
-        });
-      } catch (error) {
-        console.error(
-          'Failed to process registration email job in background:',
-          error
-        );
-      }
-    });
+    if (queueResult.queued)
+      after(async () => {
+        try {
+          await processNextAvailableRegistrationEmailJob({
+            operator: {
+              userId: 'system-after-trigger',
+              primaryEmail: 'system-after-trigger@local',
+            },
+          });
+        } catch (error) {
+          console.error(
+            'Failed to process registration email job in background:',
+            error
+          );
+        }
+      });
 
     return adminJson({
       success: true,

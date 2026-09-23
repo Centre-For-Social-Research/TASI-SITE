@@ -6,7 +6,6 @@ import {
   useCallback,
   createContext,
   useContext,
-  useDeferredValue,
   useEffect,
   useMemo,
   useRef,
@@ -45,7 +44,6 @@ const {
   getBatchStatusTone,
   getQuickActionOptions,
   isSupabaseAdminConfigError,
-  prioritizeRegistrationQueue,
   summarizeSelection,
 } = dashboardUtils;
 
@@ -404,6 +402,8 @@ function RowActions({
 }
 
 function RegistrantDrawer({
+  activeRegistrationId,
+  previewRegistration,
   detailState,
   detailDraft,
   setDetailDraft,
@@ -414,7 +414,10 @@ function RegistrantDrawer({
   open,
   onClose,
 }) {
-  const activeRegistration = detailState.data?.registration;
+  const activeRegistration =
+    detailState.data?.registration?.id === activeRegistrationId
+      ? detailState.data.registration
+      : null;
   const [photoLoaded, setPhotoLoaded] = useState(false);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -425,21 +428,36 @@ function RegistrantDrawer({
       open={open}
       onClose={onClose}
       title={
-        activeRegistration
-          ? `${activeRegistration.first_name} ${activeRegistration.last_name}`
+        activeRegistration || previewRegistration
+          ? `${(activeRegistration || previewRegistration).first_name} ${(activeRegistration || previewRegistration).last_name}`
           : 'Registrant Detail'
       }
     >
       {detailState.loading ? (
-        <div className="flex flex-col items-center justify-center gap-3 py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Loading details…
-          </p>
+        <div className="space-y-4 py-4">
+          {previewRegistration ? (
+            <div className="space-y-1 text-sm text-zinc-700 dark:text-zinc-200">
+              <p className="font-semibold">
+                {previewRegistration.first_name} {previewRegistration.last_name}
+              </p>
+              <p>
+                {previewRegistration.organization || 'Independent attendee'}
+              </p>
+              <p>{previewRegistration.email}</p>
+              <p>Status: {previewRegistration.status}</p>
+            </div>
+          ) : null}
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              Loading review details…
+            </p>
+          </div>
         </div>
       ) : !activeRegistration ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Select a registrant row to see their details here.
+          {detailState.error ||
+            'Select a registrant row to see their details here.'}
         </p>
       ) : (
         <div className="space-y-5">
@@ -752,6 +770,10 @@ export default function RegistrationsAdminPanel({ operator }) {
   const detailCacheRef = useRef(
     createMemoryCache({ ttlMs: DEFAULT_DETAIL_TTL_MS })
   );
+  const listRequestRef = useRef(0);
+  const listAbortRef = useRef(null);
+  const detailRequestRef = useRef(0);
+  const detailAbortRef = useRef(null);
   const [filters, setFilters] = useState({
     search: '',
     status: 'all',
@@ -798,20 +820,21 @@ export default function RegistrationsAdminPanel({ operator }) {
     sendQr: false,
   });
   const [qrLoading, setQrLoading] = useState({ send: false, resend: false });
-  const deferredSearch = useDeferredValue(filters.search);
+  const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(filters.search), 300);
+    return () => clearTimeout(timer);
+  }, [filters.search]);
   const queryString = useMemo(
-    () => buildDashboardQueryString({ ...filters, search: deferredSearch }),
-    [deferredSearch, filters]
+    () => buildDashboardQueryString({ ...filters, search: debouncedSearch }),
+    [debouncedSearch, filters]
   );
   const hasConfigError = isSupabaseAdminConfigError(state.error);
   const selectionSummary = summarizeSelection({
     selectedCount: selectedIds.length,
     matchedCount: state.count,
   });
-  const orderedRegistrations = useMemo(
-    () => prioritizeRegistrationQueue(state.registrations || []),
-    [state.registrations]
-  );
+  const orderedRegistrations = state.registrations || [];
   const ds = useClientDataSource({ data: orderedRegistrations });
   const gridColumns = useResponsiveRegistrationColumns();
 
@@ -832,6 +855,10 @@ export default function RegistrationsAdminPanel({ operator }) {
 
   const loadRegistrations = useCallback(
     async ({ background = false, force = false } = {}) => {
+      const requestId = ++listRequestRef.current;
+      listAbortRef.current?.abort();
+      const controller = new AbortController();
+      listAbortRef.current = controller;
       const cached = force
         ? null
         : readRegistrationListCache(listCacheRef.current, queryString);
@@ -847,9 +874,11 @@ export default function RegistrationsAdminPanel({ operator }) {
           `/api/admin/registrations?${queryString}`,
           {
             cache: 'no-store',
+            signal: controller.signal,
           }
         );
         const data = await response.json();
+        if (requestId !== listRequestRef.current) return;
         if (!response.ok)
           return setState({
             loading: false,
@@ -880,7 +909,12 @@ export default function RegistrationsAdminPanel({ operator }) {
             )
           )
         );
-      } catch {
+      } catch (error) {
+        if (
+          requestId !== listRequestRef.current ||
+          error?.name === 'AbortError'
+        )
+          return;
         setState({
           loading: false,
           registrations: [],
@@ -897,6 +931,10 @@ export default function RegistrationsAdminPanel({ operator }) {
   const loadDetail = useCallback(
     async (registrationId, { force = false } = {}) => {
       if (!registrationId) return;
+      const requestId = ++detailRequestRef.current;
+      detailAbortRef.current?.abort();
+      const controller = new AbortController();
+      detailAbortRef.current = controller;
       const cached = force
         ? null
         : readRegistrationDetailCache(detailCacheRef.current, registrationId);
@@ -915,9 +953,10 @@ export default function RegistrationsAdminPanel({ operator }) {
       try {
         const response = await fetch(
           `/api/admin/registrations/${registrationId}`,
-          { cache: 'no-store' }
+          { cache: 'no-store', signal: controller.signal }
         );
         const data = await response.json();
+        if (requestId !== detailRequestRef.current) return;
         if (!response.ok)
           return setDetailState({
             loading: false,
@@ -936,7 +975,12 @@ export default function RegistrationsAdminPanel({ operator }) {
           vipFlag: Boolean(data.registration.vip_flag),
           reviewNotes: data.registration.review_notes || '',
         });
-      } catch {
+      } catch (error) {
+        if (
+          requestId !== detailRequestRef.current ||
+          error?.name === 'AbortError'
+        )
+          return;
         setDetailState({
           loading: false,
           data: null,
@@ -953,6 +997,13 @@ export default function RegistrationsAdminPanel({ operator }) {
   useEffect(() => {
     if (activeRegistrationId) void loadDetail(activeRegistrationId);
   }, [activeRegistrationId, loadDetail]);
+  useEffect(
+    () => () => {
+      listAbortRef.current?.abort();
+      detailAbortRef.current?.abort();
+    },
+    []
+  );
 
   const setFilterValue = (key, value) =>
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
@@ -979,6 +1030,10 @@ export default function RegistrationsAdminPanel({ operator }) {
   const openDrawerFor = (registrationId) => {
     if (registrationId === activeRegistrationId) {
       void loadDetail(registrationId);
+    } else {
+      detailRequestRef.current += 1;
+      detailAbortRef.current?.abort();
+      setDetailState({ loading: true, data: null, error: '' });
     }
     setActiveRegistrationId(registrationId);
     setDrawerOpen(true);
@@ -1026,7 +1081,7 @@ export default function RegistrationsAdminPanel({ operator }) {
     status,
     speakerFlag,
     vipFlag,
-    reviewNotes = '',
+    reviewNotes,
     expectedUpdatedAt = '',
   }) => {
     const response = await fetch('/api/admin/registrations/status', {
@@ -1111,10 +1166,14 @@ export default function RegistrationsAdminPanel({ operator }) {
       const updatedCount = data.updatedIds?.length || 0;
       const conflictCount = data.conflictIds?.length || 0;
       showToast(
-        conflictCount
-          ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
-          : `Updated ${updatedCount} registrants to ${nextStatus}.`,
-        conflictCount ? 'warning' : 'success'
+        !data.emailResult?.queued && updatedCount
+          ? `Updated ${updatedCount} registrants, but emails were not queued. Check delivery jobs.`
+          : conflictCount
+            ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
+            : `Updated ${updatedCount} registrants to ${nextStatus}.`,
+        conflictCount || (!data.emailResult?.queued && updatedCount)
+          ? 'warning'
+          : 'success'
       );
       invalidateAdminCaches(selectedIds);
       void loadRegistrations({ background: true, force: true });
@@ -1170,27 +1229,30 @@ export default function RegistrationsAdminPanel({ operator }) {
           registrationIds: [registration.id],
           resendExisting: true,
         }));
+      let statusResult;
       if (actionKey === 'confirm')
-        await updateRegistrationStatus({
+        statusResult = await updateRegistrationStatus({
           registrationId: registration.id,
           status: 'confirmed',
           expectedUpdatedAt: registration.updated_at || '',
         });
       if (actionKey === 'waitlist')
-        await updateRegistrationStatus({
+        statusResult = await updateRegistrationStatus({
           registrationId: registration.id,
           status: 'waitlisted',
           expectedUpdatedAt: registration.updated_at || '',
         });
       if (actionKey === 'reject')
-        await updateRegistrationStatus({
+        statusResult = await updateRegistrationStatus({
           registrationId: registration.id,
           status: 'rejected',
           expectedUpdatedAt: registration.updated_at || '',
         });
       showToast(
-        `${actionKey} completed for ${registration.first_name} ${registration.last_name}.`,
-        'success'
+        statusResult?.emailResult?.queued
+          ? `${actionKey} completed for ${registration.first_name} ${registration.last_name}; email queued.`
+          : `${actionKey} saved for ${registration.first_name} ${registration.last_name}, but email was not queued. Check delivery jobs.`,
+        statusResult?.emailResult?.queued ? 'success' : 'warning'
       );
       invalidateAdminCaches([registration.id]);
       void loadRegistrations({ background: true, force: true });
@@ -1228,8 +1290,8 @@ export default function RegistrationsAdminPanel({ operator }) {
       showToast(
         data.emailResult?.queued
           ? 'Notes saved; email queued for delivery.'
-          : 'Notes saved.',
-        'success'
+          : 'Review saved, but email was not queued. Check delivery jobs.',
+        data.emailResult?.queued ? 'success' : 'warning'
       );
       invalidateAdminCaches([registrationId]);
       void loadRegistrations({ background: true, force: true });
@@ -1326,7 +1388,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       <AdminPageIntro
         eyebrow="Registrations"
         title="Review Queue"
-        description="Sort the most urgent records to the top, act inline for speed, and open richer registrant detail from the review drawer."
+        description="Review registrations in date order, act inline, and open richer registrant detail from the review drawer."
         chips={['Review decisions', 'Bulk status updates', 'QR pass delivery']}
         actions={
           <div className="flex flex-wrap gap-2">
@@ -1638,6 +1700,10 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Registrant detail drawer */}
       <RegistrantDrawer
+        activeRegistrationId={activeRegistrationId}
+        previewRegistration={state.registrations.find(
+          (registration) => registration.id === activeRegistrationId
+        )}
         detailState={detailState}
         detailDraft={detailDraft}
         setDetailDraft={setDetailDraft}
