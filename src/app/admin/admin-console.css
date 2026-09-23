@@ -4,7 +4,8 @@
    Admin font variables are injected by the root layout via next/font/google. */
 
 /* ── Tokens (light, single theme) ───────────────────────────────────────── */
-.admin-v2 {
+.admin-v2,
+.admin-v2-drawer-content {
   --adm-canvas: #f4f7f7;
   --adm-canvas-2: #edf2f4;
   --adm-panel: #ffffff;
@@ -71,7 +72,8 @@
   font-family: var(--adm-serif);
   font-style: normal;
 }
-.admin-v2 .adm-eyebrow {
+.admin-v2 .adm-eyebrow,
+.admin-v2-drawer-content .adm-eyebrow {
   font-family: var(--adm-mono);
   font-size: 10px;
   letter-spacing: 0.18em;
@@ -188,6 +190,32 @@
     system-ui,
     sans-serif
   ) !important;
+}
+.admin-v2-drawer-content input:focus-visible,
+.admin-v2-drawer-content select:focus-visible,
+.admin-v2-drawer-content textarea:focus-visible {
+  border-color: var(--adm-accent) !important;
+  box-shadow: 0 0 0 3px var(--adm-accent-soft) !important;
+}
+.admin-v2-drawer-content .adm-guest-detail-section,
+.admin-v2-drawer-content .adm-guest-history-section {
+  border: 1px solid var(--adm-line);
+  border-radius: 10px;
+  background: var(--adm-panel);
+  padding: 16px;
+}
+.admin-v2-drawer-content .adm-guest-detail-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.admin-v2-drawer-content .adm-guest-detail-field-wide {
+  grid-column: 1 / -1;
+}
+@media (max-width: 420px) {
+  .admin-v2-drawer-content .adm-guest-detail-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Mobile nav tabs ────────────────────────────────────────────────────── */
@@ -489,10 +517,6 @@
 .admin-v2 textarea::placeholder {
   color: var(--adm-ink-4) !important;
 }
-.admin-v2 input.adm-submission-search-input {
-  padding-left: 36px !important;
-}
-
 /* Checkboxes */
 .admin-v2 input[type='checkbox'],
 .admin-v2 input[type='radio'] {

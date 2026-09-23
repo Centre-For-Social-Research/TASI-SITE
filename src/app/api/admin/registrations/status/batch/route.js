@@ -45,7 +45,10 @@ export async function POST(request) {
     }
 
     const status = normalizeRegistrationStatus(body?.status);
-    const reviewNotes = String(body?.reviewNotes || '').trim();
+    const reviewNotes =
+      typeof body?.reviewNotes === 'string'
+        ? body.reviewNotes.trim()
+        : undefined;
     const speakerFlag =
       typeof body?.speakerFlag === 'boolean' ? body.speakerFlag : undefined;
     const vipFlag =
@@ -75,13 +78,22 @@ export async function POST(request) {
       }
     }
 
-    const queueResult = await queueRegistrationEmailBatchJob({
-      registrations: updatedRegistrations,
-      templateType: status,
-      operator: authResult.operator,
-    });
+    let queueResult;
+    try {
+      queueResult = await queueRegistrationEmailBatchJob({
+        registrations: updatedRegistrations,
+        templateType: status,
+        operator: authResult.operator,
+      });
+    } catch (error) {
+      console.error(
+        'Statuses saved but registration emails could not be queued.',
+        error
+      );
+      queueResult = { queued: false, error: 'Emails could not be queued.' };
+    }
 
-    if (updatedRegistrations.length) {
+    if (updatedRegistrations.length && queueResult.queued) {
       after(async () => {
         try {
           await processNextAvailableRegistrationEmailJob({

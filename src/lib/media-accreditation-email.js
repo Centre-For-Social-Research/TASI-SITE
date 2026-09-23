@@ -5,7 +5,7 @@ function formatOptional(value) {
 }
 
 export function buildTeamNotificationEmail(application) {
-  const subject = `Media accreditation request — ${application.publication}`;
+  const subject = `Media accreditation request: ${application.publication}`;
   const text = [
     `A new media accreditation request has come in for ${EVENT_CONFIG.shortName}.`,
     '',

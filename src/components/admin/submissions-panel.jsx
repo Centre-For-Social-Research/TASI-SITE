@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Download, Eye, FileSpreadsheet, Inbox, Search, X } from 'lucide-react';
+import { Download, Eye, FileSpreadsheet, Inbox, X } from 'lucide-react';
 import {
   AdminAlert,
   AdminStatusBadge,
@@ -289,20 +289,8 @@ export default function SubmissionsPanel() {
           }}
           className="adm-submission-filters"
         >
-          <label style={{ position: 'relative' }}>
-            <Search
-              size={15}
-              style={{
-                position: 'absolute',
-                left: 12,
-                top: 13,
-                color: 'var(--adm-ink-3)',
-                pointerEvents: 'none',
-                zIndex: 1,
-              }}
-            />
+          <label>
             <input
-              className="adm-submission-search-input"
               aria-label="Search submissions"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}

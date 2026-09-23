@@ -1,6 +1,10 @@
 import { Resend } from 'resend';
 import { EVENT_CONFIG } from '@/lib/registration-constants';
 import { renderBrandedEmailHtml } from '@/lib/email-branding';
+import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import internalNotificationEmail from '@/lib/internal-notification-email.cjs';
+
+const { renderInternalNotificationHtml } = internalNotificationEmail;
 
 let resendClient = null;
 
@@ -95,8 +99,9 @@ export async function sendInboundNotificationEmail({ subject, text, replyTo }) {
     to: recipients,
     subject,
     text,
-    html: renderBrandedEmailHtml(text, { showSupportFooter: false }),
+    html: renderInternalNotificationHtml({ subject, text }),
     replyTo: replyTo ? [replyTo] : undefined,
+    attachments: await getTasiEmailInlineAttachments(),
   });
 
   if (error) {

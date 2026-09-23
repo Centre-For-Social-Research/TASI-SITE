@@ -233,5 +233,12 @@ test('internal notifications and applicant replies use the private comms setting
   );
   assert.match(resendSource, /getApplicationCommsEmail/);
   assert.match(resendSource, /replyTo: \[replyEmail\]/);
-  assert.match(resendSource, /showSupportFooter: false/);
+  assert.match(
+    resendSource,
+    /renderInternalNotificationHtml\(\{ subject, text \}\)/
+  );
+  assert.match(
+    resendSource,
+    /attachments: await getTasiEmailInlineAttachments\(\)/
+  );
 });

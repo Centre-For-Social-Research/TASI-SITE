@@ -5,9 +5,11 @@ import {
   isAfterBadgeFreeze,
 } from '@/lib/registration-utils';
 import passUtils from '@/lib/registration-pass-utils.cjs';
+import reviewUpdate from '@/lib/registration-review-update.cjs';
 import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
 const { normalizeRegistrationRecord, getIssuedEntryPass } = passUtils;
+const { resolveRegistrationReviewFields } = reviewUpdate;
 const { getCheckInDayNumber, isCheckedInForDay, normalizeCheckInDay } =
   checkInDayUtils;
 
@@ -324,10 +326,13 @@ export async function updateRegistrationStatus({
   expectedUpdatedAt,
 }) {
   const existing = await getRegistrationById(registrationId);
-  const nextSpeakerFlag =
-    typeof speakerFlag === 'boolean' ? speakerFlag : existing.speaker_flag;
-  const nextVipFlag =
-    typeof vipFlag === 'boolean' ? vipFlag : existing.vip_flag;
+  const reviewFields = resolveRegistrationReviewFields(existing, {
+    reviewNotes,
+    speakerFlag,
+    vipFlag,
+  });
+  const nextSpeakerFlag = reviewFields.speakerFlag;
+  const nextVipFlag = reviewFields.vipFlag;
   const badgeColor = getBadgeColor({
     attendeeCategory: existing.attendee_category,
     speakerFlag: nextSpeakerFlag,
@@ -339,7 +344,7 @@ export async function updateRegistrationStatus({
     .from('event_registrations')
     .update({
       status,
-      review_notes: reviewNotes || null,
+      review_notes: reviewFields.reviewNotes || null,
       speaker_flag: nextSpeakerFlag,
       vip_flag: nextVipFlag,
       badge_color_label: badgeColor.label,
@@ -375,7 +380,7 @@ export async function updateRegistrationStatus({
     actorClerkId: operator.userId,
     actorEmail: operator.primaryEmail,
     actionType: 'status_updated',
-    notes: reviewNotes || null,
+    notes: typeof reviewNotes === 'string' ? reviewNotes.trim() || null : null,
   });
 
   return normalizeRegistrationRecord(data);

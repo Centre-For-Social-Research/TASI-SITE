@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Eye, Mail, Pencil, Plus, Search, Send, X } from 'lucide-react';
+import { Eye, Mail, Pencil, Plus, Send, X } from 'lucide-react';
 import {
   AdminAlert,
   AdminStatusBadge,
@@ -514,22 +514,13 @@ export default function GuestInvitationsPanel({ canManage }) {
             borderBottom: '1px solid var(--adm-line)',
           }}
         >
-          <label style={{ position: 'relative' }}>
-            <Search
-              size={15}
-              style={{
-                position: 'absolute',
-                left: 12,
-                top: 13,
-                color: 'var(--adm-ink-3)',
-              }}
-            />
+          <label>
             <input
               aria-label="Search guest invitations"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
               placeholder="Search name, email, organisation…"
-              style={{ ...inputStyle(), paddingLeft: 36 }}
+              style={inputStyle()}
             />
           </label>
           <select
@@ -761,7 +752,7 @@ export default function GuestInvitationsPanel({ canManage }) {
             Loading invitation…
           </p>
         ) : (
-          <div style={{ display: 'grid', gap: 20 }}>
+          <div style={{ display: 'grid', gap: 16 }}>
             <div>
               <div
                 style={{
@@ -802,8 +793,9 @@ export default function GuestInvitationsPanel({ canManage }) {
 
             {canManage ? (
               <form
+                className="adm-guest-detail-section"
                 onSubmit={saveInvitation}
-                style={{ display: 'grid', gap: 12 }}
+                style={{ display: 'grid', gap: 14 }}
               >
                 <div
                   style={{
@@ -814,40 +806,50 @@ export default function GuestInvitationsPanel({ canManage }) {
                 >
                   Guest details
                 </div>
-                {[
-                  { key: 'name', label: 'Guest name', required: true },
-                  {
-                    key: 'email',
-                    label: 'Email address',
-                    required: true,
-                    type: 'email',
-                  },
-                  { key: 'designation', label: 'Designation' },
-                  { key: 'organization', label: 'Organisation' },
-                ].map((field) => (
-                  <label key={field.key} style={{ display: 'grid', gap: 6 }}>
-                    <span
-                      style={{
-                        color: 'var(--adm-ink-2)',
-                        fontFamily: 'var(--adm-mono)',
-                        fontSize: 10,
-                        letterSpacing: '.08em',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      {field.label}
-                    </span>
-                    <input
-                      type={field.type || 'text'}
-                      required={field.required}
-                      value={editForm[field.key]}
-                      onChange={(event) =>
-                        updateForm(setEditForm, field.key, event.target.value)
+                <div className="adm-guest-detail-fields">
+                  {[
+                    { key: 'name', label: 'Guest name', required: true },
+                    {
+                      key: 'email',
+                      label: 'Email address',
+                      required: true,
+                      type: 'email',
+                    },
+                    { key: 'designation', label: 'Designation' },
+                    { key: 'organization', label: 'Organisation' },
+                  ].map((field) => (
+                    <label
+                      key={field.key}
+                      className={
+                        field.required
+                          ? 'adm-guest-detail-field-wide'
+                          : undefined
                       }
-                      style={inputStyle()}
-                    />
-                  </label>
-                ))}
+                      style={{ display: 'grid', gap: 6 }}
+                    >
+                      <span
+                        style={{
+                          color: 'var(--adm-ink-2)',
+                          fontFamily: 'var(--adm-mono)',
+                          fontSize: 10,
+                          letterSpacing: '.08em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {field.label}
+                      </span>
+                      <input
+                        type={field.type || 'text'}
+                        required={field.required}
+                        value={editForm[field.key]}
+                        onChange={(event) =>
+                          updateForm(setEditForm, field.key, event.target.value)
+                        }
+                        style={inputStyle()}
+                      />
+                    </label>
+                  ))}
+                </div>
                 <button
                   type="submit"
                   disabled={savingEdit}
@@ -859,11 +861,10 @@ export default function GuestInvitationsPanel({ canManage }) {
             ) : null}
 
             <div
+              className="adm-guest-history-section"
               style={{
                 display: 'grid',
                 gap: 9,
-                paddingTop: 18,
-                borderTop: '1px solid var(--adm-line)',
               }}
             >
               <div
