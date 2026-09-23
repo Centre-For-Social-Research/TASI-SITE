@@ -36,7 +36,6 @@ import {
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
-import { AdminProgressCard } from '@/components/admin/admin-charts';
 import registrationCache from '@/lib/admin-registration-cache.cjs';
 
 const {
@@ -360,7 +359,7 @@ function ReviewSummary({ summary }) {
         label="QR Issued"
         value={summary.qrIssued}
         tone="accent"
-        detail="Already mailed or queued"
+        detail="Passes issued"
         icon={QrCode}
       />
       <AdminStatCard
@@ -1455,10 +1454,7 @@ export default function RegistrationsAdminPanel({ operator }) {
     <div className="space-y-6">
       {/* Page header */}
       <AdminPageIntro
-        eyebrow="Registrations"
-        title="Review Queue"
         description="Review registrations in date order, act inline, and open richer registrant detail from the review drawer."
-        chips={['Review decisions', 'Bulk status updates', 'QR pass delivery']}
         actions={
           <div className="flex flex-wrap gap-2">
             {['csv', 'xlsx'].map((format) => (
@@ -1494,68 +1490,6 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Summary stats */}
       <ReviewSummary summary={state.summary} />
-
-      {/* Progress cards */}
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <AdminProgressCard
-          label="Confirmation Rate"
-          value={state.summary?.confirmed || 0}
-          percent={
-            state.summary &&
-            (state.summary.confirmed || 0) + (state.summary.pending || 0) > 0
-              ? Math.round(
-                  ((state.summary.confirmed || 0) /
-                    ((state.summary.confirmed || 0) +
-                      (state.summary.pending || 0))) *
-                    100
-                )
-              : 0
-          }
-          color="cyan"
-        />
-        <AdminProgressCard
-          label="QR Coverage"
-          value={state.summary?.qrIssued || 0}
-          percent={
-            (state.summary?.confirmed || 0) > 0
-              ? Math.round(
-                  ((state.summary.qrIssued || 0) / state.summary.confirmed) *
-                    100
-                )
-              : 0
-          }
-          color="emerald"
-        />
-        <AdminProgressCard
-          label="Check-in Progress"
-          value={state.summary?.checkedIn || 0}
-          percent={
-            (state.summary?.qrIssued || 0) > 0
-              ? Math.round(
-                  ((state.summary.checkedIn || 0) / state.summary.qrIssued) *
-                    100
-                )
-              : 0
-          }
-          color="amber"
-        />
-        <AdminProgressCard
-          label="Pending Decisions"
-          value={state.summary?.pending || 0}
-          percent={
-            state.summary &&
-            (state.summary.confirmed || 0) + (state.summary.pending || 0) > 0
-              ? Math.round(
-                  ((state.summary.pending || 0) /
-                    ((state.summary.confirmed || 0) +
-                      (state.summary.pending || 0))) *
-                    100
-                )
-              : 0
-          }
-          color="rose"
-        />
-      </section>
 
       {/* Filters */}
       <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">

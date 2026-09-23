@@ -400,19 +400,9 @@ export default function GuestInvitationsPanel({ canManage }) {
           }}
         >
           <div>
-            <div className="adm-eyebrow">Invitation-only list</div>
-            <h2
-              style={{
-                margin: '5px 0 0',
-                color: 'var(--adm-ink)',
-                fontSize: 22,
-              }}
-            >
-              Guest Invitations
-            </h2>
             <p
               style={{
-                margin: '6px 0 0',
+                margin: 0,
                 maxWidth: 650,
                 color: 'var(--adm-ink-3)',
                 fontSize: 13,

@@ -214,27 +214,15 @@ const PAGE_TITLES = {
   '/admin/settings': { kicker: 'SYSTEM · CONFIG', title: 'Settings', meta: '' },
 };
 
-const ADM_NAV_GROUPS = [
-  {
-    group: 'Registrations',
-    keys: ['/admin/registrations', '/admin/email-jobs', '/admin/delivery'],
-  },
-  {
-    group: 'Submissions',
-    keys: ['/admin/submissions'],
-  },
-  {
-    group: 'Guests',
-    keys: ['/admin/guest-invitations'],
-  },
-  {
-    group: 'Day-of',
-    keys: ['/admin/check-in'],
-  },
-  {
-    group: 'System',
-    keys: ['/admin/audit', '/admin/settings'],
-  },
+const ADM_NAV_ITEMS = [
+  '/admin/registrations',
+  '/admin/submissions',
+  '/admin/guest-invitations',
+  '/admin/email-jobs',
+  '/admin/delivery',
+  '/admin/check-in',
+  '/admin/audit',
+  '/admin/settings',
 ];
 
 function daysToEvent() {
@@ -324,89 +312,78 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
       </div>
 
       {/* Nav */}
-      <nav style={{ flex: 1, overflow: 'auto', padding: '14px 10px' }}>
-        {ADM_NAV_GROUPS.map((group) => (
-          <div key={group.group} style={{ marginBottom: 18 }}>
-            <div
-              className="adm-eyebrow"
-              style={{ padding: '0 12px', marginBottom: 6 }}
+      <nav
+        aria-label="Admin pages"
+        style={{ flex: 1, overflow: 'auto', padding: '14px 10px' }}
+      >
+        {ADM_NAV_ITEMS.map((href) => {
+          const Icon = NAV_ICONS[href];
+          const meta = navLabels[href];
+          const active = isActive(href);
+          const label = PAGE_TITLES[href]?.title || href;
+          return (
+            <button
+              key={href}
+              className="adm-nav-btn"
+              onClick={() => navigate(href)}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '9px 12px',
+                marginBottom: 2,
+                background: active ? 'var(--adm-panel-2)' : 'transparent',
+                border: '1px solid transparent',
+                borderRadius: 10,
+                color: active ? 'var(--adm-ink)' : 'var(--adm-ink-2)',
+                fontSize: 13,
+                fontWeight: active ? 500 : 400,
+                cursor: 'pointer',
+                position: 'relative',
+                fontFamily: 'var(--adm-sans)',
+              }}
             >
-              {group.group}
-            </div>
-            {group.keys.map((href) => {
-              const Icon = NAV_ICONS[href];
-              const meta = navLabels[href];
-              const active = isActive(href);
-              const label = PAGE_TITLES[href]?.title || href;
-              return (
-                <button
-                  key={href}
-                  className="adm-nav-btn"
-                  onClick={() => navigate(href)}
+              {active && (
+                <span
                   style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    padding: '9px 12px',
-                    marginBottom: 2,
-                    background: active ? 'var(--adm-panel-2)' : 'transparent',
-                    border:
-                      '1px solid ' +
-                      (active ? 'var(--adm-line)' : 'transparent'),
+                    position: 'absolute',
+                    left: -1,
+                    top: 10,
+                    bottom: 10,
+                    width: 2,
+                    background: 'var(--adm-accent)',
                     borderRadius: 10,
-                    color: active ? 'var(--adm-ink)' : 'var(--adm-ink-2)',
-                    fontSize: 13,
-                    fontWeight: active ? 500 : 400,
-                    cursor: 'pointer',
-                    position: 'relative',
-                    fontFamily: 'var(--adm-sans)',
+                  }}
+                />
+              )}
+              {Icon && (
+                <Icon
+                  style={{
+                    color: active ? 'var(--adm-accent)' : 'var(--adm-ink-3)',
+                  }}
+                />
+              )}
+              <span style={{ flex: 1 }}>{label}</span>
+              {meta?.showBadge && (
+                <span
+                  className="adm-mono"
+                  style={{
+                    fontSize: 10,
+                    padding: '2px 6px',
+                    borderRadius: 10,
+                    background: 'var(--adm-accent-soft)',
+                    color: 'var(--adm-accent)',
+                    border: '1px solid var(--adm-accent-line)',
                   }}
                 >
-                  {active && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        left: -1,
-                        top: 10,
-                        bottom: 10,
-                        width: 2,
-                        background: 'var(--adm-accent)',
-                        borderRadius: 10,
-                      }}
-                    />
-                  )}
-                  {Icon && (
-                    <Icon
-                      style={{
-                        color: active
-                          ? 'var(--adm-accent)'
-                          : 'var(--adm-ink-3)',
-                      }}
-                    />
-                  )}
-                  <span style={{ flex: 1 }}>{label}</span>
-                  {meta?.showBadge && (
-                    <span
-                      className="adm-mono"
-                      style={{
-                        fontSize: 10,
-                        padding: '2px 6px',
-                        borderRadius: 10,
-                        background: 'var(--adm-accent-soft)',
-                        color: 'var(--adm-accent)',
-                        border: '1px solid var(--adm-accent-line)',
-                      }}
-                    >
-                      {meta.badgeCount}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        ))}
+                  {meta.badgeCount}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Event panel */}
@@ -425,7 +402,9 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
             className="adm-eyebrow"
             style={{ color: 'var(--adm-accent)', marginBottom: 6 }}
           >
-            EVENT · T-{daysToEvent()}
+            {daysToEvent() > 0
+              ? `${daysToEvent()} days until the event`
+              : 'Event underway'}
           </div>
           <div
             style={{

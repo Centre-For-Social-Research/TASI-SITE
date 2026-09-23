@@ -3,7 +3,7 @@ import { Inter, JetBrains_Mono, Outfit, Source_Sans_3 } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
-import ChatBot from '@/components/chatbot/ChatBot';
+import ChatBotGate from '@/components/chatbot/ChatBotGate';
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
@@ -215,7 +215,7 @@ export default function RootLayout({
           <AppShell>{children}</AppShell>
           <Analytics />
           <SpeedInsights />
-          <ChatBot />
+          <ChatBotGate />
         </ThemeProvider>
       </body>
     </html>

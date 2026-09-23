@@ -37,11 +37,11 @@ function getJobTone(job) {
  * endpoint URLs, labels, accent styling, and panel-specific rendering are
  * provided through the `config` prop so each queue stays a thin wrapper.
  */
-export default function JobManagerPanel({ operator, config }) {
+export default function JobManagerPanel({ config }) {
   const {
     endpoints, // { list, detail(jobId), process, retry(jobId) }
     messages, // { loadJobs, networkLoadJobs, loadDetail, networkLoadDetail, process, retry }
-    intro, // { eyebrow, title, description, chips(operator) }
+    intro,
     alertTitle,
     statCards, // [{ key: 'queued'|'processing'|'sent'|'failed', label, tone, detail }]
     listHeader, // { eyebrow, description }
@@ -299,12 +299,7 @@ export default function JobManagerPanel({ operator, config }) {
 
   return (
     <div className="space-y-5">
-      <AdminPageIntro
-        eyebrow={intro.eyebrow}
-        title={intro.title}
-        description={intro.description}
-        chips={intro.chips(operator)}
-      />
+      <AdminPageIntro description={intro.description} />
 
       {jobsState.error ? (
         <AdminAlert
