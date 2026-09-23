@@ -16,6 +16,7 @@ import {
   Clock,
   Download,
   ExternalLink,
+  Linkedin,
   Loader2,
   MessageSquare,
   CheckCircle2,
@@ -40,6 +41,7 @@ import registrationCache from '@/lib/admin-registration-cache.cjs';
 
 const {
   buildDashboardQueryString,
+  getLinkedInProfileUrl,
   getBatchStatusTone,
   summarizeQrSelection,
   getQuickActionOptions,
@@ -139,14 +141,29 @@ function RegistrantCell({ row }) {
   const ctx = useContext(RegistrationGridCtx);
   if (!row.data || !ctx) return null;
   const r = row.data;
+  const linkedInUrl = getLinkedInProfileUrl(r.linkedin_url);
   return (
     <div
       className="flex h-full cursor-pointer flex-col justify-center py-1"
       onClick={() => ctx.openDrawerFor(r.id)}
     >
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-        {r.first_name} {r.last_name}
-      </p>
+      <div className="flex items-center gap-2">
+        <p className="min-w-0 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          {r.first_name} {r.last_name}
+        </p>
+        {linkedInUrl ? (
+          <a
+            href={linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            aria-label={`Open ${r.first_name} ${r.last_name}'s LinkedIn profile`}
+            className="inline-flex shrink-0 items-center gap-1 rounded-[10px] border border-sky-200 bg-sky-50 px-1.5 py-0.5 text-[11px] font-medium text-sky-800 hover:bg-sky-100 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-300"
+          >
+            <Linkedin className="h-3 w-3" /> LinkedIn
+          </a>
+        ) : null}
+      </div>
       <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
         {r.registration_code}
       </p>
@@ -515,9 +532,9 @@ function RegistrantDrawer({
               <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
                 {activeRegistration.email}
               </p>
-              {activeRegistration.linkedin_url ? (
+              {getLinkedInProfileUrl(activeRegistration.linkedin_url) ? (
                 <a
-                  href={activeRegistration.linkedin_url}
+                  href={getLinkedInProfileUrl(activeRegistration.linkedin_url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-1 text-xs text-sky-600 hover:underline"

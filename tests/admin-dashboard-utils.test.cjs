@@ -10,7 +10,21 @@ const {
   summarizeSelection,
   prioritizeRegistrationQueue,
   getQuickActionOptions,
+  getLinkedInProfileUrl,
 } = require('../src/lib/admin-dashboard-utils.cjs');
+
+test('review queue opens only valid LinkedIn hosts', () => {
+  assert.equal(
+    getLinkedInProfileUrl('http://www.linkedin.com/in/saquib'),
+    'https://www.linkedin.com/in/saquib'
+  );
+  assert.equal(
+    getLinkedInProfileUrl('https://linkedin.com.evil.test/in/x'),
+    ''
+  );
+  assert.equal(getLinkedInProfileUrl('javascript:alert(1)'), '');
+  assert.equal(getLinkedInProfileUrl(''), '');
+});
 
 test('QR selection counts first sends, repeats and ineligible people without broadening scope', () => {
   assert.deepEqual(

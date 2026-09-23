@@ -43,6 +43,26 @@ function buildDashboardQueryString(filters = {}) {
   return params.toString();
 }
 
+function getLinkedInProfileUrl(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(String(value).trim());
+    const host = url.hostname.toLowerCase();
+    if (
+      !['http:', 'https:'].includes(url.protocol) ||
+      (host !== 'linkedin.com' && !host.endsWith('.linkedin.com')) ||
+      url.username ||
+      url.password
+    ) {
+      return '';
+    }
+    url.protocol = 'https:';
+    return url.toString();
+  } catch {
+    return '';
+  }
+}
+
 function summarizeQrSelection(selectedIds = [], registrations = []) {
   const selected = new Set(selectedIds);
   const confirmed = registrations.filter(
@@ -139,6 +159,7 @@ function getQuickActionOptions(registration = {}) {
 
 module.exports = {
   buildDashboardQueryString,
+  getLinkedInProfileUrl,
   summarizeQrSelection,
   summarizeSelection,
   isSupabaseAdminConfigError,
