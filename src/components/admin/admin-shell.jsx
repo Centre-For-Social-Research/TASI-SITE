@@ -233,6 +233,14 @@ function daysToEvent() {
   return Math.max(0, diff);
 }
 
+function eventStatusLabel() {
+  if (Date.now() >= new Date('2026-10-16T00:00:00+05:30').getTime()) {
+    return 'Event completed';
+  }
+  const days = daysToEvent();
+  return days > 0 ? `${days} days until the event` : 'Event underway';
+}
+
 function getInitials(name) {
   return String(name || 'OP')
     .trim()
@@ -402,9 +410,7 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
             className="adm-eyebrow"
             style={{ color: 'var(--adm-accent)', marginBottom: 6 }}
           >
-            {daysToEvent() > 0
-              ? `${daysToEvent()} days until the event`
-              : 'Event underway'}
+            {eventStatusLabel()}
           </div>
           <div
             style={{
