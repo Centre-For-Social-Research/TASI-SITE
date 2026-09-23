@@ -1060,7 +1060,10 @@ export default function RegistrationsAdminPanel({ operator }) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : format === 'pdf' ? 'pdf' : 'csv'}`;
+      a.download =
+        format === 'pdf'
+          ? 'tasi-2026-badge-export.pdf'
+          : `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : 'csv'}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1438,16 +1441,16 @@ export default function RegistrationsAdminPanel({ operator }) {
                   ? 'Export CSV'
                   : format === 'xlsx'
                     ? 'Export Excel'
-                    : 'Download badge PDFs'}
+                    : 'Create badge export PDF'}
               </button>
             ))}
           </div>
         }
       />
       <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-        Exports cover all registrations, regardless of selection or filters.
-        Download badge PDFs creates one combined badge proof for printing; it
-        does not download the QR email.
+        Exports cover all registrations, regardless of selection or filters. The
+        PDF is one combined badge proof for printing, separate from the QR
+        email. Each export records a badge batch.
       </p>
       <section
         className="mt-4 rounded-[10px] border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]"
