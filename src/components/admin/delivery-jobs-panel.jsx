@@ -1,6 +1,9 @@
 'use client';
 
 import JobManagerPanel from '@/components/admin/job-manager-panel';
+import jobLabels from '@/lib/admin-job-labels.cjs';
+
+const { jobParticipantTitle } = jobLabels;
 
 const DELIVERY_JOBS_CONFIG = {
   endpoints: {
@@ -70,12 +73,9 @@ const DELIVERY_JOBS_CONFIG = {
     selectedRow: 'bg-amber-50/40 dark:bg-amber-950/20',
     progressBar: 'bg-amber-600',
   },
-  renderJobTitle: (job) =>
-    job.id === 'legacy-direct-send'
-      ? 'Direct Send'
-      : `${job.id.slice(0, 8)}...`,
+  renderJobTitle: jobParticipantTitle,
   renderJobSubtitle: (job) =>
-    `${job.selection_mode} · ${job.total_items} items`,
+    `${job.selection_mode} · ${job.total_items} recipient${job.total_items === 1 ? '' : 's'}`,
   emptyState: (state) =>
     state.queueUnavailable
       ? 'Queue-backed jobs are unavailable in this environment, so there is nothing to inspect here yet.'

@@ -1,6 +1,9 @@
 'use client';
 
 import JobManagerPanel from '@/components/admin/job-manager-panel';
+import jobLabels from '@/lib/admin-job-labels.cjs';
+
+const { jobParticipantTitle } = jobLabels;
 
 const EMAIL_JOBS_CONFIG = {
   endpoints: {
@@ -65,9 +68,9 @@ const EMAIL_JOBS_CONFIG = {
     selectedRow: 'bg-purple-50/40 dark:bg-purple-950/20',
     progressBar: 'bg-purple-600',
   },
-  renderJobTitle: (job) => job.template_type,
+  renderJobTitle: jobParticipantTitle,
   renderJobSubtitle: (job) =>
-    `ID: ${job.id.slice(0, 8)}... · ${job.total_items} items`,
+    `${job.template_type.replaceAll('_', ' ')} · ${job.total_items} recipient${job.total_items === 1 ? '' : 's'}`,
   emptyState: () => 'No registration email jobs yet.',
   detail: {
     eyebrow: 'Selected Job',

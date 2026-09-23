@@ -46,7 +46,7 @@ export default function JobManagerPanel({ config }) {
     statCards, // [{ key: 'queued'|'processing'|'sent'|'failed', label, tone, detail }]
     listHeader, // { eyebrow, description }
     accent, // { eyebrow, processButton, rowProcessButton, selectedRow, progressBar }
-    renderJobTitle, // (job) => ReactNode
+    renderJobTitle, // (job, detailItems?) => ReactNode
     renderJobSubtitle, // (job) => ReactNode
     emptyState, // (state) => string
     detail, // { eyebrow, stats: [{ label, field }], emptyHint }
@@ -359,7 +359,7 @@ export default function JobManagerPanel({ config }) {
             <table className="min-w-full">
               <thead className="sticky top-0 bg-zinc-50 dark:bg-white/[0.06]/80">
                 <tr className="border-b border-zinc-200 text-[10px] font-semibold uppercase tracking-wide text-zinc-400 dark:border-white/[0.06] dark:text-zinc-500">
-                  <th className="px-4 py-3 text-left">Job</th>
+                  <th className="px-4 py-3 text-left">Recipients</th>
                   <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-left">Progress</th>
                   <th className="px-4 py-3 text-left">Attempts</th>
@@ -463,8 +463,11 @@ export default function JobManagerPanel({ config }) {
                 {detail.eyebrow}
               </p>
               <h3 className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-                {jobsState.selectedDetail?.job?.id
-                  ? `${jobsState.selectedDetail.job.id.slice(0, 12)}…`
+                {jobsState.selectedDetail?.job
+                  ? renderJobTitle(
+                      jobsState.selectedDetail.job,
+                      jobsState.selectedDetail.items
+                    )
                   : 'Pick a job'}
               </h3>
             </div>

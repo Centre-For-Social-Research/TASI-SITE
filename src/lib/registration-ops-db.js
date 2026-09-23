@@ -475,9 +475,21 @@ export async function listPassIssueEmailJobs({ limit = 8 } = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('pass_issue_email_jobs')
-    .select('*')
+    .select(
+      `
+      *,
+      recipient_preview:pass_issue_email_job_items (
+        registration:event_registrations (first_name, last_name)
+      )
+    `
+    )
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', {
+      ascending: true,
+      referencedTable: 'recipient_preview',
+    })
+    .limit(limit)
+    .limit(1, { referencedTable: 'recipient_preview' });
 
   if (error) {
     throw new Error(error.message);
@@ -759,9 +771,21 @@ export async function listRegistrationEmailJobs({ limit = 20 } = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('registration_email_jobs')
-    .select('*')
+    .select(
+      `
+      *,
+      recipient_preview:registration_email_job_items (
+        registration:event_registrations (first_name, last_name)
+      )
+    `
+    )
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', {
+      ascending: true,
+      referencedTable: 'recipient_preview',
+    })
+    .limit(limit)
+    .limit(1, { referencedTable: 'recipient_preview' });
 
   if (error) {
     throw new Error(error.message);
