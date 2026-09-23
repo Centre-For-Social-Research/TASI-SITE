@@ -799,6 +799,7 @@ export default function RegistrationsAdminPanel({ operator }) {
   );
   const listRequestRef = useRef(0);
   const listAbortRef = useRef(null);
+  const lastListRequestAtRef = useRef(0);
   const detailRequestRef = useRef(0);
   const detailAbortRef = useRef(null);
   const [filters, setFilters] = useState({
@@ -880,6 +881,7 @@ export default function RegistrationsAdminPanel({ operator }) {
 
   const loadRegistrations = useCallback(
     async ({ background = false, force = false } = {}) => {
+      lastListRequestAtRef.current = Date.now();
       const requestId = ++listRequestRef.current;
       listAbortRef.current?.abort();
       const controller = new AbortController();
@@ -1019,6 +1021,23 @@ export default function RegistrationsAdminPanel({ operator }) {
   useEffect(() => {
     void loadRegistrations();
   }, [loadRegistrations]);
+
+  useEffect(() => {
+    const refreshIfStale = () => {
+      if (document.hidden || Date.now() - lastListRequestAtRef.current < 60_000)
+        return;
+      void loadRegistrations({ background: true, force: true });
+      if (drawerOpen && activeRegistrationId) {
+        void loadDetail(activeRegistrationId, { force: true });
+      }
+    };
+    window.addEventListener('focus', refreshIfStale);
+    document.addEventListener('visibilitychange', refreshIfStale);
+    return () => {
+      window.removeEventListener('focus', refreshIfStale);
+      document.removeEventListener('visibilitychange', refreshIfStale);
+    };
+  }, [activeRegistrationId, drawerOpen, loadDetail, loadRegistrations]);
   useEffect(() => {
     if (activeRegistrationId) void loadDetail(activeRegistrationId);
   }, [activeRegistrationId, loadDetail]);

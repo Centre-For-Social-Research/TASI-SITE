@@ -1,27 +1,13 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Toaster } from 'sonner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
 import { buildAdminNavigation } from '@/lib/admin-shell-utils.cjs';
-import { resolveAdminShellRuntimeState } from '@/lib/admin-runtime-guards.cjs';
 import AdminCommandPalette from '@/components/admin/admin-command-palette';
-
-const AdminShellDataContext = createContext(null);
-
-export function useAdminShellData() {
-  return useContext(AdminShellDataContext);
-}
 
 /* ── Inline SVG icons (thin stroke, 18×18) ───────────────────────────────── */
 const Ico = {
@@ -179,7 +165,6 @@ const Ico = {
 };
 
 const NAV_ICONS = {
-  '/admin': Ico.gauge,
   '/admin/registrations': Ico.users,
   '/admin/submissions': Ico.audit,
   '/admin/guest-invitations': Ico.mail,
@@ -191,11 +176,6 @@ const NAV_ICONS = {
 };
 
 const PAGE_TITLES = {
-  '/admin': {
-    kicker: 'OPERATIONS · LIVE',
-    title: 'Dashboard',
-    meta: 'Auto-refresh · 30s',
-  },
   '/admin/registrations': {
     kicker: 'REGISTRATIONS · REVIEW',
     title: 'Review Queue',
@@ -236,10 +216,6 @@ const PAGE_TITLES = {
 
 const ADM_NAV_GROUPS = [
   {
-    group: 'Overview',
-    keys: ['/admin'],
-  },
-  {
     group: 'Registrations',
     keys: ['/admin/registrations', '/admin/email-jobs', '/admin/delivery'],
   },
@@ -278,20 +254,9 @@ function getInitials(name) {
     .join('');
 }
 
-/* ── Live clock ─────────────────────────────────────────────────────────── */
-function useClock() {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return now;
-}
-
 /* ── Sidebar ────────────────────────────────────────────────────────────── */
 function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
-  const isActive = (href) =>
-    href === '/admin' ? currentPath === '/admin' : currentPath.startsWith(href);
+  const isActive = (href) => currentPath.startsWith(href);
 
   const navLabels = {};
   navSections.forEach((s) =>
@@ -571,36 +536,9 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
 }
 
 /* ── TopBar ──────────────────────────────────────────────────────────────── */
-function TopBar({ currentPath, shellState, onPalette, operator }) {
-  const now = useClock();
+function TopBar({ currentPath, onPalette, operator }) {
   const titleDef =
     PAGE_TITLES[currentPath] || PAGE_TITLES['/admin/registrations'];
-  const { summary, jobs } = shellState;
-
-  const fmtTime = now
-    ? now.toLocaleTimeString('en-IN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      })
-    : '--:--:--';
-  const fmtDate = now
-    ? now
-        .toLocaleDateString('en-IN', {
-          weekday: 'short',
-          day: '2-digit',
-          month: 'short',
-        })
-        .toUpperCase()
-    : '---';
-
-  const runningJobs = jobs.filter((j) => j?.status === 'running').length;
-  const failedJobs = jobs.reduce((t, j) => t + Number(j?.failed_items || 0), 0);
-  const qrQueue = Math.max(
-    (summary.confirmed || 0) - (summary.qrIssued || 0),
-    0
-  );
 
   return (
     <header
@@ -613,84 +551,6 @@ function TopBar({ currentPath, shellState, onPalette, operator }) {
         borderBottom: '1px solid var(--adm-line)',
       }}
     >
-      {/* Ticker strip */}
-      <div
-        className="adm-ticker-strip"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '6px 22px',
-          borderBottom: '1px solid var(--adm-line)',
-          fontFamily: 'var(--adm-mono)',
-          fontSize: 10.5,
-          letterSpacing: '0.06em',
-          color: 'var(--adm-ink-3)',
-        }}
-      >
-        <div
-          className="adm-ticker-left"
-          style={{ display: 'flex', alignItems: 'center', gap: 16 }}
-        >
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              color: 'var(--adm-accent)',
-            }}
-          >
-            <span className="adm-pulse-dot" />
-            LIVE
-          </span>
-          <span style={{ color: 'var(--adm-ink-2)' }}>IST {fmtTime}</span>
-          <span>·</span>
-          <span>{fmtDate}</span>
-        </div>
-        <div
-          className="adm-ticker-right"
-          style={{ display: 'flex', alignItems: 'center', gap: 16 }}
-        >
-          <span>
-            PENDING{' '}
-            <span style={{ color: 'var(--adm-warn)' }}>
-              {summary.pending || 0}
-            </span>
-          </span>
-          <span>·</span>
-          <span>CONFIRMED {summary.confirmed || 0}</span>
-          <span style={{ opacity: 0.35 }}>|</span>
-          <span>CHECK-IN {summary.checkedIn || 0}</span>
-          <span>·</span>
-          <span>
-            QR QUEUE{' '}
-            <span
-              style={{
-                color: qrQueue > 0 ? 'var(--adm-warn)' : 'var(--adm-ink-3)',
-              }}
-            >
-              {qrQueue}
-            </span>
-          </span>
-          {runningJobs > 0 && (
-            <>
-              <span style={{ opacity: 0.35 }}>|</span>
-              <span style={{ color: 'var(--adm-accent)' }}>
-                {runningJobs} JOB{runningJobs > 1 ? 'S' : ''} RUNNING
-              </span>
-            </>
-          )}
-          {failedJobs > 0 && (
-            <>
-              <span style={{ opacity: 0.35 }}>|</span>
-              <span style={{ color: 'var(--adm-bad)' }}>
-                {failedJobs} FAILED
-              </span>
-            </>
-          )}
-        </div>
-      </div>
-
       {/* Title row */}
       <div
         className="adm-topbar-title-row"
@@ -865,10 +725,7 @@ function TopBar({ currentPath, shellState, onPalette, operator }) {
       >
         {Object.entries(PAGE_TITLES).map(([href, def]) => {
           const Icon = NAV_ICONS[href];
-          const active =
-            href === '/admin'
-              ? currentPath === '/admin'
-              : currentPath.startsWith(href);
+          const active = currentPath.startsWith(href);
           return (
             <Link
               key={href}
@@ -908,71 +765,6 @@ export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
   const router = useRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const [runtimeIssue, setRuntimeIssue] = useState(null);
-  const [shellState, setShellState] = useState({
-    summary: { pending: 0, confirmed: 0, qrIssued: 0, checkedIn: 0 },
-    jobs: [],
-  });
-  const shellStateRef = useRef(shellState);
-
-  useEffect(() => {
-    shellStateRef.current = shellState;
-  }, [shellState]);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function loadShellData() {
-      if (document.hidden) return;
-      try {
-        const [regRes, jobsRes] = await Promise.all([
-          fetch('/api/admin/registrations/summary', { cache: 'no-store' }),
-          fetch('/api/admin/passes/jobs', { cache: 'no-store' }),
-        ]);
-        const [regData, jobsData] = await Promise.all([
-          regRes.json().catch(() => ({})),
-          jobsRes.json().catch(() => ({})),
-        ]);
-        if (cancelled) return;
-        const { nextState, runtimeIssue: nextIssue } =
-          resolveAdminShellRuntimeState({
-            currentPath,
-            previousState: shellStateRef.current,
-            registrations: {
-              ok: regRes.ok,
-              status: regRes.status,
-              data: regData,
-            },
-            jobs: { ok: jobsRes.ok, status: jobsRes.status, data: jobsData },
-          });
-        setShellState(nextState);
-        setRuntimeIssue(nextIssue);
-      } catch {
-        if (!cancelled)
-          setRuntimeIssue({
-            kind: 'degraded',
-            message: 'Live admin stats temporarily unavailable.',
-          });
-      }
-    }
-    void loadShellData();
-    const timer = window.setInterval(() => void loadShellData(), 30000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, [currentPath]);
-
-  useEffect(() => {
-    if (!runtimeIssue || typeof window === 'undefined') return;
-    if (runtimeIssue.kind === 'reauth') {
-      void signOut({ redirectUrl: runtimeIssue.redirectTo }).catch(() =>
-        window.location.assign(runtimeIssue.redirectTo)
-      );
-      return;
-    }
-    if (runtimeIssue.kind === 'forbidden')
-      window.location.assign(runtimeIssue.redirectTo);
-  }, [runtimeIssue, signOut]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -990,82 +782,57 @@ export default function AdminShell({ operator, currentPath, children }) {
   }, []);
 
   const navSections = useMemo(
-    () =>
-      buildAdminNavigation({
-        pathname: currentPath,
-        summary: shellState.summary,
-        jobs: shellState.jobs,
-      }),
-    [currentPath, shellState]
+    () => buildAdminNavigation({ pathname: currentPath }),
+    [currentPath]
   );
   async function handleSignOut() {
     await signOut({ redirectUrl: '/' });
   }
 
   return (
-    <AdminShellDataContext.Provider value={{ shellState, runtimeIssue }}>
+    <div
+      className="admin-v2"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'row',
+        fontFamily: 'var(--adm-sans)',
+      }}
+    >
+      <Sidebar
+        currentPath={currentPath}
+        navigate={router.push}
+        navSections={navSections}
+        operator={operator}
+        onSignOut={handleSignOut}
+      />
       <div
-        className="admin-v2"
         style={{
-          minHeight: '100vh',
+          flex: 1,
+          minWidth: 0,
           display: 'flex',
-          flexDirection: 'row',
-          fontFamily: 'var(--adm-sans)',
+          flexDirection: 'column',
         }}
       >
-        <Sidebar
+        <TopBar
           currentPath={currentPath}
-          navigate={router.push}
-          navSections={navSections}
+          onPalette={() => setPaletteOpen(true)}
           operator={operator}
-          onSignOut={handleSignOut}
         />
-        <div
-          style={{
-            flex: 1,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
+        <main
+          className="adm-page-content"
+          key={currentPath}
+          style={{ flex: 1, padding: '24px 28px 48px 28px' }}
         >
-          <TopBar
-            currentPath={currentPath}
-            shellState={shellState}
-            onPalette={() => setPaletteOpen(true)}
-            operator={operator}
-          />
-          <main
-            className="adm-page-content"
-            key={currentPath}
-            style={{ flex: 1, padding: '24px 28px 48px 28px' }}
-          >
-            {runtimeIssue?.kind === 'degraded' && (
-              <div
-                style={{
-                  marginBottom: 18,
-                  padding: '10px 16px',
-                  borderRadius: 10,
-                  border: '1px solid var(--adm-warn-soft)',
-                  background: 'var(--adm-warn-soft)',
-                  fontFamily: 'var(--adm-mono)',
-                  fontSize: 11,
-                  color: 'var(--adm-warn)',
-                  letterSpacing: '0.04em',
-                }}
-              >
-                ⚠ {runtimeIssue.message}
-              </div>
-            )}
-            {children}
-          </main>
-        </div>
-
-        <AdminCommandPalette
-          open={paletteOpen}
-          onClose={() => setPaletteOpen(false)}
-        />
-        <Toaster richColors closeButton position="bottom-right" />
+          {children}
+        </main>
       </div>
-    </AdminShellDataContext.Provider>
+
+      <AdminCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+      />
+      <Toaster richColors closeButton position="bottom-right" />
+    </div>
   );
 }

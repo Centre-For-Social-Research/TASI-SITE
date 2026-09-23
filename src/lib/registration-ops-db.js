@@ -122,7 +122,7 @@ export async function listRegistrationQueue({
   `;
 
   const dataQuery = applyRegistrationFilters(
-    buildQueueBaseQuery(queueFields, { count: 'exact' }),
+    buildQueueBaseQuery(queueFields),
     filters
   ).range(from, to);
 
@@ -137,7 +137,7 @@ export async function listRegistrationQueue({
     throw new Error(errors[0].message);
   }
 
-  const totalCount = summary.total || dataResult.count || 0;
+  const totalCount = summary.total || 0;
 
   return {
     registrations: (dataResult.data || []).map((record) => {
