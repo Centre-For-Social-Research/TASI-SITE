@@ -203,10 +203,12 @@ export async function updateGuestInvitation({ id, input }) {
     if (isDuplicate(error)) throw new GuestInvitationDuplicateEmailError();
     throw new Error(error.message);
   }
-  if (!data)
+  if (!data) {
+    await getGuestInvitationById(id);
     throw new Error(
       'This invitation cannot be edited while a send is unresolved.'
     );
+  }
   return normalizeGuestInvitationRow(data);
 }
 

@@ -611,7 +611,7 @@ declare
   v_invitation public.guest_invitations;
   v_now timestamptz := now();
 begin
-  if p_outcome not in ('accepted', 'failed') then
+  if p_outcome is null or p_outcome not in ('accepted', 'failed') then
     raise exception 'Invalid guest send outcome.' using errcode = '22023';
   end if;
   if p_outcome = 'accepted' and nullif(trim(p_provider_message_id), '') is null then
