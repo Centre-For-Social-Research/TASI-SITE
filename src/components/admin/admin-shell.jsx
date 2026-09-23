@@ -5,7 +5,7 @@ import { Toaster } from 'sonner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useClerk } from '@clerk/nextjs';
+import { useAuth, useClerk } from '@clerk/nextjs';
 import { buildAdminNavigation } from '@/lib/admin-shell-utils.cjs';
 import AdminCommandPalette from '@/components/admin/admin-command-palette';
 
@@ -748,8 +748,17 @@ function TopBar({ currentPath, onPalette, operator }) {
 /* ── Main shell ──────────────────────────────────────────────────────────── */
 export default function AdminShell({ operator, currentPath, children }) {
   const { signOut } = useClerk();
+  const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.replace(
+        `/sign-in?redirect_url=${encodeURIComponent(currentPath)}`
+      );
+    }
+  }, [currentPath, isLoaded, isSignedIn, router]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
