@@ -152,3 +152,51 @@ test('guest invitation send attaches the no-QR guest poster image', () => {
     /QRCode|qrDataUrl|QR entry pass|renderToBuffer|pdfBuffer/
   );
 });
+
+test('guest invitation poster renders readable white lettering', async () => {
+  const { buildGuestInvitationPoster } =
+    await import('../src/lib/guest-invitation-poster.js');
+  const { default: sharp } = await import('sharp');
+  const { imageBuffer } = await buildGuestInvitationPoster({
+    name: 'Saquib Jamil',
+  });
+  const { data, info } = await sharp(imageBuffer)
+    .extract({ left: 0, top: 430, width: 1024, height: 150 })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  let whitePixels = 0;
+  for (let index = 0; index < data.length; index += info.channels) {
+    if (data[index] > 235 && data[index + 1] > 235 && data[index + 2] > 235) {
+      whitePixels += 1;
+    }
+  }
+
+  // The production card with missing glyphs had 3,595 pixels in this strip.
+  // Readable lettering rendered with the bundled font has about 9,000.
+  assert.ok(whitePixels > 6500, `Only ${whitePixels} white text pixels`);
+});
+
+test('guest invitation poster keeps long names within the card', async () => {
+  const { buildGuestInvitationPoster } =
+    await import('../src/lib/guest-invitation-poster.js');
+  const { default: sharp } = await import('sharp');
+  const { imageBuffer } = await buildGuestInvitationPoster({
+    name: `A&B ${'Guest Name '.repeat(13)}`.trim(),
+  });
+
+  const { width, height, format } = await sharp(imageBuffer).metadata();
+  assert.deepEqual(
+    { width, height, format },
+    { width: 1024, height: 1536, format: 'jpeg' }
+  );
+});
+
+test('guest invitation card addresses the guest by first name only', async () => {
+  const { buildGuestInvitationPoster } =
+    await import('../src/lib/guest-invitation-poster.js');
+  const first = await buildGuestInvitationPoster({ name: 'Saquib Jamil' });
+  const second = await buildGuestInvitationPoster({ name: 'Saquib Varma' });
+  assert.deepEqual(first.imageBuffer, second.imageBuffer);
+});
