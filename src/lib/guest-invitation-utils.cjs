@@ -119,18 +119,10 @@ function normalizeGuestInvitationDelivery(row = {}) {
   };
 }
 
-function guestInvitationSendKey(invitation) {
-  if (!invitation?.id || !invitation?.updatedAt) {
-    throw new Error('A claimed guest invitation is required to send email.');
-  }
-  return `guest-invitation/${invitation.id}/${encodeURIComponent(invitation.updatedAt)}`;
-}
-
 module.exports = {
   GUEST_INVITATION_STATUSES,
   normalizeGuestInvitationInput,
   normalizeGuestInvitationRow,
   normalizeGuestInvitationDelivery,
-  guestInvitationSendKey,
   sanitizeGuestText,
 };

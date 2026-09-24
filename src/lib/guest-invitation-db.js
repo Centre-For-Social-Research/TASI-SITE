@@ -138,7 +138,7 @@ export async function getGuestInvitationDetail(id) {
   const { data, error } = await getSupabase()
     .from('guest_invitation_deliveries')
     .select(
-      'id,delivery_status,recipient_email,provider_message_id,failure_reason,actor_email,created_at'
+      'id,delivery_status,recipient_email,provider_message_id,failure_reason,actor_email,created_at,request_sha256'
     )
     .eq('guest_invitation_id', id)
     .order('created_at', { ascending: false })
@@ -148,6 +148,10 @@ export async function getGuestInvitationDetail(id) {
   return {
     invitation,
     deliveries: (data || []).map(normalizeGuestInvitationDelivery),
+    activeAttempt:
+      invitation.status === 'sending'
+        ? (data || []).find((row) => row.delivery_status === 'sending') || null
+        : null,
   };
 }
 
@@ -200,16 +204,15 @@ export async function updateGuestInvitation({ id, input }) {
     throw new Error(error.message);
   }
   if (!data) {
-    const current = await getGuestInvitationById(id);
-    if (current.status === 'sending') {
-      throw new GuestInvitationAlreadySendingError();
-    }
-    throw new GuestInvitationNotFoundError();
+    await getGuestInvitationById(id);
+    throw new Error(
+      'This invitation cannot be edited while a send is unresolved.'
+    );
   }
   return normalizeGuestInvitationRow(data);
 }
 
-export async function claimGuestInvitationSend({ id }) {
+export async function claimGuestInvitationSend({ id, operator }) {
   const invitation = await getGuestInvitationById(id);
   if (invitation.status === 'sending') {
     throw new GuestInvitationAlreadySendingError();
@@ -218,162 +221,105 @@ export async function claimGuestInvitationSend({ id }) {
     throw new Error('This invitation cannot be sent in its current state.');
   }
 
-  const { data, error } = await getSupabase()
-    .from('guest_invitations')
-    .update({
-      status: 'sending',
-      last_error: null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-    .in('status', SENDABLE_STATUSES)
-    .select(INVITATION_SELECT)
-    .maybeSingle();
+  const { data, error } = await getSupabase().rpc(
+    'claim_guest_invitation_send',
+    {
+      p_invitation_id: id,
+      p_expected_updated_at: invitation.updatedAt,
+      p_actor_clerk_id: operator?.userId || null,
+      p_actor_email: operator?.primaryEmail || null,
+    }
+  );
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code === 'P0001' || error.code === '23505') {
+      throw new GuestInvitationAlreadySendingError();
+    }
+    throw new Error(error.message);
+  }
   if (!data) throw new GuestInvitationAlreadySendingError();
-  return normalizeGuestInvitationRow(data);
-}
-
-// When Resend accepted an email but the final invitation update failed, the
-// accepted delivery row is enough to finish the existing send without mailing
-// the guest again. An in-flight send with no accepted row stays protected.
-export async function reconcileGuestInvitationSend({ id }) {
-  const invitation = await getGuestInvitationById(id);
-  if (invitation.status !== 'sending') return null;
-
-  const supabase = getSupabase();
-  const { data: delivery, error: deliveryError } = await supabase
-    .from('guest_invitation_deliveries')
-    .select('created_at,provider_message_id,actor_clerk_id,actor_email')
-    .eq('guest_invitation_id', id)
-    .eq('delivery_status', 'accepted')
-    .gte('created_at', invitation.updatedAt)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (deliveryError) throw new Error(deliveryError.message);
-  if (!delivery) return null;
-
-  const { data, error } = await supabase
-    .from('guest_invitations')
-    .update({
-      status: 'sent',
-      send_count: invitation.sendCount + 1,
-      first_sent_at: invitation.firstSentAt || delivery.created_at,
-      last_sent_at: delivery.created_at,
-      last_provider_message_id: delivery.provider_message_id,
-      last_error: null,
-      last_sent_by_clerk_id: delivery.actor_clerk_id,
-      last_sent_by_email: delivery.actor_email,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-    .eq('status', 'sending')
-    .eq('send_count', invitation.sendCount)
-    .select(INVITATION_SELECT)
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-  return data ? normalizeGuestInvitationRow(data) : getGuestInvitationById(id);
+  return { invitation, attempt: data };
 }
 
 export async function markGuestInvitationSent({
-  invitation,
-  operator,
+  attemptId,
   providerMessageId,
 }) {
-  const supabase = getSupabase();
-  const sentAt = new Date().toISOString();
-  const { error: historyError } = await supabase
-    .from('guest_invitation_deliveries')
-    .insert({
-      guest_invitation_id: invitation.id,
-      delivery_status: 'accepted',
-      recipient_email: invitation.email,
-      provider_message_id: providerMessageId || null,
-      actor_clerk_id: operator?.userId || null,
-      actor_email: operator?.primaryEmail || null,
-      created_at: sentAt,
-    });
-
-  if (historyError) throw new Error(historyError.message);
-
-  const { data, error } = await supabase
-    .from('guest_invitations')
-    .update({
-      status: 'sent',
-      send_count: invitation.sendCount + 1,
-      first_sent_at: invitation.firstSentAt || sentAt,
-      last_sent_at: sentAt,
-      last_provider_message_id: providerMessageId || null,
-      last_error: null,
-      last_sent_by_clerk_id: operator?.userId || null,
-      last_sent_by_email: operator?.primaryEmail || null,
-      updated_at: sentAt,
-    })
-    .eq('id', invitation.id)
-    .eq('status', 'sending')
-    .eq('send_count', invitation.sendCount)
-    .select(INVITATION_SELECT)
-    .maybeSingle();
+  const { data, error } = await getSupabase().rpc(
+    'finish_guest_invitation_send',
+    {
+      p_attempt_id: attemptId,
+      p_outcome: 'accepted',
+      p_provider_message_id: providerMessageId,
+    }
+  );
 
   if (error) throw new Error(error.message);
-  if (!data) {
-    throw new Error(
-      'The email was accepted, but the invitation record needs reconciliation before it can be resent.'
-    );
-  }
-
+  if (!data)
+    throw new Error('Accepted guest invitation could not be recorded.');
   return normalizeGuestInvitationRow(data);
 }
 
-export async function markGuestInvitationFailed({
-  invitation,
-  operator,
-  errorMessage,
-}) {
-  const supabase = getSupabase();
-  const failedAt = new Date().toISOString();
-  const reason = String(
-    errorMessage || 'Email delivery could not start.'
-  ).slice(0, 1000);
-  const { data, error } = await supabase
-    .from('guest_invitations')
-    .update({
-      status: 'failed',
-      last_error: reason,
-      updated_at: failedAt,
-    })
-    .eq('id', invitation.id)
-    .eq('status', 'sending')
-    .select(INVITATION_SELECT)
-    .maybeSingle();
+export async function markGuestInvitationFailed({ attemptId, errorMessage }) {
+  const { data, error } = await getSupabase().rpc(
+    'finish_guest_invitation_send',
+    {
+      p_attempt_id: attemptId,
+      p_outcome: 'failed',
+      p_failure_reason: String(errorMessage || 'Email was not sent.').slice(
+        0,
+        1000
+      ),
+    }
+  );
 
   if (error) throw new Error(error.message);
-  if (!data) {
+  if (!data)
     throw new Error('Unable to record the failed invitation delivery.');
-  }
+  return normalizeGuestInvitationRow(data);
+}
 
-  const { error: historyError } = await supabase
+export async function getActiveGuestSendAttempt(id) {
+  const { data, error } = await getSupabase()
     .from('guest_invitation_deliveries')
-    .insert({
-      guest_invitation_id: invitation.id,
-      delivery_status: 'failed',
-      recipient_email: invitation.email,
-      failure_reason: reason,
-      actor_clerk_id: operator?.userId || null,
-      actor_email: operator?.primaryEmail || null,
-      created_at: failedAt,
-    });
+    .select(
+      'id,guest_invitation_id,guest_name,recipient_email,delivery_status,request_sha256,created_at'
+    )
+    .eq('guest_invitation_id', id)
+    .eq('delivery_status', 'sending')
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
+}
 
-  if (historyError) {
-    console.error(
-      'Unable to append guest invitation failure history.',
-      historyError
+export async function prepareGuestSendRequest(attemptId, requestSha256) {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('guest_invitation_deliveries')
+    .update({
+      request_sha256: requestSha256,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', attemptId)
+    .eq('delivery_status', 'sending')
+    .is('request_sha256', null)
+    .select('request_sha256')
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (data) return;
+
+  const { data: existing, error: lookupError } = await supabase
+    .from('guest_invitation_deliveries')
+    .select('request_sha256,delivery_status')
+    .eq('id', attemptId)
+    .maybeSingle();
+  if (lookupError) throw new Error(lookupError.message);
+  if (
+    existing?.delivery_status !== 'sending' ||
+    existing.request_sha256 !== requestSha256
+  ) {
+    throw new Error(
+      'The invitation email changed since this attempt began. Check Resend before retrying.'
     );
   }
-
-  return normalizeGuestInvitationRow(data);
 }

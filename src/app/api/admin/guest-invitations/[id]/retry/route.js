@@ -4,7 +4,7 @@ import { sendGuestInvitation } from '@/lib/guest-invitation-send';
 
 export async function POST(_request, context) {
   const authResult = await requireAdminOperator({
-    route: 'api.admin.guest-invitations.send',
+    route: 'api.admin.guest-invitations.retry',
   });
   if (!authResult.ok) return authResult.response;
 
@@ -13,20 +13,14 @@ export async function POST(_request, context) {
     const invitation = await sendGuestInvitation({
       id,
       operator: authResult.operator,
+      retry: true,
     });
     return adminJson({ success: true, invitation });
   } catch (error) {
     const message =
       error instanceof Error
         ? error.message
-        : 'Unable to send guest invitation.';
-    const status = /not found/i.test(message)
-      ? 404
-      : /already being sent|cannot be sent|changed|locked|uncertain/i.test(
-            message
-          )
-        ? 409
-        : 502;
-    return adminJson({ error: message }, { status });
+        : 'Unable to retry guest invitation.';
+    return adminJson({ error: message }, { status: 409 });
   }
 }

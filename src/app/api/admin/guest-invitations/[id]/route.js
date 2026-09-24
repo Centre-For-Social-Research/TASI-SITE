@@ -45,10 +45,10 @@ export async function PATCH(request, context) {
         : 'Unable to update guest invitation.';
     const status = /required|valid|characters|already exists/i.test(message)
       ? 400
-      : /not found/i.test(message)
-        ? 404
-        : /already being sent/i.test(message)
-          ? 409
+      : /while a send is unresolved/i.test(message)
+        ? 409
+        : /not found/i.test(message)
+          ? 404
           : 500;
     return adminJson({ error: message }, { status });
   }

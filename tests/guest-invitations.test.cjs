@@ -6,7 +6,6 @@ const path = require('node:path');
 const {
   normalizeGuestInvitationInput,
   normalizeGuestInvitationRow,
-  guestInvitationSendKey,
 } = require('../src/lib/guest-invitation-utils.cjs');
 
 function readSource(relativePath) {
@@ -29,17 +28,6 @@ test('guest invitation input accepts only the agreed guest fields', () => {
       organization: 'CSR',
     }
   );
-});
-
-test('guest send attempt key stays stable for one claim and changes for the next', () => {
-  const first = { id: 'guest-1', updatedAt: '2026-09-24T01:00:00.001Z' };
-  const second = { ...first, updatedAt: '2026-09-24T01:00:00.002Z' };
-  assert.equal(guestInvitationSendKey(first), guestInvitationSendKey(first));
-  assert.notEqual(
-    guestInvitationSendKey(first),
-    guestInvitationSendKey(second)
-  );
-  assert.throws(() => guestInvitationSendKey({ id: 'guest-1' }), /claimed/);
 });
 
 test('guest invitation input requires a name and a valid email', () => {
@@ -118,17 +106,23 @@ test('guest invitation routes require admin authorization for mutations and use 
   const sendRoute = readSource(
     'src/app/api/admin/guest-invitations/[id]/send/route.js'
   );
+  const retryRoute = readSource(
+    'src/app/api/admin/guest-invitations/[id]/retry/route.js'
+  );
+  const sendService = readSource('src/lib/guest-invitation-send.js');
   const panel = readSource('src/components/admin/guest-invitations-panel.jsx');
 
   assert.match(collectionRoute, /requireAdminOperator/);
   assert.match(itemRoute, /requireAdminOperator/);
   assert.match(sendRoute, /requireAdminOperator/);
-  assert.match(sendRoute, /claimGuestInvitationSend/);
-  assert.match(sendRoute, /markGuestInvitationSent/);
-  assert.match(sendRoute, /tasi-2026-calendar\.ics/);
-  assert.match(sendRoute, /email\.calendarContent/);
+  assert.match(retryRoute, /requireAdminOperator/);
+  assert.match(sendService, /claimGuestInvitationSend/);
+  assert.match(sendService, /markGuestInvitationSent/);
+  assert.match(sendService, /tasi-2026-calendar\.ics/);
+  assert.match(sendService, /email\.calendarContent/);
+  assert.match(sendService, /guestSendIdempotencyKey\(attempt\.id\)/);
   assert.doesNotMatch(
-    sendRoute,
+    sendService,
     /event_registrations|entry_passes|createPassIssueEmailJob|QR/
   );
   assert.match(
@@ -139,9 +133,7 @@ test('guest invitation routes require admin authorization for mutations and use 
 });
 
 test('guest invitation send attaches the no-QR guest poster image', () => {
-  const source = readSource(
-    'src/app/api/admin/guest-invitations/[id]/send/route.js'
-  );
+  const source = readSource('src/lib/guest-invitation-send.js');
   const poster = readSource('src/lib/guest-invitation-poster.js');
 
   assert.match(source, /buildGuestInvitationPoster/);
@@ -159,15 +151,4 @@ test('guest invitation send attaches the no-QR guest poster image', () => {
     poster,
     /QRCode|qrDataUrl|QR entry pass|renderToBuffer|pdfBuffer/
   );
-});
-
-test('uncertain guest provider outcomes keep the send locked for reconciliation', () => {
-  const route = readSource(
-    'src/app/api/admin/guest-invitations/[id]/send/route.js'
-  );
-  const db = readSource('src/lib/guest-invitation-db.js');
-  assert.match(route, /idempotencyKey: guestInvitationSendKey\(invitation\)/);
-  assert.match(route, /if \(invitation && !providerAttempted\)/);
-  assert.match(route, /reconcileGuestInvitationSend\(\{ id \}\)/);
-  assert.match(db, /\.gte\('created_at', invitation\.updatedAt\)/);
 });
