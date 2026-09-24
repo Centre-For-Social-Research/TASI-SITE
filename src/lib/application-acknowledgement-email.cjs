@@ -381,6 +381,42 @@ function buildGuestInvitationEmail({
   };
 }
 
+function buildSpotRegistrationEmail({
+  firstName,
+  eventDay,
+  replyEmail = DEFAULT_COMMS_EMAIL,
+}) {
+  const name = firstName || 'there';
+  const date = eventDay === 2 ? '15 October 2026' : '14 October 2026';
+  const paragraphs = [
+    `Thank you for registering at the Trust & Safety India Festival 2026 desk on ${date}. Your registration and check-in for today have been recorded.`,
+    'You are all set to join the festival today. We are glad you could be here for the programme and conversations.',
+    ...(eventDay === 1
+      ? [
+          'If you join us again tomorrow, please check in at the registration desk.',
+        ]
+      : []),
+  ];
+
+  return {
+    subject: 'Your TASI 2026 on-site registration is confirmed',
+    text: [
+      `Dear ${name},`,
+      '',
+      ...paragraphs.flatMap((paragraph) => [paragraph, '']),
+      `Questions or corrections? Reply to this email or write to ${replyEmail}.`,
+      '',
+      'Trust & Safety India Festival 2026',
+      'People First. Safety Always.',
+    ].join('\n'),
+    html: renderAcknowledgementHtml({
+      firstName: name,
+      paragraphs,
+      replyEmail,
+    }),
+  };
+}
+
 module.exports = {
   DEFAULT_COMMS_EMAIL,
   buildExhibitionAcknowledgementEmail,
@@ -393,5 +429,6 @@ module.exports = {
   buildRegistrationWaitlistedEmail,
   buildRegistrationRejectedEmail,
   buildGuestInvitationEmail,
+  buildSpotRegistrationEmail,
   escapeHtml,
 };

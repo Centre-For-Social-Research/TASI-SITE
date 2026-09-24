@@ -1,8 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Eye, Mail, Pencil, Plus, Send, X } from 'lucide-react';
+import { Download, Eye, Mail, Pencil, Plus, Send, X } from 'lucide-react';
 import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
+import { downloadAdminFile } from '@/lib/admin-download';
 import {
   AdminAlert,
   AdminStatusBadge,
@@ -204,6 +205,7 @@ export default function GuestInvitationsPanel({ canManage }) {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [sendingId, setSendingId] = useState(null);
   const [clockNow, setClockNow] = useState(0);
+  const [exporting, setExporting] = useState('');
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -452,6 +454,22 @@ export default function GuestInvitationsPanel({ canManage }) {
     firstRow + result.invitations.length - 1
   );
 
+  async function exportInvitations(format) {
+    setExporting(format);
+    try {
+      const params = new URLSearchParams({ format, status });
+      if (search) params.set('search', search);
+      await downloadAdminFile(
+        `/api/admin/guest-invitations/export?${params}`,
+        `tasi-2026-guest-invitations.${format}`
+      );
+    } catch (exportError) {
+      setToast({ tone: 'danger', message: exportError.message });
+    } finally {
+      setExporting('');
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <section
@@ -484,22 +502,40 @@ export default function GuestInvitationsPanel({ canManage }) {
               registration, QR pass, or check-in credential.
             </p>
           </div>
-          {canManage ? (
-            <button
-              type="button"
-              style={{
-                ...buttonStyle(true),
-                fontFamily: 'var(--adm-sans)',
-                fontSize: 14,
-                fontWeight: 600,
-                letterSpacing: 0,
-              }}
-              onClick={() => setCreateOpen((open) => !open)}
-            >
-              {createOpen ? <X size={14} /> : <Plus size={14} />}
-              {createOpen ? 'Close' : 'Add guest'}
-            </button>
-          ) : null}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {['csv', 'xlsx'].map((format) => (
+              <button
+                key={format}
+                type="button"
+                style={buttonStyle()}
+                disabled={Boolean(exporting)}
+                onClick={() => exportInvitations(format)}
+              >
+                <Download size={14} />{' '}
+                {exporting === format
+                  ? 'Preparing…'
+                  : format === 'csv'
+                    ? 'Export CSV'
+                    : 'Export Excel'}
+              </button>
+            ))}
+            {canManage ? (
+              <button
+                type="button"
+                style={{
+                  ...buttonStyle(true),
+                  fontFamily: 'var(--adm-sans)',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: 0,
+                }}
+                onClick={() => setCreateOpen((open) => !open)}
+              >
+                {createOpen ? <X size={14} /> : <Plus size={14} />}
+                {createOpen ? 'Close' : 'Add guest'}
+              </button>
+            ) : null}
+          </div>
         </div>
 
         {!canManage ? (

@@ -121,6 +121,21 @@ export async function listGuestInvitations({
   };
 }
 
+export async function listAllGuestInvitations(filters = {}) {
+  const invitations = [];
+  let page = 1;
+  for (;;) {
+    const result = await listGuestInvitations({
+      ...filters,
+      page,
+      pageSize: 100,
+    });
+    invitations.push(...result.invitations);
+    if (page >= result.meta.totalPages) return invitations;
+    page += 1;
+  }
+}
+
 export async function getGuestInvitationById(id) {
   const { data, error } = await getSupabase()
     .from('guest_invitations')
