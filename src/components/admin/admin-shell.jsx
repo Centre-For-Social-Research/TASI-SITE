@@ -168,6 +168,7 @@ const NAV_ICONS = {
   '/admin/registrations': Ico.users,
   '/admin/submissions': Ico.audit,
   '/admin/guest-invitations': Ico.mail,
+  '/admin/spot-registrations': Ico.users,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
   '/admin/check-in': Ico.qr,
@@ -190,6 +191,11 @@ const PAGE_TITLES = {
     kicker: 'GUESTS · INVITATIONS',
     title: 'Guest Invitations',
     meta: 'Manual · No QR credential',
+  },
+  '/admin/spot-registrations': {
+    kicker: 'DAY-OF · WALK-INS',
+    title: 'Spot Registrations',
+    meta: 'Desk check-in and email',
   },
   '/admin/email-jobs': {
     kicker: 'EMAILS · REGISTRATION',
@@ -218,6 +224,7 @@ const ADM_NAV_ITEMS = [
   '/admin/registrations',
   '/admin/submissions',
   '/admin/guest-invitations',
+  '/admin/spot-registrations',
   '/admin/email-jobs',
   '/admin/delivery',
   '/admin/check-in',

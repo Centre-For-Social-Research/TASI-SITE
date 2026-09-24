@@ -1,12 +1,14 @@
 'use client';
 
 import jsQR from 'jsqr';
+import { Download } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
 import checkInUtils from '@/lib/check-in-panel-utils.cjs';
 import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 import { AdminStatCard, AdminStatusBadge } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
+import { downloadAdminFile } from '@/lib/admin-download';
 
 const {
   classifyCameraStartFailure,
@@ -68,6 +70,8 @@ export default function CheckInPanel() {
   const [scanSubmitting, setScanSubmitting] = useState(false);
   const [configWarning, setConfigWarning] = useState('');
   const [recentScans, setRecentScans] = useState([]);
+  const [exporting, setExporting] = useState('');
+  const [exportError, setExportError] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -100,6 +104,21 @@ export default function CheckInPanel() {
       total: recentScans.length,
     };
   }, [recentScans]);
+
+  async function exportCheckIns(format) {
+    setExporting(format);
+    setExportError('');
+    try {
+      await downloadAdminFile(
+        `/api/admin/check-in/export?format=${format}`,
+        `tasi-2026-check-ins.${format}`
+      );
+    } catch (error) {
+      setExportError(error.message);
+    } finally {
+      setExporting('');
+    }
+  }
 
   const stopCamera = useCallback((nextState = 'idle') => {
     if (animationFrameRef.current) {
@@ -381,7 +400,36 @@ export default function CheckInPanel() {
   return (
     <div className="space-y-6">
       <section className="space-y-4">
-        <AdminPageIntro description="Keep the camera running during live operations, fall back to manual lookup when needed, and keep the latest scan outcomes visible for the whole desk team." />
+        <AdminPageIntro
+          description="Scan or look up attendees at the desk. Exports include actual check-ins across both event days, including spot registrations. Each day attended has a row; use email to count unique people."
+          actions={
+            <div className="flex flex-wrap gap-2">
+              {['csv', 'xlsx'].map((format) => (
+                <button
+                  key={format}
+                  type="button"
+                  disabled={Boolean(exporting)}
+                  onClick={() => exportCheckIns(format)}
+                  className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
+                >
+                  <Download size={15} />
+                  {exporting === format
+                    ? 'Preparing…'
+                    : format === 'csv'
+                      ? 'Export CSV'
+                      : 'Export Excel'}
+                </button>
+              ))}
+            </div>
+          }
+        />
+        {exportError ? (
+          <ResultCard
+            title="Export failed"
+            description={exportError}
+            tone="danger"
+          />
+        ) : null}
         <div className="mt-5 flex flex-wrap gap-4">
           <label className="flex min-w-64 flex-col gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
             Desk Label
