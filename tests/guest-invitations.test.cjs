@@ -192,3 +192,11 @@ test('guest invitation poster keeps long names within the card', async () => {
     { width: 1024, height: 1536, format: 'jpeg' }
   );
 });
+
+test('guest invitation card addresses the guest by first name only', async () => {
+  const { buildGuestInvitationPoster } =
+    await import('../src/lib/guest-invitation-poster.js');
+  const first = await buildGuestInvitationPoster({ name: 'Saquib Jamil' });
+  const second = await buildGuestInvitationPoster({ name: 'Saquib Varma' });
+  assert.deepEqual(first.imageBuffer, second.imageBuffer);
+});

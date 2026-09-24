@@ -41,7 +41,10 @@ async function getBackground() {
 }
 
 function posterTextLines(name) {
-  const guestName = String(name || 'Guest').trim() || 'Guest';
+  const guestName =
+    String(name || 'Guest')
+      .trim()
+      .split(/\s+/)[0] || 'Guest';
   const textFontSize = guestName.length > 24 ? 34 : 36;
 
   return [
