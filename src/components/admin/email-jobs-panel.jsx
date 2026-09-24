@@ -1,6 +1,9 @@
 'use client';
 
 import JobManagerPanel from '@/components/admin/job-manager-panel';
+import jobLabels from '@/lib/admin-job-labels.cjs';
+
+const { jobParticipantTitle } = jobLabels;
 
 const EMAIL_JOBS_CONFIG = {
   endpoints: {
@@ -18,15 +21,11 @@ const EMAIL_JOBS_CONFIG = {
     retry: 'Unable to retry failed registration email items.',
   },
   intro: {
-    eyebrow: 'Confirmation Emails',
-    title: 'Send plain-text acknowledgments after registration approval',
+    eyebrow: 'Email delivery',
+    title: 'Registration Emails',
     description:
-      'Sends a text-only confirmation email when a registration is approved. No attachments, no pass — just a notification to the attendee that their spot is confirmed.',
-    chips: (operator) => [
-      `Handled by ${operator.displayName}`,
-      'Text email · No attachment',
-      'Retry failed confirmation emails',
-    ],
+      'Track registration and status emails. Open a job to see who received it, why it failed, or retry a failed item.',
+    chips: () => [],
   },
   alertTitle: 'Email Queue Error',
   statCards: [
@@ -69,9 +68,9 @@ const EMAIL_JOBS_CONFIG = {
     selectedRow: 'bg-purple-50/40 dark:bg-purple-950/20',
     progressBar: 'bg-purple-600',
   },
-  renderJobTitle: (job) => job.template_type,
+  renderJobTitle: jobParticipantTitle,
   renderJobSubtitle: (job) =>
-    `ID: ${job.id.slice(0, 8)}... · ${job.total_items} items`,
+    `${job.template_type.replaceAll('_', ' ')} · ${job.total_items} recipient${job.total_items === 1 ? '' : 's'}`,
   emptyState: () => 'No registration email jobs yet.',
   detail: {
     eyebrow: 'Selected Job',

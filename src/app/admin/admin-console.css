@@ -204,6 +204,20 @@
   background: var(--adm-panel);
   padding: 16px;
 }
+.admin-v2 .adm-guest-create-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.admin-v2 .adm-guest-create-form input:focus-visible {
+  border-color: var(--adm-accent) !important;
+  box-shadow: 0 0 0 3px var(--adm-accent-soft) !important;
+}
+@media (max-width: 700px) {
+  .admin-v2 .adm-guest-create-fields {
+    grid-template-columns: 1fr;
+  }
+}
 .admin-v2-drawer-content .adm-guest-detail-fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

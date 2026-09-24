@@ -54,7 +54,7 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
-export default function CheckInPanel({ operator }) {
+export default function CheckInPanel() {
   const [deskLabel, setDeskLabel] = useState('Main Desk');
   const [selectedEventDay, setSelectedEventDay] = useState(() =>
     getDefaultCheckInDay()
@@ -381,17 +381,7 @@ export default function CheckInPanel({ operator }) {
   return (
     <div className="space-y-6">
       <section className="space-y-4">
-        <AdminPageIntro
-          eyebrow="Check-In"
-          title="Scanner-first entry validation"
-          description="Keep the camera running during live operations, fall back to manual lookup when needed, and keep the latest scan outcomes visible for the whole desk team."
-          chips={[
-            `Desk lead: ${operator.displayName}`,
-            selectedEventDayLabel,
-            'Live QR scanning',
-            'Manual attendee lookup',
-          ]}
-        />
+        <AdminPageIntro description="Keep the camera running during live operations, fall back to manual lookup when needed, and keep the latest scan outcomes visible for the whole desk team." />
         <div className="mt-5 flex flex-wrap gap-4">
           <label className="flex min-w-64 flex-col gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
             Desk Label

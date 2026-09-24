@@ -16,10 +16,11 @@ import {
   Clock,
   Download,
   ExternalLink,
+  Linkedin,
   Loader2,
+  MessageSquare,
   CheckCircle2,
   QrCode,
-  RefreshCw,
   UserCheck,
   Trash2,
 } from 'lucide-react';
@@ -36,12 +37,13 @@ import {
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
-import { AdminProgressCard } from '@/components/admin/admin-charts';
 import registrationCache from '@/lib/admin-registration-cache.cjs';
 
 const {
   buildDashboardQueryString,
+  getLinkedInProfileUrl,
   getBatchStatusTone,
+  summarizeQrSelection,
   getQuickActionOptions,
   isSupabaseAdminConfigError,
   summarizeSelection,
@@ -90,7 +92,7 @@ function getPriorityTone(priorityTier) {
 
 function statusHint(status) {
   if (status === 'confirmed')
-    return 'Confirmation email is sent on save. QR pass stays available from row actions.';
+    return 'A new confirmation decision queues an email. Saving notes alone does not resend it.';
   if (status === 'waitlisted')
     return 'Waitlisted registrants are held out of the QR queue until re-confirmed.';
   if (status === 'rejected')
@@ -139,14 +141,29 @@ function RegistrantCell({ row }) {
   const ctx = useContext(RegistrationGridCtx);
   if (!row.data || !ctx) return null;
   const r = row.data;
+  const linkedInUrl = getLinkedInProfileUrl(r.linkedin_url);
   return (
     <div
       className="flex h-full cursor-pointer flex-col justify-center py-1"
       onClick={() => ctx.openDrawerFor(r.id)}
     >
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-        {r.first_name} {r.last_name}
-      </p>
+      <div className="flex items-center gap-2">
+        <p className="min-w-0 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          {r.first_name} {r.last_name}
+        </p>
+        {linkedInUrl ? (
+          <a
+            href={linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            aria-label={`Open ${r.first_name} ${r.last_name}'s LinkedIn profile`}
+            className="inline-flex shrink-0 items-center gap-1 rounded-[10px] border border-sky-200 bg-sky-50 px-1.5 py-0.5 text-[11px] font-medium text-sky-800 hover:bg-sky-100 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-300"
+          >
+            <Linkedin className="h-3 w-3" /> LinkedIn
+          </a>
+        ) : null}
+      </div>
       <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
         {r.registration_code}
       </p>
@@ -185,6 +202,31 @@ function RegStatusCell({ row }) {
         {row.data.status}
       </AdminStatusBadge>
     </div>
+  );
+}
+
+function NotesCell({ row }) {
+  const ctx = useContext(RegistrationGridCtx);
+  if (!row.data || !ctx) return null;
+  return (
+    <button
+      type="button"
+      className="flex h-full items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-300"
+      onClick={() => ctx.openDrawerFor(row.data.id)}
+      aria-label={
+        row.data.has_review_note
+          ? `Read note for ${row.data.first_name} ${row.data.last_name}`
+          : `Open ${row.data.first_name} ${row.data.last_name}; no note added`
+      }
+    >
+      {row.data.has_review_note ? (
+        <>
+          <MessageSquare className="h-3.5 w-3.5" /> Note added
+        </>
+      ) : (
+        'None'
+      )}
+    </button>
   );
 }
 
@@ -274,6 +316,7 @@ const REGISTRATION_COLUMNS = [
   },
   { id: 'email', name: 'Email', width: 220, cellRenderer: EmailCell },
   { id: 'status', name: 'Status', width: 130, cellRenderer: RegStatusCell },
+  { id: 'notes', name: 'Notes', width: 115, cellRenderer: NotesCell },
   { id: 'location', name: 'Location', width: 160, cellRenderer: LocationCell },
   { id: 'qr', name: 'QR', width: 110, cellRenderer: QRStatusCell },
   { id: 'checkin', name: 'Check-In', width: 160, cellRenderer: CheckInCell },
@@ -333,7 +376,7 @@ function ReviewSummary({ summary }) {
         label="QR Issued"
         value={summary.qrIssued}
         tone="accent"
-        detail="Already mailed or queued"
+        detail="Passes issued"
         icon={QrCode}
       />
       <AdminStatCard
@@ -489,9 +532,9 @@ function RegistrantDrawer({
               <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
                 {activeRegistration.email}
               </p>
-              {activeRegistration.linkedin_url ? (
+              {getLinkedInProfileUrl(activeRegistration.linkedin_url) ? (
                 <a
-                  href={activeRegistration.linkedin_url}
+                  href={getLinkedInProfileUrl(activeRegistration.linkedin_url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-1 text-xs text-sky-600 hover:underline"
@@ -772,6 +815,7 @@ export default function RegistrationsAdminPanel({ operator }) {
   );
   const listRequestRef = useRef(0);
   const listAbortRef = useRef(null);
+  const lastListRequestAtRef = useRef(0);
   const detailRequestRef = useRef(0);
   const detailAbortRef = useRef(null);
   const [filters, setFilters] = useState({
@@ -810,16 +854,14 @@ export default function RegistrationsAdminPanel({ operator }) {
   const [exportLoading, setExportLoading] = useState({
     csv: false,
     xlsx: false,
-    pdf: false,
   });
   const [pendingActions, setPendingActions] = useState(new Set());
   const [pendingBulk, setPendingBulk] = useState({
     confirm: false,
     waitlist: false,
     reject: false,
-    sendQr: false,
   });
-  const [qrLoading, setQrLoading] = useState({ send: false, resend: false });
+  const [qrLoading, setQrLoading] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(filters.search), 300);
@@ -855,6 +897,7 @@ export default function RegistrationsAdminPanel({ operator }) {
 
   const loadRegistrations = useCallback(
     async ({ background = false, force = false } = {}) => {
+      lastListRequestAtRef.current = Date.now();
       const requestId = ++listRequestRef.current;
       listAbortRef.current?.abort();
       const controller = new AbortController();
@@ -994,6 +1037,23 @@ export default function RegistrationsAdminPanel({ operator }) {
   useEffect(() => {
     void loadRegistrations();
   }, [loadRegistrations]);
+
+  useEffect(() => {
+    const refreshIfStale = () => {
+      if (document.hidden || Date.now() - lastListRequestAtRef.current < 60_000)
+        return;
+      void loadRegistrations({ background: true, force: true });
+      if (drawerOpen && activeRegistrationId) {
+        void loadDetail(activeRegistrationId, { force: true });
+      }
+    };
+    window.addEventListener('focus', refreshIfStale);
+    document.addEventListener('visibilitychange', refreshIfStale);
+    return () => {
+      window.removeEventListener('focus', refreshIfStale);
+      document.removeEventListener('visibilitychange', refreshIfStale);
+    };
+  }, [activeRegistrationId, drawerOpen, loadDetail, loadRegistrations]);
   useEffect(() => {
     if (activeRegistrationId) void loadDetail(activeRegistrationId);
   }, [activeRegistrationId, loadDetail]);
@@ -1005,8 +1065,10 @@ export default function RegistrationsAdminPanel({ operator }) {
     []
   );
 
-  const setFilterValue = (key, value) =>
+  const setFilterValue = (key, value) => {
+    setSelectedIds([]);
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
+  };
   const toggleSelection = (registrationId) =>
     setSelectedIds((current) =>
       current.includes(registrationId)
@@ -1060,7 +1122,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : format === 'pdf' ? 'pdf' : 'csv'}`;
+      a.download = `tasi-2026-registrations.${format === 'xlsx' ? 'xlsx' : 'csv'}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1131,11 +1193,20 @@ export default function RegistrationsAdminPanel({ operator }) {
   };
 
   const bulkUpdateStatus = async (nextStatus) => {
-    if (!selectedIds.length)
-      return showToast(
-        'Select at least one registrant before running a bulk status update.',
-        'warning'
-      );
+    const registrationsToUpdate = state.registrations.filter(
+      (registration) =>
+        selectedIds.includes(registration.id) &&
+        registration.status !== nextStatus
+    );
+    if (!registrationsToUpdate.length)
+      return showToast(`Selected people are already ${nextStatus}.`, 'warning');
+    const skippedCount = selectedIds.length - registrationsToUpdate.length;
+    if (
+      !window.confirm(
+        `Change ${registrationsToUpdate.length} selected registration${registrationsToUpdate.length === 1 ? '' : 's'} to ${nextStatus}?\n\nStatus emails will be queued for those people. ${skippedCount} already have this status and will be skipped.`
+      )
+    )
+      return;
     const bulkKey =
       nextStatus === 'confirmed'
         ? 'confirm'
@@ -1149,15 +1220,10 @@ export default function RegistrationsAdminPanel({ operator }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: nextStatus,
-          updates: selectedIds.map((registrationId) => {
-            const registration = state.registrations.find(
-              (item) => item.id === registrationId
-            );
-            return {
-              registrationId,
-              expectedUpdatedAt: registration?.updated_at || '',
-            };
-          }),
+          updates: registrationsToUpdate.map((registration) => ({
+            registrationId: registration.id,
+            expectedUpdatedAt: registration.updated_at || '',
+          })),
         }),
       });
       const data = await response.json();
@@ -1166,12 +1232,17 @@ export default function RegistrationsAdminPanel({ operator }) {
       const updatedCount = data.updatedIds?.length || 0;
       const conflictCount = data.conflictIds?.length || 0;
       showToast(
-        !data.emailResult?.queued && updatedCount
-          ? `Updated ${updatedCount} registrants, but emails were not queued. Check delivery jobs.`
-          : conflictCount
-            ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
-            : `Updated ${updatedCount} registrants to ${nextStatus}.`,
-        conflictCount || (!data.emailResult?.queued && updatedCount)
+        data.emailResult?.notRequired
+          ? `Updated ${updatedCount} registrations; no status emails needed.`
+          : !data.emailResult?.queued && updatedCount
+            ? `Updated ${updatedCount} registrants, but emails were not queued. Check delivery jobs.`
+            : conflictCount
+              ? `Updated ${updatedCount}; ${conflictCount} changed elsewhere and need refresh.`
+              : `Updated ${updatedCount} registrants to ${nextStatus}.`,
+        conflictCount ||
+          (!data.emailResult?.queued &&
+            !data.emailResult?.notRequired &&
+            updatedCount)
           ? 'warning'
           : 'success'
       );
@@ -1193,21 +1264,24 @@ export default function RegistrationsAdminPanel({ operator }) {
   };
 
   const handleSendQr = async () => {
-    setQrLoading((p) => ({ ...p, send: true }));
-    await queueQrJob({ registrationIds: selectedIds });
-    setQrLoading((p) => ({ ...p, send: false }));
-  };
-
-  const handleResendQr = async () => {
-    setQrLoading((p) => ({ ...p, resend: true }));
-    await queueQrJob({ registrationIds: selectedIds, resendExisting: true });
-    setQrLoading((p) => ({ ...p, resend: false }));
-  };
-
-  const bulkSendQrQueue = async () => {
-    setPendingBulk((p) => ({ ...p, sendQr: true }));
-    await queueQrJob({ registrationIds: selectedIds });
-    setPendingBulk((p) => ({ ...p, sendQr: false }));
+    const target = summarizeQrSelection(selectedIds, state.registrations);
+    if (!target.registrationIds.length)
+      return showToast(
+        'Select confirmed registrants to send QR emails.',
+        'warning'
+      );
+    if (
+      !window.confirm(
+        `Send QR emails to ${target.registrationIds.length} selected people?\n\n${target.firstSendCount} first sends. ${target.repeatCount} already have a pass and will receive another email. ${target.ineligibleCount} ineligible people will be skipped.`
+      )
+    )
+      return;
+    setQrLoading(true);
+    await queueQrJob({
+      registrationIds: target.registrationIds,
+      resendExisting: target.repeatCount > 0,
+    });
+    setQrLoading(false);
   };
 
   const handleQuickAction = async (registration, actionKey) => {
@@ -1216,19 +1290,23 @@ export default function RegistrationsAdminPanel({ operator }) {
     try {
       if (actionKey === 'sendQr') {
         if (registration.status !== 'confirmed')
-          await updateRegistrationStatus({
-            registrationId: registration.id,
-            status: 'confirmed',
-            expectedUpdatedAt: registration.updated_at || '',
-          });
-        await queueQrJob({ registrationIds: [registration.id] });
+          throw new Error(
+            'Confirm this registration before sending a QR pass.'
+          );
+        if (
+          !window.confirm(
+            registration.qr_pass_issued_at
+              ? `Send another QR email to ${registration.first_name} ${registration.last_name}? This person already has an issued pass.`
+              : `Send a QR email to ${registration.first_name} ${registration.last_name}?`
+          )
+        )
+          return;
+        await queueQrJob({
+          registrationIds: [registration.id],
+          resendExisting: Boolean(registration.qr_pass_issued_at),
+        });
         return;
       }
-      if (actionKey === 'resendQr')
-        return void (await queueQrJob({
-          registrationIds: [registration.id],
-          resendExisting: true,
-        }));
       let statusResult;
       if (actionKey === 'confirm')
         statusResult = await updateRegistrationStatus({
@@ -1249,10 +1327,15 @@ export default function RegistrationsAdminPanel({ operator }) {
           expectedUpdatedAt: registration.updated_at || '',
         });
       showToast(
-        statusResult?.emailResult?.queued
-          ? `${actionKey} completed for ${registration.first_name} ${registration.last_name}; email queued.`
-          : `${actionKey} saved for ${registration.first_name} ${registration.last_name}, but email was not queued. Check delivery jobs.`,
-        statusResult?.emailResult?.queued ? 'success' : 'warning'
+        statusResult?.emailResult?.notRequired
+          ? `Review saved for ${registration.first_name} ${registration.last_name}; no status email needed.`
+          : statusResult?.emailResult?.queued
+            ? `${actionKey} completed for ${registration.first_name} ${registration.last_name}; email queued.`
+            : `${actionKey} saved for ${registration.first_name} ${registration.last_name}, but email was not queued. Check delivery jobs.`,
+        statusResult?.emailResult?.queued ||
+          statusResult?.emailResult?.notRequired
+          ? 'success'
+          : 'warning'
       );
       invalidateAdminCaches([registration.id]);
       void loadRegistrations({ background: true, force: true });
@@ -1288,10 +1371,14 @@ export default function RegistrationsAdminPanel({ operator }) {
         expectedUpdatedAt: detailState.data?.registration?.updated_at || '',
       });
       showToast(
-        data.emailResult?.queued
-          ? 'Notes saved; email queued for delivery.'
-          : 'Review saved, but email was not queued. Check delivery jobs.',
-        data.emailResult?.queued ? 'success' : 'warning'
+        data.emailResult?.notRequired
+          ? 'Review saved; no status email needed.'
+          : data.emailResult?.queued
+            ? 'Notes saved; email queued for delivery.'
+            : 'Review saved, but email was not queued. Check delivery jobs.',
+        data.emailResult?.queued || data.emailResult?.notRequired
+          ? 'success'
+          : 'warning'
       );
       invalidateAdminCaches([registrationId]);
       void loadRegistrations({ background: true, force: true });
@@ -1386,29 +1473,10 @@ export default function RegistrationsAdminPanel({ operator }) {
     <div className="space-y-6">
       {/* Page header */}
       <AdminPageIntro
-        eyebrow="Registrations"
-        title="Review Queue"
         description="Review registrations in date order, act inline, and open richer registrant detail from the review drawer."
-        chips={['Review decisions', 'Bulk status updates', 'QR pass delivery']}
         actions={
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={state.loading || hasConfigError}
-              onClick={() => {
-                invalidateAdminCaches();
-                void loadRegistrations({ force: true });
-                if (activeRegistrationId) {
-                  detailCacheRef.current.delete(activeRegistrationId);
-                  void loadDetail(activeRegistrationId, { force: true });
-                }
-              }}
-              className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10 dark:hover:bg-white/10"
-            >
-              <RefreshCw className="h-3 w-3" />
-              Refresh
-            </button>
-            {['csv', 'xlsx', 'pdf'].map((format) => (
+            {['csv', 'xlsx'].map((format) => (
               <button
                 key={format}
                 type="button"
@@ -1421,53 +1489,16 @@ export default function RegistrationsAdminPanel({ operator }) {
                 ) : (
                   <Download className="h-3 w-3" />
                 )}
-                {format === 'csv'
-                  ? 'Export CSV'
-                  : format === 'xlsx'
-                    ? 'Export Excel'
-                    : 'Export PDF'}
+                {format === 'csv' ? 'Export CSV' : 'Export Excel'}
               </button>
             ))}
           </div>
         }
       />
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={handleSendQr}
-          disabled={state.loading || hasConfigError || qrLoading.send}
-          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-amber-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-50"
-        >
-          {qrLoading.send ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : null}
-          {selectedIds.length ? 'Send QR To Selected' : 'Send QR To Filtered'}
-        </button>
-        <button
-          type="button"
-          onClick={handleResendQr}
-          disabled={state.loading || hasConfigError || qrLoading.resend}
-          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-        >
-          {qrLoading.resend ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : null}
-          Resend Issued QR
-        </button>
-        <a
-          href="/admin/delivery"
-          className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-        >
-          Delivery Jobs
-        </a>
-        <a
-          href="/admin/check-in"
-          className="inline-flex h-9 items-center rounded-[10px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 shadow-sm transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-        >
-          Check-In Console
-        </a>
-      </div>
-
+      <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+        CSV and Excel include all registrations, regardless of selection or
+        filters.
+      </p>
       {hasConfigError ? (
         <AdminAlert
           title="Supabase Configuration Required"
@@ -1478,68 +1509,6 @@ export default function RegistrationsAdminPanel({ operator }) {
 
       {/* Summary stats */}
       <ReviewSummary summary={state.summary} />
-
-      {/* Progress cards */}
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <AdminProgressCard
-          label="Confirmation Rate"
-          value={state.summary?.confirmed || 0}
-          percent={
-            state.summary &&
-            (state.summary.confirmed || 0) + (state.summary.pending || 0) > 0
-              ? Math.round(
-                  ((state.summary.confirmed || 0) /
-                    ((state.summary.confirmed || 0) +
-                      (state.summary.pending || 0))) *
-                    100
-                )
-              : 0
-          }
-          color="cyan"
-        />
-        <AdminProgressCard
-          label="QR Coverage"
-          value={state.summary?.qrIssued || 0}
-          percent={
-            (state.summary?.confirmed || 0) > 0
-              ? Math.round(
-                  ((state.summary.qrIssued || 0) / state.summary.confirmed) *
-                    100
-                )
-              : 0
-          }
-          color="emerald"
-        />
-        <AdminProgressCard
-          label="Check-in Progress"
-          value={state.summary?.checkedIn || 0}
-          percent={
-            (state.summary?.qrIssued || 0) > 0
-              ? Math.round(
-                  ((state.summary.checkedIn || 0) / state.summary.qrIssued) *
-                    100
-                )
-              : 0
-          }
-          color="amber"
-        />
-        <AdminProgressCard
-          label="Pending Decisions"
-          value={state.summary?.pending || 0}
-          percent={
-            state.summary &&
-            (state.summary.confirmed || 0) + (state.summary.pending || 0) > 0
-              ? Math.round(
-                  ((state.summary.pending || 0) /
-                    ((state.summary.confirmed || 0) +
-                      (state.summary.pending || 0))) *
-                    100
-                )
-              : 0
-          }
-          color="rose"
-        />
-      </section>
 
       {/* Filters */}
       <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
@@ -1627,7 +1596,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
           <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
-            Review Queue
+            Registrations
             {!state.loading && state.count > 0 ? (
               <span className="ml-2 text-xs font-normal text-zinc-400 dark:text-zinc-500">
                 {state.count} registrants
@@ -1666,12 +1635,13 @@ export default function RegistrationsAdminPanel({ operator }) {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  setSelectedIds([]);
                   setFilters((current) => ({
                     ...current,
                     page: Math.max(current.page - 1, 1),
-                  }))
-                }
+                  }));
+                }}
                 disabled={state.pagination.page <= 1}
                 className="h-8 rounded-full border border-zinc-200 bg-white px-3 text-xs text-zinc-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
               >
@@ -1679,15 +1649,16 @@ export default function RegistrationsAdminPanel({ operator }) {
               </button>
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  setSelectedIds([]);
                   setFilters((current) => ({
                     ...current,
                     page: Math.min(
                       current.page + 1,
                       state.pagination.totalPages
                     ),
-                  }))
-                }
+                  }));
+                }}
                 disabled={state.pagination.page >= state.pagination.totalPages}
                 className="h-8 rounded-full border border-zinc-200 bg-white px-3 text-xs text-zinc-700 disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200"
               >
@@ -1716,8 +1687,8 @@ export default function RegistrationsAdminPanel({ operator }) {
       />
 
       {/* Sticky bulk actions bar */}
-      {selectedIds.length > 0 ? (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur shadow-lg dark:border-white/[0.06] dark:bg-white/[0.03]/95">
+      {selectedIds.length > 1 ? (
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur md:left-[248px] dark:border-white/[0.06] dark:bg-zinc-950/95">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
               {selectedIds.length} selected
@@ -1726,7 +1697,7 @@ export default function RegistrationsAdminPanel({ operator }) {
               <QuickActionButton
                 action={{
                   key: 'confirm',
-                  label: 'Mark Confirmed',
+                  label: 'Confirm selected',
                   kind: 'success',
                 }}
                 onClick={() => bulkUpdateStatus('confirmed')}
@@ -1735,7 +1706,7 @@ export default function RegistrationsAdminPanel({ operator }) {
               <QuickActionButton
                 action={{
                   key: 'waitlist',
-                  label: 'Mark Waitlisted',
+                  label: 'Waitlist selected',
                   kind: 'warning',
                 }}
                 onClick={() => bulkUpdateStatus('waitlisted')}
@@ -1744,17 +1715,26 @@ export default function RegistrationsAdminPanel({ operator }) {
               <QuickActionButton
                 action={{
                   key: 'reject',
-                  label: 'Mark Rejected',
+                  label: 'Reject selected',
                   kind: 'danger',
                 }}
                 onClick={() => bulkUpdateStatus('rejected')}
                 loading={pendingBulk.reject}
               />
               <QuickActionButton
-                action={{ key: 'sendQr', label: 'Send QR', kind: 'info' }}
-                onClick={bulkSendQrQueue}
-                disabled={state.loading || hasConfigError}
-                loading={pendingBulk.sendQr}
+                action={{
+                  key: 'sendQr',
+                  label: 'Send QR to selected',
+                  kind: 'info',
+                }}
+                onClick={handleSendQr}
+                loading={qrLoading}
+                disabled={
+                  state.loading ||
+                  hasConfigError ||
+                  !summarizeQrSelection(selectedIds, state.registrations)
+                    .registrationIds.length
+                }
               />
             </div>
             <button

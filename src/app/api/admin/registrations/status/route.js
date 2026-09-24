@@ -10,6 +10,9 @@ import {
 } from '@/lib/registration-email-job-service';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
 import { adminJson } from '@/lib/admin-api-cache';
+import reviewEmail from '@/lib/registration-review-email.cjs';
+
+const { getReviewEmailTemplate } = reviewEmail;
 
 export async function POST(request) {
   const authResult = await requireAdminOperator({
@@ -44,20 +47,25 @@ export async function POST(request) {
       expectedUpdatedAt: String(body?.expectedUpdatedAt || '').trim(),
     });
 
-    const templateType = updatedRegistration.status;
-    let queueResult;
-    try {
-      queueResult = await queueRegistrationEmailJob({
-        registrationId: updatedRegistration.id,
-        templateType,
-        operator: authResult.operator,
-      });
-    } catch (error) {
-      console.error(
-        'Status saved but registration email could not be queued.',
-        error
-      );
-      queueResult = { queued: false, error: 'Email could not be queued.' };
+    const templateType = getReviewEmailTemplate(
+      updatedRegistration.previousStatus,
+      updatedRegistration.status
+    );
+    let queueResult = { queued: false, notRequired: true };
+    if (templateType) {
+      try {
+        queueResult = await queueRegistrationEmailJob({
+          registrationId: updatedRegistration.id,
+          templateType,
+          operator: authResult.operator,
+        });
+      } catch (error) {
+        console.error(
+          'Status saved but registration email could not be queued.',
+          error
+        );
+        queueResult = { queued: false, error: 'Email could not be queued.' };
+      }
     }
 
     if (queueResult.queued)
@@ -82,6 +90,7 @@ export async function POST(request) {
       registration: updatedRegistration,
       emailResult: {
         queued: Boolean(queueResult.queued),
+        notRequired: Boolean(queueResult.notRequired),
         sent: false,
         error: queueResult.queued ? null : queueResult.error || null,
       },

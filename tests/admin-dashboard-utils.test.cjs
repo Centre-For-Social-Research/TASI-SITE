@@ -1,13 +1,64 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const {
   getBatchStatusTone,
   buildDashboardQueryString,
+  summarizeQrSelection,
   summarizeSelection,
   prioritizeRegistrationQueue,
   getQuickActionOptions,
+  getLinkedInProfileUrl,
 } = require('../src/lib/admin-dashboard-utils.cjs');
+
+test('review queue opens only valid LinkedIn hosts', () => {
+  assert.equal(
+    getLinkedInProfileUrl('http://www.linkedin.com/in/saquib'),
+    'https://www.linkedin.com/in/saquib'
+  );
+  assert.equal(
+    getLinkedInProfileUrl('https://linkedin.com.evil.test/in/x'),
+    ''
+  );
+  assert.equal(getLinkedInProfileUrl('javascript:alert(1)'), '');
+  assert.equal(getLinkedInProfileUrl(''), '');
+});
+
+test('QR selection counts first sends, repeats and ineligible people without broadening scope', () => {
+  assert.deepEqual(
+    summarizeQrSelection(
+      ['new', 'issued', 'pending'],
+      [
+        { id: 'new', status: 'confirmed', qr_pass_issued_at: null },
+        { id: 'issued', status: 'confirmed', qr_pass_issued_at: '2026-09-23' },
+        { id: 'pending', status: 'pending', qr_pass_issued_at: null },
+        { id: 'unselected', status: 'confirmed', qr_pass_issued_at: null },
+      ]
+    ),
+    {
+      registrationIds: ['new', 'issued'],
+      firstSendCount: 1,
+      repeatCount: 1,
+      ineligibleCount: 1,
+    }
+  );
+});
+
+test('bulk QR control appears only with multiple selections and has no filter-wide send action', () => {
+  const panel = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      'src/components/admin/registrations-admin-panel.jsx'
+    ),
+    'utf8'
+  );
+  assert.match(panel, /selectedIds\.length > 1/);
+  assert.match(panel, /Send QR to selected/);
+  assert.doesNotMatch(panel, /handleSendQr\('filtered'\)/);
+  assert.doesNotMatch(panel, /handleResendQr/);
+});
 
 test('buildDashboardQueryString omits empty filter values', () => {
   const query = buildDashboardQueryString({
@@ -30,7 +81,6 @@ test('summarizeSelection reports selected and matched counts for bulk actions', 
     {
       selectedLabel: '12 selected',
       matchedLabel: '48 matched',
-      actionScopeLabel: 'Send to selected attendees',
     }
   );
 
@@ -42,7 +92,6 @@ test('summarizeSelection reports selected and matched counts for bulk actions', 
     {
       selectedLabel: '0 selected',
       matchedLabel: '48 matched',
-      actionScopeLabel: 'Send to all matched attendees',
     }
   );
 });
@@ -110,8 +159,16 @@ test('getQuickActionOptions adapts row actions to registrant state', () => {
   assert.deepEqual(
     getQuickActionOptions({
       status: 'confirmed',
+      qr_pass_issued_at: '2026-09-23',
+    }).map((action) => action.key),
+    ['sendQr', 'waitlist', 'reject']
+  );
+
+  assert.deepEqual(
+    getQuickActionOptions({
+      status: 'confirmed',
       qr_pass_issued_at: '2026-03-01T10:00:00.000Z',
     }).map((action) => action.key),
-    ['resendQr', 'waitlist', 'reject']
+    ['sendQr', 'waitlist', 'reject']
   );
 });

@@ -123,34 +123,57 @@ function InvitationForm({ form, onChange, onSubmit, saving, submitLabel }) {
 
   return (
     <form
+      className="adm-guest-create-form"
       onSubmit={onSubmit}
-      style={{ display: 'grid', gap: 12, marginTop: 14 }}
+      style={{ maxWidth: 760, marginTop: 20 }}
     >
-      {fields.map((field) => (
-        <label key={field.key} style={{ display: 'grid', gap: 6 }}>
-          <span
-            style={{
-              color: 'var(--adm-ink-2)',
-              fontFamily: 'var(--adm-mono)',
-              fontSize: 10,
-              letterSpacing: '.08em',
-              textTransform: 'uppercase',
-            }}
-          >
-            {field.label}
-            {field.required ? ' · required' : ' · optional'}
-          </span>
-          <input
-            type={field.type || 'text'}
-            required={field.required}
-            autoComplete={field.autoComplete}
-            value={form[field.key]}
-            onChange={(event) => onChange(field.key, event.target.value)}
-            style={inputStyle()}
-          />
-        </label>
-      ))}
-      <button type="submit" disabled={saving} style={buttonStyle(true)}>
+      <div className="adm-guest-create-fields">
+        {fields.map((field) => (
+          <label key={field.key} style={{ display: 'grid', gap: 7 }}>
+            <span
+              style={{
+                color: 'var(--adm-ink)',
+                fontFamily: 'var(--adm-sans)',
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              {field.label}
+              <span
+                style={{
+                  marginLeft: 5,
+                  color: 'var(--adm-ink-3)',
+                  fontSize: 12,
+                  fontWeight: 400,
+                }}
+              >
+                {field.required ? '*' : '(optional)'}
+              </span>
+            </span>
+            <input
+              type={field.type || 'text'}
+              required={field.required}
+              autoComplete={field.autoComplete}
+              value={form[field.key]}
+              onChange={(event) => onChange(field.key, event.target.value)}
+              style={{ ...inputStyle(), fontSize: 15, minHeight: 44 }}
+            />
+          </label>
+        ))}
+      </div>
+      <button
+        type="submit"
+        disabled={saving}
+        style={{
+          ...buttonStyle(true),
+          marginTop: 18,
+          fontFamily: 'var(--adm-sans)',
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: 0,
+          padding: '10px 16px',
+        }}
+      >
         <Plus size={14} /> {saving ? 'Saving…' : submitLabel}
       </button>
     </form>
@@ -343,8 +366,11 @@ export default function GuestInvitationsPanel({ canManage }) {
 
   async function sendInvitation(invitation) {
     const isResend = invitation.status === 'sent';
+    const isReconcile = invitation.status === 'sending';
     const confirmed = window.confirm(
-      `${isResend ? 'Resend' : 'Send'} the fixed invitation to ${invitation.email}?\n\nThis does not create a registration, QR pass, or check-in credential.`
+      isReconcile
+        ? `Check the recorded delivery for ${invitation.email}? This will not send another email.`
+        : `${isResend ? 'Resend' : 'Send'} the fixed invitation to ${invitation.email}?\n\nThis does not create a registration, QR pass, or check-in credential.`
     );
     if (!confirmed) return;
 
@@ -360,7 +386,9 @@ export default function GuestInvitationsPanel({ canManage }) {
       }
       setToast({
         tone: 'success',
-        message: `Invitation accepted for delivery to ${json.invitation.email}.`,
+        message: json.reconciled
+          ? `The accepted send to ${json.invitation.email} is now recorded.`
+          : `Invitation accepted for delivery to ${json.invitation.email}.`,
       });
       setSelected(json.invitation);
       setDetail((current) =>
@@ -428,10 +456,9 @@ export default function GuestInvitationsPanel({ canManage }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <section
         style={{
-          border: '1px solid var(--adm-line)',
-          borderRadius: 10,
-          background: 'var(--adm-panel)',
-          padding: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 12,
         }}
       >
         <div
@@ -444,43 +471,39 @@ export default function GuestInvitationsPanel({ canManage }) {
           }}
         >
           <div>
-            <div className="adm-eyebrow">Invitation-only list</div>
-            <h2
-              style={{
-                margin: '5px 0 0',
-                color: 'var(--adm-ink)',
-                fontSize: 22,
-              }}
-            >
-              Guest Invitations
-            </h2>
             <p
               style={{
-                margin: '6px 0 0',
+                margin: 0,
                 maxWidth: 650,
                 color: 'var(--adm-ink-3)',
-                fontSize: 13,
+                fontSize: 14,
                 lineHeight: 1.55,
               }}
             >
-              A separate, manual invitation list for special guests. It does not
-              create a registration, QR pass, or check-in credential.
+              Manage invitations for special guests. This list does not create a
+              registration, QR pass, or check-in credential.
             </p>
           </div>
           {canManage ? (
             <button
               type="button"
-              style={buttonStyle(true)}
+              style={{
+                ...buttonStyle(true),
+                fontFamily: 'var(--adm-sans)',
+                fontSize: 14,
+                fontWeight: 600,
+                letterSpacing: 0,
+              }}
               onClick={() => setCreateOpen((open) => !open)}
             >
               {createOpen ? <X size={14} /> : <Plus size={14} />}
-              {createOpen ? 'Close form' : 'Add guest'}
+              {createOpen ? 'Close' : 'Add guest'}
             </button>
           ) : null}
         </div>
 
         {!canManage ? (
-          <div style={{ marginTop: 16 }}>
+          <div>
             <AdminAlert
               tone="info"
               title="Read-only access"
@@ -488,44 +511,46 @@ export default function GuestInvitationsPanel({ canManage }) {
             />
           </div>
         ) : null}
+      </section>
 
-        {createOpen && canManage ? (
+      {createOpen && canManage ? (
+        <section
+          style={{
+            maxWidth: 820,
+            border: '1px solid var(--adm-line)',
+            borderRadius: 10,
+            background: 'var(--adm-panel)',
+            padding: 20,
+          }}
+        >
           <div
             style={{
-              marginTop: 18,
-              paddingTop: 18,
-              borderTop: '1px solid var(--adm-line)',
+              color: 'var(--adm-ink)',
+              fontSize: 16,
+              fontWeight: 600,
             }}
           >
-            <div
-              style={{
-                color: 'var(--adm-ink)',
-                fontSize: 14,
-                fontWeight: 600,
-              }}
-            >
-              Add a guest draft
-            </div>
-            <p
-              style={{
-                margin: '5px 0 0',
-                color: 'var(--adm-ink-3)',
-                fontSize: 12,
-              }}
-            >
-              The email uses one fixed, approved template. Add the guest,
-              preview it, then choose a deliberate single send.
-            </p>
-            <InvitationForm
-              form={createForm}
-              onChange={(key, value) => updateForm(setCreateForm, key, value)}
-              onSubmit={createInvitation}
-              saving={creating}
-              submitLabel="Save draft"
-            />
+            Add guest
           </div>
-        ) : null}
-      </section>
+          <p
+            style={{
+              margin: '5px 0 0',
+              color: 'var(--adm-ink-3)',
+              fontSize: 13,
+            }}
+          >
+            Save their details first. You can preview and send the invitation
+            after saving.
+          </p>
+          <InvitationForm
+            form={createForm}
+            onChange={(key, value) => updateForm(setCreateForm, key, value)}
+            onSubmit={createInvitation}
+            saving={creating}
+            submitLabel="Save draft"
+          />
+        </section>
+      ) : null}
 
       {error ? (
         <AdminAlert
@@ -998,19 +1023,18 @@ export default function GuestInvitationsPanel({ canManage }) {
               {canManage ? (
                 <button
                   type="button"
-                  disabled={
-                    currentInvitation.status === 'sending' ||
-                    sendingId === currentInvitation.id
-                  }
+                  disabled={sendingId === currentInvitation.id}
                   onClick={() => sendInvitation(currentInvitation)}
                   style={buttonStyle(true)}
                 >
                   <Send size={14} />
                   {sendingId === currentInvitation.id
-                    ? 'Sending…'
-                    : currentInvitation.status === 'sent'
-                      ? 'Resend invitation'
-                      : 'Send invitation'}
+                    ? 'Working…'
+                    : currentInvitation.status === 'sending'
+                      ? 'Check send record'
+                      : currentInvitation.status === 'sent'
+                        ? 'Resend invitation'
+                        : 'Send invitation'}
                 </button>
               ) : null}
             </div>

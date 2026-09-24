@@ -10,6 +10,9 @@ import {
 } from '@/lib/registration-email-job-service';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
 import { adminJson } from '@/lib/admin-api-cache';
+import reviewEmail from '@/lib/registration-review-email.cjs';
+
+const { getReviewEmailTemplate } = reviewEmail;
 
 const MAX_BATCH_SIZE = 100;
 
@@ -78,19 +81,25 @@ export async function POST(request) {
       }
     }
 
-    let queueResult;
-    try {
-      queueResult = await queueRegistrationEmailBatchJob({
-        registrations: updatedRegistrations,
-        templateType: status,
-        operator: authResult.operator,
-      });
-    } catch (error) {
-      console.error(
-        'Statuses saved but registration emails could not be queued.',
-        error
-      );
-      queueResult = { queued: false, error: 'Emails could not be queued.' };
+    const emailRegistrations = updatedRegistrations.filter((registration) =>
+      getReviewEmailTemplate(registration.previousStatus, registration.status)
+    );
+    const templateType = emailRegistrations.length ? status : null;
+    let queueResult = { queued: false, notRequired: true };
+    if (templateType) {
+      try {
+        queueResult = await queueRegistrationEmailBatchJob({
+          registrations: emailRegistrations,
+          templateType,
+          operator: authResult.operator,
+        });
+      } catch (error) {
+        console.error(
+          'Statuses saved but registration emails could not be queued.',
+          error
+        );
+        queueResult = { queued: false, error: 'Emails could not be queued.' };
+      }
     }
 
     if (updatedRegistrations.length && queueResult.queued) {
@@ -119,6 +128,7 @@ export async function POST(request) {
         registrations: updatedRegistrations,
         emailResult: {
           queued: Boolean(queueResult.queued),
+          notRequired: Boolean(queueResult.notRequired),
           jobId: queueResult.jobId || null,
           totalItems: queueResult.totalItems || 0,
           error: queueResult.queued ? null : queueResult.error || null,

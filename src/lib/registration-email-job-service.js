@@ -4,6 +4,7 @@ import {
   markNotificationDelivery,
 } from './registration-db.js';
 import { deliverRegistrationEmail } from './registration-email.js';
+import { REGISTRATION_EMAIL_COPY } from './registration-constants.js';
 import { deliverHighPriorityRegistrationWhatsApp } from './registration-whatsapp-notifications.js';
 import {
   DEFAULT_JOB_CHUNK_SIZE,
@@ -53,6 +54,9 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     notificationId = null,
     operator = null,
   }) {
+    if (!Object.hasOwn(REGISTRATION_EMAIL_COPY, templateType)) {
+      throw new Error(`Unsupported email template: ${templateType}`);
+    }
     try {
       const nextNotificationId =
         notificationId ||
@@ -106,6 +110,9 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     templateType,
     operator = null,
   }) {
+    if (!Object.hasOwn(REGISTRATION_EMAIL_COPY, templateType)) {
+      throw new Error(`Unsupported email template: ${templateType}`);
+    }
     const normalizedRegistrations = registrations.filter(
       (registration) => registration?.id
     );
