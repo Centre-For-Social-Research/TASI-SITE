@@ -102,6 +102,7 @@ export async function listRegistrationQueue({
     linkedin_url,
     priority_tier,
     status,
+    review_notes,
     speaker_flag,
     vip_flag,
     exception_badge_required,
@@ -121,7 +122,7 @@ export async function listRegistrationQueue({
   `;
 
   const dataQuery = applyRegistrationFilters(
-    buildQueueBaseQuery(queueFields, { count: 'exact' }),
+    buildQueueBaseQuery(queueFields),
     filters
   ).range(from, to);
 
@@ -136,10 +137,17 @@ export async function listRegistrationQueue({
     throw new Error(errors[0].message);
   }
 
-  const totalCount = summary.total || dataResult.count || 0;
+  const totalCount = summary.total || 0;
 
   return {
-    registrations: (dataResult.data || []).map(normalizeRegistrationRecord),
+    registrations: (dataResult.data || []).map((record) => {
+      const { review_notes: reviewNotes, ...registration } =
+        normalizeRegistrationRecord(record);
+      return {
+        ...registration,
+        has_review_note: Boolean(reviewNotes?.trim()),
+      };
+    }),
     count: totalCount,
     pagination: {
       page: normalizedPage,
@@ -467,9 +475,21 @@ export async function listPassIssueEmailJobs({ limit = 8 } = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('pass_issue_email_jobs')
-    .select('*')
+    .select(
+      `
+      *,
+      recipient_preview:pass_issue_email_job_items (
+        registration:event_registrations (first_name, last_name)
+      )
+    `
+    )
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', {
+      ascending: true,
+      referencedTable: 'recipient_preview',
+    })
+    .limit(limit)
+    .limit(1, { referencedTable: 'recipient_preview' });
 
   if (error) {
     throw new Error(error.message);
@@ -751,9 +771,21 @@ export async function listRegistrationEmailJobs({ limit = 20 } = {}) {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('registration_email_jobs')
-    .select('*')
+    .select(
+      `
+      *,
+      recipient_preview:registration_email_job_items (
+        registration:event_registrations (first_name, last_name)
+      )
+    `
+    )
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', {
+      ascending: true,
+      referencedTable: 'recipient_preview',
+    })
+    .limit(limit)
+    .limit(1, { referencedTable: 'recipient_preview' });
 
   if (error) {
     throw new Error(error.message);

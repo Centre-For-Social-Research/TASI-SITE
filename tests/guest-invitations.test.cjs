@@ -6,6 +6,7 @@ const path = require('node:path');
 const {
   normalizeGuestInvitationInput,
   normalizeGuestInvitationRow,
+  guestInvitationSendKey,
 } = require('../src/lib/guest-invitation-utils.cjs');
 
 function readSource(relativePath) {
@@ -28,6 +29,17 @@ test('guest invitation input accepts only the agreed guest fields', () => {
       organization: 'CSR',
     }
   );
+});
+
+test('guest send attempt key stays stable for one claim and changes for the next', () => {
+  const first = { id: 'guest-1', updatedAt: '2026-09-24T01:00:00.001Z' };
+  const second = { ...first, updatedAt: '2026-09-24T01:00:00.002Z' };
+  assert.equal(guestInvitationSendKey(first), guestInvitationSendKey(first));
+  assert.notEqual(
+    guestInvitationSendKey(first),
+    guestInvitationSendKey(second)
+  );
+  assert.throws(() => guestInvitationSendKey({ id: 'guest-1' }), /claimed/);
 });
 
 test('guest invitation input requires a name and a valid email', () => {
@@ -147,4 +159,15 @@ test('guest invitation send attaches the no-QR guest poster image', () => {
     poster,
     /QRCode|qrDataUrl|QR entry pass|renderToBuffer|pdfBuffer/
   );
+});
+
+test('uncertain guest provider outcomes keep the send locked for reconciliation', () => {
+  const route = readSource(
+    'src/app/api/admin/guest-invitations/[id]/send/route.js'
+  );
+  const db = readSource('src/lib/guest-invitation-db.js');
+  assert.match(route, /idempotencyKey: guestInvitationSendKey\(invitation\)/);
+  assert.match(route, /if \(invitation && !providerAttempted\)/);
+  assert.match(route, /reconcileGuestInvitationSend\(\{ id \}\)/);
+  assert.match(db, /\.gte\('created_at', invitation\.updatedAt\)/);
 });

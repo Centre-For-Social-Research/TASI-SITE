@@ -76,18 +76,40 @@ test('registrations grid hides low-value columns on narrow screens while keeping
   assert.match(source, /id: 'registrant'/);
   assert.match(source, /id: 'email'/);
   assert.match(source, /id: 'status'/);
+  assert.match(source, /id: 'notes'/);
   assert.match(source, /id: 'actions'/);
 });
 
-test('admin shell and dashboard use summary endpoint instead of heavy list polling', () => {
-  const shell = readSource('src/components/admin/admin-shell.jsx');
-  const dashboard = readSource('src/components/admin/admin-dashboard.jsx');
+test('queue returns only note presence to the list while detail retains note text', () => {
+  const queue = readSource('src/lib/registration-ops-db.js');
+  const panel = readSource(
+    'src/components/admin/registrations-admin-panel.jsx'
+  );
 
-  assert.match(shell, /\/api\/admin\/registrations\/summary/);
-  assert.doesNotMatch(shell, /\/api\/admin\/registrations\?pageSize=1/);
-  // Dashboard performs no fetches of its own — it relies on shell data.
-  assert.doesNotMatch(dashboard, /fetch\(/);
-  assert.match(dashboard, /useAdminShellData/);
+  assert.match(queue, /has_review_note: Boolean\(reviewNotes\?\.trim\(\)\)/);
+  assert.match(panel, /row\.data\.has_review_note/);
+  assert.match(panel, /detailDraft\.reviewNotes/);
+});
+
+test('admin entry routes to the review queue without global stats polling', () => {
+  const shell = readSource('src/components/admin/admin-shell.jsx');
+  const entry = readSource('src/app/admin/page.jsx');
+  const reviewPage = readSource('src/app/admin/registrations/page.jsx');
+
+  assert.match(entry, /redirect\('\/admin\/registrations'\)/);
+  assert.match(reviewPage, /getAuthorizedOperator/);
+  assert.doesNotMatch(shell, /\/api\/admin\/registrations\/summary/);
+  assert.doesNotMatch(shell, /\/api\/admin\/passes\/jobs/);
+  assert.doesNotMatch(shell, /30000/);
+});
+
+test('review queue gets its total from the summary instead of a second exact count', () => {
+  const source = readSource('src/lib/registration-ops-db.js');
+  const queueFunction = source
+    .split('export async function listRegistrationQueue')[1]
+    .split('function normalizeSummaryRow')[0];
+  assert.match(queueFunction, /const totalCount = summary\.total \|\| 0/);
+  assert.doesNotMatch(queueFunction, /count: 'exact'/);
 });
 
 test('admin registration APIs use no-store private cache headers', () => {

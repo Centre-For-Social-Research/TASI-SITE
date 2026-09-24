@@ -43,6 +43,44 @@ function buildDashboardQueryString(filters = {}) {
   return params.toString();
 }
 
+function getLinkedInProfileUrl(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(String(value).trim());
+    const host = url.hostname.toLowerCase();
+    if (
+      !['http:', 'https:'].includes(url.protocol) ||
+      (host !== 'linkedin.com' && !host.endsWith('.linkedin.com')) ||
+      url.username ||
+      url.password
+    ) {
+      return '';
+    }
+    url.protocol = 'https:';
+    return url.toString();
+  } catch {
+    return '';
+  }
+}
+
+function summarizeQrSelection(selectedIds = [], registrations = []) {
+  const selected = new Set(selectedIds);
+  const confirmed = registrations.filter(
+    (registration) =>
+      selected.has(registration.id) && registration.status === 'confirmed'
+  );
+  return {
+    registrationIds: confirmed.map((registration) => registration.id),
+    firstSendCount: confirmed.filter(
+      (registration) => !registration.qr_pass_issued_at
+    ).length,
+    repeatCount: confirmed.filter((registration) =>
+      Boolean(registration.qr_pass_issued_at)
+    ).length,
+    ineligibleCount: selectedIds.length - confirmed.length,
+  };
+}
+
 function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
   const normalizedSelected = Number(selectedCount || 0);
   const normalizedMatched = Number(matchedCount || 0);
@@ -50,10 +88,6 @@ function summarizeSelection({ selectedCount = 0, matchedCount = 0 } = {}) {
   return {
     selectedLabel: `${normalizedSelected} selected`,
     matchedLabel: `${normalizedMatched} matched`,
-    actionScopeLabel:
-      normalizedSelected > 0
-        ? 'Send to selected attendees'
-        : 'Send to all matched attendees',
   };
 }
 
@@ -108,8 +142,8 @@ function getQuickActionOptions(registration = {}) {
   if (registration.status === 'confirmed') {
     return [
       {
-        key: registration.qr_pass_issued_at ? 'resendQr' : 'sendQr',
-        label: registration.qr_pass_issued_at ? 'Resend QR' : 'Send QR',
+        key: 'sendQr',
+        label: 'Send QR',
         kind: 'info',
       },
       { key: 'waitlist', label: 'Waitlist', kind: 'warning' },
@@ -125,6 +159,8 @@ function getQuickActionOptions(registration = {}) {
 
 module.exports = {
   buildDashboardQueryString,
+  getLinkedInProfileUrl,
+  summarizeQrSelection,
   summarizeSelection,
   isSupabaseAdminConfigError,
   getBatchStatusTone,

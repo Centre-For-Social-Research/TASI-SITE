@@ -198,19 +198,9 @@ export default function SubmissionsPanel() {
             }}
           >
             <div>
-              <div className="adm-eyebrow">Website inbox</div>
-              <h2
-                style={{
-                  margin: '5px 0 0',
-                  fontSize: 22,
-                  color: 'var(--adm-ink)',
-                }}
-              >
-                Submissions
-              </h2>
               <p
                 style={{
-                  margin: '6px 0 0',
+                  margin: 0,
                   color: 'var(--adm-ink-3)',
                   fontSize: 13,
                 }}
