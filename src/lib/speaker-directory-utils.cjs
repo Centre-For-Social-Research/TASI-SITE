@@ -54,7 +54,10 @@ function buildSpeakerSlug(name = '') {
 
 function getSpeakerProfilePath(speaker = {}) {
   const slug = buildSpeakerSlug(speaker.name);
-  return slug ? `/speakers/${slug}` : '/speakers';
+  if (!slug) return '/speakers';
+  return speaker.edition === '2026'
+    ? `/speakers/2026/${slug}`
+    : `/speakers/${slug}`;
 }
 
 function findSpeakerBySlug(speakers = [], slug = '') {
@@ -72,7 +75,8 @@ function buildSpeakerCategories(speakers = []) {
   const categories = new Set(
     speakers.map((speaker) => speaker.category).filter(Boolean)
   );
-  return [ALL_SPEAKERS_LABEL, ...Array.from(categories)];
+  const hasOther = categories.delete('Other');
+  return [ALL_SPEAKERS_LABEL, ...categories, ...(hasOther ? ['Other'] : [])];
 }
 
 function speakerMatchesQuery(speaker = {}, query = '') {

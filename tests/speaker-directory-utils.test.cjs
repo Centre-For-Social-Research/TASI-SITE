@@ -23,6 +23,11 @@ test('speaker directory helpers build categories, initials, links, and photos', 
       photo: '/img/Speaker Highlights/Dr. Subrahmanyam Jaishankar.png',
     },
     {
+      name: 'Example Speaker',
+      designation: 'Example role',
+      category: 'Other',
+    },
+    {
       name: 'Yoel Roth',
       designation: 'Trust and safety expert',
       category: 'International',
@@ -34,17 +39,22 @@ test('speaker directory helpers build categories, initials, links, and photos', 
     ALL_SPEAKERS_LABEL,
     'Government',
     'International',
+    'Other',
   ]);
   assert.equal(getSpeakerInitials('Yoel Roth'), 'YR');
   assert.equal(getSpeakerInitials(''), 'SP');
   assert.equal(getSpeakerPhotoSrc(speakers[0]), speakers[0].photo);
-  assert.equal(getSpeakerPhotoSrc(speakers[1]), '/img/speakers/Yoel Roth.webp');
+  assert.equal(getSpeakerPhotoSrc(speakers[2]), '/img/speakers/Yoel Roth.webp');
   assert.equal(buildSpeakerSlug('Dr. S Jaishankar'), 'dr-s-jaishankar');
-  assert.equal(getSpeakerProfilePath(speakers[1]), '/speakers/yoel-roth');
+  assert.equal(getSpeakerProfilePath(speakers[2]), '/speakers/yoel-roth');
+  assert.equal(
+    getSpeakerProfilePath({ name: 'Yoel Roth', edition: '2026' }),
+    '/speakers/2026/yoel-roth'
+  );
   assert.equal(isVipSpeaker(speakers[0]), true);
   assert.equal(isVipSpeaker('Yoel Roth'), false);
   assert.match(
-    getSpeakerLinkedInUrl(speakers[1]),
+    getSpeakerLinkedInUrl(speakers[2]),
     /^https:\/\/www\.linkedin\.com\/search\/results\/all\/\?keywords=/
   );
 });

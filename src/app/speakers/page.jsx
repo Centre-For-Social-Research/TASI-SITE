@@ -14,7 +14,7 @@ export const metadata = {
 
 export default async function SpeakersPage({ searchParams }) {
   const resolvedSearchParams = await searchParams;
-  const initialYear = resolvedSearchParams?.year === '2026' ? '2026' : '2025';
+  const initialYear = resolvedSearchParams?.year === '2025' ? '2025' : '2026';
 
   return (
     <>

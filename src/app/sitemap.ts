@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { getBlogPosts } from '@/lib/blog';
 import { partners } from '@/data/partners';
 import { speakers } from '@/data/speakers';
+import speakers2026 from '@/data/speakers-2026.json';
 import { programmeSessions2025 } from '@/data/programme-2025';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
@@ -122,6 +123,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     }));
 
+  const speakerEntries2026: MetadataRoute.Sitemap = speakers2026
+    .map((speaker) => buildSpeakerSlug(speaker.name))
+    .filter(Boolean)
+    .map((slug) => ({
+      url: `${BASE}/speakers/2026/${slug}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }));
+
   const programmeSessionEntries: MetadataRoute.Sitemap =
     sortProgrammeSessionsForAgenda(
       programmeSessions2025.filter(shouldShowProgrammeSession)
@@ -140,6 +150,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticEntries,
     ...speakerEntries,
+    ...speakerEntries2026,
     ...programmeSessionEntries,
     ...partnerEntries,
     ...blogEntries,

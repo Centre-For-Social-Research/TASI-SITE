@@ -47,7 +47,7 @@ CENTRE FOR SOCIAL RESEARCH (CSR):
 13. Supporting Parents and Strengthening Parent-Child Safety Online
 14. Protecting and Empowering Seniors in Digital Environments
 
-SPEAKERS (TASI 2025 — 100+ speakers; TASI 2026 to be announced):
+SPEAKERS: TASI 2026 speaker profiles are available at /speakers?year=2026. The following examples are from TASI 2025 (100+ speakers):
 Government Leaders:
 - Dr. Subrahmanyam Jaishankar — External Affairs Minister, Govt. of India
 - S. Krishnan — Secretary, MeitY

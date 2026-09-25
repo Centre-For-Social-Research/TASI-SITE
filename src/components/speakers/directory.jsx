@@ -14,16 +14,19 @@ const {
   paginateSpeakers,
 } = speakerDirectoryUtils;
 
-export default function SpeakersDirectory() {
-  const categories = useMemo(() => buildSpeakerCategories(speakers), []);
+export default function SpeakersDirectory({ speakerList = speakers }) {
+  const categories = useMemo(
+    () => buildSpeakerCategories(speakerList),
+    [speakerList]
+  );
 
   const [active, setActive] = useState(ALL_SPEAKERS_LABEL);
   const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = useMemo(
-    () => filterSpeakers(speakers, { activeCategory: active, query }),
-    [active, query]
+    () => filterSpeakers(speakerList, { activeCategory: active, query }),
+    [active, query, speakerList]
   );
   const {
     currentPageSafe,
@@ -63,7 +66,7 @@ export default function SpeakersDirectory() {
           )}
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mb-6 flex gap-1.5 overflow-x-auto pb-2">
           {categories.map((category) => (
             <button
               key={category}
@@ -72,7 +75,7 @@ export default function SpeakersDirectory() {
                 setActive(category);
                 setCurrentPage(1);
               }}
-              className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+              className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-2 text-xs font-semibold transition ${
                 active === category
                   ? 'border-orange-700 bg-orange-700 text-white'
                   : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500'

@@ -27,6 +27,17 @@ test('sitemap includes speaker profile URLs', () => {
   assert.match(source, /programmeSessionEntries/);
   assert.match(source, /partnerEntries/);
   assert.match(source, /`\$\{BASE\}\/speakers\/\$\{slug\}`/);
+  assert.match(source, /`\$\{BASE\}\/speakers\/2026\/\$\{slug\}`/);
+});
+
+test('2026 speaker profiles have their own crawlable route and event schema', () => {
+  const source = readSource('src/app/speakers/2026/[slug]/page.jsx');
+
+  assert.match(source, /export function generateStaticParams/);
+  assert.match(source, /export async function generateMetadata/);
+  assert.match(source, /'@type': 'Person'/);
+  assert.match(source, /Trust and Safety India Festival 2026/);
+  assert.match(source, /speakers\/2026/);
 });
 
 test('speaker cards link to crawlable speaker profile pages', () => {

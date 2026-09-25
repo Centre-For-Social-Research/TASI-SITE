@@ -31,14 +31,14 @@ export const getInvolvedQuickLinks = [
 
 export const involvementOptions = [
   {
-    title: 'Stakeholder Engagement Roundtable',
+    title: 'Attend TASI 2026',
     description:
-      'Join us as we kick off the preparation for TASI 2026 with an online stakeholder engagement roundtable.',
-    href: '/blog/tasi-2026-stakeholder-roundtable',
-    cta: 'Read Important Update',
+      'Join policymakers, platform teams, researchers, and civil society leaders at TASI 2026 for conversations on digital trust and safety.',
+    href: '/register',
+    cta: 'Explore Registration',
     image: '/img/home-gallery/7T7A5237-new.webp',
-    imageAlt: 'TASI Engagement Roundtable',
-    eyebrow: 'Update',
+    imageAlt: 'Audience attending a panel at TASI',
+    eyebrow: 'Attend',
   },
   {
     title: 'Become a Sponsor',

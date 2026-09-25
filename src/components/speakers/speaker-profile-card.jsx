@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Linkedin } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
+import { getSpeakerAvatarStyle } from '@/lib/speaker-photo-position-2026';
 import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 import { cn } from '@/lib/utils';
 
 const {
   VIP_LABEL,
+  buildSpeakerSlug,
   getSpeakerInitials,
   getSpeakerLinkedInUrl,
   getSpeakerPhotoSrc,
@@ -24,9 +26,15 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
   const [isFlipped, setIsFlipped] = useState(false);
   const avatarInitials = getSpeakerInitials(speaker.name);
   const linkedInUrl = getSpeakerLinkedInUrl(speaker);
+  const showLinkedIn =
+    speaker.edition !== '2026' || Boolean(speaker.linkedinUrl);
   const photoSrc = getSpeakerPhotoSrc(speaker);
   const profilePath = getSpeakerProfilePath(speaker);
   const isFeaturedSpeaker = isVipSpeaker(speaker);
+  const photoStyle =
+    speaker.edition === '2026'
+      ? getSpeakerAvatarStyle(buildSpeakerSlug(speaker.name))
+      : undefined;
 
   return (
     <div
@@ -45,13 +53,19 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
       >
         <Card
           className={cn(
-            'tasi-flip-face absolute h-full w-full rounded-[10px] p-6 shadow-lg',
+            'tasi-flip-face absolute h-full w-full rounded-[10px] shadow-lg',
+            speaker.edition === '2026' ? 'p-5' : 'p-6',
             isFeaturedSpeaker
               ? 'border-[#9c3c46] bg-[#801b26]'
               : 'border-stone-200 bg-white'
           )}
         >
-          <div className="flex h-full w-full flex-col items-center justify-center space-y-4 text-center">
+          <div
+            className={cn(
+              'flex h-full w-full flex-col items-center justify-center text-center',
+              speaker.edition === '2026' ? 'space-y-2' : 'space-y-4'
+            )}
+          >
             <button
               type="button"
               onClick={() => setIsFlipped(true)}
@@ -68,6 +82,7 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
                   src={photoSrc}
                   alt={speaker.name}
                   className="object-cover"
+                  style={photoStyle}
                 />
                 <AvatarFallback className="text-2xl">
                   {avatarInitials}
@@ -75,7 +90,9 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
               </Avatar>
             </button>
 
-            <div className="space-y-2">
+            <div
+              className={speaker.edition === '2026' ? 'space-y-1' : 'space-y-2'}
+            >
               <h3
                 className={cn(
                   'text-xl font-bold',
@@ -86,15 +103,28 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
               </h3>
               <p
                 className={cn(
-                  'text-sm',
+                  speaker.edition === '2026'
+                    ? 'line-clamp-2 text-xs leading-4'
+                    : 'text-sm',
                   isFeaturedSpeaker ? 'text-stone-200' : 'text-stone-600'
                 )}
               >
                 {speaker.designation}
               </p>
+              {speaker.edition === '2026' && speaker.organisation && (
+                <p
+                  className={cn(
+                    'line-clamp-2 text-xs font-medium leading-4',
+                    isFeaturedSpeaker ? 'text-stone-300' : 'text-stone-500'
+                  )}
+                >
+                  {speaker.organisation}
+                </p>
+              )}
               <p
                 className={cn(
                   'text-xs font-semibold uppercase tracking-[0.1em]',
+                  speaker.edition === '2026' && 'leading-4',
                   isFeaturedSpeaker ? 'text-amber-300' : 'text-orange-700'
                 )}
               >
@@ -112,20 +142,22 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
                 >
                   Profile
                 </Link>
-                <a
-                  href={linkedInUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`${speaker.name} LinkedIn`}
-                  className={cn(
-                    'rounded-full border p-1.5 transition-colors',
-                    isFeaturedSpeaker
-                      ? 'border-stone-300/60 text-stone-200 hover:border-stone-200 hover:text-stone-100'
-                      : 'border-stone-300 text-stone-600 hover:border-orange-300 hover:text-orange-700'
-                  )}
-                >
-                  <Linkedin className="h-4 w-4" />
-                </a>
+                {showLinkedIn && (
+                  <a
+                    href={linkedInUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${speaker.name} LinkedIn`}
+                    className={cn(
+                      'rounded-full border p-1.5 transition-colors',
+                      isFeaturedSpeaker
+                        ? 'border-stone-300/60 text-stone-200 hover:border-stone-200 hover:text-stone-100'
+                        : 'border-stone-300 text-stone-600 hover:border-orange-300 hover:text-orange-700'
+                    )}
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                )}
               </div>
             </div>
 
@@ -200,6 +232,7 @@ const SpeakerProfileCard = forwardRef(function SpeakerProfileCard(
                     src={photoSrc}
                     alt={speaker.name}
                     className="object-cover"
+                    style={photoStyle}
                   />
                   <AvatarFallback>{avatarInitials}</AvatarFallback>
                 </Avatar>
