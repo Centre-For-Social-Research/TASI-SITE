@@ -1,567 +1,525 @@
-// TASI 2026 programme.
-//
-// Session titles only. Speaker names are deliberately omitted until the
-// speaker list is confirmed - every `speakers` array here stays empty so the
-// agenda cards render without a speakers block.
-//
-// Day keys map to: oct13 = Tue 13 Oct 2026 (opening reception),
-// oct14 = Wed 14 Oct 2026, oct15 = Thu 15 Oct 2026.
+// Public TASI 2026 programme. The latest draft takes precedence over the
+// earlier CSV where their schedules differ. Speaker details and internal
+// planning notes must not be published here.
 
-const SPEAKERS_TBA = 'Speakers for this session will be announced soon.';
+const makeSession = (id, day, time, venue, format, title, description) => ({
+  id: `tasi26-${id}`,
+  day,
+  time,
+  track: venue,
+  venue,
+  format,
+  title,
+  description:
+    description || 'Further details about this session will be shared soon.',
+  speakers: [],
+});
 
 export const programmeSessions2026 = [
-  // ---------------------------------------------------------------------
-  // DAY 0 - Tuesday, 13 October 2026 - Opening Reception
-  // ---------------------------------------------------------------------
-  {
-    id: 'tasi26-1',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'opening',
-    title: 'Opening Reception',
-    description:
-      'Invite-only opening reception hosted by the German High Commission with the Embassy of France, marking the start of TASI 2026.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-2',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'spotlight',
-    title: 'Safety Spotlight: Using AI to Connect Youth with Their Community',
-    description: `A reception spotlight on how AI can strengthen the link between young people and the communities around them. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-3',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'spotlight',
-    title: 'Spotlight: Journalism Safety',
-    description: `A reception spotlight on protecting journalists and press freedom in the digital environment. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-4',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'spotlight',
-    title: 'Spotlight: Lessons from Australia',
-    description: `A reception spotlight on what Australia's online safety experience offers other jurisdictions. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-5',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'spotlight',
-    title:
-      'Spotlight: Using Technology to Combat Trafficking - A Lesson from India',
-    description: `A reception spotlight on technology-led approaches to anti-trafficking work in India. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-6',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'spotlight',
-    title: 'Spotlight: AI Companions',
-    description: `A reception spotlight on AI companion products and the safety questions they raise. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-7',
-    day: 'oct13',
-    time: '18:00–20:00',
-    track: 'Opening Reception',
-    venue: 'Opening Reception',
-    format: 'spotlight',
-    title: 'Spotlight: Equipping Front Line Workers',
-    description: `A reception spotlight on tools and training for the front line workers who support survivors and at-risk communities. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
+  // Tuesday, 13 October: opening reception and public safety spotlights.
+  makeSession(
+    1,
+    'oct13',
+    '18:00–20:00',
+    'German Embassy',
+    'opening',
+    'Opening Reception',
+    'Opening evening reception jointly hosted by the Embassy of France and the German Embassy, bringing delegates and partners together for welcome remarks and Safety Spotlights to launch TASI 2026.'
+  ),
+  makeSession(
+    49,
+    'oct13',
+    '18:14–19:30',
+    'German Embassy',
+    'opening',
+    'Safety Spotlights',
+    'Short, solution-focused presentations on children’s information literacy, journalism safety, lessons from Australia, technology to combat trafficking and Project Lantern.'
+  ),
+  makeSession(
+    2,
+    'oct13',
+    '18:35–18:50',
+    'German Embassy',
+    'spotlight',
+    'Safety Spotlight: Building Children’s Critical Thinking',
+    'A spotlight on helping children navigate information and develop critical thinking.'
+  ),
+  makeSession(
+    3,
+    'oct13',
+    '18:50–19:05',
+    'German Embassy',
+    'spotlight',
+    'Spotlight: Journalism Safety'
+  ),
+  makeSession(
+    4,
+    'oct13',
+    '19:05–19:15',
+    'German Embassy',
+    'spotlight',
+    'Spotlight: Lessons from Australia'
+  ),
+  makeSession(
+    5,
+    'oct13',
+    '19:15–19:25',
+    'German Embassy',
+    'spotlight',
+    'Spotlight: Using Technology to Combat Trafficking'
+  ),
+  // Two spotlights share the 19:25–19:35 slot in the source. Both are held.
 
-  // ---------------------------------------------------------------------
-  // DAY 1 - Wednesday, 14 October 2026
-  // ---------------------------------------------------------------------
-  {
-    id: 'tasi26-8',
-    day: 'oct14',
-    time: '09:00–10:00',
-    track: 'Lobby',
-    venue: 'Lobby',
-    format: 'special',
-    title: 'Registration + Tea/Coffee',
-    description:
-      'Delegate registration and welcome refreshments before the opening session.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-9',
-    day: 'oct14',
-    time: '10:00–10:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'opening',
-    title: 'Welcome and Opening Remarks',
-    description:
-      'Opening of TASI 2026 with welcome remarks from the festival hosts.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-10',
-    day: 'oct14',
-    time: '10:15–10:30',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'keynote',
-    title: 'Opening Sponsor Keynote',
-    description: `The opening keynote from the festival's headline sponsor. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-11',
-    day: 'oct14',
-    time: '10:30–11:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: 'Opening Panel: Forces Reshaping Trust and Safety in 2026',
-    description: `A scene-setting panel on the technology, regulatory, and operational shifts redrawing trust and safety this year. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-12',
-    day: 'oct14',
-    time: '11:15–11:30',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Spotlight: Using AI to Connect Youth with Their Community',
-    description: `A spotlight session on AI as a bridge between young people and their communities. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-13',
-    day: 'oct14',
-    time: '11:30–11:45',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'keynote',
-    title: 'Opening Remarks and Ministerial Keynote',
-    description: `Host remarks followed by a ministerial keynote address. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-14',
-    day: 'oct14',
-    time: '11:30–13:00',
-    track: 'Workshop Room',
-    venue: 'Workshop Room',
-    format: 'workshop',
-    title: 'Workshop: Using AI to Connect Youth with Their Community',
-    description:
-      'A hands-on workshop extending the youth and community spotlight into practical methods. Capacity is limited to 60 delegates.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-15',
-    day: 'oct14',
-    time: '11:30–13:00',
-    track: 'Roundtable Room',
-    venue: 'Roundtable Room',
-    format: 'roundtable',
-    title: 'Industry Roundtable',
-    description:
-      'A closed industry roundtable on platform safety practice. Capacity is limited to 25 delegates.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-16',
-    day: 'oct14',
-    time: '11:45–12:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'fireside',
-    title: 'Fireside Chat: Industry and the Tech Coalition',
-    description: `A fireside conversation between the Tech Coalition and an industry representative on cross-platform child safety work. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-17',
-    day: 'oct14',
-    time: '12:15–12:30',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-18',
-    day: 'oct14',
-    time: '12:30–13:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title:
-      'Panel: Growing Up Digital - Designing for Youth Wellbeing in the Age of AI',
-    description: `A panel on product design, youth mental health, and the wellbeing questions AI raises for young users. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-19',
-    day: 'oct14',
-    time: '13:15–13:30',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-20',
-    day: 'oct14',
-    time: '13:30–14:15',
-    track: 'Lobby',
-    venue: 'Lobby',
-    format: 'special',
-    title: 'LUNCH BREAK',
-    description:
-      'Networking and transition window at the Lobby before the afternoon session block.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-21',
-    day: 'oct14',
-    time: '14:00–15:30',
-    track: 'Workshop Room',
-    venue: 'Workshop Room',
-    format: 'workshop',
-    title: 'Sandbox Workshop',
-    description:
-      'A practitioner sandbox workshop on child online resilience. Capacity is limited to 60 delegates.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-22',
-    day: 'oct14',
-    time: '14:00–15:00',
-    track: 'Roundtable Room',
-    venue: 'Roundtable Room',
-    format: 'roundtable',
-    title: 'Closed-Door Roundtable',
-    description:
-      'An invite-only roundtable held under closed-door rules. Capacity is limited to 25 delegates.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-23',
-    day: 'oct14',
-    time: '14:15–15:00',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: 'Panel: Age Assurance and Age-Appropriate Design',
-    description: `A panel on building better experiences for children through age assurance and age-appropriate design. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-24',
-    day: 'oct14',
-    time: '15:00–15:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-25',
-    day: 'oct14',
-    time: '15:00–17:00',
-    track: 'Roundtable Room',
-    venue: 'Roundtable Room',
-    format: 'roundtable',
-    title: 'Policy Lab: Building Safer Online Social Discovery Ecosystems',
-    description:
-      'An extended policy lab on safety in online social discovery and dating products. Capacity is limited to 25 delegates.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-26',
-    day: 'oct14',
-    time: '15:15–15:30',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'keynote',
-    title: 'Keynote Address',
-    description: `An afternoon keynote on safety by design and inclusive digital societies in the age of AI. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-27',
-    day: 'oct14',
-    time: '15:30–16:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: "Leaders Dialogue on Technology and Women's Empowerment",
-    description: `A leaders dialogue on how technology can advance women's safety, participation, and economic power. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-28',
-    day: 'oct14',
-    time: '16:15–16:30',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-29',
-    day: 'oct14',
-    time: '16:30–17:00',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'keynote',
-    title: 'Closing Keynote',
-    description: `The closing keynote for the first conference day. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-30',
-    day: 'oct14',
-    time: '18:00–20:00',
-    track: 'Evening Reception',
-    venue: 'Evening Reception',
-    format: 'special',
-    title: 'Evening Reception',
-    description:
-      'Invite-only offsite evening reception for delegates and partners. Venue to be announced.',
-    speakers: [],
-  },
+  // Wednesday, 14 October: Main Hall.
+  makeSession(
+    8,
+    'oct14',
+    '09:00–10:00',
+    'Lobby',
+    'special',
+    'Registration and Tea/Coffee'
+  ),
+  makeSession(
+    9,
+    'oct14',
+    '10:00–10:15',
+    'Main Hall',
+    'opening',
+    'Welcome and Opening Remarks'
+  ),
+  makeSession(
+    10,
+    'oct14',
+    '10:15–10:30',
+    'Main Hall',
+    'keynote',
+    'Opening Sponsor Keynote: Safety in the AI Era'
+  ),
+  makeSession(
+    11,
+    'oct14',
+    '10:30–11:15',
+    'Main Hall',
+    'panel',
+    'Panel: Forces Reshaping Trust & Safety in 2026',
+    'Senior leaders from technology, government and industry discuss the forces likely to shape trust and safety in the year ahead.'
+  ),
+  makeSession(
+    12,
+    'oct14',
+    '11:15–11:30',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: What Happens When Critical Thinking Becomes a Daily Practice?'
+  ),
+  makeSession(
+    13,
+    'oct14',
+    '11:30–11:45',
+    'Main Hall',
+    'keynote',
+    'Keynote Address'
+  ),
+  makeSession(
+    16,
+    'oct14',
+    '11:45–12:15',
+    'Main Hall',
+    'fireside',
+    'Fireside Chat: The Fight Against CSAM: From Detection to Prevention Through Industry Collaboration',
+    'A discussion of industry collaboration against CSAM, from detection and reporting to prevention.'
+  ),
+  makeSession(
+    17,
+    'oct14',
+    '12:15–12:30',
+    'Main Hall',
+    'spotlight',
+    'Sponsor Spotlight: Microsoft x Cyberlite'
+  ),
+  makeSession(
+    18,
+    'oct14',
+    '12:30–13:15',
+    'Main Hall',
+    'panel',
+    'Panel: Growing Up Digital: Designing for Youth Wellbeing in the Age of AI',
+    'How digital experiences can support young people’s wellbeing as AI becomes part of how they learn and connect.'
+  ),
+  makeSession(
+    19,
+    'oct14',
+    '13:15–13:30',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: My Digital Wellbeing Journal Launch'
+  ),
+  makeSession(20, 'oct14', '13:30–14:15', 'Lobby', 'special', 'Lunch Break'),
+  makeSession(
+    23,
+    'oct14',
+    '14:15–15:00',
+    'Main Hall',
+    'panel',
+    'Panel: Age Assurance and Age-Appropriate Design: Building Better Experiences for Children',
+    'Building age-appropriate digital experiences that balance safety, privacy and participation.'
+  ),
+  makeSession(
+    24,
+    'oct14',
+    '15:00–15:15',
+    'Main Hall',
+    'spotlight',
+    'Sponsor Spotlight: Roblox / CSR'
+  ),
+  makeSession(
+    26,
+    'oct14',
+    '15:15–15:30',
+    'Main Hall',
+    'keynote',
+    'Special Address: Women, Power and Participation in the Digital Age'
+  ),
+  makeSession(
+    27,
+    'oct14',
+    '15:30–16:30',
+    'Main Hall',
+    'fireside',
+    'Leadership Dialogue: Women in Public Life: Building Safer Spaces for Stronger Democracy'
+  ),
+  makeSession(
+    29,
+    'oct14',
+    '16:30–17:00',
+    'Main Hall',
+    'keynote',
+    'Closing Keynote / Special Address'
+  ),
+  makeSession(
+    51,
+    'oct14',
+    '17:00–17:15',
+    'Main Hall',
+    'spotlight',
+    'Sponsor Spotlight: Driving Human Safety in the Digital World Through AI'
+  ),
+  // Wednesday, 14 October: parallel rooms. The latest draft resolves the
+  // earlier overlapping morning roundtable entries.
+  makeSession(
+    80,
+    'oct14',
+    '10:00–11:00',
+    'Roundtable Room',
+    'roundtable',
+    'Gender, Governance and India’s AI Future'
+  ),
+  makeSession(
+    52,
+    'oct14',
+    '10:30–11:30',
+    'Workshop Room',
+    'workshop',
+    'Workshop: Family Wellbeing'
+  ),
+  makeSession(
+    53,
+    'oct14',
+    '11:45–13:00',
+    'Workshop Room',
+    'workshop',
+    'Workshop: Building a Taxonomy of Contextualised AI Risks for the Global Majority'
+  ),
+  makeSession(
+    54,
+    'oct14',
+    '11:30–13:00',
+    'Roundtable Room',
+    'roundtable',
+    'Roundtable: Advancing Child Safety in Online Social Gaming'
+  ),
+  makeSession(
+    55,
+    'oct14',
+    '14:00–14:45',
+    'Workshop Room',
+    'workshop',
+    'Interactive Masterclass: A Fact-Checker’s Guide to AI and Deepfakes'
+  ),
+  makeSession(
+    56,
+    'oct14',
+    '14:00–15:00',
+    'Roundtable Room',
+    'roundtable',
+    'Raising Children in the AI Era: Balancing Privacy, Trust and Safety'
+  ),
+  makeSession(
+    57,
+    'oct14',
+    '14:45–15:30',
+    'Workshop Room',
+    'workshop',
+    'Partner Workshop'
+  ),
+  makeSession(
+    58,
+    'oct14',
+    '15:00–16:00',
+    'Roundtable Room',
+    'roundtable',
+    'Behind the Curtain: Fraud, Scams and the Fight for Trust and Safety in the AI Era'
+  ),
+  makeSession(
+    59,
+    'oct14',
+    '15:30–17:00',
+    'Workshop Room',
+    'workshop',
+    'Designing for Children: Critical Inquiry and Empathy'
+  ),
+  makeSession(
+    60,
+    'oct14',
+    '16:00–17:00',
+    'Roundtable Room',
+    'roundtable',
+    'Regulating for Safety: Are We Over-Regulating and Under-Governing the Internet?'
+  ),
+  makeSession(
+    25,
+    'oct14',
+    '17:00–19:00',
+    'Workshop Room',
+    'workshop',
+    'Policy Lab: Building Safer Online Social Discovery Ecosystems'
+  ),
 
-  // ---------------------------------------------------------------------
-  // DAY 2 - Thursday, 15 October 2026
-  // ---------------------------------------------------------------------
-  {
-    id: 'tasi26-31',
-    day: 'oct15',
-    time: '09:00–10:00',
-    track: 'Lobby',
-    venue: 'Lobby',
-    format: 'special',
-    title: 'Registration + Tea/Coffee',
-    description:
-      'Delegate registration and welcome refreshments before the second conference day.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-32',
-    day: 'oct15',
-    time: '10:00–10:05',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'opening',
-    title: 'Welcome Back',
-    description: 'Opening of the second conference day.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-33',
-    day: 'oct15',
-    time: '10:05–10:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'keynote',
-    title: 'Opening Keynote: Journalism, Democracy and Trust in the Age of AI',
-    description: `A keynote on the pressure AI places on journalism, democratic institutions, and public trust. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-34',
-    day: 'oct15',
-    time: '10:15–11:00',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: 'Panel: Journalism Safety',
-    description: `A panel on the physical and digital risks journalists face, and what platforms and regulators can do about them. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-35',
-    day: 'oct15',
-    time: '10:15–11:45',
-    track: 'Workshop Room',
-    venue: 'Workshop Room',
-    format: 'workshop',
-    title: 'Morning Workshop',
-    description:
-      'A partner-led workshop session. Capacity is limited to 60 delegates. Full details to be announced.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-36',
-    day: 'oct15',
-    time: '11:00–11:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Spotlight: Digital Safety for Seniors',
-    description: `A spotlight session on protecting older adults online. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-37',
-    day: 'oct15',
-    time: '11:15–12:15',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'fireside',
-    title: 'Fireside Chat: Building Trust in the Age of AI',
-    description: `A fireside conversation on regulating for trust and protecting people as AI systems scale. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-38',
-    day: 'oct15',
-    time: '11:45–13:00',
-    track: 'Workshop Room',
-    venue: 'Workshop Room',
-    format: 'panel',
-    title: 'Panel: Fraud and Scams',
-    description: `A panel on the scale of online fraud and what platforms, regulators, and civil society can do together. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-39',
-    day: 'oct15',
-    time: '12:15–12:35',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-40',
-    day: 'oct15',
-    time: '12:35–13:35',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: "Panel: Women's Safety",
-    description: `A panel on image-based abuse, online harassment, and the systems that protect women online. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-41',
-    day: 'oct15',
-    time: '13:35–14:35',
-    track: 'Lobby',
-    venue: 'Lobby',
-    format: 'special',
-    title: 'LUNCH BREAK',
-    description:
-      'Networking and transition window at the Lobby before the afternoon session block.',
-    speakers: [],
-  },
-  {
-    id: 'tasi26-42',
-    day: 'oct15',
-    time: '14:35–14:50',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-43',
-    day: 'oct15',
-    time: '14:50–15:50',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: 'Panel: AI Companions',
-    description: `A panel on companion AI products, emotional dependency, and the safety guardrails they need. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-44',
-    day: 'oct15',
-    time: '14:50–15:50',
-    track: 'Workshop Room',
-    venue: 'Workshop Room',
-    format: 'panel',
-    title: 'Panel: Content Creators',
-    description: `A panel on creator safety, advertising standards, and platform accountability. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-45',
-    day: 'oct15',
-    time: '15:50–16:10',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'spotlight',
-    title: 'Partner Spotlight',
-    description: `A short partner spotlight session. Topic and ${SPEAKERS_TBA.toLowerCase()}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-46',
-    day: 'oct15',
-    time: '16:10–16:50',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'panel',
-    title: 'Panel: Combatting Trafficking',
-    description: `A panel on technology, law enforcement, and NGO collaboration against human trafficking. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-47',
-    day: 'oct15',
-    time: '16:10–16:50',
-    track: 'Workshop Room',
-    venue: 'Workshop Room',
-    format: 'workshop',
-    title: 'Breakout: Wellbeing of Trust and Safety Workers',
-    description: `A breakout on moderator wellbeing, vicarious trauma, and duty of care in trust and safety operations. ${SPEAKERS_TBA}`,
-    speakers: [],
-  },
-  {
-    id: 'tasi26-48',
-    day: 'oct15',
-    time: '16:50–17:00',
-    track: 'Main Hall',
-    venue: 'Main Hall',
-    format: 'special',
-    title: 'Closing Remarks',
-    description: 'Closing reflections on the two-day TASI 2026 programme.',
-    speakers: [],
-  },
+  // Thursday, 15 October: Main Hall.
+  makeSession(
+    31,
+    'oct15',
+    '09:00–10:00',
+    'Lobby',
+    'special',
+    'Registration and Tea/Coffee'
+  ),
+  makeSession(
+    32,
+    'oct15',
+    '10:00–10:05',
+    'Main Hall',
+    'opening',
+    'Welcome Back'
+  ),
+  makeSession(
+    33,
+    'oct15',
+    '10:05–10:15',
+    'Main Hall',
+    'keynote',
+    'Opening Keynote: Journalism, Democracy and Trust in the Age of AI'
+  ),
+  makeSession(
+    34,
+    'oct15',
+    '10:15–11:00',
+    'Main Hall',
+    'panel',
+    'Panel: Trust, Safety & Equity: Journalism in a Changing Information Ecosystem',
+    'Protecting journalists, strengthening the integrity of the information ecosystem and rebuilding public trust in the age of AI.'
+  ),
+  makeSession(
+    61,
+    'oct15',
+    '11:00–11:15',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: Netflix'
+  ),
+  makeSession(
+    44,
+    'oct15',
+    '11:15–12:00',
+    'Main Hall',
+    'panel',
+    'Panel: Safety and Well-being of Content Creators',
+    'What it takes to help content creators thrive, including tools and platform investments that support their wellbeing.'
+  ),
+  makeSession(
+    62,
+    'oct15',
+    '12:00–12:30',
+    'Main Hall',
+    'fireside',
+    'Fireside Chat: Technology, Learning, and the Next Generation'
+  ),
+  makeSession(
+    63,
+    'oct15',
+    '12:30–12:45',
+    'Main Hall',
+    'spotlight',
+    'Partner Spotlight'
+  ),
+  makeSession(
+    40,
+    'oct15',
+    '12:45–13:30',
+    'Main Hall',
+    'panel',
+    'Panel: Beyond Online Harm: Rethinking Women’s Safety in a Changing Digital World',
+    'Designing digital spaces where women can participate fully, confidently and on their own terms.'
+  ),
+  makeSession(41, 'oct15', '13:30–14:20', 'Lobby', 'special', 'Lunch Break'),
+  makeSession(
+    64,
+    'oct15',
+    '14:20–14:50',
+    'Main Hall',
+    'fireside',
+    'Fireside Chat: Navigating Social Media Across Generations'
+  ),
+  makeSession(
+    46,
+    'oct15',
+    '14:50–15:35',
+    'Main Hall',
+    'panel',
+    'Panel: Combatting Trafficking: Building Stronger Partnerships to Prevent and Respond to Exploitation',
+    'How industry, civil society and government can strengthen prevention of and response to exploitation.'
+  ),
+  makeSession(
+    65,
+    'oct15',
+    '15:35–15:50',
+    'Main Hall',
+    'spotlight',
+    'Google Spotlight'
+  ),
+  makeSession(
+    66,
+    'oct15',
+    '15:50–16:10',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: TQH Report Launch'
+  ),
+  makeSession(
+    67,
+    'oct15',
+    '16:10–16:50',
+    'Main Hall',
+    'panel',
+    'Closing Plenary: Trust & Safety at a Crossroads',
+    'Reflections on the two-day convening and what it will take to move from reacting to harms to anticipating and preventing them.'
+  ),
+  makeSession(
+    48,
+    'oct15',
+    '16:50–17:00',
+    'Main Hall',
+    'special',
+    'Festival Closing'
+  ),
+  makeSession(
+    68,
+    'oct15',
+    '18:00–20:00',
+    'Netheland Embassy',
+    'special',
+    'Closing Reception',
+    'Closing reception for delegates and partners to reflect on the two-day programme and continue conversations across the trust and safety community.'
+  ),
+
+  // Thursday, 15 October: parallel rooms. The overlapping 11:45–13:00
+  // and 12:30–14:00 Workshop Room entries are held pending correction.
+  makeSession(
+    69,
+    'oct15',
+    '10:00–11:00',
+    'Workshop Room',
+    'panel',
+    'Panel: Growing Up and Parenting in the Digital Age'
+  ),
+  makeSession(
+    70,
+    'oct15',
+    '10:15–11:15',
+    'Roundtable Room',
+    'roundtable',
+    'Roundtable: Technology-Facilitated Gender-Based Violence'
+  ),
+  makeSession(
+    71,
+    'oct15',
+    '11:00–11:45',
+    'Workshop Room',
+    'workshop',
+    'Everest Group Session'
+  ),
+  makeSession(
+    72,
+    'oct15',
+    '11:45–12:45',
+    'Roundtable Room',
+    'roundtable',
+    'Growing Up With AI: Lessons from Young People and Educators'
+  ),
+  makeSession(
+    73,
+    'oct15',
+    '12:45–13:00',
+    'Roundtable Room',
+    'spotlight',
+    'Online Content Regulation and Censorship'
+  ),
+  makeSession(
+    74,
+    'oct15',
+    '14:00–15:00',
+    'Roundtable Room',
+    'roundtable',
+    'Beyond the Binary: Rethinking Age Assurance and Child Online Safety in India'
+  ),
+  makeSession(
+    75,
+    'oct15',
+    '14:30–15:15',
+    'Workshop Room',
+    'workshop',
+    'Building Better Technology for Children: A Global South Approach to Child-Centred Design'
+  ),
+  makeSession(
+    76,
+    'oct15',
+    '15:00–15:50',
+    'Roundtable Room',
+    'roundtable',
+    'Rethinking Image-Based Abuse in South Asia'
+  ),
+  makeSession(
+    77,
+    'oct15',
+    '15:15–16:00',
+    'Workshop Room',
+    'workshop',
+    'Open Source AI: Standards, Safeguards and Shared Responsibility'
+  ),
+  makeSession(
+    78,
+    'oct15',
+    '16:00–16:45',
+    'Roundtable Room',
+    'roundtable',
+    'Can South Asia Build a Shared Framework for Child Online Safety?'
+  ),
+  makeSession(
+    79,
+    'oct15',
+    '16:10–17:00',
+    'Workshop Room',
+    'workshop',
+    'Snap Workshop'
+  ),
 ];

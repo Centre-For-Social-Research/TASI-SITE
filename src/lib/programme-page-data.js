@@ -26,17 +26,17 @@ export const programmeDayDateMap2026 = {
 export const programmeReceptionNotes2026 = [
   {
     day: 'October 13',
-    venue: 'German High Commission, New Delhi',
+    venue: 'German Embassy, New Delhi',
     access: 'Invite only',
     description:
-      'Opening evening reception hosted with the Embassy of France, with safety spotlight conversations to launch TASI 2026.',
+      'Opening evening reception jointly hosted by the Embassy of France and the German Embassy, bringing delegates and partners together for welcome remarks and Safety Spotlights to launch TASI 2026.',
   },
   {
-    day: 'October 14',
-    venue: 'Offsite embassy reception, New Delhi',
+    day: 'October 15',
+    venue: 'Netheland Embassy, New Delhi',
     access: 'Invite only',
     description:
-      'Evening reception for delegates and partners after the first conference day. Venue to be announced.',
+      'Closing reception for delegates and partners to reflect on the two-day programme and continue conversations across the trust and safety community.',
   },
 ];
 
