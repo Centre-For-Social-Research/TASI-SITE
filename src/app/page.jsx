@@ -1,6 +1,8 @@
 import HomeNavbar from '@/components/home/navbar';
 import HomeHero from '@/components/home/hero';
+import HomeQuickLinks from '@/components/home/home-quick-links';
 import FestivalHighlightsSection from '@/components/home/festival-highlights-section';
+import SpeakerCountriesMap from '@/components/home/speaker-countries-map';
 import NewsUpdatesSection from '@/components/home/news-updates-section';
 import SpeakerHighlightSection from '@/components/home/speaker-highlight-section';
 import VideoTestimonialsSection from '@/components/home/video-testimonials-section';
@@ -21,7 +23,11 @@ export default function HomePage() {
       <HomeNavbar />
       <main>
         <HomeHero />
-        <FestivalHighlightsSection />
+        <div className="bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b]">
+          <HomeQuickLinks />
+          <SpeakerCountriesMap />
+          <FestivalHighlightsSection />
+        </div>
         <NewsUpdatesSection />
         <SpeakerHighlightSection />
         <VideoTestimonialsSection />
