@@ -6,27 +6,8 @@ const MUX_EMBED_URL =
 
 export default function FestivalHighlightsSection() {
   return (
-    <section className="relative bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] py-section-sm md:py-section-md lg:py-section-lg px-6 lg:px-16">
+    <section className="relative py-section-sm md:py-section-md lg:py-section-lg px-6 lg:px-16">
       <div className="mx-auto w-full max-w-[1300px]">
-        {/* Top Nav Pills */}
-        <div className="-mt-7 md:-mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-16 md:mb-20">
-          {[
-            { label: 'News', href: '/blog' },
-            { label: 'Testimonials', href: '#video-testimonials' },
-            { label: 'Speakers', href: '#speakers' },
-            { label: 'Sponsors', href: '/sponsor' },
-            { label: 'Exhibit', href: '/exhibition' },
-          ].map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="rounded-full border-[1.5px] border-white px-5 py-1.5 md:px-6 md:py-2 text-[13px] md:text-sm font-bold text-white transition-all hover:bg-white hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-
         {/* Content Two-Column Layout */}
         <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
           {/* Left Side: Text */}
