@@ -64,11 +64,11 @@ test('2026 speaker email link opens the 2026 speakers view', () => {
     'src/components/speakers/speakers-page-client.jsx'
   );
 
-  assert.match(speakersPage, /resolvedSearchParams\?\.year === '2026'/);
+  assert.match(speakersPage, /resolvedSearchParams\?\.year === '2025'/);
   assert.match(speakersPage, /<SpeakersPageClient initialYear=\{initialYear\}/);
   assert.match(
     speakersClient,
-    /function SpeakersPageClient\(\{ initialYear = '2025' \}\)/
+    /function SpeakersPageClient\(\{ initialYear = '2026' \}\)/
   );
   assert.match(speakersClient, /useState\(initialYear\)/);
 });

@@ -1,7 +1,7 @@
 const links = [
   { label: 'News', href: '/blog' },
   { label: 'Testimonials', href: '#video-testimonials' },
-  { label: 'Speakers', href: '#speakers' },
+  { label: 'Speakers', href: '/speakers?year=2026' },
   { label: 'Sponsors', href: '/sponsor' },
   { label: 'Exhibit', href: '/exhibition' },
 ];
