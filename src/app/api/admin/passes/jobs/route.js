@@ -40,8 +40,9 @@ export async function GET() {
 
   try {
     const jobs = await listPassIssueEmailJobs({
-      limit: 8,
+      limit: 20,
       createdAfter: AUTOMATIC_EMAIL_JOB_CUTOFF,
+      includeCompletedBefore: true,
     });
     return Response.json({
       success: true,

@@ -471,7 +471,11 @@ export async function refreshPassIssueEmailJob(jobId) {
   return data;
 }
 
-export async function listPassIssueEmailJobs({ limit = 8, createdAfter } = {}) {
+export async function listPassIssueEmailJobs({
+  limit = 8,
+  createdAfter,
+  includeCompletedBefore = false,
+} = {}) {
   const supabase = getSupabase();
   let query = supabase.from('pass_issue_email_jobs').select(
     `
@@ -481,7 +485,11 @@ export async function listPassIssueEmailJobs({ limit = 8, createdAfter } = {}) {
       )
     `
   );
-  if (createdAfter) query = query.gte('created_at', createdAfter);
+  if (createdAfter && includeCompletedBefore) {
+    query = query.or(`created_at.gte.${createdAfter},status.eq.completed`);
+  } else if (createdAfter) {
+    query = query.gte('created_at', createdAfter);
+  }
   const { data, error } = await query
     .order('created_at', { ascending: false })
     .order('created_at', {
