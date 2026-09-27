@@ -5,7 +5,7 @@ import {
   updateRegistrationStatus,
 } from '@/lib/registration-db';
 import {
-  processNextAvailableRegistrationEmailJob,
+  processRegistrationEmailJob,
   queueRegistrationEmailJob,
 } from '@/lib/registration-email-job-service';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
@@ -57,6 +57,7 @@ export async function POST(request) {
         queueResult = await queueRegistrationEmailJob({
           registrationId: updatedRegistration.id,
           templateType,
+          recipientEmail: updatedRegistration.email,
           operator: authResult.operator,
         });
       } catch (error) {
@@ -68,10 +69,11 @@ export async function POST(request) {
       }
     }
 
-    if (queueResult.queued)
+    if (queueResult.queued && queueResult.jobId)
       after(async () => {
         try {
-          await processNextAvailableRegistrationEmailJob({
+          await processRegistrationEmailJob({
+            jobId: queueResult.jobId,
             operator: {
               userId: 'system-after-trigger',
               primaryEmail: 'system-after-trigger@local',

@@ -198,9 +198,9 @@ const PAGE_TITLES = {
     meta: 'Desk check-in and email',
   },
   '/admin/email-jobs': {
-    kicker: 'EMAILS · REGISTRATION',
-    title: 'Registration Emails',
-    meta: 'Status updates and acknowledgements',
+    kicker: 'EMAILS · OUTGOING',
+    title: 'Outgoing Emails',
+    meta: 'Provider history and registration email jobs',
   },
   '/admin/delivery': {
     kicker: 'EMAILS · QR PASSES',
@@ -215,7 +215,7 @@ const PAGE_TITLES = {
   '/admin/audit': {
     kicker: 'SYSTEM · AUDIT',
     title: 'Audit Trail',
-    meta: 'Last 30 days',
+    meta: 'Operator and system actions',
   },
   '/admin/settings': { kicker: 'SYSTEM · CONFIG', title: 'Settings', meta: '' },
 };

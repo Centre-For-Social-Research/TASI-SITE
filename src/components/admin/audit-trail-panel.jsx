@@ -181,35 +181,43 @@ export default function AuditTrailPanel() {
   const [error, setError] = useState(null);
   const [actorFilter, setActorFilter] = useState('all');
   const [refreshing, setRefreshing] = useState(false);
+  const [cursorStack, setCursorStack] = useState([]);
+  const [nextCursor, setNextCursor] = useState(null);
   const abortRef = useRef(null);
 
-  const fetchAudit = useCallback(async (actor = 'all', silent = false) => {
-    if (abortRef.current) abortRef.current.abort();
-    abortRef.current = new AbortController();
-    if (!silent) setLoading(true);
-    else setRefreshing(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/audit?limit=100&actor=${actor}`, {
-        signal: abortRef.current.signal,
-        cache: 'no-store',
-      });
-      const json = await res.json();
-      if (!res.ok || !json.ok)
-        throw new Error(json.error || 'Failed to load audit log');
-      setEntries(json.data || []);
-    } catch (e) {
-      if (e.name !== 'AbortError') setError(e.message);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+  const fetchAudit = useCallback(
+    async (actor = 'all', pageCursor = '', silent = false) => {
+      if (abortRef.current) abortRef.current.abort();
+      abortRef.current = new AbortController();
+      if (!silent) setLoading(true);
+      else setRefreshing(true);
+      setError(null);
+      try {
+        const query = new URLSearchParams({ limit: '50', actor });
+        if (pageCursor) query.set('cursor', pageCursor);
+        const res = await fetch(`/api/admin/audit?${query}`, {
+          signal: abortRef.current.signal,
+          cache: 'no-store',
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok)
+          throw new Error(json.error || 'Failed to load audit log');
+        setEntries(json.data || []);
+        setNextCursor(json.nextCursor || null);
+      } catch (e) {
+        if (e.name !== 'AbortError') setError(e.message);
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount; state updates resolve after await
-    fetchAudit(actorFilter);
-  }, [fetchAudit, actorFilter]);
+    fetchAudit(actorFilter, cursorStack.at(-1) || '');
+  }, [fetchAudit, actorFilter, cursorStack]);
 
   function downloadLog() {
     const lines = entries
@@ -240,11 +248,11 @@ export default function AuditTrailPanel() {
         }}
       >
         {[
-          { label: 'TOTAL · 30D', value: entries.length, accent: true },
-          { label: 'OPERATOR', value: operatorCount },
-          { label: 'SYSTEM', value: systemCount },
+          { label: 'THIS PAGE', value: entries.length, accent: true },
+          { label: 'OPERATOR · PAGE', value: operatorCount },
+          { label: 'SYSTEM · PAGE', value: systemCount },
           {
-            label: 'EVENT KINDS',
+            label: 'EVENT KINDS · PAGE',
             value: new Set(entries.map((e) => e.kind)).size,
           },
         ].map((s, i) => (
@@ -306,7 +314,7 @@ export default function AuditTrailPanel() {
               className="adm-eyebrow"
               style={{ marginBottom: 4, color: 'var(--adm-accent)' }}
             >
-              AUDIT · 30D
+              AUDIT TRAIL
             </div>
             <div
               style={{ fontSize: 15, fontWeight: 600, color: 'var(--adm-ink)' }}
@@ -328,7 +336,10 @@ export default function AuditTrailPanel() {
               {ACTOR_FILTERS.map((f) => (
                 <button
                   key={f.key}
-                  onClick={() => setActorFilter(f.key)}
+                  onClick={() => {
+                    setActorFilter(f.key);
+                    setCursorStack([]);
+                  }}
                   style={{
                     padding: '6px 12px',
                     fontFamily: 'var(--adm-mono)',
@@ -358,7 +369,9 @@ export default function AuditTrailPanel() {
               size="sm"
               kind="soft"
               icon={<Ico.refresh style={{ color: 'var(--adm-ink-3)' }} />}
-              onClick={() => fetchAudit(actorFilter, true)}
+              onClick={() =>
+                fetchAudit(actorFilter, cursorStack.at(-1) || '', true)
+              }
               disabled={refreshing}
             >
               {refreshing ? 'Refreshing…' : 'Refresh'}
@@ -389,7 +402,11 @@ export default function AuditTrailPanel() {
             >
               {error}
             </div>
-            <Btn size="sm" kind="ghost" onClick={() => fetchAudit(actorFilter)}>
+            <Btn
+              size="sm"
+              kind="ghost"
+              onClick={() => fetchAudit(actorFilter, cursorStack.at(-1) || '')}
+            >
               Retry
             </Btn>
           </div>
@@ -509,6 +526,41 @@ export default function AuditTrailPanel() {
             </table>
           </div>
         )}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '12px 18px',
+            borderTop: '1px solid var(--adm-line)',
+          }}
+        >
+          <Btn
+            size="sm"
+            kind="soft"
+            disabled={!cursorStack.length}
+            onClick={() => setCursorStack(cursorStack.slice(0, -1))}
+          >
+            Newer
+          </Btn>
+          <span className="adm-mono" style={{ fontSize: 11 }}>
+            Page {cursorStack.length + 1} · {entries.length} entries
+          </span>
+          <Btn
+            size="sm"
+            kind="soft"
+            disabled={!nextCursor}
+            onClick={() => setCursorStack([...cursorStack, nextCursor])}
+          >
+            Older
+          </Btn>
+          <span
+            className="adm-mono"
+            style={{ fontSize: 10, color: 'var(--adm-ink-4)' }}
+          >
+            Download log exports this page.
+          </span>
+        </div>
       </div>
     </div>
   );

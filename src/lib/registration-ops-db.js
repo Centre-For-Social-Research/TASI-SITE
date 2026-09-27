@@ -471,18 +471,18 @@ export async function refreshPassIssueEmailJob(jobId) {
   return data;
 }
 
-export async function listPassIssueEmailJobs({ limit = 8 } = {}) {
+export async function listPassIssueEmailJobs({ limit = 8, createdAfter } = {}) {
   const supabase = getSupabase();
-  const { data, error } = await supabase
-    .from('pass_issue_email_jobs')
-    .select(
-      `
+  let query = supabase.from('pass_issue_email_jobs').select(
+    `
       *,
       recipient_preview:pass_issue_email_job_items (
         registration:event_registrations (first_name, last_name)
       )
     `
-    )
+  );
+  if (createdAfter) query = query.gte('created_at', createdAfter);
+  const { data, error } = await query
     .order('created_at', { ascending: false })
     .order('created_at', {
       ascending: true,
@@ -496,6 +496,23 @@ export async function listPassIssueEmailJobs({ limit = 8 } = {}) {
   }
 
   return data || [];
+}
+
+// Automatic workers only take jobs created after the pre-event backlog review.
+// Older jobs remain visible and can be inspected without being restarted.
+export const AUTOMATIC_EMAIL_JOB_CUTOFF = '2026-09-27T18:30:00.000Z';
+
+export async function getNextPassIssueEmailJob() {
+  const { data, error } = await getSupabase()
+    .from('pass_issue_email_jobs')
+    .select('*')
+    .in('status', ['queued', 'processing'])
+    .gte('created_at', AUTOMATIC_EMAIL_JOB_CUTOFF)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
 }
 
 export async function getPassIssueEmailJob(jobId) {
@@ -706,79 +723,28 @@ export async function insertRegistrationEmailJobItems({
 }
 
 export async function refreshRegistrationEmailJob(jobId) {
-  const supabase = getSupabase();
-  const { data: items, error } = await supabase
-    .from('registration_email_job_items')
-    .select('status')
-    .eq('job_id', jobId);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const counters = {
-    total_items: items.length,
-    queued_items: 0,
-    processing_items: 0,
-    sent_items: 0,
-    failed_items: 0,
-    retrying_items: 0,
-  };
-
-  for (const item of items) {
-    if (item.status === 'queued') counters.queued_items += 1;
-    if (item.status === 'processing') counters.processing_items += 1;
-    if (item.status === 'sent') counters.sent_items += 1;
-    if (item.status === 'failed') counters.failed_items += 1;
-    if (item.status === 'retrying') counters.retrying_items += 1;
-  }
-
-  let status = 'queued';
-  let completedAt = null;
-  if (counters.processing_items > 0 || counters.retrying_items > 0) {
-    status = 'processing';
-  } else if (counters.queued_items > 0) {
-    status = 'queued';
-  } else if (counters.failed_items > 0) {
-    status = 'failed';
-    completedAt = new Date().toISOString();
-  } else {
-    status = 'completed';
-    completedAt = new Date().toISOString();
-  }
-
-  const { data, error: updateError } = await supabase
-    .from('registration_email_jobs')
-    .update({
-      ...counters,
-      status,
-      completed_at: completedAt,
-      last_processed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', jobId)
-    .select('*')
+  const { data, error } = await getSupabase()
+    .rpc('refresh_registration_email_job', { p_job_id: jobId })
     .single();
-
-  if (updateError) {
-    throw new Error(updateError.message);
-  }
-
+  if (error) throw new Error(error.message);
   return data;
 }
 
-export async function listRegistrationEmailJobs({ limit = 20 } = {}) {
+export async function listRegistrationEmailJobs({
+  limit = 20,
+  createdAfter,
+} = {}) {
   const supabase = getSupabase();
-  const { data, error } = await supabase
-    .from('registration_email_jobs')
-    .select(
-      `
+  let query = supabase.from('registration_email_jobs').select(
+    `
       *,
       recipient_preview:registration_email_job_items (
         registration:event_registrations (first_name, last_name)
       )
     `
-    )
+  );
+  if (createdAfter) query = query.gte('created_at', createdAfter);
+  const { data, error } = await query
     .order('created_at', { ascending: false })
     .order('created_at', {
       ascending: true,
@@ -792,6 +758,16 @@ export async function listRegistrationEmailJobs({ limit = 20 } = {}) {
   }
 
   return data || [];
+}
+
+export async function getNextRegistrationEmailJob() {
+  const { data, error } = await getSupabase()
+    .rpc('get_next_registration_email_job', {
+      p_created_after: AUTOMATIC_EMAIL_JOB_CUTOFF,
+    })
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
 }
 
 export async function getRegistrationEmailJob(jobId) {
@@ -917,15 +893,6 @@ export async function retryFailedRegistrationEmailJobItems(jobId) {
   if (error) {
     throw new Error(error.message);
   }
-
-  await supabase
-    .from('registration_email_jobs')
-    .update({
-      status: 'queued',
-      completed_at: null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', jobId);
 
   return data || [];
 }

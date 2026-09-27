@@ -2,10 +2,11 @@ import { after } from 'next/server';
 import { requireAdminOperator } from '@/lib/registration-auth';
 import {
   StaleRegistrationUpdateError,
+  getRegistrationReviewSnapshots,
   updateRegistrationStatus,
 } from '@/lib/registration-db';
 import {
-  processNextAvailableRegistrationEmailJob,
+  processRegistrationEmailJob,
   queueRegistrationEmailBatchJob,
 } from '@/lib/registration-email-job-service';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
@@ -59,6 +60,23 @@ export async function POST(request) {
     const updatedRegistrations = [];
     const conflictIds = [];
 
+    const idCounts = new Map();
+    for (const update of updates) {
+      idCounts.set(
+        update.registrationId,
+        (idCounts.get(update.registrationId) || 0) + 1
+      );
+    }
+    const snapshots = await getRegistrationReviewSnapshots(
+      updates
+        .filter(
+          (update) =>
+            update.expectedUpdatedAt &&
+            idCounts.get(update.registrationId) === 1
+        )
+        .map((update) => update.registrationId)
+    );
+
     for (const update of updates) {
       try {
         updatedRegistrations.push(
@@ -70,6 +88,7 @@ export async function POST(request) {
             vipFlag,
             operator: authResult.operator,
             expectedUpdatedAt: update.expectedUpdatedAt,
+            existingRegistration: snapshots.get(update.registrationId),
           })
         );
       } catch (error) {
@@ -102,10 +121,15 @@ export async function POST(request) {
       }
     }
 
-    if (updatedRegistrations.length && queueResult.queued) {
+    if (
+      updatedRegistrations.length &&
+      queueResult.queued &&
+      queueResult.jobId
+    ) {
       after(async () => {
         try {
-          await processNextAvailableRegistrationEmailJob({
+          await processRegistrationEmailJob({
+            jobId: queueResult.jobId,
             operator: {
               userId: 'system-after-trigger',
               primaryEmail: 'system-after-trigger@local',

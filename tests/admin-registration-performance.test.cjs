@@ -7,6 +7,7 @@ const {
   createMemoryCache,
   applyRegistrationListCache,
   readRegistrationListCache,
+  applySavedRegistrationsToList,
   applyRegistrationDetailCache,
   readRegistrationDetailCache,
   invalidateRegistrationCaches,
@@ -49,6 +50,43 @@ test('admin registration memory cache honors ttl, force bypass callers, and inva
   });
 
   assert.equal(readRegistrationDetailCache(detailCache, 'r1'), null);
+});
+
+test('successful status saves update visible rows without exposing review notes or changing conflict rows', () => {
+  const state = {
+    registrations: [
+      {
+        id: 'saved',
+        status: 'pending',
+        updated_at: 'old',
+        has_review_note: false,
+      },
+      { id: 'conflict', status: 'pending', updated_at: 'unchanged' },
+    ],
+    count: 2,
+  };
+  const next = applySavedRegistrationsToList(state, [
+    {
+      id: 'saved',
+      status: 'confirmed',
+      updated_at: 'new',
+      reviewed_at: 'reviewed',
+      speaker_flag: true,
+      vip_flag: false,
+      exception_badge_required: true,
+      badge_color_label: 'Gold',
+      badge_color_hex: '#123456',
+      review_notes: 'Private note',
+    },
+  ]);
+
+  assert.equal(next.registrations[0].status, 'confirmed');
+  assert.equal(next.registrations[0].updated_at, 'new');
+  assert.equal(next.registrations[0].has_review_note, true);
+  assert.equal('review_notes' in next.registrations[0], false);
+  assert.strictEqual(next.registrations[1], state.registrations[1]);
+  assert.equal(next.count, 2);
+  assert.strictEqual(applySavedRegistrationsToList(state, []), state);
 });
 
 test('admin registration client keeps attendee cache in memory only', () => {
@@ -153,6 +191,12 @@ test('batch status route replaces client-side request storms and supports stale 
   assert.match(statusRoute, /status: 409/);
   assert.match(registrationDb, /expectedUpdatedAt/);
   assert.match(registrationDb, /StaleRegistrationUpdateError/);
+  assert.match(batchRoute, /getRegistrationReviewSnapshots/);
+  assert.match(batchRoute, /existingRegistration: snapshots\.get/);
+  assert.match(
+    registrationDb,
+    /existingRegistration \|\| \(await getRegistrationById/
+  );
 });
 
 test('registration schema adds safe summary function and search indexes', () => {

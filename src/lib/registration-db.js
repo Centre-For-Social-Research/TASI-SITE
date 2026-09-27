@@ -236,6 +236,18 @@ export async function getRegistrationById(id) {
   return normalizeRegistrationRecord(data);
 }
 
+export async function getRegistrationReviewSnapshots(ids) {
+  if (!ids.length) return new Map();
+  const { data, error } = await getSupabase()
+    .from('event_registrations')
+    .select(
+      'id,status,attendee_category,speaker_flag,vip_flag,review_notes,updated_at'
+    )
+    .in('id', ids);
+  if (error) throw new Error(error.message);
+  return new Map((data || []).map((row) => [row.id, row]));
+}
+
 export async function listRegistrations(filters = {}) {
   const supabase = getSupabase();
   let query = supabase
@@ -324,8 +336,10 @@ export async function updateRegistrationStatus({
   vipFlag,
   operator,
   expectedUpdatedAt,
+  existingRegistration,
 }) {
-  const existing = await getRegistrationById(registrationId);
+  const existing =
+    existingRegistration || (await getRegistrationById(registrationId));
   const reviewFields = resolveRegistrationReviewFields(existing, {
     reviewNotes,
     speakerFlag,

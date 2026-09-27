@@ -1,6 +1,7 @@
 'use client';
 
 import JobManagerPanel from '@/components/admin/job-manager-panel';
+import OutgoingEmailHistory from '@/components/admin/outgoing-email-history';
 import jobLabels from '@/lib/admin-job-labels.cjs';
 
 const { jobParticipantTitle } = jobLabels;
@@ -22,9 +23,9 @@ const EMAIL_JOBS_CONFIG = {
   },
   intro: {
     eyebrow: 'Email delivery',
-    title: 'Registration Emails',
+    title: 'Outgoing Emails',
     description:
-      'Track registration and status emails. Open a job to see who received it, why it failed, or retry a failed item.',
+      'View outgoing email history and inspect registration email jobs. Recent failed jobs can be retried after review.',
     chips: () => [],
   },
   alertTitle: 'Email Queue Error',
@@ -45,7 +46,7 @@ const EMAIL_JOBS_CONFIG = {
       key: 'sent',
       label: 'Sent',
       tone: 'success',
-      detail: 'Confirmation delivered to inbox',
+      detail: 'Accepted by email provider',
     },
     {
       key: 'failed',
@@ -85,5 +86,10 @@ const EMAIL_JOBS_CONFIG = {
 };
 
 export default function EmailJobsPanel({ operator }) {
-  return <JobManagerPanel operator={operator} config={EMAIL_JOBS_CONFIG} />;
+  return (
+    <div className="space-y-6">
+      <JobManagerPanel operator={operator} config={EMAIL_JOBS_CONFIG} />
+      <OutgoingEmailHistory />
+    </div>
+  );
 }
