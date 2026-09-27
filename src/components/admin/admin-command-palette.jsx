@@ -47,7 +47,7 @@ function buildCommands({ router, signOut }) {
     },
     {
       id: 'nav-email-jobs',
-      label: 'Go to Registration Emails',
+      label: 'Go to Outgoing Emails',
       group: 'Navigate',
       icon: Mail,
       run: go('/admin/email-jobs'),

@@ -16,8 +16,8 @@ import {
   createRegistrationEmailJobRecord,
   getRegistrationEmailJob,
   insertRegistrationEmailJobItems,
+  getNextRegistrationEmailJob,
   listRegistrationEmailJobItems,
-  listRegistrationEmailJobs,
   refreshRegistrationEmailJob,
   retryFailedRegistrationEmailJobItems,
   updateRegistrationEmailJobItem,
@@ -35,7 +35,7 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     createJobRecord = createRegistrationEmailJobRecord,
     insertJobItems = insertRegistrationEmailJobItems,
     refreshJob = refreshRegistrationEmailJob,
-    listJobs = listRegistrationEmailJobs,
+    getNextJob = getNextRegistrationEmailJob,
     getJob = getRegistrationEmailJob,
     claimJobItems = claimRegistrationEmailJobItems,
     updateJobItem = updateRegistrationEmailJobItem,
@@ -52,6 +52,7 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     registrationId,
     templateType,
     notificationId = null,
+    recipientEmail = null,
     operator = null,
   }) {
     if (!Object.hasOwn(REGISTRATION_EMAIL_COPY, templateType)) {
@@ -63,7 +64,8 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
         (await createRegistrationNotification({
           registrationId,
           templateType,
-          recipientEmail: (await getRegistration(registrationId)).email,
+          recipientEmail:
+            recipientEmail || (await getRegistration(registrationId)).email,
           actorClerkId: operator?.userId || null,
           actorEmail: operator?.primaryEmail || null,
         }));
@@ -233,10 +235,7 @@ export function createRegistrationEmailJobProcessor(deps = {}) {
     operator = createSystemOperator(),
     chunkSize,
   } = {}) {
-    const jobs = await listJobs({ limit: 20 });
-    const activeJob = jobs.find((job) =>
-      ['queued', 'processing'].includes(job.status)
-    );
+    const activeJob = await getNextJob();
 
     if (!activeJob) {
       return null;

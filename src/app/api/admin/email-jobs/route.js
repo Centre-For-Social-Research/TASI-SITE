@@ -1,6 +1,9 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
-import { listRegistrationEmailJobs } from '@/lib/registration-ops-db';
+import {
+  AUTOMATIC_EMAIL_JOB_CUTOFF,
+  listRegistrationEmailJobs,
+} from '@/lib/registration-ops-db';
 
 function serializeJob(job) {
   return {
@@ -28,7 +31,10 @@ export async function GET() {
   }
 
   try {
-    const jobs = await listRegistrationEmailJobs({ limit: 12 });
+    const jobs = await listRegistrationEmailJobs({
+      limit: 12,
+      createdAfter: AUTOMATIC_EMAIL_JOB_CUTOFF,
+    });
     return Response.json({
       success: true,
       jobs: jobs.map(serializeJob),

@@ -55,6 +55,7 @@ const {
   createMemoryCache,
   applyRegistrationListCache,
   readRegistrationListCache,
+  applySavedRegistrationsToList,
   applyRegistrationDetailCache,
   readRegistrationDetailCache,
   invalidateRegistrationCaches,
@@ -894,6 +895,24 @@ export default function RegistrationsAdminPanel({ operator }) {
       registrationIds,
     });
   };
+  const applySavedRegistrations = (registrations = []) => {
+    setState((current) =>
+      applySavedRegistrationsToList(current, registrations)
+    );
+    setDetailState((current) => {
+      const saved = registrations.find(
+        (registration) => registration?.id === current.data?.registration?.id
+      );
+      if (!saved) return current;
+      return {
+        ...current,
+        data: {
+          ...current.data,
+          registration: { ...current.data.registration, ...saved },
+        },
+      };
+    });
+  };
 
   const loadRegistrations = useCallback(
     async ({ background = false, force = false } = {}) => {
@@ -922,15 +941,21 @@ export default function RegistrationsAdminPanel({ operator }) {
         );
         const data = await response.json();
         if (requestId !== listRequestRef.current) return;
-        if (!response.ok)
-          return setState({
-            loading: false,
-            registrations: [],
-            summary: null,
-            pagination: null,
-            count: 0,
-            error: data.error || 'Unable to load registrations.',
-          });
+        if (!response.ok) {
+          const error = data.error || 'Unable to load registrations.';
+          return setState((current) =>
+            background
+              ? { ...current, loading: false, error }
+              : {
+                  loading: false,
+                  registrations: [],
+                  summary: null,
+                  pagination: null,
+                  count: 0,
+                  error,
+                }
+          );
+        }
         const nextState = {
           loading: false,
           registrations: data.registrations || [],
@@ -958,14 +983,18 @@ export default function RegistrationsAdminPanel({ operator }) {
           error?.name === 'AbortError'
         )
           return;
-        setState({
-          loading: false,
-          registrations: [],
-          summary: null,
-          pagination: null,
-          count: 0,
-          error: 'Network error.',
-        });
+        setState((current) =>
+          background
+            ? { ...current, loading: false, error: 'Network error.' }
+            : {
+                loading: false,
+                registrations: [],
+                summary: null,
+                pagination: null,
+                count: 0,
+                error: 'Network error.',
+              }
+        );
       }
     },
     [queryString]
@@ -1247,6 +1276,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           : 'success'
       );
       invalidateAdminCaches(selectedIds);
+      applySavedRegistrations(data.registrations || []);
       void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId) {
         void loadDetail(activeRegistrationId, { force: true });
@@ -1338,6 +1368,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           : 'warning'
       );
       invalidateAdminCaches([registration.id]);
+      applySavedRegistrations([statusResult.registration]);
       void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId === registration.id)
         void loadDetail(registration.id, { force: true });
@@ -1381,6 +1412,7 @@ export default function RegistrationsAdminPanel({ operator }) {
           : 'warning'
       );
       invalidateAdminCaches([registrationId]);
+      applySavedRegistrations([data.registration]);
       void loadRegistrations({ background: true, force: true });
       void loadDetail(registrationId, { force: true });
     } catch (error) {

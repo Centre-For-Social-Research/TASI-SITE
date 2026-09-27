@@ -53,6 +53,36 @@ function readRegistrationListCache(cache, key) {
   return cache.get(key);
 }
 
+function applySavedRegistrationsToList(state, savedRegistrations = []) {
+  const savedById = new Map(
+    savedRegistrations
+      .filter((registration) => registration?.id)
+      .map((registration) => [registration.id, registration])
+  );
+  if (!state?.registrations?.length || !savedById.size) return state;
+
+  let changed = false;
+  const registrations = state.registrations.map((registration) => {
+    const saved = savedById.get(registration.id);
+    if (!saved) return registration;
+    changed = true;
+    return {
+      ...registration,
+      status: saved.status,
+      updated_at: saved.updated_at,
+      reviewed_at: saved.reviewed_at,
+      speaker_flag: saved.speaker_flag,
+      vip_flag: saved.vip_flag,
+      exception_badge_required: saved.exception_badge_required,
+      badge_color_label: saved.badge_color_label,
+      badge_color_hex: saved.badge_color_hex,
+      has_review_note: Boolean(saved.review_notes?.trim()),
+    };
+  });
+
+  return changed ? { ...state, registrations } : state;
+}
+
 function applyRegistrationDetailCache(cache, registrationId, value) {
   cache.set(registrationId, value);
 }
@@ -81,6 +111,7 @@ module.exports = {
   createMemoryCache,
   applyRegistrationListCache,
   readRegistrationListCache,
+  applySavedRegistrationsToList,
   applyRegistrationDetailCache,
   readRegistrationDetailCache,
   invalidateRegistrationCaches,

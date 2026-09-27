@@ -8,7 +8,10 @@ import {
   createPassIssueEmailJob,
   processNextAvailablePassIssueEmailJob,
 } from '@/lib/pass-issue-job-service';
-import { listPassIssueEmailJobs } from '@/lib/registration-ops-db';
+import {
+  AUTOMATIC_EMAIL_JOB_CUTOFF,
+  listPassIssueEmailJobs,
+} from '@/lib/registration-ops-db';
 
 function serializeJob(job) {
   return {
@@ -36,7 +39,10 @@ export async function GET() {
   }
 
   try {
-    const jobs = await listPassIssueEmailJobs({ limit: 8 });
+    const jobs = await listPassIssueEmailJobs({
+      limit: 8,
+      createdAfter: AUTOMATIC_EMAIL_JOB_CUTOFF,
+    });
     return Response.json({
       success: true,
       jobs: jobs.map(serializeJob),

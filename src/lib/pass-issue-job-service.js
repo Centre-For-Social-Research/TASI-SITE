@@ -20,9 +20,9 @@ import {
   claimPassIssueEmailJobItems,
   createPassIssueEmailJobRecord,
   getPassIssueEmailJob,
+  getNextPassIssueEmailJob,
   insertPassIssueEmailJobItems,
   listPassIssueEmailJobItems,
-  listPassIssueEmailJobs,
   listRegistrationsForPassJob,
   refreshPassIssueEmailJob,
   retryFailedPassIssueEmailJobItems,
@@ -189,10 +189,7 @@ export async function processNextAvailablePassIssueEmailJob({
   operator,
   chunkSize,
 } = {}) {
-  const jobs = await listPassIssueEmailJobs({ limit: 20 });
-  const activeJob = jobs.find((job) =>
-    ['queued', 'processing'].includes(job.status)
-  );
+  const activeJob = await getNextPassIssueEmailJob();
 
   if (!activeJob) {
     return null;
