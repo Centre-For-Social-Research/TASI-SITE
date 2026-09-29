@@ -18,16 +18,10 @@ const SOCIAL_PROFILES = {
   instagram: 'https://www.instagram.com/csr_india/',
 };
 
-const TASI_LINKEDIN_PAGE = 'https://www.linkedin.com/company/tasifestival/';
-
-// Collaborative posts put the speaker's badge on the CSR/TASI feeds too.
-// Only Instagram has a true collaborator invite; LinkedIn and Facebook reach
-// the pages through tags.
-const COLLAB_TIPS = [
-  'Instagram: tap Tag people, then Invite collaborator, and add @csr_india. The post then appears on both profiles.',
-  'LinkedIn: type @ and pick Centre for Social Research India and TASI Festival so the post shows on our pages and we can reshare it.',
-  'X and Facebook: tag @CSR_India or Centre for Social Research and we will repost you.',
-];
+// One short line under the share icons. Only Instagram has a true
+// collaborator invite; elsewhere tagging lets CSR/TASI reshare the post.
+const COLLAB_NOTE =
+  'Posting on Instagram? Invite @csr_india as a collaborator. On LinkedIn, tag Centre for Social Research India and TASI Festival.';
 
 const EXTRA_HASHTAGS = ['#TrustAndSafety', '#OnlineSafety'];
 
@@ -80,10 +74,9 @@ function buildSpeakerShareLinks({ captions, badgePageUrl }) {
 }
 
 module.exports = {
-  COLLAB_TIPS,
+  COLLAB_NOTE,
   SOCIAL_PROFILES,
   SOCIAL_TAGS,
-  TASI_LINKEDIN_PAGE,
   buildSpeakerShareCaptions,
   buildSpeakerShareLinks,
 };

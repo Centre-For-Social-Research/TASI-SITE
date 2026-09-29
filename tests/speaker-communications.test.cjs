@@ -218,9 +218,10 @@ test('badge email is the fixed template with badge, share buttons and plan-ahead
     email.html,
     /src="https:\/\/trustandsafetyindia\.org\/img\/email\/tasi-2026-delhi-footer\.jpeg"/
   );
-  assert.match(email.html, /Make it a collaborative post/);
-  assert.match(email.html, /Invite collaborator, and add @csr_india/);
-  assert.match(email.html, /Help us build the buzz/);
+  assert.match(email.html, /Thank you for confirming as a speaker<\/h1>/);
+  assert.match(email.html, /Invite @csr_india as a collaborator/);
+  assert.match(email.html, /Help build the buzz around TASI 2026/);
+  assert.equal((email.html.match(/cid:social-/g) || []).length, 4);
   assert.match(email.html, /linkedin\.com\/showcase\/trust-safety\/posts/);
   assert.match(email.html, /x\.com\/CSR_India/);
   assert.match(email.html, /instagram\.com\/csr_india/);
@@ -228,8 +229,8 @@ test('badge email is the fixed template with badge, share buttons and plan-ahead
   assert.match(email.html, /linkedin\.com\/feed\/\?shareActive=true&amp;text=/);
   assert.match(email.html, /twitter\.com\/intent\/tweet\?text=/);
   assert.match(email.html, /facebook\.com\/sharer\/sharer\.php\?u=/);
-  assert.match(email.html, /Google Calendar/);
-  assert.match(email.html, /Outlook Calendar/);
+  assert.match(email.html, /calendar\.google\.com\/calendar\/render/);
+  assert.match(email.html, /outlook\.office\.com\/calendar/);
   assert.match(email.html, /Programme &amp; agenda/);
   assert.match(email.html, /Venue map/);
   assert.match(email.html, /mailto:tasi\.comms@csrindia\.org/);

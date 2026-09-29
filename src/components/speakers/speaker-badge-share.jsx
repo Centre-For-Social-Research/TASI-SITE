@@ -68,8 +68,7 @@ export default function SpeakerBadgeShare({
   captions,
   links,
   profiles,
-  collabTips,
-  tasiLinkedInPage,
+  collabNote,
   highlight,
 }) {
   const [platform, setPlatform] = useState(highlight || 'linkedin');
@@ -120,7 +119,7 @@ export default function SpeakerBadgeShare({
 
   return (
     <section className="mx-auto grid w-full max-w-5xl gap-8 px-4 py-10 md:grid-cols-[minmax(0,380px)_1fr] md:px-6 md:py-14">
-      <div className="grid content-start gap-4">
+      <div className="grid min-w-0 content-start gap-4">
         {/* eslint-disable-next-line @next/next/no-img-element -- private badge served by a token route */}
         <img
           src={imageUrl}
@@ -135,7 +134,7 @@ export default function SpeakerBadgeShare({
         </a>
       </div>
 
-      <div className="grid content-start gap-6">
+      <div className="grid min-w-0 content-start gap-6">
         <div>
           <h2 className="text-2xl font-bold text-stone-900 dark:text-white">
             Share your badge
@@ -173,6 +172,30 @@ export default function SpeakerBadgeShare({
           )}
         </div>
 
+        <div className="grid gap-2 text-sm leading-6 text-stone-500 dark:text-stone-400">
+          <p>{collabNote}</p>
+          <p>
+            Help build the buzz around {editionName} by reposting our latest
+            updates on{' '}
+            {PLATFORMS.map(({ key, label }, index) => (
+              <span key={key}>
+                <a
+                  href={profiles[key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-[#022d5d] underline underline-offset-2 dark:text-sky-300"
+                >
+                  {label}
+                </a>
+                {index < PLATFORMS.length - 2
+                  ? ', '
+                  : index === PLATFORMS.length - 2
+                    ? ' and '
+                    : '.'}
+              </span>
+            ))}
+          </p>
+        </div>
         <div className="rounded-[10px] border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-900">
           <div className="mb-3 flex flex-wrap gap-2">
             {PLATFORMS.map(({ key, label }) => (
@@ -190,7 +213,7 @@ export default function SpeakerBadgeShare({
               </button>
             ))}
           </div>
-          <p className="whitespace-pre-line text-sm leading-6 text-stone-800 dark:text-stone-100">
+          <p className="whitespace-pre-line text-sm leading-6 text-stone-800 [overflow-wrap:anywhere] dark:text-stone-100">
             {captions[platform]}
           </p>
           <button
@@ -215,49 +238,6 @@ export default function SpeakerBadgeShare({
           >
             {message}
           </p>
-        </div>
-
-        <div className="rounded-[10px] border border-stone-200 p-4 dark:border-stone-700">
-          <h3 className="font-semibold text-stone-900 dark:text-white">
-            Make it a collaborative post
-          </h3>
-          <ul className="mt-3 grid gap-2 text-sm leading-6 text-stone-700 dark:text-stone-300">
-            {collabTips.map((tip) => (
-              <li key={tip}>• {tip}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="rounded-[10px] border border-stone-200 p-4 dark:border-stone-700">
-          <h3 className="font-semibold text-stone-900 dark:text-white">
-            Help us build the buzz
-          </h3>
-          <p className="mt-2 text-sm leading-6 text-stone-600 dark:text-stone-300">
-            Follow us and repost our latest {editionName} updates so more people
-            hear about the festival.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-3">
-            {PLATFORMS.map(({ key, label }) => (
-              <a
-                key={key}
-                href={profiles[key]}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Follow on ${label}`}
-                className={iconButtonClass}
-              >
-                <PlatformIcon platformKey={key} label={label} />
-              </a>
-            ))}
-          </div>
-          <a
-            href={tasiLinkedInPage}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 inline-block text-sm font-semibold text-[#022d5d] underline dark:text-sky-300"
-          >
-            Follow TASI Festival on LinkedIn
-          </a>
         </div>
       </div>
     </section>

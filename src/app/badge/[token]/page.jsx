@@ -9,9 +9,8 @@ import speakerBadgeEmail from '@/lib/speaker-badge-email.cjs';
 
 const { getSpeakerEdition, isValidDownloadToken } = speakerCommunicationsUtils;
 const {
-  COLLAB_TIPS,
+  COLLAB_NOTE,
   SOCIAL_PROFILES,
-  TASI_LINKEDIN_PAGE,
   buildSpeakerShareCaptions,
   buildSpeakerShareLinks,
 } = speakerBadgeShare;
@@ -103,8 +102,7 @@ export default async function SpeakerBadgePage({ params, searchParams }) {
           captions={captions}
           links={buildSpeakerShareLinks({ captions, badgePageUrl: pageUrl })}
           profiles={SOCIAL_PROFILES}
-          collabTips={COLLAB_TIPS}
-          tasiLinkedInPage={TASI_LINKEDIN_PAGE}
+          collabNote={COLLAB_NOTE}
           highlight={query?.share === 'instagram' ? 'instagram' : null}
         />
       </main>
