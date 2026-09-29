@@ -250,11 +250,12 @@ test('share captions tag CSR and TASI on each platform', () => {
     badgePageUrl: pageUrl,
   });
   assert.match(captions.linkedin, /@Centre for Social Research India/);
-  assert.match(captions.linkedin, /@TASI Festival/);
+  assert.match(captions.linkedin, /and @TASI for having me/);
+  assert.doesNotMatch(captions.linkedin, /TASI Festival/);
   assert.match(captions.x, /@CSR_India/);
   assert.match(captions.instagram, /@csr_india/);
   assert.match(captions.facebook, /@Centre for Social Research/);
-  assert.match(captions.display, /@TASI Festival/);
+  assert.match(captions.display, /and @TASI for having me/);
   assert.doesNotMatch(captions.display, /https:/);
   for (const caption of Object.values(captions)) {
     assert.match(caption, /#TASI2026/);
@@ -427,4 +428,40 @@ test('badge email invites others to register and asks for badge checks in the fo
     'badge check is in the footer'
   );
   assert.match(email.text, /trustandsafetyindia\.org\/register/);
+});
+
+test('intro puts the profile line before the badge line, and the footer links our socials', () => {
+  const email = buildSpeakerBadgeEmail({
+    name: 'Dr. Ranjana Kumari',
+    edition: '2026',
+    siteUrl: 'https://trustandsafetyindia.org',
+    token: 'a'.repeat(43),
+  });
+  const order = [
+    'Thank you for confirming as a speaker',
+    'Your speaker profile is now live',
+    'Your speaker badge is below and attached',
+    'Please share your badge with your network',
+  ].map((text) => email.html.indexOf(text));
+  assert.ok(
+    order.every((index) => index > 0),
+    'every intro line is present'
+  );
+  assert.deepEqual(
+    [...order].sort((a, b) => a - b),
+    order
+  );
+
+  const footer = email.html.slice(email.html.indexOf('Team TASI'));
+  assert.match(footer, /Follow us:/);
+  for (const url of [
+    'https://www.linkedin.com/company/tasifestival/',
+    'https://x.com/CSR_India',
+    'https://www.facebook.com/csrindia.org',
+    'https://www.instagram.com/csr_india/',
+  ]) {
+    assert.ok(footer.includes(`href="${url}"`), url);
+  }
+  assert.equal((email.html.match(/cid:social-/g) || []).length, 4);
+  assert.doesNotMatch(email.html, /TASI Festival/);
 });

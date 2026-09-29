@@ -3,7 +3,7 @@ const { getSpeakerEdition } = require('./speaker-communications-utils.cjs');
 // Handles from the site footer. TASI has LinkedIn pages only; elsewhere it is
 // tagged through the edition hashtag.
 const SOCIAL_TAGS = {
-  linkedin: ['@Centre for Social Research India', '@TASI Festival'],
+  linkedin: ['@Centre for Social Research India', '@TASI'],
   x: ['@CSR_India'],
   facebook: ['@Centre for Social Research'],
   instagram: ['@csr_india'],
@@ -11,8 +11,7 @@ const SOCIAL_TAGS = {
 
 // Where speakers repost TASI updates, also from the site footer.
 const SOCIAL_PROFILES = {
-  linkedin:
-    'https://www.linkedin.com/showcase/trust-safety/posts/?feedView=all',
+  linkedin: 'https://www.linkedin.com/company/tasifestival/',
   x: 'https://x.com/CSR_India',
   facebook: 'https://www.facebook.com/csrindia.org',
   instagram: 'https://www.instagram.com/csr_india/',
@@ -21,7 +20,7 @@ const SOCIAL_PROFILES = {
 // One short line under the share icons. Only Instagram has a true
 // collaborator invite; elsewhere tagging lets CSR/TASI reshare the post.
 const COLLAB_NOTE =
-  'Posting on Instagram? Invite @csr_india as a collaborator. On LinkedIn, tag Centre for Social Research India and TASI Festival.';
+  'Posting on Instagram? Invite @csr_india as a collaborator. On LinkedIn, tag Centre for Social Research India and TASI.';
 
 const EXTRA_HASHTAGS = ['#TrustAndSafety', '#OnlineSafety'];
 

@@ -7,7 +7,7 @@ const PLATFORMS = [
   {
     key: 'linkedin',
     label: 'LinkedIn',
-    hint: 'LinkedIn opens with this caption ready. Type @ and pick Centre for Social Research India and TASI Festival to tag them, then add your badge image.',
+    hint: 'LinkedIn opens with this caption ready. Type @ and pick Centre for Social Research India and TASI to tag them, then add your badge image.',
   },
   {
     key: 'x',
