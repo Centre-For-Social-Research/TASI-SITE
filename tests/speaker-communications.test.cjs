@@ -218,9 +218,21 @@ test('badge email is the fixed template with badge, share buttons and plan-ahead
     email.html,
     /src="https:\/\/trustandsafetyindia\.org\/img\/email\/tasi-2026-delhi-footer\.jpeg"/
   );
-  assert.match(email.html, /Thank you for confirming as a speaker<\/h1>/);
+  assert.match(
+    email.html,
+    /Thank you for confirming as a speaker for TASI 2026/
+  );
   assert.match(email.html, /Invite @csr_india as a collaborator/);
-  assert.match(email.html, /Help build the buzz around TASI 2026/);
+  assert.match(
+    email.html,
+    /Help build the buzz by reposting our latest TASI 2026 updates/
+  );
+  // The collaboration note sits directly under the single icon row.
+  assert.ok(
+    email.html.indexOf('Invite @csr_india') >
+      email.html.lastIndexOf('cid:social-')
+  );
+  assert.doesNotMatch(email.html, /Make it a collaborative post/);
   assert.equal((email.html.match(/cid:social-/g) || []).length, 4);
   assert.match(email.html, /linkedin\.com\/showcase\/trust-safety\/posts/);
   assert.match(email.html, /x\.com\/CSR_India/);
