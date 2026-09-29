@@ -509,18 +509,15 @@ test('badge names spelled differently on the website still find their profile', 
   }
 });
 
-test('the eight speakers added from the profile form now have profiles', () => {
+test('the five speakers added from the profile form now have profiles', () => {
   const {
     findSpeakerProfilePath,
   } = require('../src/lib/speaker-badge-profile.cjs');
   const speakers = require('../src/data/speakers-2026.json');
   for (const name of [
     'Aishwarya Salvi',
-    'Ashwini Vaishnaw',
-    'Deepak Goel',
     'Dr. Manoj Shakya',
     'Dr. Rupa Munakarmi',
-    'Dr. Sanjeev Sharma',
     'Haribol Acharya',
     'Rohit Kumar',
   ]) {
@@ -548,4 +545,30 @@ test('Uma Subramanian is spelled correctly and the old profile URL redirects', (
   const config = readSource('next.config.mjs');
   assert.match(config, /source: '\/speakers\/2026\/uma-submanian'/);
   assert.match(config, /destination: '\/speakers\/2026\/uma-subramanian'/);
+});
+
+test('speakers without profile-use consent are not published', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  const speakers = require('../src/data/speakers-2026.json');
+  for (const name of [
+    'Ashwini Vaishnaw',
+    'Deepak Goel',
+    'Dr. Sanjeev Sharma',
+  ]) {
+    assert.ok(!speakers.some((entry) => entry.name === name), name);
+    assert.equal(findSpeakerProfilePath({ name, edition: '2026' }), null);
+    const email = buildSpeakerBadgeEmail({
+      name,
+      edition: '2026',
+      siteUrl: 'https://trustandsafetyindia.org',
+      token: 'a'.repeat(43),
+    });
+    assert.doesNotMatch(email.html, /View your profile/);
+  }
+  assert.match(
+    readSource('scripts/import-tasi-2026-speakers.mjs'),
+    /withheldProfiles\.has\(name\)/
+  );
 });
