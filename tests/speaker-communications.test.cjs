@@ -286,10 +286,7 @@ test('every embedded brand icon exists in public/img/email/social', () => {
   }
   const send = readSource('src/lib/speaker-badge-send.js');
   for (const { filename } of SOCIAL_ICON_FILES) {
-    assert.match(
-      send,
-      new RegExp(`'social', '${filename.replace('.', '\.')}'`)
-    );
+    assert.ok(send.includes(`'social', '${filename}'`), filename);
   }
 });
 
