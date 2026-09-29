@@ -168,6 +168,7 @@ const NAV_ICONS = {
   '/admin/registrations': Ico.users,
   '/admin/submissions': Ico.audit,
   '/admin/guest-invitations': Ico.mail,
+  '/admin/speaker-communications': Ico.mail,
   '/admin/spot-registrations': Ico.users,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
@@ -191,6 +192,11 @@ const PAGE_TITLES = {
     kicker: 'GUESTS · INVITATIONS',
     title: 'Guest Invitations',
     meta: 'Manual · No QR credential',
+  },
+  '/admin/speaker-communications': {
+    kicker: 'SPEAKERS · BADGES',
+    title: 'Speaker Communications',
+    meta: 'Fixed badge email · Per edition',
   },
   '/admin/spot-registrations': {
     kicker: 'DAY-OF · WALK-INS',
@@ -224,6 +230,7 @@ const ADM_NAV_ITEMS = [
   '/admin/registrations',
   '/admin/submissions',
   '/admin/guest-invitations',
+  '/admin/speaker-communications',
   '/admin/spot-registrations',
   '/admin/email-jobs',
   '/admin/delivery',

@@ -124,8 +124,9 @@ export async function sendApplicantConfirmationEmail({
   idempotencyKey,
 }) {
   const resend = getResendClient();
+  const recipients = (Array.isArray(to) ? to : [to]).filter(Boolean);
 
-  if (!resend || !to) {
+  if (!resend || !recipients.length) {
     return {
       sent: false,
       skipped: true,
@@ -136,7 +137,7 @@ export async function sendApplicantConfirmationEmail({
   const replyEmail = replyTo || getApplicationCommsEmail();
   const payload = {
     from: getResendFromEmail(),
-    to: [to],
+    to: recipients,
     subject,
     text,
     html: html || renderBrandedEmailHtml(text, { supportEmail: replyEmail }),
