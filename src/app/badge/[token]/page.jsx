@@ -8,7 +8,13 @@ import speakerBadgeShare from '@/lib/speaker-badge-share.cjs';
 import speakerBadgeEmail from '@/lib/speaker-badge-email.cjs';
 
 const { getSpeakerEdition, isValidDownloadToken } = speakerCommunicationsUtils;
-const { buildSpeakerShareCaptions, buildSpeakerShareLinks } = speakerBadgeShare;
+const {
+  COLLAB_TIPS,
+  SOCIAL_PROFILES,
+  TASI_LINKEDIN_PAGE,
+  buildSpeakerShareCaptions,
+  buildSpeakerShareLinks,
+} = speakerBadgeShare;
 const { buildSpeakerBadgeDownloadUrl, buildSpeakerBadgePageUrl } =
   speakerBadgeEmail;
 
@@ -91,10 +97,14 @@ export default async function SpeakerBadgePage({ params, searchParams }) {
         </BrandedPageHero>
         <SpeakerBadgeShare
           name={badge.speaker_name}
+          editionName={edition.name}
           imageUrl={`/badge/${token}/image`}
           downloadUrl={buildSpeakerBadgeDownloadUrl({ siteUrl, token })}
           captions={captions}
           links={buildSpeakerShareLinks({ captions, badgePageUrl: pageUrl })}
+          profiles={SOCIAL_PROFILES}
+          collabTips={COLLAB_TIPS}
+          tasiLinkedInPage={TASI_LINKEDIN_PAGE}
           highlight={query?.share === 'instagram' ? 'instagram' : null}
         />
       </main>

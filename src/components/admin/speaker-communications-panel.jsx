@@ -131,6 +131,7 @@ function emailPreviewHtml(html, badgeDataUrl) {
   const origin = window.location.origin;
   return html
     .replaceAll('cid:speaker-badge', badgeDataUrl || '')
+    .replace(/cid:social-([a-z]+)/g, `${origin}/img/email/social/$1.png`)
     .replaceAll('cid:tasi-logo', `${origin}/img/email/tasi-festival-logo.png`)
     .replaceAll(
       'cid:tasi-delhi-footer',

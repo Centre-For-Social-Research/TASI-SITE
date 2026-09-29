@@ -7,7 +7,8 @@ import {
   prepareSpeakerBadgeSendRequest,
 } from '@/lib/speaker-communications-db';
 import { downloadSpeakerBadgeImage } from '@/lib/speaker-badge-storage';
-import { getTasiEmailInlineAttachments } from '@/lib/qr-pass-email-assets';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import {
   getResendClient,
   getResendFromEmail,
@@ -18,6 +19,7 @@ import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
 
 const {
+  SOCIAL_ICON_FILES,
   SPEAKER_BADGE_CONTENT_ID,
   SPEAKER_COMMS_REPLY_TO,
   buildSpeakerBadgeEmail,
@@ -31,6 +33,36 @@ function getSiteUrl() {
     process.env.NEXT_PUBLIC_SITE_URL ||
     'https://trustandsafetyindia.org'
   );
+}
+
+let cachedEmailImages = null;
+
+// The logo and brand icons are embedded; the footer loads from the site, so
+// it is not attached.
+async function getSpeakerEmailImages() {
+  if (cachedEmailImages) return cachedEmailImages;
+  // Literal paths so the serverless bundle traces every file.
+  const directory = path.join(process.cwd(), 'public', 'img', 'email');
+  const [logo, ...icons] = await Promise.all([
+    fs.readFile(path.join(directory, 'tasi-festival-logo.png')),
+    fs.readFile(path.join(directory, 'social', 'linkedin.png')),
+    fs.readFile(path.join(directory, 'social', 'x.png')),
+    fs.readFile(path.join(directory, 'social', 'facebook.png')),
+    fs.readFile(path.join(directory, 'social', 'instagram.png')),
+  ]);
+  cachedEmailImages = [
+    {
+      filename: 'tasi-festival-logo.png',
+      content: logo,
+      contentId: 'tasi-logo',
+    },
+    ...SOCIAL_ICON_FILES.map(({ filename, contentId }, index) => ({
+      filename,
+      content: icons[index],
+      contentId,
+    })),
+  ];
+  return cachedEmailImages;
 }
 
 function speakerBadgeIdempotencyKey(attemptId) {
@@ -48,7 +80,7 @@ async function buildBadgeMessage({ speaker, badgePath, downloadToken, test }) {
     test,
   });
   const [inlineAttachments, badge] = await Promise.all([
-    getTasiEmailInlineAttachments(),
+    getSpeakerEmailImages(),
     downloadSpeakerBadgeImage(badgePath),
   ]);
   const extension = badgePath.endsWith('.jpg') ? 'jpg' : 'png';

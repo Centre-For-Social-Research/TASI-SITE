@@ -1,46 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Check,
-  Copy,
-  Download,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
-} from 'lucide-react';
+import { Check, Copy, Download } from 'lucide-react';
 
 const PLATFORMS = [
   {
     key: 'linkedin',
     label: 'LinkedIn',
-    icon: Linkedin,
-    color: '#0a66c2',
-    hint: 'LinkedIn opens with this caption ready. Type @ before Centre for Social Research India and TASI Festival to tag them, then add your badge image.',
+    hint: 'LinkedIn opens with this caption ready. Type @ and pick Centre for Social Research India and TASI Festival to tag them, then add your badge image.',
   },
   {
     key: 'x',
     label: 'X',
-    icon: Twitter,
-    color: '#000000',
     hint: 'X opens with this caption ready. Your badge shows as the link preview.',
   },
   {
     key: 'facebook',
     label: 'Facebook',
-    icon: Facebook,
-    color: '#1877f2',
     hint: 'Facebook does not allow pre-filled captions, so we copy it for you. Paste it into your post.',
   },
   {
     key: 'instagram',
     label: 'Instagram',
-    icon: Instagram,
-    color: '#c13584',
-    hint: 'Instagram has no share link. We copy the caption and open your phone’s share sheet with the badge. Pick Instagram, then paste the caption.',
+    hint: 'Instagram has no share link. We copy the caption and open your phone’s share sheet with the badge. Pick Instagram, paste the caption, and invite @csr_india as a collaborator.',
   },
 ];
+
+function iconSrc(key) {
+  return `/img/email/social/${key}.png`;
+}
 
 async function copyText(text) {
   try {
@@ -51,12 +39,37 @@ async function copyText(text) {
   }
 }
 
+function PlatformIcon({ platformKey, label }) {
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element -- tiny static brand icon shared with the email */}
+      <img
+        src={iconSrc(platformKey)}
+        alt=""
+        width={44}
+        height={44}
+        className="h-11 w-11"
+      />
+      <span className="text-xs font-medium text-stone-600 dark:text-stone-300">
+        {label}
+      </span>
+    </>
+  );
+}
+
+const iconButtonClass =
+  'flex flex-col items-center gap-1.5 rounded-[10px] p-2 transition hover:bg-stone-100 dark:hover:bg-stone-800';
+
 export default function SpeakerBadgeShare({
   name,
+  editionName,
   imageUrl,
   downloadUrl,
   captions,
   links,
+  profiles,
+  collabTips,
+  tasiLinkedInPage,
   highlight,
 }) {
   const [platform, setPlatform] = useState(highlight || 'linkedin');
@@ -68,8 +81,8 @@ export default function SpeakerBadgeShare({
     window.setTimeout(() => setMessage(''), 4000);
   }
 
-  async function copyCaption(key = platform) {
-    const copied = await copyText(captions[key]);
+  async function copyCaption() {
+    const copied = await copyText(captions[platform]);
     flash(copied ? 'Caption copied.' : 'Select the caption and copy it.');
   }
 
@@ -78,8 +91,9 @@ export default function SpeakerBadgeShare({
   function onPlatformClick(key) {
     setPlatform(key);
     copyText(captions[key]).then((copied) => {
-      if (copied && key !== 'x')
+      if (copied && key !== 'x') {
         flash('Caption copied. Paste it into your post.');
+      }
     });
   }
 
@@ -121,30 +135,27 @@ export default function SpeakerBadgeShare({
         </a>
       </div>
 
-      <div className="grid content-start gap-5">
+      <div className="grid content-start gap-6">
         <div>
           <h2 className="text-2xl font-bold text-stone-900 dark:text-white">
-            Share that you are speaking
+            Share your badge
           </h2>
           <p className="mt-2 text-stone-600 dark:text-stone-300">
             Tap a platform to post. The caption is copied for you.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {PLATFORMS.map(({ key, label, icon: Icon, color }) =>
+        <div className="flex flex-wrap gap-3">
+          {PLATFORMS.map(({ key, label }) =>
             key === 'instagram' ? (
               <button
                 key={key}
                 type="button"
                 onClick={shareToInstagram}
-                className="inline-flex items-center justify-center gap-2 rounded-[10px] px-3 py-3 text-sm font-semibold text-white"
-                style={{
-                  background: color,
-                  outline: platform === key ? `3px solid ${color}55` : 'none',
-                }}
+                aria-label={`Share on ${label}`}
+                className={iconButtonClass}
               >
-                <Icon className="h-4 w-4" /> {label}
+                <PlatformIcon platformKey={key} label={label} />
               </button>
             ) : (
               <a
@@ -153,13 +164,10 @@ export default function SpeakerBadgeShare({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => onPlatformClick(key)}
-                className="inline-flex items-center justify-center gap-2 rounded-[10px] px-3 py-3 text-sm font-semibold text-white"
-                style={{
-                  background: color,
-                  outline: platform === key ? `3px solid ${color}55` : 'none',
-                }}
+                aria-label={`Share on ${label}`}
+                className={iconButtonClass}
               >
-                <Icon className="h-4 w-4" /> {label}
+                <PlatformIcon platformKey={key} label={label} />
               </a>
             )
           )}
@@ -187,7 +195,7 @@ export default function SpeakerBadgeShare({
           </p>
           <button
             type="button"
-            onClick={() => copyCaption()}
+            onClick={copyCaption}
             className="mt-4 inline-flex items-center gap-2 rounded-[10px] border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-100"
           >
             {message ? (
@@ -200,15 +208,57 @@ export default function SpeakerBadgeShare({
           <p className="mt-3 text-xs leading-5 text-stone-500 dark:text-stone-400">
             {active?.hint}
           </p>
+          <p
+            role="status"
+            aria-live="polite"
+            className="mt-2 min-h-5 text-sm font-medium text-[#022d5d] dark:text-sky-300"
+          >
+            {message}
+          </p>
         </div>
 
-        <p
-          role="status"
-          aria-live="polite"
-          className="min-h-5 text-sm font-medium text-[#022d5d] dark:text-sky-300"
-        >
-          {message}
-        </p>
+        <div className="rounded-[10px] border border-stone-200 p-4 dark:border-stone-700">
+          <h3 className="font-semibold text-stone-900 dark:text-white">
+            Make it a collaborative post
+          </h3>
+          <ul className="mt-3 grid gap-2 text-sm leading-6 text-stone-700 dark:text-stone-300">
+            {collabTips.map((tip) => (
+              <li key={tip}>• {tip}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-[10px] border border-stone-200 p-4 dark:border-stone-700">
+          <h3 className="font-semibold text-stone-900 dark:text-white">
+            Help us build the buzz
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-stone-600 dark:text-stone-300">
+            Follow us and repost our latest {editionName} updates so more people
+            hear about the festival.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {PLATFORMS.map(({ key, label }) => (
+              <a
+                key={key}
+                href={profiles[key]}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Follow on ${label}`}
+                className={iconButtonClass}
+              >
+                <PlatformIcon platformKey={key} label={label} />
+              </a>
+            ))}
+          </div>
+          <a
+            href={tasiLinkedInPage}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-block text-sm font-semibold text-[#022d5d] underline dark:text-sky-300"
+          >
+            Follow TASI Festival on LinkedIn
+          </a>
+        </div>
       </div>
     </section>
   );

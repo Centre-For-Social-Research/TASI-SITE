@@ -17,6 +17,7 @@ const {
   summarizeSpeakerBadges,
 } = require('../src/lib/speaker-communications-utils.cjs');
 const {
+  SOCIAL_ICON_FILES,
   SPEAKER_COMMS_REPLY_TO,
   buildSpeakerBadgeDownloadUrl,
   buildSpeakerBadgeEmail,
@@ -205,9 +206,25 @@ test('badge email is the fixed template with badge, share buttons and plan-ahead
   assert.match(email.html, /Dear Yoel &lt;Roth&gt;,/);
   assert.match(email.html, /src="cid:speaker-badge"/);
   assert.match(email.html, /Download your badge<\/a>/);
-  for (const platform of ['LinkedIn', 'X', 'Facebook', 'Instagram']) {
-    assert.match(email.html, new RegExp(`>${platform}</a>`));
+  assert.match(
+    email.text,
+    /Thank you for confirming as a speaker for TASI 2026/
+  );
+  for (const platform of ['linkedin', 'x', 'facebook', 'instagram']) {
+    assert.match(email.html, new RegExp(`src="cid:social-${platform}"`));
   }
+  assert.doesNotMatch(email.html, /cid:tasi-delhi-footer/);
+  assert.match(
+    email.html,
+    /src="https:\/\/trustandsafetyindia\.org\/img\/email\/tasi-2026-delhi-footer\.jpeg"/
+  );
+  assert.match(email.html, /Make it a collaborative post/);
+  assert.match(email.html, /Invite collaborator, and add @csr_india/);
+  assert.match(email.html, /Help us build the buzz/);
+  assert.match(email.html, /linkedin\.com\/showcase\/trust-safety\/posts/);
+  assert.match(email.html, /x\.com\/CSR_India/);
+  assert.match(email.html, /instagram\.com\/csr_india/);
+  assert.match(email.html, /facebook\.com\/csrindia\.org/);
   assert.match(email.html, /linkedin\.com\/feed\/\?shareActive=true&amp;text=/);
   assert.match(email.html, /twitter\.com\/intent\/tweet\?text=/);
   assert.match(email.html, /facebook\.com\/sharer\/sharer\.php\?u=/);
@@ -235,6 +252,8 @@ test('share captions tag CSR and TASI on each platform', () => {
   assert.match(captions.x, /@CSR_India/);
   assert.match(captions.instagram, /@csr_india/);
   assert.match(captions.facebook, /@Centre for Social Research/);
+  assert.match(captions.display, /@TASI Festival/);
+  assert.doesNotMatch(captions.display, /https:/);
   for (const caption of Object.values(captions)) {
     assert.match(caption, /#TASI2026/);
   }
@@ -250,6 +269,25 @@ test('share captions tag CSR and TASI on each platform', () => {
   assert.equal(new URL(links.x).searchParams.get('text'), captions.x);
   assert.equal(new URL(links.facebook).searchParams.get('u'), pageUrl);
   assert.equal(links.instagram, `${pageUrl}?share=instagram`);
+});
+
+test('every embedded brand icon exists in public/img/email/social', () => {
+  for (const { filename, contentId } of SOCIAL_ICON_FILES) {
+    assert.ok(
+      fs.existsSync(
+        path.join(process.cwd(), 'public', 'img', 'email', 'social', filename)
+      ),
+      filename
+    );
+    assert.match(contentId, /^social-(linkedin|x|facebook|instagram)$/);
+  }
+  const send = readSource('src/lib/speaker-badge-send.js');
+  for (const { filename } of SOCIAL_ICON_FILES) {
+    assert.match(
+      send,
+      new RegExp(`'social', '${filename.replace('.', '\.')}'`)
+    );
+  }
 });
 
 test('test badge email is clearly marked', () => {
