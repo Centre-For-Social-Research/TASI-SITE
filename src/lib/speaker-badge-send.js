@@ -101,10 +101,6 @@ async function buildBadgeMessage({ speaker, badgePath, downloadToken, test }) {
         contentId: SPEAKER_BADGE_CONTENT_ID,
       },
       { filename, content: badge },
-      {
-        filename: `tasi-${speaker.edition}-calendar.ics`,
-        content: Buffer.from(email.calendarContent, 'utf8'),
-      },
     ],
   };
 }

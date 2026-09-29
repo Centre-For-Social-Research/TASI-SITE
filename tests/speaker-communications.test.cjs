@@ -223,35 +223,24 @@ test('badge email is the fixed template with badge, share buttons and plan-ahead
     /Thank you for confirming as a speaker for TASI 2026/
   );
   assert.match(email.html, /Invite @csr_india as a collaborator/);
-  assert.match(
-    email.html,
-    /Help build the buzz by reposting our latest TASI 2026 updates/
-  );
-  // The collaboration note sits directly under the single icon row.
+  // Only the collaboration note sits under the single icon row.
   assert.ok(
     email.html.indexOf('Invite @csr_india') >
       email.html.lastIndexOf('cid:social-')
   );
   assert.doesNotMatch(email.html, /Make it a collaborative post/);
+  assert.doesNotMatch(email.html, /Help build the buzz by reposting/);
+  assert.doesNotMatch(email.html, /open with the caption ready/);
   assert.equal((email.html.match(/cid:social-/g) || []).length, 4);
-  assert.match(email.html, /linkedin\.com\/showcase\/trust-safety\/posts/);
-  assert.match(email.html, /x\.com\/CSR_India/);
-  assert.match(email.html, /instagram\.com\/csr_india/);
-  assert.match(email.html, /facebook\.com\/csrindia\.org/);
   assert.match(email.html, /linkedin\.com\/feed\/\?shareActive=true&amp;text=/);
   assert.match(email.html, /twitter\.com\/intent\/tweet\?text=/);
   assert.match(email.html, /facebook\.com\/sharer\/sharer\.php\?u=/);
-  assert.match(email.html, /calendar\.google\.com\/calendar\/render/);
-  assert.match(email.html, /outlook\.office\.com\/calendar/);
+  assert.doesNotMatch(email.html, /Plan ahead|Add to calendar|\.ics/);
+  assert.equal('calendarContent' in email, false);
   assert.match(email.html, /Programme &amp; agenda/);
   assert.match(email.html, /Venue map/);
   assert.match(email.html, /mailto:tasi\.comms@csrindia\.org/);
   assert.doesNotMatch(email.html, /Test email/);
-  assert.match(email.calendarContent, /DTSTART;VALUE=DATE:20261014/);
-  assert.match(
-    email.calendarContent,
-    /LOCATION:India International Centre\\, New Delhi/
-  );
 });
 
 test('share captions tag CSR and TASI on each platform', () => {
