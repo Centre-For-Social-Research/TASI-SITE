@@ -369,3 +369,62 @@ test('public badge image validates the token before touching storage', () => {
   assert.match(page, /robots: \{ index: false, follow: false \}/);
   assert.match(page, /\/badge\/\$\{token\}\/image/);
 });
+
+test('profile link appears only for speakers in the public directory', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  assert.equal(
+    findSpeakerProfilePath({ name: 'Dr. Ranjana Kumari', edition: '2026' }),
+    '/speakers/2026/dr-ranjana-kumari'
+  );
+  assert.equal(
+    findSpeakerProfilePath({ name: 'Not A Listed Speaker', edition: '2026' }),
+    null
+  );
+  assert.equal(
+    findSpeakerProfilePath({ name: 'Dr. Ranjana Kumari', edition: '1999' }),
+    null
+  );
+
+  const base = {
+    edition: '2026',
+    siteUrl: 'https://trustandsafetyindia.org',
+    token: 'a'.repeat(43),
+  };
+  const listed = buildSpeakerBadgeEmail({
+    ...base,
+    name: 'Dr. Ranjana Kumari',
+  });
+  assert.match(
+    listed.html,
+    /href="https:\/\/trustandsafetyindia\.org\/speakers\/2026\/dr-ranjana-kumari"[^>]*>View your profile<\/a>/
+  );
+  assert.match(listed.text, /Your speaker profile is now live/);
+
+  const unlisted = buildSpeakerBadgeEmail({
+    ...base,
+    name: 'Not A Listed Speaker',
+  });
+  assert.doesNotMatch(unlisted.html, /View your profile/);
+  assert.doesNotMatch(unlisted.text, /Your speaker profile/);
+});
+
+test('badge email invites others to register and asks for badge checks in the footer', () => {
+  const email = buildSpeakerBadgeEmail({
+    name: 'Yoel Roth',
+    edition: '2026',
+    siteUrl: 'https://trustandsafetyindia.org',
+    token: 'a'.repeat(43),
+  });
+  assert.match(
+    email.html,
+    /Invite them to register for TASI 2026 at <a href="https:\/\/trustandsafetyindia\.org\/register"/
+  );
+  const check = email.html.indexOf('Please check that your name, designation');
+  assert.ok(
+    check > email.html.indexOf('Team TASI'),
+    'badge check is in the footer'
+  );
+  assert.match(email.text, /trustandsafetyindia\.org\/register/);
+});
