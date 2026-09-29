@@ -494,3 +494,17 @@ test('each email tab has its own sidebar icon', () => {
   assert.match(shell, /'\/admin\/speaker-communications': Ico\.badge/);
   assert.match(shell, /'\/admin\/email-jobs': Ico\.mail/);
 });
+
+test('badge names spelled differently on the website still find their profile', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  for (const name of [
+    'Caroline Makumbe',
+    'Madeline Coelho',
+    'Siddharth Pillai',
+    'Uma Subramanian',
+  ]) {
+    assert.ok(findSpeakerProfilePath({ name, edition: '2026' }), name);
+  }
+});
