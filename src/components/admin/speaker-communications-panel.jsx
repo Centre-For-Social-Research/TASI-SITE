@@ -192,6 +192,7 @@ export default function SpeakerCommunicationsPanel({
   const [upload, setUpload] = useState(null);
   const [bulk, setBulk] = useState(null);
   const [testSent, setTestSent] = useState(false);
+  const [testTo, setTestTo] = useState(operatorEmail || '');
   const [selected, setSelected] = useState(null);
   const [detail, setDetail] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -417,7 +418,11 @@ export default function SpeakerCommunicationsPanel({
     try {
       const response = await fetch(
         `/api/admin/speaker-communications/${speaker.id}/test`,
-        { method: 'POST' }
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ to: testTo.trim() }),
+        }
       );
       const json = await readJson(response, 'Unable to send test email.');
       setTestSent(true);
@@ -612,7 +617,7 @@ export default function SpeakerCommunicationsPanel({
                 title={
                   testSent
                     ? undefined
-                    : 'Send yourself a test from any speaker first.'
+                    : 'Send a test from any speaker’s details first.'
                 }
                 style={{
                   ...buttonStyle(true),
@@ -636,12 +641,6 @@ export default function SpeakerCommunicationsPanel({
           tone="info"
           title="Read-only access"
           description="Reviewer accounts can view speakers and badges, but only an admin can upload, edit or send."
-        />
-      ) : !testSent && readyIds.length ? (
-        <AdminAlert
-          tone="info"
-          title="Send yourself a test first"
-          description={`Open any speaker and choose “Send test to me”. The test goes to ${operatorEmail || 'your email'} and unlocks “Send to all ready”.`}
         />
       ) : null}
 
@@ -1143,17 +1142,6 @@ export default function SpeakerCommunicationsPanel({
                 <Eye size={14} />{' '}
                 {busy === 'preview' ? 'Loading…' : 'Preview email'}
               </button>
-              {canManage && current.hasBadge ? (
-                <button
-                  type="button"
-                  disabled={Boolean(busy)}
-                  onClick={() => sendTest(current)}
-                  style={buttonStyle()}
-                >
-                  <FlaskConical size={14} />{' '}
-                  {busy === 'test' ? 'Sending…' : 'Send test to me'}
-                </button>
-              ) : null}
               {canManage &&
               (canSendState(current.state) || current.state === 'sent') ? (
                 <button
@@ -1174,10 +1162,51 @@ export default function SpeakerCommunicationsPanel({
               ) : null}
             </div>
             {canManage && current.hasBadge ? (
-              <p style={{ margin: 0, color: 'var(--adm-ink-3)', fontSize: 12 }}>
-                The test goes only to {operatorEmail || 'you'} and does not
-                count as sent.
-              </p>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  sendTest(current);
+                }}
+                style={{ display: 'grid', gap: 8 }}
+              >
+                <label
+                  htmlFor="speaker-test-email"
+                  style={{
+                    color: 'var(--adm-ink-2)',
+                    fontFamily: 'var(--adm-mono)',
+                    fontSize: 10,
+                    letterSpacing: '.08em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Send a test to
+                </label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    id="speaker-test-email"
+                    type="email"
+                    required
+                    value={testTo}
+                    onChange={(event) => setTestTo(event.target.value)}
+                    placeholder="name@example.org"
+                    style={{ ...inputStyle(), flex: 1 }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={Boolean(busy)}
+                    style={buttonStyle()}
+                  >
+                    <FlaskConical size={14} />{' '}
+                    {busy === 'test' ? 'Sending…' : 'Send test'}
+                  </button>
+                </div>
+                <p
+                  style={{ margin: 0, color: 'var(--adm-ink-3)', fontSize: 12 }}
+                >
+                  The test uses this speaker’s badge, is marked [TEST], and does
+                  not count as sent. One test unlocks “Send to all ready”.
+                </p>
+              </form>
             ) : null}
 
             {current.status === 'sending' ? (

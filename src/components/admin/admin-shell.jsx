@@ -62,6 +62,40 @@ const Ico = {
       <path d="M3 7l9 6 9-6" />
     </svg>
   ),
+  badge: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <rect x="5" y="6" width="14" height="15" rx="2" />
+      <path d="M10 3h4v4h-4z" />
+      <circle cx="12" cy="12" r="2.2" />
+      <path d="M8.5 17.5c.7-1.4 2-2.2 3.5-2.2s2.8.8 3.5 2.2" />
+    </svg>
+  ),
+  ticket: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z" />
+      <path d="M14 6v12" strokeDasharray="2 2" />
+    </svg>
+  ),
   truck: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -167,8 +201,8 @@ const Ico = {
 const NAV_ICONS = {
   '/admin/registrations': Ico.users,
   '/admin/submissions': Ico.audit,
-  '/admin/guest-invitations': Ico.mail,
-  '/admin/speaker-communications': Ico.mail,
+  '/admin/guest-invitations': Ico.ticket,
+  '/admin/speaker-communications': Ico.badge,
   '/admin/spot-registrations': Ico.users,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,

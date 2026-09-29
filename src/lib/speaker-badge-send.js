@@ -24,7 +24,8 @@ const {
   SPEAKER_COMMS_REPLY_TO,
   buildSpeakerBadgeEmail,
 } = speakerBadgeEmail;
-const { speakerBadgeDownloadFilename } = speakerCommunicationsUtils;
+const { parseSpeakerEmails, speakerBadgeDownloadFilename } =
+  speakerCommunicationsUtils;
 const { canRetryGuestSend, hashGuestEmailRequest } = guestSendAttempt;
 
 function getSiteUrl() {
@@ -122,12 +123,16 @@ export async function previewSpeakerBadgeEmail(id) {
   };
 }
 
-// A test goes only to the signed-in operator and is never recorded as a
-// send, so it cannot mark a speaker as done.
-export async function sendSpeakerBadgeTest({ id, operator }) {
+// A test goes to one address the admin chooses (their own by default), is
+// marked [TEST], and is never recorded as a send, so it cannot mark a
+// speaker as done.
+export async function sendSpeakerBadgeTest({ id, operator, to }) {
   if (!getResendClient()) throw new Error('Resend is not configured.');
-  const recipient = operator?.primaryEmail;
-  if (!recipient) throw new Error('Your account has no email address.');
+  const [recipient, ...extra] = parseSpeakerEmails(
+    String(to || '').trim() || operator?.primaryEmail || ''
+  );
+  if (!recipient) throw new Error('An email address is required for the test.');
+  if (extra.length) throw new Error('Send a test to at most one address.');
 
   const { speaker, badgePath, downloadToken } =
     await getSpeakerBadgeForSend(id);

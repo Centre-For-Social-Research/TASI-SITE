@@ -462,3 +462,113 @@ test('intro puts the profile line before the badge line, and the footer links ou
   assert.equal((email.html.match(/cid:social-/g) || []).length, 4);
   assert.doesNotMatch(email.html, /TASI Festival/);
 });
+
+test('test sends go to one chosen address, defaulting to the admin', () => {
+  const send = readSource('src/lib/speaker-badge-send.js');
+  assert.match(
+    send,
+    /parseSpeakerEmails\(\s*String\(to \|\| ''\)\.trim\(\) \|\| operator\?\.primaryEmail/
+  );
+  assert.match(send, /Send a test to at most one address/);
+  const route = readSource(
+    'src/app/api/admin/speaker-communications/[id]/test/route.js'
+  );
+  assert.match(route, /requireAdminOperator/);
+  assert.match(route, /to: typeof body\?\.to === 'string'/);
+  assert.equal(speakerErrorStatus('Send a test to at most one address.'), 400);
+  assert.equal(
+    speakerErrorStatus('An email address is required for the test.'),
+    400
+  );
+
+  const panel = readSource(
+    'src/components/admin/speaker-communications-panel.jsx'
+  );
+  assert.doesNotMatch(panel, /Send yourself a test first/);
+  assert.match(panel, /Send a test to/);
+});
+
+test('each email tab has its own sidebar icon', () => {
+  const shell = readSource('src/components/admin/admin-shell.jsx');
+  assert.match(shell, /'\/admin\/guest-invitations': Ico\.ticket/);
+  assert.match(shell, /'\/admin\/speaker-communications': Ico\.badge/);
+  assert.match(shell, /'\/admin\/email-jobs': Ico\.mail/);
+});
+
+test('badge names spelled differently on the website still find their profile', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  for (const name of [
+    'Caroline Makumbe',
+    'Madeline Coelho',
+    'Siddharth Pillai',
+    'Uma Subramanian',
+  ]) {
+    assert.ok(findSpeakerProfilePath({ name, edition: '2026' }), name);
+  }
+});
+
+test('the five speakers added from the profile form now have profiles', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  const speakers = require('../src/data/speakers-2026.json');
+  for (const name of [
+    'Aishwarya Salvi',
+    'Dr. Manoj Shakya',
+    'Dr. Rupa Munakarmi',
+    'Haribol Acharya',
+    'Rohit Kumar',
+  ]) {
+    const profile = findSpeakerProfilePath({ name, edition: '2026' });
+    assert.ok(profile, name);
+    const speaker = speakers.find(
+      (entry) =>
+        `/speakers/2026/${entry.name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')}` === profile
+    );
+    assert.ok(speaker?.bio, `${name} has a bio`);
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), 'public', speaker.photo)),
+      `${name} photo exists`
+    );
+  }
+});
+
+test('Uma Subramanian is spelled correctly and the old profile URL redirects', () => {
+  const speakers = require('../src/data/speakers-2026.json');
+  assert.ok(speakers.some((entry) => entry.name === 'Uma Subramanian'));
+  assert.ok(!speakers.some((entry) => /Submanian/.test(entry.name)));
+  const config = readSource('next.config.mjs');
+  assert.match(config, /source: '\/speakers\/2026\/uma-submanian'/);
+  assert.match(config, /destination: '\/speakers\/2026\/uma-subramanian'/);
+});
+
+test('speakers without profile-use consent are not published', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  const speakers = require('../src/data/speakers-2026.json');
+  for (const name of [
+    'Ashwini Vaishnaw',
+    'Deepak Goel',
+    'Dr. Sanjeev Sharma',
+  ]) {
+    assert.ok(!speakers.some((entry) => entry.name === name), name);
+    assert.equal(findSpeakerProfilePath({ name, edition: '2026' }), null);
+    const email = buildSpeakerBadgeEmail({
+      name,
+      edition: '2026',
+      siteUrl: 'https://trustandsafetyindia.org',
+      token: 'a'.repeat(43),
+    });
+    assert.doesNotMatch(email.html, /View your profile/);
+  }
+  assert.match(
+    readSource('scripts/import-tasi-2026-speakers.mjs'),
+    /withheldProfiles\.has\(name\)/
+  );
+});

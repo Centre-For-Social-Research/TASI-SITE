@@ -167,6 +167,12 @@ const nextConfig = {
         destination: 'https://trustandsafetyindia.org/:path*',
         permanent: true,
       },
+      // The profile was first published with a misspelled name.
+      {
+        source: '/speakers/2026/uma-submanian',
+        destination: '/speakers/2026/uma-subramanian',
+        permanent: true,
+      },
     ];
   },
   async headers() {
