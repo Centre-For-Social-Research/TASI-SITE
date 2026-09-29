@@ -191,7 +191,7 @@ export default function SpeakerCommunicationsPanel({
   const [filter, setFilter] = useState('all');
   const [upload, setUpload] = useState(null);
   const [bulk, setBulk] = useState(null);
-  const [testSent, setTestSent] = useState(false);
+  const [testResult, setTestResult] = useState(null);
   const [testTo, setTestTo] = useState(operatorEmail || '');
   const [selected, setSelected] = useState(null);
   const [detail, setDetail] = useState(null);
@@ -229,6 +229,12 @@ export default function SpeakerCommunicationsPanel({
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-change updates after an awaited request
     load();
   }, [load]);
+
+  useEffect(() => {
+    if (!toast?.message) return undefined;
+    const timer = window.setTimeout(() => setToast(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
 
   const working = Boolean(upload?.running || bulk?.running);
   useEffect(() => {
@@ -425,13 +431,21 @@ export default function SpeakerCommunicationsPanel({
         }
       );
       const json = await readJson(response, 'Unable to send test email.');
-      setTestSent(true);
-      setToast({
-        tone: 'success',
-        message: `Test email with ${speaker.name}'s badge sent to ${json.recipient}.`,
+      const sentAt = new Intl.DateTimeFormat('en-IN', {
+        timeStyle: 'short',
+        timeZone: 'Asia/Kolkata',
+      }).format(new Date());
+      setTestResult({
+        speakerId: speaker.id,
+        ok: true,
+        message: `Test sent to ${json.recipient} at ${sentAt}. Check that inbox (and spam) in a minute.`,
       });
     } catch (testError) {
-      setToast({ tone: 'danger', message: testError.message });
+      setTestResult({
+        speakerId: speaker.id,
+        ok: false,
+        message: testError.message,
+      });
     } finally {
       setBusy('');
     }
@@ -613,19 +627,14 @@ export default function SpeakerCommunicationsPanel({
               </button>
               <button
                 type="button"
-                disabled={working || !readyIds.length || !testSent}
-                title={
-                  testSent
-                    ? undefined
-                    : 'Send a test from any speaker’s details first.'
-                }
+                disabled={working || !readyIds.length}
                 style={{
                   ...buttonStyle(true),
                   fontFamily: 'var(--adm-sans)',
                   fontSize: 14,
                   fontWeight: 600,
                   letterSpacing: 0,
-                  opacity: working || !readyIds.length || !testSent ? 0.55 : 1,
+                  opacity: working || !readyIds.length ? 0.55 : 1,
                 }}
                 onClick={sendAllReady}
               >
@@ -1200,11 +1209,30 @@ export default function SpeakerCommunicationsPanel({
                     {busy === 'test' ? 'Sending…' : 'Send test'}
                   </button>
                 </div>
+                {testResult?.speakerId === current.id ? (
+                  <p
+                    role="status"
+                    style={{
+                      margin: 0,
+                      padding: '9px 12px',
+                      borderRadius: 10,
+                      fontSize: 13,
+                      lineHeight: 1.5,
+                      color: testResult.ok ? 'var(--adm-ok)' : 'var(--adm-bad)',
+                      background: testResult.ok
+                        ? 'var(--adm-ok-soft)'
+                        : 'var(--adm-bad-soft)',
+                    }}
+                  >
+                    {testResult.ok ? '✓ ' : ''}
+                    {testResult.message}
+                  </p>
+                ) : null}
                 <p
                   style={{ margin: 0, color: 'var(--adm-ink-3)', fontSize: 12 }}
                 >
                   The test uses this speaker’s badge, is marked [TEST], and does
-                  not count as sent. One test unlocks “Send to all ready”.
+                  not count as sent.
                 </p>
               </form>
             ) : null}
@@ -1338,11 +1366,27 @@ export default function SpeakerCommunicationsPanel({
         )}
       </SlideOverDrawer>
 
-      <AdminToast
-        message={toast?.message}
-        tone={toast?.tone}
-        onDismiss={() => setToast(null)}
-      />
+      {/* Pinned above the drawer so results are visible wherever you are. */}
+      {toast?.message ? (
+        <div
+          style={{
+            position: 'fixed',
+            right: 20,
+            bottom: 20,
+            zIndex: 60,
+            width: 'min(420px, calc(100vw - 40px))',
+            boxShadow: '0 12px 32px rgba(0,0,0,.25)',
+            borderRadius: 10,
+            background: 'var(--adm-panel)',
+          }}
+        >
+          <AdminToast
+            message={toast.message}
+            tone={toast.tone}
+            onDismiss={() => setToast(null)}
+          />
+        </div>
+      ) : null}
 
       <style jsx>{`
         @media (max-width: 760px) {

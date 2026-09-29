@@ -486,6 +486,15 @@ test('test sends go to one chosen address, defaulting to the admin', () => {
   );
   assert.doesNotMatch(panel, /Send yourself a test first/);
   assert.match(panel, /Send a test to/);
+  // Bulk send no longer waits for a test, and test results show in the drawer.
+  assert.doesNotMatch(panel, /testSent/);
+  assert.match(panel, /disabled=\{working \|\| !readyIds\.length\}/);
+  assert.match(panel, /Test sent to \$\{json\.recipient\}/);
+  // Messages are pinned above the drawer rather than at the end of the page.
+  assert.match(
+    panel,
+    /position: 'fixed',\s*right: 20,\s*bottom: 20,\s*zIndex: 60/
+  );
 });
 
 test('each email tab has its own sidebar icon', () => {
