@@ -124,15 +124,37 @@ function inputStyle() {
   };
 }
 
-function emailPreviewHtml(html) {
+// The preview iframe is sandboxed and sends no session cookie, so the
+// private badge is embedded as a data URL rather than linked.
+function emailPreviewHtml(html, badgeDataUrl) {
   if (!html || typeof window === 'undefined') return '';
   const origin = window.location.origin;
   return html
+    .replaceAll('cid:speaker-badge', badgeDataUrl || '')
     .replaceAll('cid:tasi-logo', `${origin}/img/email/tasi-festival-logo.png`)
     .replaceAll(
       'cid:tasi-delhi-footer',
       `${origin}/img/email/tasi-2026-delhi-footer.jpeg`
     );
+}
+
+async function fetchBadgeDataUrl(speakerId) {
+  try {
+    const response = await fetch(
+      `/api/admin/speaker-communications/${speakerId}/badge`,
+      { cache: 'no-store' }
+    );
+    if (!response.ok) return '';
+    const blob = await response.blob();
+    return await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return '';
+  }
 }
 
 function sleep(ms) {
@@ -378,7 +400,10 @@ export default function SpeakerCommunicationsPanel({
         { cache: 'no-store' }
       );
       const json = await readJson(response, 'Unable to preview email.');
-      setPreview(json.email);
+      const badgeDataUrl = speaker.hasBadge
+        ? await fetchBadgeDataUrl(speaker.id)
+        : '';
+      setPreview({ ...json.email, badgeDataUrl });
     } catch (previewError) {
       setToast({ tone: 'danger', message: previewError.message });
     } finally {
@@ -1254,7 +1279,7 @@ export default function SpeakerCommunicationsPanel({
                 </div>
                 <iframe
                   title="Speaker badge email preview"
-                  srcDoc={emailPreviewHtml(preview.html)}
+                  srcDoc={emailPreviewHtml(preview.html, preview.badgeDataUrl)}
                   sandbox=""
                   style={{
                     width: '100%',

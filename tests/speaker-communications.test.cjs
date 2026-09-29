@@ -21,6 +21,10 @@ const {
   buildSpeakerBadgeDownloadUrl,
   buildSpeakerBadgeEmail,
 } = require('../src/lib/speaker-badge-email.cjs');
+const {
+  buildSpeakerShareCaptions,
+  buildSpeakerShareLinks,
+} = require('../src/lib/speaker-badge-share.cjs');
 const { buildAdminNavigation } = require('../src/lib/admin-shell-utils.cjs');
 
 function readSource(relativePath) {
@@ -179,43 +183,81 @@ test('error messages map to the right HTTP status', () => {
   assert.equal(speakerErrorStatus('boom'), 500);
 });
 
-test('badge email is the fixed template with the download link and CSR reply-to', () => {
-  const downloadUrl = buildSpeakerBadgeDownloadUrl({
-    siteUrl: 'https://trustandsafetyindia.org/',
-    token: 'a'.repeat(43),
-  });
+test('badge email is the fixed template with badge, share buttons and plan-ahead details', () => {
+  const token = 'a'.repeat(43);
   assert.equal(
-    downloadUrl,
-    `https://trustandsafetyindia.org/badge/${'a'.repeat(43)}`
+    buildSpeakerBadgeDownloadUrl({
+      siteUrl: 'https://trustandsafetyindia.org/',
+      token,
+    }),
+    `https://trustandsafetyindia.org/badge/${token}/image?download=1`
   );
   assert.equal(SPEAKER_COMMS_REPLY_TO, 'tasi.comms@csrindia.org');
 
   const email = buildSpeakerBadgeEmail({
     name: 'Yoel <Roth>',
     edition: '2026',
-    downloadUrl,
+    siteUrl: 'https://trustandsafetyindia.org',
+    token,
   });
   assert.equal(email.subject, 'Your speaker badge for TASI 2026');
   assert.match(email.text, /Dear Yoel <Roth>,/);
-  assert.match(
-    email.text,
-    /Download your badge: https:\/\/trustandsafetyindia\.org\/badge\//
-  );
-  assert.match(
-    email.text,
-    /Centre for Social Research India and Trust & Safety Forum/
-  );
   assert.match(email.html, /Dear Yoel &lt;Roth&gt;,/);
+  assert.match(email.html, /src="cid:speaker-badge"/);
   assert.match(email.html, /Download your badge<\/a>/);
+  for (const platform of ['LinkedIn', 'X', 'Facebook', 'Instagram']) {
+    assert.match(email.html, new RegExp(`>${platform}</a>`));
+  }
+  assert.match(email.html, /linkedin\.com\/feed\/\?shareActive=true&amp;text=/);
+  assert.match(email.html, /twitter\.com\/intent\/tweet\?text=/);
+  assert.match(email.html, /facebook\.com\/sharer\/sharer\.php\?u=/);
+  assert.match(email.html, /Google Calendar/);
+  assert.match(email.html, /Outlook Calendar/);
+  assert.match(email.html, /Programme &amp; agenda/);
+  assert.match(email.html, /Venue map/);
   assert.match(email.html, /mailto:tasi\.comms@csrindia\.org/);
   assert.doesNotMatch(email.html, /Test email/);
+  assert.match(email.calendarContent, /DTSTART;VALUE=DATE:20261014/);
+  assert.match(
+    email.calendarContent,
+    /LOCATION:India International Centre\\, New Delhi/
+  );
+});
+
+test('share captions tag CSR and TASI on each platform', () => {
+  const pageUrl = `https://trustandsafetyindia.org/badge/${'a'.repeat(43)}`;
+  const captions = buildSpeakerShareCaptions({
+    edition: '2026',
+    badgePageUrl: pageUrl,
+  });
+  assert.match(captions.linkedin, /@Centre for Social Research India/);
+  assert.match(captions.linkedin, /@TASI Festival/);
+  assert.match(captions.x, /@CSR_India/);
+  assert.match(captions.instagram, /@csr_india/);
+  assert.match(captions.facebook, /@Centre for Social Research/);
+  for (const caption of Object.values(captions)) {
+    assert.match(caption, /#TASI2026/);
+  }
+  // X counts any link as 23 characters.
+  const xLength = captions.x.replace(pageUrl, 'x'.repeat(23)).length;
+  assert.ok(xLength <= 280, `X caption is ${xLength} characters`);
+
+  const links = buildSpeakerShareLinks({ captions, badgePageUrl: pageUrl });
+  assert.equal(
+    new URL(links.linkedin).searchParams.get('text'),
+    captions.linkedin
+  );
+  assert.equal(new URL(links.x).searchParams.get('text'), captions.x);
+  assert.equal(new URL(links.facebook).searchParams.get('u'), pageUrl);
+  assert.equal(links.instagram, `${pageUrl}?share=instagram`);
 });
 
 test('test badge email is clearly marked', () => {
   const email = buildSpeakerBadgeEmail({
     name: 'Yoel Roth',
     edition: '2026',
-    downloadUrl: 'https://example.org/badge/x',
+    siteUrl: 'https://example.org',
+    token: 'a'.repeat(43),
     test: true,
   });
   assert.equal(email.subject, '[TEST] Your speaker badge for TASI 2026');
@@ -273,11 +315,17 @@ test('sends reuse the durable attempt and idempotency pattern', () => {
   assert.match(migration, /'speaker-badges', 'speaker-badges', false/);
 });
 
-test('public badge download validates the token before touching storage', () => {
-  const source = readSource('src/app/badge/[token]/route.js');
+test('public badge image validates the token before touching storage', () => {
+  const source = readSource('src/app/badge/[token]/image/route.js');
   const tokenCheck = source.indexOf('isValidDownloadToken(token)');
   const lookup = source.indexOf('getSpeakerBadgeByDownloadToken(token)');
   assert.ok(tokenCheck > 0 && lookup > tokenCheck);
   assert.match(source, /protectPublicRoute/);
   assert.match(source, /noindex/);
+  assert.match(source, /download \? 'attachment' : 'inline'/);
+
+  const page = readSource('src/app/badge/[token]/page.jsx');
+  assert.match(page, /isValidDownloadToken\(token\)/);
+  assert.match(page, /robots: \{ index: false, follow: false \}/);
+  assert.match(page, /\/badge\/\$\{token\}\/image/);
 });

@@ -20,6 +20,16 @@ const SPEAKER_EDITIONS = {
     dates: '14-15 October 2026',
     venue: 'India International Centre, New Delhi',
     hashtag: '#TASI2026',
+    venueMapUrl:
+      'https://www.google.com/maps/search/?api=1&query=India+International+Centre+New+Delhi',
+    // All-day dates for .ics and Google (end is exclusive), and local times
+    // for Outlook.
+    calendar: {
+      startDate: '20261014',
+      endDate: '20261016',
+      startLocal: '2026-10-14T09:00:00+05:30',
+      endLocal: '2026-10-15T18:00:00+05:30',
+    },
   },
 };
 

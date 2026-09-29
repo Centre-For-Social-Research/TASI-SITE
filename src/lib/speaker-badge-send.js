@@ -18,8 +18,8 @@ import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
 
 const {
+  SPEAKER_BADGE_CONTENT_ID,
   SPEAKER_COMMS_REPLY_TO,
-  buildSpeakerBadgeDownloadUrl,
   buildSpeakerBadgeEmail,
 } = speakerBadgeEmail;
 const { speakerBadgeDownloadFilename } = speakerCommunicationsUtils;
@@ -42,10 +42,8 @@ async function buildBadgeMessage({ speaker, badgePath, downloadToken, test }) {
   const email = buildSpeakerBadgeEmail({
     name: speaker.name,
     edition: speaker.edition,
-    downloadUrl: buildSpeakerBadgeDownloadUrl({
-      siteUrl: getSiteUrl(),
-      token: downloadToken,
-    }),
+    siteUrl: getSiteUrl(),
+    token: downloadToken,
     replyEmail: SPEAKER_COMMS_REPLY_TO,
     test,
   });
@@ -54,17 +52,26 @@ async function buildBadgeMessage({ speaker, badgePath, downloadToken, test }) {
     downloadSpeakerBadgeImage(badgePath),
   ]);
   const extension = badgePath.endsWith('.jpg') ? 'jpg' : 'png';
+  const filename = speakerBadgeDownloadFilename({
+    name: speaker.name,
+    edition: speaker.edition,
+    extension,
+  });
+  // The badge goes twice: inline for the preview in the email body, and as
+  // a plain attachment so every mail client offers it as a download.
   return {
     email,
     attachments: [
       ...inlineAttachments,
       {
-        filename: speakerBadgeDownloadFilename({
-          name: speaker.name,
-          edition: speaker.edition,
-          extension,
-        }),
+        filename: `preview-${filename}`,
         content: badge,
+        contentId: SPEAKER_BADGE_CONTENT_ID,
+      },
+      { filename, content: badge },
+      {
+        filename: `tasi-${speaker.edition}-calendar.ics`,
+        content: Buffer.from(email.calendarContent, 'utf8'),
       },
     ],
   };
@@ -75,10 +82,8 @@ export async function previewSpeakerBadgeEmail(id) {
   const email = buildSpeakerBadgeEmail({
     name: speaker.name,
     edition: speaker.edition,
-    downloadUrl: buildSpeakerBadgeDownloadUrl({
-      siteUrl: getSiteUrl(),
-      token: downloadToken,
-    }),
+    siteUrl: getSiteUrl(),
+    token: downloadToken,
     replyEmail: SPEAKER_COMMS_REPLY_TO,
   });
   return {
