@@ -5,7 +5,7 @@ import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 
 const { speakerErrorStatus } = speakerCommunicationsUtils;
 
-export async function POST(_request, context) {
+export async function POST(request, context) {
   const authResult = await requireAdminOperator({
     route: 'api.admin.speaker-communications.test',
   });
@@ -13,9 +13,11 @@ export async function POST(_request, context) {
 
   try {
     const { id } = await context.params;
+    const body = await request.json().catch(() => ({}));
     const result = await sendSpeakerBadgeTest({
       id,
       operator: authResult.operator,
+      to: typeof body?.to === 'string' ? body.to : '',
     });
     return adminJson({ success: true, ...result });
   } catch (error) {

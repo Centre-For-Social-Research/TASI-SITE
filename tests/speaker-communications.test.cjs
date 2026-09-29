@@ -462,3 +462,35 @@ test('intro puts the profile line before the badge line, and the footer links ou
   assert.equal((email.html.match(/cid:social-/g) || []).length, 4);
   assert.doesNotMatch(email.html, /TASI Festival/);
 });
+
+test('test sends go to one chosen address, defaulting to the admin', () => {
+  const send = readSource('src/lib/speaker-badge-send.js');
+  assert.match(
+    send,
+    /parseSpeakerEmails\(\s*String\(to \|\| ''\)\.trim\(\) \|\| operator\?\.primaryEmail/
+  );
+  assert.match(send, /Send a test to at most one address/);
+  const route = readSource(
+    'src/app/api/admin/speaker-communications/[id]/test/route.js'
+  );
+  assert.match(route, /requireAdminOperator/);
+  assert.match(route, /to: typeof body\?\.to === 'string'/);
+  assert.equal(speakerErrorStatus('Send a test to at most one address.'), 400);
+  assert.equal(
+    speakerErrorStatus('An email address is required for the test.'),
+    400
+  );
+
+  const panel = readSource(
+    'src/components/admin/speaker-communications-panel.jsx'
+  );
+  assert.doesNotMatch(panel, /Send yourself a test first/);
+  assert.match(panel, /Send a test to/);
+});
+
+test('each email tab has its own sidebar icon', () => {
+  const shell = readSource('src/components/admin/admin-shell.jsx');
+  assert.match(shell, /'\/admin\/guest-invitations': Ico\.ticket/);
+  assert.match(shell, /'\/admin\/speaker-communications': Ico\.badge/);
+  assert.match(shell, /'\/admin\/email-jobs': Ico\.mail/);
+});
