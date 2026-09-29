@@ -12,7 +12,6 @@ const DIRECTORY_ALIASES = {
     'caroline-makumbe': 'Caroline Simangaliso Makumbe',
     'madeline-coelho': 'Madelaine Coelho',
     'siddharth-pillai': 'Siddharth P',
-    'uma-subramanian': 'Uma Submanian',
   },
 };
 

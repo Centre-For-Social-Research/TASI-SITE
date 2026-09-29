@@ -29,6 +29,15 @@ const photoOverrides = new Map([
 // The organizer explicitly confirmed permission to publish this profile.
 const consentOverrides = new Set(['Smriti Irani']);
 const knownPhotoExceptions = new Set(['Uma Submanian']);
+// Names the form submitted with a typo, published as corrected.
+const nameCorrections = new Map([['Uma Submanian', 'Uma Subramanian']]);
+// Square crops around the face for wide or landscape headshots, in the
+// submitted image's own pixels.
+const photoCrops = new Map([
+  ['Dr. Rupa Munakarmi', { left: 215, top: 230, width: 360, height: 360 }],
+  ['Deepak Goel', { left: 163, top: 25, width: 260, height: 260 }],
+  ['Dr. Sanjeev Sharma', { left: 62, top: 0, width: 310, height: 310 }],
+]);
 
 const normalize = (value) =>
   String(value || '')
@@ -103,7 +112,8 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
     throw new Error(`Profile-use consent is missing for ${name}`);
   }
 
-  const slug = buildSpeakerSlug(name);
+  const publishedName = nameCorrections.get(name) || name;
+  const slug = buildSpeakerSlug(publishedName);
   if (!slug || usedSlugs.has(slug))
     throw new Error(`Duplicate speaker: ${name}`);
   usedSlugs.add(slug);
@@ -131,8 +141,9 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
     usedPhotos.add(file);
     await mkdir(outputDirectory, { recursive: true });
     const outputFile = path.join(outputDirectory, `${slug}.webp`);
-    await sharp(path.join(headshotsPath, file))
-      .rotate()
+    const crop = photoCrops.get(name);
+    const image = sharp(path.join(headshotsPath, file)).rotate();
+    await (crop ? image.extract(crop) : image)
       .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
       .webp({ quality: 80, effort: 5 })
       .toFile(outputFile);
@@ -145,7 +156,7 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
   }
 
   records.push({
-    name,
+    name: publishedName,
     designation: row['Current Designation / Job Title'],
     organisation: row['Organisation'],
     country: row['Country'],

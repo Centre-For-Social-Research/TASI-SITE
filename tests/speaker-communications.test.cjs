@@ -508,3 +508,44 @@ test('badge names spelled differently on the website still find their profile', 
     assert.ok(findSpeakerProfilePath({ name, edition: '2026' }), name);
   }
 });
+
+test('the eight speakers added from the profile form now have profiles', () => {
+  const {
+    findSpeakerProfilePath,
+  } = require('../src/lib/speaker-badge-profile.cjs');
+  const speakers = require('../src/data/speakers-2026.json');
+  for (const name of [
+    'Aishwarya Salvi',
+    'Ashwini Vaishnaw',
+    'Deepak Goel',
+    'Dr. Manoj Shakya',
+    'Dr. Rupa Munakarmi',
+    'Dr. Sanjeev Sharma',
+    'Haribol Acharya',
+    'Rohit Kumar',
+  ]) {
+    const profile = findSpeakerProfilePath({ name, edition: '2026' });
+    assert.ok(profile, name);
+    const speaker = speakers.find(
+      (entry) =>
+        `/speakers/2026/${entry.name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')}` === profile
+    );
+    assert.ok(speaker?.bio, `${name} has a bio`);
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), 'public', speaker.photo)),
+      `${name} photo exists`
+    );
+  }
+});
+
+test('Uma Subramanian is spelled correctly and the old profile URL redirects', () => {
+  const speakers = require('../src/data/speakers-2026.json');
+  assert.ok(speakers.some((entry) => entry.name === 'Uma Subramanian'));
+  assert.ok(!speakers.some((entry) => /Submanian/.test(entry.name)));
+  const config = readSource('next.config.mjs');
+  assert.match(config, /source: '\/speakers\/2026\/uma-submanian'/);
+  assert.match(config, /destination: '\/speakers\/2026\/uma-subramanian'/);
+});
