@@ -2,8 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { CalendarPlus, Clock, Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import {
+  BookmarkCheck,
+  BookmarkPlus,
+  CalendarPlus,
+  Clock,
+  Search,
+} from 'lucide-react';
+import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import agendaBuilderUtils from '@/lib/agenda-builder-utils.cjs';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 import BuildMyAgenda from './build-my-agenda';
@@ -16,6 +23,7 @@ const {
   timeSortValue,
 } = programmeAgendaUtils;
 const { getSpeakerProfilePath } = speakerDirectoryUtils;
+const { getEditionYear } = agendaBuilderUtils;
 
 const FORMAT_LABELS = {
   opening: 'Opening',
@@ -172,6 +180,89 @@ function buildCalendarMetadata(session, allSessions, labels, dayDateMap) {
   };
 }
 
+// Agenda picks persist per edition in this browser only. localStorage is the
+// store; memoryAgenda covers browsers where storage is blocked.
+const AGENDA_CHANGE_EVENT = 'tasi-agenda-change';
+const memoryAgenda = new Map();
+
+function readAgenda(storageKey) {
+  try {
+    return localStorage.getItem(storageKey) || '[]';
+  } catch {
+    return memoryAgenda.get(storageKey) || '[]';
+  }
+}
+
+function parseAgenda(raw) {
+  try {
+    const parsed = JSON.parse(raw);
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function writeAgenda(storageKey, value) {
+  memoryAgenda.set(storageKey, value);
+  try {
+    localStorage.setItem(storageKey, value);
+  } catch {
+    // storage blocked; the in-memory copy keeps this visit working
+  }
+  window.dispatchEvent(new Event(AGENDA_CHANGE_EVENT));
+}
+
+function subscribeAgenda(callback) {
+  window.addEventListener('storage', callback);
+  window.addEventListener(AGENDA_CHANGE_EVENT, callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener(AGENDA_CHANGE_EVENT, callback);
+  };
+}
+
+function useSavedAgenda(storageKey) {
+  const raw = useSyncExternalStore(
+    subscribeAgenda,
+    () => readAgenda(storageKey),
+    () => '[]'
+  );
+  const selectedIds = useMemo(() => parseAgenda(raw), [raw]);
+
+  // Read the store rather than the render snapshot so rapid clicks compose.
+  const update = useCallback(
+    (updater) => {
+      const next = updater(parseAgenda(readAgenda(storageKey)));
+      writeAgenda(storageKey, JSON.stringify([...next]));
+    },
+    [storageKey]
+  );
+
+  const toggle = useCallback(
+    (id) =>
+      update((next) => {
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      }),
+    [update]
+  );
+  const setMany = useCallback(
+    (ids, selected) =>
+      update((next) => {
+        for (const id of ids) {
+          if (selected) next.add(id);
+          else next.delete(id);
+        }
+        return next;
+      }),
+    [update]
+  );
+  const clear = useCallback(() => update(() => new Set()), [update]);
+
+  return { selectedIds, toggle, setMany, clear };
+}
+
 export default function ProgrammeAgendaClient({
   sessions,
   dayLabels,
@@ -186,6 +277,9 @@ export default function ProgrammeAgendaClient({
   const [format, setFormat] = useState('');
   const [venue, setVenue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const editionYear = getEditionYear(dayDateMap);
+  const agenda = useSavedAgenda(`tasi-my-agenda-${editionYear || 'default'}`);
+  const closeAgendaBuilder = useCallback(() => setShowAgendaBuilder(false), []);
 
   const normalizedSessions = useMemo(
     () =>
@@ -343,6 +437,11 @@ export default function ProgrammeAgendaClient({
           >
             <CalendarPlus className="h-4 w-4" />
             Build My Agenda
+            {agenda.selectedIds.size > 0 && (
+              <span className={styles['build-agenda-count']}>
+                {agenda.selectedIds.size}
+              </span>
+            )}
           </button>
 
           <span
@@ -446,28 +545,51 @@ export default function ProgrammeAgendaClient({
                         {session.venue || session.track}
                       </div>
 
-                      {session.calendar && (
-                        <div className={styles['session-actions']}>
-                          <a
-                            className={styles['calendar-btn']}
-                            href={session.calendar.microsoftHref}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <CalendarPlus />
-                            <span>Add to Calendar</span>
-                          </a>
-                          <a
-                            className={styles['calendar-btn']}
-                            href={session.calendar.googleHref}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <CalendarPlus />
-                            <span>Google Calendar</span>
-                          </a>
-                        </div>
-                      )}
+                      <div className={styles['session-actions']}>
+                        <button
+                          type="button"
+                          aria-pressed={agenda.selectedIds.has(session.id)}
+                          onClick={() => agenda.toggle(session.id)}
+                          className={cx(
+                            styles['agenda-toggle'],
+                            agenda.selectedIds.has(session.id) &&
+                              styles['agenda-toggle-on']
+                          )}
+                        >
+                          {agenda.selectedIds.has(session.id) ? (
+                            <BookmarkCheck aria-hidden="true" />
+                          ) : (
+                            <BookmarkPlus aria-hidden="true" />
+                          )}
+                          <span>
+                            {agenda.selectedIds.has(session.id)
+                              ? 'In my agenda'
+                              : 'Add to my agenda'}
+                          </span>
+                        </button>
+                        {session.calendar && (
+                          <>
+                            <a
+                              className={styles['calendar-btn']}
+                              href={session.calendar.microsoftHref}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <CalendarPlus />
+                              <span>Add to Calendar</span>
+                            </a>
+                            <a
+                              className={styles['calendar-btn']}
+                              href={session.calendar.googleHref}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <CalendarPlus />
+                              <span>Google Calendar</span>
+                            </a>
+                          </>
+                        )}
+                      </div>
 
                       {session.speakersDetailed &&
                         session.speakersDetailed.length > 0 && (
@@ -569,8 +691,15 @@ export default function ProgrammeAgendaClient({
       <BuildMyAgenda
         sessions={normalizedSessions}
         isOpen={showAgendaBuilder}
-        onClose={() => setShowAgendaBuilder(false)}
+        onClose={closeAgendaBuilder}
         dayLabels={labels}
+        dayDateMap={dayDateMap}
+        editionYear={editionYear}
+        formatLabels={FORMAT_LABELS}
+        selectedIds={agenda.selectedIds}
+        onToggle={agenda.toggle}
+        onSetMany={agenda.setMany}
+        onClear={agenda.clear}
       />
     </section>
   );

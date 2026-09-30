@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ArrowLeft, Linkedin } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
@@ -148,7 +149,7 @@ export default async function SpeakerProfilePage({ params }) {
               </p>
             </article>
 
-            <aside className="rounded-[10px] bg-white p-6 shadow-sm">
+            <aside className="flex flex-col rounded-[10px] bg-white p-6 shadow-sm">
               <h2 className="text-sm font-black uppercase tracking-[0.14em] text-stone-500">
                 Speaker Details
               </h2>
@@ -168,21 +169,26 @@ export default async function SpeakerProfilePage({ params }) {
                   <dd className="mt-1 text-stone-900">{speaker.designation}</dd>
                 </div>
               </dl>
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-8 border-t border-stone-200 pt-5 md:mt-auto">
+                <div className="mb-5 flex items-center gap-2">
+                  <a
+                    href={linkedInUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${speaker.name} on LinkedIn`}
+                    title="LinkedIn"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700"
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                </div>
                 <Link
                   href="/speakers?year=2025"
-                  className="rounded-[10px] border border-stone-300 px-4 py-2 text-center text-sm font-semibold text-stone-700 hover:border-orange-400 hover:text-orange-700"
+                  className="group inline-flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-orange-700"
                 >
+                  <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
                   All speakers
                 </Link>
-                <a
-                  href={linkedInUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-[10px] border border-stone-300 px-4 py-2 text-center text-sm font-semibold text-stone-700 hover:border-orange-400 hover:text-orange-700"
-                >
-                  LinkedIn profile
-                </a>
               </div>
             </aside>
           </div>
