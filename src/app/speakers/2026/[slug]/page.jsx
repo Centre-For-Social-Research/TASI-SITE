@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ArrowLeft, Instagram, Linkedin, Twitter } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
@@ -75,6 +76,11 @@ export default async function SpeakerProfilePage({ params }) {
   const speaker = getSpeakerOrNotFound(slug);
   const photoSrc = getSpeakerPhotoSrc(speaker);
   const profileUrl = `${siteUrl}/speakers/2026/${buildSpeakerSlug(speaker.name)}`;
+  const socialLinks = [
+    { label: 'LinkedIn', url: speaker.linkedinUrl, Icon: Linkedin },
+    { label: 'X', url: speaker.xUrl, Icon: Twitter },
+    { label: 'Instagram', url: speaker.instagramUrl, Icon: Instagram },
+  ].filter(({ url }) => Boolean(url));
   const personStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -160,7 +166,7 @@ export default async function SpeakerProfilePage({ params }) {
               </p>
             </article>
 
-            <aside className="rounded-[10px] bg-white p-6 shadow-sm">
+            <aside className="flex flex-col rounded-[10px] bg-white p-6 shadow-sm">
               <h2 className="text-sm font-black uppercase tracking-[0.14em] text-stone-500">
                 Speaker Details
               </h2>
@@ -176,30 +182,38 @@ export default async function SpeakerProfilePage({ params }) {
                   </div>
                 )}
               </dl>
-              <div className="mt-6 flex flex-col gap-3">
+
+              {socialLinks.length > 0 && (
+                <div className="mt-6 border-t border-stone-200 pt-5">
+                  <h3 className="text-sm font-semibold text-stone-500">
+                    Connect
+                  </h3>
+                  <div className="mt-3 flex items-center gap-2">
+                    {socialLinks.map(({ label, url, Icon }) => (
+                      <a
+                        key={label}
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${speaker.name} on ${label}`}
+                        title={label}
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700"
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-6 border-t border-stone-200 pt-5 md:mt-auto">
                 <Link
                   href="/speakers?year=2026"
-                  className="rounded-[10px] border border-stone-300 px-4 py-2 text-center text-sm font-semibold text-stone-700 hover:border-orange-400 hover:text-orange-700"
+                  className="group inline-flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-orange-700"
                 >
+                  <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
                   All TASI 2026 speakers
                 </Link>
-                {[
-                  ['LinkedIn', speaker.linkedinUrl],
-                  ['X profile', speaker.xUrl],
-                  ['Instagram profile', speaker.instagramUrl],
-                ]
-                  .filter(([, url]) => Boolean(url))
-                  .map(([label, url]) => (
-                    <a
-                      key={label}
-                      href={url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-[10px] border border-stone-300 px-4 py-2 text-center text-sm font-semibold text-stone-700 hover:border-orange-400 hover:text-orange-700"
-                    >
-                      {label}
-                    </a>
-                  ))}
               </div>
             </aside>
           </div>
