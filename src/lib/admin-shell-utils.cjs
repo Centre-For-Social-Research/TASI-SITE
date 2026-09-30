@@ -74,6 +74,14 @@ function buildAdminNavigation({ pathname = '', summary = {}, jobs = [] } = {}) {
           showBadge: false,
         },
         {
+          href: '/admin/reminders',
+          label: 'Reminders',
+          active: normalizedPath === '/admin/reminders',
+          badgeCount: 0,
+          badgeTone: 'default',
+          showBadge: false,
+        },
+        {
           href: '/admin/spot-registrations',
           label: 'Spot Registrations',
           active: normalizedPath === '/admin/spot-registrations',

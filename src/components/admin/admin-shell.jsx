@@ -62,6 +62,22 @@ const Ico = {
       <path d="M3 7l9 6 9-6" />
     </svg>
   ),
+  bell: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" />
+      <path d="M10 20.5a2 2 0 0 0 4 0" />
+    </svg>
+  ),
   badge: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -203,6 +219,7 @@ const NAV_ICONS = {
   '/admin/submissions': Ico.audit,
   '/admin/guest-invitations': Ico.ticket,
   '/admin/speaker-communications': Ico.badge,
+  '/admin/reminders': Ico.bell,
   '/admin/spot-registrations': Ico.users,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
@@ -231,6 +248,11 @@ const PAGE_TITLES = {
     kicker: 'SPEAKERS · BADGES',
     title: 'Speaker Communications',
     meta: 'Fixed badge email · Per edition',
+  },
+  '/admin/reminders': {
+    kicker: 'REGISTRANTS · REMINDERS',
+    title: 'Event Reminders',
+    meta: 'Editable copy · Confirmed registrants',
   },
   '/admin/spot-registrations': {
     kicker: 'DAY-OF · WALK-INS',
