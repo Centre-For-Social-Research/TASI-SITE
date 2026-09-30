@@ -1,59 +1,62 @@
-/* TASI Operations Console — Admin Design System v2
+/* TASI Operations Console — Admin Design System v3
    Scoped to .admin-v2 so it doesn't bleed into the public site.
-   Midnight navy sidebar, cool white canvas, and restrained teal accent.
+   Soft grey canvas, white cards, near-black ink, lime/orange/yellow accents.
    Admin font variables are injected by the root layout via next/font/google. */
 
 /* ── Tokens (light, single theme) ───────────────────────────────────────── */
 .admin-v2,
 .admin-v2-drawer-content {
-  --adm-canvas: #f4f7f7;
-  --adm-canvas-2: #edf2f4;
+  --adm-canvas: #f3f3f2;
+  --adm-canvas-2: #f7f7f6;
   --adm-panel: #ffffff;
-  --adm-panel-2: #edf5f5;
-  --adm-line: rgba(31, 48, 56, 0.12);
-  --adm-line-strong: rgba(31, 48, 56, 0.22);
-  --adm-ink: #1f3038;
-  --adm-ink-2: #354b55;
-  --adm-ink-3: #607682;
-  --adm-ink-4: #83949b;
+  --adm-panel-2: #f3f3f2;
+  --adm-line: rgba(17, 17, 17, 0.07);
+  --adm-line-strong: rgba(17, 17, 17, 0.13);
+  --adm-ink: #141414;
+  --adm-ink-2: #3b3b3b;
+  --adm-ink-3: #8c8c8c;
+  --adm-ink-4: #b4b4b4;
 
-  --adm-accent: #0b6d69;
+  /* Primary actions are near-black, like the reference's "Upgrade now". */
+  --adm-accent: #141414;
   --adm-accent-ink: #ffffff;
-  --adm-accent-soft: rgba(11, 109, 105, 0.1);
-  --adm-accent-line: rgba(11, 109, 105, 0.32);
+  --adm-accent-soft: rgba(140, 198, 63, 0.18);
+  --adm-accent-line: rgba(125, 186, 52, 0.5);
 
-  --adm-purple: #37627a;
-  --adm-purple-soft: rgba(55, 98, 122, 0.1);
+  /* Brand greens */
+  --adm-lime: #8cc63f;
+  --adm-lime-2: #b8e06a;
+  --adm-yellow: #f2e94e;
+  --adm-orange: #f5a45b;
 
-  --adm-ok: #087956;
-  --adm-ok-soft: rgba(8, 121, 86, 0.11);
-  --adm-warn: #a06711;
-  --adm-warn-soft: rgba(160, 103, 17, 0.12);
-  --adm-bad: #b23a40;
-  --adm-bad-soft: rgba(178, 58, 64, 0.1);
-  --adm-info: #315d83;
-  --adm-info-soft: rgba(49, 93, 131, 0.1);
+  --adm-purple: #4f8a17;
+  --adm-purple-soft: rgba(140, 198, 63, 0.18);
 
-  --adm-sans: var(--font-admin-sans, 'Source Sans 3', system-ui, sans-serif);
-  --adm-mono: var(--font-admin-mono, 'JetBrains Mono', ui-monospace, monospace);
+  --adm-ok: #4f8a17;
+  --adm-ok-soft: rgba(140, 198, 63, 0.18);
+  --adm-warn: #c9701f;
+  --adm-warn-soft: rgba(245, 164, 91, 0.18);
+  --adm-bad: #d8452f;
+  --adm-bad-soft: rgba(216, 69, 47, 0.1);
+  --adm-info: #8a7a0c;
+  --adm-info-soft: rgba(242, 233, 78, 0.28);
+
+  --adm-sans: var(
+    --font-admin-sans,
+    'Plus Jakarta Sans',
+    system-ui,
+    sans-serif
+  );
+  /* No monospace in this system: numbers use tabular sans figures instead. */
+  --adm-mono: var(--adm-sans);
   --adm-serif: var(--adm-sans);
 }
 
 .admin-v2 .adm-sidebar {
-  --adm-canvas-2: #172b3b;
-  --adm-panel: #203b4e;
-  --adm-panel-2: #214657;
-  --adm-line: rgba(222, 238, 244, 0.14);
-  --adm-line-strong: rgba(222, 238, 244, 0.23);
-  --adm-ink: #f6fbfc;
-  --adm-ink-2: #d4e2e8;
-  --adm-ink-3: #a9c0cb;
-  --adm-ink-4: #8ea8b5;
-  --adm-accent: #79cfc6;
-  --adm-accent-ink: #172b3b;
-  --adm-accent-soft: rgba(121, 207, 198, 0.12);
-  --adm-accent-line: rgba(121, 207, 198, 0.32);
-  background: #172b3b !important;
+  --adm-canvas-2: #ffffff;
+  --adm-panel: #f3f3f2;
+  --adm-panel-2: #f0f0ef;
+  background: #ffffff !important;
 }
 
 .admin-v2 {
@@ -66,7 +69,7 @@
 /* ── Typography helpers ─────────────────────────────────────────────────── */
 .admin-v2 .adm-mono {
   font-family: var(--adm-mono);
-  font-feature-settings: 'zero', 'ss01';
+  font-feature-settings: 'tnum';
 }
 .admin-v2 .adm-serif {
   font-family: var(--adm-serif);
@@ -74,10 +77,9 @@
 }
 .admin-v2 .adm-eyebrow,
 .admin-v2-drawer-content .adm-eyebrow {
-  font-family: var(--adm-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-family: var(--adm-sans);
+  font-size: 11.5px;
+  letter-spacing: 0;
   color: var(--adm-ink-3);
   font-weight: 500;
 }
@@ -155,15 +157,15 @@
 /* ── Dashboard big numbers ──────────────────────────────────────────────── */
 .admin-v2 .adm-big-number-value {
   font-family: var(--adm-mono);
-  font-size: 52px;
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.035em;
   color: var(--adm-ink);
-  font-feature-settings: 'zero', 'ss01', 'tnum';
+  font-feature-settings: 'tnum';
 }
 .admin-v2 .adm-big-number-value--accent {
-  color: var(--adm-accent);
+  color: var(--adm-ok);
 }
 
 /* ── Row hover ──────────────────────────────────────────────────────────── */
@@ -176,17 +178,17 @@
 
 /* ── Slide-over drawer (vaul portal renders outside .admin-v2) ──────────── */
 .admin-v2-drawer-overlay {
-  background: rgba(23, 43, 59, 0.45) !important;
+  background: rgba(20, 20, 20, 0.35) !important;
   backdrop-filter: blur(4px) !important;
 }
 
 .admin-v2-drawer-content {
   background: #ffffff !important;
-  border-left: 1px solid rgba(31, 48, 56, 0.22) !important;
-  color: #1f3038 !important;
+  border-left: 1px solid rgba(17, 17, 17, 0.13) !important;
+  color: #141414 !important;
   font-family: var(
     --font-admin-sans,
-    'Source Sans 3',
+    'Plus Jakarta Sans',
     system-ui,
     sans-serif
   ) !important;
@@ -475,10 +477,10 @@
 }
 .admin-v2 thead th {
   padding: 10px 14px !important;
-  font-family: var(--adm-mono) !important;
-  font-size: 10px !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
+  font-family: var(--adm-sans) !important;
+  font-size: 12px !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
   font-weight: 500 !important;
   color: var(--adm-ink-3) !important;
   text-align: left !important;
@@ -566,7 +568,7 @@
 /* Primary / filled buttons */
 .admin-v2 [class*='bg-purple'][class*='text-white'],
 .admin-v2 [class*='bg-indigo'][class*='text-white'] {
-  background: var(--adm-purple) !important;
+  background: var(--adm-accent) !important;
   color: var(--adm-accent-ink) !important;
   border-color: transparent !important;
 }
@@ -598,6 +600,11 @@
   background-color: var(--adm-accent) !important;
   color: var(--adm-accent-ink) !important;
 }
+/* Solid teal = primary action button → admin accent */
+.admin-v2 [class*='bg-teal-'] {
+  background-color: var(--adm-accent) !important;
+  color: var(--adm-accent-ink) !important;
+}
 /* Info / sky / cyan tones */
 .admin-v2 [class*='text-sky-'],
 .admin-v2 [class*='text-blue-'],
@@ -608,6 +615,23 @@
 .admin-v2 [class*='bg-blue-'],
 .admin-v2 [class*='bg-cyan-'] {
   background: var(--adm-info-soft) !important;
+}
+
+/* Tinted borders follow the same tones */
+.admin-v2 [class*='border-emerald-'] {
+  border-color: var(--adm-accent-line) !important;
+}
+.admin-v2 [class*='border-amber-'] {
+  border-color: rgba(245, 164, 91, 0.45) !important;
+}
+.admin-v2 [class*='border-rose-'],
+.admin-v2 [class*='border-red-'] {
+  border-color: rgba(216, 69, 47, 0.28) !important;
+}
+.admin-v2 [class*='border-sky-'],
+.admin-v2 [class*='border-blue-'],
+.admin-v2 [class*='border-cyan-'] {
+  border-color: rgba(201, 184, 30, 0.45) !important;
 }
 
 /* ── Sonner toast (inside admin) ────────────────────────────────────────── */
@@ -624,16 +648,16 @@
 .admin-v2 [class*='bg-purple-700'],
 .admin-v2 [class*='bg-indigo-500'],
 .admin-v2 [class*='bg-indigo-600'] {
-  background-color: var(--adm-purple) !important;
+  background-color: var(--adm-lime) !important;
   color: var(--adm-accent-ink) !important;
 }
 .admin-v2 [class*='bg-emerald-500'],
 .admin-v2 [class*='bg-emerald-600'] {
-  background-color: var(--adm-ok) !important;
+  background-color: var(--adm-lime) !important;
 }
 .admin-v2 [class*='bg-amber-500'],
 .admin-v2 [class*='bg-yellow-500'] {
-  background-color: var(--adm-warn) !important;
+  background-color: var(--adm-orange) !important;
 }
 .admin-v2 [class*='bg-rose-500'],
 .admin-v2 [class*='bg-red-500'] {
@@ -642,7 +666,7 @@
 .admin-v2 [class*='bg-sky-500'],
 .admin-v2 [class*='bg-blue-500'],
 .admin-v2 [class*='bg-cyan-500'] {
-  background-color: var(--adm-info) !important;
+  background-color: var(--adm-yellow) !important;
 }
 
 /* ── Progress bar tracks ────────────────────────────────────────────────── */
@@ -684,7 +708,7 @@
   background-color: var(--adm-canvas-2) !important;
 }
 .admin-v2 [data-ln-row='true']:hover::before {
-  background: rgba(31, 48, 56, 0.04) !important;
+  background: rgba(17, 17, 17, 0.04) !important;
 }
 .admin-v2 [data-ln-row='true'][data-ln-selected='true']::before {
   background: var(--adm-accent-soft) !important;
@@ -698,9 +722,9 @@
   --ln-gray-02: var(--adm-canvas-2);
   --ln-gray-05: var(--adm-panel);
   --ln-gray-10: var(--adm-panel-2);
-  --ln-gray-20: rgba(31, 48, 56, 0.1);
-  --ln-gray-30: rgba(31, 48, 56, 0.16);
-  --ln-gray-40: rgba(31, 48, 56, 0.24);
+  --ln-gray-20: rgba(17, 17, 17, 0.1);
+  --ln-gray-30: rgba(17, 17, 17, 0.16);
+  --ln-gray-40: rgba(17, 17, 17, 0.24);
   --ln-gray-50: var(--adm-ink-4);
   --ln-gray-60: var(--adm-ink-3);
   --ln-gray-70: var(--adm-ink-3);
@@ -713,7 +737,7 @@
   --ln-bg-page: var(--adm-canvas);
   --ln-bg-light: var(--adm-canvas-2);
   --ln-bg-strong: var(--adm-panel-2);
-  --ln-bg-row-hover: rgba(31, 48, 56, 0.04);
+  --ln-bg-row-hover: rgba(17, 17, 17, 0.04);
   --ln-bg-row-alternate: var(--adm-canvas-2);
   --ln-bg-ui-panel: var(--adm-panel);
   --ln-bg-form-field: var(--adm-panel);
@@ -723,7 +747,7 @@
   --ln-border: var(--adm-line);
   --ln-border-row: var(--adm-line);
   --ln-border-strong: var(--adm-line-strong);
-  --ln-border-xstrong: rgba(31, 48, 56, 0.3);
+  --ln-border-xstrong: rgba(17, 17, 17, 0.3);
   --ln-border-icon: var(--adm-ink-3);
   --ln-border-ui-panel: var(--adm-line);
   --ln-border-button-light: var(--adm-line-strong);
@@ -737,12 +761,12 @@
   --ln-text-light: var(--adm-ink-3);
   --ln-text-xlight: var(--adm-ink-4);
 
-  --ln-primary-05: rgba(11, 109, 105, 0.05);
+  --ln-primary-05: rgba(140, 198, 63, 0.08);
   --ln-primary-10: var(--adm-accent-soft);
   --ln-primary-30: var(--adm-accent-line);
-  --ln-primary-50: #14827d;
+  --ln-primary-50: #6fa82d;
   --ln-primary-70: var(--adm-accent);
-  --ln-primary-90: #075753;
+  --ln-primary-90: #3d6d10;
 }
 
 /* ── Radix / Vaul portal overlays inside admin ──────────────────────────── */
@@ -762,7 +786,7 @@
 .admin-v2 [aria-selected='true'],
 .admin-v2 [data-state='active'] {
   background: var(--adm-accent-soft) !important;
-  color: var(--adm-accent) !important;
+  color: var(--adm-ink) !important;
   border-color: var(--adm-accent-line) !important;
 }
 
@@ -779,8 +803,8 @@
   background: var(--adm-panel) !important;
   border: 1px solid var(--adm-line-strong) !important;
   color: var(--adm-ink) !important;
-  font-family: var(--adm-mono) !important;
-  font-size: 11px !important;
+  font-family: var(--adm-sans) !important;
+  font-size: 12px !important;
   border-radius: 10px !important;
 }
 
@@ -792,8 +816,8 @@
 
 /* ── Shadow elevations ──────────────────────────────────────────────────── */
 .admin-v2 [class*='shadow-'] {
-  box-shadow: 0 4px 24px rgba(31, 48, 56, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(17, 17, 17, 0.05) !important;
 }
 .admin-v2 [class*='shadow-sm'] {
-  box-shadow: 0 2px 8px rgba(31, 48, 56, 0.06) !important;
+  box-shadow: 0 1px 3px rgba(17, 17, 17, 0.04) !important;
 }

@@ -65,42 +65,34 @@ export default function AdminAccessFallback({
   const clerkConfig = operator?.clerkConfig || {};
 
   return (
-    <main className="min-h-screen bg-[#0b0c0f] px-6 py-24 text-[#edf0f6]">
-      <div className="mx-auto max-w-3xl rounded-[10px] border border-[#23262d] bg-[#111318] p-8">
-        <p className="font-admin-mono text-[10px] uppercase tracking-[0.18em] text-[#8d93a5]">
-          Access Required
-        </p>
-        <h1 className="mt-3 font-admin-display text-4xl text-[#f5f6f8]">
+    <main className="min-h-screen bg-[#f3f3f2] px-6 py-24 font-admin-sans text-[#141414]">
+      <div className="mx-auto max-w-3xl rounded-[10px] border border-black/[0.07] bg-white p-8 shadow-[0_4px_20px_rgba(17,17,17,0.05)]">
+        <p className="text-xs font-medium text-[#8c8c8c]">Access Required</p>
+        <h1 className="mt-3 font-admin-display text-4xl font-semibold tracking-tight text-[#141414]">
           {heading}
         </h1>
-        <p className="mt-4 text-sm font-semibold leading-relaxed text-[#d5dae7]">
+        <p className="mt-4 text-sm font-semibold leading-relaxed text-[#3b3b3b]">
           {copy.title}
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-[#9ca3b5]">
+        <p className="mt-2 text-sm leading-relaxed text-[#8c8c8c]">
           {copy.description}
         </p>
-        <dl className="mt-6 grid gap-3 rounded-[10px] border border-[#23262d] bg-[#0b0c0f] p-4 text-xs text-[#aab1c0] sm:grid-cols-3">
+        <dl className="mt-6 grid gap-3 rounded-[10px] border border-black/[0.07] bg-[#f7f7f6] p-4 text-xs text-[#3b3b3b] sm:grid-cols-3">
           <div>
-            <dt className="font-admin-mono uppercase tracking-[0.14em] text-[#71788a]">
-              Reason
-            </dt>
-            <dd className="mt-1 font-admin-mono text-[#edf0f6]">
+            <dt className="text-[#8c8c8c]">Reason</dt>
+            <dd className="mt-1 font-medium tabular-nums text-[#141414]">
               {operator?.reason || 'unknown'}
             </dd>
           </div>
           <div>
-            <dt className="font-admin-mono uppercase tracking-[0.14em] text-[#71788a]">
-              Public Key
-            </dt>
-            <dd className="mt-1 font-admin-mono text-[#edf0f6]">
+            <dt className="text-[#8c8c8c]">Public Key</dt>
+            <dd className="mt-1 font-medium tabular-nums text-[#141414]">
               {getConfiguredLabel(clerkConfig.publishableKeyConfigured)}
             </dd>
           </div>
           <div>
-            <dt className="font-admin-mono uppercase tracking-[0.14em] text-[#71788a]">
-              Secret Key
-            </dt>
-            <dd className="mt-1 font-admin-mono text-[#edf0f6]">
+            <dt className="text-[#8c8c8c]">Secret Key</dt>
+            <dd className="mt-1 font-medium tabular-nums text-[#141414]">
               {getConfiguredLabel(clerkConfig.secretKeyConfigured)}
             </dd>
           </div>

@@ -140,12 +140,12 @@ function IntegrationRow({ label, ok, optional }) {
   const styles = {
     ok: { bg: 'var(--adm-ok-soft)', color: 'var(--adm-ok)', text: 'OK' },
     optional: {
-      bg: 'rgba(138,143,156,0.12)',
+      bg: 'var(--adm-panel-2)',
       color: 'var(--adm-ink-3)',
       text: 'Not configured · optional',
     },
     missing: {
-      bg: 'rgba(224,96,96,0.12)',
+      bg: 'var(--adm-bad-soft)',
       color: 'var(--adm-bad)',
       text: 'MISSING',
     },
@@ -244,7 +244,7 @@ function EmailChip({ email, source, onRemove, removing }) {
             gap: 4,
             padding: '2px 7px',
             borderRadius: 10,
-            background: 'rgba(138,143,156,0.1)',
+            background: 'var(--adm-panel-2)',
             color: 'var(--adm-ink-4)',
             fontFamily: 'var(--adm-mono)',
             fontSize: 9.5,
@@ -559,7 +559,7 @@ export default function SettingsPanel() {
             fontFamily: 'var(--adm-mono)',
             fontSize: 12,
             letterSpacing: '0.04em',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+            boxShadow: '0 8px 24px rgba(17,17,17,0.12)',
             animation: 'adm-fade-up 0.2s ease-out',
           }}
         >

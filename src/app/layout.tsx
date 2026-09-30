@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono, Outfit, Source_Sans_3 } from 'next/font/google';
+import {
+  Inter,
+  JetBrains_Mono,
+  Outfit,
+  Plus_Jakarta_Sans,
+} from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
@@ -110,7 +115,7 @@ const outfit = Outfit({
   display: 'swap',
 });
 
-const adminSans = Source_Sans_3({
+const adminSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-admin-sans',
   display: 'swap',
