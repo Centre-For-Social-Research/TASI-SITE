@@ -149,7 +149,12 @@ export async function sendApplicantConfirmationEmail({
     : await resend.emails.send(payload);
 
   if (error) {
-    throw new Error(error.message || 'Failed to send email.');
+    // Keep Resend's error code, so callers can tell a definite rejection
+    // from an outcome they cannot know.
+    const failure = new Error(error.message || 'Failed to send email.');
+    failure.providerErrorName = error.name || null;
+    failure.providerStatusCode = error.statusCode ?? null;
+    throw failure;
   }
 
   return {
