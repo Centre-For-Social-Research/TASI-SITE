@@ -287,6 +287,7 @@ const ADM_NAV_ITEMS = [
   '/admin/submissions',
   '/admin/guest-invitations',
   '/admin/speaker-communications',
+  '/admin/reminders',
   '/admin/spot-registrations',
   '/admin/email-jobs',
   '/admin/delivery',

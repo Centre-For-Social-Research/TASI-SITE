@@ -275,6 +275,19 @@ test('admin navigation lists Reminders with its own icon', () => {
   assert.equal(item.active, true);
   const shell = readSource('src/components/admin/admin-shell.jsx');
   assert.match(shell, /'\/admin\/reminders': Ico\.bell/);
+  // The sidebar renders ADM_NAV_ITEMS, so the tab must be listed there too.
+  const navList = shell.slice(
+    shell.indexOf('const ADM_NAV_ITEMS = ['),
+    shell.indexOf('];', shell.indexOf('const ADM_NAV_ITEMS = ['))
+  );
+  assert.match(
+    navList,
+    /'\/admin\/speaker-communications',\s*'\/admin\/reminders',/
+  );
+  assert.match(
+    shell,
+    /'\/admin\/reminders': \{\s*kicker: 'REGISTRANTS · REMINDERS',\s*title: 'Event Reminders'/
+  );
 });
 
 test('every reminder change requires an admin; reads allow reviewers', () => {
