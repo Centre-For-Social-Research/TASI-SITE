@@ -7,7 +7,7 @@ import { Drawer } from 'vaul';
 const TONES = {
   default: {
     fg: 'var(--adm-ink-3)',
-    bg: 'rgba(255,255,255,0.05)',
+    bg: 'var(--adm-panel-2)',
     dot: 'var(--adm-ink-3)',
   },
   warning: {
@@ -115,7 +115,7 @@ export function AdminStatCard({
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,.35)';
+        e.currentTarget.style.boxShadow = '0 8px 24px rgba(17,17,17,.06)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = '';
@@ -354,7 +354,7 @@ export function SlideOverDrawer({ open, onClose, title, children }) {
             background: 'var(--adm-panel, #11141c)',
             color: 'var(--adm-ink, #f3f4f7)',
             fontFamily: 'var(--adm-sans)',
-            boxShadow: '-40px 0 80px rgba(0,0,0,.4)',
+            boxShadow: '-24px 0 60px rgba(17,17,17,.12)',
           }}
         >
           <div
