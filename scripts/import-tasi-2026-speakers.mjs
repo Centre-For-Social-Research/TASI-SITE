@@ -27,7 +27,7 @@ const photoOverrides = new Map([
 ]);
 
 // The organizer explicitly confirmed permission to publish this profile.
-const consentOverrides = new Set(['Smriti Irani']);
+const consentOverrides = new Set(['Smriti Irani', 'Nicky Jackson Colaco']);
 // Form rows without profile-use consent that the organizer chose not to
 // publish. They are skipped rather than failing the import.
 const withheldProfiles = new Set([
@@ -42,6 +42,9 @@ const nameCorrections = new Map([['Uma Submanian', 'Uma Subramanian']]);
 // submitted image's own pixels.
 const photoCrops = new Map([
   ['Dr. Rupa Munakarmi', { left: 215, top: 230, width: 360, height: 360 }],
+  ['Vedanta Agarwal', { left: 100, top: 20, width: 700, height: 700 }],
+  ['Nicky Jackson Colaco', { left: 560, top: 100, width: 1500, height: 1500 }],
+  ['Beh Lih Yi', { left: 50, top: 250, width: 1900, height: 1900 }],
 ]);
 
 const normalize = (value) =>

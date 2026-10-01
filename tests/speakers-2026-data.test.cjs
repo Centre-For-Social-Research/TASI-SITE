@@ -7,7 +7,7 @@ const speakers = require('../src/data/speakers-2026.json');
 const { buildSpeakerSlug } = require('../src/lib/speaker-directory-utils.cjs');
 
 test('2026 speaker snapshot has complete public profiles and matched images', () => {
-  assert.equal(speakers.length, 52);
+  assert.equal(speakers.length, 56);
   const slugs = new Set();
   for (const speaker of speakers) {
     for (const field of [
