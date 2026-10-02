@@ -4,7 +4,10 @@ import { partnersPageMetadata } from '@/data/partners-page';
 
 export const metadata = partnersPageMetadata;
 
-export default function Page() {
+export default async function Page({ searchParams }) {
+  const resolvedSearchParams = await searchParams;
+  const initialYear = resolvedSearchParams?.year === '2025' ? '2025' : '2026';
+
   return (
     <>
       <PageSeoJsonLd
@@ -19,7 +22,7 @@ export default function Page() {
           'digital safety partners India',
         ]}
       />
-      <PartnersPage />
+      <PartnersPage initialYear={initialYear} />
     </>
   );
 }
