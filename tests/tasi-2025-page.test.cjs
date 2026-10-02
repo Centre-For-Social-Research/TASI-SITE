@@ -135,3 +135,29 @@ test('radial timeline keeps the compact journey implementation and removes stale
   assert.doesNotMatch(source, /Energy Level/);
   assert.doesNotMatch(source, /Zap,/);
 });
+
+test('TASI 2025 page shows its own fixed partner logos', async () => {
+  const source = readFile('src/components/editions/tasi-2025-page.jsx');
+  assert.match(
+    source,
+    /<PartnersMarqueeStrip[\s\S]*partners=\{tasi2025Partners\}/
+  );
+
+  const { tasi2025Partners } = await importModule(
+    'src/data/tasi-2025-edition.js'
+  );
+  assert.equal(tasi2025Partners.length, 32);
+  const slugs = new Set();
+  for (const partner of tasi2025Partners) {
+    assert.ok(partner.name && partner.slug && partner.logo, partner.name);
+    assert.ok(!slugs.has(partner.slug), `duplicate ${partner.slug}`);
+    slugs.add(partner.slug);
+    assert.ok(
+      fs.existsSync(absolutePath(path.join('public', partner.logo))),
+      `${partner.name} logo file exists`
+    );
+  }
+
+  const strip = readFile('src/components/sponsor/partners-marquee-strip.jsx');
+  assert.match(strip, /partnerPageSlugs\.has\(partner\.slug\)/);
+});

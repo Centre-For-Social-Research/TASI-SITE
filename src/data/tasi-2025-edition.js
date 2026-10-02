@@ -185,3 +185,101 @@ export const tasi2025MediaLinks = [
     external: false,
   },
 ];
+
+// Partners of the TASI 2025 edition, kept here so the 2025 page keeps
+// showing them after the shared partner list moves on to TASI 2026.
+// Logos link to a partner page only while one exists in src/data/partners.js.
+export const tasi2025Partners = [
+  {
+    name: 'Booking.com',
+    logo: '/img/Logo/Booking.com.png',
+    slug: 'booking-com',
+  },
+  {
+    name: 'Teleperformance',
+    logo: '/img/Logo/TP.webp',
+    slug: 'teleperformance',
+  },
+  { name: 'Meta', logo: '/img/Logo/Meta.png', slug: 'meta' },
+  { name: 'Snapchat', logo: '/img/Logo/Snapchat.png', slug: 'snapchat' },
+  { name: 'YouTube', logo: '/img/Logo/YouTube.png', slug: 'youtube' },
+  { name: 'Truecaller', logo: '/img/Logo/Truecaller.png', slug: 'truecaller' },
+  { name: 'GSMA', logo: '/img/Logo/GSMA.png', slug: 'gsma' },
+  {
+    name: 'Match Group',
+    logo: '/img/Logo/Match Group.png',
+    slug: 'match-group',
+  },
+  { name: 'X', logo: '/img/Logo/X.png', slug: 'x' },
+  { name: 'Resolver', logo: '/img/Logo/Resolver.png', slug: 'resolver' },
+  { name: 'VYS', logo: '/img/Logo/VYS.png', slug: 'vys-vyanams-strategies' },
+  {
+    name: 'GirlEffect',
+    logo: '/img/Logo/GirlEffect.webp',
+    slug: 'girl-effect',
+  },
+  { name: 'UN Women', logo: '/img/Logo/Un Women.png', slug: 'un-women' },
+  {
+    name: 'French Embassy',
+    logo: '/img/Logo/France in India.png',
+    slug: 'embassy-of-france-in-india',
+  },
+  {
+    name: 'Swedish Embassy',
+    logo: '/img/Logo/Sweden Embassy.png',
+    slug: 'embassy-of-sweden-in-india',
+  },
+  {
+    name: 'Australian High Commission',
+    logo: '/img/Logo/Australian High Commission.png',
+    slug: 'australian-high-commission-india',
+  },
+  {
+    name: 'Netherlands Embassy',
+    logo: '/img/Logo/kingdom-of-the-netherlands.png',
+    slug: 'netherlands-in-india',
+  },
+  {
+    name: 'Canadian High Commission',
+    logo: '/img/Logo/Embassy of Canada.png',
+    slug: 'high-commission-of-canada-in-india',
+  },
+  {
+    name: 'Obhan & Associates',
+    logo: '/img/Logo/Obhan and Associates.png',
+    slug: 'obhan-associates',
+  },
+  { name: 'ASCI', logo: '/img/Logo/ASCI.png', slug: 'asci' },
+  {
+    name: 'Dhirubhai Ambani University',
+    logo: '/img/Logo/Dhirubhai Ambani University.webp',
+    slug: 'dhirubhai-ambani-university',
+  },
+  {
+    name: 'The Asia Foundation',
+    logo: '/img/Logo/The Asia Foundation.png',
+    slug: 'the-asia-foundation',
+  },
+  { name: 'ACTS', logo: '/img/Logo/ACTS.png', slug: 'acts-india' },
+  { name: 'Safetipin', logo: '/img/Logo/Safetipin.png', slug: 'safetipin' },
+  {
+    name: 'The Dialogue',
+    logo: '/img/Logo/The Dialogue.png',
+    slug: 'the-dialogue',
+  },
+  { name: 'IGPP', logo: '/img/Logo/IGPP.png', slug: 'igpp' },
+  { name: 'INHOPE', logo: '/img/Logo/Inhope.png', slug: 'inhope' },
+  { name: 'TQH', logo: '/img/Logo/TQH.png', slug: 'the-quantum-hub' },
+  {
+    name: 'COR Sandbox',
+    logo: '/img/Logo/COR Sandbox.webp',
+    slug: 'cor-sandbox',
+  },
+  { name: 'Roblox', logo: '/img/Logo/Roblox.png', slug: 'roblox' },
+  { name: 'GroSafe', logo: '/img/Logo/GroSafe.png', slug: 'grosafe' },
+  {
+    name: 'FRIDA Health',
+    logo: '/img/Logo/FRIDA Logo.png',
+    slug: 'frida-fund',
+  },
+];

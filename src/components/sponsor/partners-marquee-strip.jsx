@@ -1,8 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { partners } from '@/data/partners';
+import { partners as currentPartners } from '@/data/partners';
 
-export default function PartnersMarqueeStrip() {
+const partnerPageSlugs = new Set(currentPartners.map(({ slug }) => slug));
+
+const logoTileClass =
+  'forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 !bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] dark:!bg-white sm:min-h-24 sm:px-4 sm:py-4';
+
+// Shared logo grid. The sponsor page uses the current partner list; edition
+// pages pass their own fixed list. A logo links to its partner page only
+// while that page exists.
+export default function PartnersMarqueeStrip({
+  eyebrow = 'Our Network',
+  title = 'Partners from TASI 2025',
+  description = 'A growing network of organizations already shaping the trust and safety conversation around TASI.',
+  partners = currentPartners,
+}) {
   const remainderMd = partners.length % 4;
   const remainderLg = partners.length % 6;
 
@@ -28,24 +41,19 @@ export default function PartnersMarqueeStrip() {
       <div className="relative mx-auto w-full max-w-6xl px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">
-            Our Network
+            {eyebrow}
           </p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-white md:text-4xl">
-            Partners from TASI 2025
+            {title}
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-white/75 md:text-base">
-            A growing network of organizations already shaping the trust and
-            safety conversation around TASI.
+            {description}
           </p>
         </div>
 
         <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
-          {partners.map((partner, index) => (
-            <Link
-              key={partner.slug}
-              href={`/partners/${partner.slug}`}
-              className={`forced-color-adjust-none [color-scheme:light] flex min-h-20 items-center justify-center rounded-[10px] border border-white/10 !bg-white px-3 py-3 shadow-[0_18px_50px_-36px_rgba(0,0,0,0.65)] transition-transform hover:-translate-y-0.5 dark:!bg-white sm:min-h-24 sm:px-4 sm:py-4 ${getPlacementClasses(index)}`}
-            >
+          {partners.map((partner, index) => {
+            const logo = (
               <Image
                 src={partner.logo}
                 alt={partner.name}
@@ -55,8 +63,26 @@ export default function PartnersMarqueeStrip() {
                 className="h-10 w-full object-contain sm:h-11"
                 quality={80}
               />
-            </Link>
-          ))}
+            );
+            const placement = getPlacementClasses(index);
+
+            return partnerPageSlugs.has(partner.slug) ? (
+              <Link
+                key={partner.slug}
+                href={`/partners/${partner.slug}`}
+                className={`${logoTileClass} transition-transform hover:-translate-y-0.5 ${placement}`}
+              >
+                {logo}
+              </Link>
+            ) : (
+              <div
+                key={partner.slug}
+                className={`${logoTileClass} ${placement}`}
+              >
+                {logo}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
