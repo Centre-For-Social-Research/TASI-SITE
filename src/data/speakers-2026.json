@@ -1,5 +1,16 @@
 [
   {
+    "name": "Adam Seldow",
+    "designation": "Senior Director of Education Policy",
+    "organisation": "Roblox",
+    "country": "United States",
+    "category": "Legal / Policy",
+    "bio": "Dr. Adam Seldow serves as Senior Director of Education Policy at Roblox with the goal of contributing to the next generation of creators. Dr. Seldow taught secondary school mathematics and led technology in large US school districts. He earned his undergraduate degree from the United States Military Academy at West Point and his master's and doctoral degrees in education policy and leadership from Harvard University.",
+    "photo": "/img/speakers/2026/adam-seldow.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/aseldow/",
+    "edition": "2026"
+  },
+  {
     "name": "Aishwarya Dongre",
     "designation": "IPS/Deputy Director",
     "organisation": "Indian Cybercrime Coordination Centre (I4C)",
@@ -31,6 +42,19 @@
     "photo": "/img/speakers/2026/akash-pugalia.webp",
     "linkedinUrl": "https://www.linkedin.com/in/akashpug03/",
     "instagramUrl": "https://instagram.com/akash.pugalia",
+    "edition": "2026"
+  },
+  {
+    "name": "Anil Raghuvanshi",
+    "designation": "Founder",
+    "organisation": "ChildSafeNet",
+    "country": "Nepal",
+    "category": "Civil Society",
+    "bio": "Anil Raghuvanshi is the Founder of ChildSafeNet, a Nepal-based organisation dedicated to protecting children and young people online. He is a writer and an internationally respected expert speaker on child online protection, with more than 35 years of child protection experience.\n\nAnil has worked at national and international levels, including in nine countries across Asia, Africa, Europe and the Caribbean. His career includes roles with UNICEF, ECPAT International, Save the Children, Plan International and the International Labour Organization.\n\nThrough ChildSafeNet, he combines research, awareness, capacity building and advocacy to prevent online harm. His work addresses online sexual exploitation and abuse, grooming, cyberbullying, technology-facilitated violence and risks associated with artificial intelligence.\n\nAs Principal Investigator, Anil has led research on parenting in the digital age, online intimate partner violence, online grooming and generative AI’s implications for children. He translates evidence into practical guidance for families, professional training and recommendations for safer platform design.\n\nHe serves on the WeProtect Global Alliance Steering Committee and the Sexual Violence Research Initiative’s Global Advisory Group. Drawing on experience in emergencies and conflict settings, he champions prevention, children’s meaningful participation and collaboration among families, educators, researchers, governments and technology companies to create safer digital environments for all children.",
+    "photo": "/img/speakers/2026/anil-raghuvanshi.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/anil-raghuvanshi",
+    "xUrl": "https://x.com/anilrag",
+    "instagramUrl": "https://instagram.com/anil.raghuvanshi17",
     "edition": "2026"
   },
   {
@@ -176,6 +200,17 @@
     "bio": "Dr. Rupa Munakarmi is an educator, researcher, and policy consultant with more than twenty five years of professional engagement in Nepal’s education sector. She holds a PhD in Development Studies (Education) from Kathmandu University as a Danida Fellowship (DFC) scholar. Dr. Munakarmi is currently serving as an Assistant Professor and Head of Department at the Department of Inclusive Education, Early Childhood Development and Professional Studies (DIEP), Kathmandu University School of Education (KUSOED). She teaches from the Master’s to PhD levels and is actively engaged in supervising graduate and doctoral students in their research, including thesis and dissertation research at KU, Tribhuvan University (TU), and Farwest University.\n\nShe is also an education advisor at Kathmandu Metropolitan City. She currently holds key leadership positions, including Chairperson of Loo Niva Child Concern Group and Chairperson and Vice Chair at Visionary Voice Nepal and Nepal GoodWeave Foundation, contributing to organizational governance, strategic direction, and rights-based advocacy. In addition, she serves as a Central Member of the National Election Observation Committee, supporting democratic accountability and civic oversight.\n\nDr. Munakarmi has led and contributed to a wide range of qualitative and mixed-methods studies related to education policy, AI in education, governance, curriculum, assessment, ECED, Education financing, Country Inequalities, and child rights. Her publications include peer-reviewed journal articles, national research reports, and policy-oriented studies.",
     "photo": "/img/speakers/2026/dr-rupa-munakarmi.webp",
     "linkedinUrl": "https://www.linkedin.com/in/rupa-munakarmi-b2763071/",
+    "edition": "2026"
+  },
+  {
+    "name": "Faye D’Souza",
+    "designation": "Founder & Editor, Journalist",
+    "organisation": "Beatroot News",
+    "country": "India",
+    "category": "Media & Journalism",
+    "bio": "Faye D’Souza is a journalist with 22 years of experience in television, radio, print and digital. She now runs a digital content brand called 'Beatroot' that aims to restore the dignity of news by informing young Indians in a manner that is non-partisan and respectful. She was the youngest woman to lead a national news television channel in India. She received the RedInk Award for \"Journalist of the Year\" in 2018 and the RedInk Award for reporting on health during the pandemic in 2021. She was also named Vogue Woman of the Year in 2018, Impact’s 40 Under 40 and has been rated among the most impactful women in media and marketing in India. She also enjoys speaking with young people and women about building credibility, shattering the glass ceiling, and making professional dreams come true. Her content and work focus on equal rights, LGBTQI rights, Climate change, and mental health.",
+    "photo": "/img/speakers/2026/faye-d-souza.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/faye-d-souza-0a3b9410/",
     "edition": "2026"
   },
   {
@@ -384,6 +419,16 @@
     "edition": "2026"
   },
   {
+    "name": "Maina Korir",
+    "designation": "Research Director & Program Lead",
+    "organisation": "iLabAfrica, Strathmore University",
+    "country": "Kenya",
+    "category": "Academia & Research",
+    "bio": "Dr Maina Korir is a cybersecurity researcher and educator specialising in digital trust, privacy, data governance and cybersecurity. She is Research Director and Program Lead at iLabAfrica, Strathmore University, in Nairobi, Kenya where she leads cybersecurity research, capacity-building initiatives, and postgraduate education. She holds a PhD in Privacy and Learning Analytics from The Open University, UK.\n\nHer research interests include child online safety, digital identity and privacy, cybersecurity risks in digital financial services, and privacy and control in learning technologies. She has worked across academia, research, and applied policy, including consultancy work on governance and the responsible use of artificial intelligence.",
+    "photo": "/img/speakers/2026/maina-korir.webp",
+    "edition": "2026"
+  },
+  {
     "name": "Manoj Shakya",
     "designation": "Associate Professor",
     "organisation": "Kathmandu University",
@@ -459,6 +504,19 @@
     "bio": "At OpenAI, Pragya leads Strategy & Global Affairs for India, one of the world’s most transformative AI markets. She works across product, policy, partnerships, and GTM to ensure we present one OpenAI story that aligns our mission with India’s priorities.\n\nBefore OpenAI, Pragya spearheaded Public Affairs at Truecaller, the leading caller identification app. Pragya joined Truecaller from WhatsApp, where she was one of their first hires in India, managing Communications and driving reputation and advocacy efforts. She holds a Master of Business Administration (MBA) from the International Management Institute, and a Bachelor's degree in Commerce from Delhi University.",
     "photo": "/img/speakers/2026/pragya-misra.webp",
     "linkedinUrl": "https://www.linkedin.com/in/pragyamisra16/",
+    "edition": "2026"
+  },
+  {
+    "name": "Pratishtha Arora",
+    "designation": "CEO",
+    "organisation": "Social & Media Matters",
+    "country": "India",
+    "category": "Civil Society",
+    "bio": "Pratishtha Arora is a practitioner-advocate, trust & safety leader and gender and technology specialist with over a decade of experience building safer digital spaces through policy, research, training and field work. She is the Co-Founder and CEO of Social & Media Matters (S&MM), a civil society organisation working on digital safety, online rights, media and AI literacy, and child online safety across India and the Asia Pacific. Her work focuses on designing curricula and programmes and provid direct, real-time support to victims of cybercrime. Beyond S&MM, she is a Board Member at SHIELD (Italy), where she leads Regional Strategy for Asia Pacific, is a member of the Bureau of Indian Standards and member of a Trust and Safety Committee.",
+    "photo": "/img/speakers/2026/pratishtha-arora.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/arora-pratishtha",
+    "xUrl": "https://x.com/gendercrusader",
+    "instagramUrl": "https://www.instagram.com/arorapratishtha",
     "edition": "2026"
   },
   {
@@ -553,6 +611,17 @@
     "category": "International Organisation",
     "bio": "Name: Snigdha Bhardwaj\n\nTitle: Director and Global Head of Generative AI, Trust & Safety, Google\n\nBio: A transformational leader with a 20+ years of experience and strong background in Trust and Safety, currently driving Generative AI testing and enforcement strategy for consumer products in Google. \n\nSnigdha has been instrumental in setting the framework and direction for key & novel Google launches, including Gemini, Search launches like AIO & AIM, Labs launches like NotebookLM and AI Studios launches, collaborating directly with the Office of the CEO and multiple cross-functional senior leaders. Snigdha's expertise includes developing robust strategies for content and actor-based abuse in Generative AI, with a focus on trust & info quality. Also championing key strategic priorities including implementation & resource allocation for Generative AI launches, advocating for xT&S resourcing to SVPs, and effectively coordinating across multiple organizations to ensure successful pre and post launch support. As a subject matter expert on intelligence and risk related to Generative AI, Snigdha has shared knowledge through numerous tech talks and authored/contributed to extensive documentation, including several senior exec level presentations and external engagements.\n\nPrior to the Generative AI era, Snigdha led various cross functional and complex programs for Google Search overseeing the global teams' delivery for policy implementation and enforcement efforts. This included launching features across Search, supporting the automated process development, and working with cross functional teams to find solutions to the user facing issues.\n\nWarmest Regards,",
     "photo": "/img/speakers/2026/snigdha-bhardwaj.webp",
+    "edition": "2026"
+  },
+  {
+    "name": "Sophia Wanjiru",
+    "designation": "Trust and Safety Senior Policy Lead",
+    "organisation": "Booking.com",
+    "country": "Netherlands",
+    "category": "Technology",
+    "bio": "Sophia Wanjiru is a Senior Trust & Safety Policy Lead at Booking.com, with 15+ years of experience spanning cybersecurity, risk management, Trust & Safety, regulatory compliance and customer protection. Her career has included roles across technology, financial services and the NGO sector, including Standard Bank and World Vision International.\n\nAt Booking.com, her work has evolved from cybersecurity and risk management into Trust & Safety governance and regulatory implementation. She supports the operationalization of human rights and safety frameworks, translating commitments around exploitation, safety and human-rights risks into governance, controls, operational processes and escalation mechanisms.\n\nSophia works closely with Legal, Human Rights, Operations, Product, Engineering, Risk and Compliance teams to strengthen prevention, detection, escalation and response across the platform. Her regulatory work includes the EU Digital Services Act and EU AI Act. She holds a Master’s degree in Computer Security from the University of Kent.",
+    "photo": "/img/speakers/2026/sophia-wanjiru.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/sophia-wanjiru",
     "edition": "2026"
   },
   {
