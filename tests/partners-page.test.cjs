@@ -85,3 +85,59 @@ test('partners components consume tracked data and lucide icon registry', () => 
   assert.match(iconSource, /Linkedin/);
   assert.doesNotMatch(detailSource, /<svg/);
 });
+
+test('TASI 2026 partner list is ordered and shown on the homepage strip and sponsor page', async () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const { pathToFileURL } = require('node:url');
+  const { tasi2026Partners, tasi2026PartnerSlugs } = await import(
+    pathToFileURL(path.join(process.cwd(), 'src/data/partners-2026.js'))
+  );
+  assert.equal(tasi2026Partners.length, 22);
+  assert.deepEqual(tasi2026PartnerSlugs.slice(0, 6), [
+    'google',
+    'teleperformance',
+    'meta',
+    'snapchat',
+    'booking-com',
+    'obhan-mason',
+  ]);
+  for (const removed of [
+    'youtube',
+    'truecaller',
+    'gsma',
+    'x',
+    'resolver',
+    'vys-vyanams-strategies',
+    'obhan-associates',
+    'dhirubhai-ambani-university',
+    'the-asia-foundation',
+    'safetipin',
+    'inhope',
+    'cor-sandbox',
+    'un-women',
+    'embassy-of-sweden-in-india',
+    'australian-high-commission-india',
+    'high-commission-of-canada-in-india',
+  ]) {
+    assert.ok(!tasi2026PartnerSlugs.includes(removed), removed);
+  }
+  for (const partner of tasi2026Partners) {
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), 'public', partner.logo)),
+      `${partner.name} logo exists`
+    );
+  }
+
+  const read = (file) =>
+    fs.readFileSync(path.join(process.cwd(), file), 'utf8');
+  const strip = read('src/components/home/sponsors-strip-carousel.jsx');
+  assert.match(strip, /from '@\/data\/partners-2026'/);
+  assert.match(strip, /Partners of TASI 2026/);
+  const sponsor = read('src/components/sponsor/sponsor-page.jsx');
+  assert.match(sponsor, /partners=\{tasi2026Partners\}/);
+  assert.match(
+    read('next.config.mjs'),
+    /source: '\/partners\/obhan-associates',\s*destination: '\/partners\/obhan-mason'/
+  );
+});

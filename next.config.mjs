@@ -173,6 +173,12 @@ const nextConfig = {
         destination: '/speakers/2026/uma-subramanian',
         permanent: true,
       },
+      // Obhan & Associates merged with Mason & Associates as Obhan Mason.
+      {
+        source: '/partners/obhan-associates',
+        destination: '/partners/obhan-mason',
+        permanent: true,
+      },
     ];
   },
   async headers() {

@@ -247,7 +247,8 @@ export const tasi2025Partners = [
   {
     name: 'Obhan & Associates',
     logo: '/img/Logo/Obhan and Associates.png',
-    slug: 'obhan-associates',
+    // The firm is now Obhan Mason; link to its current partner page.
+    slug: 'obhan-mason',
   },
   { name: 'ASCI', logo: '/img/Logo/ASCI.png', slug: 'asci' },
   {

@@ -1,7 +1,7 @@
 export const partners = [
   {
     name: 'Booking.com',
-    logo: '/img/Logo/Booking.com.png',
+    logo: '/img/Logo/2026/booking-com.png',
     slug: 'booking-com',
     type: 'Corporate Partner',
     description:
@@ -18,7 +18,7 @@ export const partners = [
   },
   {
     name: 'Teleperformance',
-    logo: '/img/Logo/TP.webp',
+    logo: '/img/Logo/2026/tp.png',
     slug: 'teleperformance',
     type: 'Corporate Partner',
     description:
@@ -35,7 +35,7 @@ export const partners = [
   },
   {
     name: 'Meta',
-    logo: '/img/Logo/Meta.png',
+    logo: '/img/Logo/2026/meta.png',
     slug: 'meta',
     type: 'Corporate Partner',
     description:
@@ -52,7 +52,7 @@ export const partners = [
   },
   {
     name: 'Snapchat',
-    logo: '/img/Logo/Snapchat.png',
+    logo: '/img/Logo/2026/snapchat.png',
     slug: 'snapchat',
     type: 'Corporate Partner',
     description:
@@ -64,6 +64,55 @@ export const partners = [
       linkedin: 'https://www.linkedin.com/company/snap-inc-',
       twitter: 'https://x.com/snap',
       instagram: 'https://www.instagram.com/snapchat',
+    },
+  },
+  {
+    name: 'Google',
+    logo: '/img/Logo/2026/google.png',
+    slug: 'google',
+    type: 'Corporate Partner',
+    description:
+      'Google is a global technology company whose products, including Search, Android, Chrome, Gmail and YouTube, are used by billions of people. Its work in online safety spans child protection, harmful content, misinformation and responsible AI.',
+    country: 'United States',
+    category: 'Technology',
+    website: 'https://about.google',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/google',
+      twitter: 'https://x.com/Google',
+      instagram: 'https://www.instagram.com/google',
+      youtube: 'https://www.youtube.com/@Google',
+    },
+  },
+  {
+    name: 'Microsoft',
+    logo: '/img/Logo/2026/microsoft.png',
+    slug: 'microsoft',
+    type: 'Corporate Partner',
+    description:
+      'Microsoft is a global technology company behind Windows, Microsoft 365, Azure, LinkedIn and Xbox. Its digital safety work covers online child protection, harmful content and responsible AI.',
+    country: 'United States',
+    category: 'Technology',
+    website: 'https://www.microsoft.com',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/microsoft',
+      twitter: 'https://x.com/Microsoft',
+      instagram: 'https://www.instagram.com/microsoft',
+      youtube: 'https://www.youtube.com/@Microsoft',
+    },
+  },
+  {
+    name: 'Tencent',
+    logo: '/img/Logo/2026/tencent.png',
+    slug: 'tencent',
+    type: 'Corporate Partner',
+    description:
+      'Tencent is a technology company headquartered in Shenzhen, China, whose services span social communication, digital content, games, cloud and fintech, including WeChat and QQ.',
+    country: 'China',
+    category: 'Technology',
+    website: 'https://www.tencent.com/en-us/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/tencent',
+      twitter: 'https://x.com/TencentGlobal',
     },
   },
   {
@@ -118,7 +167,7 @@ export const partners = [
   },
   {
     name: 'Match Group',
-    logo: '/img/Logo/Match Group.png',
+    logo: '/img/Logo/2026/match-group.png',
     slug: 'match-group',
     type: 'Corporate Partner',
     description:
@@ -131,6 +180,20 @@ export const partners = [
       twitter: 'https://x.com/MatchGroup',
       instagram: 'https://www.instagram.com/matchgroup',
       youtube: 'https://www.youtube.com/@matchgroup',
+    },
+  },
+  {
+    name: 'Tech Coalition',
+    logo: '/img/Logo/2026/tech-coalition.png',
+    slug: 'tech-coalition',
+    type: 'Industry Partner',
+    description:
+      'The Tech Coalition is a global alliance of technology companies working together to combat online child sexual exploitation and abuse. Founded in 2006, it funds research, shares tools and builds industry practice to keep children safe online.',
+    country: 'United States',
+    category: 'Industry Alliance',
+    website: 'https://technologycoalition.org',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/tech-coalition-inc',
     },
   },
   {
@@ -217,7 +280,7 @@ export const partners = [
   },
   {
     name: 'French Embassy',
-    logo: '/img/Logo/France in India.png',
+    logo: '/img/Logo/2026/france-in-india.png',
     slug: 'embassy-of-france-in-india',
     type: 'Diplomatic Partner',
     description:
@@ -228,6 +291,21 @@ export const partners = [
     social: {
       twitter: 'https://x.com/franceinindia',
       instagram: 'https://www.instagram.com/franceinindia',
+    },
+  },
+  {
+    name: 'German Embassy',
+    logo: '/img/Logo/2026/germany-in-india.png',
+    slug: 'germany-in-india',
+    type: 'Diplomatic Partner',
+    description:
+      'The German Embassy in New Delhi represents the Federal Republic of Germany in India and Bhutan, supporting bilateral cooperation across diplomacy, trade, technology, culture and people-to-people exchange.',
+    country: 'India',
+    category: 'Diplomatic Mission',
+    website: 'https://india.diplo.de/in-en',
+    social: {
+      twitter: 'https://x.com/GermanyinIndia',
+      youtube: 'https://www.youtube.com/@GermanyinIndia',
     },
   },
   {
@@ -262,7 +340,7 @@ export const partners = [
   },
   {
     name: 'Netherlands Embassy',
-    logo: '/img/Logo/kingdom-of-the-netherlands.png',
+    logo: '/img/Logo/2026/netherlands-in-india.png',
     slug: 'netherlands-in-india',
     type: 'Diplomatic Partner',
     description:
@@ -294,19 +372,17 @@ export const partners = [
     },
   },
   {
-    name: 'Obhan & Associates',
-    logo: '/img/Logo/Obhan and Associates.png',
-    slug: 'obhan-associates',
+    name: 'Obhan Mason',
+    logo: '/img/Logo/2026/obhan-mason.png',
+    slug: 'obhan-mason',
     type: 'Professional Services Partner',
     description:
-      'Obhan & Associates is an Indian law firm known for work across intellectual property, corporate advisory, disputes, and business law for clients ranging from startups to established enterprises.',
+      'Obhan Mason is an Indian law firm formed by the merger of Obhan & Associates and Mason & Associates, with practices across intellectual property, corporate and transactional law, litigation, technology, media and entertainment, and data protection.',
     country: 'India',
     category: 'Law Firm',
-    website: 'https://www.obhanandassociates.com',
+    website: 'https://obhanmason.com',
     social: {
       linkedin: 'https://www.linkedin.com/company/obhanmason',
-      twitter: 'https://x.com/obhaniplaw',
-      instagram: 'https://www.instagram.com/obhanandassociates',
     },
   },
   {
@@ -414,7 +490,7 @@ export const partners = [
   },
   {
     name: 'IGPP',
-    logo: '/img/Logo/IGPP.png',
+    logo: '/img/Logo/2026/igpp.png',
     slug: 'igpp',
     type: 'Policy Partner',
     description:
@@ -477,7 +553,7 @@ export const partners = [
   },
   {
     name: 'Roblox',
-    logo: '/img/Logo/Roblox.png',
+    logo: '/img/Logo/2026/roblox.png',
     slug: 'roblox',
     type: 'Corporate Partner',
     description:

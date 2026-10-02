@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { partners } from '@/data/partners';
+import { tasi2026Partners as partners } from '@/data/partners-2026';
 
 export default function SponsorsStripCarousel() {
   // We duplicate the partners list to create a seamless infinite loop.
@@ -13,7 +13,7 @@ export default function SponsorsStripCarousel() {
     <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen overflow-hidden bg-white pt-12 pb-7 font-['Inter',sans-serif] dark:bg-[#121212] md:pt-14 md:pb-8">
       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 mb-3 md:mb-4">
         <h3 className="text-center text-xl font-bold text-[#14283c] dark:text-gray-200 md:text-3xl">
-          Partners From TASI 2025
+          Partners of TASI 2026
         </h3>
       </div>
 
