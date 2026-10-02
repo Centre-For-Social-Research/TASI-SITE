@@ -177,7 +177,13 @@ Central Delhi: Claridges, Eros Hotel, Hyatt Regency Delhi, Imperial Hotel, ITC M
 
 Practical: Drink sealed bottled water; currency exchange at airport/hotels; major credit cards accepted.
 
-RECEPTIONS (2025 reference; 2026 TBA):
+RECEPTIONS 2026 (all invitation only; invited guests receive timing, venue and entry details directly):
+- Opening Reception, Tuesday 13 October: jointly hosted by the Embassy of France and the German Embassy — welcome remarks, Safety Spotlights from global safety innovators, networking
+- Match Group Policy Lab, Wednesday 14 October, India International Centre: private closed-door roundtable on building safer online social discovery ecosystems, followed by a networking reception
+- Closing Reception, Thursday 15 October: hosted by the Embassy of the Kingdom of the Netherlands — reflections on the festival and networking
+- A festival registration does not by itself include a reception invitation. Enquiries: india@trustandsafetyfestival.com
+
+RECEPTIONS 2025 (past edition):
 - Opening Reception: Embassy of France — diplomatic welcome, international perspectives
 - Mid-Festival: Embassy of Netherlands — Safety by Design, women-led tech solutions
 - Closing Reception: Swedish Embassy — forward-looking panel, informal dinner

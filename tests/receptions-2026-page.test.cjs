@@ -22,13 +22,14 @@ function readFiles(relativePaths) {
   return relativePaths.map(readFile).join('\n');
 }
 
-test('receptions 2026 page keeps only a short update notice below the hero', () => {
+test('receptions 2026 page lists the 2026 events instead of a placeholder notice', () => {
   const updateSource = readFile(
     'src/components/receptions/reception-2026-update.jsx'
   );
   const allSources = readFiles(receptionComponentFiles);
 
-  assert.match(updateSource, /Reception details will be updated soon\./);
+  assert.match(updateSource, /receptions2026\.map/);
+  assert.doesNotMatch(updateSource, /Reception details will be updated soon/);
   assert.doesNotMatch(allSources, /Why These Receptions Matter/);
   assert.doesNotMatch(allSources, /Who Should Plan To Be In The Room/);
   assert.doesNotMatch(allSources, /How Access Works/);
@@ -65,6 +66,29 @@ test('receptions data does not keep unused agenda item artifacts', () => {
   assert.doesNotMatch(source, /agendaItems/);
   assert.doesNotMatch(source, /timeStart/);
   assert.doesNotMatch(source, /speakerName/);
+});
+
+test('receptions 2026 events take their time and venue from the programme', () => {
+  const source = readFile('src/data/receptions-2026.js');
+  const { receptions2026 } = require('../src/data/receptions-2026.js');
+  const { programmeSessions2026 } = require('../src/data/programme-2026.js');
+
+  assert.equal(receptions2026.length, 3);
+  for (const event of receptions2026) {
+    assert.ok(
+      programmeSessions2026.includes(event.session),
+      `${event.slug} is a programme session`
+    );
+    for (const host of event.hosts) {
+      assert.ok(
+        fs.existsSync(absolutePath(`public${host.logo}`)),
+        `${host.logo} exists`
+      );
+    }
+  }
+
+  assert.doesNotMatch(source, /\d{1,2}:\d{2}/);
+  assert.doesNotMatch(source, /Sitharaman|Finance Minister/);
 });
 
 test('receptions page avoids low-contrast dark-mode accent tokens and raw bg-white pills', () => {

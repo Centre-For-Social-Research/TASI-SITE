@@ -426,7 +426,7 @@ export const programmeSessions2026 = [
     68,
     'oct15',
     '18:00–20:00',
-    'Netheland Embassy',
+    'Embassy of the Netherlands',
     'special',
     'Closing Reception',
     'Closing reception for delegates and partners to reflect on the two-day programme and continue conversations across the trust and safety community.'

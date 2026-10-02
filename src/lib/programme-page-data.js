@@ -33,7 +33,7 @@ export const programmeReceptionNotes2026 = [
   },
   {
     day: 'October 15',
-    venue: 'Netheland Embassy, New Delhi',
+    venue: 'Embassy of the Netherlands, New Delhi',
     access: 'Invite only',
     description:
       'Closing reception for delegates and partners to reflect on the two-day programme and continue conversations across the trust and safety community.',
