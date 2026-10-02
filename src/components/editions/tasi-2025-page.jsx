@@ -11,8 +11,9 @@ import {
 } from '@/components/editions/tasi-2025-sections';
 import GlobalCta from '@/components/home/global-cta';
 import HomeNavbar from '@/components/home/navbar';
+import PartnersMarqueeStrip from '@/components/sponsor/partners-marquee-strip';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
-import { tasi2025HeroPills } from '@/data/tasi-2025-edition';
+import { tasi2025HeroPills, tasi2025Partners } from '@/data/tasi-2025-edition';
 
 export default function Tasi2025Page() {
   return (
@@ -67,6 +68,12 @@ export default function Tasi2025Page() {
         <Tasi2025ResearchSpotlightsSection />
         <Tasi2025RecommendationsSection />
         <Tasi2025Quotes />
+        <PartnersMarqueeStrip
+          eyebrow="Our Network"
+          title="Partners of TASI 2025"
+          description="The organizations that partnered with us to make the inaugural Trust and Safety India Festival possible."
+          partners={tasi2025Partners}
+        />
         <Tasi2025LookingAheadSection />
         <GlobalCta />
       </main>

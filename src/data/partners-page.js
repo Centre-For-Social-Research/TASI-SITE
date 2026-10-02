@@ -1,4 +1,6 @@
 import { partners } from './partners.js';
+import { tasi2026Partners } from './partners-2026.js';
+import { tasi2025Partners } from './tasi-2025-edition.js';
 
 export const partnersPageMetadata = {
   title: 'Trust and Safety India Festival Partners | TASI Organizations',
@@ -17,12 +19,45 @@ export const partnersPageMetadata = {
   },
 };
 
+// The page switches between editions, like the speakers and receptions
+// pages; the eyebrow stays fixed and the heading follows the year.
 export const partnersPageHero = {
-  eyebrow: 'TASI 2025',
+  eyebrow: 'Our Partners',
   title: 'Our Partners',
-  description:
-    'A diverse network of technology companies, civil society organisations, diplomatic missions, and research institutions that shaped the trust and safety conversation at TASI 2025.',
+  editions: {
+    2026: {
+      title: 'Partners of TASI 2026',
+      description:
+        'The technology companies, civil society organisations, diplomatic missions, and research institutions partnering with us to shape the trust and safety conversation at TASI 2026.',
+      updateNote:
+        'This list will be updated as additional partners are confirmed.',
+    },
+    2025: {
+      title: 'Partners of TASI 2025',
+      description:
+        'A diverse network of technology companies, civil society organisations, diplomatic missions, and research institutions that shaped the trust and safety conversation at TASI 2025.',
+    },
+  },
 };
+
+export const PARTNER_EDITIONS = ['2025', '2026'];
+export const DEFAULT_PARTNER_EDITION = '2026';
+
+const partnersBySlug = new Map(
+  partners.map((partner) => [partner.slug, partner])
+);
+
+// 2026 in sponsorship order; 2025 as it was, with that year's names and
+// logos, and each partner's current category for the card.
+export function getPartnersForEdition(edition) {
+  if (edition === '2025') {
+    return tasi2025Partners.map((partner) => ({
+      ...partner,
+      category: partnersBySlug.get(partner.slug)?.category || '',
+    }));
+  }
+  return tasi2026Partners;
+}
 
 export const partnersPageCta = {
   eyebrow: 'Partner With TASI 2026',

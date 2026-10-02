@@ -22,7 +22,8 @@ test('partners routes delegate to tracked list and detail components', () => {
   );
   assert.match(listRoute, /export const metadata = partnersPageMetadata;/);
   assert.match(listRoute, /PageSeoJsonLd/);
-  assert.match(listRoute, /<PartnersPage \/>/);
+  assert.match(listRoute, /<PartnersPage initialYear=\{initialYear\} \/>/);
+  assert.match(listRoute, /year === '2025' \? '2025' : '2026'/);
 
   assert.match(
     detailRoute,
@@ -78,10 +79,97 @@ test('partners components consume tracked data and lucide icon registry', () => 
 
   assert.match(listSource, /partnersPageHero/);
   assert.match(listSource, /partnersPageCta/);
-  assert.match(listSource, /partners\.map/);
+  assert.match(listSource, /getPartnersForEdition/);
+  assert.match(listSource, /PartnersEditionView/);
+  assert.match(
+    readFile('src/components/partners/partners-edition-view.jsx'),
+    /EditionYearToggle/
+  );
   assert.match(detailSource, /buildPartnerSocialLinks/);
   assert.match(detailSource, /getPartnerNavigation/);
   assert.match(iconSource, /from 'lucide-react'/);
   assert.match(iconSource, /Linkedin/);
   assert.doesNotMatch(detailSource, /<svg/);
+});
+
+test('TASI 2026 partner list is ordered and shown on the homepage strip and sponsor page', async () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const { pathToFileURL } = require('node:url');
+  const { tasi2026Partners, tasi2026PartnerSlugs } = await import(
+    pathToFileURL(path.join(process.cwd(), 'src/data/partners-2026.js'))
+  );
+  assert.equal(tasi2026Partners.length, 22);
+  assert.deepEqual(tasi2026PartnerSlugs.slice(0, 6), [
+    'google',
+    'teleperformance',
+    'meta',
+    'snapchat',
+    'booking-com',
+    'obhan-mason',
+  ]);
+  for (const removed of [
+    'youtube',
+    'truecaller',
+    'gsma',
+    'x',
+    'resolver',
+    'vys-vyanams-strategies',
+    'obhan-associates',
+    'dhirubhai-ambani-university',
+    'the-asia-foundation',
+    'safetipin',
+    'inhope',
+    'cor-sandbox',
+    'un-women',
+    'embassy-of-sweden-in-india',
+    'australian-high-commission-india',
+    'high-commission-of-canada-in-india',
+  ]) {
+    assert.ok(!tasi2026PartnerSlugs.includes(removed), removed);
+  }
+  for (const partner of tasi2026Partners) {
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), 'public', partner.logo)),
+      `${partner.name} logo exists`
+    );
+  }
+
+  const read = (file) =>
+    fs.readFileSync(path.join(process.cwd(), file), 'utf8');
+  const strip = read('src/components/home/sponsors-strip-carousel.jsx');
+  assert.match(strip, /from '@\/data\/partners-2026'/);
+  assert.match(strip, /Partners of TASI 2026/);
+  const sponsor = read('src/components/sponsor/sponsor-page.jsx');
+  assert.match(sponsor, /partners=\{tasi2026Partners\}/);
+  assert.match(
+    read('next.config.mjs'),
+    /source: '\/partners\/obhan-associates',\s*destination: '\/partners\/obhan-mason'/
+  );
+});
+
+test('partners page splits TASI 2026 and TASI 2025 editions', async () => {
+  const pageData = await loadModule('src/data/partners-page.js');
+  assert.deepEqual(pageData.PARTNER_EDITIONS, ['2025', '2026']);
+  assert.equal(pageData.DEFAULT_PARTNER_EDITION, '2026');
+  assert.equal(
+    pageData.partnersPageHero.editions['2026'].title,
+    'Partners of TASI 2026'
+  );
+  assert.equal(
+    pageData.partnersPageHero.editions['2025'].title,
+    'Partners of TASI 2025'
+  );
+
+  const edition2026 = pageData.getPartnersForEdition('2026');
+  const edition2025 = pageData.getPartnersForEdition('2025');
+  assert.equal(edition2026.length, 22);
+  assert.equal(edition2026[0].slug, 'google');
+  assert.equal(edition2025.length, 32);
+  assert.ok(edition2025.some((partner) => partner.slug === 'youtube'));
+  assert.ok(!edition2025.some((partner) => partner.slug === 'google'));
+  for (const partner of [...edition2026, ...edition2025]) {
+    assert.ok(pageData.getPartnerBySlug(partner.slug), partner.slug);
+    assert.ok(partner.category, `${partner.slug} has a category`);
+  }
 });
