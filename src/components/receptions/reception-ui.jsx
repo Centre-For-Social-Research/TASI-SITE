@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { MoveRight } from 'lucide-react';
+import { Lock, MoveRight } from 'lucide-react';
 
 export function ReceptionSpeakerBadge({ person }) {
   return (
@@ -36,25 +36,44 @@ export function ReceptionSpeakerBadge({ person }) {
 }
 
 export function ReceptionOverviewCard({ reception }) {
+  const hostLogos = reception.hostLogos || [
+    { logo: reception.hostLogo, name: reception.hostEmbassy },
+  ];
+
   return (
     <article className="flex h-full flex-col rounded-[10px] border border-stone-200 bg-white p-6 shadow-xl shadow-stone-200/40 transition-transform duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-amber-300">
-            {reception.shortDate}
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-amber-300">
+              {reception.shortDate}
+            </p>
+            {reception.access ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-stone-200 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-stone-600 dark:border-slate-700 dark:text-slate-300">
+                <Lock className="h-3 w-3" />
+                {reception.access}
+              </span>
+            ) : null}
+          </div>
           <h3 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
             {reception.title}
           </h3>
         </div>
-        <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-[#fff] dark:border-slate-700">
-          <Image
-            src={reception.hostLogo}
-            alt={reception.hostEmbassy}
-            fill
-            className="scale-[1.2] object-contain object-center p-1.5"
-            sizes="48px"
-          />
+        <div className="flex flex-none -space-x-3">
+          {hostLogos.map((host) => (
+            <div
+              key={host.name}
+              className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-[#fff] dark:border-slate-700"
+            >
+              <Image
+                src={host.logo}
+                alt={host.name}
+                fill
+                className="scale-[1.2] object-contain object-center p-1.5"
+                sizes="48px"
+              />
+            </div>
+          ))}
         </div>
       </div>
       <p className="mt-5 text-base font-semibold leading-relaxed text-stone-800 dark:text-slate-100">

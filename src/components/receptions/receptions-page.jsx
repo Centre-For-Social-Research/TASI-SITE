@@ -23,19 +23,14 @@ const heroContent = {
   },
   pre: {
     title: 'TASI 2026 Receptions.',
-    subtitle:
-      'Diplomatic hospitality for the conversations that continue after the main stage.',
+    subtitle: 'Three evenings around the festival.',
     description:
-      'Explore the role of receptions within TASI 2026, from diplomatic hosting and cross-sector networking to the quieter conversations that help summit relationships turn into action.',
-    pills: [
-      'Diplomatic hospitality',
-      'Cross-sector networking',
-      'Registration via main festival flow',
-    ],
+      'An opening reception hosted by the Embassy of France and the German Embassy, a private Match Group Policy Lab, and a closing reception hosted by the Embassy of the Kingdom of the Netherlands.',
+    pills: ['13–15 October 2026', 'New Delhi', 'Invitation only'],
   },
 };
 
-export default function ReceptionsPage({ initialMode = 'post' }) {
+export default function ReceptionsPage({ initialMode = 'pre' }) {
   const [mode, setMode] = useState(initialMode === 'pre' ? 'pre' : 'post');
   const hero = heroContent[mode];
 
