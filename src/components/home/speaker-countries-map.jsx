@@ -158,7 +158,8 @@ export default function SpeakerCountriesMap() {
         view.x + view.width - 48 * labelScale,
         Math.max(view.x + 48 * labelScale, delhi.x)
       )
-    : delhi.x + 28;
+    : // Clears Nepal's marker, which sits just east of Delhi.
+      delhi.x + 44;
 
   return (
     <section
