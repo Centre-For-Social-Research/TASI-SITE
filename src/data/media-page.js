@@ -172,10 +172,17 @@ export const pressReleasesPage = {
     eyebrow: 'Media Resources',
     title: 'Press Releases',
     description:
-      'Official release documents, media invites, and press coordination material from the TASI 2025 cycle.',
+      'Official release documents, media invites, and press coordination material for TASI 2026 and the TASI 2025 cycle.',
   },
   itemLabel: 'Press Release',
   files: [
+    {
+      title: 'Media Invite - Trust and Safety India Festival 2026',
+      description:
+        'Inauguration on Wednesday, 14 October 2026 at 9:30 am, India International Centre, New Delhi. Includes RSVP details and the media accreditation QR code.',
+      href: '/downloads/media-invite-tasi-2026.pdf',
+      type: 'PDF',
+    },
     {
       title:
         "Trust & Safety India Festival 2025 Launches in New Delhi, Showcasing India's Global Leadership in Digital Trust",
