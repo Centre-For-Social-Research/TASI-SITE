@@ -37,6 +37,10 @@ import {
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
+import {
+  QrSendProgressCard,
+  useQrSendProgress,
+} from '@/components/admin/qr-send-progress';
 import registrationCache from '@/lib/admin-registration-cache.cjs';
 
 const {
@@ -1193,6 +1197,13 @@ export default function RegistrationsAdminPanel({ operator }) {
     return data;
   };
 
+  const qrSend = useQrSendProgress({
+    onFinished: () => {
+      invalidateAdminCaches();
+      void loadRegistrations({ background: true, force: true });
+    },
+  });
+
   const queueQrJob = async ({
     resendExisting = false,
     registrationIds = [],
@@ -1210,7 +1221,11 @@ export default function RegistrationsAdminPanel({ operator }) {
           data.error || 'Unable to queue QR email job.',
           'danger'
         );
-      showToast(data.message || 'QR email job queued.', 'success');
+      if (data.job?.id) {
+        void qrSend.start(data.job);
+      } else {
+        showToast(data.message || 'QR email job queued.', 'success');
+      }
       invalidateAdminCaches(registrationIds);
       void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId) {
@@ -1312,6 +1327,9 @@ export default function RegistrationsAdminPanel({ operator }) {
       resendExisting: target.repeatCount > 0,
     });
     setQrLoading(false);
+    // Clear the selection so the same people cannot be sent twice by a
+    // second tap while this send is running.
+    setSelectedIds([]);
   };
 
   const handleQuickAction = async (registration, actionKey) => {
@@ -1718,6 +1736,12 @@ export default function RegistrationsAdminPanel({ operator }) {
         onClose={() => setDrawerOpen(false)}
       />
 
+      <QrSendProgressCard
+        run={qrSend.run}
+        onDismiss={qrSend.dismiss}
+        lifted={selectedIds.length > 1}
+      />
+
       {/* Sticky bulk actions bar */}
       {selectedIds.length > 1 ? (
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur md:left-[248px] dark:border-white/[0.06] dark:bg-zinc-950/95">
@@ -1764,6 +1788,7 @@ export default function RegistrationsAdminPanel({ operator }) {
                 disabled={
                   state.loading ||
                   hasConfigError ||
+                  Boolean(qrSend.run?.running) ||
                   !summarizeQrSelection(selectedIds, state.registrations)
                     .registrationIds.length
                 }
