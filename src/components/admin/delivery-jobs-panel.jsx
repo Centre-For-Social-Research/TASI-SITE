@@ -29,6 +29,7 @@ const DELIVERY_JOBS_CONFIG = {
   },
   alertTitle: 'Delivery Error',
   trackQueueUnavailable: true,
+  coverageLabel: 'Delegates with a QR pass',
   queueUnavailableAlert: {
     title: 'Direct-Send Compatibility Mode',
     description:
@@ -49,7 +50,7 @@ const DELIVERY_JOBS_CONFIG = {
     },
     {
       key: 'sent',
-      label: 'Sent',
+      label: 'Sent today',
       tone: 'success',
       detail: 'Accepted by Resend for delivery',
     },
@@ -57,7 +58,7 @@ const DELIVERY_JOBS_CONFIG = {
       key: 'failed',
       label: 'Failed',
       tone: 'danger',
-      detail: 'Use Retry Failed on the job',
+      detail: 'Use Retry Failed on the send',
     },
   ],
   listHeader: {

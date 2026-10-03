@@ -2,8 +2,16 @@ import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
 import {
   AUTOMATIC_EMAIL_JOB_CUTOFF,
-  listRegistrationEmailJobs,
+  listRegistrationEmailJobCounters,
+  listRegistrationEmailJobsPage,
 } from '@/lib/registration-ops-db';
+import jobView from '@/lib/admin-job-view.cjs';
+import pagination from '@/lib/admin-pagination.cjs';
+
+const { summarizeJobs } = jobView;
+const { clampPage } = pagination;
+
+const PAGE_SIZE = 15;
 
 function serializeJob(job) {
   return {
@@ -22,7 +30,7 @@ function serializeJob(job) {
   };
 }
 
-export async function GET() {
+export async function GET(request) {
   const authResult = await requireAuthorizedOperator({
     route: 'api.admin.email.jobs.list',
   });
@@ -31,13 +39,22 @@ export async function GET() {
   }
 
   try {
-    const jobs = await listRegistrationEmailJobs({
-      limit: 12,
-      createdAfter: AUTOMATIC_EMAIL_JOB_CUTOFF,
-    });
+    const page = clampPage(
+      new URL(request.url).searchParams.get('page'),
+      Number.MAX_SAFE_INTEGER
+    );
+    const scope = { createdAfter: AUTOMATIC_EMAIL_JOB_CUTOFF };
+    const [{ jobs, total }, counters] = await Promise.all([
+      listRegistrationEmailJobsPage({ ...scope, page, pageSize: PAGE_SIZE }),
+      listRegistrationEmailJobCounters(scope),
+    ]);
     return Response.json({
       success: true,
       jobs: jobs.map(serializeJob),
+      page,
+      pageSize: PAGE_SIZE,
+      total,
+      summary: summarizeJobs(counters),
     });
   } catch (error) {
     return Response.json(

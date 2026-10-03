@@ -15,6 +15,7 @@ function loadRoute(relativePath, dependencies) {
     Buffer,
     URL,
     Response,
+    setTimeout,
   });
   return testModule.exports;
 }
@@ -129,9 +130,15 @@ test('audit cursor reaches older actions across all four sources without duplica
   assert.ok(found.includes('registration:registration-84'));
 });
 
+const historyHelpers = {
+  '@/lib/email-history.cjs': require('../src/lib/email-history.cjs'),
+  '@/lib/admin-pagination.cjs': require('../src/lib/admin-pagination.cjs'),
+};
+
 test('provider history reads email metadata and never sends messages', async () => {
   let sent = false;
   const route = loadRoute('src/app/api/admin/email-history/route.js', {
+    ...historyHelpers,
     '@/lib/registration-auth': {
       requireAuthorizedOperator: async () => ({ ok: true }),
     },
@@ -209,4 +216,73 @@ test('job archive includes retrying legacy attempts in its issues filter', async
   ).json();
   assert.equal(filter, 'failed_items.gt.0,retrying_items.gt.0');
   assert.equal(body.jobs[0].id, 'legacy-job');
+});
+
+test('history pages through Resend, then filters bounced and suppressed with counts', async () => {
+  const events = ['delivered', 'bounced', 'suppressed', 'opened', 'sent'];
+  const all = Array.from({ length: 130 }, (_, index) => ({
+    id: `email-${String(index).padStart(3, '0')}`,
+    to: [`person${index}@example.com`],
+    subject: index === 7 ? 'Your TASI 2026 QR entry pass' : 'Hello',
+    created_at: new Date(
+      Date.UTC(2026, 9, 3, 12, 0, 0) - index * 1000
+    ).toISOString(),
+    last_event: events[index % events.length],
+  }));
+  const calls = [];
+  const route = loadRoute('src/app/api/admin/email-history/route.js', {
+    ...historyHelpers,
+    '@/lib/registration-auth': {
+      requireAuthorizedOperator: async () => ({ ok: true }),
+    },
+    '@/lib/resend': {
+      getResendClient: () => ({
+        emails: {
+          list: async ({ limit, after }) => {
+            calls.push(after || '');
+            const start = after ? all.findIndex((e) => e.id === after) + 1 : 0;
+            const data = all.slice(start, start + limit);
+            return {
+              data: { data, has_more: start + limit < all.length },
+              error: null,
+            };
+          },
+        },
+      }),
+    },
+    '@/lib/admin-api-cache': {
+      adminJson: (body, init) => Response.json(body, init),
+    },
+  });
+  const get = async (query) =>
+    (
+      await route.GET({
+        url: `https://example.test/api/admin/email-history?${query}`,
+      })
+    ).json();
+
+  const bounced = await get('status=bounced');
+  assert.deepEqual(calls, ['', 'email-099']);
+  assert.equal(bounced.total, 26);
+  assert.equal(bounced.emails.length, 25);
+  assert.ok(bounced.emails.every((email) => email.lastEvent === 'bounced'));
+  assert.equal(bounced.complete, true);
+  assert.equal(bounced.counts.all, 130);
+  assert.equal(bounced.counts.bounced, 26);
+  assert.equal(bounced.counts.suppressed, 26);
+  assert.equal(bounced.counts.delivered, 52);
+  assert.equal(bounced.counts.problems, 52);
+
+  const secondPage = await get('status=bounced&page=2');
+  assert.equal(secondPage.emails.length, 1);
+  assert.equal(secondPage.page, 2);
+
+  const search = await get('q=qr%20entry');
+  assert.equal(search.total, 1);
+  assert.equal(search.emails[0].id, 'email-007');
+
+  const unknown = await route.GET({
+    url: 'https://example.test/api/admin/email-history?status=nope',
+  });
+  assert.equal(unknown.status, 400);
 });

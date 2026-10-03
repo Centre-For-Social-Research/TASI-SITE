@@ -76,7 +76,7 @@ test('recipient filters only offer statuses that exist, with counts', () => {
   assert.equal(itemTone('retrying'), 'warning');
 });
 
-test('jobs are one list; a job opens in place to show its recipients', () => {
+test('sends are one aligned table; a send opens in place to show its recipients', () => {
   const panel = fs.readFileSync(
     path.join(process.cwd(), 'src/components/admin/job-manager-panel.jsx'),
     'utf8'
@@ -88,6 +88,59 @@ test('jobs are one list; a job opens in place to show its recipients', () => {
       "selectedJobId: current.selectedJobId === jobId ? '' : jobId"
     )
   );
-  assert.ok(panel.includes('max-h-[420px] overflow-y-auto'));
+  assert.ok(panel.includes('max-h-[360px] overflow-y-auto'));
+  // Header and rows share one grid, so the columns line up.
+  assert.ok(panel.split('${JOB_GRID}').length >= 3);
   assert.ok(!panel.includes('Attempts: {item.attempt_count}'));
+});
+
+test('sends are grouped by IST day, with time taken and coverage', () => {
+  const {
+    coverageSummary,
+    groupJobsByDay,
+    jobDuration,
+    sentOnDay,
+  } = require('../src/lib/admin-job-view.cjs');
+  const now = Date.parse('2026-10-03T18:40:00+05:30');
+  const jobs = [
+    { id: 'a', created_at: '2026-10-03T17:48:00+05:30', sent_items: 50 },
+    { id: 'b', created_at: '2026-10-03T00:10:00+05:30', sent_items: 1 },
+    { id: 'c', created_at: '2026-10-02T23:50:00+05:30', sent_items: 1 },
+    { id: 'd', created_at: '2026-09-24T11:39:00+05:30', sent_items: 1 },
+  ];
+  const groups = groupJobsByDay(jobs, now);
+  assert.deepEqual(
+    groups.map((group) => [group.label, group.jobs.length, group.sent]),
+    [
+      ['Today', 2, 51],
+      ['Yesterday', 1, 1],
+      ['24 Sept 2026', 1, 1],
+    ]
+  );
+  assert.equal(sentOnDay(jobs, now), 51);
+
+  assert.equal(
+    jobDuration({
+      created_at: '2026-10-03T17:48:00Z',
+      completed_at: '2026-10-03T17:49:22Z',
+    }),
+    '1m 22s'
+  );
+  assert.equal(
+    jobDuration({
+      created_at: '2026-10-03T17:48:00Z',
+      completed_at: '2026-10-03T17:48:03Z',
+    }),
+    '3s'
+  );
+  assert.equal(jobDuration({ created_at: '2026-10-03T17:48:00Z' }), '');
+
+  assert.deepEqual(coverageSummary({ confirmed: 316, issued: 252 }), {
+    issued: 252,
+    confirmed: 316,
+    remaining: 64,
+    percent: 80,
+  });
+  assert.equal(coverageSummary(null), null);
+  assert.equal(coverageSummary({ confirmed: 0, issued: 0 }), null);
 });

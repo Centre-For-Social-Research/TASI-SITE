@@ -508,6 +508,134 @@ export async function listPassIssueEmailJobs({
   return data || [];
 }
 
+const JOB_COUNTER_COLUMNS =
+  'id, status, created_at, total_items, queued_items, processing_items, sent_items, failed_items, retrying_items';
+
+function scopeJobQuery(query, { createdAfter, includeCompletedBefore }) {
+  if (createdAfter && includeCompletedBefore) {
+    return query.or(`created_at.gte.${createdAfter},status.eq.completed`);
+  }
+  if (createdAfter) return query.gte('created_at', createdAfter);
+  return query;
+}
+
+// One page of email jobs (newest first) with a recipient name for the title,
+// plus the total number of jobs for the pager.
+async function listEmailJobsPage({
+  table,
+  itemsTable,
+  page = 1,
+  pageSize = 15,
+  createdAfter,
+  includeCompletedBefore = false,
+}) {
+  const from = (Math.max(1, page) - 1) * pageSize;
+  const query = scopeJobQuery(
+    getSupabase()
+      .from(table)
+      .select(
+        `
+          *,
+          recipient_preview:${itemsTable} (
+            registration:event_registrations (first_name, last_name)
+          )
+        `,
+        { count: 'exact' }
+      ),
+    { createdAfter, includeCompletedBefore }
+  );
+  const { data, error, count } = await query
+    .order('created_at', { ascending: false })
+    .order('created_at', {
+      ascending: true,
+      referencedTable: 'recipient_preview',
+    })
+    .range(from, from + pageSize - 1)
+    .limit(1, { referencedTable: 'recipient_preview' });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { jobs: data || [], total: count || 0 };
+}
+
+// Counters for every job in scope, for the summary strip.
+async function listEmailJobCounters({
+  table,
+  columns = JOB_COUNTER_COLUMNS,
+  createdAfter,
+  includeCompletedBefore = false,
+}) {
+  const { data, error } = await scopeJobQuery(
+    getSupabase().from(table).select(columns),
+    { createdAfter, includeCompletedBefore }
+  ).limit(2000);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data || [];
+}
+
+export function listPassIssueEmailJobsPage(options = {}) {
+  return listEmailJobsPage({
+    ...options,
+    table: 'pass_issue_email_jobs',
+    itemsTable: 'pass_issue_email_job_items',
+  });
+}
+
+export function listPassIssueEmailJobCounters(options = {}) {
+  return listEmailJobCounters({
+    ...options,
+    table: 'pass_issue_email_jobs',
+    // QR jobs also count people skipped because they already had a pass.
+    columns: `${JOB_COUNTER_COLUMNS}, skipped_items`,
+  });
+}
+
+export function listRegistrationEmailJobsPage(options = {}) {
+  return listEmailJobsPage({
+    ...options,
+    table: 'registration_email_jobs',
+    itemsTable: 'registration_email_job_items',
+  });
+}
+
+export function listRegistrationEmailJobCounters(options = {}) {
+  return listEmailJobCounters({
+    ...options,
+    table: 'registration_email_jobs',
+  });
+}
+
+// How far the QR mail-out has got: confirmed delegates, and how many of them
+// have been sent a pass.
+export async function getPassCoverage() {
+  const supabase = getSupabase();
+  const [confirmed, issued] = await Promise.all([
+    supabase
+      .from('event_registrations')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'confirmed'),
+    supabase
+      .from('event_registrations')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'confirmed')
+      .not('qr_pass_issued_at', 'is', null),
+  ]);
+
+  if (confirmed.error) throw new Error(confirmed.error.message);
+  if (issued.error) throw new Error(issued.error.message);
+
+  return {
+    confirmed: confirmed.count || 0,
+    issued: issued.count || 0,
+  };
+}
+
 // Automatic workers only take jobs created after the pre-event backlog review.
 // Older jobs remain visible and can be inspected without being restarted.
 export const AUTOMATIC_EMAIL_JOB_CUTOFF = '2026-09-27T18:30:00.000Z';

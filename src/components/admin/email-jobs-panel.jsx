@@ -2,6 +2,7 @@
 
 import JobManagerPanel from '@/components/admin/job-manager-panel';
 import OutgoingEmailHistory from '@/components/admin/outgoing-email-history';
+import AdminPageIntro from '@/components/admin/admin-page-intro';
 import jobLabels from '@/lib/admin-job-labels.cjs';
 
 const { jobParticipantTitle } = jobLabels;
@@ -24,27 +25,27 @@ const EMAIL_JOBS_CONFIG = {
   intro: {
     eyebrow: 'Email delivery',
     title: 'Outgoing Emails',
-    description:
-      'View outgoing email history and inspect registration email jobs. Recent failed jobs can be retried after review.',
+    // The page intro is shown above the email history instead.
+    description: '',
     chips: () => [],
   },
   alertTitle: 'Email Queue Error',
   statCards: [
     {
       key: 'queued',
-      label: 'Queued Emails',
+      label: 'Waiting',
       tone: 'warning',
       detail: 'Waiting for background worker',
     },
     {
       key: 'processing',
-      label: 'Processing',
+      label: 'Sending now',
       tone: 'info',
       detail: 'Currently sending',
     },
     {
       key: 'sent',
-      label: 'Sent',
+      label: 'Sent today',
       tone: 'success',
       detail: 'Accepted by email provider',
     },
@@ -52,13 +53,13 @@ const EMAIL_JOBS_CONFIG = {
       key: 'failed',
       label: 'Failed',
       tone: 'danger',
-      detail: 'Need operator attention',
+      detail: 'Use Retry Failed on the send',
     },
   ],
   listHeader: {
-    eyebrow: 'Confirmation Email Jobs',
+    eyebrow: 'Registration email queue',
     description:
-      'Text-only notification emails · Select a job to inspect failures and retry.',
+      'Status emails (received, confirmed, waitlisted, rejected) sent in bulk. Click a send to see who it went to.',
   },
   accent: {
     eyebrow: 'text-purple-600',
@@ -70,6 +71,11 @@ const EMAIL_JOBS_CONFIG = {
     progressBar: 'bg-purple-600',
   },
   renderJobTitle: jobParticipantTitle,
+  // "submission_received" -> "Submission received"
+  renderJobTag: (job) => {
+    const label = String(job.template_type || '').replaceAll('_', ' ');
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  },
   renderJobSubtitle: (job) =>
     `${job.template_type.replaceAll('_', ' ')} · ${job.total_items} recipient${job.total_items === 1 ? '' : 's'}`,
   emptyState: () => 'No registration email jobs yet.',
@@ -88,8 +94,9 @@ const EMAIL_JOBS_CONFIG = {
 export default function EmailJobsPanel({ operator }) {
   return (
     <div className="space-y-6">
-      <JobManagerPanel operator={operator} config={EMAIL_JOBS_CONFIG} />
+      <AdminPageIntro description="Every email the site has sent and whether it reached the inbox. Use the filters to find bounced or suppressed addresses." />
       <OutgoingEmailHistory />
+      <JobManagerPanel operator={operator} config={EMAIL_JOBS_CONFIG} />
     </div>
   );
 }

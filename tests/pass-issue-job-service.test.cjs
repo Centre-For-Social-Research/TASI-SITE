@@ -80,8 +80,9 @@ test('QR job history includes completed older jobs without exposing unfinished o
   );
 });
 
-test('QR admin list requests completed history while keeping the recent cutoff', async () => {
-  const options = [];
+test('QR admin list loads one page of history, a summary across all jobs and coverage', async () => {
+  const pageOptions = [];
+  const counterOptions = [];
   const { code } = transformSync(
     readSource('src/app/api/admin/passes/jobs/route.js'),
     { format: 'cjs' }
@@ -91,6 +92,9 @@ test('QR admin list requests completed history while keeping the recent cutoff',
     module: testModule,
     exports: testModule.exports,
     Response,
+    URL,
+    Intl,
+    Date,
     require: (specifier) => {
       if (specifier === '@/lib/registration-auth') {
         return { requireAuthorizedOperator: async () => ({ ok: true }) };
@@ -101,12 +105,26 @@ test('QR admin list requests completed history while keeping the recent cutoff',
           isQueueInfrastructureUnavailable: () => false,
         };
       }
+      if (specifier === '@/lib/admin-job-view.cjs') {
+        return require('../src/lib/admin-job-view.cjs');
+      }
+      if (specifier === '@/lib/admin-pagination.cjs') {
+        return require('../src/lib/admin-pagination.cjs');
+      }
       if (specifier === '@/lib/registration-ops-db') {
         return {
           AUTOMATIC_EMAIL_JOB_CUTOFF: '2026-09-27T18:30:00.000Z',
-          listPassIssueEmailJobs: async (value) => {
-            options.push(value);
-            return [];
+          getPassCoverage: async () => ({ confirmed: 316, issued: 252 }),
+          listPassIssueEmailJobsPage: async (value) => {
+            pageOptions.push(value);
+            return { jobs: [], total: 31 };
+          },
+          listPassIssueEmailJobCounters: async (value) => {
+            counterOptions.push(value);
+            return [
+              { queued_items: 4, retrying_items: 1, processing_items: 1 },
+              { failed_items: 2 },
+            ];
           },
         };
       }
@@ -114,13 +132,25 @@ test('QR admin list requests completed history while keeping the recent cutoff',
     },
   });
 
-  const response = await testModule.exports.GET();
+  const response = await testModule.exports.GET(
+    new Request('https://example.test/api/admin/passes/jobs?page=3')
+  );
   assert.equal(response.status, 200);
-  assert.deepEqual(JSON.parse(JSON.stringify(options)), [
-    {
-      limit: 20,
-      createdAfter: '2026-09-27T18:30:00.000Z',
-      includeCompletedBefore: true,
-    },
+  const body = await response.json();
+  assert.equal(body.page, 3);
+  assert.equal(body.pageSize, 15);
+  assert.equal(body.total, 31);
+  assert.deepEqual(body.coverage, { confirmed: 316, issued: 252 });
+  assert.deepEqual(
+    { ...body.summary, sent: 0 },
+    { queued: 5, processing: 1, failed: 2, sent: 0 }
+  );
+  const scope = {
+    createdAfter: '2026-09-27T18:30:00.000Z',
+    includeCompletedBefore: true,
+  };
+  assert.deepEqual(JSON.parse(JSON.stringify(pageOptions)), [
+    { ...scope, page: 3, pageSize: 15 },
   ]);
+  assert.deepEqual(JSON.parse(JSON.stringify(counterOptions)), [scope]);
 });
