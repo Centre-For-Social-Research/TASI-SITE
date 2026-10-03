@@ -663,3 +663,75 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Live festival status (14-15 Oct only) */
+.agenda-root .session-card.session-live {
+  border-color: #ff3b5c;
+  box-shadow:
+    0 0 0 1px #ff3b5c,
+    0 12px 32px rgba(255, 59, 92, 0.16);
+}
+
+.agenda-root .session-card.session-past {
+  opacity: 0.55;
+}
+
+.agenda-root .live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: #ff3b5c;
+  padding: 3px 10px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.agenda-root .live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+
+.agenda-root .jump-to-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  border-radius: 999px;
+  border: 1.5px solid #ff3b5c;
+  padding: 6px 14px;
+  color: #ff3b5c;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.agenda-root .jump-to-now:hover {
+  background: #ff3b5c;
+  color: #fff;
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agenda-root .live-dot {
+    animation: none;
+  }
+}

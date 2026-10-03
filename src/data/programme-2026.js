@@ -1,6 +1,12 @@
 // Public TASI 2026 programme. The latest draft takes precedence over the
-// earlier CSV where their schedules differ. Speaker details and internal
-// planning notes must not be published here.
+// earlier CSV where their schedules differ. Internal planning notes must not
+// be published here. Confirmed speakers live in programme-2026-speakers.js.
+//
+// Keep session ids stable when editing: saved agendas and session links are
+// keyed on them. Titles and descriptions can change freely; old session URLs
+// redirect to the new title.
+
+import { sessionSpeakers2026 } from './programme-2026-speakers.js';
 
 const makeSession = (id, day, time, venue, format, title, description) => ({
   id: `tasi26-${id}`,
@@ -12,7 +18,7 @@ const makeSession = (id, day, time, venue, format, title, description) => ({
   title,
   description:
     description || 'Further details about this session will be shared soon.',
-  speakers: [],
+  speakers: sessionSpeakers2026[`tasi26-${id}`] || [],
 });
 
 export const programmeSessions2026 = [
@@ -523,3 +529,16 @@ export const programmeSessions2026 = [
     'Snap Workshop'
   ),
 ];
+
+// Slim copy for the client-side "Now and Next" views: only the festival
+// days and only the fields they need.
+export const liveProgrammeSessions2026 = programmeSessions2026
+  .filter((session) => session.day === 'oct14' || session.day === 'oct15')
+  .map(({ id, day, time, venue, title, speakers }) => ({
+    id,
+    day,
+    time,
+    venue,
+    title,
+    speakers,
+  }));

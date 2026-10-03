@@ -1,8 +1,35 @@
 import { speakers } from '@/data/speakers';
+import speakers2026 from '@/data/speakers-2026.json';
 import { agendaSpeakerFallbackTitles2025 } from '@/data/programme-2025';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 
 const { normalizePersonName } = programmeAgendaUtils;
+
+// 2026 speakers come from the 2026 directory, so session cards show the
+// current designation and photo and link to /speakers/2026/<name>.
+export function buildProgrammeSpeakerDesignationMap2026() {
+  return Object.fromEntries(
+    speakers2026
+      .map((speaker) => [
+        normalizePersonName(speaker.name),
+        [speaker.designation, speaker.organisation].filter(Boolean).join(', '),
+      ])
+      .filter(([key, value]) => key && value)
+  );
+}
+
+export function buildProgrammeSpeakerPhotoMap2026() {
+  return Object.fromEntries(
+    speakers2026
+      .filter((speaker) => speaker.photo)
+      .map((speaker) => [
+        normalizePersonName(speaker.name),
+        speaker.photo.startsWith('/')
+          ? speaker.photo
+          : `/img/speakers/${speaker.photo}`,
+      ])
+  );
+}
 
 export const programmeDayLabels = {
   oct6: 'October 6 - Opening Reception',

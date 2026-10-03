@@ -10,7 +10,9 @@ import {
   Search,
 } from 'lucide-react';
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import { useFestivalClock } from '@/components/live/use-festival-clock';
 import agendaBuilderUtils from '@/lib/agenda-builder-utils.cjs';
+import liveProgramme from '@/lib/live-programme.cjs';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 import BuildMyAgenda from './build-my-agenda';
@@ -24,6 +26,7 @@ const {
 } = programmeAgendaUtils;
 const { getSpeakerProfilePath } = speakerDirectoryUtils;
 const { getEditionYear } = agendaBuilderUtils;
+const { getSessionLiveStatus } = liveProgramme;
 
 const FORMAT_LABELS = {
   opening: 'Opening',
@@ -270,7 +273,11 @@ export default function ProgrammeAgendaClient({
   speakerPhotoMap = {},
   receptionNotes = [],
   dayDateMap = DEFAULT_DAY_DATE_MAP,
+  showLiveStatus = false,
+  speakerEdition,
 }) {
+  const clock = useFestivalClock();
+  const liveClock = showLiveStatus ? clock : null;
   const [showAgendaBuilder, setShowAgendaBuilder] = useState(false);
   const [activeDay, setActiveDay] = useState('all');
   const [query, setQuery] = useState('');
@@ -287,8 +294,9 @@ export default function ProgrammeAgendaClient({
         sessions,
         speakerDesignationMap,
         speakerPhotoMap,
+        speakerEdition,
       }),
-    [sessions, speakerDesignationMap, speakerPhotoMap]
+    [sessions, speakerDesignationMap, speakerPhotoMap, speakerEdition]
   );
 
   const formats = useMemo(
@@ -355,6 +363,33 @@ export default function ProgrammeAgendaClient({
     Math.ceil(sessionsWithCalendar.length / SESSIONS_PER_PAGE)
   );
   const currentPageSafe = Math.min(currentPage, totalPages);
+
+  const liveDayKey =
+    liveClock === null
+      ? null
+      : (normalizedSessions.find(
+          (session) => getSessionLiveStatus(session, liveClock) === 'live'
+        )?.day ?? null);
+
+  // Clears filters, opens today's tab and pages to the session on now.
+  const jumpToNow = () => {
+    const todays = sortProgrammeSessionsForAgenda(
+      normalizedSessions.filter((session) => session.day === liveDayKey)
+    );
+    const index = todays.findIndex(
+      (session) => getSessionLiveStatus(session, liveClock) === 'live'
+    );
+    setQuery('');
+    setFormat('');
+    setVenue('');
+    setActiveDay(liveDayKey);
+    setCurrentPage(Math.floor(Math.max(index, 0) / SESSIONS_PER_PAGE) + 1);
+    window.setTimeout(() => {
+      document
+        .querySelector('[data-live-status="live"]')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  };
   const paginatedSessions = useMemo(() => {
     const startIndex = (currentPageSafe - 1) * SESSIONS_PER_PAGE;
     return sessionsWithCalendar.slice(
@@ -482,6 +517,16 @@ export default function ProgrammeAgendaClient({
               {labels[dayKey]}
             </button>
           ))}
+          {liveDayKey ? (
+            <button
+              type="button"
+              className={styles['jump-to-now']}
+              onClick={jumpToNow}
+            >
+              <span className={styles['live-dot']} aria-hidden="true" />
+              Jump to now
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -494,154 +539,176 @@ export default function ProgrammeAgendaClient({
           ) : (
             <>
               <div className={styles['sessions-list']}>
-                {paginatedSessions.map((session) => (
-                  <div
-                    key={session.id}
-                    className={cx(
-                      styles['session-card'],
-                      styles[`format-${session.format}`]
-                    )}
-                  >
-                    <div className={styles['card-content']}>
-                      <div className={styles['card-top']}>
-                        <div className={styles['venue-badge']}>
-                          {session.venue || session.track}
-                        </div>
-                        <span
-                          className={cx(
-                            styles['format-badge'],
-                            styles[`badge-${session.format}`]
-                          )}
-                        >
-                          {FORMAT_LABELS[session.format]}
-                        </span>
-                      </div>
-
-                      <div className={styles['card-meta']}>
-                        <div className={styles['meta-item']}>
-                          <Clock aria-hidden="true" />
-                          <span>{session.time}</span>
-                        </div>
-                        <span className={styles['meta-sep']}>•</span>
-                        <div className={styles['meta-item']}>
-                          <span>{labels[session.day] || session.day}</span>
-                        </div>
-                      </div>
-
-                      <Link
-                        className={styles['session-title']}
-                        href={getProgrammeSessionPath(session)}
-                      >
-                        {session.title}
-                      </Link>
-
-                      {session.topic && (
-                        <div className={styles['session-topic']}>
-                          {session.topic}
-                        </div>
+                {paginatedSessions.map((session) => {
+                  const liveStatus =
+                    liveClock === null
+                      ? null
+                      : getSessionLiveStatus(session, liveClock);
+                  return (
+                    <div
+                      key={session.id}
+                      data-live-status={liveStatus || undefined}
+                      className={cx(
+                        styles['session-card'],
+                        styles[`format-${session.format}`],
+                        liveStatus === 'live' && styles['session-live'],
+                        liveStatus === 'past' && styles['session-past']
                       )}
-
-                      <div className={styles['session-venue-line']}>
-                        {session.venue || session.track}
-                      </div>
-
-                      <div className={styles['session-actions']}>
-                        <button
-                          type="button"
-                          aria-pressed={agenda.selectedIds.has(session.id)}
-                          onClick={() => agenda.toggle(session.id)}
-                          className={cx(
-                            styles['agenda-toggle'],
-                            agenda.selectedIds.has(session.id) &&
-                              styles['agenda-toggle-on']
-                          )}
-                        >
-                          {agenda.selectedIds.has(session.id) ? (
-                            <BookmarkCheck aria-hidden="true" />
-                          ) : (
-                            <BookmarkPlus aria-hidden="true" />
-                          )}
-                          <span>
-                            {agenda.selectedIds.has(session.id)
-                              ? 'In my agenda'
-                              : 'Add to my agenda'}
+                    >
+                      <div className={styles['card-content']}>
+                        <div className={styles['card-top']}>
+                          <div className={styles['venue-badge']}>
+                            {session.venue || session.track}
+                          </div>
+                          {liveStatus === 'live' ? (
+                            <span className={styles['live-badge']}>
+                              <span
+                                className={styles['live-dot']}
+                                aria-hidden="true"
+                              />
+                              Live
+                            </span>
+                          ) : null}
+                          <span
+                            className={cx(
+                              styles['format-badge'],
+                              styles[`badge-${session.format}`]
+                            )}
+                          >
+                            {FORMAT_LABELS[session.format]}
                           </span>
-                        </button>
-                        {session.calendar && (
-                          <>
-                            <a
-                              className={styles['calendar-btn']}
-                              href={session.calendar.microsoftHref}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <CalendarPlus />
-                              <span>Add to Calendar</span>
-                            </a>
-                            <a
-                              className={styles['calendar-btn']}
-                              href={session.calendar.googleHref}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <CalendarPlus />
-                              <span>Google Calendar</span>
-                            </a>
-                          </>
-                        )}
-                      </div>
+                        </div>
 
-                      {session.speakersDetailed &&
-                        session.speakersDetailed.length > 0 && (
-                          <div className={styles['speakers-section']}>
-                            <div className={styles['speakers-label']}>
-                              Speakers
-                            </div>
-                            <div className={styles['speakers-list']}>
-                              {session.speakersDetailed.map((speaker, idx) => (
-                                <div
-                                  key={idx}
-                                  className={styles['speaker-row']}
-                                >
-                                  <div
-                                    className={cx(
-                                      styles['speaker-avatar'],
-                                      'relative'
-                                    )}
-                                    aria-hidden="true"
-                                  >
-                                    {speaker.photo ? (
-                                      <Image
-                                        src={speaker.photo}
-                                        alt=""
-                                        fill
-                                        sizes="58px"
-                                      />
-                                    ) : (
-                                      <span>{speaker.name.charAt(0)}</span>
-                                    )}
-                                  </div>
-                                  <div className={styles['speaker-info']}>
-                                    <Link
-                                      className={styles['speaker-name']}
-                                      href={getSpeakerProfilePath(speaker)}
-                                    >
-                                      {speaker.name}
-                                    </Link>
-                                    {speaker.title && (
-                                      <div className={styles['speaker-title']}>
-                                        {speaker.title}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
+                        <div className={styles['card-meta']}>
+                          <div className={styles['meta-item']}>
+                            <Clock aria-hidden="true" />
+                            <span>{session.time}</span>
+                          </div>
+                          <span className={styles['meta-sep']}>•</span>
+                          <div className={styles['meta-item']}>
+                            <span>{labels[session.day] || session.day}</span>
+                          </div>
+                        </div>
+
+                        <Link
+                          className={styles['session-title']}
+                          href={getProgrammeSessionPath(session)}
+                        >
+                          {session.title}
+                        </Link>
+
+                        {session.topic && (
+                          <div className={styles['session-topic']}>
+                            {session.topic}
                           </div>
                         )}
+
+                        <div className={styles['session-venue-line']}>
+                          {session.venue || session.track}
+                        </div>
+
+                        <div className={styles['session-actions']}>
+                          <button
+                            type="button"
+                            aria-pressed={agenda.selectedIds.has(session.id)}
+                            onClick={() => agenda.toggle(session.id)}
+                            className={cx(
+                              styles['agenda-toggle'],
+                              agenda.selectedIds.has(session.id) &&
+                                styles['agenda-toggle-on']
+                            )}
+                          >
+                            {agenda.selectedIds.has(session.id) ? (
+                              <BookmarkCheck aria-hidden="true" />
+                            ) : (
+                              <BookmarkPlus aria-hidden="true" />
+                            )}
+                            <span>
+                              {agenda.selectedIds.has(session.id)
+                                ? 'In my agenda'
+                                : 'Add to my agenda'}
+                            </span>
+                          </button>
+                          {session.calendar && (
+                            <>
+                              <a
+                                className={styles['calendar-btn']}
+                                href={session.calendar.microsoftHref}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <CalendarPlus />
+                                <span>Add to Calendar</span>
+                              </a>
+                              <a
+                                className={styles['calendar-btn']}
+                                href={session.calendar.googleHref}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <CalendarPlus />
+                                <span>Google Calendar</span>
+                              </a>
+                            </>
+                          )}
+                        </div>
+
+                        {session.speakersDetailed &&
+                          session.speakersDetailed.length > 0 && (
+                            <div className={styles['speakers-section']}>
+                              <div className={styles['speakers-label']}>
+                                Speakers
+                              </div>
+                              <div className={styles['speakers-list']}>
+                                {session.speakersDetailed.map(
+                                  (speaker, idx) => (
+                                    <div
+                                      key={idx}
+                                      className={styles['speaker-row']}
+                                    >
+                                      <div
+                                        className={cx(
+                                          styles['speaker-avatar'],
+                                          'relative'
+                                        )}
+                                        aria-hidden="true"
+                                      >
+                                        {speaker.photo ? (
+                                          <Image
+                                            src={speaker.photo}
+                                            alt=""
+                                            fill
+                                            sizes="58px"
+                                          />
+                                        ) : (
+                                          <span>{speaker.name.charAt(0)}</span>
+                                        )}
+                                      </div>
+                                      <div className={styles['speaker-info']}>
+                                        <Link
+                                          className={styles['speaker-name']}
+                                          href={getSpeakerProfilePath(speaker)}
+                                        >
+                                          {speaker.name}
+                                        </Link>
+                                        {speaker.title && (
+                                          <div
+                                            className={styles['speaker-title']}
+                                          >
+                                            {speaker.title}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               {totalPages > 1 && (
                 <div className={styles['pagination-wrap']}>
