@@ -57,7 +57,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=high
+      # High/critical advisories fail CI; time-boxed exceptions live in
+      # scripts/audit-check.mjs.
+      - run: npm run audit:ci
 
   build:
     name: Build
