@@ -103,9 +103,36 @@ function assertQueueInfrastructureAvailable(
     : new Error(String(errorOrMessage || message));
 }
 
+// An item stays "processing" only while a request is sending it (seconds).
+// If a request is cut off mid-chunk, nothing else moves the item on, so it
+// would be stuck for good. After this long it is treated as interrupted.
+const STALE_PROCESSING_MS = 10 * 60 * 1000;
+
+// Splits items left "processing" by an interrupted request into those to
+// send again and those already out of attempts.
+function planStaleJobItemRecovery(items = [], now = Date.now()) {
+  const retry = [];
+  const fail = [];
+
+  for (const item of items) {
+    if (item.status !== 'processing' || !item.last_attempt_at) continue;
+    const lastAttempt = Date.parse(item.last_attempt_at);
+    if (!Number.isFinite(lastAttempt)) continue;
+    if (now - lastAttempt < STALE_PROCESSING_MS) continue;
+
+    const attempts = Number(item.attempt_count || 0);
+    const maxAttempts = Number(item.max_attempts || MAX_JOB_RETRIES);
+    (attempts < maxAttempts ? retry : fail).push(item);
+  }
+
+  return { retry, fail };
+}
+
 module.exports = {
   DEFAULT_JOB_CHUNK_SIZE,
   MAX_JOB_RETRIES,
+  STALE_PROCESSING_MS,
+  planStaleJobItemRecovery,
   assertQueueInfrastructureAvailable,
   buildJobSelection,
   deriveJobProgress,

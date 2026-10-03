@@ -5,6 +5,12 @@ import {
   processPassIssueEmailJob,
 } from '@/lib/pass-issue-job-service';
 
+// Each request handles a small chunk (about 5 s per pass), so this is a
+// generous ceiling rather than an expected duration.
+export const maxDuration = 300;
+
+const MAX_CHUNK_SIZE = 20;
+
 function serializeJob(job) {
   if (!job) {
     return null;
@@ -37,7 +43,11 @@ export async function POST(request) {
   try {
     const body = await request.json().catch(() => ({}));
     const jobId = String(body?.jobId || '').trim();
-    const chunkSize = Number(body?.chunkSize || 0) || undefined;
+    const requestedChunk = Number(body?.chunkSize || 0);
+    const chunkSize =
+      requestedChunk > 0
+        ? Math.min(Math.floor(requestedChunk), MAX_CHUNK_SIZE)
+        : undefined;
     const processedJob = jobId
       ? await processPassIssueEmailJob({
           jobId,

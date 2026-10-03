@@ -2,9 +2,14 @@ import { timingSafeEqual } from 'node:crypto';
 import { processNextAvailablePassIssueEmailJob } from '@/lib/pass-issue-job-service';
 import { processNextAvailableRegistrationEmailJob } from '@/lib/registration-email-job-service';
 
-export const maxDuration = 60;
+// A QR pass takes about 5 s, so a 20-pass chunk could outlast a 60 s limit
+// and leave items stuck mid-send. QR chunks are kept small and the run stops
+// starting new work well before the limit.
+export const maxDuration = 300;
 
 const MAX_DRAIN_PASSES = 6;
+const QR_CHUNK_SIZE = 5;
+const TIME_BUDGET_MS = 200 * 1000;
 
 function isAuthorizedCronRequest(request) {
   const cronSecret = process.env.CRON_SECRET?.trim();
@@ -43,9 +48,16 @@ export async function GET(request) {
     registrationEmailJobsProcessed: 0,
   };
 
+  const startedAt = Date.now();
+
   for (let attempt = 0; attempt < MAX_DRAIN_PASSES; attempt += 1) {
+    if (Date.now() - startedAt > TIME_BUDGET_MS) break;
+
     const [qrJob, registrationEmailJob] = await Promise.all([
-      processNextAvailablePassIssueEmailJob({ operator }),
+      processNextAvailablePassIssueEmailJob({
+        operator,
+        chunkSize: QR_CHUNK_SIZE,
+      }),
       processNextAvailableRegistrationEmailJob({ operator }),
     ]);
 

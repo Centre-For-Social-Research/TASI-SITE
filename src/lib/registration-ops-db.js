@@ -1,8 +1,10 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { getRegistrationById } from '@/lib/registration-db';
 import passUtils from '@/lib/registration-pass-utils.cjs';
+import registrationJobUtils from '@/lib/registration-job-utils.cjs';
 
 const { normalizeRegistrationRecord } = passUtils;
+const { planStaleJobItemRecovery } = registrationJobUtils;
 
 function getSupabase() {
   return getSupabaseAdmin();
@@ -578,7 +580,54 @@ export async function listPassIssueEmailJobItems({ jobId, limit = 50 } = {}) {
   return data || [];
 }
 
+// Moves pass items stuck in "processing" after an interrupted request back
+// into the queue (or to failed when out of attempts). Each update only
+// applies if the item is still exactly as read, so a send that is genuinely
+// in progress is never touched.
+export async function releaseStalePassIssueEmailJobItems(jobId) {
+  const supabase = getSupabase();
+  const { data: items, error } = await supabase
+    .from('pass_issue_email_job_items')
+    .select('id, status, attempt_count, max_attempts, last_attempt_at')
+    .eq('job_id', jobId)
+    .eq('status', 'processing');
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const { retry, fail } = planStaleJobItemRecovery(items || []);
+  const release = async (item, update) => {
+    const { error: updateError } = await supabase
+      .from('pass_issue_email_job_items')
+      .update({ ...update, updated_at: new Date().toISOString() })
+      .eq('id', item.id)
+      .eq('status', 'processing')
+      .eq('last_attempt_at', item.last_attempt_at);
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+  };
+
+  for (const item of retry) {
+    await release(item, {
+      status: 'retrying',
+      failure_reason: 'Recovered after an interrupted send.',
+    });
+  }
+  for (const item of fail) {
+    await release(item, {
+      status: 'failed',
+      failure_reason: 'Interrupted while sending and out of attempts.',
+    });
+  }
+
+  return { retried: retry.length, failed: fail.length };
+}
+
 export async function claimPassIssueEmailJobItems({ jobId, limit = 20 } = {}) {
+  await releaseStalePassIssueEmailJobItems(jobId);
+
   const supabase = getSupabase();
   const { data: items, error } = await supabase
     .from('pass_issue_email_job_items')

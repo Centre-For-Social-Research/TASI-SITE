@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AdminAlert,
   AdminStatCard,
@@ -16,6 +16,12 @@ function formatDate(value) {
     timeStyle: 'short',
   }).format(new Date(value));
 }
+
+// Queue processing runs like the speaker bulk send: one request at a time,
+// a few items per request, and a short pause before the next one. Requests
+// never overlap, so sends stay steady instead of arriving in bursts.
+const PROCESS_CHUNK_SIZE = 5;
+const PROCESS_GAP_MS = 700;
 
 function progressWidth(progress) {
   return `${Math.max(progress?.percentComplete || 0, 4)}%`;
@@ -218,40 +224,71 @@ export default function JobManagerPanel({ config }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobsState.selectedJobId]);
 
+  const hasActiveJobs = useMemo(
+    () =>
+      jobsState.jobs.some((job) =>
+        ['queued', 'processing'].includes(job.status)
+      ),
+    [jobsState.jobs]
+  );
+
+  // Latest refresh callbacks for the processing loop, which outlives renders.
+  const refreshRef = useRef({ loadJobs, loadJobDetail, selectedJobId: '' });
   useEffect(() => {
-    const hasActiveJobs = jobsState.jobs.some((job) =>
-      ['queued', 'processing'].includes(job.status)
-    );
+    refreshRef.current = {
+      loadJobs,
+      loadJobDetail,
+      selectedJobId: jobsState.selectedJobId,
+    };
+  }, [jobsState.selectedJobId, loadJobDetail, loadJobs]);
+
+  // True while a process request is in flight, shared across loop restarts
+  // so two requests are never sent at once.
+  const processingRef = useRef(false);
+
+  useEffect(() => {
     if (!hasActiveJobs) return undefined;
+    let cancelled = false;
 
-    const timer = window.setInterval(async () => {
-      try {
-        await fetch(endpoints.process, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}),
-        });
-      } catch {}
+    const run = async () => {
+      while (!cancelled) {
+        if (!processingRef.current) {
+          processingRef.current = true;
+          try {
+            await fetch(endpoints.process, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ chunkSize: PROCESS_CHUNK_SIZE }),
+            });
+          } catch {
+            // The next round retries; the queue keeps the item.
+          } finally {
+            processingRef.current = false;
+          }
+        }
+        if (cancelled) break;
 
-      void loadJobs();
-      if (jobsState.selectedJobId) void loadJobDetail(jobsState.selectedJobId);
-    }, 4000);
+        const { selectedJobId, ...refresh } = refreshRef.current;
+        void refresh.loadJobs();
+        if (selectedJobId) void refresh.loadJobDetail(selectedJobId);
+        await new Promise((resolve) =>
+          window.setTimeout(resolve, PROCESS_GAP_MS)
+        );
+      }
+    };
 
-    return () => window.clearInterval(timer);
-  }, [
-    endpoints.process,
-    jobsState.jobs,
-    jobsState.selectedJobId,
-    loadJobDetail,
-    loadJobs,
-  ]);
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [endpoints.process, hasActiveJobs]);
 
   const processJob = async (jobId = '') => {
     try {
       await fetch(endpoints.process, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId }),
+        body: JSON.stringify({ jobId, chunkSize: PROCESS_CHUNK_SIZE }),
       });
       void loadJobs();
       if (jobId) void loadJobDetail(jobId);
