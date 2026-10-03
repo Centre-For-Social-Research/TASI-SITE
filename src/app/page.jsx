@@ -23,9 +23,11 @@ export default function HomePage() {
       <HomeNavbar />
       <main>
         <HomeHero />
-        <div className="bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b]">
+        <div className="bg-[radial-gradient(ellipse_at_80%_20%,#2a1a5e_0%,transparent_55%),linear-gradient(180deg,#0d0b1f_0%,#120a26_100%)]">
           <HomeQuickLinks />
           <SpeakerCountriesMap />
+        </div>
+        <div className="bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b]">
           <FestivalHighlightsSection />
         </div>
         <NewsUpdatesSection />
