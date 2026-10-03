@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import LiveNowBoard from '@/components/live/live-now-board';
 import ProgrammeAgendaClient from '@/components/programme/programme-agenda-client';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import EditionYearToggle from '@/components/ui/edition-year-toggle';
@@ -29,6 +30,9 @@ export default function ProgrammePageClient({
   dayLabels2026,
   receptionNotes2026 = [],
   dayDateMap2026,
+  liveSessions2026 = [],
+  speakerDesignationMap2026 = {},
+  speakerPhotoMap2026 = {},
 }) {
   const [year, setYear] = useState('2026');
   const hero = heroContent[year];
@@ -62,15 +66,20 @@ export default function ProgrammePageClient({
           receptionNotes={receptionNotes}
         />
       ) : (
-        <ProgrammeAgendaClient
-          key="agenda-2026"
-          sessions={sessions2026}
-          dayLabels={dayLabels2026}
-          speakerDesignationMap={{}}
-          speakerPhotoMap={{}}
-          receptionNotes={receptionNotes2026}
-          dayDateMap={dayDateMap2026}
-        />
+        <>
+          <LiveNowBoard sessions={liveSessions2026} />
+          <ProgrammeAgendaClient
+            key="agenda-2026"
+            sessions={sessions2026}
+            dayLabels={dayLabels2026}
+            speakerDesignationMap={speakerDesignationMap2026}
+            speakerPhotoMap={speakerPhotoMap2026}
+            speakerEdition="2026"
+            receptionNotes={receptionNotes2026}
+            dayDateMap={dayDateMap2026}
+            showLiveStatus
+          />
+        </>
       )}
     </main>
   );

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { CalendarDays, Grid2X2, MapPin } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
@@ -12,7 +12,9 @@ import { programmeSessionDetailDescriptions } from '@/data/programme-session-det
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import {
   buildProgrammeSpeakerDesignationMap,
+  buildProgrammeSpeakerDesignationMap2026,
   buildProgrammeSpeakerPhotoMap,
+  buildProgrammeSpeakerPhotoMap2026,
   programmeDayLabels,
   programmeDayLabels2026,
 } from '@/lib/programme-page-data';
@@ -21,6 +23,7 @@ import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 const SITE_URL = 'https://trustandsafetyindia.org';
 const {
   buildProgrammeSessionViewModels,
+  findProgrammeSessionByLegacySlug,
   findProgrammeSessionBySlug,
   getProgrammeSessionPath,
   shouldShowProgrammeSession,
@@ -31,15 +34,19 @@ const { getSpeakerProfilePath } = speakerDirectoryUtils;
 const ALL_DAY_LABELS = { ...programmeDayLabels, ...programmeDayLabels2026 };
 
 function getSessionViewModels() {
-  return sortProgrammeSessionsForAgenda(
-    buildProgrammeSessionViewModels({
-      sessions: [...programmeSessions2025, ...programmeSessions2026].filter(
-        shouldShowProgrammeSession
-      ),
+  return sortProgrammeSessionsForAgenda([
+    ...buildProgrammeSessionViewModels({
+      sessions: programmeSessions2025.filter(shouldShowProgrammeSession),
       speakerDesignationMap: buildProgrammeSpeakerDesignationMap(),
       speakerPhotoMap: buildProgrammeSpeakerPhotoMap(),
-    })
-  );
+    }),
+    ...buildProgrammeSessionViewModels({
+      sessions: programmeSessions2026.filter(shouldShowProgrammeSession),
+      speakerDesignationMap: buildProgrammeSpeakerDesignationMap2026(),
+      speakerPhotoMap: buildProgrammeSpeakerPhotoMap2026(),
+      speakerEdition: '2026',
+    }),
+  ]);
 }
 
 function getSessionBySlug(slug) {
@@ -109,7 +116,15 @@ export default async function ProgrammeSessionPage({ params }) {
   const { slug } = await params;
   const session = getSessionBySlug(slug);
 
-  if (!session) notFound();
+  if (!session) {
+    // A session whose title changed: send old shared links to the new URL.
+    const renamed = findProgrammeSessionByLegacySlug(
+      getSessionViewModels(),
+      slug
+    );
+    if (renamed) permanentRedirect(getProgrammeSessionPath(renamed));
+    notFound();
+  }
 
   const description = buildSessionDescription(session);
   const path = getProgrammeSessionPath(session);

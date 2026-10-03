@@ -35,14 +35,44 @@ function parseRange(time) {
   return { start: toMinutes(start), end: toMinutes(end) };
 }
 
-test('2026 agenda publishes session titles without any speaker names', async () => {
+test('2026 speakers only come from the confirmed list and match the speaker directory', async () => {
   const sessions = await loadSessions();
+  const { sessionSpeakers2026 } = await import(
+    pathToFileURL(
+      path.join(process.cwd(), 'src/data/programme-2026-speakers.js')
+    ).href
+  );
+  const directory = require('../src/data/speakers-2026.json');
+  const directoryNames = new Set(directory.map((speaker) => speaker.name));
+  const sessionIds = new Set(sessions.map((session) => session.id));
+
+  for (const [sessionId, names] of Object.entries(sessionSpeakers2026)) {
+    assert.ok(
+      sessionIds.has(sessionId),
+      `${sessionId} in programme-2026-speakers.js is not a programme session id`
+    );
+    assert.ok(
+      Array.isArray(names) && names.length > 0,
+      `${sessionId} lists speakers`
+    );
+    assert.equal(
+      new Set(names).size,
+      names.length,
+      `${sessionId} repeats a speaker`
+    );
+    for (const name of names) {
+      assert.ok(
+        directoryNames.has(name),
+        `"${name}" (${sessionId}) is not in speakers-2026.json; check the spelling or add their profile first`
+      );
+    }
+  }
 
   for (const session of sessions) {
     assert.deepEqual(
       session.speakers,
-      [],
-      `${session.id} must not carry speaker names until the line-up is confirmed`
+      sessionSpeakers2026[session.id] || [],
+      `${session.id} speakers must come from programme-2026-speakers.js`
     );
   }
 });
@@ -132,4 +162,73 @@ test('2026 agenda never double-books a single-track room', async () => {
       );
     }
   }
+});
+
+test('renamed sessions keep working: old links resolve by session id', () => {
+  const {
+    buildProgrammeSessionSlug,
+    findProgrammeSessionByLegacySlug,
+    findProgrammeSessionBySlug,
+  } = require('../src/lib/programme-agenda-utils.cjs');
+  const sessions = [
+    { id: 'tasi26-2', title: 'Short id session' },
+    {
+      id: 'tasi26-25',
+      title: 'Policy Lab: Building Trusted Human Connections',
+    },
+  ];
+
+  const oldLink =
+    'tasi26-25-policy-lab-building-safer-online-social-discovery-ecosystems';
+  assert.equal(findProgrammeSessionBySlug(sessions, oldLink), undefined);
+  assert.equal(
+    findProgrammeSessionByLegacySlug(sessions, oldLink).id,
+    'tasi26-25'
+  );
+  assert.equal(
+    findProgrammeSessionByLegacySlug(sessions, 'tasi26-25').id,
+    'tasi26-25'
+  );
+  assert.equal(
+    findProgrammeSessionByLegacySlug(sessions, 'tasi26-2-old').id,
+    'tasi26-2'
+  );
+  assert.equal(
+    findProgrammeSessionByLegacySlug(sessions, 'tasi26-99-gone'),
+    null
+  );
+  assert.equal(
+    buildProgrammeSessionSlug(sessions[1]),
+    'tasi26-25-policy-lab-building-trusted-human-connections'
+  );
+});
+
+test('2026 session speakers link to their 2026 profile with directory details', () => {
+  const {
+    buildProgrammeSessionViewModels,
+  } = require('../src/lib/programme-agenda-utils.cjs');
+  const {
+    getSpeakerProfilePath,
+  } = require('../src/lib/speaker-directory-utils.cjs');
+
+  const [session] = buildProgrammeSessionViewModels({
+    sessions: [
+      {
+        id: 'tasi26-25',
+        title: 'Fireside',
+        day: 'oct14',
+        speakers: ['Yoel Roth'],
+      },
+    ],
+    speakerDesignationMap: {
+      'yoel roth': 'SVP, Head of Trust and Safety, Match Group',
+    },
+    speakerPhotoMap: { 'yoel roth': '/img/speakers/2026/yoel-roth.webp' },
+    speakerEdition: '2026',
+  });
+  const [speaker] = session.speakersDetailed;
+
+  assert.equal(speaker.title, 'SVP, Head of Trust and Safety, Match Group');
+  assert.equal(speaker.photo, '/img/speakers/2026/yoel-roth.webp');
+  assert.equal(getSpeakerProfilePath(speaker), '/speakers/2026/yoel-roth');
 });

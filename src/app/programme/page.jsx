@@ -1,10 +1,15 @@
 import HomeNavbar from '@/components/home/navbar';
 import ProgrammePageClient from '@/components/programme/programme-page-client';
 import { programmeSessions2025 } from '@/data/programme-2025';
-import { programmeSessions2026 } from '@/data/programme-2026';
+import {
+  liveProgrammeSessions2026,
+  programmeSessions2026,
+} from '@/data/programme-2026';
 import {
   buildProgrammeSpeakerDesignationMap,
+  buildProgrammeSpeakerDesignationMap2026,
   buildProgrammeSpeakerPhotoMap,
+  buildProgrammeSpeakerPhotoMap2026,
   programmeDayDateMap2026,
   programmeDayLabels,
   programmeDayLabels2026,
@@ -71,6 +76,9 @@ export default function ProgrammePage() {
         dayLabels2026={programmeDayLabels2026}
         receptionNotes2026={programmeReceptionNotes2026}
         dayDateMap2026={programmeDayDateMap2026}
+        liveSessions2026={liveProgrammeSessions2026}
+        speakerDesignationMap2026={buildProgrammeSpeakerDesignationMap2026()}
+        speakerPhotoMap2026={buildProgrammeSpeakerPhotoMap2026()}
       />
     </>
   );

@@ -99,10 +99,33 @@ function findProgrammeSessionBySlug(sessions = [], slug) {
   );
 }
 
+// Session URLs are "<id>-<title>". When a title changes, links shared with
+// the old title still carry the id, so match on the id part alone. The id
+// must be followed by "-" or end the slug, so "tasi26-2" never matches a
+// "tasi26-25-..." link.
+function findProgrammeSessionByLegacySlug(sessions = [], slug = '') {
+  const value = String(slug).toLowerCase();
+  let best = null;
+  let bestLength = 0;
+
+  for (const session of sessions) {
+    const idSlug = buildProgrammeSessionSlug({ id: session.id });
+    if (!idSlug) continue;
+    const matches = value === idSlug || value.startsWith(`${idSlug}-`);
+    if (matches && idSlug.length > bestLength) {
+      best = session;
+      bestLength = idSlug.length;
+    }
+  }
+
+  return best;
+}
+
 function buildProgrammeSessionViewModels({
   sessions = [],
   speakerDesignationMap = {},
   speakerPhotoMap = {},
+  speakerEdition,
 } = {}) {
   return sessions.filter(shouldShowProgrammeSession).map((session) => ({
     ...session,
@@ -112,6 +135,8 @@ function buildProgrammeSessionViewModels({
       title: resolveMappedPersonValue(speakerName, speakerDesignationMap),
       photo: resolveMappedPersonValue(speakerName, speakerPhotoMap),
       mod: false,
+      // Lets getSpeakerProfilePath() link 2026 speakers to /speakers/2026/.
+      ...(speakerEdition ? { edition: speakerEdition } : {}),
     })),
   }));
 }
@@ -120,6 +145,7 @@ module.exports = {
   DAY_ORDER,
   buildProgrammeSessionViewModels,
   buildProgrammeSessionSlug,
+  findProgrammeSessionByLegacySlug,
   timeSortValue,
   compareProgrammeSessions,
   findProgrammeSessionBySlug,
