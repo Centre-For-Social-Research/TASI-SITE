@@ -13,6 +13,11 @@ import {
   listPassIssueEmailJobs,
 } from '@/lib/registration-ops-db';
 
+export const maxDuration = 300;
+
+const AFTER_CHUNK_SIZE = 5;
+const AFTER_TIME_BUDGET_MS = 120 * 1000;
+
 function serializeJob(job) {
   return {
     ...job,
@@ -94,11 +99,20 @@ export async function POST(request) {
           userId: 'system-after-trigger',
           primaryEmail: 'system-after-trigger@local',
         };
-        for (let i = 0; i < 6; i++) {
+        // Small chunks inside a time budget, so this background kick-off ends
+        // well before the function limit instead of being cut off mid-send.
+        // The admin tab and the pass-week cron carry on from here.
+        const startedAt = Date.now();
+        while (Date.now() - startedAt < AFTER_TIME_BUDGET_MS) {
           const processed = await processNextAvailablePassIssueEmailJob({
             operator: bgOperator,
+            chunkSize: AFTER_CHUNK_SIZE,
           });
           if (!processed) break;
+          const remaining =
+            Number(processed.queued_items || 0) +
+            Number(processed.retrying_items || 0);
+          if (remaining === 0) break;
         }
       } catch (error) {
         console.error(

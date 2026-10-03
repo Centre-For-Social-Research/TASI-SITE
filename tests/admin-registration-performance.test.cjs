@@ -222,10 +222,10 @@ test('registration schema adds safe summary function and search indexes', () => 
 
 // The project is on Vercel Pro. The daily drain stays as it was; the only
 // frequent cron is the "Find my pass" safety net, limited to festival days.
-test('vercel crons keep the daily drain and limit the frequent one to the festival', () => {
+test('vercel crons keep the daily drain and limit the frequent ones to pass and festival week', () => {
   const config = JSON.parse(readSource('vercel.json'));
 
-  assert.equal(config.crons.length, 2);
+  assert.equal(config.crons.length, 3);
   assert.deepEqual(config.crons[0], {
     path: '/api/internal/registration-ops/drain',
     schedule: '0 0 * * *',
@@ -233,5 +233,9 @@ test('vercel crons keep the daily drain and limit the frequent one to the festiv
   assert.deepEqual(config.crons[1], {
     path: '/api/internal/my-pass/drain',
     schedule: '*/2 * 11-15 10 *',
+  });
+  assert.deepEqual(config.crons[2], {
+    path: '/api/internal/registration-ops/drain-passes',
+    schedule: '*/2 * 3-10 10 *',
   });
 });

@@ -7,7 +7,7 @@ function readSource(relativePath) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
 
-test('delivery jobs panel still surfaces queue-unavailable state and drives bounded processing through polling', () => {
+test('delivery jobs panel still surfaces queue-unavailable state and drives paced, non-overlapping processing', () => {
   const wrapper = readSource('src/components/admin/delivery-jobs-panel.jsx');
   const generic = readSource('src/components/admin/job-manager-panel.jsx');
 
@@ -17,10 +17,14 @@ test('delivery jobs panel still surfaces queue-unavailable state and drives boun
   assert.match(wrapper, /\/api\/admin\/passes\/jobs/);
   assert.match(wrapper, /JobManagerPanel/);
 
-  // Generic panel drives bounded processing through polling.
+  // Generic panel processes one small chunk at a time, like the speaker bulk
+  // send: never a new request while one is in flight, with a pause between.
   assert.match(generic, /queueUnavailable/);
-  assert.match(generic, /setInterval/);
-  assert.match(generic, /4000/);
+  assert.match(generic, /const PROCESS_CHUNK_SIZE = 5;/);
+  assert.match(generic, /const PROCESS_GAP_MS = 700;/);
+  assert.match(generic, /processingRef\.current/);
+  assert.match(generic, /chunkSize: PROCESS_CHUNK_SIZE/);
+  assert.doesNotMatch(generic, /setInterval\(async/);
 });
 
 test('email jobs panel is a thin config wrapper around the generic job manager', () => {
