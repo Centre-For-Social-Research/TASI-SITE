@@ -76,12 +76,18 @@ test('recipient filters only offer statuses that exist, with counts', () => {
   assert.equal(itemTone('retrying'), 'warning');
 });
 
-test('the recipient panel fits the window and scrolls its own list', () => {
+test('jobs are one list; a job opens in place to show its recipients', () => {
   const panel = fs.readFileSync(
     path.join(process.cwd(), 'src/components/admin/job-manager-panel.jsx'),
     'utf8'
   );
-  assert.match(panel, /xl:max-h-\[calc\(100vh-8\.5rem\)\]/);
-  assert.match(panel, /min-h-0 flex-1 overflow-y-auto/);
-  assert.doesNotMatch(panel, /Attempts: \{item\.attempt_count\}/);
+  assert.ok(!panel.includes('xl:grid-cols-[minmax(0,1fr)_400px]'));
+  assert.ok(panel.includes('aria-expanded={open}'));
+  assert.ok(
+    panel.includes(
+      "selectedJobId: current.selectedJobId === jobId ? '' : jobId"
+    )
+  );
+  assert.ok(panel.includes('max-h-[420px] overflow-y-auto'));
+  assert.ok(!panel.includes('Attempts: {item.attempt_count}'));
 });

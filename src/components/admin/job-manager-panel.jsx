@@ -7,6 +7,7 @@ import {
   AdminStatusBadge,
   LoadingRows,
 } from '@/components/admin/admin-ui';
+import { ChevronRight } from 'lucide-react';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
 import jobView from '@/lib/admin-job-view.cjs';
 
@@ -155,9 +156,13 @@ export default function JobManagerPanel({ config }) {
   });
   const [itemFilter, setItemFilter] = useState('all');
 
-  const selectJob = (jobId) => {
+  // One job open at a time; clicking the open job closes it.
+  const toggleJob = (jobId) => {
     setItemFilter('all');
-    setJobsState((current) => ({ ...current, selectedJobId: jobId }));
+    setJobsState((current) => ({
+      ...current,
+      selectedJobId: current.selectedJobId === jobId ? '' : jobId,
+    }));
   };
 
   const loadJobs = useCallback(async () => {
@@ -177,7 +182,7 @@ export default function JobManagerPanel({ config }) {
         ...current,
         loading: false,
         jobs: data.jobs || [],
-        selectedJobId: current.selectedJobId || data.jobs?.[0]?.id || '',
+        selectedJobId: current.selectedJobId,
         ...(trackQueueUnavailable
           ? { queueUnavailable: Boolean(data.queueUnavailable) }
           : {}),
@@ -249,7 +254,7 @@ export default function JobManagerPanel({ config }) {
           ...current,
           loading: false,
           jobs: data.jobs || [],
-          selectedJobId: current.selectedJobId || data.jobs?.[0]?.id || '',
+          selectedJobId: current.selectedJobId,
           ...(trackQueueUnavailable
             ? { queueUnavailable: Boolean(data.queueUnavailable) }
             : {}),
@@ -425,22 +430,20 @@ export default function JobManagerPanel({ config }) {
     return { queued, processing, failed, sent };
   }, [jobsState.jobs]);
 
-  const selectedJob = jobsState.selectedDetail?.job || null;
-  // Title the panel exactly as the list row does, so they always match.
-  const selectedListJob =
-    jobsState.jobs.find((job) => job.id === selectedJob?.id) || null;
-  const selectedItems = useMemo(
-    () => jobsState.selectedDetail?.items || [],
-    [jobsState.selectedDetail]
-  );
+  // Recipients of the open job, shown under its row.
+  const openDetail =
+    jobsState.selectedDetail?.job?.id === jobsState.selectedJobId
+      ? jobsState.selectedDetail
+      : null;
+  const openItems = useMemo(() => openDetail?.items || [], [openDetail]);
   const filterOptions = useMemo(
-    () => itemFilterOptions(selectedItems),
-    [selectedItems]
+    () => itemFilterOptions(openItems),
+    [openItems]
   );
   const activeFilter = filterOptions.some((option) => option.key === itemFilter)
     ? itemFilter
     : 'all';
-  const visibleItems = selectedItems.filter((item) =>
+  const visibleItems = openItems.filter((item) =>
     itemMatchesFilter(item, activeFilter)
   );
 
@@ -475,68 +478,74 @@ export default function JobManagerPanel({ config }) {
         ))}
       </section>
 
-      <section className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
-        <section style={panelStyle} className="overflow-hidden">
-          <div
-            className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
-            style={{ borderBottom: '1px solid var(--adm-line)' }}
-          >
-            <div>
-              <p style={eyebrowStyle}>{listHeader.eyebrow}</p>
-              <p className="mt-1 text-sm" style={{ color: 'var(--adm-ink-3)' }}>
-                {listHeader.description}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => void processJob()}
-              disabled={!hasActiveJobs}
-              style={pillButtonStyle()}
-              className="shrink-0 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Process All
-            </button>
+      <section style={panelStyle} className="overflow-hidden">
+        <div
+          className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
+          style={{ borderBottom: '1px solid var(--adm-line)' }}
+        >
+          <div>
+            <p style={eyebrowStyle}>{listHeader.eyebrow}</p>
+            <p className="mt-1 text-sm" style={{ color: 'var(--adm-ink-3)' }}>
+              {listHeader.description}
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={() => void processJob()}
+            disabled={!hasActiveJobs}
+            style={pillButtonStyle()}
+            className="shrink-0 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Process All
+          </button>
+        </div>
 
-          {jobsState.loading ? (
-            <table className="min-w-full">
-              <tbody>
-                <LoadingRows count={5} cols={4} />
-              </tbody>
-            </table>
-          ) : null}
+        {jobsState.loading ? (
+          <table className="min-w-full">
+            <tbody>
+              <LoadingRows count={5} cols={4} />
+            </tbody>
+          </table>
+        ) : null}
 
-          {!jobsState.loading && jobsState.jobs.length ? (
-            <ul>
-              {jobsState.jobs.map((job) => {
-                const counts = jobCounts(job);
-                const tone = jobTone(job);
-                const selected = jobsState.selectedJobId === job.id;
-                return (
-                  <li
-                    key={job.id}
-                    style={{
-                      borderBottom: '1px solid var(--adm-line)',
-                      background: selected
-                        ? 'var(--adm-panel-2)'
-                        : 'transparent',
-                      boxShadow: selected
-                        ? 'inset 3px 0 0 var(--adm-ink)'
-                        : 'none',
+        {!jobsState.loading && jobsState.jobs.length ? (
+          <ul>
+            {jobsState.jobs.map((job) => {
+              const counts = jobCounts(job);
+              const tone = jobTone(job);
+              const open = jobsState.selectedJobId === job.id;
+              return (
+                <li
+                  key={job.id}
+                  style={{
+                    borderBottom: '1px solid var(--adm-line)',
+                    background: open ? 'var(--adm-panel-2)' : 'transparent',
+                  }}
+                >
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={open}
+                    onClick={() => toggleJob(job.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        toggleJob(job.id);
+                      }
                     }}
+                    className="grid cursor-pointer items-center gap-x-5 gap-y-3 px-5 py-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_250px]"
                   >
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => selectJob(job.id)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault();
-                          selectJob(job.id);
-                        }
-                      }}
-                      className="grid cursor-pointer items-center gap-x-5 gap-y-3 px-5 py-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_230px]"
-                    >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <ChevronRight
+                        size={16}
+                        aria-hidden="true"
+                        style={{
+                          flexShrink: 0,
+                          color: 'var(--adm-ink-3)',
+                          transform: open ? 'rotate(90deg)' : 'none',
+                          transition: 'transform 150ms ease',
+                        }}
+                      />
                       <div className="min-w-0">
                         <p
                           className="truncate text-sm font-semibold"
@@ -552,250 +561,189 @@ export default function JobManagerPanel({ config }) {
                           {formatDate(job.created_at)}
                         </p>
                       </div>
-
-                      <div className="min-w-0">
-                        <ProgressBar percent={counts.percent} tone={tone} />
-                        <p
-                          className="mt-1.5 text-xs"
-                          style={{ color: 'var(--adm-ink-2)' }}
-                        >
-                          {jobResultText(job)}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-start gap-2 md:justify-end">
-                        {['queued', 'processing'].includes(job.status) ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              void processJob(job.id);
-                            }}
-                            style={pillButtonStyle()}
-                          >
-                            Process
-                          </button>
-                        ) : null}
-                        {job.failed_items > 0 ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              void retryJob(job.id);
-                            }}
-                            style={pillButtonStyle('danger')}
-                          >
-                            Retry Failed
-                          </button>
-                        ) : null}
-                        <AdminStatusBadge tone={tone}>
-                          {jobStatusLabel(job)}
-                        </AdminStatusBadge>
-                      </div>
                     </div>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : null}
 
-          {!jobsState.loading && !jobsState.jobs.length ? (
-            <div
-              className="p-8 text-center text-sm"
-              style={{ color: 'var(--adm-ink-3)' }}
-            >
-              {emptyState(jobsState)}
-            </div>
-          ) : null}
-        </section>
-
-        {/* Fits the window and scrolls its own recipient list, so a large
-            job never runs under the page header or off the screen. */}
-        <section
-          style={panelStyle}
-          className="flex flex-col overflow-hidden xl:sticky xl:top-28 xl:max-h-[calc(100vh-8.5rem)]"
-        >
-          <div
-            className="px-5 pt-5 pb-4"
-            style={{ borderBottom: '1px solid var(--adm-line)' }}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p style={eyebrowStyle}>{detail.eyebrow}</p>
-                <h3
-                  className="mt-1 truncate text-base font-semibold"
-                  style={{ color: 'var(--adm-ink)' }}
-                >
-                  {selectedJob
-                    ? selectedListJob
-                      ? renderJobTitle(selectedListJob)
-                      : renderJobTitle(selectedJob, selectedItems)
-                    : 'Pick a job'}
-                </h3>
-                {selectedJob ? (
-                  <p
-                    className="mt-0.5 text-xs"
-                    style={{ color: 'var(--adm-ink-3)' }}
-                  >
-                    Started {formatDate(selectedJob.created_at)}
-                  </p>
-                ) : null}
-              </div>
-              {selectedJob ? (
-                <AdminStatusBadge tone={jobTone(selectedJob)}>
-                  {jobStatusLabel(selectedJob)}
-                </AdminStatusBadge>
-              ) : null}
-            </div>
-
-            {selectedJob ? (
-              <>
-                <dl
-                  className="mt-4 grid gap-2"
-                  style={{
-                    gridTemplateColumns: `repeat(${detail.stats.length}, minmax(0, 1fr))`,
-                  }}
-                >
-                  {detail.stats.map((stat) => (
-                    <div
-                      key={stat.field}
-                      className="rounded-[10px] px-3 py-2"
-                      style={{ background: 'var(--adm-panel-2)' }}
-                    >
-                      <dt style={eyebrowStyle}>{stat.label}</dt>
-                      <dd
-                        className="mt-0.5 text-lg font-semibold tabular-nums"
-                        style={{ color: 'var(--adm-ink)' }}
+                    <div className="min-w-0">
+                      <ProgressBar percent={counts.percent} tone={tone} />
+                      <p
+                        className="mt-1.5 text-xs"
+                        style={{ color: 'var(--adm-ink-2)' }}
                       >
-                        {Number(selectedJob[stat.field] || 0)}
-                      </dd>
+                        {jobResultText(job)}
+                      </p>
                     </div>
-                  ))}
-                </dl>
-                <div className="mt-3">
-                  <ProgressBar
-                    percent={jobCounts(selectedJob).percent}
-                    tone={jobTone(selectedJob)}
-                  />
-                </div>
-                {selectedItems.length > 1 ? (
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {filterOptions.map((option) => (
-                      <button
-                        key={option.key}
-                        type="button"
-                        onClick={() => setItemFilter(option.key)}
-                        aria-pressed={activeFilter === option.key}
-                        style={chipStyle(activeFilter === option.key)}
-                      >
-                        {option.label} {option.count}
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
-              </>
-            ) : null}
-          </div>
 
-          {selectedJob ? (
-            <div className="min-h-0 flex-1 overflow-y-auto">
-              <ul>
-                {visibleItems.map((item) => {
-                  const name =
-                    [
-                      item.registration?.first_name,
-                      item.registration?.last_name,
-                    ]
-                      .filter(Boolean)
-                      .join(' ') || 'Unknown recipient';
-                  const showReason =
-                    item.failure_reason && item.status !== 'sent';
-                  return (
-                    <li
-                      key={item.id}
-                      className="px-5 py-3"
-                      style={{ borderBottom: '1px solid var(--adm-line)' }}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p
-                            className="truncate text-sm font-medium"
-                            style={{ color: 'var(--adm-ink)' }}
-                          >
-                            {name}
-                          </p>
-                          <p
-                            className="truncate text-xs"
-                            style={{ color: 'var(--adm-ink-3)' }}
-                          >
-                            {item.registration?.email}
-                          </p>
-                        </div>
-                        <div className="shrink-0 text-right">
-                          <AdminStatusBadge tone={itemTone(item.status)}>
-                            {item.status}
-                          </AdminStatusBadge>
-                          <p
-                            className="mt-1 text-[11px] tabular-nums"
-                            style={{ color: 'var(--adm-ink-3)' }}
-                          >
-                            {formatTime(
-                              item.sent_at ||
-                                item.last_attempt_at ||
-                                item.updated_at
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      {showReason ? (
-                        <p
-                          className="mt-1.5 text-xs"
-                          style={{
-                            color:
-                              item.status === 'skipped'
-                                ? 'var(--adm-ink-3)'
-                                : 'var(--adm-bad)',
+                    <div className="flex items-center justify-start gap-2 md:justify-end">
+                      {['queued', 'processing'].includes(job.status) ? (
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            void processJob(job.id);
                           }}
+                          style={pillButtonStyle()}
                         >
-                          {item.failure_reason}
-                          {item.status === 'failed' && item.attempt_count
-                            ? ` (${item.attempt_count} attempt${item.attempt_count === 1 ? '' : 's'})`
-                            : ''}
-                        </p>
+                          Process
+                        </button>
                       ) : null}
-                    </li>
-                  );
-                })}
-              </ul>
+                      {job.failed_items > 0 ? (
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            void retryJob(job.id);
+                          }}
+                          style={pillButtonStyle('danger')}
+                        >
+                          Retry Failed
+                        </button>
+                      ) : null}
+                      <AdminStatusBadge tone={tone}>
+                        {jobStatusLabel(job)}
+                      </AdminStatusBadge>
+                    </div>
+                  </div>
 
-              {!selectedItems.length ? (
-                <p
-                  className="px-5 py-4 text-sm"
-                  style={{ color: 'var(--adm-ink-3)' }}
-                >
-                  This job has no recipients recorded yet.
-                </p>
-              ) : null}
-              {selectedItems.length > 0 &&
-              Number(selectedJob.total_items || 0) > selectedItems.length ? (
-                <p
-                  className="px-5 py-3 text-xs"
-                  style={{ color: 'var(--adm-ink-3)' }}
-                >
-                  Showing the first {selectedItems.length} of{' '}
-                  {selectedJob.total_items} recipients.
-                </p>
-              ) : null}
-            </div>
-          ) : (
-            <p
-              className="px-5 py-4 text-sm"
-              style={{ color: 'var(--adm-ink-3)' }}
-            >
-              {detail.emptyHint}
-            </p>
-          )}
-        </section>
+                  {open ? (
+                    <div className="px-5 pb-5 md:pl-12">
+                      {!openDetail ? (
+                        <p
+                          className="text-sm"
+                          style={{ color: 'var(--adm-ink-3)' }}
+                        >
+                          Loading recipients…
+                        </p>
+                      ) : (
+                        <>
+                          {openItems.length > 1 ? (
+                            <div className="mb-3 flex flex-wrap gap-1.5">
+                              {filterOptions.map((option) => (
+                                <button
+                                  key={option.key}
+                                  type="button"
+                                  onClick={() => setItemFilter(option.key)}
+                                  aria-pressed={activeFilter === option.key}
+                                  style={chipStyle(activeFilter === option.key)}
+                                >
+                                  {option.label} {option.count}
+                                </button>
+                              ))}
+                            </div>
+                          ) : null}
+
+                          {/* Long lists scroll inside the job, so the page
+                              stays short and the next job is close by. */}
+                          <ul
+                            className="max-h-[420px] overflow-y-auto"
+                            style={panelStyle}
+                          >
+                            {visibleItems.map((item) => {
+                              const name =
+                                [
+                                  item.registration?.first_name,
+                                  item.registration?.last_name,
+                                ]
+                                  .filter(Boolean)
+                                  .join(' ') || 'Unknown recipient';
+                              const showReason =
+                                item.failure_reason && item.status !== 'sent';
+                              return (
+                                <li
+                                  key={item.id}
+                                  className="px-4 py-2.5"
+                                  style={{
+                                    borderBottom: '1px solid var(--adm-line)',
+                                  }}
+                                >
+                                  <div className="grid items-center gap-x-4 gap-y-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_auto_80px]">
+                                    <p
+                                      className="truncate text-sm font-medium"
+                                      style={{ color: 'var(--adm-ink)' }}
+                                    >
+                                      {name}
+                                    </p>
+                                    <p
+                                      className="truncate text-xs"
+                                      style={{ color: 'var(--adm-ink-3)' }}
+                                    >
+                                      {item.registration?.email}
+                                    </p>
+                                    <span>
+                                      <AdminStatusBadge
+                                        tone={itemTone(item.status)}
+                                      >
+                                        {item.status}
+                                      </AdminStatusBadge>
+                                    </span>
+                                    <p
+                                      className="text-xs tabular-nums sm:text-right"
+                                      style={{ color: 'var(--adm-ink-3)' }}
+                                    >
+                                      {formatTime(
+                                        item.sent_at ||
+                                          item.last_attempt_at ||
+                                          item.updated_at
+                                      )}
+                                    </p>
+                                  </div>
+                                  {showReason ? (
+                                    <p
+                                      className="mt-1 text-xs"
+                                      style={{
+                                        color:
+                                          item.status === 'skipped'
+                                            ? 'var(--adm-ink-3)'
+                                            : 'var(--adm-bad)',
+                                      }}
+                                    >
+                                      {item.failure_reason}
+                                      {item.status === 'failed' &&
+                                      item.attempt_count
+                                        ? ` (${item.attempt_count} attempt${item.attempt_count === 1 ? '' : 's'})`
+                                        : ''}
+                                    </p>
+                                  ) : null}
+                                </li>
+                              );
+                            })}
+                            {!openItems.length ? (
+                              <li
+                                className="px-4 py-3 text-sm"
+                                style={{ color: 'var(--adm-ink-3)' }}
+                              >
+                                This job has no recipients recorded yet.
+                              </li>
+                            ) : null}
+                          </ul>
+
+                          {openItems.length > 0 &&
+                          Number(job.total_items || 0) > openItems.length ? (
+                            <p
+                              className="mt-2 text-xs"
+                              style={{ color: 'var(--adm-ink-3)' }}
+                            >
+                              Showing the first {openItems.length} of{' '}
+                              {job.total_items} recipients.
+                            </p>
+                          ) : null}
+                        </>
+                      )}
+                    </div>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+
+        {!jobsState.loading && !jobsState.jobs.length ? (
+          <div
+            className="p-8 text-center text-sm"
+            style={{ color: 'var(--adm-ink-3)' }}
+          >
+            {emptyState(jobsState)}
+          </div>
+        ) : null}
       </section>
     </div>
   );

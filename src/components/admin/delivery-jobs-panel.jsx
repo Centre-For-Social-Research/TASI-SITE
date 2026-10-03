@@ -63,7 +63,7 @@ const DELIVERY_JOBS_CONFIG = {
   listHeader: {
     eyebrow: 'Recent QR sends',
     description:
-      'Each send from Registrations is one job. Pick one to see who it went to.',
+      'Each send from Registrations is one job. Click a send to see who it went to.',
   },
   accent: {
     eyebrow: 'text-amber-600',
