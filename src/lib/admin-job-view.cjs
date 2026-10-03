@@ -90,7 +90,104 @@ function itemFilterOptions(items = []) {
   })).filter((option) => option.key === 'all' || option.count > 0);
 }
 
+const IST = 'Asia/Kolkata';
+
+function istDayKey(value) {
+  const date = new Date(value);
+  if (!value || Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: IST,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+}
+
+function dayLabel(key, now = Date.now()) {
+  const today = istDayKey(now);
+  const yesterday = istDayKey(now - 24 * 60 * 60 * 1000);
+  if (key === today) return 'Today';
+  if (key === yesterday) return 'Yesterday';
+  if (!key) return 'Unknown date';
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: IST,
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(`${key}T12:00:00+05:30`));
+}
+
+// Groups jobs (newest first) by the IST day they started, with a per-day
+// count of sends and passes sent.
+function groupJobsByDay(jobs = [], now = Date.now()) {
+  const groups = [];
+  for (const job of jobs) {
+    const key = istDayKey(job.created_at);
+    let group = groups.find((entry) => entry.key === key);
+    if (!group) {
+      group = { key, label: dayLabel(key, now), jobs: [], sent: 0 };
+      groups.push(group);
+    }
+    group.jobs.push(job);
+    group.sent += count(job.sent_items);
+  }
+  return groups;
+}
+
+function sentOnDay(jobs = [], now = Date.now()) {
+  const today = istDayKey(now);
+  return jobs
+    .filter((job) => istDayKey(job.created_at) === today)
+    .reduce((sum, job) => sum + count(job.sent_items), 0);
+}
+
+// How long a finished send took, e.g. "1m 22s". Blank while it runs.
+function jobDuration(job = {}) {
+  if (!job.completed_at || !job.created_at) return '';
+  const seconds = Math.max(
+    0,
+    Math.round(
+      (Date.parse(job.completed_at) - Date.parse(job.created_at)) / 1000
+    )
+  );
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ${seconds % 60}s`;
+  return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+}
+
+function coverageSummary(coverage) {
+  if (!coverage || !coverage.confirmed) return null;
+  const issued = Math.min(count(coverage.issued), count(coverage.confirmed));
+  const confirmed = count(coverage.confirmed);
+  return {
+    issued,
+    confirmed,
+    remaining: confirmed - issued,
+    percent: Math.round((issued / confirmed) * 100),
+  };
+}
+
+// Summary strip numbers across every job, not just the page on screen.
+function summarizeJobs(jobs = [], now = Date.now()) {
+  return jobs.reduce(
+    (summary, job) => ({
+      queued:
+        summary.queued + count(job.queued_items) + count(job.retrying_items),
+      processing: summary.processing + count(job.processing_items),
+      failed: summary.failed + count(job.failed_items),
+      sent: summary.sent,
+    }),
+    { queued: 0, processing: 0, failed: 0, sent: sentOnDay(jobs, now) }
+  );
+}
+
 module.exports = {
+  summarizeJobs,
+  coverageSummary,
+  groupJobsByDay,
+  jobDuration,
+  sentOnDay,
   itemFilterOptions,
   itemMatchesFilter,
   itemTone,

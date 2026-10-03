@@ -10,8 +10,17 @@ import {
 } from '@/lib/pass-issue-job-service';
 import {
   AUTOMATIC_EMAIL_JOB_CUTOFF,
-  listPassIssueEmailJobs,
+  getPassCoverage,
+  listPassIssueEmailJobCounters,
+  listPassIssueEmailJobsPage,
 } from '@/lib/registration-ops-db';
+import jobView from '@/lib/admin-job-view.cjs';
+import pagination from '@/lib/admin-pagination.cjs';
+
+const { summarizeJobs } = jobView;
+const { clampPage } = pagination;
+
+const PAGE_SIZE = 15;
 
 export const maxDuration = 300;
 
@@ -35,7 +44,7 @@ function serializeJob(job) {
   };
 }
 
-export async function GET() {
+export async function GET(request) {
   const authResult = await requireAuthorizedOperator({
     route: 'api.admin.passes.jobs.list',
   });
@@ -44,14 +53,28 @@ export async function GET() {
   }
 
   try {
-    const jobs = await listPassIssueEmailJobs({
-      limit: 20,
+    const page = clampPage(
+      new URL(request.url).searchParams.get('page'),
+      Number.MAX_SAFE_INTEGER
+    );
+    const scope = {
       createdAfter: AUTOMATIC_EMAIL_JOB_CUTOFF,
       includeCompletedBefore: true,
-    });
+    };
+    const [{ jobs, total }, counters, coverage] = await Promise.all([
+      listPassIssueEmailJobsPage({ ...scope, page, pageSize: PAGE_SIZE }),
+      listPassIssueEmailJobCounters(scope),
+      // Coverage is a nice-to-have; the job list still loads without it.
+      getPassCoverage().catch(() => null),
+    ]);
     return Response.json({
       success: true,
       jobs: jobs.map(serializeJob),
+      page,
+      pageSize: PAGE_SIZE,
+      total,
+      summary: summarizeJobs(counters),
+      coverage,
     });
   } catch (error) {
     if (isQueueInfrastructureUnavailable(error)) {
