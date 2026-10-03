@@ -4,6 +4,10 @@
     {
       "path": "/api/internal/registration-ops/drain",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/internal/my-pass/drain",
+      "schedule": "*/2 * 11-15 10 *"
     }
   ]
 }

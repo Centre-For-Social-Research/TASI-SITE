@@ -1,5 +1,7 @@
 .section {
   overflow: hidden;
+  /* The homepage wraps this section and the quick links in one midnight
+     background so there is no seam between them. */
   background: transparent;
   color: #fff;
   padding: 72px 24px 64px;
@@ -57,6 +59,8 @@
   border: 1px solid #6a43804d;
   border-radius: 10px;
   overflow: hidden;
+  color: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
   background:
     radial-gradient(ellipse at 70% 35%, #32174180, transparent 65%), #160e25;
 }
@@ -213,88 +217,4 @@
   font-size: 11px;
   line-height: 1.6;
   color: #ab9ab9;
-}
-
-@media (min-width: 1024px) {
-  .section {
-    padding-left: 64px;
-    padding-right: 64px;
-  }
-}
-@media (max-width: 850px) {
-  .headingRow {
-    gap: 28px;
-  }
-  .intro {
-    max-width: 300px;
-    font-size: 14px;
-  }
-  .countrySelect {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .connectionCaption {
-    max-width: 240px;
-  }
-}
-@media (max-width: 639px) {
-  .section {
-    padding: 48px 16px 40px;
-  }
-  .headingRow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 22px;
-    margin-bottom: 24px;
-  }
-  .eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.13em;
-    margin-bottom: 14px;
-  }
-  .intro {
-    max-width: none;
-  }
-  .stat {
-    margin-top: 12px;
-  }
-  .toolbar {
-    padding: 10px 12px;
-    min-height: 56px;
-  }
-  .legend {
-    gap: 6px;
-    font-size: 10px;
-  }
-  .legendLine {
-    margin-left: 5px;
-    width: 16px;
-  }
-  .motionControl {
-    font-size: 10px;
-    min-height: 34px;
-    padding: 6px;
-    gap: 4px;
-  }
-  .mapFooter {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-    padding: 16px;
-  }
-  .countrySelect {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .countrySelect select {
-    width: 185px;
-    max-width: 65%;
-  }
-  .connectionCaption {
-    max-width: none;
-    min-height: 20px;
-  }
 }

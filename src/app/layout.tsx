@@ -9,6 +9,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import AppShell from '@/components/app-shell';
 import ChatBotGate from '@/components/chatbot/ChatBotGate';
+import PassLookupLink from '@/components/my-pass/pass-lookup-link';
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
@@ -221,6 +222,7 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
           <ChatBotGate />
+          <PassLookupLink />
         </ThemeProvider>
       </body>
     </html>

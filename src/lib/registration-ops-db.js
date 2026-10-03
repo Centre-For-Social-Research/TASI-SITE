@@ -934,3 +934,42 @@ export async function deleteRegistration(id) {
     throw new Error(error.message);
   }
 }
+
+// --- Find my pass (public, 13-15 Oct only) ---------------------------------
+
+export async function findRegistrationForPassLookup(email) {
+  const { data, error } = await getSupabase()
+    .from('event_registrations')
+    .select('id, status, entry_passes(id, status)')
+    .eq('email', email)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function listRecentPassLookupRequests({
+  registrationId,
+  operatorId,
+  since,
+}) {
+  const { data, error } = await getSupabase()
+    .from('pass_issue_email_job_items')
+    .select('created_at, pass_issue_email_jobs!inner(created_by_clerk_id)')
+    .eq('registration_id', registrationId)
+    .eq('pass_issue_email_jobs.created_by_clerk_id', operatorId)
+    .gte('created_at', since);
+  if (error) throw new Error(error.message);
+  return (data || []).map((item) => item.created_at);
+}
+
+export async function listPendingPassLookupJobs({ operatorId, limit = 20 }) {
+  const { data, error } = await getSupabase()
+    .from('pass_issue_email_jobs')
+    .select('id')
+    .eq('created_by_clerk_id', operatorId)
+    .in('status', ['queued', 'processing'])
+    .order('created_at', { ascending: true })
+    .limit(limit);
+  if (error) throw new Error(error.message);
+  return data || [];
+}
