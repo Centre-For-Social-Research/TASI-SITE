@@ -24,7 +24,7 @@ const DELIVERY_JOBS_CONFIG = {
     eyebrow: 'Email delivery',
     title: 'QR Pass Emails',
     description:
-      'Track QR pass emails and their v2 PDF entry passes. Open a job to inspect recipients or retry failed delivery.',
+      'Every QR pass send, who it reached, and anything that needs a retry.',
     chips: () => [],
   },
   alertTitle: 'Delivery Error',
@@ -37,32 +37,33 @@ const DELIVERY_JOBS_CONFIG = {
   statCards: [
     {
       key: 'queued',
-      label: 'Queued Passes',
+      label: 'Waiting',
       tone: 'warning',
-      detail: 'Waiting for the next worker pass',
+      detail: 'Queued to send',
     },
     {
       key: 'processing',
-      label: 'Processing',
+      label: 'Sending now',
       tone: 'info',
-      detail: 'Generating PDF or uploading QR',
+      detail: 'Building the PDF pass and emailing it',
     },
     {
       key: 'sent',
-      label: 'Dispatched',
+      label: 'Sent',
       tone: 'success',
-      detail: 'PDF badge delivered to inbox',
+      detail: 'Accepted by Resend for delivery',
     },
     {
       key: 'failed',
       label: 'Failed',
       tone: 'danger',
-      detail: 'Need retry or operator attention',
+      detail: 'Use Retry Failed on the job',
     },
   ],
   listHeader: {
-    eyebrow: 'Recent Pass Dispatch Jobs',
-    description: 'Select a job to inspect recipients, failures, and retries.',
+    eyebrow: 'Recent QR sends',
+    description:
+      'Each send from Registrations is one job. Pick one to see who it went to.',
   },
   accent: {
     eyebrow: 'text-amber-600',
@@ -75,13 +76,13 @@ const DELIVERY_JOBS_CONFIG = {
   },
   renderJobTitle: jobParticipantTitle,
   renderJobSubtitle: (job) =>
-    `${job.selection_mode} · ${job.total_items} recipient${job.total_items === 1 ? '' : 's'}`,
+    `${job.total_items} recipient${job.total_items === 1 ? '' : 's'}`,
   emptyState: (state) =>
     state.queueUnavailable
       ? 'Queue-backed jobs are unavailable in this environment, so there is nothing to inspect here yet.'
       : 'No QR delivery jobs yet. Queue one from the review page to see it here.',
   detail: {
-    eyebrow: 'Selected Dispatch Job',
+    eyebrow: 'Recipients',
     stats: [
       { label: 'Total', field: 'total_items' },
       { label: 'Sent', field: 'sent_items' },

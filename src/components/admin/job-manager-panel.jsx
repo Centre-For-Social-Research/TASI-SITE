@@ -8,6 +8,17 @@ import {
   LoadingRows,
 } from '@/components/admin/admin-ui';
 import AdminPageIntro from '@/components/admin/admin-page-intro';
+import jobView from '@/lib/admin-job-view.cjs';
+
+const {
+  itemFilterOptions,
+  itemMatchesFilter,
+  itemTone,
+  jobCounts,
+  jobResultText,
+  jobStatusLabel,
+  jobTone,
+} = jobView;
 
 function formatDate(value) {
   if (!value) return 'Not yet';
@@ -23,16 +34,90 @@ function formatDate(value) {
 const PROCESS_CHUNK_SIZE = 5;
 const PROCESS_GAP_MS = 700;
 
-function progressWidth(progress) {
-  return `${Math.max(progress?.percentComplete || 0, 4)}%`;
+function formatTime(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  const sameDay = date.toDateString() === new Date().toDateString();
+  return new Intl.DateTimeFormat('en-IN', {
+    ...(sameDay ? {} : { day: 'numeric', month: 'short' }),
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(date);
 }
 
-function getJobTone(job) {
-  const tone = job?.progress?.tone || 'default';
-  if (tone === 'success') return 'success';
-  if (tone === 'warning') return 'warning';
-  if (tone === 'danger') return 'danger';
-  return 'default';
+const TONE_COLORS = {
+  success: 'var(--adm-ok)',
+  warning: 'var(--adm-warn)',
+  danger: 'var(--adm-bad)',
+  default: 'var(--adm-ink-3)',
+};
+
+const panelStyle = {
+  borderRadius: 10,
+  border: '1px solid var(--adm-line)',
+  background: 'var(--adm-panel)',
+};
+
+const eyebrowStyle = {
+  fontFamily: 'var(--adm-mono)',
+  fontSize: 10,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  fontWeight: 600,
+  color: 'var(--adm-ink-3)',
+};
+
+function pillButtonStyle(tone = 'default') {
+  const danger = tone === 'danger';
+  return {
+    borderRadius: 999,
+    padding: '6px 14px',
+    fontSize: 12,
+    fontWeight: 600,
+    whiteSpace: 'nowrap',
+    border: `1px solid ${danger ? 'var(--adm-bad)' : 'var(--adm-line-strong)'}`,
+    background: danger ? 'var(--adm-bad-soft)' : 'var(--adm-panel)',
+    color: danger ? 'var(--adm-bad)' : 'var(--adm-ink)',
+  };
+}
+
+function chipStyle(active) {
+  return {
+    borderRadius: 999,
+    padding: '4px 10px',
+    fontSize: 12,
+    fontWeight: 600,
+    border: `1px solid ${active ? 'var(--adm-ink)' : 'var(--adm-line-strong)'}`,
+    background: active ? 'var(--adm-ink)' : 'var(--adm-panel)',
+    color: active ? 'var(--adm-accent-ink)' : 'var(--adm-ink-2)',
+  };
+}
+
+function ProgressBar({ percent, tone }) {
+  return (
+    <div
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={percent}
+      style={{
+        height: 6,
+        borderRadius: 999,
+        background: 'var(--adm-line-strong)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          height: '100%',
+          width: `${percent}%`,
+          borderRadius: 999,
+          background: TONE_COLORS[tone] || TONE_COLORS.default,
+          transition: 'width 300ms ease',
+        }}
+      />
+    </div>
+  );
 }
 
 /**
@@ -68,6 +153,12 @@ export default function JobManagerPanel({ config }) {
     error: '',
     queueUnavailable: false,
   });
+  const [itemFilter, setItemFilter] = useState('all');
+
+  const selectJob = (jobId) => {
+    setItemFilter('all');
+    setJobsState((current) => ({ ...current, selectedJobId: jobId }));
+  };
 
   const loadJobs = useCallback(async () => {
     try {
@@ -334,6 +425,25 @@ export default function JobManagerPanel({ config }) {
     return { queued, processing, failed, sent };
   }, [jobsState.jobs]);
 
+  const selectedJob = jobsState.selectedDetail?.job || null;
+  // Title the panel exactly as the list row does, so they always match.
+  const selectedListJob =
+    jobsState.jobs.find((job) => job.id === selectedJob?.id) || null;
+  const selectedItems = useMemo(
+    () => jobsState.selectedDetail?.items || [],
+    [jobsState.selectedDetail]
+  );
+  const filterOptions = useMemo(
+    () => itemFilterOptions(selectedItems),
+    [selectedItems]
+  );
+  const activeFilter = filterOptions.some((option) => option.key === itemFilter)
+    ? itemFilter
+    : 'all';
+  const visibleItems = selectedItems.filter((item) =>
+    itemMatchesFilter(item, activeFilter)
+  );
+
   return (
     <div className="space-y-5">
       <AdminPageIntro description={intro.description} />
@@ -365,225 +475,323 @@ export default function JobManagerPanel({ config }) {
         ))}
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <div className="flex items-center justify-between gap-4 border-b border-zinc-200 px-5 py-3 dark:border-white/[0.06]">
+      <section className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
+        <section style={panelStyle} className="overflow-hidden">
+          <div
+            className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
+            style={{ borderBottom: '1px solid var(--adm-line)' }}
+          >
             <div>
-              <p
-                className={`text-xs font-semibold uppercase tracking-widest ${accent.eyebrow}`}
-              >
-                {listHeader.eyebrow}
-              </p>
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              <p style={eyebrowStyle}>{listHeader.eyebrow}</p>
+              <p className="mt-1 text-sm" style={{ color: 'var(--adm-ink-3)' }}>
                 {listHeader.description}
               </p>
             </div>
             <button
               type="button"
               onClick={() => void processJob()}
-              disabled={
-                !jobsState.jobs.some((j) =>
-                  ['queued', 'processing'].includes(j.status)
-                )
-              }
-              className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-40 ${accent.processButton}`}
+              disabled={!hasActiveJobs}
+              style={pillButtonStyle()}
+              className="shrink-0 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Process All
             </button>
           </div>
 
-          <div className="overflow-auto">
+          {jobsState.loading ? (
             <table className="min-w-full">
-              <thead className="sticky top-0 bg-zinc-50 dark:bg-white/[0.06]/80">
-                <tr className="border-b border-zinc-200 text-[10px] font-semibold uppercase tracking-wide text-zinc-400 dark:border-white/[0.06] dark:text-zinc-500">
-                  <th className="px-4 py-3 text-left">Recipients</th>
-                  <th className="px-4 py-3 text-left">Status</th>
-                  <th className="px-4 py-3 text-left">Progress</th>
-                  <th className="px-4 py-3 text-left">Attempts</th>
-                  <th className="px-4 py-3 text-left">Updated</th>
-                  <th className="px-4 py-3 text-left">Actions</th>
-                </tr>
-              </thead>
               <tbody>
-                {jobsState.loading ? <LoadingRows count={5} cols={6} /> : null}
-                {!jobsState.loading &&
-                  jobsState.jobs.map((job) => (
-                    <tr
-                      key={job.id}
-                      className={`cursor-pointer border-b border-zinc-100 transition hover:bg-zinc-50 dark:border-white/[0.04] dark:hover:bg-white/10/50 ${jobsState.selectedJobId === job.id ? accent.selectedRow : ''}`}
-                      onClick={() =>
-                        setJobsState((current) => ({
-                          ...current,
-                          selectedJobId: job.id,
-                        }))
-                      }
-                    >
-                      <td className="px-4 py-4">
-                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                          {renderJobTitle(job)}
-                        </p>
-                        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                          {renderJobSubtitle(job)}
-                        </p>
-                      </td>
-                      <td className="px-4 py-4">
-                        <AdminStatusBadge tone={getJobTone(job)}>
-                          {job.status}
-                        </AdminStatusBadge>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="h-2 w-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/10">
-                          <div
-                            className={`h-full rounded-full ${accent.progressBar}`}
-                            style={{ width: progressWidth(job.progress) }}
-                          />
-                        </div>
-                        <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-                          {job.progress?.completed || 0} completed ·{' '}
-                          {job.progress?.remaining || 0} remaining
-                        </p>
-                      </td>
-                      <td className="px-4 py-4 text-sm text-zinc-700 dark:text-zinc-300">
-                        {job.sent_items || 0} sent · {job.failed_items || 0}{' '}
-                        failed
-                      </td>
-                      <td className="px-4 py-4 text-sm text-zinc-500 dark:text-zinc-400">
-                        {formatDate(job.updated_at || job.created_at)}
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          {['queued', 'processing'].includes(job.status) ? (
-                            <button
-                              type="button"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                void processJob(job.id);
-                              }}
-                              className={`rounded-full border px-3 py-1.5 text-xs ${accent.rowProcessButton}`}
-                            >
-                              Process
-                            </button>
-                          ) : null}
-                          {job.failed_items > 0 ? (
-                            <button
-                              type="button"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                void retryJob(job.id);
-                              }}
-                              className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs text-rose-800 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300"
-                            >
-                              Retry Failed
-                            </button>
-                          ) : null}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                <LoadingRows count={5} cols={4} />
               </tbody>
             </table>
-          </div>
+          ) : null}
+
+          {!jobsState.loading && jobsState.jobs.length ? (
+            <ul>
+              {jobsState.jobs.map((job) => {
+                const counts = jobCounts(job);
+                const tone = jobTone(job);
+                const selected = jobsState.selectedJobId === job.id;
+                return (
+                  <li
+                    key={job.id}
+                    style={{
+                      borderBottom: '1px solid var(--adm-line)',
+                      background: selected
+                        ? 'var(--adm-panel-2)'
+                        : 'transparent',
+                      boxShadow: selected
+                        ? 'inset 3px 0 0 var(--adm-ink)'
+                        : 'none',
+                    }}
+                  >
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => selectJob(job.id)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          selectJob(job.id);
+                        }
+                      }}
+                      className="grid cursor-pointer items-center gap-x-5 gap-y-3 px-5 py-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_230px]"
+                    >
+                      <div className="min-w-0">
+                        <p
+                          className="truncate text-sm font-semibold"
+                          style={{ color: 'var(--adm-ink)' }}
+                        >
+                          {renderJobTitle(job)}
+                        </p>
+                        <p
+                          className="mt-1 truncate text-xs"
+                          style={{ color: 'var(--adm-ink-3)' }}
+                        >
+                          {renderJobSubtitle(job)} ·{' '}
+                          {formatDate(job.created_at)}
+                        </p>
+                      </div>
+
+                      <div className="min-w-0">
+                        <ProgressBar percent={counts.percent} tone={tone} />
+                        <p
+                          className="mt-1.5 text-xs"
+                          style={{ color: 'var(--adm-ink-2)' }}
+                        >
+                          {jobResultText(job)}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-start gap-2 md:justify-end">
+                        {['queued', 'processing'].includes(job.status) ? (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              void processJob(job.id);
+                            }}
+                            style={pillButtonStyle()}
+                          >
+                            Process
+                          </button>
+                        ) : null}
+                        {job.failed_items > 0 ? (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              void retryJob(job.id);
+                            }}
+                            style={pillButtonStyle('danger')}
+                          >
+                            Retry Failed
+                          </button>
+                        ) : null}
+                        <AdminStatusBadge tone={tone}>
+                          {jobStatusLabel(job)}
+                        </AdminStatusBadge>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
 
           {!jobsState.loading && !jobsState.jobs.length ? (
-            <div className="p-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div
+              className="p-8 text-center text-sm"
+              style={{ color: 'var(--adm-ink-3)' }}
+            >
               {emptyState(jobsState)}
             </div>
           ) : null}
         </section>
 
-        <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm xl:sticky xl:top-28 xl:self-start dark:border-white/[0.06] dark:bg-white/[0.03]">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p
-                className={`text-xs font-semibold uppercase tracking-widest ${accent.eyebrow}`}
-              >
-                {detail.eyebrow}
-              </p>
-              <h3 className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-                {jobsState.selectedDetail?.job
-                  ? renderJobTitle(
-                      jobsState.selectedDetail.job,
-                      jobsState.selectedDetail.items
-                    )
-                  : 'Pick a job'}
-              </h3>
-            </div>
-            {jobsState.selectedDetail?.job ? (
-              <AdminStatusBadge tone={getJobTone(jobsState.selectedDetail.job)}>
-                {jobsState.selectedDetail.job.status}
-              </AdminStatusBadge>
-            ) : null}
-          </div>
-
-          {jobsState.selectedDetail?.job ? (
-            <>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                {detail.stats.map((stat) => (
-                  <div
-                    key={stat.field}
-                    className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]"
+        {/* Fits the window and scrolls its own recipient list, so a large
+            job never runs under the page header or off the screen. */}
+        <section
+          style={panelStyle}
+          className="flex flex-col overflow-hidden xl:sticky xl:top-28 xl:max-h-[calc(100vh-8.5rem)]"
+        >
+          <div
+            className="px-5 pt-5 pb-4"
+            style={{ borderBottom: '1px solid var(--adm-line)' }}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p style={eyebrowStyle}>{detail.eyebrow}</p>
+                <h3
+                  className="mt-1 truncate text-base font-semibold"
+                  style={{ color: 'var(--adm-ink)' }}
+                >
+                  {selectedJob
+                    ? selectedListJob
+                      ? renderJobTitle(selectedListJob)
+                      : renderJobTitle(selectedJob, selectedItems)
+                    : 'Pick a job'}
+                </h3>
+                {selectedJob ? (
+                  <p
+                    className="mt-0.5 text-xs"
+                    style={{ color: 'var(--adm-ink-3)' }}
                   >
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                      {stat.label}
-                    </p>
-                    <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">
-                      {jobsState.selectedDetail.job[stat.field]}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 space-y-3">
-                {(jobsState.selectedDetail.items || []).map((item) => (
-                  <div
-                    key={item.id}
-                    className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-3 dark:border-white/[0.06] dark:bg-white/[0.04]"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                          {item.registration?.first_name}{' '}
-                          {item.registration?.last_name}
-                        </p>
-                        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                          {item.registration?.registration_code} ·{' '}
-                          {item.registration?.email}
-                        </p>
-                      </div>
-                      <AdminStatusBadge
-                        tone={
-                          item.status === 'sent'
-                            ? 'success'
-                            : item.status === 'failed'
-                              ? 'danger'
-                              : 'warning'
-                        }
-                      >
-                        {item.status}
-                      </AdminStatusBadge>
-                    </div>
-                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                      {item.failure_reason ||
-                        item.registration?.organization ||
-                        'No failure reason recorded.'}
-                    </p>
-                    <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
-                      Attempts: {item.attempt_count}/{item.max_attempts} · Last
-                      attempt:{' '}
-                      {formatDate(item.last_attempt_at || item.updated_at)}
-                    </p>
-                  </div>
-                ))}
-
-                {!(jobsState.selectedDetail.items || []).length ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    This job has no item-level attempts recorded yet.
+                    Started {formatDate(selectedJob.created_at)}
                   </p>
                 ) : null}
               </div>
-            </>
+              {selectedJob ? (
+                <AdminStatusBadge tone={jobTone(selectedJob)}>
+                  {jobStatusLabel(selectedJob)}
+                </AdminStatusBadge>
+              ) : null}
+            </div>
+
+            {selectedJob ? (
+              <>
+                <dl
+                  className="mt-4 grid gap-2"
+                  style={{
+                    gridTemplateColumns: `repeat(${detail.stats.length}, minmax(0, 1fr))`,
+                  }}
+                >
+                  {detail.stats.map((stat) => (
+                    <div
+                      key={stat.field}
+                      className="rounded-[10px] px-3 py-2"
+                      style={{ background: 'var(--adm-panel-2)' }}
+                    >
+                      <dt style={eyebrowStyle}>{stat.label}</dt>
+                      <dd
+                        className="mt-0.5 text-lg font-semibold tabular-nums"
+                        style={{ color: 'var(--adm-ink)' }}
+                      >
+                        {Number(selectedJob[stat.field] || 0)}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="mt-3">
+                  <ProgressBar
+                    percent={jobCounts(selectedJob).percent}
+                    tone={jobTone(selectedJob)}
+                  />
+                </div>
+                {selectedItems.length > 1 ? (
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {filterOptions.map((option) => (
+                      <button
+                        key={option.key}
+                        type="button"
+                        onClick={() => setItemFilter(option.key)}
+                        aria-pressed={activeFilter === option.key}
+                        style={chipStyle(activeFilter === option.key)}
+                      >
+                        {option.label} {option.count}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </>
+            ) : null}
+          </div>
+
+          {selectedJob ? (
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <ul>
+                {visibleItems.map((item) => {
+                  const name =
+                    [
+                      item.registration?.first_name,
+                      item.registration?.last_name,
+                    ]
+                      .filter(Boolean)
+                      .join(' ') || 'Unknown recipient';
+                  const showReason =
+                    item.failure_reason && item.status !== 'sent';
+                  return (
+                    <li
+                      key={item.id}
+                      className="px-5 py-3"
+                      style={{ borderBottom: '1px solid var(--adm-line)' }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p
+                            className="truncate text-sm font-medium"
+                            style={{ color: 'var(--adm-ink)' }}
+                          >
+                            {name}
+                          </p>
+                          <p
+                            className="truncate text-xs"
+                            style={{ color: 'var(--adm-ink-3)' }}
+                          >
+                            {item.registration?.email}
+                          </p>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <AdminStatusBadge tone={itemTone(item.status)}>
+                            {item.status}
+                          </AdminStatusBadge>
+                          <p
+                            className="mt-1 text-[11px] tabular-nums"
+                            style={{ color: 'var(--adm-ink-3)' }}
+                          >
+                            {formatTime(
+                              item.sent_at ||
+                                item.last_attempt_at ||
+                                item.updated_at
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      {showReason ? (
+                        <p
+                          className="mt-1.5 text-xs"
+                          style={{
+                            color:
+                              item.status === 'skipped'
+                                ? 'var(--adm-ink-3)'
+                                : 'var(--adm-bad)',
+                          }}
+                        >
+                          {item.failure_reason}
+                          {item.status === 'failed' && item.attempt_count
+                            ? ` (${item.attempt_count} attempt${item.attempt_count === 1 ? '' : 's'})`
+                            : ''}
+                        </p>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {!selectedItems.length ? (
+                <p
+                  className="px-5 py-4 text-sm"
+                  style={{ color: 'var(--adm-ink-3)' }}
+                >
+                  This job has no recipients recorded yet.
+                </p>
+              ) : null}
+              {selectedItems.length > 0 &&
+              Number(selectedJob.total_items || 0) > selectedItems.length ? (
+                <p
+                  className="px-5 py-3 text-xs"
+                  style={{ color: 'var(--adm-ink-3)' }}
+                >
+                  Showing the first {selectedItems.length} of{' '}
+                  {selectedJob.total_items} recipients.
+                </p>
+              ) : null}
+            </div>
           ) : (
-            <p className="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
+            <p
+              className="px-5 py-4 text-sm"
+              style={{ color: 'var(--adm-ink-3)' }}
+            >
               {detail.emptyHint}
             </p>
           )}
