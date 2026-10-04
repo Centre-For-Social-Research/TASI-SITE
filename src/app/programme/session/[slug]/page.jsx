@@ -5,6 +5,7 @@ import { CalendarDays, Grid2X2, MapPin } from 'lucide-react';
 import HomeNavbar from '@/components/home/navbar';
 import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
+import SessionShareButton from '@/components/programme/session-share-button';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import { programmeSessions2025 } from '@/data/programme-2025';
 import { programmeSessions2026 } from '@/data/programme-2026';
@@ -203,9 +204,16 @@ export default async function ProgrammeSessionPage({ params }) {
           }`}
         >
           <article className="flex flex-col rounded-[10px] border border-stone-200 bg-white p-7 shadow-sm dark:border-stone-800 dark:bg-stone-900 md:p-8">
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-stone-400">
-              {session.format} Session
-            </p>
+            <div className="flex items-start justify-between gap-4">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-stone-400">
+                {session.format} Session
+              </p>
+              <SessionShareButton
+                path={path}
+                title={session.title}
+                className="inline-flex items-center gap-2 rounded-full border border-stone-300 px-4 py-2 text-sm font-bold text-stone-700 transition hover:border-[#b33f2a] hover:text-[#b33f2a] dark:border-stone-700 dark:text-stone-200 [&_svg]:h-4 [&_svg]:w-4"
+              />
+            </div>
             <h2 className="mt-5 max-w-3xl text-3xl font-black tracking-tight text-stone-950 dark:text-white md:text-4xl">
               {session.title}
             </h2>

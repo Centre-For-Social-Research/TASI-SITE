@@ -17,6 +17,7 @@ import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 import BuildMyAgenda from './build-my-agenda';
 import styles from './programme-agenda.module.css';
+import SessionShareButton from './session-share-button';
 
 const {
   buildProgrammeSessionViewModels,
@@ -651,6 +652,11 @@ export default function ProgrammeAgendaClient({
                               </a>
                             </>
                           )}
+                          <SessionShareButton
+                            path={getProgrammeSessionPath(session)}
+                            title={session.title}
+                            className={styles['agenda-toggle']}
+                          />
                         </div>
 
                         {session.speakersDetailed &&
