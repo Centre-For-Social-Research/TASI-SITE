@@ -34,46 +34,50 @@ function BandLink({ href, children }) {
   );
 }
 
+// Every piece of text in the strip shares one size so it reads as a single line.
+const STRIP_TEXT = 'text-xs font-black uppercase tracking-[0.14em] md:text-sm';
+
 function CountdownTile({ value, label }) {
   return (
-    <div className="flex w-[4.75rem] flex-col items-center rounded-[10px] border border-white/10 bg-white/[0.04] py-3 md:w-24 md:py-4">
-      <span
-        className={`${MONO} text-3xl font-medium leading-none text-[#ffd919] md:text-5xl`}
-      >
+    <div className="flex items-baseline gap-1.5 rounded-[10px] bg-[#350265] px-2.5 py-1.5">
+      <span className={`${MONO} ${STRIP_TEXT} text-[#ffd919]`}>
         {String(value).padStart(2, '0')}
       </span>
-      <span className="mt-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/50">
-        {label}
-      </span>
+      <span className={`${STRIP_TEXT} text-white/70`}>{label}</span>
     </div>
   );
 }
 
 function Countdown({ countdown }) {
   return (
-    <BandShell>
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ff8fa3]">
-          TASI 2026 · India International Centre, New Delhi
-        </p>
-        <p className="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">
-          Doors open at <span className={MONO}>09:00</span> on 14 October.
-        </p>
-        <div className="mt-3">
-          <BandLink href="/programme">See the programme</BandLink>
+    <section className="border-b border-[#350265]/10 bg-white px-4 py-2.5 text-[#350265] md:px-8 lg:px-16">
+      <div className="mx-auto flex w-full max-w-[1300px] flex-col gap-2.5 md:flex-row md:items-center md:justify-between">
+        <div
+          className={`${STRIP_TEXT} flex flex-wrap items-center gap-x-4 gap-y-1`}
+        >
+          <span>TASI 2026 · IIC, New Delhi</span>
+          <span className="hidden h-3 w-px bg-[#350265]/30 md:block" />
+          <span>
+            Doors open <span className={MONO}>09:00</span>, 14 October
+          </span>
+          <Link
+            href="/programme"
+            className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
+          >
+            Programme
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        <div
+          className="flex items-center gap-1.5"
+          aria-label={`${countdown.days} days, ${countdown.hours} hours and ${countdown.minutes} minutes to go`}
+        >
+          <CountdownTile value={countdown.days} label="Days" />
+          <CountdownTile value={countdown.hours} label="Hrs" />
+          <CountdownTile value={countdown.minutes} label="Min" />
         </div>
       </div>
-      <div
-        className="flex items-center gap-2 md:gap-3"
-        aria-label={`${countdown.days} days, ${countdown.hours} hours and ${countdown.minutes} minutes to go`}
-      >
-        <CountdownTile value={countdown.days} label="Days" />
-        <span className={`${MONO} text-2xl text-white/25`}>:</span>
-        <CountdownTile value={countdown.hours} label="Hours" />
-        <span className={`${MONO} text-2xl text-white/25`}>:</span>
-        <CountdownTile value={countdown.minutes} label="Min" />
-      </div>
-    </BandShell>
+    </section>
   );
 }
 
