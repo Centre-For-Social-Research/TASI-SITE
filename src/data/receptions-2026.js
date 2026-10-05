@@ -48,7 +48,8 @@ export const receptions2026 = [
     hostLine: 'Hosted by Match Group',
     card: {
       title: 'Match Group Policy Lab',
-      theme: 'Building Safer Online Social Discovery Ecosystems',
+      theme:
+        'Building Trusted Human Connections: Designing for Safety, Authenticity and Inclusion',
       summary:
         'A private, closed-door roundtable at the end of the first festival day on trust, authenticity and safety by design in online social discovery, followed by an evening reception.',
     },

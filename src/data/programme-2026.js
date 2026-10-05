@@ -35,11 +35,11 @@ export const programmeSessions2026 = [
   makeSession(
     49,
     'oct13',
-    '18:14–19:30',
+    '18:30–19:35',
     'German Embassy',
     'opening',
     'Safety Spotlights',
-    'Short, solution-focused presentations on children’s information literacy, journalism safety, lessons from Australia, technology to combat trafficking and Project Lantern.'
+    'Short, solution-focused presentations on children’s agency in navigating information, safety in journalism, youth participation in online safety, rescue and rehabilitation of trafficking survivors, and shared signals for safer platforms.'
   ),
   makeSession(
     2,
@@ -47,8 +47,8 @@ export const programmeSessions2026 = [
     '18:35–18:50',
     'German Embassy',
     'spotlight',
-    'Safety Spotlight: Building Children’s Critical Thinking',
-    'A spotlight on helping children navigate information and develop critical thinking.'
+    'Safety Spotlight: From Protection to Agency: Building Children’s Capacity to Navigate Information With Humans in the Lead',
+    'A spotlight on moving from protecting children to building their capacity to navigate information, with humans in the lead.'
   ),
   makeSession(
     3,
@@ -56,7 +56,7 @@ export const programmeSessions2026 = [
     '18:50–19:05',
     'German Embassy',
     'spotlight',
-    'Spotlight: Journalism Safety'
+    'Spotlight: Making Safety Part of the Assignment'
   ),
   makeSession(
     4,
@@ -64,7 +64,7 @@ export const programmeSessions2026 = [
     '19:05–19:15',
     'German Embassy',
     'spotlight',
-    'Spotlight: Lessons from Australia'
+    'Spotlight: Less Advising, More Doing: Rethinking Youth Participation in Online Safety'
   ),
   makeSession(
     5,
@@ -72,9 +72,16 @@ export const programmeSessions2026 = [
     '19:15–19:25',
     'German Embassy',
     'spotlight',
-    'Spotlight: Using Technology to Combat Trafficking'
+    'Spotlight: Rescue. Rehabilitation. Repatriation.'
   ),
-  // Two spotlights share the 19:25–19:35 slot in the source. Both are held.
+  makeSession(
+    81,
+    'oct13',
+    '19:25–19:35',
+    'German Embassy',
+    'spotlight',
+    'Spotlight: Lantern: Shared Signals, Safer Platforms'
+  ),
 
   // Wednesday, 14 October: Main Hall.
   makeSession(
@@ -99,7 +106,7 @@ export const programmeSessions2026 = [
     '10:15–10:30',
     'Main Hall',
     'keynote',
-    'Opening Sponsor Keynote: Safety in the AI Era'
+    'Opening Keynote: Growing Up With AI: What Safety Means Now'
   ),
   makeSession(
     11,
@@ -107,7 +114,7 @@ export const programmeSessions2026 = [
     '10:30–11:15',
     'Main Hall',
     'panel',
-    'Panel: Forces Reshaping Trust & Safety in 2026',
+    'Opening Panel: Forces Reshaping Trust & Safety in 2026',
     'Senior leaders from technology, government and industry discuss the forces likely to shape trust and safety in the year ahead.'
   ),
   makeSession(
@@ -116,7 +123,7 @@ export const programmeSessions2026 = [
     '11:15–11:30',
     'Main Hall',
     'spotlight',
-    'Spotlight: What Happens When Critical Thinking Becomes a Daily Practice?'
+    'Spotlight: What Happens When Critical Thinking Becomes a Daily Practice? How Can AI Play a Role With Humans in the Lead?'
   ),
   makeSession(
     13,
@@ -124,7 +131,7 @@ export const programmeSessions2026 = [
     '11:30–11:45',
     'Main Hall',
     'keynote',
-    'Keynote Address'
+    'Opening Remarks and Keynote Address'
   ),
   makeSession(
     16,
@@ -134,14 +141,6 @@ export const programmeSessions2026 = [
     'fireside',
     'Fireside Chat: The Fight Against CSAM: From Detection to Prevention Through Industry Collaboration',
     'A discussion of industry collaboration against CSAM, from detection and reporting to prevention.'
-  ),
-  makeSession(
-    17,
-    'oct14',
-    '12:15–12:30',
-    'Main Hall',
-    'spotlight',
-    'Sponsor Spotlight: Microsoft x Cyberlite'
   ),
   makeSession(
     18,
@@ -176,7 +175,7 @@ export const programmeSessions2026 = [
     '15:00–15:15',
     'Main Hall',
     'spotlight',
-    'Sponsor Spotlight: Roblox / CSR'
+    'Sponsor Spotlight: Youth in Play'
   ),
   makeSession(
     26,
@@ -189,10 +188,18 @@ export const programmeSessions2026 = [
   makeSession(
     27,
     'oct14',
-    '15:30–16:30',
+    '15:30–16:00',
     'Main Hall',
     'fireside',
     'Leadership Dialogue: Women in Public Life: Building Safer Spaces for Stronger Democracy'
+  ),
+  makeSession(
+    82,
+    'oct14',
+    '16:00–16:30',
+    'Main Hall',
+    'fireside',
+    'Fireside Chat with Yoel Roth'
   ),
   makeSession(
     29,
@@ -200,7 +207,7 @@ export const programmeSessions2026 = [
     '16:30–17:00',
     'Main Hall',
     'keynote',
-    'Closing Keynote / Special Address'
+    'Closing Keynote'
   ),
   makeSession(
     51,
@@ -210,15 +217,22 @@ export const programmeSessions2026 = [
     'spotlight',
     'Sponsor Spotlight: Driving Human Safety in the Digital World Through AI'
   ),
-  // Wednesday, 14 October: parallel rooms. The latest draft resolves the
-  // earlier overlapping morning roundtable entries.
+  // Wednesday, 14 October: parallel rooms.
+  makeSession(
+    84,
+    'oct14',
+    '10:00–10:30',
+    'Workshop Room',
+    'workshop',
+    'Not Another Chatbot: Public Interest AI and Community Knowledge as Trust and Safety Infrastructure'
+  ),
   makeSession(
     80,
     'oct14',
     '10:00–11:00',
     'Roundtable Room',
-    'roundtable',
-    'Gender, Governance and India’s AI Future'
+    'panel',
+    'Panel: Gender, Governance and India’s AI Future'
   ),
   makeSession(
     52,
@@ -226,7 +240,7 @@ export const programmeSessions2026 = [
     '10:30–11:30',
     'Workshop Room',
     'workshop',
-    'Workshop: Family Wellbeing'
+    'From Teenagers to “Seenagers”: Navigating Digital Wellbeing Across Generations and Mitigating Digital Risks'
   ),
   makeSession(
     53,
@@ -234,7 +248,7 @@ export const programmeSessions2026 = [
     '11:45–13:00',
     'Workshop Room',
     'workshop',
-    'Workshop: Building a Taxonomy of Contextualised AI Risks for the Global Majority'
+    'Workshop: A Systems Approach to AI Risks in Global Majority Contexts'
   ),
   makeSession(
     54,
@@ -261,12 +275,12 @@ export const programmeSessions2026 = [
     'Raising Children in the AI Era: Balancing Privacy, Trust and Safety'
   ),
   makeSession(
-    57,
+    69,
     'oct14',
     '14:45–15:30',
     'Workshop Room',
-    'workshop',
-    'Partner Workshop'
+    'panel',
+    'Panel: Growing Up and Parenting in the Digital Age'
   ),
   makeSession(
     58,
@@ -282,7 +296,7 @@ export const programmeSessions2026 = [
     '15:30–17:00',
     'Workshop Room',
     'workshop',
-    'Designing for Children: Critical Inquiry and Empathy'
+    'Designing for Children: Critical Inquiry, Empathy and Safety in the Information Age'
   ),
   makeSession(
     60,
@@ -298,7 +312,7 @@ export const programmeSessions2026 = [
     '17:00–19:00',
     'Workshop Room',
     'workshop',
-    'Policy Lab: Building Safer Online Social Discovery Ecosystems'
+    'Policy Lab: Building Trusted Human Connections: Designing for Safety, Authenticity and Inclusion'
   ),
 
   // Thursday, 15 October: Main Hall.
@@ -341,7 +355,7 @@ export const programmeSessions2026 = [
     '11:00–11:15',
     'Main Hall',
     'spotlight',
-    'Spotlight: Netflix'
+    'Spotlight: I4C, Saksham Senior and Meta Collaboration for Cyber Awareness Month'
   ),
   makeSession(
     44,
@@ -366,7 +380,7 @@ export const programmeSessions2026 = [
     '12:30–12:45',
     'Main Hall',
     'spotlight',
-    'Partner Spotlight'
+    'Spotlight: Girl Effect'
   ),
   makeSession(
     40,
@@ -384,7 +398,7 @@ export const programmeSessions2026 = [
     '14:20–14:50',
     'Main Hall',
     'fireside',
-    'Fireside Chat: Navigating Social Media Across Generations'
+    'Fireside Chat: Navigating Social Media Across a Generation Gap'
   ),
   makeSession(
     46,
@@ -418,7 +432,7 @@ export const programmeSessions2026 = [
     'Main Hall',
     'panel',
     'Closing Plenary: Trust & Safety at a Crossroads',
-    'Reflections on the two-day convening and what it will take to move from reacting to harms to anticipating and preventing them.'
+    'How should we rethink safety, responsibility and human wellbeing for the next era of technology? Reflections on the two-day convening and what it will take to move from reacting to harms to anticipating and preventing them.'
   ),
   makeSession(
     48,
@@ -426,7 +440,7 @@ export const programmeSessions2026 = [
     '16:50–17:00',
     'Main Hall',
     'special',
-    'Festival Closing'
+    'Closing Remarks'
   ),
   makeSession(
     68,
@@ -441,20 +455,12 @@ export const programmeSessions2026 = [
   // Thursday, 15 October: parallel rooms. The overlapping 11:45–13:00
   // and 12:30–14:00 Workshop Room entries are held pending correction.
   makeSession(
-    69,
-    'oct15',
-    '10:00–11:00',
-    'Workshop Room',
-    'panel',
-    'Panel: Growing Up and Parenting in the Digital Age'
-  ),
-  makeSession(
     70,
     'oct15',
     '10:15–11:15',
     'Roundtable Room',
     'roundtable',
-    'Roundtable: Technology-Facilitated Gender-Based Violence'
+    'Roundtable: Continuum of Online and Offline Abuse'
   ),
   makeSession(
     71,
@@ -478,7 +484,7 @@ export const programmeSessions2026 = [
     '12:45–13:00',
     'Roundtable Room',
     'spotlight',
-    'Online Content Regulation and Censorship'
+    'The Small Fish in the Big Pond of Online Content Regulation: Splinternet of Censorship and the Online Safety Act in Sri Lanka'
   ),
   makeSession(
     74,
@@ -486,7 +492,7 @@ export const programmeSessions2026 = [
     '14:00–15:00',
     'Roundtable Room',
     'roundtable',
-    'Beyond the Binary: Rethinking Age Assurance and Child Online Safety in India'
+    'Age, Access and Safety: Building an Age-Appropriate Digital Ecosystem for Children in India'
   ),
   makeSession(
     75,
@@ -526,7 +532,7 @@ export const programmeSessions2026 = [
     '16:10–17:00',
     'Workshop Room',
     'workshop',
-    'Snap Workshop'
+    'Digital Wellness Hour: A Guided Journalling Workshop for Teens'
   ),
 ];
 
