@@ -452,8 +452,7 @@ export const programmeSessions2026 = [
     'Closing reception for delegates and partners to reflect on the two-day programme and continue conversations across the trust and safety community.'
   ),
 
-  // Thursday, 15 October: parallel rooms. The overlapping 11:45–13:00
-  // and 12:30–14:00 Workshop Room entries are held pending correction.
+  // Thursday, 15 October: parallel rooms.
   makeSession(
     70,
     'oct15',
@@ -469,6 +468,23 @@ export const programmeSessions2026 = [
     'Workshop Room',
     'workshop',
     'Everest Group Session'
+  ),
+  makeSession(
+    83,
+    'oct15',
+    '11:45–13:00',
+    'Workshop Room',
+    'workshop',
+    'Kids Safety Masterclass',
+    'An interactive session for parents covering product safety features, safety mechanisms and learning opportunities for students that use generative AI to improve learning outcomes.'
+  ),
+  makeSession(
+    17,
+    'oct15',
+    '13:00–14:00',
+    'Workshop Room',
+    'workshop',
+    'Designing With, Not For: Youth Co-Design as a Safeguarding Tool for AI Companionship'
   ),
   makeSession(
     72,
