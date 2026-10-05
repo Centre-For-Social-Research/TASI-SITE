@@ -1,5 +1,18 @@
 [
   {
+    "name": "Abhilash Mallick",
+    "designation": "Editor, Fact-Check",
+    "organisation": "The Quint",
+    "country": "India",
+    "category": "Media & Journalism",
+    "bio": "Journalist, researcher and policy practitioner with over 10 years of experience working at\nthe intersection of disinformation, technology, artificial intelligence, and public policy.\nCurrently leads WebQoof, the award-winning fact-checking initiative at The Quint, where he\nmanages editorial strategy, international partnerships and AI-driven product development.\nHis work increasingly focuses on AI governance, digital policy, information integrity and\nemerging technologies, with particular interest in how AI reshapes geopolitics, democratic\ninstitutions and public discourse.",
+    "photo": "/img/speakers/2026/abhilash-mallick.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/abhilash-mallick-b2143912/",
+    "xUrl": "https://x.com/Abhilash279",
+    "instagramUrl": "https://www.instagram.com/abhilash_mallick/",
+    "edition": "2026"
+  },
+  {
     "name": "Adam Seldow",
     "designation": "Senior Director of Education Policy",
     "organisation": "Roblox",
@@ -520,6 +533,19 @@
     "edition": "2026"
   },
   {
+    "name": "Rahul Fernandes",
+    "designation": "Google, Meta & TikTok alum",
+    "organisation": "Media and technology",
+    "country": "India",
+    "category": "Technology",
+    "bio": "Rahul Fernandes has a background spanning journalism and technology. He spent almost a decade in the US, working at Meta, Google and TikTok. His work included news ranking and information integrity at Facebook, and how people discover and engage with content through Discover, the content feed within Google Search and Android devices.",
+    "photo": "/img/speakers/2026/rahul-fernandes.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/newspaperwallah/",
+    "xUrl": "https://x.com/newspaperwallah",
+    "instagramUrl": "https://www.instagram.com/newspaperwallah/",
+    "edition": "2026"
+  },
+  {
     "name": "Rob Lewington",
     "designation": "SVP | Head of Global Trust & Safety",
     "organisation": "TP",
@@ -564,6 +590,18 @@
     "bio": "Satviki Varma is a development professional with extensive experience leading multi-sectoral programmes across health, gender, adolescent wellbeing and digital safety in India and globally. She currently leads programmes at Girl Effect India, where she has been closely involved in the organisation’s work to address technology-facilitated gender-based violence (TFGBV) through research, youth engagement, school-based interventions, digital campaigns and multi-stakeholder partnerships.\n\nHer work includes leading the development and scale-up of Tipi Tipi Talk, a school-based digital safety programme, and contributing to Girl Effect’s wider India vs Tech Hinsa initiative, which brings together behaviour change, storytelling, education and systems-level engagement to prevent and respond to online gender-based violence.\n\nPreviously, Satviki has worked with the Children’s Investment Fund Foundation (CIFF), Aga Khan Foundation, John Snow India (JSI), and the United Nations Environment Programme (UNEP) in Geneva. Her experience spans programme strategy, human-centred design and locally led development, including initiatives reaching over 150,000 households across 11 states. A former journalist, she brings together systems thinking and storytelling to drive social change and build safer, more equitable environments for young people.",
     "photo": "/img/speakers/2026/satviki-varma.webp",
     "linkedinUrl": "https://www.linkedin.com/in/satviki-varma-29ba1666/",
+    "edition": "2026"
+  },
+  {
+    "name": "Shiromi Samarakoon",
+    "designation": "Founder and Chairman",
+    "organisation": "Digital Safeguarding Centre",
+    "country": "Sri Lanka",
+    "category": "Civil Society",
+    "bio": "Shiromi Samarakoon is innovation-driven professional with over 10 years of national and international experience spanning education, child safeguarding, online safety, digital well-being, digital inclusion, youth development and social innovation. She has worked with leading international and national organisations, including UNICEF, the International Telecommunication Union (ITU), Save the Children and the British Council, providing technical expertise, programme leadership, research and capacity-building support.\n\nShe is the Founder and Chairman of the Digital Safeguarding Centre and Co-Founder & Managing Director of 360 Campus, an education-focused institution in Sri Lanka. Her expertise includes child online protection, technology-facilitated gender-based violence, digital resilience, safeguarding, education and lifelong learning. She has led the development of national and organisational guidelines, policies, curricula, training programmes and practical resources, and has designed and delivered capacity-building programmes for educators, government officials, civil society organisations, professionals, parents and young people.\n\nHer professional experience includes regional work on Child Online Protection across the Asia-Pacific region, national-level programme management, multi-stakeholder coordination, policy and research, and collaboration with government, international organisations, educational institutions and the private sector. She is particularly passionate about strengthening safe, inclusive and innovative learning environments, promoting responsible and meaningful use of technology, and building resilient communities through education, digital literacy and evidence-based policy and practice.",
+    "photo": "/img/speakers/2026/shiromi-samarakoon.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/shiromi-samarakoon-b199b786/",
+    "instagramUrl": "https://www.instagram.com/shirosam7/",
     "edition": "2026"
   },
   {
@@ -633,6 +671,17 @@
     "bio": "Sophie Mortimer is Head of Support Services at SWGfL, responsible for the UK Revenge Porn Helpline, the only dedicated service providing specialist support to adults affected by intimate image abuse in the UK. Under her leadership, the Helpline has become an essential resource, offering expert guidance to those navigating the challenges of this deeply personal form of online harm. Sophie also plays a pivotal role in StopNCII.org, a global platform enabling individuals to protect their private images across the world from unauthorised sharing across partner platforms.\nA passionate advocate for online safety and survivor support, Sophie speaks at events in the UK and internationally, promoting cross-border collaboration as vital to addressing the global nature of online abuse. Her work spans survivor advocacy, public awareness, and policy influence, alongside championing innovative technological solutions. Sophie's dedication to fostering partnerships and raising awareness makes her a leading figure in the fight against tech-facilitated gender-based violence and a prominent voice for change.",
     "photo": "/img/speakers/2026/sophie-mortimer.webp",
     "linkedinUrl": "https://www.linkedin.com/in/sophie-mortimer-31038b76/",
+    "edition": "2026"
+  },
+  {
+    "name": "Tamanna Rahman",
+    "designation": "Executive Director",
+    "organisation": "Coalition of Development Communication Society / Medicare Japan",
+    "country": "Bangladesh",
+    "category": "Creators & Public Educators",
+    "bio": "Ms. Tamanna Rahman is an expert in Communication and Media for Development sector Bangladesh. In her 31+ years’ career path, she gained vast experience in communications, advocacy and campaign related activities including program, research, organizational capacity building initiatives etc. \nCurrently, she is working with multiple organizations, such as, acting as an Executive Director, Coalition of Development Communication Society (CDCS), Director, Medicare Japan and Ovibash Technical Training Institute (a sister concerned of Medicare Japan).  She is also an enlisted Recourse Person of Bangladesh Community Radio Association (BCRA), she also act as a\tLocal Commissioner, Uttara District, Bangladesh Girl Guides Association.\n\nShe started her career as a Coordinator with the South Asian Disaster Management Center under International University of Business Agriculture and Technology - IUBAT. She also acted as a Program Officer, Research, Training and Management International and Coordinator Building Capacity of Bangladesh NGO’s Network for Radio and Communication-BNNRC along with other organizations.\n In her long career journey, Ms. Rahman facilitated many training workshops in the country and abroad. She is graduated from the University of Dhaka, where she completed both of her BSS and MSS under Sociology discipline.",
+    "photo": "/img/speakers/2026/tamanna-rahman.webp",
+    "linkedinUrl": "https://linkedin.com/in/tamanna-rahman-200a9b29",
     "edition": "2026"
   },
   {
