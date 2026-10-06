@@ -54,6 +54,9 @@ const organisationCorrections = new Map([
 ]);
 // Countries published differently from the form, keyed by speaker name.
 const countryCorrections = new Map([['Marisa Gerards', 'Netherlands']]);
+// Form bios pasted with a hard line break every line; their lines are joined
+// back into one paragraph.
+const unwrapBios = new Set(['Abhilash Mallick']);
 // Bios written for speakers whose form bio was only a link, keyed by speaker
 // name. Drawn from the page the speaker linked to.
 const bioOverrides = new Map([
@@ -200,9 +203,15 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
     organisation: organisationCorrections.get(name) || row['Organisation'],
     country: countryCorrections.get(name) || row['Country'],
     category: row['Which category best describes you?'],
-    bio:
-      bioOverrides.get(name) ||
-      row['Professional Bio (Please provide a brief professional biography).'],
+    bio: bioOverrides.has(name)
+      ? bioOverrides.get(name)
+      : unwrapBios.has(name)
+        ? row[
+            'Professional Bio (Please provide a brief professional biography).'
+          ].replace(/\s*\n\s*/g, ' ')
+        : row[
+            'Professional Bio (Please provide a brief professional biography).'
+          ],
     photo,
     linkedinUrl: socialUrl(row['LinkedIn profile URL'], 'linkedin'),
     xUrl: socialUrl(row['X (Twitter) profile URL'], 'x'),
