@@ -43,12 +43,14 @@ const withheldProfiles = new Set([
 const knownPhotoExceptions = new Set(['Uma Subramanian']);
 // Names the form submitted with a typo, published as corrected.
 const nameCorrections = new Map([['Uma Submanian', 'Uma Subramanian']]);
-// Organisation names the form submitted with a typo, keyed by speaker name.
+// Organisation names published differently from the form, keyed by speaker
+// name: typos, and names the organizer asked to change.
 const organisationCorrections = new Map([
   [
     'Tamanna Rahman',
     'Coalition of Development Communication Society / Medicare Japan',
   ],
+  ['Barkha Dutt', 'Mojo Story'],
 ]);
 // Square crops around the face for wide or landscape headshots, in the
 // submitted image's own pixels.
