@@ -389,7 +389,7 @@ export const partners = [
     name: 'ASCI',
     logo: '/img/Logo/ASCI.png',
     slug: 'asci',
-    type: 'Standards Partner',
+    type: 'Session Partner',
     description:
       "The Advertising Standards Council of India (ASCI) is India's self-regulatory body for advertising, working to promote responsible advertising and consumer trust.",
     country: 'India',

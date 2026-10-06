@@ -99,7 +99,7 @@ test('TASI 2026 partner list is ordered and shown on the homepage strip and spon
   const { tasi2026Partners, tasi2026PartnerSlugs } = await import(
     pathToFileURL(path.join(process.cwd(), 'src/data/partners-2026.js'))
   );
-  assert.equal(tasi2026Partners.length, 23);
+  assert.equal(tasi2026Partners.length, 22);
   assert.deepEqual(tasi2026PartnerSlugs.slice(0, 7), [
     'google',
     'netflix',
@@ -164,7 +164,7 @@ test('partners page splits TASI 2026 and TASI 2025 editions', async () => {
 
   const edition2026 = pageData.getPartnersForEdition('2026');
   const edition2025 = pageData.getPartnersForEdition('2025');
-  assert.equal(edition2026.length, 23);
+  assert.equal(edition2026.length, 22);
   assert.equal(edition2026[0].slug, 'google');
   assert.equal(edition2025.length, 32);
   assert.ok(edition2025.some((partner) => partner.slug === 'youtube'));

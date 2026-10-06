@@ -21,7 +21,6 @@ export const tasi2026PartnerSlugs = [
   'match-group',
   'tech-coalition',
   'igpp',
-  'asci',
   'acts-india',
   'the-dialogue',
   'the-quantum-hub',
@@ -36,6 +35,7 @@ export const tasi2026PartnerSlugs = [
 export const tasi2026SessionPartnerSlugs = [
   'ab-research-consulting',
   'adobe',
+  'asci',
   'frida-fund',
   'ifdc',
   'kutunga',
