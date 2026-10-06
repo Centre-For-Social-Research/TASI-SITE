@@ -691,12 +691,22 @@ export default function ProgrammeAgendaClient({
                                         )}
                                       </div>
                                       <div className={styles['speaker-info']}>
-                                        <Link
-                                          className={styles['speaker-name']}
-                                          href={getSpeakerProfilePath(speaker)}
-                                        >
-                                          {speaker.name}
-                                        </Link>
+                                        {speaker.hasProfile === false ? (
+                                          <span
+                                            className={styles['speaker-name']}
+                                          >
+                                            {speaker.name}
+                                          </span>
+                                        ) : (
+                                          <Link
+                                            className={styles['speaker-name']}
+                                            href={getSpeakerProfilePath(
+                                              speaker
+                                            )}
+                                          >
+                                            {speaker.name}
+                                          </Link>
+                                        )}
                                         {speaker.title && (
                                           <div
                                             className={styles['speaker-title']}

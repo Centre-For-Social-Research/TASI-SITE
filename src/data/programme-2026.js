@@ -8,18 +8,34 @@
 
 import { sessionSpeakers2026 } from './programme-2026-speakers.js';
 
-const makeSession = (id, day, time, venue, format, title, description) => ({
-  id: `tasi26-${id}`,
-  day,
-  time,
-  track: venue,
-  venue,
-  format,
-  title,
-  description:
-    description || 'Further details about this session will be shared soon.',
-  speakers: sessionSpeakers2026[`tasi26-${id}`] || [],
-});
+// `speakers` is always a list of names. Speakers without a 2026 profile
+// carry their title in `guestSpeakers`, keyed by name, so they show
+// without a profile link.
+const makeSession = (id, day, time, venue, format, title, description) => {
+  const entries = sessionSpeakers2026[`tasi26-${id}`] || [];
+  const guests = entries.filter((entry) => typeof entry !== 'string');
+  return {
+    id: `tasi26-${id}`,
+    day,
+    time,
+    track: venue,
+    venue,
+    format,
+    title,
+    description:
+      description || 'Further details about this session will be shared soon.',
+    speakers: entries.map((entry) =>
+      typeof entry === 'string' ? entry : entry.name
+    ),
+    ...(guests.length
+      ? {
+          guestSpeakers: Object.fromEntries(
+            guests.map((guest) => [guest.name, guest.title])
+          ),
+        }
+      : {}),
+  };
+};
 
 export const programmeSessions2026 = [
   // Tuesday, 13 October: opening reception and public safety spotlights.

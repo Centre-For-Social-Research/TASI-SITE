@@ -130,14 +130,27 @@ function buildProgrammeSessionViewModels({
   return sessions.filter(shouldShowProgrammeSession).map((session) => ({
     ...session,
     topic: session.description || '',
-    speakersDetailed: (session.speakers || []).map((speakerName) => ({
-      name: speakerName,
-      title: resolveMappedPersonValue(speakerName, speakerDesignationMap),
-      photo: resolveMappedPersonValue(speakerName, speakerPhotoMap),
-      mod: false,
-      // Lets getSpeakerProfilePath() link 2026 speakers to /speakers/2026/.
-      ...(speakerEdition ? { edition: speakerEdition } : {}),
-    })),
+    speakersDetailed: (session.speakers || []).map((speakerName) => {
+      // Speakers without a profile: title from the session, no photo or link.
+      const guestTitle = session.guestSpeakers?.[speakerName];
+      if (guestTitle !== undefined) {
+        return {
+          name: speakerName,
+          title: guestTitle,
+          photo: '',
+          mod: false,
+          hasProfile: false,
+        };
+      }
+      return {
+        name: speakerName,
+        title: resolveMappedPersonValue(speakerName, speakerDesignationMap),
+        photo: resolveMappedPersonValue(speakerName, speakerPhotoMap),
+        mod: false,
+        // Lets getSpeakerProfilePath() link 2026 speakers to /speakers/2026/.
+        ...(speakerEdition ? { edition: speakerEdition } : {}),
+      };
+    }),
   }));
 }
 
