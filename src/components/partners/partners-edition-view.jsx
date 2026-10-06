@@ -13,10 +13,13 @@ export default function PartnersEditionView({
   eyebrow,
   heroByYear,
   partnersByYear,
+  sessionPartnersByYear = {},
+  sessionSection,
 }) {
   const [year, setYear] = useState(initialYear);
   const hero = heroByYear[year];
   const partners = partnersByYear[year];
+  const sessionPartners = sessionPartnersByYear[year] || [];
 
   return (
     <>
@@ -49,6 +52,24 @@ export default function PartnersEditionView({
               <PartnerCard key={partner.slug} partner={partner} />
             ))}
           </div>
+
+          {sessionPartners.length > 0 && sessionSection ? (
+            <div className="mt-16 border-t border-stone-200 pt-14 dark:border-slate-800 md:mt-20 md:pt-16">
+              <div className="mx-auto mb-10 max-w-2xl text-center">
+                <h2 className="text-3xl font-black tracking-tight text-stone-900 dark:text-white md:text-4xl">
+                  {sessionSection.title}
+                </h2>
+                <p className="mt-3 text-stone-600 dark:text-slate-300">
+                  {sessionSection.description}
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-8">
+                {sessionPartners.map((partner) => (
+                  <PartnerCard key={partner.slug} partner={partner} />
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </section>
     </>

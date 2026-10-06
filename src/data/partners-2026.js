@@ -1,10 +1,11 @@
 import { partners } from './partners.js';
 
 // TASI 2026 partners, in sponsorship order (highest first), then partners
-// without a sponsorship amount. Only the order is published; amounts and
-// tiers stay internal. Netflix joins once its logo is supplied.
+// without a sponsorship amount. Only the order is published; amounts stay
+// internal.
 export const tasi2026PartnerSlugs = [
   'google',
+  'netflix',
   'teleperformance',
   'meta',
   'snapchat',
@@ -20,18 +21,39 @@ export const tasi2026PartnerSlugs = [
   'match-group',
   'tech-coalition',
   'igpp',
-  'asci',
   'acts-india',
   'the-dialogue',
   'the-quantum-hub',
   'grosafe',
+  'indian-express',
+];
+
+// Organisations hosting a workshop, roundtable or session at TASI 2026,
+// in alphabetical order. They have their own section on the partners page
+// and stay out of the sponsor list above, the homepage strip and the
+// sponsor page.
+export const tasi2026SessionPartnerSlugs = [
+  'ab-research-consulting',
+  'adobe',
+  'asci',
   'frida-fund',
+  'ifdc',
+  'kutunga',
+  'moxii-africa',
+  'sflc-in',
+  'tattle',
+  'the-quint',
+  'yuvaa',
 ];
 
 const bySlug = new Map(partners.map((partner) => [partner.slug, partner]));
 
-export const tasi2026Partners = tasi2026PartnerSlugs.map((slug) => {
+const resolve = (slug) => {
   const partner = bySlug.get(slug);
   if (!partner) throw new Error(`TASI 2026 partner not found: ${slug}`);
   return partner;
-});
+};
+
+export const tasi2026Partners = tasi2026PartnerSlugs.map(resolve);
+
+export const tasi2026SessionPartners = tasi2026SessionPartnerSlugs.map(resolve);
