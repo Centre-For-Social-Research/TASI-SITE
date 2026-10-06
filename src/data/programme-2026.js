@@ -27,7 +27,7 @@ export const programmeSessions2026 = [
     1,
     'oct13',
     '18:30–20:30',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'opening',
     'Opening Reception',
     'Opening evening reception jointly hosted by the Embassy of France and the German Embassy, bringing delegates and partners together for welcome remarks and Safety Spotlights to launch TASI 2026.'
@@ -36,7 +36,7 @@ export const programmeSessions2026 = [
     49,
     'oct13',
     '19:15–20:05',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'opening',
     'Safety Spotlights',
     'Short, solution-focused presentations on children’s agency in navigating information, safety in journalism, youth participation in online safety, rescue and rehabilitation of trafficking survivors, and shared signals for safer platforms.'
@@ -45,7 +45,7 @@ export const programmeSessions2026 = [
     2,
     'oct13',
     '19:15–19:25',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'spotlight',
     'Safety Spotlight: From Protection to Agency: Building Children’s Capacity to Navigate Information With Humans in the Lead',
     'A spotlight on moving from protecting children to building their capacity to navigate information, with humans in the lead.'
@@ -54,7 +54,7 @@ export const programmeSessions2026 = [
     3,
     'oct13',
     '19:25–19:35',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Making Safety Part of the Assignment'
   ),
@@ -62,7 +62,7 @@ export const programmeSessions2026 = [
     4,
     'oct13',
     '19:35–19:45',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Less Advising, More Doing: Rethinking Youth Participation in Online Safety'
   ),
@@ -70,7 +70,7 @@ export const programmeSessions2026 = [
     5,
     'oct13',
     '19:45–19:55',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Rescue. Rehabilitation. Repatriation.'
   ),
@@ -78,7 +78,7 @@ export const programmeSessions2026 = [
     81,
     'oct13',
     '19:55–20:05',
-    'Goethe-Institut, New Delhi',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Lantern: Shared Signals, Safer Platforms'
   ),

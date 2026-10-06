@@ -27,10 +27,10 @@ export const receptions2026 = [
     card: {
       theme: 'Welcome Remarks and Safety Spotlights to Launch TASI 2026',
       summary:
-        'The evening before the festival brings delegates and partners together for welcome remarks from CSR and both ambassadors, then five short Safety Spotlights from global safety innovators.',
+        'The evening before the festival brings delegates and partners together at the Goethe-Institut for welcome remarks from CSR and the deputy ambassadors of France and Germany, then five short Safety Spotlights from global safety innovators.',
     },
     summary:
-      'The evening before the festival opens with welcome remarks from CSR and both ambassadors, followed by the Safety Spotlights: short, solution-focused talks from people working on online safety around the world.',
+      'The evening before the festival opens at the Goethe-Institut with welcome remarks from CSR and the deputy ambassadors of France and Germany, followed by the Safety Spotlights: short, solution-focused talks from people working on online safety around the world. The festival co-founders then open the reception for informal conversation.',
   },
   {
     slug: 'match-group-policy-lab',
@@ -51,10 +51,10 @@ export const receptions2026 = [
       theme:
         'Building Trusted Human Connections: Designing for Safety, Authenticity and Inclusion',
       summary:
-        'A private, closed-door roundtable at the end of the first festival day on trust, authenticity and safety by design in online social discovery, followed by an evening reception.',
+        'A private, closed-door roundtable at the end of the first festival day on trust, authenticity and safety by design in online social discovery, followed by an evening reception in the Rose Garden.',
     },
     summary:
-      'A closed-door roundtable with policymakers, platforms, researchers and civil society on building online social discovery around trust, authenticity and safety by design, followed by an evening reception.',
+      'A closed-door roundtable with policymakers, platforms, researchers and civil society on building online social discovery around trust, authenticity and safety by design, followed by an evening reception in the Rose Garden.',
   },
   {
     slug: 'closing-reception-2026',
