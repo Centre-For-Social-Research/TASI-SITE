@@ -52,6 +52,16 @@ const organisationCorrections = new Map([
   ],
   ['Barkha Dutt', 'Founder-Editor, The Mojo Story'],
 ]);
+// Countries published differently from the form, keyed by speaker name.
+const countryCorrections = new Map([['Marisa Gerards', 'Netherlands']]);
+// Bios written for speakers whose form bio was only a link, keyed by speaker
+// name. Drawn from the page the speaker linked to.
+const bioOverrides = new Map([
+  [
+    'Suhasini Haidar',
+    'Suhasini Haidar is Diplomatic Editor at The Hindu and hosts the weekly online show WorldView with Suhasini Haidar. Over three decades of reporting on foreign policy and international affairs, she has covered Pakistan, Sri Lanka, Libya, Lebanon, Syria and Kashmir. Before joining The Hindu she was Foreign Affairs Editor and a prime-time anchor at CNN-IBN, and earlier worked with CNN International in New Delhi. Her awards include the Prem Bhatia award for journalism and the Columbia-Dupont Broadcast Journalism Award for her tsunami coverage. She studied at Lady Shri Ram College, Delhi, and holds a master’s in broadcast journalism from Boston University.',
+  ],
+]);
 // Square crops around the face for wide or landscape headshots, in the
 // submitted image's own pixels.
 const photoCrops = new Map([
@@ -63,6 +73,9 @@ const photoCrops = new Map([
   ['Beh Lih Yi', { left: 50, top: 250, width: 1900, height: 1900 }],
   ['Shiromi Samarakoon', { left: 175, top: 40, width: 760, height: 760 }],
   ['Abhilash Mallick', { left: 790, top: 80, width: 1900, height: 1900 }],
+  ['Suhasini Haidar', { left: 85, top: 120, width: 1000, height: 1000 }],
+  // Submitted as a circle on a dark square; crop inside the circle.
+  ['Marisa Gerards', { left: 139, top: 111, width: 345, height: 345 }],
 ]);
 
 const normalize = (value) =>
@@ -185,11 +198,11 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
     name: publishedName,
     designation: row['Current Designation / Job Title'],
     organisation: organisationCorrections.get(name) || row['Organisation'],
-    country: row['Country'],
+    country: countryCorrections.get(name) || row['Country'],
     category: row['Which category best describes you?'],
-    bio: row[
-      'Professional Bio (Please provide a brief professional biography).'
-    ],
+    bio:
+      bioOverrides.get(name) ||
+      row['Professional Bio (Please provide a brief professional biography).'],
     photo,
     linkedinUrl: socialUrl(row['LinkedIn profile URL'], 'linkedin'),
     xUrl: socialUrl(row['X (Twitter) profile URL'], 'x'),
