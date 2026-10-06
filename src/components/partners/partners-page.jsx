@@ -11,9 +11,10 @@ import {
   partnersPageSessionSection,
 } from '@/data/partners-page';
 
-// Only what a partner card shows travels to the browser.
-const toCard = ({ name, slug, logo, category }) => ({
-  name,
+// Only what a partner card shows travels to the browser. Cards use the
+// short name where a partner has one; the partner page keeps the full name.
+const toCard = ({ name, shortName, slug, logo, category }) => ({
+  name: shortName || name,
   slug,
   logo,
   category,

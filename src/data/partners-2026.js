@@ -25,7 +25,6 @@ export const tasi2026PartnerSlugs = [
   'the-dialogue',
   'the-quantum-hub',
   'grosafe',
-  'frida-fund',
 ];
 
 // Organisations hosting a workshop, roundtable or session at TASI 2026,
@@ -35,6 +34,7 @@ export const tasi2026PartnerSlugs = [
 export const tasi2026SessionPartnerSlugs = [
   'ab-research-consulting',
   'adobe',
+  'frida-fund',
   'ifdc',
   'kutunga',
   'moxii-africa',

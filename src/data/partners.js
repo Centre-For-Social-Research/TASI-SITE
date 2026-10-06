@@ -588,10 +588,10 @@ export const partners = [
     name: 'FRIDA Health',
     logo: '/img/Logo/FRIDA Logo.png',
     slug: 'frida-fund',
-    type: 'International Partner',
+    type: 'Session Partner',
     description:
       'FRIDA Health is a women’s health advocacy lab founded to make women’s health a public priority through research, policy advocacy, communications, and campaigning. The organisation is building India’s first Parliamentarians’ Forum on Women’s Health, which currently brings together 10 Members of Parliament from seven political parties.',
-    country: 'International',
+    country: 'India',
     category: "Women's Health Advocacy",
     social: {
       linkedin: 'https://www.linkedin.com/company/fridahealth',
@@ -602,6 +602,7 @@ export const partners = [
   },
   {
     name: 'International Foundation for Digital Child',
+    shortName: 'IFDC',
     logo: '/img/Logo/2026/ifdc.png',
     slug: 'ifdc',
     type: 'Roundtable Partner',
@@ -693,6 +694,7 @@ export const partners = [
   },
   {
     name: 'Kutunga Design Academy & Innovation Lab',
+    shortName: 'Kutunga',
     logo: '/img/Logo/2026/kutunga.png',
     slug: 'kutunga',
     type: 'Workshop Partner',
