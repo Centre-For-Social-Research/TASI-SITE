@@ -50,7 +50,7 @@ const organisationCorrections = new Map([
     'Tamanna Rahman',
     'Coalition of Development Communication Society / Medicare Japan',
   ],
-  ['Barkha Dutt', 'Mojo Story'],
+  ['Barkha Dutt', 'Founder-Editor, The Mojo Story'],
 ]);
 // Square crops around the face for wide or landscape headshots, in the
 // submitted image's own pixels.
