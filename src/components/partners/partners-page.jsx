@@ -5,20 +5,31 @@ import {
   DEFAULT_PARTNER_EDITION,
   PARTNER_EDITIONS,
   getPartnersForEdition,
+  getSessionPartnersForEdition,
   partnersPageCta,
   partnersPageHero,
+  partnersPageSessionSection,
 } from '@/data/partners-page';
 
 // Only what a partner card shows travels to the browser.
+const toCard = ({ name, slug, logo, category }) => ({
+  name,
+  slug,
+  logo,
+  category,
+});
+
 const partnersByYear = Object.fromEntries(
   PARTNER_EDITIONS.map((edition) => [
     edition,
-    getPartnersForEdition(edition).map(({ name, slug, logo, category }) => ({
-      name,
-      slug,
-      logo,
-      category,
-    })),
+    getPartnersForEdition(edition).map(toCard),
+  ])
+);
+
+const sessionPartnersByYear = Object.fromEntries(
+  PARTNER_EDITIONS.map((edition) => [
+    edition,
+    getSessionPartnersForEdition(edition).map(toCard),
   ])
 );
 
@@ -35,6 +46,8 @@ export default function PartnersPage({
           eyebrow={partnersPageHero.eyebrow}
           heroByYear={partnersPageHero.editions}
           partnersByYear={partnersByYear}
+          sessionPartnersByYear={sessionPartnersByYear}
+          sessionSection={partnersPageSessionSection}
         />
 
         <section className="border-t border-stone-200 bg-white py-14 dark:border-slate-800 dark:bg-stone-950 md:py-16">

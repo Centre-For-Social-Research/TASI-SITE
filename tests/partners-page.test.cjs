@@ -173,3 +173,31 @@ test('partners page splits TASI 2026 and TASI 2025 editions', async () => {
     assert.ok(partner.category, `${partner.slug} has a category`);
   }
 });
+
+test('TASI 2026 session partners have their own list, separate from sponsors', async () => {
+  const {
+    tasi2026PartnerSlugs,
+    tasi2026SessionPartners,
+    tasi2026SessionPartnerSlugs,
+  } = await loadModule('src/data/partners-2026.js');
+  const pageData = await loadModule('src/data/partners-page.js');
+
+  assert.ok(tasi2026SessionPartners.length > 0);
+  for (const slug of tasi2026SessionPartnerSlugs) {
+    assert.ok(
+      !tasi2026PartnerSlugs.includes(slug),
+      `${slug} is listed as both a sponsor and a session partner`
+    );
+  }
+  for (const partner of tasi2026SessionPartners) {
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), 'public', partner.logo)),
+      `${partner.slug}: logo file is missing`
+    );
+  }
+  assert.equal(pageData.getSessionPartnersForEdition('2025').length, 0);
+  assert.equal(
+    pageData.getSessionPartnersForEdition('2026'),
+    tasi2026SessionPartners
+  );
+});

@@ -600,4 +600,138 @@ export const partners = [
       youtube: 'https://www.youtube.com/channel/UCViULImeg-MuBgqWq4W70QA',
     },
   },
+  {
+    name: 'International Foundation for Digital Child',
+    logo: '/img/Logo/2026/ifdc.png',
+    slug: 'ifdc',
+    type: 'Roundtable Partner',
+    description:
+      'IFDC is a Sri Lanka-based organization working to create a safer, more responsible, and inclusive digital environment for children and young people. Its work focuses on online child safety, responsible technology use, platform accountability, and digital wellbeing. Through research, training, advocacy, and capacity building, IFDC works with children, educators, parents, professionals, and other stakeholders to strengthen digital safety and promote responsible engagement with technology in Sri Lanka.',
+    country: 'Sri Lanka',
+    category: 'Child Online Safety',
+    website: 'https://www.ifdchild.org',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/100746536/',
+      instagram: 'https://www.instagram.com/ifdchild/',
+    },
+  },
+  {
+    name: 'Yuvaa',
+    logo: '/img/Logo/2026/yuvaa.png',
+    slug: 'yuvaa',
+    type: 'Session Partner',
+    description:
+      "Yuvaa is a youth media and insights organisation that has spent the past eight years making important things interesting for young India. Our vision is to make young Indians feel less alone by listening to them, engaging with them, and ensuring better representation, both online and on the ground. We've been able to achieve this by collaborating with partners from private and development sectors, as well as with individuals, experts, celebrities, and influencers. Today, we reach around 6 million young people every week across our platforms, with 828K+ followers on Instagram, 500K+ subscribers on YouTube, and 1.9M+ followers on Josh. We have also engaged over 100,000 students in person across 1,000+ colleges in 75+ cities.",
+    country: 'India',
+    category: 'Youth Media & Insights',
+    website: 'https://yuvaa.co.in/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/weareyuvaa',
+      twitter: 'https://x.com/weareyuvaa',
+      instagram: 'https://www.instagram.com/weareyuvaa',
+    },
+  },
+  {
+    name: 'AB Research Consulting',
+    logo: '/img/Logo/2026/ab-research-consulting.png',
+    slug: 'ab-research-consulting',
+    type: 'Roundtable Partner',
+    description:
+      'AB Research Consulting is an independent social research consultancy working with mission-driven organisations to understand complex social problems and turn knowledge into action. Its work spans violence and abuse, mental health, access to services and online harms, using research, evaluation and strategic thinking to inform policy and practice.',
+    country: 'United Kingdom',
+    category: 'Social Research Consultancy',
+    website: 'https://www.abresearchconsulting.com',
+  },
+  {
+    name: 'The Quint',
+    logo: '/img/Logo/2026/the-quint.png',
+    slug: 'the-quint',
+    type: 'Workshop Partner',
+    description:
+      'The Quint, launched in 2015, is a leading Indian digital news platform focused on enterprise journalism, ground reporting, fact-checking and impactful storytelling. Through diverse, interactive formats, it investigates issues that matter, amplifies unheard voices and drives conversations. Its WebQoof vertical combats misinformation in Hindi and English.',
+    country: 'India',
+    category: 'Digital News Media',
+    website: 'https://www.thequint.com/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/thequint',
+      twitter: 'https://x.com/TheQuint',
+      instagram: 'https://www.instagram.com/thequint',
+    },
+  },
+  {
+    name: 'SFLC.in',
+    logo: '/img/Logo/2026/sflc-in.png',
+    slug: 'sflc-in',
+    type: 'Session Partner',
+    description:
+      'Software Freedom Law Center, India (SFLC.in) is a donor supported legal services organization that brings together lawyers, policy analysts, students, and technologists to protect freedom in the digital world.',
+    country: 'India',
+    category: 'Digital Rights Legal Services',
+    website: 'https://sflc.in/',
+    social: {
+      linkedin:
+        'https://www.linkedin.com/company/software-freedom-law-centre-india-sflc.in-/',
+      twitter: 'https://x.com/SFLCin',
+      instagram: 'https://www.instagram.com/sflc_in/',
+    },
+  },
+  {
+    name: 'Tattle Civic Tech',
+    logo: '/img/Logo/2026/tattle.png',
+    slug: 'tattle',
+    type: 'Workshop Partner',
+    description:
+      'At Tattle, we research, build tools and datasets to respond to harmful content online and amplify civic agency.',
+    country: 'India',
+    category: 'Civic Technology',
+    website: 'https://tattle.co.in/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/tattle-civic-technologies/',
+      twitter: 'https://x.com/tattlemade',
+      instagram: 'https://www.instagram.com/tattle.tv/',
+    },
+  },
+  {
+    name: 'Kutunga Design Academy & Innovation Lab',
+    logo: '/img/Logo/2026/kutunga.png',
+    slug: 'kutunga',
+    type: 'Workshop Partner',
+    description:
+      'Kutunga is a women-led organisation building technology through genuine human connection. We build the talent, tools and systems needed to create safer, more inclusive digital experiences that reflect children’s realities, cultures and contexts, particularly across the Global South. Our work brings together child-centred design, technology, research and innovation to help shape technology with children, not simply for them.',
+    country: 'Kenya & South Africa',
+    category: 'Child-Centred Design',
+    website: 'https://www.kutunga.org',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/kutunga/',
+      twitter: 'https://x.com/Kutunga_',
+      instagram: 'https://www.instagram.com/kutunga_initiative',
+    },
+  },
+  {
+    name: 'Adobe',
+    logo: '/img/Logo/2026/adobe.png',
+    slug: 'adobe',
+    type: 'Roundtable Partner',
+    description:
+      'Adobe is the global leader in Customer Experience Orchestration and Creativity & Productivity solutions. Our tools and services allow our customers to create groundbreaking digital content, deploy it across media and devices, measure and optimize it over time and achieve greater business success. We help our customers make, manage, measure and monetize their content across every channel and screen.',
+    country: 'United States',
+    category: 'Technology',
+    website: 'https://www.adobe.com',
+  },
+  {
+    name: 'Moxii Africa',
+    logo: '/img/Logo/2026/moxii-africa.png',
+    slug: 'moxii-africa',
+    type: 'Workshop Partner',
+    description:
+      'Moxii Africa, formerly Media Monitoring Africa, strives for open and trusted information across Africa. With over 30 years of experience, we promote ethical journalism, hold power to account and empower people to navigate the information ecosystem. Through research, advocacy, education and innovation, we aim to strengthen information integrity and help protect children online.',
+    country: 'South Africa',
+    category: 'Media & Information Integrity',
+    website: 'https://moxiiafrica.org',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/moxiiafrica',
+      twitter: 'https://x.com/moxiiafrica',
+      instagram: 'https://www.instagram.com/moxiiafrica/',
+    },
+  },
 ];

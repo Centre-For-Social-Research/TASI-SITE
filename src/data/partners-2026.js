@@ -28,10 +28,30 @@ export const tasi2026PartnerSlugs = [
   'frida-fund',
 ];
 
+// Organisations hosting a workshop, roundtable or session at TASI 2026,
+// in alphabetical order. They have their own section on the partners page
+// and stay out of the sponsor list above, the homepage strip and the
+// sponsor page.
+export const tasi2026SessionPartnerSlugs = [
+  'ab-research-consulting',
+  'adobe',
+  'ifdc',
+  'kutunga',
+  'moxii-africa',
+  'sflc-in',
+  'tattle',
+  'the-quint',
+  'yuvaa',
+];
+
 const bySlug = new Map(partners.map((partner) => [partner.slug, partner]));
 
-export const tasi2026Partners = tasi2026PartnerSlugs.map((slug) => {
+const resolve = (slug) => {
   const partner = bySlug.get(slug);
   if (!partner) throw new Error(`TASI 2026 partner not found: ${slug}`);
   return partner;
-});
+};
+
+export const tasi2026Partners = tasi2026PartnerSlugs.map(resolve);
+
+export const tasi2026SessionPartners = tasi2026SessionPartnerSlugs.map(resolve);
