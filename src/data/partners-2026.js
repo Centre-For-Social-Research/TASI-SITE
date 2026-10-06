@@ -1,10 +1,11 @@
 import { partners } from './partners.js';
 
 // TASI 2026 partners, in sponsorship order (highest first), then partners
-// without a sponsorship amount. Only the order is published; amounts and
-// tiers stay internal. Netflix joins once its logo is supplied.
+// without a sponsorship amount. Only the order is published; amounts stay
+// internal.
 export const tasi2026PartnerSlugs = [
   'google',
+  'netflix',
   'teleperformance',
   'meta',
   'snapchat',
@@ -25,6 +26,7 @@ export const tasi2026PartnerSlugs = [
   'the-dialogue',
   'the-quantum-hub',
   'grosafe',
+  'indian-express',
 ];
 
 // Organisations hosting a workshop, roundtable or session at TASI 2026,

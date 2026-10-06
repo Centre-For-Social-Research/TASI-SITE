@@ -736,4 +736,37 @@ export const partners = [
       instagram: 'https://www.instagram.com/moxiiafrica/',
     },
   },
+  {
+    name: 'Netflix',
+    logo: '/img/Logo/2026/netflix.png',
+    slug: 'netflix',
+    type: 'Platinum Partner',
+    description:
+      'Netflix is one of the world’s leading entertainment services, offering TV series, films and games across a wide range of genres and languages to members in more than 190 countries.',
+    country: 'United States',
+    category: 'Entertainment Streaming',
+    website: 'https://www.netflix.com/in/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/netflix',
+      twitter: 'https://x.com/NetflixIndia',
+      instagram: 'https://www.instagram.com/netflix_in',
+    },
+  },
+  {
+    name: 'The Indian Express',
+    logo: '/img/Logo/2026/indian-express.png',
+    slug: 'indian-express',
+    type: 'Digital Media Partner',
+    description:
+      'The Indian Express is one of India’s leading news organisations, known for its independent and investigative reporting. It publishes news, analysis and explainers in print and online at indianexpress.com.',
+    country: 'India',
+    category: 'Digital Media',
+    website: 'https://indianexpress.com',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/indian-express/',
+      twitter: 'https://x.com/indianexpress',
+      instagram: 'https://www.instagram.com/indianexpress',
+      youtube: 'https://www.youtube.com/@indianexpress',
+    },
+  },
 ];
