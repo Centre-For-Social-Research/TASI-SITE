@@ -1,5 +1,5 @@
 import { partners } from './partners.js';
-import { tasi2026Partners } from './partners-2026.js';
+import { tasi2026Partners, tasi2026SessionPartners } from './partners-2026.js';
 import { tasi2025Partners } from './tasi-2025-edition.js';
 
 export const partnersPageMetadata = {
@@ -57,6 +57,18 @@ export function getPartnersForEdition(edition) {
     }));
   }
   return tasi2026Partners;
+}
+
+// Workshop, roundtable and session partners get their own section below the
+// main grid. Only 2026 has them.
+export const partnersPageSessionSection = {
+  title: 'Session Partners',
+  description:
+    'Organisations hosting workshops, roundtables and sessions at TASI 2026.',
+};
+
+export function getSessionPartnersForEdition(edition) {
+  return edition === '2026' ? tasi2026SessionPartners : [];
 }
 
 export const partnersPageCta = {
