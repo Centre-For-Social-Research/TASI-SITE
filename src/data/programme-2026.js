@@ -26,8 +26,8 @@ export const programmeSessions2026 = [
   makeSession(
     1,
     'oct13',
-    '18:00–20:00',
-    'German Embassy',
+    '18:30–20:30',
+    'Goethe-Institut',
     'opening',
     'Opening Reception',
     'Opening evening reception jointly hosted by the Embassy of France and the German Embassy, bringing delegates and partners together for welcome remarks and Safety Spotlights to launch TASI 2026.'
@@ -35,8 +35,8 @@ export const programmeSessions2026 = [
   makeSession(
     49,
     'oct13',
-    '18:30–19:35',
-    'German Embassy',
+    '19:15–20:05',
+    'Goethe-Institut',
     'opening',
     'Safety Spotlights',
     'Short, solution-focused presentations on children’s agency in navigating information, safety in journalism, youth participation in online safety, rescue and rehabilitation of trafficking survivors, and shared signals for safer platforms.'
@@ -44,8 +44,8 @@ export const programmeSessions2026 = [
   makeSession(
     2,
     'oct13',
-    '18:35–18:50',
-    'German Embassy',
+    '19:15–19:25',
+    'Goethe-Institut',
     'spotlight',
     'Safety Spotlight: From Protection to Agency: Building Children’s Capacity to Navigate Information With Humans in the Lead',
     'A spotlight on moving from protecting children to building their capacity to navigate information, with humans in the lead.'
@@ -53,32 +53,32 @@ export const programmeSessions2026 = [
   makeSession(
     3,
     'oct13',
-    '18:50–19:05',
-    'German Embassy',
+    '19:25–19:35',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Making Safety Part of the Assignment'
   ),
   makeSession(
     4,
     'oct13',
-    '19:05–19:15',
-    'German Embassy',
+    '19:35–19:45',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Less Advising, More Doing: Rethinking Youth Participation in Online Safety'
   ),
   makeSession(
     5,
     'oct13',
-    '19:15–19:25',
-    'German Embassy',
+    '19:45–19:55',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Rescue. Rehabilitation. Repatriation.'
   ),
   makeSession(
     81,
     'oct13',
-    '19:25–19:35',
-    'German Embassy',
+    '19:55–20:05',
+    'Goethe-Institut',
     'spotlight',
     'Spotlight: Lantern: Shared Signals, Safer Platforms'
   ),
@@ -131,7 +131,7 @@ export const programmeSessions2026 = [
     '11:30–11:45',
     'Main Hall',
     'keynote',
-    'Opening Remarks and Keynote Address'
+    'Opening Remarks and Inaugural Address'
   ),
   makeSession(
     16,
@@ -175,7 +175,7 @@ export const programmeSessions2026 = [
     '15:00–15:15',
     'Main Hall',
     'spotlight',
-    'Sponsor Spotlight: Youth in Play'
+    'Spotlight: Youth in Play'
   ),
   makeSession(
     26,
@@ -199,7 +199,7 @@ export const programmeSessions2026 = [
     '16:00–16:30',
     'Main Hall',
     'fireside',
-    'Fireside Chat with Yoel Roth'
+    'Fireside Chat: The Future of Connection: Culture, Community and Trust Online'
   ),
   makeSession(
     29,
@@ -380,7 +380,7 @@ export const programmeSessions2026 = [
     '12:30–12:45',
     'Main Hall',
     'spotlight',
-    'Spotlight: Girl Effect'
+    'Spotlight: From Tech Hinsa to Tech Respect: Putting Young People at the Heart of a Safer Digital Future'
   ),
   makeSession(
     40,

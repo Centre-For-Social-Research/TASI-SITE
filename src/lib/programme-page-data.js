@@ -53,7 +53,7 @@ export const programmeDayDateMap2026 = {
 export const programmeReceptionNotes2026 = [
   {
     day: 'October 13',
-    venue: 'German Embassy, New Delhi',
+    venue: 'Goethe-Institut, New Delhi',
     access: 'Invite only',
     description:
       'Opening evening reception jointly hosted by the Embassy of France and the German Embassy, bringing delegates and partners together for welcome remarks and Safety Spotlights to launch TASI 2026.',
