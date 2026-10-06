@@ -830,6 +830,8 @@ export default function RegistrationsAdminPanel({ operator }) {
     city: '',
     country: '',
     organization: '',
+    // '' shows everyone; 'yes' shows only registrants marked as speakers.
+    speakerFlag: '',
     page: 1,
     pageSize: 50,
   });
@@ -1615,7 +1617,18 @@ export default function RegistrationsAdminPanel({ operator }) {
             {allVisibleSelected ? 'Clear Visible' : 'Select Visible'}
           </button>
         </div>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+          <select
+            value={filters.speakerFlag}
+            onChange={(event) =>
+              setFilterValue('speakerFlag', event.target.value)
+            }
+            aria-label="Filter by speaker"
+            className="h-9 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
+          >
+            <option value="">All registrants</option>
+            <option value="yes">Speakers only</option>
+          </select>
           <input
             value={filters.country}
             onChange={(event) => setFilterValue('country', event.target.value)}

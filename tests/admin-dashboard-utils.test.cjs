@@ -172,3 +172,32 @@ test('getQuickActionOptions adapts row actions to registrant state', () => {
     ['sendQr', 'waitlist', 'reject']
   );
 });
+
+test('registrations speaker filter only narrows the list when set to speakers', () => {
+  assert.equal(
+    buildDashboardQueryString({ status: 'all', speakerFlag: '' }),
+    'status=all'
+  );
+  assert.equal(
+    buildDashboardQueryString({ status: 'all', speakerFlag: 'yes' }),
+    'status=all&speakerFlag=yes'
+  );
+
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const panel = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      'src/components/admin/registrations-admin-panel.jsx'
+    ),
+    'utf8'
+  );
+  assert.match(panel, /speakerFlag: '',/);
+  assert.match(panel, /<option value="yes">Speakers only<\/option>/);
+  // Changing a filter must clear the selection, so a bulk QR send never
+  // carries rows over from another view.
+  assert.match(
+    panel,
+    /const setFilterValue = \(key, value\) => \{\s*setSelectedIds\(\[\]\);/
+  );
+});
