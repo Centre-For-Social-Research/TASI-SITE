@@ -111,7 +111,7 @@ export default function PartnerDetailPage({ partner }) {
                 {partner.name}
               </h1>
 
-              <p className="mt-5 grow px-8 pb-2 text-[0.975rem] leading-relaxed text-stone-600 dark:text-slate-300 md:px-10">
+              <p className="mt-5 grow whitespace-pre-line px-8 pb-2 text-[0.975rem] leading-relaxed text-stone-600 dark:text-slate-300 md:px-10">
                 {partner.description}
               </p>
 

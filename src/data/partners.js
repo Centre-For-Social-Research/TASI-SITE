@@ -377,7 +377,7 @@ export const partners = [
     slug: 'obhan-mason',
     type: 'Professional Services Partner',
     description:
-      'Obhan Mason is an Indian law firm formed by the merger of Obhan & Associates and Mason & Associates, with practices across intellectual property, corporate and transactional law, litigation, technology, media and entertainment, and data protection.',
+      'Obhan Mason is an Indian law firm advising businesses across corporate law and M&A support, technology, media and telecommunications (TMT), data protection and privacy, intellectual property, and dispute resolution. With a focus on the evolving digital landscape, the firm helps businesses navigate emerging regulatory challenges and promote responsible innovation, digital trust and safer online ecosystems.\n\nThe firm’s TMT practice is ranked Band 1 by Chambers and Partners, and its practices have been recognised by leading legal directories for over 15 years. It has also been recognised as the Best Law Firm for Women in India by Vahura on several occasions, reflecting its commitment to equality, diversity and inclusion.',
     country: 'India',
     category: 'Law Firm',
     website: 'https://obhanmason.com',
