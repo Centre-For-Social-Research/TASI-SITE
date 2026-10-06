@@ -40,9 +40,18 @@ const withheldProfiles = new Set([
   'Deepak Goel',
   'Dr. Sanjeev Sharma',
 ]);
-const knownPhotoExceptions = new Set(['Uma Submanian']);
+const knownPhotoExceptions = new Set(['Uma Subramanian']);
 // Names the form submitted with a typo, published as corrected.
 const nameCorrections = new Map([['Uma Submanian', 'Uma Subramanian']]);
+// Organisation names published differently from the form, keyed by speaker
+// name: typos, and names the organizer asked to change.
+const organisationCorrections = new Map([
+  [
+    'Tamanna Rahman',
+    'Coalition of Development Communication Society / Medicare Japan',
+  ],
+  ['Barkha Dutt', 'Founder-Editor, The Mojo Story'],
+]);
 // Square crops around the face for wide or landscape headshots, in the
 // submitted image's own pixels.
 const photoCrops = new Map([
@@ -52,6 +61,8 @@ const photoCrops = new Map([
   ['Vedanta Agarwal', { left: 100, top: 20, width: 700, height: 700 }],
   ['Nicky Jackson Colaco', { left: 560, top: 100, width: 1500, height: 1500 }],
   ['Beh Lih Yi', { left: 50, top: 250, width: 1900, height: 1900 }],
+  ['Shiromi Samarakoon', { left: 175, top: 40, width: 760, height: 760 }],
+  ['Abhilash Mallick', { left: 790, top: 80, width: 1900, height: 1900 }],
 ]);
 
 const normalize = (value) =>
@@ -141,7 +152,7 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
   );
   if (
     candidates.length > 1 ||
-    (candidates.length === 0 && !knownPhotoExceptions.has(name))
+    (candidates.length === 0 && !knownPhotoExceptions.has(publishedName))
   ) {
     throw new Error(
       `${name}: expected one headshot, found ${candidates.length}`
@@ -163,7 +174,7 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
       .webp({ quality: 80, effort: 5 })
       .toFile(outputFile);
     photo = `/img/speakers/2026/${slug}.webp`;
-  } else if (name === 'Uma Submanian') {
+  } else if (publishedName === 'Uma Subramanian') {
     // Same RATI co-founder has a verified image already used in the 2025 directory.
     photo = '/img/speakers/Uma Subramanian.webp';
   } else {
@@ -173,7 +184,7 @@ for (let rowIndex = 2; rowIndex <= sheet.rowCount; rowIndex += 1) {
   records.push({
     name: publishedName,
     designation: row['Current Designation / Job Title'],
-    organisation: row['Organisation'],
+    organisation: organisationCorrections.get(name) || row['Organisation'],
     country: row['Country'],
     category: row['Which category best describes you?'],
     bio: row[
