@@ -9,8 +9,8 @@
 import { sessionSpeakers2026 } from './programme-2026-speakers.js';
 
 // `speakers` is always a list of names. Speakers without a 2026 profile
-// carry their title in `guestSpeakers`, keyed by name, so they show
-// without a profile link.
+// carry their details in `guestSpeakers`, keyed by name: a title, plus a
+// photo and `profile: '2025'` when they have a TASI 2025 profile to link to.
 const makeSession = (id, day, time, venue, format, title, description) => {
   const entries = sessionSpeakers2026[`tasi26-${id}`] || [];
   const guests = entries.filter((entry) => typeof entry !== 'string');
@@ -30,7 +30,7 @@ const makeSession = (id, day, time, venue, format, title, description) => {
     ...(guests.length
       ? {
           guestSpeakers: Object.fromEntries(
-            guests.map((guest) => [guest.name, guest.title])
+            guests.map(({ name, ...details }) => [name, details])
           ),
         }
       : {}),

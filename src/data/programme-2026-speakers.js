@@ -5,9 +5,11 @@
 // and the name must match the `name` in src/data/speakers-2026.json exactly;
 // that is where the photo, designation and profile link come from.
 //
-// A speaker without a profile is listed as { name, title }. They show with
-// their initial and title, and no profile link. Once they submit a profile,
-// switch them to a plain name.
+// A speaker without a 2026 profile is listed as { name, title }. They show
+// with their initial and title, and no profile link. If they spoke at
+// TASI 2025, add `photo` and `profile: '2025'` to reuse that year's photo and
+// link to their 2025 profile. Once they submit a 2026 profile, switch them
+// to a plain name.
 //
 // A CI test fails on any unknown name or session id, so typos never reach
 // the live site. Sessions not listed here show no speakers.
@@ -47,19 +49,31 @@ export const sessionSpeakers2026 = {
       name: 'Andras Molnar',
       title:
         'Senior Digital Policy Manager & Director of Online Safety, TUM Think Tank',
+      photo: '/img/speakers/Andras Malnar.webp',
+      profile: '2025',
     },
     {
       name: 'Kavitha KK',
       title: 'Public Policy Director, India & South Asia, Roblox',
     },
-    { name: 'Kazim Rizvi', title: 'The Dialogue' },
+    {
+      name: 'Kazim Rizvi',
+      title: 'Founding Director, The Dialogue',
+      photo: '/img/speakers/Kazim Rizvi.webp',
+      profile: '2025',
+    },
   ],
   'tasi26-24': ['Dr Priyanka Bhalla', 'Jyoti Vadehra'],
   'tasi26-26': ['Smriti Irani'],
   'tasi26-27': [
     'Bansuri Swaraj',
     'Dr. Ranjana Kumari',
-    { name: 'Natasha Jog', title: 'Director, Public Policy, Meta India' },
+    {
+      name: 'Natasha Jog',
+      title: 'Director, Public Policy, Meta India',
+      photo: '/img/speakers/Natasha Jog.png',
+      profile: '2025',
+    },
     {
       name: 'Manish Tiwari',
       title: 'Director, Institute for Governance, Policies & Politics (IGPP)',
@@ -117,7 +131,12 @@ export const sessionSpeakers2026 = {
       name: 'Vijaya Rahatkar',
       title: 'Chairperson, National Commission for Women',
     },
-    { name: 'Natasha Jog', title: 'Public Policy Director, Meta' },
+    {
+      name: 'Natasha Jog',
+      title: 'Public Policy Director, Meta',
+      photo: '/img/speakers/Natasha Jog.png',
+      profile: '2025',
+    },
   ],
   'tasi26-46': [
     'Basarbatu Can',
@@ -138,10 +157,14 @@ export const sessionSpeakers2026 = {
       name: 'Manisha Kapoor',
       title:
         'CEO & Secretary General, The Advertising Standards Council of India',
+      photo: '/img/speakers/Manisha Kapoor.png',
+      profile: '2025',
     },
     {
       name: 'Rajesh Ranjan',
       title: 'Head of Government Affairs and Public Policy, Google',
+      photo: '/img/speakers/Rajesh Ranjan.webp',
+      profile: '2025',
     },
     { name: 'Nandagopal Rajan', title: 'CEO, Indian Express Digital' },
   ],

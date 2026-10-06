@@ -131,15 +131,17 @@ function buildProgrammeSessionViewModels({
     ...session,
     topic: session.description || '',
     speakersDetailed: (session.speakers || []).map((speakerName) => {
-      // Speakers without a profile: title from the session, no photo or link.
-      const guestTitle = session.guestSpeakers?.[speakerName];
-      if (guestTitle !== undefined) {
+      // Speakers without a profile for this edition: details come from the
+      // session. A TASI 2025 profile links to /speakers/<name>; otherwise
+      // there is no link.
+      const guest = session.guestSpeakers?.[speakerName];
+      if (guest) {
         return {
           name: speakerName,
-          title: guestTitle,
-          photo: '',
+          title: guest.title,
+          photo: guest.photo || '',
           mod: false,
-          hasProfile: false,
+          ...(guest.profile === '2025' ? {} : { hasProfile: false }),
         };
       }
       return {

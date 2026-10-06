@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
@@ -47,6 +48,9 @@ test('2026 speakers only come from the confirmed list and match the speaker dire
   const sessionIds = new Set(sessions.map((session) => session.id));
 
   const nameOf = (entry) => (typeof entry === 'string' ? entry : entry.name);
+  const { speakers: speakers2025 } = await import(
+    pathToFileURL(path.join(process.cwd(), 'src/data/speakers.js')).href
+  );
 
   for (const [sessionId, entries] of Object.entries(sessionSpeakers2026)) {
     assert.ok(
@@ -78,6 +82,17 @@ test('2026 speakers only come from the confirmed list and match the speaker dire
           !directoryNames.has(entry.name),
           `"${entry.name}" (${sessionId}) has a profile; list them by name instead`
         );
+        if (entry.profile === '2025') {
+          assert.ok(
+            speakers2025.some((speaker) => speaker.name === entry.name),
+            `"${entry.name}" (${sessionId}) has no TASI 2025 profile`
+          );
+          assert.ok(
+            entry.photo &&
+              fs.existsSync(path.join(process.cwd(), 'public', entry.photo)),
+            `"${entry.name}" (${sessionId}): 2025 photo file is missing`
+          );
+        }
       }
     }
   }
@@ -93,9 +108,11 @@ test('2026 speakers only come from the confirmed list and match the speaker dire
     assert.deepEqual(
       session.guestSpeakers,
       guests.length
-        ? Object.fromEntries(guests.map((guest) => [guest.name, guest.title]))
+        ? Object.fromEntries(
+            guests.map(({ name, ...details }) => [name, details])
+          )
         : undefined,
-      `${session.id} guest speaker titles must come from programme-2026-speakers.js`
+      `${session.id} guest speaker details must come from programme-2026-speakers.js`
     );
   }
 });
@@ -267,19 +284,29 @@ test('2026 speakers without a profile show their title and no profile link', () 
         id: 'tasi26-82',
         title: 'Fireside',
         day: 'oct14',
-        speakers: ['Yoel Roth', 'Kevin Lee'],
-        guestSpeakers: { 'Kevin Lee': 'CEO, Yuvaa' },
+        speakers: ['Yoel Roth', 'Kevin Lee', 'Kazim Rizvi'],
+        guestSpeakers: {
+          'Kevin Lee': { title: 'CEO, Yuvaa' },
+          'Kazim Rizvi': {
+            title: 'Founding Director, The Dialogue',
+            photo: '/img/speakers/Kazim Rizvi.webp',
+            profile: '2025',
+          },
+        },
       },
     ],
     speakerDesignationMap: { 'yoel roth': 'SVP, Match Group' },
     speakerPhotoMap: { 'yoel roth': '/img/speakers/2026/yoel-roth.webp' },
     speakerEdition: '2026',
   });
-  const [yoel, kevin] = session.speakersDetailed;
+  const [yoel, kevin, kazim] = session.speakersDetailed;
 
   assert.notEqual(yoel.hasProfile, false);
   assert.equal(yoel.photo, '/img/speakers/2026/yoel-roth.webp');
   assert.equal(kevin.hasProfile, false);
   assert.equal(kevin.title, 'CEO, Yuvaa');
   assert.equal(kevin.photo, '');
+  assert.notEqual(kazim.hasProfile, false);
+  assert.equal(kazim.edition, undefined);
+  assert.equal(kazim.photo, '/img/speakers/Kazim Rizvi.webp');
 });
