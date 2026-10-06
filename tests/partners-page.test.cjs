@@ -100,8 +100,9 @@ test('TASI 2026 partner list is ordered and shown on the homepage strip and spon
     pathToFileURL(path.join(process.cwd(), 'src/data/partners-2026.js'))
   );
   assert.equal(tasi2026Partners.length, 22);
-  assert.deepEqual(tasi2026PartnerSlugs.slice(0, 6), [
+  assert.deepEqual(tasi2026PartnerSlugs.slice(0, 7), [
     'google',
+    'netflix',
     'teleperformance',
     'meta',
     'snapchat',
@@ -172,4 +173,32 @@ test('partners page splits TASI 2026 and TASI 2025 editions', async () => {
     assert.ok(pageData.getPartnerBySlug(partner.slug), partner.slug);
     assert.ok(partner.category, `${partner.slug} has a category`);
   }
+});
+
+test('TASI 2026 session partners have their own list, separate from sponsors', async () => {
+  const {
+    tasi2026PartnerSlugs,
+    tasi2026SessionPartners,
+    tasi2026SessionPartnerSlugs,
+  } = await loadModule('src/data/partners-2026.js');
+  const pageData = await loadModule('src/data/partners-page.js');
+
+  assert.ok(tasi2026SessionPartners.length > 0);
+  for (const slug of tasi2026SessionPartnerSlugs) {
+    assert.ok(
+      !tasi2026PartnerSlugs.includes(slug),
+      `${slug} is listed as both a sponsor and a session partner`
+    );
+  }
+  for (const partner of tasi2026SessionPartners) {
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), 'public', partner.logo)),
+      `${partner.slug}: logo file is missing`
+    );
+  }
+  assert.equal(pageData.getSessionPartnersForEdition('2025').length, 0);
+  assert.equal(
+    pageData.getSessionPartnersForEdition('2026'),
+    tasi2026SessionPartners
+  );
 });
