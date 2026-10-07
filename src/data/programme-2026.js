@@ -491,8 +491,8 @@ export const programmeSessions2026 = [
     '15:50–16:10',
     'Main Hall',
     'spotlight',
-    'Spotlight: TQH Report Launch',
-    'The launch of a new report by The Quantum Hub on trust and safety.'
+    'Report Launch: Designing for Online Safety: Reimagining India’s Digital Service Regulation',
+    'The Quantum Hub launches its report on a next-generation approach to online safety in India: classifying digital services by functionality, risk and scale, and shifting regulation from individual content to how services are designed to prevent harm.'
   ),
   makeSession(
     67,
