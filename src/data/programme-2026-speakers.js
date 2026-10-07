@@ -187,6 +187,10 @@ export const sessionSpeakers2026 = {
 
   // Thursday, 15 October: Workshop and Roundtable Rooms
   'tasi26-70': ['Madelaine Coelho'],
+  'tasi26-71': [
+    'Akash Pugalia',
+    { name: 'Dhruv Khosla', title: 'Everest Group' },
+  ],
   'tasi26-72': ['Manoj Shakya'],
   'tasi26-73': ['Ashwini Natesan'],
   'tasi26-75': ['Caroline Simangaliso Makumbe'],
