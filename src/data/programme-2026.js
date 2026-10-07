@@ -538,8 +538,8 @@ export const programmeSessions2026 = [
     '11:00–11:45',
     'Workshop Room',
     'workshop',
-    'Everest Group Session',
-    'A session led by Everest Group.'
+    'Workshop: Building Safer and Smarter AI',
+    'An Everest Group workshop on how AI training is moving beyond data labelling into model evaluation, post-training, red-teaming and continuous improvement, and the skills and human-in-the-loop processes needed to build safe, scalable AI.'
   ),
   makeSession(
     83,
