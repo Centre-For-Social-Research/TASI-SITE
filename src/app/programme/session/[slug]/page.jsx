@@ -158,7 +158,9 @@ export default async function ProgrammeSessionPage({ params }) {
       '@type': 'Person',
       name: speaker.name,
       jobTitle: speaker.title,
-      url: `${SITE_URL}${getSpeakerProfilePath(speaker)}`,
+      ...(speaker.hasProfile === false
+        ? {}
+        : { url: `${SITE_URL}${getSpeakerProfilePath(speaker)}` }),
     })),
     keywords: [
       'Trust and Safety India Festival',
@@ -247,33 +249,50 @@ export default async function ProgrammeSessionPage({ params }) {
                 Speakers
               </p>
               <div className="mt-5 space-y-4">
-                {speakers.map((speaker) => (
-                  <Link
-                    key={speaker.name}
-                    href={getSpeakerProfilePath(speaker)}
-                    className="flex gap-3 text-stone-900 no-underline dark:text-white"
-                  >
-                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-stone-200">
-                      {speaker.photo && (
-                        <Image
-                          src={speaker.photo}
-                          alt={speaker.name}
-                          fill
-                          sizes="48px"
-                          className="object-cover"
-                        />
-                      )}
-                    </span>
-                    <span>
-                      <span className="block font-bold">{speaker.name}</span>
-                      {speaker.title && (
-                        <span className="block text-sm text-stone-600 dark:text-stone-300">
-                          {speaker.title}
-                        </span>
-                      )}
-                    </span>
-                  </Link>
-                ))}
+                {speakers.map((speaker) => {
+                  const content = (
+                    <>
+                      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-stone-200 font-bold text-stone-600">
+                        {speaker.photo ? (
+                          <Image
+                            src={speaker.photo}
+                            alt={speaker.name}
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <span aria-hidden="true">
+                            {speaker.name.charAt(0)}
+                          </span>
+                        )}
+                      </span>
+                      <span>
+                        <span className="block font-bold">{speaker.name}</span>
+                        {speaker.title && (
+                          <span className="block text-sm text-stone-600 dark:text-stone-300">
+                            {speaker.title}
+                          </span>
+                        )}
+                      </span>
+                    </>
+                  );
+                  const className =
+                    'flex gap-3 text-stone-900 no-underline dark:text-white';
+                  return speaker.hasProfile === false ? (
+                    <div key={speaker.name} className={className}>
+                      {content}
+                    </div>
+                  ) : (
+                    <Link
+                      key={speaker.name}
+                      href={getSpeakerProfilePath(speaker)}
+                      className={className}
+                    >
+                      {content}
+                    </Link>
+                  );
+                })}
               </div>
             </aside>
           )}

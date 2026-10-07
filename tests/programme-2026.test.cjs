@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
@@ -46,33 +47,72 @@ test('2026 speakers only come from the confirmed list and match the speaker dire
   const directoryNames = new Set(directory.map((speaker) => speaker.name));
   const sessionIds = new Set(sessions.map((session) => session.id));
 
-  for (const [sessionId, names] of Object.entries(sessionSpeakers2026)) {
+  const nameOf = (entry) => (typeof entry === 'string' ? entry : entry.name);
+  const { speakers: speakers2025 } = await import(
+    pathToFileURL(path.join(process.cwd(), 'src/data/speakers.js')).href
+  );
+
+  for (const [sessionId, entries] of Object.entries(sessionSpeakers2026)) {
     assert.ok(
       sessionIds.has(sessionId),
       `${sessionId} in programme-2026-speakers.js is not a programme session id`
     );
     assert.ok(
-      Array.isArray(names) && names.length > 0,
+      Array.isArray(entries) && entries.length > 0,
       `${sessionId} lists speakers`
     );
+    const names = entries.map(nameOf);
     assert.equal(
       new Set(names).size,
       names.length,
       `${sessionId} repeats a speaker`
     );
-    for (const name of names) {
-      assert.ok(
-        directoryNames.has(name),
-        `"${name}" (${sessionId}) is not in speakers-2026.json; check the spelling or add their profile first`
-      );
+    for (const entry of entries) {
+      if (typeof entry === 'string') {
+        assert.ok(
+          directoryNames.has(entry),
+          `"${entry}" (${sessionId}) is not in speakers-2026.json; check the spelling or add their profile first`
+        );
+      } else {
+        assert.ok(
+          entry.name?.trim() && entry.title?.trim(),
+          `${sessionId}: a speaker without a profile needs a name and title`
+        );
+        assert.ok(
+          !directoryNames.has(entry.name),
+          `"${entry.name}" (${sessionId}) has a profile; list them by name instead`
+        );
+        if (entry.profile === '2025') {
+          assert.ok(
+            speakers2025.some((speaker) => speaker.name === entry.name),
+            `"${entry.name}" (${sessionId}) has no TASI 2025 profile`
+          );
+          assert.ok(
+            entry.photo &&
+              fs.existsSync(path.join(process.cwd(), 'public', entry.photo)),
+            `"${entry.name}" (${sessionId}): 2025 photo file is missing`
+          );
+        }
+      }
     }
   }
 
   for (const session of sessions) {
+    const entries = sessionSpeakers2026[session.id] || [];
     assert.deepEqual(
       session.speakers,
-      sessionSpeakers2026[session.id] || [],
+      entries.map(nameOf),
       `${session.id} speakers must come from programme-2026-speakers.js`
+    );
+    const guests = entries.filter((entry) => typeof entry !== 'string');
+    assert.deepEqual(
+      session.guestSpeakers,
+      guests.length
+        ? Object.fromEntries(
+            guests.map(({ name, ...details }) => [name, details])
+          )
+        : undefined,
+      `${session.id} guest speaker details must come from programme-2026-speakers.js`
     );
   }
 });
@@ -231,4 +271,42 @@ test('2026 session speakers link to their 2026 profile with directory details', 
   assert.equal(speaker.title, 'SVP, Head of Trust and Safety, Match Group');
   assert.equal(speaker.photo, '/img/speakers/2026/yoel-roth.webp');
   assert.equal(getSpeakerProfilePath(speaker), '/speakers/2026/yoel-roth');
+});
+
+test('2026 speakers without a profile show their title and no profile link', () => {
+  const {
+    buildProgrammeSessionViewModels,
+  } = require('../src/lib/programme-agenda-utils.cjs');
+
+  const [session] = buildProgrammeSessionViewModels({
+    sessions: [
+      {
+        id: 'tasi26-82',
+        title: 'Fireside',
+        day: 'oct14',
+        speakers: ['Yoel Roth', 'Kevin Lee', 'Kazim Rizvi'],
+        guestSpeakers: {
+          'Kevin Lee': { title: 'CEO, Yuvaa' },
+          'Kazim Rizvi': {
+            title: 'Founding Director, The Dialogue',
+            photo: '/img/speakers/Kazim Rizvi.webp',
+            profile: '2025',
+          },
+        },
+      },
+    ],
+    speakerDesignationMap: { 'yoel roth': 'SVP, Match Group' },
+    speakerPhotoMap: { 'yoel roth': '/img/speakers/2026/yoel-roth.webp' },
+    speakerEdition: '2026',
+  });
+  const [yoel, kevin, kazim] = session.speakersDetailed;
+
+  assert.notEqual(yoel.hasProfile, false);
+  assert.equal(yoel.photo, '/img/speakers/2026/yoel-roth.webp');
+  assert.equal(kevin.hasProfile, false);
+  assert.equal(kevin.title, 'CEO, Yuvaa');
+  assert.equal(kevin.photo, '');
+  assert.notEqual(kazim.hasProfile, false);
+  assert.equal(kazim.edition, undefined);
+  assert.equal(kazim.photo, '/img/speakers/Kazim Rizvi.webp');
 });
