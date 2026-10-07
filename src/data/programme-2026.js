@@ -110,7 +110,8 @@ export const programmeSessions2026 = [
     '09:00–10:00',
     'Lobby',
     'special',
-    'Registration and Tea/Coffee'
+    'Registration and Tea/Coffee',
+    'Collect your festival badge at the registration desk and meet fellow delegates over tea and coffee before the opening session. Please carry your QR pass and a valid government-issued photo ID.'
   ),
   makeSession(
     9,
@@ -184,7 +185,15 @@ export const programmeSessions2026 = [
     'Spotlight: My Digital Wellbeing Journal Launch',
     'The launch of My Digital Wellbeing Journal, a resource to help young people reflect on their online lives and build healthier digital habits.'
   ),
-  makeSession(20, 'oct14', '13:30–14:15', 'Lobby', 'special', 'Lunch Break'),
+  makeSession(
+    20,
+    'oct14',
+    '13:30–14:15',
+    'Lobby',
+    'special',
+    'Lunch Break',
+    'Lunch for all delegates, with time to network with speakers, partners and fellow participants.'
+  ),
   makeSession(
     23,
     'oct14',
@@ -365,7 +374,8 @@ export const programmeSessions2026 = [
     '09:00–10:00',
     'Lobby',
     'special',
-    'Registration and Tea/Coffee'
+    'Registration and Tea/Coffee',
+    'Registration opens for the second day of the festival, with tea and coffee. Please carry your QR pass and a valid government-issued photo ID.'
   ),
   makeSession(
     32,
@@ -439,7 +449,15 @@ export const programmeSessions2026 = [
     'Panel: Beyond Online Harm: Rethinking Women’s Safety in a Changing Digital World',
     'A panel on women’s safety beyond online harm, and how to design digital spaces where women can participate fully, confidently and on their own terms.'
   ),
-  makeSession(41, 'oct15', '13:30–14:20', 'Lobby', 'special', 'Lunch Break'),
+  makeSession(
+    41,
+    'oct15',
+    '13:30–14:20',
+    'Lobby',
+    'special',
+    'Lunch Break',
+    'Lunch for all delegates, with time to continue conversations from the morning sessions before the afternoon programme.'
+  ),
   makeSession(
     64,
     'oct15',
