@@ -34,13 +34,28 @@ export const sessionSpeakers2026 = {
     'Snigdha Bhardwaj',
     'Nicky Jackson Colaco',
     'Akash Pugalia',
+    {
+      name: 'Deepak Goel',
+      title:
+        'Group Coordinator, Cyber Laws and Data Governance Division, Ministry of Electronics and Information Technology',
+    },
     'Rohit Kumar',
     'Faye D’Souza',
   ],
   'tasi26-12': ['Rahul Fernandes', 'Nandini Chatterjee Singh'],
   'tasi26-13': ['Dr. Ranjana Kumari'],
   'tasi26-16': ['Lisa Morrison', 'Madeline Shepherd', 'Karuna Nain'],
-  'tasi26-18': ['Uthara Ganesh', 'Laura Higgins', 'Lucy Thomas', 'Barkha Dutt'],
+  'tasi26-18': [
+    'Uthara Ganesh',
+    'Laura Higgins',
+    {
+      name: 'Dr. Sanjeev Sharma',
+      title:
+        'Member Secretary, National Commission for Protection of Child Rights (NCPCR)',
+    },
+    'Lucy Thomas',
+    'Barkha Dutt',
+  ],
   'tasi26-23': [
     'Siddharth P',
     'Omari Rodney',
