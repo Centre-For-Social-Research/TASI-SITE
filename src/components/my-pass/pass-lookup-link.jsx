@@ -17,7 +17,7 @@ const getSnapshot = () => isPassLookupOpen(new Date());
 // so the static HTML outside the window never contains the link.
 const getServerSnapshot = () => false;
 
-// Renders nothing outside 12-15 October, so the site is unchanged the rest
+// Renders nothing outside 9-15 October, so the site is unchanged the rest
 // of the year. The server enforces the same window on the page and API.
 export default function PassLookupLink() {
   const pathname = usePathname() || '';
