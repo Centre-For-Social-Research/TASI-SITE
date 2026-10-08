@@ -17,8 +17,9 @@ function read(relativePath) {
 
 const ist = (value) => new Date(`${value}+05:30`);
 
-test('find my pass is only open from 12 Oct 00:00 to 15 Oct 23:59 IST', () => {
-  assert.equal(isPassLookupOpen(ist('2026-10-11T23:59:59')), false);
+test('find my pass is only open from 9 Oct 00:00 to 15 Oct 23:59 IST', () => {
+  assert.equal(isPassLookupOpen(ist('2026-10-08T23:59:59')), false);
+  assert.equal(isPassLookupOpen(ist('2026-10-09T00:00:00')), true);
   assert.equal(isPassLookupOpen(ist('2026-10-12T00:00:00')), true);
   assert.equal(isPassLookupOpen(ist('2026-10-14T09:00:00')), true);
   assert.equal(isPassLookupOpen(ist('2026-10-15T23:59:59')), true);
@@ -27,7 +28,8 @@ test('find my pass is only open from 12 Oct 00:00 to 15 Oct 23:59 IST', () => {
 });
 
 test('the pass lookup drain keeps running a few hours after close, then stops', () => {
-  assert.equal(isPassLookupDrainActive(ist('2026-10-11T23:00:00')), false);
+  assert.equal(isPassLookupDrainActive(ist('2026-10-08T23:00:00')), false);
+  assert.equal(isPassLookupDrainActive(ist('2026-10-09T00:00:00')), true);
   assert.equal(isPassLookupDrainActive(ist('2026-10-16T05:59:00')), true);
   assert.equal(isPassLookupDrainActive(ist('2026-10-16T06:00:00')), false);
   assert.equal(isPassLookupDrainActive(ist('2027-10-14T09:00:00')), false);
@@ -90,7 +92,7 @@ test('the pass lookup cron needs the cron secret and only drains public jobs', (
     vercel.crons.some(
       (cron) =>
         cron.path === '/api/internal/my-pass/drain' &&
-        cron.schedule === '*/2 * 11-15 10 *'
+        cron.schedule === '*/2 * 8-15 10 *'
     )
   );
 });

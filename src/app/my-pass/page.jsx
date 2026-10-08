@@ -52,7 +52,7 @@ export default function Page() {
           <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 md:px-8 lg:grid-cols-[1fr_0.95fr] lg:gap-16">
             <div className="text-center lg:text-left">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-white/75">
-                TASI 2026 · Festival week
+                TASI 2026 · 14-15 October
               </p>
               <h1 className="mt-4 text-4xl font-black leading-[1.05] tracking-tight text-white md:text-6xl">
                 Lost your pass?
