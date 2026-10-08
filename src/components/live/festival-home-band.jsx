@@ -62,9 +62,13 @@ function Countdown({ countdown }) {
           </span>
           <Link
             href="/programme"
-            className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
+            className="inline-flex items-center gap-2 rounded-full bg-[#ffd919] px-3 py-1 transition hover:brightness-105"
           >
-            Programme
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#350265] opacity-60 motion-reduce:animate-none" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#350265]" />
+            </span>
+            The 2026 agenda is live
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

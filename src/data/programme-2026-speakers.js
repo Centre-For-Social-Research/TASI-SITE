@@ -69,10 +69,7 @@ export const sessionSpeakers2026 = {
       photo: '/img/speakers/Andras Malnar.webp',
       profile: '2025',
     },
-    {
-      name: 'Kavitha KK',
-      title: 'Public Policy Director, India & South Asia, Roblox',
-    },
+    'Kavitha Kunhi Kannan',
     {
       name: 'Kazim Rizvi',
       title: 'Founding Director, The Dialogue',
@@ -187,6 +184,10 @@ export const sessionSpeakers2026 = {
 
   // Thursday, 15 October: Workshop and Roundtable Rooms
   'tasi26-70': ['Madelaine Coelho'],
+  'tasi26-71': [
+    'Akash Pugalia',
+    { name: 'Dhruv Khosla', title: 'Everest Group' },
+  ],
   'tasi26-72': ['Manoj Shakya'],
   'tasi26-73': ['Ashwini Natesan'],
   'tasi26-75': ['Caroline Simangaliso Makumbe'],
