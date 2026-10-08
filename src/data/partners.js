@@ -17,12 +17,12 @@ export const partners = [
     },
   },
   {
-    name: 'Teleperformance',
+    name: 'TP',
     logo: '/img/Logo/2026/tp.png',
     slug: 'teleperformance',
     type: 'Corporate Partner',
     description:
-      'Teleperformance, now branded as TP, is a global leader in digital business services, combining AI, operations, and human expertise to support customer experience, trust and safety, and enterprise transformation.',
+      'TP (formerly Teleperformance) is a global leader in digital business services, combining AI, operations, and human expertise to support customer experience, trust and safety, and enterprise transformation.',
     country: 'France',
     category: 'Digital Business Services',
     website: 'https://www.tp.com/en-us/',

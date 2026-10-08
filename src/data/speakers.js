@@ -180,7 +180,7 @@ export const speakers = [
     category: 'Civil Society',
     photo: 'Dr. Ranjana Kumari.webp',
     linkedinUrl: 'https://www.linkedin.com/in/rkumari/',
-    bio: 'Dr. Ranjana Kumari has been a leading advocate for women’s rights in India for over four decades, combining activism, scholarship, and policy engagement. She has advised the Government of India through roles on the National Commission for Women, Ministry of Women and Child Development, NHRC, and Ministry of Labour, and has served as a Gender Expert at the ILO and United Nations in Geneva. Recognized with national and international awards, including the Lotus Leadership Award, she was named among Apolitical’s 100 Most Influential People in Gender Policy. She also serves on Meta’s Global Advisory Council, the Advertising Standards Council of India, and was previously member of the Trust and Safety Council of Teleperformance and Twitter advocating for safe, respectful online spaces.',
+    bio: 'Dr. Ranjana Kumari has been a leading advocate for women’s rights in India for over four decades, combining activism, scholarship, and policy engagement. She has advised the Government of India through roles on the National Commission for Women, Ministry of Women and Child Development, NHRC, and Ministry of Labour, and has served as a Gender Expert at the ILO and United Nations in Geneva. Recognized with national and international awards, including the Lotus Leadership Award, she was named among Apolitical’s 100 Most Influential People in Gender Policy. She also serves on Meta’s Global Advisory Council, the Advertising Standards Council of India, and was previously member of the Trust and Safety Council of TP and Twitter advocating for safe, respectful online spaces.',
   },
   {
     name: 'Dr. Samir Parikh',
@@ -606,7 +606,7 @@ export const speakers = [
     category: 'Technology',
     photo: 'Swati Chawla.png',
     linkedinUrl: 'https://www.linkedin.com/in/swati-chawla-988a7614/',
-    bio: 'Swati Chawla is the Director of Global Operational Wellness at Teleperformance. She leads the implementation of wellness strategies that support trust and safety professionals globally. With over two decades of experience in organizational psychology and wellness, Swati has built scalable frameworks that strengthen resilience, improve employee wellness, and enable sustainable performance in high-intensity trust & safety environments. Her work focuses on establishing measurable outcomes, and fostering a culture of inclusion and psychological safety. Recognized for her contributions to workplace health, Swati has received multiple industry awards.She holds a Master’s in Psychology and Sociology.',
+    bio: 'Swati Chawla is the Director of Global Operational Wellness at TP. She leads the implementation of wellness strategies that support trust and safety professionals globally. With over two decades of experience in organizational psychology and wellness, Swati has built scalable frameworks that strengthen resilience, improve employee wellness, and enable sustainable performance in high-intensity trust & safety environments. Her work focuses on establishing measurable outcomes, and fostering a culture of inclusion and psychological safety. Recognized for her contributions to workplace health, Swati has received multiple industry awards.She holds a Master’s in Psychology and Sociology.',
   },
   {
     name: 'Uma Subramanian',
