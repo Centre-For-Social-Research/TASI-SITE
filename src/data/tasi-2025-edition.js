@@ -196,7 +196,7 @@ export const tasi2025Partners = [
     slug: 'booking-com',
   },
   {
-    name: 'Teleperformance',
+    name: 'TP',
     logo: '/img/Logo/TP.webp',
     slug: 'teleperformance',
   },

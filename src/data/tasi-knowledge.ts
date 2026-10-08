@@ -141,7 +141,7 @@ PARTNERS & SPONSORS:
 Technology Platforms: Booking.com, Meta, Snapchat, YouTube, Truecaller, Match Group, X, Resolver, Google, Roblox
 Government & Embassies: French Embassy, Swedish Embassy, Netherlands Embassy, Australian High Commission, Canadian High Commission
 Civil Society & Research: Alliance for Cyber Trust and Safety (ACTS), The Dialogue, The Asia Foundation, Safetipin, INHOPE, Quantum Hub, COR Sandbox, GroSafe, FRIDA Fund
-Other: Teleperformance, VYS, GirlEffect, UN Women, GSMA, Dhirubhai Ambani University, ASCI
+Other: TP, VYS, GirlEffect, UN Women, GSMA, Dhirubhai Ambani University, ASCI
 
 TRAVEL & GETTING TO NEW DELHI:
 Time Zone: IST (GMT +5:30)
