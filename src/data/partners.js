@@ -737,6 +737,34 @@ export const partners = [
     },
   },
   {
+    name: 'Meedan',
+    logo: '/img/Logo/2026/meedan.png',
+    slug: 'meedan',
+    type: 'Session Partner',
+    description:
+      'Meedan is a Skoll Award-winning, global nonprofit organization that takes on the fundamental challenges that digital information ecologies face. Since 2006, we’ve continually mobilized knowledge networks to help people get informed, exercise their rights, and participate in democracy. Suwali is Meedan’s new chatbot for public-interest organizations.',
+    country: 'United States',
+    category: 'Information Integrity',
+    website: 'https://meedan.org/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/meedan/',
+    },
+  },
+  {
+    name: 'Engage AI',
+    logo: '/img/Logo/2026/engage-ai.png',
+    slug: 'engage-ai',
+    type: 'Session Partner',
+    description:
+      'Engage-AI is a pioneering nonprofit advocacy group advancing the responsible development and deployment of artificial intelligence and machine learning (AI/ML) for the common good. We believe AI must be guided by core human values such as dignity, justice, inclusion, and sustainability, not just technological ambition.',
+    country: 'United States',
+    category: 'Responsible AI Advocacy',
+    website: 'https://engage-ai.org/',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/engage-ai-org/',
+    },
+  },
+  {
     name: 'Netflix',
     logo: '/img/Logo/2026/netflix.png',
     slug: 'netflix',
