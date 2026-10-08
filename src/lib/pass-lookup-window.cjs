@@ -1,8 +1,10 @@
-// "Find my pass" only exists during festival week: 12-15 October 2026, IST.
+// "Find my pass" only exists in the run-up to and during the festival:
+// 9-15 October 2026, IST. It opens on 9 October so the T-5 reminder email
+// can point people to it.
 // Outside this window the page 404s, the API refuses requests and no link
 // is rendered, so the site looks exactly as it does the rest of the year.
 
-const PASS_LOOKUP_OPENS_AT = Date.parse('2026-10-12T00:00:00+05:30');
+const PASS_LOOKUP_OPENS_AT = Date.parse('2026-10-09T00:00:00+05:30');
 const PASS_LOOKUP_CLOSES_AT = Date.parse('2026-10-16T00:00:00+05:30');
 
 // The background drain keeps going a little after close so a request made
