@@ -80,14 +80,13 @@ test('plan-your-travel shared data owns all live route datasets', async () => {
   assert.equal(data.travelOverviewSections.length, 4);
   assert.equal(data.travelQuickFacts.length, 4);
   assert.equal(data.generalQuickStats.length, 6);
-  assert.equal(data.generalInfoItems.length, 10);
-  assert.equal(data.airports.length, 4);
+  assert.equal(data.generalInfoItems.length, 9);
+  assert.equal(data.airports.length, 2);
   assert.equal(data.railwayStations.length, 3);
-  assert.equal(data.nearbyAttractions.length, 5);
-  assert.equal(data.immigrationPoints.length, 6);
-  assert.equal(data.visaPathways.length, 3);
-  assert.equal(data.visaAdditionalSections.length, 2);
-  assert.equal(data.hotels.length, 26);
+  assert.equal(data.metroStations.length, 2);
+  assert.equal(data.nearbyPlaces.length, 5);
+  assert.equal(data.visaSteps.length, 3);
+  assert.equal(data.hotels.length, 11);
 
   assert.equal(
     data.travelOverviewMetadata.title,
@@ -137,20 +136,36 @@ test('travel page components consume tracked data instead of stale inline datase
   }
 });
 
-test('local travel image assets referenced by data exist', async () => {
+test('travel content is about TASI at IIC, not another venue or event', async () => {
   const data = await loadModule('src', 'data', 'plan-your-travel-page.js');
-  const localImages = [
-    ...data.nearbyAttractions.map((attraction) => attraction.image),
-    ...data.hotels.map((hotel) => hotel.photo),
-  ].filter((image) => image.startsWith('/img/'));
+  const source = readSource('src', 'data', 'plan-your-travel-page.js');
+  const components = [
+    'plan-travel-overview-page.jsx',
+    'general-info-page.jsx',
+    'how-to-reach-page.jsx',
+    'visa-information-page.jsx',
+    'accommodation-page.jsx',
+  ].map((file) => readSource('src', 'components', 'travel', file));
 
-  assert.equal(localImages.length > 0, true);
+  assert.match(data.travelVenue.address, /Max Mueller Marg, Lodhi Estate/);
+  assert.deepEqual(
+    data.metroStations.map((station) => station.name),
+    ['Jor Bagh', 'Khan Market']
+  );
 
-  for (const image of localImages) {
-    assert.equal(
-      fs.existsSync(repoPath('public', ...image.split('/').filter(Boolean))),
-      true,
-      `${image} should exist under public`
+  for (const text of [source, ...components]) {
+    assert.doesNotMatch(
+      text,
+      /Summit|Secretariat|Supreme Court Metro|Akshardham|Note Verbale|gratis|Aerocity/i
     );
+  }
+
+  for (const hotel of data.hotels) {
+    assert.equal(
+      hotel.photo,
+      undefined,
+      `${hotel.name} should not hot-link a photo`
+    );
+    assert.match(hotel.url, /^https?:\/\//);
   }
 });
