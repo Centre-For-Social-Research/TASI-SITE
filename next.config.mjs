@@ -56,7 +56,7 @@ const siteSecurityHeaders = [
       "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      `img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com ${clerkCspOrigins.join(' ')} https://*.clerk.com https://d19ob9sqegt2wc.cloudfront.net https://*.supabase.co https://cdn.sanity.io`,
+      `img-src 'self' data: blob: https://images.unsplash.com https://image.mux.com ${clerkCspOrigins.join(' ')} https://*.clerk.com https://*.supabase.co https://cdn.sanity.io`,
       `connect-src 'self' https://*.supabase.co https://api.resend.com ${clerkCspOrigins.join(' ')} ${sentryCspOrigins.join(' ')} https://*.sanity.io wss://*.sanity.io https://*.mux.com wss://*.mux.com`,
       `frame-src https://challenges.cloudflare.com ${clerkCspOrigins.join(' ')} https://player.mux.com`,
       "object-src 'none'",
@@ -144,10 +144,6 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
-      },
-      {
-        protocol: 'https',
-        hostname: 'd19ob9sqegt2wc.cloudfront.net',
       },
     ],
     minimumCacheTTL: 31536000,
