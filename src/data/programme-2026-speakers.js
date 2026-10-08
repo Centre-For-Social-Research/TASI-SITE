@@ -45,9 +45,11 @@ export const sessionSpeakers2026 = {
   'tasi26-12': ['Rahul Fernandes', 'Nandini Chatterjee Singh'],
   'tasi26-13': ['Dr. Ranjana Kumari'],
   'tasi26-16': ['Lisa Morrison', 'Madeline Shepherd', 'Karuna Nain'],
+  'tasi26-85': ['Madeline Shepherd', 'Nina Bual'],
   'tasi26-18': [
     'Uthara Ganesh',
     'Laura Higgins',
+    { name: 'Mahima Kaul', title: 'Director, Global Affairs, Netflix India' },
     {
       name: 'Dr. Sanjeev Sharma',
       title:
@@ -96,8 +98,8 @@ export const sessionSpeakers2026 = {
   ],
   'tasi26-82': [
     'Yoel Roth',
-    { name: 'Kevin Lee', title: 'CEO, Yuvaa' },
     'Jyoti Vadehra',
+    { name: 'Kevin Lee', title: 'CEO, Yuvaa' },
   ],
   'tasi26-29': ['S. Krishnan'],
   'tasi26-51': ['Himadri Sarkar'],
@@ -109,6 +111,7 @@ export const sessionSpeakers2026 = {
       name: 'Tarunima Prabhakar',
       title: 'Founder and Research Lead, Tattle Civic Tech',
     },
+    { name: 'Poorvi Gupta', title: 'Tattle Civic Tech' },
   ],
   'tasi26-55': ['Divya Chandra'],
   'tasi26-59': ['Rahul Fernandes'],
@@ -117,7 +120,7 @@ export const sessionSpeakers2026 = {
   'tasi26-33': ['Marisa Gerards'],
   'tasi26-34': [
     'Apar Gupta',
-    'Beh Lih Yi',
+    'Kunal Majumder',
     'Dhara Mungra',
     { name: 'Jency Jacob', title: 'Managing Editor, BOOM' },
     'Suhasini Haidar',
@@ -137,10 +140,6 @@ export const sessionSpeakers2026 = {
   'tasi26-40': [
     'Uma Subramanian',
     'Sophie Mortimer',
-    {
-      name: 'Anja Kovacs',
-      title: 'Senior CIGI Fellow; Independent Researcher and Consultant',
-    },
     'Ji-yeon Lee',
     {
       name: 'Vijaya Rahatkar',
@@ -164,11 +163,12 @@ export const sessionSpeakers2026 = {
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
     {
-      name: 'Amlan Mohanty',
-      title: 'Public Policy and External Affairs Lead, Anthropic India',
+      name: 'Shikha Dahiya',
+      title:
+        'Joint Director, Ministry of Electronics and Information Technology, Government of India',
     },
+    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
     'Rob Lewington',
-    { name: 'Mahima Kaul', title: 'Director, Global Affairs, Netflix India' },
     {
       name: 'Manisha Kapoor',
       title:

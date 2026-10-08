@@ -168,6 +168,15 @@ export const programmeSessions2026 = [
     'How industry collaboration is helping fight child sexual abuse material online, from detection and reporting to prevention.'
   ),
   makeSession(
+    85,
+    'oct14',
+    '12:15–12:30',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: Behind the Chat: AI Companions Through a Teen Lens',
+    'A short talk on AI companions as teenagers experience them, and what that means for keeping young people safe.'
+  ),
+  makeSession(
     18,
     'oct14',
     '12:30–13:15',
@@ -273,8 +282,8 @@ export const programmeSessions2026 = [
     '10:00–11:00',
     'Roundtable Room',
     'panel',
-    'Panel: Gender, Governance and India’s AI Future',
-    'A panel on gender, governance and India’s AI future, and how women’s health, rights and participation can shape AI policy.'
+    'Panel: Designed Out, Left Behind: Fixing the Gender Blind Spot in AI Governance',
+    'A panel on the gender blind spot in AI governance, and how women’s health, rights and participation can shape AI policy so that women are not designed out or left behind.'
   ),
   makeSession(
     52,
@@ -419,8 +428,8 @@ export const programmeSessions2026 = [
     '11:15–12:00',
     'Main Hall',
     'panel',
-    'Panel: Safety and Well-being of Content Creators',
-    'A panel on what it takes to help content creators thrive safely, including the tools and platform investments that support their wellbeing.'
+    'Panel: Reach, Revenue & Responsibility: What AI Changes for India’s Creators',
+    'A panel on how AI is changing reach, revenue and responsibility for India’s content creators, and what it takes to help them thrive safely.'
   ),
   makeSession(
     62,
@@ -574,8 +583,8 @@ export const programmeSessions2026 = [
     '12:45–13:00',
     'Roundtable Room',
     'spotlight',
-    'The Small Fish in the Big Pond of Online Content Regulation: Splinternet of Censorship and the Online Safety Act in Sri Lanka',
-    'A short talk on online content regulation, censorship and Sri Lanka’s Online Safety Act, and what smaller countries can learn.'
+    'Small Markets, Big Platforms: Understanding Online Safety in Sri Lanka and Beyond',
+    'A short talk on online safety regulation in Sri Lanka, including its Online Safety Act, and what smaller markets can learn when dealing with global platforms.'
   ),
   makeSession(
     74,
