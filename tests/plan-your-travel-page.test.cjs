@@ -80,7 +80,7 @@ test('plan-your-travel shared data owns all live route datasets', async () => {
   assert.equal(data.travelOverviewSections.length, 4);
   assert.equal(data.travelQuickFacts.length, 4);
   assert.equal(data.generalQuickStats.length, 6);
-  assert.equal(data.generalInfoItems.length, 9);
+  assert.equal(data.generalInfoItems.length, 8);
   assert.equal(data.airports.length, 2);
   assert.equal(data.railwayStations.length, 3);
   assert.equal(data.metroStations.length, 2);
@@ -161,11 +161,18 @@ test('travel content is about TASI at IIC, not another venue or event', async ()
   }
 
   for (const hotel of data.hotels) {
-    assert.equal(
-      hotel.photo,
-      undefined,
-      `${hotel.name} should not hot-link a photo`
-    );
     assert.match(hotel.url, /^https?:\/\//);
+    assert.match(
+      hotel.photo,
+      /^\/img\/travel\/hotels\/.+\.webp$/,
+      `${hotel.name} should use a locally hosted photo`
+    );
+    assert.equal(
+      fs.existsSync(
+        repoPath('public', ...hotel.photo.split('/').filter(Boolean))
+      ),
+      true,
+      `${hotel.photo} should exist under public`
+    );
   }
 });

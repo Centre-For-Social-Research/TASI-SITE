@@ -1,5 +1,4 @@
 import {
-  Accessibility,
   AlertTriangle,
   Banknote,
   Calendar,
@@ -20,7 +19,6 @@ import {
 } from 'lucide-react';
 
 export const travelIcons = {
-  Accessibility,
   AlertTriangle,
   Banknote,
   Calendar,

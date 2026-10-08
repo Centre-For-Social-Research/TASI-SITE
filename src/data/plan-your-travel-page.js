@@ -78,56 +78,67 @@ export const hotels = [
     name: 'The Lodhi',
     area: 'Lodhi Road',
     url: 'https://www.thelodhi.com',
+    photo: '/img/travel/hotels/the-lodhi.webp',
   },
   {
     name: 'The Oberoi, New Delhi',
     area: 'Dr Zakir Hussain Marg',
     url: 'https://www.oberoihotels.com/hotels-in-delhi/',
+    photo: '/img/travel/hotels/the-oberoi.webp',
   },
   {
     name: 'Taj Mahal Hotel',
     area: 'Mansingh Road',
     url: 'https://www.tajhotels.com/en-in/taj/taj-mahal-new-delhi',
+    photo: '/img/travel/hotels/taj-mahal-hotel.webp',
   },
   {
     name: 'The Claridges',
     area: 'APJ Abdul Kalam Road',
     url: 'https://www.claridges.com',
+    photo: '/img/travel/hotels/the-claridges.webp',
   },
   {
     name: 'Le Méridien New Delhi',
     area: 'Windsor Place',
     url: 'https://www.marriott.com/en-us/hotels/delmd-le-meridien-new-delhi',
+    photo: '/img/travel/hotels/le-meridien.webp',
   },
   {
     name: 'The Imperial',
     area: 'Janpath',
     url: 'https://theimperialindia.com',
+    photo: '/img/travel/hotels/the-imperial.webp',
   },
   {
     name: 'The Lalit New Delhi',
     area: 'Barakhamba Avenue, Connaught Place',
     url: 'https://www.thelalit.com/the-lalit-new-delhi',
+    photo: '/img/travel/hotels/the-lalit.webp',
   },
   {
     name: 'ITC Maurya',
     area: 'Sardar Patel Marg, Chanakyapuri',
     url: 'https://www.itchotels.com/in/en/itcmaurya-new-delhi',
+    photo: '/img/travel/hotels/itc-maurya.webp',
   },
   {
     name: 'Taj Palace',
     area: 'Sardar Patel Marg, Chanakyapuri',
     url: 'https://www.tajhotels.com/en-in/taj/taj-palace-new-delhi',
+    photo: '/img/travel/hotels/taj-palace.webp',
   },
   {
     name: 'The Ashok',
     area: 'Niti Marg, Chanakyapuri',
     url: 'http://www.theashokhotel.com',
+    photo: '/img/travel/hotels/the-ashok.webp',
   },
   {
     name: 'Hyatt Regency Delhi',
     area: 'Bhikaji Cama Place',
     url: 'https://www.hyatt.com/hyatt-regency/en-US/delrd-hyatt-regency-delhi',
+    photo: '/img/travel/hotels/hyatt-regency-delhi.webp',
   },
 ];
 
@@ -204,7 +215,7 @@ export const generalInfoItems = [
   {
     icon: 'Wind',
     title: 'Air quality',
-    body: 'Air quality in Delhi often gets worse from mid-October. If you have asthma or are sensitive to pollution, carry a mask and any medication you need.',
+    body: 'Air quality in Delhi is good at the moment. It often gets worse from mid-November, so if you have asthma or are sensitive to pollution, carry a mask and any medication you need.',
   },
   {
     icon: 'Droplets',
@@ -235,11 +246,6 @@ export const generalInfoItems = [
     icon: 'Camera',
     title: 'Photography',
     body: 'The festival will be photographed and filmed by official photographers. Photos and videos will be shared on the TASI website after the event.',
-  },
-  {
-    icon: 'Accessibility',
-    title: 'Accessibility and dietary needs',
-    body: `If you have accessibility needs, dietary requirements, allergies or a medical condition we should know about, write to ${TRAVEL_CONTACT_EMAIL} before the festival. We keep this information confidential.`,
   },
 ];
 
