@@ -69,10 +69,7 @@ export const sessionSpeakers2026 = {
       photo: '/img/speakers/Andras Malnar.webp',
       profile: '2025',
     },
-    {
-      name: 'Kavitha KK',
-      title: 'Public Policy Director, India & South Asia, Roblox',
-    },
+    'Kavitha Kunhi Kannan',
     {
       name: 'Kazim Rizvi',
       title: 'Founding Director, The Dialogue',
