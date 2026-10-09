@@ -292,6 +292,14 @@
   margin-bottom: 0.45rem;
 }
 
+.agenda-root .reception-note {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--brown);
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+}
+
 .agenda-root .reception-copy {
   font-size: 0.78rem;
   color: var(--taupe);

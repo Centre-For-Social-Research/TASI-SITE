@@ -411,6 +411,9 @@ export default function ProgrammeAgendaClient({
                   <p className={styles['reception-day']}>{item.day}</p>
                   <p className={styles['reception-venue']}>{item.venue}</p>
                   <p className={styles['reception-access']}>{item.access}</p>
+                  {item.note && (
+                    <p className={styles['reception-note']}>{item.note}</p>
+                  )}
                   <p className={styles['reception-copy']}>{item.description}</p>
                 </article>
               ))}
