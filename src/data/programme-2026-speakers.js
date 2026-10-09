@@ -100,7 +100,28 @@ export const sessionSpeakers2026 = {
   'tasi26-51': ['Himadri Sarkar'],
 
   // Wednesday, 14 October: Workshop Room
-  'tasi26-84': ['Abhilash Mallick'],
+  'tasi26-84': [
+    'Abhilash Mallick',
+    {
+      name: 'Sneha Alexander',
+      title: 'Senior Program Manager, Asia-Pacific, Meedan',
+    },
+  ],
+  'tasi26-52': [
+    {
+      name: 'Amrita Tripathi',
+      title:
+        'Author, Podcaster, Mental Health Advocate, Founder, The Health Collective',
+    },
+    {
+      name: 'Dr Poojashivam Jaitly',
+      title: 'Senior Consultant Psychologist, Apollo Clinic',
+    },
+    { name: 'Anupriya Kapur', title: 'Digital Influencer & Life Coach' },
+    { name: 'Malti Jaiswal', title: 'Founder, Inspiring Seniors Foundation' },
+    { name: 'Rajneil Kamath', title: 'Founder, Saksham Senior' },
+    { name: 'Ruby Dhingra', title: 'Co-founder, Saksham Senior' },
+  ],
   'tasi26-53': [
     {
       name: 'Tarunima Prabhakar',
@@ -203,9 +224,33 @@ export const sessionSpeakers2026 = {
     'Akash Pugalia',
     { name: 'Dhruv Khosla', title: 'Everest Group' },
   ],
-  'tasi26-72': ['Manoj Shakya'],
+  'tasi26-17': ['Nina Bual'],
+  'tasi26-72': ['Manoj Shakya', 'Dr. Rupa Munakarmi', 'Haribol Acharya'],
   'tasi26-73': ['Ashwini Natesan'],
-  'tasi26-75': ['Caroline Simangaliso Makumbe'],
+  'tasi26-75': [
+    'Caroline Simangaliso Makumbe',
+    'Margaret Gichanga',
+    {
+      name: 'Pranay Dixit',
+      title:
+        'Volunteer Policy Counsel, Software Freedom Law Center, India (SFLC.in)',
+    },
+    'Maina Korir',
+  ],
+  'tasi26-77': [
+    'Ankit Bose',
+    {
+      name: 'Tarunima Prabhakar',
+      title: 'Founder and Research Lead, Tattle Civic Tech',
+    },
+    'Vaibhav Pulekar',
+    'Aishwarya Salvi',
+  ],
   'tasi26-76': ['Dr Abigail Bentley'],
-  'tasi26-78': ['M. C. Rasmin'],
+  'tasi26-78': [
+    'M. C. Rasmin',
+    'Shiromi Samarakoon',
+    'Anil Raghuvanshi',
+    'Pratishtha Arora',
+  ],
 };
