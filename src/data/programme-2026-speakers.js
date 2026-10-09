@@ -231,6 +231,12 @@ export const sessionSpeakers2026 = {
     'Caroline Simangaliso Makumbe',
     'Margaret Gichanga',
     {
+      name: 'Abby Roberts',
+      title: 'Project Manager, INHOPE',
+      photo: '/img/speakers/Abby Roberts.webp',
+      profile: '2025',
+    },
+    {
       name: 'Pranay Dixit',
       title:
         'Volunteer Policy Counsel, Software Freedom Law Center, India (SFLC.in)',
