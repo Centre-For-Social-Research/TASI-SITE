@@ -251,7 +251,7 @@ export const programmeSessions2026 = [
   makeSession(
     29,
     'oct14',
-    '16:30–17:00',
+    '16:30–16:50',
     'Main Hall',
     'keynote',
     'Closing Keynote',
@@ -265,6 +265,15 @@ export const programmeSessions2026 = [
     'spotlight',
     'Sponsor Spotlight: Driving Human Safety in the Digital World Through AI',
     'How human expertise and AI can work together to keep people safe in the digital world.'
+  ),
+  makeSession(
+    86,
+    'oct14',
+    '16:50–17:00',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: GroSafe',
+    'A spotlight from GroSafe.'
   ),
   // Wednesday, 14 October: parallel rooms.
   makeSession(
@@ -452,11 +461,20 @@ export const programmeSessions2026 = [
   makeSession(
     40,
     'oct15',
-    '12:45–13:30',
+    '12:45–13:25',
     'Main Hall',
     'panel',
     'Panel: Beyond Online Harm: Rethinking Women’s Safety in a Changing Digital World',
     'A panel on women’s safety beyond online harm, and how to design digital spaces where women can participate fully, confidently and on their own terms.'
+  ),
+  makeSession(
+    87,
+    'oct15',
+    '13:25–13:30',
+    'Main Hall',
+    'special',
+    'Closing Remarks: Building a Safer, More Inclusive Digital World for Women',
+    'Closing remarks to the women’s safety sessions, on building a safer, more inclusive digital world for women.'
   ),
   makeSession(
     41,
@@ -491,8 +509,8 @@ export const programmeSessions2026 = [
     '15:35–15:50',
     'Main Hall',
     'spotlight',
-    'Google Spotlight',
-    'A spotlight from Google on its work in trust and safety.'
+    'Spotlight: Google’s Architecture of Responsible AI',
+    'A spotlight from Google on how it builds responsible AI.'
   ),
   makeSession(
     66,
@@ -556,8 +574,8 @@ export const programmeSessions2026 = [
     '11:45–13:00',
     'Workshop Room',
     'workshop',
-    'Kids Safety Masterclass',
-    'An interactive session for parents on product safety features and safety mechanisms, and on how generative AI can support students’ learning.'
+    'Mastering Digital Parenting with Google',
+    'An interactive session for parents on Google’s product safety features and safety mechanisms, and on how generative AI can support students’ learning.'
   ),
   makeSession(
     17,

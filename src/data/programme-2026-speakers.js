@@ -71,10 +71,8 @@ export const sessionSpeakers2026 = {
     },
     'Kavitha Kunhi Kannan',
     {
-      name: 'Kazim Rizvi',
-      title: 'Founding Director, The Dialogue',
-      photo: '/img/speakers/Kazim Rizvi.webp',
-      profile: '2025',
+      name: 'Kamesh Shekar',
+      title: 'Associate Director, Strategy & Research, The Dialogue',
     },
   ],
   'tasi26-24': ['Dr Priyanka Bhalla', 'Jyoti Vadehra'],
@@ -102,7 +100,28 @@ export const sessionSpeakers2026 = {
   'tasi26-51': ['Himadri Sarkar'],
 
   // Wednesday, 14 October: Workshop Room
-  'tasi26-84': ['Abhilash Mallick'],
+  'tasi26-84': [
+    'Abhilash Mallick',
+    {
+      name: 'Sneha Alexander',
+      title: 'Senior Program Manager, Asia-Pacific, Meedan',
+    },
+  ],
+  'tasi26-52': [
+    {
+      name: 'Amrita Tripathi',
+      title:
+        'Author, Podcaster, Mental Health Advocate, Founder, The Health Collective',
+    },
+    {
+      name: 'Dr Poojashivam Jaitly',
+      title: 'Senior Consultant Psychologist, Apollo Clinic',
+    },
+    { name: 'Anupriya Kapur', title: 'Digital Influencer & Life Coach' },
+    { name: 'Malti Jaiswal', title: 'Founder, Inspiring Seniors Foundation' },
+    { name: 'Rajneil Kamath', title: 'Founder, Saksham Senior' },
+    { name: 'Ruby Dhingra', title: 'Co-founder, Saksham Senior' },
+  ],
   'tasi26-53': [
     {
       name: 'Tarunima Prabhakar',
@@ -127,6 +146,22 @@ export const sessionSpeakers2026 = {
       title: 'Senior Programme Coordinator, Centre for Social Research',
     },
   ],
+  'tasi26-44': [
+    {
+      name: 'Ninad Raikar',
+      title: 'COO, Indian Institute of Creative Technologies',
+    },
+    { name: 'Neha Agrawal', title: 'CEO, Mathematically Inclined' },
+    {
+      name: 'Urvashi Kapoor',
+      title: 'Executive Editor & Head of Literacy Projects, Jagran New Media',
+    },
+    {
+      name: 'Maroof Culmen',
+      title: 'Content Creator, Culmen Creative Concepts',
+    },
+    { name: 'Aman Taneja', title: 'Partner, Ikigai Law' },
+  ],
   'tasi26-62': [
     'Adam Seldow',
     {
@@ -149,9 +184,10 @@ export const sessionSpeakers2026 = {
       profile: '2025',
     },
   ],
+  'tasi26-87': [
+    { name: 'Ai Sasaki', title: 'Asia Women Leaders Forum (AWLF)' },
+  ],
   'tasi26-46': [
-    'Basarbatu Can',
-    'Sophia Wanjiru',
     'Triveni Acharya',
     'Hasina Kharbhih',
     'Aishwarya Dongre',
@@ -164,8 +200,8 @@ export const sessionSpeakers2026 = {
       title:
         'Joint Director, Ministry of Electronics and Information Technology, Government of India',
     },
-    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
     'Rob Lewington',
+    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
     {
       name: 'Manisha Kapoor',
       title:
@@ -188,9 +224,39 @@ export const sessionSpeakers2026 = {
     'Akash Pugalia',
     { name: 'Dhruv Khosla', title: 'Everest Group' },
   ],
-  'tasi26-72': ['Manoj Shakya'],
+  'tasi26-17': ['Nina Bual'],
+  'tasi26-72': ['Manoj Shakya', 'Dr. Rupa Munakarmi', 'Haribol Acharya'],
   'tasi26-73': ['Ashwini Natesan'],
-  'tasi26-75': ['Caroline Simangaliso Makumbe'],
+  'tasi26-75': [
+    'Caroline Simangaliso Makumbe',
+    'Margaret Gichanga',
+    {
+      name: 'Abby Roberts',
+      title: 'Project Manager, INHOPE',
+      photo: '/img/speakers/Abby Roberts.webp',
+      profile: '2025',
+    },
+    {
+      name: 'Pranay Dixit',
+      title:
+        'Volunteer Policy Counsel, Software Freedom Law Center, India (SFLC.in)',
+    },
+    'Maina Korir',
+  ],
+  'tasi26-77': [
+    'Ankit Bose',
+    {
+      name: 'Tarunima Prabhakar',
+      title: 'Founder and Research Lead, Tattle Civic Tech',
+    },
+    'Vaibhav Pulekar',
+    'Aishwarya Salvi',
+  ],
   'tasi26-76': ['Dr Abigail Bentley'],
-  'tasi26-78': ['M. C. Rasmin'],
+  'tasi26-78': [
+    'M. C. Rasmin',
+    'Shiromi Samarakoon',
+    'Anil Raghuvanshi',
+    'Pratishtha Arora',
+  ],
 };
