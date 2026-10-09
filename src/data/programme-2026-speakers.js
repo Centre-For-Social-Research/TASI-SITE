@@ -71,10 +71,8 @@ export const sessionSpeakers2026 = {
     },
     'Kavitha Kunhi Kannan',
     {
-      name: 'Kazim Rizvi',
-      title: 'Founding Director, The Dialogue',
-      photo: '/img/speakers/Kazim Rizvi.webp',
-      profile: '2025',
+      name: 'Kamesh Shekar',
+      title: 'Associate Director, Strategy & Research, The Dialogue',
     },
   ],
   'tasi26-24': ['Dr Priyanka Bhalla', 'Jyoti Vadehra'],
@@ -127,6 +125,22 @@ export const sessionSpeakers2026 = {
       title: 'Senior Programme Coordinator, Centre for Social Research',
     },
   ],
+  'tasi26-44': [
+    {
+      name: 'Ninad Raikar',
+      title: 'COO, Indian Institute of Creative Technologies',
+    },
+    { name: 'Neha Agrawal', title: 'CEO, Mathematically Inclined' },
+    {
+      name: 'Urvashi Kapoor',
+      title: 'Executive Editor & Head of Literacy Projects, Jagran New Media',
+    },
+    {
+      name: 'Maroof Culmen',
+      title: 'Content Creator, Culmen Creative Concepts',
+    },
+    { name: 'Aman Taneja', title: 'Partner, Ikigai Law' },
+  ],
   'tasi26-62': [
     'Adam Seldow',
     {
@@ -149,9 +163,10 @@ export const sessionSpeakers2026 = {
       profile: '2025',
     },
   ],
+  'tasi26-87': [
+    { name: 'Ai Sasaki', title: 'Asia Women Leaders Forum (AWLF)' },
+  ],
   'tasi26-46': [
-    'Basarbatu Can',
-    'Sophia Wanjiru',
     'Triveni Acharya',
     'Hasina Kharbhih',
     'Aishwarya Dongre',
@@ -164,8 +179,8 @@ export const sessionSpeakers2026 = {
       title:
         'Joint Director, Ministry of Electronics and Information Technology, Government of India',
     },
-    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
     'Rob Lewington',
+    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
     {
       name: 'Manisha Kapoor',
       title:
