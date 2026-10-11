@@ -91,36 +91,19 @@ export const sessionSpeakers2026 = {
       title: 'Director, Institute for Governance, Policies & Politics (IGPP)',
     },
   ],
-  'tasi26-82': [
-    'Yoel Roth',
-    'Jyoti Vadehra',
-    { name: 'Kevin Lee', title: 'CEO, Yuvaa' },
-  ],
+  'tasi26-82': ['Yoel Roth', 'Jyoti Vadehra', 'Kevin Lee'],
   'tasi26-29': ['S. Krishnan'],
   'tasi26-51': ['Himadri Sarkar'],
 
   // Wednesday, 14 October: Workshop Room
-  'tasi26-84': [
-    'Abhilash Mallick',
-    {
-      name: 'Sneha Alexander',
-      title: 'Senior Program Manager, Asia-Pacific, Meedan',
-    },
-  ],
+  'tasi26-84': ['Abhilash Mallick', 'Sneha Alexander'],
   'tasi26-52': [
-    {
-      name: 'Amrita Tripathi',
-      title:
-        'Author, Podcaster, Mental Health Advocate, Founder, The Health Collective',
-    },
-    {
-      name: 'Dr Poojashivam Jaitly',
-      title: 'Senior Consultant Psychologist, Apollo Clinic',
-    },
-    { name: 'Anupriya Kapur', title: 'Digital Influencer & Life Coach' },
-    { name: 'Malti Jaiswal', title: 'Founder, Inspiring Seniors Foundation' },
-    { name: 'Rajneil Kamath', title: 'Founder, Saksham Senior' },
-    { name: 'Ruby Dhingra', title: 'Co-founder, Saksham Senior' },
+    'Amrita Tripathi',
+    'Dr Poojashivam Jaitly',
+    'Anupriya Kapur',
+    'Malti Jaiswal',
+    'Rajneil Kamath',
+    'Ruby Dhingra',
   ],
   'tasi26-53': [
     {
@@ -138,29 +121,17 @@ export const sessionSpeakers2026 = {
     'Apar Gupta',
     'Kunal Majumder',
     'Dhara Mungra',
-    { name: 'Jency Jacob', title: 'Managing Editor, BOOM' },
+    'Jency Jacob',
     'Suhasini Haidar',
     'Vedanta Agarwal',
-    {
-      name: 'Sonia Bhaskar',
-      title: 'Senior Programme Coordinator, Centre for Social Research',
-    },
+    'Sonia Bhaskar',
   ],
   'tasi26-44': [
-    {
-      name: 'Ninad Raikar',
-      title: 'COO, Indian Institute of Creative Technologies',
-    },
-    { name: 'Neha Agrawal', title: 'CEO, Mathematically Inclined' },
-    {
-      name: 'Urvashi Kapoor',
-      title: 'Executive Editor & Head of Literacy Projects, Jagran New Media',
-    },
-    {
-      name: 'Maroof Culmen',
-      title: 'Content Creator, Culmen Creative Concepts',
-    },
-    { name: 'Aman Taneja', title: 'Partner, Ikigai Law' },
+    'Ninad Raikar',
+    'Neha Agrawal',
+    'Urvashi Kapoor',
+    'Maroof Culmen',
+    'Aman Taneja',
   ],
   'tasi26-62': [
     'Adam Seldow',
@@ -220,10 +191,7 @@ export const sessionSpeakers2026 = {
 
   // Thursday, 15 October: Workshop and Roundtable Rooms
   'tasi26-70': ['Madelaine Coelho'],
-  'tasi26-71': [
-    'Akash Pugalia',
-    { name: 'Dhruv Khosla', title: 'Everest Group' },
-  ],
+  'tasi26-71': ['Akash Pugalia', 'Dhruv Khosla'],
   'tasi26-17': ['Nina Bual'],
   'tasi26-72': ['Manoj Shakya', 'Dr. Rupa Munakarmi', 'Haribol Acharya'],
   'tasi26-73': ['Ashwini Natesan'],
@@ -236,11 +204,7 @@ export const sessionSpeakers2026 = {
       photo: '/img/speakers/Abby Roberts.webp',
       profile: '2025',
     },
-    {
-      name: 'Pranay Dixit',
-      title:
-        'Volunteer Policy Counsel, Software Freedom Law Center, India (SFLC.in)',
-    },
+    'Pranay Dixit',
     'Maina Korir',
   ],
   'tasi26-77': [
