@@ -590,9 +590,10 @@ export const partners = [
     slug: 'frida-fund',
     type: 'Session Partner',
     description:
-      'FRIDA Health is a women’s health advocacy lab founded to make women’s health a public priority through research, policy advocacy, communications, and campaigning. The organisation is building India’s first Parliamentarians’ Forum on Women’s Health, which currently brings together 10 Members of Parliament from seven political parties.',
+      'FRIDA is a not for profit organisation based in India, South Asia, working towards advancing women’s health, wellbeing, and dignity, through research, policy advocacy, and systems change.',
     country: 'India',
     category: "Women's Health Advocacy",
+    website: 'https://www.fridahealth.org',
     social: {
       linkedin: 'https://www.linkedin.com/company/fridahealth',
       twitter: 'https://x.com/fridahealth',
@@ -762,6 +763,21 @@ export const partners = [
     website: 'https://engage-ai.org/',
     social: {
       linkedin: 'https://www.linkedin.com/company/engage-ai-org/',
+    },
+  },
+  {
+    name: 'Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH',
+    shortName: 'GIZ',
+    logo: '/img/Logo/2026/giz.png',
+    slug: 'giz',
+    type: 'Workshop Partner',
+    description:
+      'As a service provider with worldwide operations in the fields of international cooperation for sustainable development, GIZ works with its partners to develop effective solutions that offer people better prospects and sustainably improve their living conditions. GIZ is a public-benefit federal enterprise and supports the German Government and a host of public and private sector clients in a wide variety of areas, including Energy, Environment, Urban Development and Education Work. In India, GIZ has been working for over 60 years, partnering with governments, institutions, and communities to advance sustainable growth that leaves no one behind.',
+    country: 'India',
+    category: 'International Development Cooperation',
+    website: 'https://www.giz.de/en/regions/asia/india',
+    social: {
+      linkedin: 'https://www.linkedin.com/company/31351616/',
     },
   },
   {
