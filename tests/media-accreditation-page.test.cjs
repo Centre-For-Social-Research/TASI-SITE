@@ -23,8 +23,8 @@ test('media accreditation has a dedicated public page without changing its API',
   const api = read('src', 'app', 'api', 'media-accreditation', 'route.js');
 
   assert.match(route, /mediaAccreditationMetadata/);
-  assert.match(route, /<MediaAccreditationPage \/>/);
-  assert.match(page, /<MediaAccreditationSection \/>/);
+  assert.match(route, /<MediaAccreditationPage closed=\{closed\} \/>/);
+  assert.match(page, /<MediaAccreditationSection closed=\{closed\} \/>/);
   assert.match(page, /mediaAccreditationSteps\.map/);
   assert.match(form, /fetch\('\/api\/media-accreditation'/);
   assert.match(api, /from\('contact_messages'\)\.insert/);

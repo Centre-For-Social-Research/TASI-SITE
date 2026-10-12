@@ -25,7 +25,7 @@ test('register route delegates to the tracked register page component', () => {
   );
   assert.match(source, /export const metadata = registerPageMetadata;/);
   assert.match(source, /PageSeoJsonLd/);
-  assert.match(source, /<RegisterPage \/>/);
+  assert.match(source, /<RegisterPage closed=\{closed\} \/>/);
   assert.doesNotMatch(source, /const\s+(steps|faqs)\s*=/);
 });
 
@@ -50,7 +50,7 @@ test('register page no longer renders the paid festival ticketing flow', async (
   const data = await loadModule('src/data/register-page.js');
   const source = readFile('src/components/register/register-page.jsx');
 
-  assert.match(source, /<RegistrationForm \/>/);
+  assert.match(source, /<RegistrationForm closed=\{closed\} \/>/);
   assert.doesNotMatch(source, /FestivalTicketingSection/);
   assert.doesNotMatch(source, /paidTicketingIntro/);
   assert.equal(data.paidTicketingIntro, undefined);

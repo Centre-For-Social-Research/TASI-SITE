@@ -12,7 +12,7 @@ import {
   exhibitionValueCards,
 } from '@/data/exhibition-page';
 
-export default function ExhibitionPage() {
+export default function ExhibitionPage({ closed = false }) {
   return (
     <>
       <HomeNavbar />
@@ -298,7 +298,7 @@ export default function ExhibitionPage() {
                 </p>
               </div>
               <div className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-[0_24px_70px_-42px_rgba(15,23,42,0.18)] dark:border-stone-800 dark:bg-stone-950/80 md:p-8">
-                <ExhibitionEnquiryForm />
+                <ExhibitionEnquiryForm closed={closed} />
               </div>
             </div>
           </div>

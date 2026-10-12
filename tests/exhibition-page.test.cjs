@@ -24,7 +24,7 @@ test('exhibition page route delegates to the tracked exhibition page component',
   assert.match(source, /@\/components\/exhibition\/exhibition-page/);
   assert.match(source, /PageSeoJsonLd/);
   assert.match(source, /metadata = exhibitionMetadata/);
-  assert.match(source, /<ExhibitionPage \/>/);
+  assert.match(source, /<ExhibitionPage closed=\{closed\} \/>/);
   assert.doesNotMatch(source, /BrandedPageHero/);
   assert.doesNotMatch(source, /proofPoints/);
   assert.doesNotMatch(source, /participationModes/);
@@ -65,7 +65,7 @@ test('exhibition page component uses the live flagship pavilion sales story', ()
     source,
     /import ExhibitionEnquiryForm from ['"]@\/components\/exhibition\/exhibition-enquiry-form['"]/
   );
-  assert.match(source, /<ExhibitionEnquiryForm \/>/);
+  assert.match(source, /<ExhibitionEnquiryForm closed=\{closed\} \/>/);
   assert.match(source, /Exhibition Enquiry/);
   assert.match(
     source,

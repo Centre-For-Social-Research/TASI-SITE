@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
+import { formClosedResponse, isFormOpen } from '@/lib/form-settings';
 import {
   getCompletedIdempotentResponse,
   getIdempotencyKey,
@@ -62,6 +63,13 @@ export async function POST(request) {
       typeof source === 'string' && source.trim()
         ? source.trim()
         : 'site-footer';
+
+    if (
+      normalizedSource === 'exhibition-enquiry' &&
+      !(await isFormOpen('exhibition_enquiry'))
+    ) {
+      return formClosedResponse(protection.headers);
+    }
 
     if (!isValidEmail(email)) {
       return Response.json(

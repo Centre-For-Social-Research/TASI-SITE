@@ -7,7 +7,7 @@ import {
   mediaAccreditationSteps,
 } from '@/data/media-accreditation';
 
-export default function MediaAccreditationPage() {
+export default function MediaAccreditationPage({ closed = false }) {
   return (
     <>
       <HomeNavbar />
@@ -85,7 +85,7 @@ export default function MediaAccreditationPage() {
               </article>
             </aside>
 
-            <MediaAccreditationSection />
+            <MediaAccreditationSection closed={closed} />
           </div>
         </section>
       </main>

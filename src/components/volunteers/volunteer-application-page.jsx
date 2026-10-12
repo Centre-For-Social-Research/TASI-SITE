@@ -11,7 +11,7 @@ import {
   volunteerTracks,
 } from '@/data/volunteer-application-page';
 
-export default function VolunteerApplicationPage() {
+export default function VolunteerApplicationPage({ closed = false }) {
   return (
     <>
       <HomeNavbar />
@@ -79,7 +79,7 @@ export default function VolunteerApplicationPage() {
               </div>
             </div>
 
-            <VolunteerApplicationForm />
+            <VolunteerApplicationForm closed={closed} />
           </div>
         </section>
 

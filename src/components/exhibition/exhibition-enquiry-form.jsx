@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import FormClosedNotice from '@/components/ui/form-closed-notice';
 
 const initialForm = {
   name: '',
@@ -27,7 +28,7 @@ function buildMessageBody(form) {
   ].join('\n');
 }
 
-export default function ExhibitionEnquiryForm() {
+export default function ExhibitionEnquiryForm({ closed = false }) {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -98,6 +99,7 @@ export default function ExhibitionEnquiryForm() {
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit}>
+      {closed && <FormClosedNotice />}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label

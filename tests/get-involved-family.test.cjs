@@ -52,7 +52,11 @@ test('get involved family routes delegate to tracked page components', () => {
   for (const route of routes) {
     const source = read(...route.path);
     assert.match(source, /PageSeoJsonLd/);
-    assert.match(source, new RegExp(`<${route.component} \\/>`));
+    // Pages with a closable form pass its switch state down.
+    assert.match(
+      source,
+      new RegExp(`<${route.component}( closed=\\{closed\\})? \\/>`)
+    );
     assert.match(source, new RegExp(`metadata = ${route.metadata}`));
     for (const token of route.forbidden) {
       assert.doesNotMatch(source, new RegExp(`const ${token}`));

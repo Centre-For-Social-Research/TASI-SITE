@@ -1,6 +1,9 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { adminJson } from '@/lib/admin-api-cache';
+import formSettings from '@/lib/form-settings.cjs';
+
+const { PUBLIC_FORMS } = formSettings;
 
 const SOURCES = [
   {
@@ -26,10 +29,17 @@ const SOURCES = [
     actor: 'added_by',
     select: 'id, email, role, added_by, created_at',
   },
+  {
+    table: 'form_setting_changes',
+    actor: 'changed_by_email',
+    select: 'id, form_key, is_open, changed_by_email, created_at',
+  },
 ];
 
+const FORM_LABELS = new Map(PUBLIC_FORMS.map((form) => [form.key, form.label]));
+
 function readCursor(value) {
-  if (!value) return [0, 0, 0, 0];
+  if (!value) return SOURCES.map(() => 0);
   const offsets = JSON.parse(Buffer.from(value, 'base64url').toString('utf8'));
   if (
     !Array.isArray(offsets) ||
@@ -84,6 +94,7 @@ export async function GET(request) {
     emailJobsResult,
     passJobsResult,
     emailOverridesResult,
+    formChangesResult,
   ] = results;
 
   const entries = [];
@@ -184,6 +195,21 @@ export async function GET(request) {
         ref: o.email,
         source: 3,
         rowId: o.id,
+      });
+    }
+  }
+
+  if (!formChangesResult.error) {
+    for (const c of formChangesResult.data || []) {
+      const label = FORM_LABELS.get(c.form_key) || c.form_key;
+      entries.push({
+        actor: c.changed_by_email || 'system',
+        action: `${c.is_open ? 'opened' : 'closed'} ${label}`,
+        ts: c.created_at,
+        kind: 'settings',
+        ref: c.form_key,
+        source: 4,
+        rowId: c.id,
       });
     }
   }

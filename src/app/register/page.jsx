@@ -1,10 +1,16 @@
+import { isFormOpen } from '@/lib/form-settings';
 import RegisterPage from '@/components/register/register-page';
 import PageSeoJsonLd from '@/components/seo/page-seo-json-ld';
 import { registerPageMetadata } from '@/data/register-page';
 
 export const metadata = registerPageMetadata;
 
-export default function Page() {
+// Settings refreshes this page when the form is toggled; the timer is a backstop.
+export const revalidate = 60;
+
+export default async function Page() {
+  const closed = !(await isFormOpen('registration'));
+
   return (
     <>
       <PageSeoJsonLd
@@ -19,7 +25,7 @@ export default function Page() {
           'platform accountability event',
         ]}
       />
-      <RegisterPage />
+      <RegisterPage closed={closed} />
     </>
   );
 }

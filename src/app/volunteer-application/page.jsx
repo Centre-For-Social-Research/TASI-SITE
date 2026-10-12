@@ -1,10 +1,16 @@
+import { isFormOpen } from '@/lib/form-settings';
 import VolunteerApplicationPage from '@/components/volunteers/volunteer-application-page';
 import PageSeoJsonLd from '@/components/seo/page-seo-json-ld';
 import { volunteerApplicationMetadata } from '@/data/volunteer-application-page';
 
 export const metadata = volunteerApplicationMetadata;
 
-export default function Page() {
+// Settings refreshes this page when the form is toggled; the timer is a backstop.
+export const revalidate = 60;
+
+export default async function Page() {
+  const closed = !(await isFormOpen('volunteer_application'));
+
   return (
     <>
       <PageSeoJsonLd
@@ -19,7 +25,7 @@ export default function Page() {
           'online safety conference volunteer',
         ]}
       />
-      <VolunteerApplicationPage />
+      <VolunteerApplicationPage closed={closed} />
     </>
   );
 }

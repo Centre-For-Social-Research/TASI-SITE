@@ -6,6 +6,7 @@ import {
   storeIdempotentResponse,
 } from '@/lib/api-idempotency';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { formClosedResponse, isFormOpen } from '@/lib/form-settings';
 import { isValidEmail } from '@/lib/input-sanitizers';
 import { REGISTRATION_SOURCE } from '@/lib/registration-constants';
 import { createNotification, createRegistration } from '@/lib/registration-db';
@@ -40,6 +41,10 @@ export async function POST(request) {
 
   if (!protection.ok) {
     return protection.response;
+  }
+
+  if (!(await isFormOpen('registration'))) {
+    return formClosedResponse(protection.headers);
   }
 
   try {

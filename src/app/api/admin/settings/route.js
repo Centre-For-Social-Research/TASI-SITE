@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import {
   getStoredAdminEmails,
@@ -8,6 +9,10 @@ import {
   getAzureWhatsAppConfig,
   isAzureWhatsAppConfigured,
 } from '@/lib/azure-whatsapp';
+import { getFormStatuses, setFormOpen } from '@/lib/form-settings';
+import formSettings from '@/lib/form-settings.cjs';
+
+const { PUBLIC_FORMS, isPublicFormKey } = formSettings;
 
 export async function GET() {
   const authResult = await requireAuthorizedOperator({
@@ -25,7 +30,10 @@ export async function GET() {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  const stored = await getStoredAdminEmails();
+  const [stored, forms] = await Promise.all([
+    getStoredAdminEmails(),
+    getFormStatuses(),
+  ]);
   const azureWhatsApp = getAzureWhatsAppConfig();
 
   const allAdminEmails = [
@@ -96,6 +104,8 @@ export async function GET() {
   return Response.json({
     ok: true,
     data: {
+      canEdit: isAdmin,
+      forms,
       access: {
         mode: accessMode,
         adminEmails: isAdmin ? allAdminEmails : [],
@@ -142,6 +152,26 @@ export async function PATCH(request) {
 
   const { action, email, role } = body;
   const actorEmail = authResult.operator?.primaryEmail || 'unknown';
+
+  if (action === 'set_form') {
+    const { formKey, open } = body;
+    if (!isPublicFormKey(formKey) || typeof open !== 'boolean') {
+      return Response.json(
+        { ok: false, error: 'Valid formKey and open flag required' },
+        { status: 400 }
+      );
+    }
+    const ok = await setFormOpen(formKey, open, actorEmail);
+    if (!ok) {
+      return Response.json(
+        { ok: false, error: 'Failed to save' },
+        { status: 500 }
+      );
+    }
+    // Public form pages are static, so refresh the one that shows the notice.
+    revalidatePath(PUBLIC_FORMS.find((form) => form.key === formKey).path);
+    return Response.json({ ok: true });
+  }
 
   if (!email || typeof email !== 'string' || !email.includes('@')) {
     return Response.json(

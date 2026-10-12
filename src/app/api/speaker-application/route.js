@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
+import { formClosedResponse, isFormOpen } from '@/lib/form-settings';
 import {
   isValidEmail,
   sanitizeEmail,
@@ -41,6 +42,10 @@ export async function POST(request) {
 
   if (!protection.ok) {
     return protection.response;
+  }
+
+  if (!(await isFormOpen('speaker_application'))) {
+    return formClosedResponse(protection.headers);
   }
 
   try {

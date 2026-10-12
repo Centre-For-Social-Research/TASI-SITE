@@ -481,12 +481,94 @@ function EmailSection({ label, emails, role, onAdd, onRemove }) {
   );
 }
 
+/* ── Public form open/close row ─────────────────────────────────────────── */
+function FormToggleRow({ form, canEdit, saving, onToggle }) {
+  const color = form.open ? 'var(--adm-ok)' : 'var(--adm-bad)';
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 12,
+        padding: '9px 12px',
+        borderRadius: 10,
+        background: 'var(--adm-panel-2)',
+        border: '1px solid var(--adm-line)',
+      }}
+    >
+      <div style={{ minWidth: 0 }}>
+        <div
+          className="adm-mono"
+          style={{ fontSize: 12, color: 'var(--adm-ink-2)' }}
+        >
+          {form.label}
+        </div>
+        <div
+          className="adm-mono"
+          style={{ fontSize: 10, color: 'var(--adm-ink-4)', marginTop: 2 }}
+        >
+          {form.path}
+          {form.updatedBy ? ` · last changed by ${form.updatedBy}` : ''}
+        </div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 5,
+            padding: '3px 9px',
+            borderRadius: 10,
+            color,
+            fontFamily: 'var(--adm-mono)',
+            fontSize: 10,
+            letterSpacing: '0.08em',
+            fontWeight: 500,
+            border: '1px solid ' + color + '33',
+          }}
+        >
+          <span
+            style={{
+              width: 5,
+              height: 5,
+              borderRadius: 999,
+              background: 'currentColor',
+            }}
+          />
+          {form.open ? 'OPEN' : 'CLOSED'}
+        </span>
+        {canEdit && (
+          <button
+            onClick={() => onToggle(form)}
+            disabled={saving}
+            style={{
+              padding: '4px 10px',
+              borderRadius: 10,
+              border: '1px solid var(--adm-line)',
+              background: 'transparent',
+              color: 'var(--adm-ink-3)',
+              fontFamily: 'var(--adm-mono)',
+              fontSize: 10,
+              letterSpacing: '0.06em',
+              cursor: saving ? 'default' : 'pointer',
+            }}
+          >
+            {saving ? '…' : form.open ? 'Close' : 'Open'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Main panel ──────────────────────────────────────────────────────────── */
 export default function SettingsPanel() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [toast, setToast] = useState(null);
+  const [savingForm, setSavingForm] = useState(null);
 
   async function load() {
     try {
@@ -539,6 +621,40 @@ export default function SettingsPanel() {
       await load();
     } else {
       showToast(json.error || 'Failed to remove', true);
+    }
+  }
+
+  async function handleToggleForm(form) {
+    const open = !form.open;
+    const verb = open ? 'Open' : 'Close';
+    if (
+      !window.confirm(
+        `${verb} ${form.label}? ${
+          open
+            ? 'The closed notice will be removed and submissions accepted again.'
+            : 'A closed notice will show above the form and submissions will be rejected.'
+        }`
+      )
+    )
+      return;
+    setSavingForm(form.key);
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set_form', formKey: form.key, open }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        showToast(`${form.label} ${open ? 'opened' : 'closed'}`);
+        await load();
+      } else {
+        showToast(json.error || 'Failed to update', true);
+      }
+    } catch {
+      showToast('Network error — try again', true);
+    } finally {
+      setSavingForm(null);
     }
   }
 
@@ -658,6 +774,37 @@ export default function SettingsPanel() {
                 </div>
               </div>
             )}
+          </ConfigCard>
+        </div>
+
+        {/* Public forms — open or close each one */}
+        <div style={{ gridColumn: '1 / -1' }}>
+          <ConfigCard title="Registrations & Forms" loading={loading}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {(data?.forms || []).map((form) => (
+                <FormToggleRow
+                  key={form.key}
+                  form={form}
+                  canEdit={Boolean(data?.canEdit)}
+                  saving={savingForm === form.key}
+                  onToggle={handleToggleForm}
+                />
+              ))}
+              <span
+                className="adm-mono"
+                style={{
+                  fontSize: 10,
+                  color: 'var(--adm-ink-4)',
+                  letterSpacing: '0.06em',
+                  marginTop: 4,
+                }}
+              >
+                Closing a form keeps it visible with a closed notice and rejects
+                new submissions. Spot registration at the desk and the
+                newsletter are not affected.
+                {data && !data.canEdit ? ' Only admins can change these.' : ''}
+              </span>
+            </div>
           </ConfigCard>
         </div>
 

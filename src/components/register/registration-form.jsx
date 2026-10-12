@@ -6,6 +6,7 @@ import {
   ATTENDEE_CATEGORIES,
   QR_PASS_RELEASE_TIMING,
 } from '@/lib/registration-constants';
+import FormClosedNotice from '@/components/ui/form-closed-notice';
 
 const FIELD_CLASS =
   'h-12 rounded-[10px] border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-amber-500/20';
@@ -35,7 +36,7 @@ async function readImageDimensions(file) {
   }
 }
 
-export default function RegistrationForm() {
+export default function RegistrationForm({ closed = false }) {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [photoNote, setPhotoNote] = useState(
     'Upload a JPG or PNG under 100KB. Recommended size: 400 x 400 pixels.'
@@ -184,6 +185,8 @@ export default function RegistrationForm() {
           {QR_PASS_RELEASE_TIMING}.
         </p>
       </div>
+
+      {closed && <FormClosedNotice className="mt-6" />}
 
       <form
         onSubmit={handleSubmit(onSubmit)}
