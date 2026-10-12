@@ -56,7 +56,7 @@ export const sessionSpeakers2026 = {
   'tasi26-18': [
     'Uthara Ganesh',
     'Laura Higgins',
-    { name: 'Mahima Kaul', title: 'Director, Global Affairs, Netflix India' },
+    'Mahima Kaul',
     {
       name: 'Dr. Sanjeev Sharma',
       title:
