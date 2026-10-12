@@ -38,6 +38,7 @@ export const tasi2026SessionPartnerSlugs = [
   'asci',
   'engage-ai',
   'frida-fund',
+  'giz',
   'ifdc',
   'kutunga',
   'meedan',
