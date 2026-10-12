@@ -574,22 +574,36 @@ export async function recordBadgeExport({
   return data.id;
 }
 
+// Each id goes into the request URL. The Supabase gateway answered a 25 KB
+// URL (645 ids) with 400 Bad Request, so update in batches of ~4 KB each.
+const BADGE_EXPORT_UPDATE_BATCH_SIZE = 100;
+
 export async function setLastBadgeExportBatch(batchId, registrationIds) {
   if (!registrationIds.length) {
     return;
   }
 
   const supabase = getSupabase();
-  const { error } = await supabase
-    .from('event_registrations')
-    .update({
-      last_badge_export_batch_id: batchId,
-      updated_at: new Date().toISOString(),
-    })
-    .in('id', registrationIds);
+  const updatedAt = new Date().toISOString();
+  for (
+    let start = 0;
+    start < registrationIds.length;
+    start += BADGE_EXPORT_UPDATE_BATCH_SIZE
+  ) {
+    const { error } = await supabase
+      .from('event_registrations')
+      .update({
+        last_badge_export_batch_id: batchId,
+        updated_at: updatedAt,
+      })
+      .in(
+        'id',
+        registrationIds.slice(start, start + BADGE_EXPORT_UPDATE_BATCH_SIZE)
+      );
 
-  if (error) {
-    throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
   }
 }
 
