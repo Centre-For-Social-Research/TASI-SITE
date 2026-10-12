@@ -150,6 +150,7 @@ export const sessionSpeakers2026 = {
       title: 'Managing Principal, Technology Strategy, The Asia Group',
     },
   ],
+  'tasi26-63': ['Satviki Varma'],
   'tasi26-27': ['Smriti Irani', 'Dr. Ranjana Kumari'],
   'tasi26-46': ['Triveni Acharya', 'Hasina Kharbhih', 'Smita Mitra'],
   'tasi26-66': ['Rohit Kumar'],
