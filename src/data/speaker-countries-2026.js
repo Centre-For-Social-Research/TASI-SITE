@@ -1,8 +1,8 @@
 // Country values from the official TASI 2026 Speaker Profile Form,
 // with Germany added from organizer-confirmed participation.
 // Source: spreadsheet 1H0JxH3ABTIGUYYSKZvExgduta8BQ5G3eiHm5-P21K7E,
-// Form Responses 1 Country column, read 2026-10-05 (69 populated responses;
-// Nepal and Malaysia now come from the form itself).
+// Form Responses 1 Country column, read 2026-10-12 (100 populated responses;
+// Ireland and Lithuania were added from the 12 October responses).
 // Trimmed whitespace; UK -> United Kingdom; USA -> United States;
 // S. Korea -> South Korea; the explicit United Kingdom / Spain response
 // contributes both countries. No speaker identities or form content is shipped.
@@ -51,11 +51,25 @@ export const speakerCountries2026 = [
     host: true,
   },
   {
+    id: 'ireland',
+    country: 'Ireland',
+    longitude: -8,
+    latitude: 53.4,
+    label: [-56, 4],
+  },
+  {
     id: 'kenya',
     country: 'Kenya',
     longitude: 37.9,
     latitude: 0.5,
     label: [-15, 25],
+  },
+  {
+    id: 'lithuania',
+    country: 'Lithuania',
+    longitude: 23.9,
+    latitude: 55.2,
+    label: [34, -34],
   },
   {
     id: 'malaysia',
