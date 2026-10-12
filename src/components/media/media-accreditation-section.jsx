@@ -9,6 +9,7 @@ import {
   MEDIA_COVERAGE_DAYS,
   MEDIA_OUTLET_TYPES,
 } from '@/data/media-accreditation';
+import FormClosedNotice from '@/components/ui/form-closed-notice';
 
 const initialFormState = {
   name: '',
@@ -24,7 +25,7 @@ const fieldClassName =
 const labelClassName =
   'mb-2 block text-xs font-black uppercase tracking-[0.12em] text-white';
 
-export default function MediaAccreditationSection() {
+export default function MediaAccreditationSection({ closed = false }) {
   const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -125,6 +126,8 @@ export default function MediaAccreditationSection() {
             </a>
             .
           </p>
+
+          {closed && <FormClosedNotice className="mt-6" />}
 
           <form className="mt-6 w-full" onSubmit={handleSubmit}>
             <div className="grid gap-4 md:grid-cols-2">

@@ -1,10 +1,16 @@
+import { isFormOpen } from '@/lib/form-settings';
 import SpeakerApplicationPage from '@/components/speakers/speaker-application-page';
 import PageSeoJsonLd from '@/components/seo/page-seo-json-ld';
 import { speakerApplicationMetadata } from '@/data/speaker-application-page';
 
 export const metadata = speakerApplicationMetadata;
 
-export default function Page() {
+// Settings refreshes this page when the form is toggled; the timer is a backstop.
+export const revalidate = 60;
+
+export default async function Page() {
+  const closed = !(await isFormOpen('speaker_application'));
+
   return (
     <>
       <PageSeoJsonLd
@@ -19,7 +25,7 @@ export default function Page() {
           'AI governance speakers',
         ]}
       />
-      <SpeakerApplicationPage />
+      <SpeakerApplicationPage closed={closed} />
     </>
   );
 }

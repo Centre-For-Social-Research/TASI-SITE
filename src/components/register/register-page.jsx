@@ -11,7 +11,7 @@ import {
 } from '@/data/register-page';
 import RegistrationForm from './registration-form';
 
-export default function RegisterPage() {
+export default function RegisterPage({ closed = false }) {
   return (
     <>
       <HomeNavbar />
@@ -106,7 +106,7 @@ export default function RegisterPage() {
               </section>
             </div>
 
-            <RegistrationForm />
+            <RegistrationForm closed={closed} />
           </div>
         </section>
       </main>

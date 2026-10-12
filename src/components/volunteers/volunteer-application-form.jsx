@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import FormClosedNotice from '@/components/ui/form-closed-notice';
 
 const initialFormState = {
   firstName: '',
@@ -14,7 +15,7 @@ const initialFormState = {
   motivation: '',
 };
 
-export default function VolunteerApplicationForm() {
+export default function VolunteerApplicationForm({ closed = false }) {
   const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,6 +79,7 @@ export default function VolunteerApplicationForm() {
       onSubmit={handleSubmit}
       className="flex h-full flex-col rounded-[10px] border border-stone-200/80 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-8"
     >
+      {closed && <FormClosedNotice className="mb-6" />}
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="mb-2 block text-xs font-black uppercase tracking-[0.18em] text-stone-500 dark:text-slate-400">

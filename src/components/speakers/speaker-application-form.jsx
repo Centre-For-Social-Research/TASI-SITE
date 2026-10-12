@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import FormClosedNotice from '@/components/ui/form-closed-notice';
 
 const initialFormState = {
   firstName: '',
@@ -12,7 +13,7 @@ const initialFormState = {
   pitch: '',
 };
 
-export default function SpeakerApplicationForm() {
+export default function SpeakerApplicationForm({ closed = false }) {
   const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -95,6 +96,12 @@ export default function SpeakerApplicationForm() {
           audience need it responds to.
         </p>
       </div>
+
+      {closed && (
+        <div className="px-6 pt-6 sm:px-8">
+          <FormClosedNotice />
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}

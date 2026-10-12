@@ -1,10 +1,16 @@
+import { isFormOpen } from '@/lib/form-settings';
 import ExhibitionPage from '@/components/exhibition/exhibition-page';
 import PageSeoJsonLd from '@/components/seo/page-seo-json-ld';
 import { exhibitionMetadata } from '@/data/exhibition-page';
 
 export const metadata = exhibitionMetadata;
 
-export default function Page() {
+// Settings refreshes this page when the form is toggled; the timer is a backstop.
+export const revalidate = 60;
+
+export default async function Page() {
+  const closed = !(await isFormOpen('exhibition_enquiry'));
+
   return (
     <>
       <PageSeoJsonLd
@@ -18,7 +24,7 @@ export default function Page() {
           'trust and safety partnerships',
         ]}
       />
-      <ExhibitionPage />
+      <ExhibitionPage closed={closed} />
     </>
   );
 }

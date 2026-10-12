@@ -29,7 +29,7 @@ function buildSpeakerHighlights() {
   });
 }
 
-export default function SpeakerApplicationPage() {
+export default function SpeakerApplicationPage({ closed = false }) {
   const speakerHighlights = buildSpeakerHighlights();
 
   return (
@@ -90,7 +90,7 @@ export default function SpeakerApplicationPage() {
             </div>
 
             <div className="h-full">
-              <SpeakerApplicationForm />
+              <SpeakerApplicationForm closed={closed} />
             </div>
           </div>
         </section>

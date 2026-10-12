@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { protectPublicPostRoute } from '@/lib/api-security';
+import { formClosedResponse, isFormOpen } from '@/lib/form-settings';
 import {
   getCompletedIdempotentResponse,
   getIdempotencyKey,
@@ -45,6 +46,10 @@ export async function POST(request) {
 
   if (!protection.ok) {
     return protection.response;
+  }
+
+  if (!(await isFormOpen('media_accreditation'))) {
+    return formClosedResponse(protection.headers);
   }
 
   try {

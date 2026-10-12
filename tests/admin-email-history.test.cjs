@@ -63,7 +63,7 @@ function fakeDatabase(tables) {
   };
 }
 
-test('audit cursor reaches older actions across all four sources without duplicates', async () => {
+test('audit cursor reaches older actions across every source without duplicates', async () => {
   const tables = {
     registration_status_history: Array.from({ length: 85 }, (_, index) => ({
       id: String(index),
@@ -92,6 +92,15 @@ test('audit cursor reaches older actions across all four sources without duplica
         created_at: '2026-09-27T00:00:00.000Z',
       },
     ],
+    form_setting_changes: [
+      {
+        id: 1,
+        form_key: 'registration',
+        is_open: false,
+        changed_by_email: 'operator@example.com',
+        created_at: '2026-09-25T00:00:00.000Z',
+      },
+    ],
     admin_email_overrides: [
       {
         id: 1,
@@ -110,6 +119,7 @@ test('audit cursor reaches older actions across all four sources without duplica
     '@/lib/admin-api-cache': {
       adminJson: (body, init) => Response.json(body, init),
     },
+    '@/lib/form-settings.cjs': require('../src/lib/form-settings.cjs'),
   });
 
   const found = [];
@@ -124,9 +134,10 @@ test('audit cursor reaches older actions across all four sources without duplica
     cursor = body.nextCursor || '';
     if (!body.hasMore) break;
   }
-  assert.equal(found.length, 117);
-  assert.equal(new Set(found).size, 117);
+  assert.equal(found.length, 118);
+  assert.equal(new Set(found).size, 118);
   assert.ok(found.includes('settings:admin@example.com'));
+  assert.ok(found.includes('settings:registration'));
   assert.ok(found.includes('registration:registration-84'));
 });
 

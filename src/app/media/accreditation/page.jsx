@@ -1,10 +1,16 @@
+import { isFormOpen } from '@/lib/form-settings';
 import MediaAccreditationPage from '@/components/media/media-accreditation-page';
 import PageSeoJsonLd from '@/components/seo/page-seo-json-ld';
 import { mediaAccreditationMetadata } from '@/data/media-accreditation';
 
 export const metadata = mediaAccreditationMetadata;
 
-export default function Page() {
+// Settings refreshes this page when the form is toggled; the timer is a backstop.
+export const revalidate = 60;
+
+export default async function Page() {
+  const closed = !(await isFormOpen('media_accreditation'));
+
   return (
     <>
       <PageSeoJsonLd
@@ -19,7 +25,7 @@ export default function Page() {
           'New Delhi trust and safety conference media',
         ]}
       />
-      <MediaAccreditationPage />
+      <MediaAccreditationPage closed={closed} />
     </>
   );
 }
