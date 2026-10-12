@@ -38,7 +38,7 @@ test('newsletter is not a closable form', () => {
 
 test('migration allows exactly the closable form keys', () => {
   const migration = fs.readFileSync(
-    'supabase/migrations/20261012090000_form_settings.sql',
+    'supabase/migrations/20261012053502_form_settings.sql',
     'utf8'
   );
   for (const form of PUBLIC_FORMS) {
