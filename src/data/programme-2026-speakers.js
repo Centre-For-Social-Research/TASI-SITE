@@ -14,7 +14,7 @@
 // A CI test fails on any unknown name or session id, so typos never reach
 // the live site. Sessions not listed here show no speakers.
 
-// Source: the TASI 2026 agenda sheet, 6 October. In each session the
+// Source: the TASI 2026 agenda sheet, 12 October. In each session the
 // moderator, where there is one, is listed last.
 export const sessionSpeakers2026 = {
   // Tuesday, 13 October: opening reception
@@ -43,7 +43,14 @@ export const sessionSpeakers2026 = {
     'Faye D’Souza',
   ],
   'tasi26-12': ['Rahul Fernandes', 'Nandini Chatterjee Singh'],
-  'tasi26-13': ['Dr. Ranjana Kumari'],
+  'tasi26-13': [
+    'Dr. Ranjana Kumari',
+    {
+      name: 'Jitin Prasada',
+      title:
+        'Minister of State for Commerce & Industry and Electronics & IT, Government of India',
+    },
+  ],
   'tasi26-16': ['Lisa Morrison', 'Madeline Shepherd', 'Karuna Nain'],
   'tasi26-85': ['Madeline Shepherd', 'Nina Bual'],
   'tasi26-18': [
@@ -76,20 +83,23 @@ export const sessionSpeakers2026 = {
     },
   ],
   'tasi26-24': ['Dr Priyanka Bhalla', 'Jyoti Vadehra'],
-  'tasi26-26': ['Smriti Irani'],
-  'tasi26-27': [
-    'Bansuri Swaraj',
-    'Dr. Ranjana Kumari',
+  'tasi26-40': [
+    'Uma Subramanian',
+    'Sophie Mortimer',
+    'Ji-yeon Lee',
+    {
+      name: 'Vijaya Rahatkar',
+      title: 'Chairperson, National Commission for Women',
+    },
     {
       name: 'Natasha Jog',
-      title: 'Director, Public Policy, Meta India',
+      title: 'Public Policy Director, Meta',
       photo: '/img/speakers/Natasha Jog.png',
       profile: '2025',
     },
-    {
-      name: 'Manish Tiwari',
-      title: 'Director, Institute for Governance, Policies & Politics (IGPP)',
-    },
+  ],
+  'tasi26-87': [
+    { name: 'Ai Sasaki', title: 'Asia Women Leaders Forum (AWLF)' },
   ],
   'tasi26-82': ['Yoel Roth', 'Jyoti Vadehra', 'Kevin Lee'],
   'tasi26-29': ['S. Krishnan'],
@@ -140,30 +150,8 @@ export const sessionSpeakers2026 = {
       title: 'Managing Principal, Technology Strategy, The Asia Group',
     },
   ],
-  'tasi26-40': [
-    'Uma Subramanian',
-    'Sophie Mortimer',
-    'Ji-yeon Lee',
-    {
-      name: 'Vijaya Rahatkar',
-      title: 'Chairperson, National Commission for Women',
-    },
-    {
-      name: 'Natasha Jog',
-      title: 'Public Policy Director, Meta',
-      photo: '/img/speakers/Natasha Jog.png',
-      profile: '2025',
-    },
-  ],
-  'tasi26-87': [
-    { name: 'Ai Sasaki', title: 'Asia Women Leaders Forum (AWLF)' },
-  ],
-  'tasi26-46': [
-    'Triveni Acharya',
-    'Hasina Kharbhih',
-    'Aishwarya Dongre',
-    'Smita Mitra',
-  ],
+  'tasi26-27': ['Smriti Irani', 'Dr. Ranjana Kumari'],
+  'tasi26-46': ['Triveni Acharya', 'Hasina Kharbhih', 'Smita Mitra'],
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
     {
