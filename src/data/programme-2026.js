@@ -159,9 +159,18 @@ export const programmeSessions2026 = [
     'Opening remarks from CSR, followed by the inaugural address of TASI 2026.'
   ),
   makeSession(
+    18,
+    'oct14',
+    '11:45–12:20',
+    'Main Hall',
+    'panel',
+    'Panel: Growing Up Digital: Designing for Youth Wellbeing in the Age of AI',
+    'How platforms, regulators and civil society can design digital experiences that support young people’s wellbeing as AI becomes part of how they learn, play and connect.'
+  ),
+  makeSession(
     16,
     'oct14',
-    '11:45–12:15',
+    '12:30–13:00',
     'Main Hall',
     'fireside',
     'Fireside Chat: The Fight Against CSAM: From Detection to Prevention Through Industry Collaboration',
@@ -170,20 +179,11 @@ export const programmeSessions2026 = [
   makeSession(
     85,
     'oct14',
-    '12:15–12:30',
+    '13:00–13:15',
     'Main Hall',
     'spotlight',
     'Spotlight: Behind the Chat: AI Companions Through a Teen Lens',
     'A short talk on AI companions as teenagers experience them, and what that means for keeping young people safe.'
-  ),
-  makeSession(
-    18,
-    'oct14',
-    '12:30–13:15',
-    'Main Hall',
-    'panel',
-    'Panel: Growing Up Digital: Designing for Youth Wellbeing in the Age of AI',
-    'How platforms, regulators and civil society can design digital experiences that support young people’s wellbeing as AI becomes part of how they learn, play and connect.'
   ),
   makeSession(
     19,
@@ -222,22 +222,22 @@ export const programmeSessions2026 = [
     'A spotlight on Youth in Play, on how young people experience play online and how safety and civility can be built into it.'
   ),
   makeSession(
-    26,
+    40,
     'oct14',
-    '15:15–15:30',
+    '15:15–15:55',
     'Main Hall',
-    'keynote',
-    'Special Address: Women, Power and Participation in the Digital Age',
-    'A special address on women’s power and participation in public and digital life, and what it takes to make online spaces safe for women to lead.'
+    'panel',
+    'Panel: Beyond Online Harm: Rethinking Women’s Safety in a Changing Digital World',
+    'A panel on women’s safety beyond online harm, and how to design digital spaces where women can participate fully, confidently and on their own terms.'
   ),
   makeSession(
-    27,
+    87,
     'oct14',
-    '15:30–16:00',
+    '15:55–16:00',
     'Main Hall',
-    'fireside',
-    'Leadership Dialogue: Women in Public Life: Building Safer Spaces for Stronger Democracy',
-    'A conversation on the abuse women in public life face online, and how parliament, platforms and civil society can build safer spaces for a stronger democracy.'
+    'special',
+    'Closing Remarks: Building a Safer, More Inclusive Digital World for Women',
+    'Closing remarks to the women’s safety sessions, on building a safer, more inclusive digital world for women.'
   ),
   makeSession(
     82,
@@ -251,7 +251,7 @@ export const programmeSessions2026 = [
   makeSession(
     29,
     'oct14',
-    '16:30–16:50',
+    '16:30–17:00',
     'Main Hall',
     'keynote',
     'Closing Keynote',
@@ -265,15 +265,6 @@ export const programmeSessions2026 = [
     'spotlight',
     'Sponsor Spotlight: Driving Human Safety in the Digital World Through AI',
     'How human expertise and AI can work together to keep people safe in the digital world.'
-  ),
-  makeSession(
-    86,
-    'oct14',
-    '16:50–17:00',
-    'Main Hall',
-    'spotlight',
-    'Spotlight: GroSafe',
-    'A spotlight from GroSafe.'
   ),
   // Wednesday, 14 October: parallel rooms.
   makeSession(
@@ -459,31 +450,31 @@ export const programmeSessions2026 = [
     'How Girl Effect is putting young people at the heart of a safer digital future, moving from tech-facilitated harm to tech respect.'
   ),
   makeSession(
-    40,
-    'oct15',
-    '12:45–13:25',
-    'Main Hall',
-    'panel',
-    'Panel: Beyond Online Harm: Rethinking Women’s Safety in a Changing Digital World',
-    'A panel on women’s safety beyond online harm, and how to design digital spaces where women can participate fully, confidently and on their own terms.'
-  ),
-  makeSession(
-    87,
-    'oct15',
-    '13:25–13:30',
-    'Main Hall',
-    'special',
-    'Closing Remarks: Building a Safer, More Inclusive Digital World for Women',
-    'Closing remarks to the women’s safety sessions, on building a safer, more inclusive digital world for women.'
-  ),
-  makeSession(
     41,
     'oct15',
-    '13:30–14:20',
+    '12:45–13:45',
     'Lobby',
     'special',
     'Lunch Break',
     'Lunch for all delegates, with time to continue conversations from the morning sessions before the afternoon programme.'
+  ),
+  makeSession(
+    86,
+    'oct15',
+    '13:45–14:00',
+    'Main Hall',
+    'spotlight',
+    'Spotlight: GroSafe',
+    'A spotlight from GroSafe.'
+  ),
+  makeSession(
+    27,
+    'oct15',
+    '14:00–14:20',
+    'Main Hall',
+    'fireside',
+    'Leadership Dialogue: Women in Public Life: Building Safer Spaces for Stronger Democracy',
+    'A conversation on the abuse women in public life face online, and how parliament, platforms and civil society can build safer spaces for a stronger democracy.'
   ),
   makeSession(
     64,
