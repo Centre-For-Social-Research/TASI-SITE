@@ -53,10 +53,7 @@ test('every reminder carries the on-site wayfinding and venue map link', () => {
     email.html,
     /<a href="https:\/\/trustandsafetyindia\.org\/venue-map" style="[^"]*">See the venue map<\/a>/
   );
-  assert.match(
-    email.text,
-    /Lunch: Rose Garden, next to the Kamaladevi Complex/
-  );
+  assert.match(email.text, /Lunch: Rose Garden, behind the Main Hall/);
   assert.match(
     email.text,
     /Venue map: https:\/\/trustandsafetyindia\.org\/venue-map/

@@ -52,22 +52,29 @@ export const venueMapFloors = [
         marker: 'R',
         zone: 'connect',
         name: 'Registration',
-        room: 'Outside the Main Hall',
+        room: 'At the entrance',
         note: 'Keep your QR pass handy to collect your badge.',
       },
       {
         marker: '2',
         zone: 'connect',
         name: 'Exhibition',
-        room: 'Outside the Main Hall',
+        room: 'Stalls 1–5, by the entrance',
         note: 'Meet partners and see their work between sessions.',
       },
       {
         marker: '3',
         zone: 'connect',
+        name: 'Selfie Point',
+        room: 'By the entrance',
+        note: 'Share your TASI 2026 moment.',
+      },
+      {
+        marker: '4',
+        zone: 'connect',
         name: 'Lunch',
         room: 'Rose Garden',
-        note: 'Next to the Kamaladevi Complex, during the lunch break.',
+        note: 'Behind the Main Hall, during the lunch break.',
       },
     ],
   },
@@ -77,14 +84,14 @@ export const venueMapFloors = [
     subtitle: 'One level up from the Main Hall',
     places: [
       {
-        marker: '4',
+        marker: '5',
         zone: 'breakouts',
         name: 'Workshop Room',
         room: 'Seminar Halls 1 & 2 (combined)',
         note: 'Workshops and masterclasses.',
       },
       {
-        marker: '5',
+        marker: '6',
         zone: 'breakouts',
         name: 'Roundtable Room',
         room: 'Seminar Hall 3',
@@ -96,6 +103,7 @@ export const venueMapFloors = [
 
 export const venueMapArrival = [
   'The Kamaladevi Complex is next to Gate 1 of the India International Centre.',
-  'Registration is on the ground floor, just outside the Main Hall.',
+  'Enter on the side facing Gate 1. Registration, the selfie point and the exhibition stalls are right by the entrance.',
+  'The Main Hall is just past registration, and lunch is in the Rose Garden behind it.',
   'A lift and stairs connect the ground floor with the first floor rooms.',
 ];

@@ -152,8 +152,8 @@ function Pin({
 }
 
 function CoreTags({ baseY }) {
-  const [lx, ly] = point(12.9, 7.2, 0.9, baseY);
-  const [sx, sy] = point(11.9, 8.4, 0.9, baseY);
+  const [lx, ly] = point(13.3, 0.9, 0.9, baseY);
+  const [sx, sy] = point(12.1, 1.7, 0.9, baseY);
   return (
     <g>
       <g transform={`translate(${lx - 11} ${ly - 11})`}>
@@ -204,8 +204,9 @@ function Tree({ x, y, baseY }) {
 export default function VenueMapIllustration() {
   const ff = FIRST_FLOOR_Y;
   const gf = GROUND_FLOOR_Y;
-  const [entryX, entryY] = point(2.6, 9.15, 0, gf);
-  const [entryFromX, entryFromY] = point(2.6, 11.6, 0, gf);
+  // Guests walk in on the side facing Gate 1, at the front of the drawing.
+  const [entryX, entryY] = point(11.6, 9.15, 0, gf);
+  const [entryFromX, entryFromY] = point(11.6, 11.8, 0, gf);
   const entryAngle = Math.atan2(entryY - entryFromY, entryX - entryFromX);
   const arrowHead = [0, -6, 6].map((offset) => {
     const back = offset === 0 ? 0 : 13;
@@ -218,20 +219,31 @@ export default function VenueMapIllustration() {
 
   return (
     <svg
-      viewBox="0 70 690 665"
+      viewBox="0 70 640 665"
       role="img"
       aria-labelledby="venue-map-title venue-map-desc"
       className="h-auto w-full font-sans"
     >
       <title id="venue-map-title">Kamaladevi Complex venue map</title>
       <desc id="venue-map-desc">
-        Ground floor: Main Hall, with registration and the exhibition outside
-        it, and lunch in the Rose Garden next door. First floor: Workshop Room
-        and Roundtable Room. A lift and stairs connect the two floors.
+        Ground floor: you enter on the side facing Gate 1, where the
+        registration desk, a selfie point and exhibition stalls 1 to 5 are. The
+        Main Hall is behind them, and lunch is in the Rose Garden behind the
+        Main Hall. First floor: Workshop Room and Roundtable Room. A lift and
+        stairs connect the two floors.
       </desc>
 
       {/* First floor */}
       <Floor baseY={ff} />
+      <Box
+        x0={11.4}
+        y0={0}
+        x1={14}
+        y1={2.4}
+        h={0.9}
+        baseY={ff}
+        faces={FACES.core}
+      />
       <Box
         x0={0}
         y0={0}
@@ -243,85 +255,85 @@ export default function VenueMapIllustration() {
       />
       <Box
         x0={9}
-        y0={0}
+        y0={2.8}
         x1={14}
-        y1={5.5}
+        y1={7.6}
         h={1.1}
         baseY={ff}
         faces={FACES.breakoutsAlt}
       />
-      <Box
-        x0={11.2}
-        y0={6.2}
-        x1={14}
-        y1={9}
-        h={0.9}
-        baseY={ff}
-        faces={FACES.core}
-      />
       <CoreTags baseY={ff} />
 
-      {/* Ground floor */}
-      <Floor baseY={gf} />
+      {/* Rose Garden, behind the Main Hall */}
       <Box
-        x0={0}
-        y0={0}
-        x1={10}
-        y1={5.5}
-        h={1.4}
-        baseY={gf}
-        faces={FACES.sessions}
-      />
-      {[0.6, 2.2, 3.8].map((y) => (
-        <Box
-          key={y}
-          x0={11}
-          y0={y}
-          x1={13.6}
-          y1={y + 1.2}
-          h={0.6}
-          baseY={gf}
-          faces={FACES.connect}
-        />
-      ))}
-      <Box
-        x0={1}
-        y0={7.2}
-        x1={4.2}
-        y1={8}
-        h={0.5}
-        baseY={gf}
-        faces={FACES.connect}
-      />
-      <Box
-        x0={11.2}
-        y0={6.2}
-        x1={14}
-        y1={9}
-        h={0.9}
-        baseY={gf}
-        faces={FACES.core}
-      />
-      <CoreTags baseY={gf} />
-
-      {/* Rose Garden */}
-      <Box
-        x0={15}
-        y0={0}
-        x1={19}
-        y1={9}
+        x0={-5.4}
+        y0={-0.5}
+        x1={-0.6}
+        y1={7}
         h={0.2}
         z={-0.2}
         baseY={gf}
         faces={FACES.grass}
       />
       {[
-        [15.5, 1],
-        [15.8, 7.5],
-        [18.4, 8.3],
+        [-4.6, 0.3],
+        [-4.4, 6.1],
+        [-1.6, 5.6],
       ].map(([x, y]) => (
         <Tree key={`${x}-${y}`} x={x} y={y} baseY={gf} />
       ))}
+
+      {/* Ground floor */}
+      <Floor baseY={gf} />
+      <Box
+        x0={11.4}
+        y0={0}
+        x1={14}
+        y1={2.4}
+        h={0.9}
+        baseY={gf}
+        faces={FACES.core}
+      />
+      <Box
+        x0={0}
+        y0={0}
+        x1={9.5}
+        y1={5.8}
+        h={1.4}
+        baseY={gf}
+        faces={FACES.sessions}
+      />
+      {[2.8, 3.7, 4.6, 5.5, 6.4].map((y) => (
+        <Box
+          key={y}
+          x0={12.7}
+          y0={y}
+          x1={13.8}
+          y1={y + 0.8}
+          h={0.6}
+          baseY={gf}
+          faces={FACES.connect}
+        />
+      ))}
+      <Box
+        x0={4}
+        y0={7.7}
+        x1={9.6}
+        y1={8.4}
+        h={0.5}
+        baseY={gf}
+        faces={FACES.connect}
+      />
+      <Box
+        x0={12.4}
+        y0={8}
+        x1={13.3}
+        y1={8.8}
+        h={0.25}
+        baseY={gf}
+        faces={FACES.connect}
+      />
+      <CoreTags baseY={gf} />
 
       {/* Entry */}
       <line
@@ -335,13 +347,21 @@ export default function VenueMapIllustration() {
       />
       <polygon points={polygon(arrowHead)} fill="#350265" />
       <text
-        x={entryFromX - 6}
+        x={entryFromX - 22}
         y={entryFromY + 20}
         fontSize="15"
         fontWeight="800"
         fill="#350265"
       >
         Entry
+      </text>
+      <text
+        x={entryFromX + 26}
+        y={entryFromY + 20}
+        fontSize="11.5"
+        fill="#57534e"
+      >
+        from Gate 1
       </text>
 
       {/* Floor labels */}
@@ -360,7 +380,7 @@ export default function VenueMapIllustration() {
       </text>
       <text
         x="18"
-        y="420"
+        y="590"
         fontSize="14"
         fontWeight="800"
         letterSpacing="2"
@@ -368,7 +388,7 @@ export default function VenueMapIllustration() {
       >
         GROUND FLOOR
       </text>
-      <text x="18" y="438" fontSize="12" fill="#57534e">
+      <text x="18" y="608" fontSize="12" fill="#57534e">
         Kamaladevi Complex
       </text>
 
@@ -378,24 +398,35 @@ export default function VenueMapIllustration() {
         y={2.75}
         z={1.1}
         baseY={ff}
-        marker="4"
+        marker="5"
         zone="breakouts"
         label="Workshop Room"
         sublabel="Seminar Halls 1 & 2"
       />
       <Pin
         x={11.5}
-        y={2.75}
+        y={5.2}
         z={1.1}
         baseY={ff}
-        marker="5"
+        marker="6"
         zone="breakouts"
         label="Roundtable Room"
+        side="left"
         sublabel="Seminar Hall 3"
       />
       <Pin
-        x={5}
-        y={2.75}
+        x={-3}
+        y={3.25}
+        z={0}
+        baseY={gf}
+        marker="4"
+        zone="connect"
+        label="Lunch"
+        sublabel="Rose Garden"
+      />
+      <Pin
+        x={4.75}
+        y={2.9}
         z={1.4}
         baseY={gf}
         marker="1"
@@ -404,8 +435,8 @@ export default function VenueMapIllustration() {
         sublabel="Multipurpose Hall"
       />
       <Pin
-        x={2.6}
-        y={7.6}
+        x={6.8}
+        y={8}
         z={0.5}
         baseY={gf}
         marker="R"
@@ -414,23 +445,25 @@ export default function VenueMapIllustration() {
         side="left"
       />
       <Pin
-        x={12.3}
-        y={2.8}
+        x={13.25}
+        y={4.6}
         z={0.6}
         baseY={gf}
         marker="2"
         zone="connect"
         label="Exhibition"
+        side="left"
+        sublabel="Stalls 1–5"
       />
       <Pin
-        x={17}
-        y={4.5}
-        z={0}
+        x={12.85}
+        y={8.4}
+        z={0.25}
         baseY={gf}
         marker="3"
         zone="connect"
-        label="Lunch"
-        sublabel="Rose Garden"
+        label="Selfie Point"
+        side="left"
       />
     </svg>
   );

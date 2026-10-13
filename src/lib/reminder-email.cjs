@@ -27,8 +27,8 @@ const REMINDER_EVENT = {
 // Where things are inside IIC. Matches src/data/venue-map.js.
 const WAYFINDING = [
   ['Main Hall', 'Ground Floor, Kamaladevi Complex'],
-  ['Registration & Exhibition', 'Outside the Main Hall'],
-  ['Lunch', 'Rose Garden, next to the Kamaladevi Complex'],
+  ['Registration & Exhibition', 'At the entrance, facing Gate 1'],
+  ['Lunch', 'Rose Garden, behind the Main Hall'],
   ['Workshops & Roundtables', 'First Floor (Seminar Halls 1, 2 & 3)'],
 ];
 
