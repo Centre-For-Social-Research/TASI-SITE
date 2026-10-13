@@ -1,8 +1,10 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
+import checkInScanSearch from '@/lib/check-in-scan-search.cjs';
 
 const { getCheckInDayNumber, normalizeCheckInDay, normalizeCheckIns } =
   checkInDayUtils;
+const { buildEntryScanSearchFilters } = checkInScanSearch;
 
 const REGISTRATION_CHECK_IN_SELECT = `
   id,
@@ -234,9 +236,9 @@ export async function completeCheckIn({
 export async function listRecentEntryScans(options = {}) {
   const normalizedOptions =
     typeof options === 'number' ? { limit: options } : options || {};
-  const { limit = 8, eventDay } = normalizedOptions;
+  const { limit = 25, eventDay, search = '' } = normalizedOptions;
   const supabase = getSupabase();
-  const query = supabase
+  let query = supabase
     .from('entry_scans')
     .select(
       `
@@ -245,7 +247,7 @@ export async function listRecentEntryScans(options = {}) {
       desk_label,
       event_day,
       created_at,
-      registration:event_registrations (
+      registration:event_registrations!inner (
         registration_code,
         first_name,
         last_name,
@@ -253,11 +255,16 @@ export async function listRecentEntryScans(options = {}) {
       )
     `
     )
-    .eq('event_day', getCheckInDayNumber(eventDay))
-    .order('created_at', { ascending: false })
-    .limit(limit);
+    .eq('event_day', getCheckInDayNumber(eventDay));
 
-  const { data, error } = await query;
+  // Every word has to match the attendee's first name, last name or code.
+  for (const filter of buildEntryScanSearchFilters(search)) {
+    query = query.or(filter, { referencedTable: 'registration' });
+  }
+
+  const { data, error } = await query
+    .order('created_at', { ascending: false })
+    .limit(Math.min(100, Math.max(1, Number(limit) || 25)));
 
   if (error) {
     throw new Error(error.message);
