@@ -348,7 +348,7 @@ export default function ShareCardBuilder() {
     'inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-50';
 
   return (
-    <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[1fr_1fr]">
+    <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch">
       <div className="rounded-3xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8">
         <label className="block text-sm font-semibold">
           Your name
@@ -473,20 +473,22 @@ export default function ShareCardBuilder() {
         </div>
       </div>
 
-      <div className="order-first mx-auto w-full max-w-xs sm:max-w-md lg:sticky lg:top-24 lg:order-none">
-        <canvas
-          ref={canvasRef}
-          width={WIDTH}
-          height={HEIGHT}
-          aria-label="Preview of your TASI 2026 card"
-          role="img"
-          className="h-auto w-full rounded-2xl shadow-2xl shadow-black/40"
-        />
-        {!ready && (
-          <p className="mt-3 text-center text-sm text-white/70">
-            Loading your card…
-          </p>
-        )}
+      <div className="order-first mx-auto w-full max-w-xs sm:max-w-md lg:order-none">
+        <div className="lg:sticky lg:top-24">
+          <canvas
+            ref={canvasRef}
+            width={WIDTH}
+            height={HEIGHT}
+            aria-label="Preview of your TASI 2026 card"
+            role="img"
+            className="h-auto w-full rounded-2xl shadow-2xl shadow-black/40"
+          />
+          {!ready && (
+            <p className="mt-3 text-center text-sm text-white/70">
+              Loading your card…
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
