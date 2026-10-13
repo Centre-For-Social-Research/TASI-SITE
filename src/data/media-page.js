@@ -177,6 +177,14 @@ export const pressReleasesPage = {
   itemLabel: 'Press Release',
   files: [
     {
+      title:
+        'Building Safer Digital Futures: The Trust and Safety India Festival 2026 Returns With The Theme "People First. Safety Always."',
+      description:
+        'Press release dated 12 October 2026 announcing TASI 2026 on 14-15 October at the India International Centre, New Delhi, with speakers from 17 countries.',
+      href: '/downloads/tasi-2026-press-release.pdf',
+      type: 'PDF',
+    },
+    {
       title: 'Media Invite - Trust and Safety India Festival 2026',
       description:
         'Inauguration on Wednesday, 14 October 2026 at 9:30 am, India International Centre, New Delhi. Includes RSVP details and the media accreditation QR code.',
