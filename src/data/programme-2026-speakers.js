@@ -69,13 +69,7 @@ export const sessionSpeakers2026 = {
     'Siddharth P',
     'Omari Rodney',
     'Keemin Ngiam',
-    {
-      name: 'Andras Molnar',
-      title:
-        'Senior Digital Policy Manager & Director of Online Safety, TUM Think Tank',
-      photo: '/img/speakers/Andras Malnar.webp',
-      profile: '2025',
-    },
+    'Andras Molnar',
     'Kavitha Kunhi Kannan',
     {
       name: 'Kamesh Shekar',
@@ -115,13 +109,7 @@ export const sessionSpeakers2026 = {
     'Rajneil Kamath',
     'Ruby Dhingra',
   ],
-  'tasi26-53': [
-    {
-      name: 'Tarunima Prabhakar',
-      title: 'Founder and Research Lead, Tattle Civic Tech',
-    },
-    { name: 'Poorvi Gupta', title: 'Tattle Civic Tech' },
-  ],
+  'tasi26-53': ['Tarunima Prabhakar', 'Poorvi Gupta'],
   'tasi26-55': ['Divya Chandra'],
   'tasi26-59': ['Rahul Fernandes'],
 
@@ -206,10 +194,7 @@ export const sessionSpeakers2026 = {
   ],
   'tasi26-77': [
     'Ankit Bose',
-    {
-      name: 'Tarunima Prabhakar',
-      title: 'Founder and Research Lead, Tattle Civic Tech',
-    },
+    'Tarunima Prabhakar',
     'Vaibhav Pulekar',
     'Aishwarya Salvi',
   ],

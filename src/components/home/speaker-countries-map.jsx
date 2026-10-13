@@ -416,8 +416,7 @@ export default function SpeakerCountriesMap() {
           </div>
         </div>
         <p className={styles.footnote}>
-          Based on TASI 2026 speaker profiles received as of 12 October 2026,
-          plus organizer-confirmed participation from Germany.
+          Based on TASI 2026 speaker profiles received as of 13 October 2026.
         </p>
       </div>
     </section>
