@@ -1,8 +1,8 @@
-// Country values from the official TASI 2026 Speaker Profile Form,
-// with Germany added from organizer-confirmed participation.
+// Country values from the official TASI 2026 Speaker Profile Form.
 // Source: spreadsheet 1H0JxH3ABTIGUYYSKZvExgduta8BQ5G3eiHm5-P21K7E,
-// Form Responses 1 Country column, read 2026-10-12 (100 populated responses;
-// Ireland and Lithuania were added from the 12 October responses).
+// Form Responses 1 Country column, read 2026-10-13 (109 populated responses;
+// Luxembourg was added from the 13 October responses, and Germany now comes
+// from the form itself).
 // Trimmed whitespace; UK -> United Kingdom; USA -> United States;
 // S. Korea -> South Korea; the explicit United Kingdom / Spain response
 // contributes both countries. No speaker identities or form content is shipped.
@@ -70,6 +70,13 @@ export const speakerCountries2026 = [
     longitude: 23.9,
     latitude: 55.2,
     label: [34, -34],
+  },
+  {
+    id: 'luxembourg',
+    country: 'Luxembourg',
+    longitude: 6.13,
+    latitude: 49.8,
+    label: [-48, -30],
   },
   {
     id: 'malaysia',
