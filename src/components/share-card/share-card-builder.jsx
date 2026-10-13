@@ -457,41 +457,43 @@ export default function ShareCardBuilder() {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8 lg:col-span-2 lg:grid lg:grid-cols-[1fr_auto] lg:items-center lg:gap-10">
-        <div>
-          <p className="text-sm font-semibold">Caption to post with it</p>
-          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-white/85">
+      <div className="rounded-xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8 lg:col-span-2">
+        <p className="border-b border-white/15 pb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/70">
+          Caption to post with it
+        </p>
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12">
+          <p className="whitespace-pre-line border-l-2 border-[#ffd919] pl-5 text-[15px] leading-relaxed text-white/90">
             {CARD_CAPTION}
           </p>
-        </div>
-        <div className="mt-5 lg:mt-0">
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={copyCaption}
-              className={`${button} bg-white/15 text-white hover:bg-white/25`}
-            >
-              {copied ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-              {copied ? 'Copied' : 'Copy caption'}
-            </button>
-            <a
-              href={linkedInUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${button} bg-[#0a66c2] text-white hover:brightness-110`}
-            >
-              <Linkedin className="h-4 w-4" />
-              Post on LinkedIn
-            </a>
+          <div className="lg:w-72">
+            <div className="grid gap-3">
+              <button
+                type="button"
+                onClick={copyCaption}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-bold text-[#350265] transition hover:bg-white/90"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+                {copied ? 'Copied' : 'Copy caption'}
+              </button>
+              <a
+                href={linkedInUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#0a66c2] px-5 py-3 text-sm font-bold text-white transition hover:brightness-110"
+              >
+                <Linkedin className="h-4 w-4" />
+                Post on LinkedIn
+              </a>
+            </div>
+            <p className="mt-3 text-xs leading-relaxed text-white/60">
+              On LinkedIn, download the card first, then add it to your post.
+              Tag Centre for Social Research India and Trust &amp; Safety Forum.
+            </p>
           </div>
-          <p className="mt-3 max-w-sm text-xs text-white/60">
-            On LinkedIn, download the card first, then add it to your post. Tag
-            Centre for Social Research India and Trust &amp; Safety Forum.
-          </p>
         </div>
       </div>
     </div>
