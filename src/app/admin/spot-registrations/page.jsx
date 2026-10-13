@@ -29,7 +29,8 @@ export default async function SpotRegistrationsPage() {
       operator={toOperatorSession(operator)}
       currentPath="/admin/spot-registrations"
     >
-      <SpotRegistrationsPanel canManage={operator.role === 'admin'} />
+      {/* Admins and reviewers both work the desk and can register walk-ins. */}
+      <SpotRegistrationsPanel canManage />
     </AdminShell>
   );
 }

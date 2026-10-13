@@ -113,7 +113,7 @@ test('receptions page keeps embassy logo circles white in dark mode', () => {
 
   const matches =
     source.match(
-      /className="relative flex h-(?:12|16) w-(?:12|16) items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-\[#fff\] dark:border-slate-700"/g
+      /["']relative flex h-(?:12|16) w-(?:12|16) items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-\[#fff\] dark:border-slate-700["']/g
     ) || [];
   assert.equal(matches.length, 2);
 });

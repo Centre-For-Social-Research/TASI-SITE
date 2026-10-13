@@ -1,8 +1,8 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import { Resend } from 'resend';
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.resend.test',
   });
   if (!authResult.ok) {
