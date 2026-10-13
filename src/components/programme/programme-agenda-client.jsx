@@ -492,7 +492,7 @@ export default function ProgrammeAgendaClient({
               className={styles['print-agenda-link']}
             >
               <Printer className="h-4 w-4" />
-              Printable Agenda
+              Download Agenda
             </a>
           )}
 
