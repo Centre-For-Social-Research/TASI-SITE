@@ -1,7 +1,4 @@
-import {
-  requireAdminOperator,
-  requireAuthorizedOperator,
-} from '@/lib/registration-auth';
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { adminJson } from '@/lib/admin-api-cache';
 import { listSpotRegistrations } from '@/lib/spot-registration-db';
 import { registerSpotAttendee } from '@/lib/spot-registration-service';
@@ -30,7 +27,8 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const authResult = await requireAdminOperator({
+  // Reviewers staff the registration desk, so they can register walk-ins.
+  const authResult = await requireAuthorizedOperator({
     route: 'api.admin.spot-registrations.create',
   });
   if (!authResult.ok) return authResult.response;

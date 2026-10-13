@@ -1,4 +1,7 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import {
+  requireAdminOperator,
+  requireAuthorizedOperator,
+} from '@/lib/registration-auth';
 import {
   deriveJobProgress,
   isQueueInfrastructureUnavailable,
@@ -98,7 +101,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.passes.jobs.create',
   });
   if (!authResult.ok) {
