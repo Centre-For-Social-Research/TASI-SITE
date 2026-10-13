@@ -7,7 +7,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { Montserrat } from 'next/font/google';
+import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import {
   Check,
   Copy,
@@ -29,22 +29,32 @@ const {
   wrapLines,
 } = shareCardUtils;
 
-const montserrat = Montserrat({
+const outfit = Outfit({
   subsets: ['latin'],
-  weight: ['400', '500', '800'],
+  weight: ['700', '800', '900'],
+  display: 'swap',
+});
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['500', '700'],
   display: 'swap',
 });
 
-// The template is a TASI 2026 speaker badge with the photo, name and
-// "Speaking at" lines cleared, so attendee cards match the speaker badges.
-const TEMPLATE_SRC = '/img/share-card/tasi-2026-card-template.webp';
+// The background is the attendee QR pass artwork: the logo box at the top
+// and the India Gate illustration at the bottom are part of the image.
+const BACKGROUND_SRC = '/img/share-card/tasi-2026-attendee-card-bg.webp';
 const WIDTH = 1080;
 const HEIGHT = 1350;
-const NAVY = '#00327d';
-const GREY = '#383737';
-const CARD_BG = '#f6f1eb';
-const PHOTO = { x: 540, y: 580, r: 195 };
-const MAX_TEXT_WIDTH = 700;
+const YELLOW = '#ffd919';
+const INK = '#2a0b4a';
+const MUTED = '#5b4a6b';
+const INDIGO = '#2e0fa3';
+const TAG_BG = '#350265';
+// Name card: white panel with a round photo on the left.
+const CARD = { x: 130, y: 555, w: 820, padX: 40, padY: 34 };
+const PHOTO_R = 85;
+const TEXT_X = CARD.x + CARD.padX + PHOTO_R * 2 + 34;
+const TEXT_W = CARD.x + CARD.w - CARD.padX - TEXT_X;
 
 // Phones that can share files open the native share sheet (LinkedIn,
 // Instagram, WhatsApp) with the card attached. Decided on the client only.
@@ -71,108 +81,152 @@ function loadImage(src) {
   });
 }
 
-function drawPhoto(ctx, photo, name) {
-  const { x, y, r } = PHOTO;
-  ctx.save();
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.18)';
-  ctx.shadowBlur = 30;
-  ctx.shadowOffsetY = 12;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2);
-  ctx.fillStyle = CARD_BG;
-  ctx.fill();
-  ctx.restore();
-
+function drawPhoto(ctx, photo, name, cx, cy) {
   ctx.save();
   ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.arc(cx, cy, PHOTO_R, 0, Math.PI * 2);
   ctx.clip();
   if (photo) {
     // Cover the circle, keeping the top of the photo where faces usually are.
-    const scale = Math.max((r * 2) / photo.width, (r * 2) / photo.height);
+    const size = PHOTO_R * 2;
+    const scale = Math.max(size / photo.width, size / photo.height);
     const w = photo.width * scale;
     const h = photo.height * scale;
-    const top = h > r * 2 ? y - r - (h - r * 2) * 0.2 : y - h / 2;
-    ctx.drawImage(photo, x - w / 2, top, w, h);
+    const top = h > size ? cy - PHOTO_R - (h - size) * 0.2 : cy - h / 2;
+    ctx.drawImage(photo, cx - w / 2, top, w, h);
   } else {
-    ctx.fillStyle = NAVY;
-    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    ctx.fillStyle = INDIGO;
+    ctx.fillRect(cx - PHOTO_R, cy - PHOTO_R, PHOTO_R * 2, PHOTO_R * 2);
     ctx.fillStyle = '#ffffff';
-    ctx.font = `800 130px ${montserrat.style.fontFamily}`;
+    ctx.font = `800 64px ${outfit.style.fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(initialsFor(name) || 'TASI', x, y + 6);
+    ctx.fillText(initialsFor(name) || 'TASI', cx, cy + 3);
+    ctx.textBaseline = 'alphabetic';
   }
   ctx.restore();
+  ctx.beginPath();
+  ctx.arc(cx, cy, PHOTO_R - 3, 0, Math.PI * 2);
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = YELLOW;
+  ctx.stroke();
 }
 
-function drawCard(ctx, template, photo, { name, designation, organisation }) {
-  const family = montserrat.style.fontFamily;
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-  ctx.drawImage(template, 0, 0, WIDTH, HEIGHT);
-  drawPhoto(ctx, photo, name);
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
 
-  ctx.textAlign = 'center';
+function drawCard(ctx, background, photo, { name, designation, organisation }) {
+  const display = outfit.style.fontFamily;
+  const body = jakarta.style.fontFamily;
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  ctx.drawImage(background, 0, 0, WIDTH, HEIGHT);
   ctx.textBaseline = 'alphabetic';
-  const displayName = (name.trim() || 'Your Name').toUpperCase();
+
+  // "SEE YOU AT" and "TASI 2026".
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.font = `700 34px ${display}`;
+  ctx.letterSpacing = '11px';
+  ctx.fillText('SEE YOU AT', WIDTH / 2 + 5, 366);
+  ctx.letterSpacing = '-2px';
+  ctx.font = `900 124px ${display}`;
+  const first = 'TASI ';
+  const second = '2026';
+  const firstW = ctx.measureText(first).width;
+  const total = firstW + ctx.measureText(second).width;
+  ctx.textAlign = 'left';
+  const startX = (WIDTH - total) / 2;
+  ctx.fillText(first, startX, 474);
+  ctx.fillStyle = YELLOW;
+  ctx.fillText(second, startX + firstW, 474);
+  ctx.letterSpacing = '0px';
+
+  // Name, then designation and organisation wrapped to at most two lines.
+  const displayName = name.trim() || 'Your Name';
   const nameSize = fitFontSize(
     (size) => {
-      ctx.font = `800 ${size}px ${family}`;
+      ctx.font = `800 ${size}px ${display}`;
       return ctx.measureText(displayName).width;
     },
-    { max: 56, min: 34, maxWidth: MAX_TEXT_WIDTH }
+    { max: 50, min: 32, maxWidth: TEXT_W }
   );
-  ctx.font = `800 ${nameSize}px ${family}`;
-  ctx.fillStyle = NAVY;
-  ctx.fillText(displayName, WIDTH / 2, 838);
-
-  // Designation and organisation get a line each, like the speaker badges.
-  // A line that is too long shrinks a little, then ends with an ellipsis.
-  // On its own, either one may wrap onto both lines.
-  ctx.fillStyle = GREY;
-  const parts = [designation, organisation]
+  ctx.font = `500 27px ${body}`;
+  const measure = (text) => ctx.measureText(text).width;
+  const detail = [designation, organisation]
     .map((text) => text.trim())
-    .filter(Boolean);
-  const measureAt = (size) => (text) => {
-    ctx.font = `400 ${size}px ${family}`;
-    return ctx.measureText(text).width;
-  };
-  let lines = [];
-  if (parts.length === 1) {
-    ctx.font = `400 31px ${family}`;
-    const wrapped = wrapLines(parts[0], measureAt(31), MAX_TEXT_WIDTH);
-    lines = wrapped.slice(0, 2).map((line, index) => ({
-      text:
-        index === 1 && wrapped.length > 2
-          ? truncateToWidth(
-              wrapped.slice(1).join(' '),
-              measureAt(31),
-              MAX_TEXT_WIDTH
-            )
-          : line,
-      size: 31,
-    }));
-  } else {
-    lines = parts.map((text) => {
-      const size = fitFontSize((s) => measureAt(s)(text), {
-        max: 31,
-        min: 24,
-        maxWidth: MAX_TEXT_WIDTH,
-      });
-      return {
-        text: truncateToWidth(text, measureAt(size), MAX_TEXT_WIDTH),
-        size,
-      };
-    });
+    .filter(Boolean)
+    .join(', ');
+  const wrapped = wrapLines(detail, measure, TEXT_W);
+  const lines = wrapped.slice(0, 2);
+  if (wrapped.length > 2) {
+    lines[1] = truncateToWidth(wrapped.slice(1).join(' '), measure, TEXT_W);
   }
-  lines.forEach(({ text, size }, index) => {
-    ctx.font = `400 ${size}px ${family}`;
-    ctx.fillText(text, WIDTH / 2, 878 + index * 36);
+
+  const textH = nameSize + (lines.length ? 8 + lines.length * 35 : 0) + 16 + 40;
+  const innerH = Math.max(PHOTO_R * 2, textH);
+  const cardH = innerH + CARD.padY * 2;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.32)';
+  ctx.shadowBlur = 50;
+  ctx.shadowOffsetY = 26;
+  roundRect(ctx, CARD.x, CARD.y, CARD.w, cardH, 4);
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+  ctx.restore();
+
+  const midY = CARD.y + cardH / 2;
+  drawPhoto(ctx, photo, name, CARD.x + CARD.padX + PHOTO_R, midY);
+
+  let y = midY - textH / 2 + nameSize * 0.82;
+  ctx.textAlign = 'left';
+  ctx.fillStyle = INK;
+  ctx.font = `800 ${nameSize}px ${display}`;
+  ctx.fillText(displayName, TEXT_X, y);
+  ctx.fillStyle = MUTED;
+  ctx.font = `500 27px ${body}`;
+  y += nameSize * 0.18 + 8;
+  lines.forEach((line) => {
+    y += 30;
+    ctx.fillText(line, TEXT_X, y);
+    y += 5;
   });
 
-  ctx.font = `500 31px ${family}`;
-  ctx.fillStyle = '#022d5d';
-  ctx.fillText("I'M ATTENDING #TASI2026", WIDTH / 2, 985);
+  // "I'M ATTENDING" tag.
+  ctx.font = `700 23px ${body}`;
+  ctx.letterSpacing = '3px';
+  const tag = "I'M ATTENDING";
+  const tagW = ctx.measureText(tag).width + 32;
+  const tagY = y + 16;
+  ctx.fillStyle = TAG_BG;
+  roundRect(ctx, TEXT_X, tagY, tagW, 40, 2);
+  ctx.fill();
+  ctx.fillStyle = YELLOW;
+  ctx.fillText(tag, TEXT_X + 16, tagY + 28);
+  ctx.letterSpacing = '0px';
+
+  // Dates, venue and hashtag under the card.
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `700 31px ${body}`;
+  ctx.letterSpacing = '3px';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+  ctx.shadowBlur = 12;
+  ctx.fillText(
+    '14–15 OCTOBER · IIC, NEW DELHI · #TASI2026',
+    WIDTH / 2,
+    Math.max(860, CARD.y + cardH + 56)
+  );
+  ctx.restore();
+  ctx.letterSpacing = '0px';
 }
 
 export default function ShareCardBuilder() {
@@ -196,10 +250,12 @@ export default function ShareCardBuilder() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      loadImage(TEMPLATE_SRC),
-      document.fonts.load(`800 56px ${montserrat.style.fontFamily}`),
-      document.fonts.load(`400 31px ${montserrat.style.fontFamily}`),
-      document.fonts.load(`500 31px ${montserrat.style.fontFamily}`),
+      loadImage(BACKGROUND_SRC),
+      document.fonts.load(`900 124px ${outfit.style.fontFamily}`),
+      document.fonts.load(`800 50px ${outfit.style.fontFamily}`),
+      document.fonts.load(`700 34px ${outfit.style.fontFamily}`),
+      document.fonts.load(`500 27px ${jakarta.style.fontFamily}`),
+      document.fonts.load(`700 31px ${jakarta.style.fontFamily}`),
     ]).then(([template]) => {
       if (cancelled) return;
       templateRef.current = template;

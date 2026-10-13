@@ -19,7 +19,7 @@ test('the card template ships with the site', () => {
     fs.existsSync(
       path.join(
         process.cwd(),
-        'public/img/share-card/tasi-2026-card-template.webp'
+        'public/img/share-card/tasi-2026-attendee-card-bg.webp'
       )
     )
   );
