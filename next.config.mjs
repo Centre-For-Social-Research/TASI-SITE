@@ -163,6 +163,13 @@ const nextConfig = {
         destination: 'https://trustandsafetyindia.org/:path*',
         permanent: true,
       },
+      // Printed QR codes point at /agenda, so swapping the PDF never
+      // needs a reprint. Temporary, so browsers don't cache the target.
+      {
+        source: '/agenda',
+        destination: '/downloads/tasi-2026-agenda.pdf',
+        permanent: false,
+      },
       // The profile was first published with a misspelled name.
       {
         source: '/speakers/2026/uma-submanian',
