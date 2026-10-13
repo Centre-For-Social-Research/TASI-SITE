@@ -28,7 +28,6 @@ const REMINDER_EVENT = {
 const WAYFINDING = [
   ['Main Hall', 'Ground Floor, Kamaladevi Complex'],
   ['Registration & Exhibition', 'At the entrance, facing Gate 1'],
-  ['Lunch', 'Rose Garden, behind the Main Hall'],
   ['Workshops & Roundtables', 'First Floor (Seminar Halls 1, 2 & 3)'],
 ];
 
