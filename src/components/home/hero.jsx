@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { InfiniteGridOverlay } from '@/components/ui/the-infinite-grid';
 import SparklesText from '@/components/ui/sparkles-text';
@@ -117,12 +116,14 @@ export default function HomeHero() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/sponsor"
-              className="inline-flex rounded-full border border-white/60 px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-white transition-all hover:bg-white hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            <a
+              href="/agenda"
+              target="_blank"
+              rel="noopener"
+              className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary dark:border-white/70 dark:text-white transition-all hover:bg-rc-secondary hover:text-slate-950 dark:hover:bg-white dark:hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
-              Become a Sponsor
-            </Link>
+              Download Agenda
+            </a>
             <a
               href="https://drive.google.com/file/d/1oG8biMtiPTBxKnABevMPAOsqx2paykwS/view?usp=sharing"
               target="_blank"

@@ -7,6 +7,7 @@ import {
   BookmarkPlus,
   CalendarPlus,
   Clock,
+  Printer,
   Search,
 } from 'lucide-react';
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
@@ -482,6 +483,18 @@ export default function ProgrammeAgendaClient({
               </span>
             )}
           </button>
+
+          {editionYear === '2026' && (
+            <a
+              href="/agenda"
+              target="_blank"
+              rel="noopener"
+              className={styles['print-agenda-link']}
+            >
+              <Printer className="h-4 w-4" />
+              Download Agenda
+            </a>
+          )}
 
           <span
             className={cx(styles['results-info'], 'hidden md:inline-block')}

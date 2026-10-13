@@ -141,6 +141,29 @@
   margin-right: 0.5rem;
 }
 
+.agenda-root .print-agenda-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.58rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--peach);
+  color: var(--brown);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s;
+}
+
+.agenda-root .print-agenda-link:hover {
+  border-color: var(--coral);
+}
+
+.agenda-root .print-agenda-link svg {
+  margin-right: 0.5rem;
+}
+
 .agenda-root .build-agenda-count {
   margin-left: 0.5rem;
   min-width: 1.25rem;

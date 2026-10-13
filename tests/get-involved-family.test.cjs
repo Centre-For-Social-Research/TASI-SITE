@@ -148,9 +148,13 @@ test('application page data owns speaker, volunteer, media, and contact datasets
 
   assert.equal(media.mediaResources.length, 4);
   assert.equal(media.pressKitPage.files.length, 2);
-  assert.equal(media.pressReleasesPage.files.length, 5);
+  assert.equal(media.pressReleasesPage.files.length, 6);
   assert.equal(
     media.pressReleasesPage.files[0].href,
+    '/downloads/tasi-2026-press-release.pdf'
+  );
+  assert.equal(
+    media.pressReleasesPage.files[1].href,
     '/downloads/media-invite-tasi-2026.pdf'
   );
   assert.ok(

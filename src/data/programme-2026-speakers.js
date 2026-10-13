@@ -14,7 +14,7 @@
 // A CI test fails on any unknown name or session id, so typos never reach
 // the live site. Sessions not listed here show no speakers.
 
-// Source: the TASI 2026 agenda sheet, 12 October. In each session the
+// Source: the TASI 2026 agenda sheet, 13 October. In each session the
 // moderator, where there is one, is listed last.
 export const sessionSpeakers2026 = {
   // Tuesday, 13 October: opening reception
@@ -152,7 +152,14 @@ export const sessionSpeakers2026 = {
   ],
   'tasi26-63': ['Satviki Varma'],
   'tasi26-27': ['Smriti Irani', 'Dr. Ranjana Kumari'],
-  'tasi26-46': ['Triveni Acharya', 'Hasina Kharbhih', 'Smita Mitra'],
+  'tasi26-46': [
+    'Triveni Acharya',
+    { name: 'Ravi Kant', title: 'Co-Founder, Shakti Vahini' },
+    'Hasina Kharbhih',
+    'Aishwarya Dongre',
+    'Smita Mitra',
+  ],
+  'tasi26-86': ['Lin Yuan Chong'],
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
     {
@@ -175,7 +182,7 @@ export const sessionSpeakers2026 = {
       photo: '/img/speakers/Rajesh Ranjan.webp',
       profile: '2025',
     },
-    { name: 'Nandagopal Rajan', title: 'CEO, Indian Express Digital' },
+    'Sayoni Aiyar',
   ],
 
   // Thursday, 15 October: Workshop and Roundtable Rooms
