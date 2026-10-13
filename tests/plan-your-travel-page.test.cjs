@@ -76,7 +76,7 @@ test('plan-your-travel routes delegate to tracked page components', () => {
 test('plan-your-travel shared data owns all live route datasets', async () => {
   const data = await loadModule('src', 'data', 'plan-your-travel-page.js');
 
-  assert.equal(data.travelTabs.length, 5);
+  assert.equal(data.travelTabs.length, 6);
   assert.equal(data.travelOverviewSections.length, 4);
   assert.equal(data.travelQuickFacts.length, 4);
   assert.equal(data.generalQuickStats.length, 6);

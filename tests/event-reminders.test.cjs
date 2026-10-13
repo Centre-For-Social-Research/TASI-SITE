@@ -37,6 +37,29 @@ test('days to go are counted in India time up to the first festival day', () => 
   assert.equal(daysUntilEvent(new Date('2026-11-01T09:00:00+05:30')), 0);
 });
 
+test('every reminder carries the on-site wayfinding and venue map link', () => {
+  const email = buildReminderEmail({
+    subject: 'See you soon',
+    body: 'Dear {{first_name}},',
+    recipient: { firstName: 'Asha' },
+    now: NOW,
+  });
+  assert.match(email.html, /Finding your way/);
+  assert.match(
+    email.html,
+    /Main Hall<\/td><td[^>]*>Ground Floor, Kamaladevi Complex/
+  );
+  assert.match(
+    email.html,
+    /<a href="https:\/\/trustandsafetyindia\.org\/venue-map" style="[^"]*">See the venue map<\/a>/
+  );
+  assert.match(email.text, /Lunch: Rose Garden, behind the Main Hall/);
+  assert.match(
+    email.text,
+    /Venue map: https:\/\/trustandsafetyindia\.org\/venue-map/
+  );
+});
+
 test('copy renders paragraphs, bullet lists, bold and links', () => {
   const email = buildReminderEmail({
     subject: 'TASI is {{days_to_go}} days away',

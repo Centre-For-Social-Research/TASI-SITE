@@ -62,6 +62,11 @@ const staticRoutes: Route[] = [
     priority: 0.6,
   },
   {
+    path: '/plan-your-travel/venue-map',
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  },
+  {
     path: '/plan-your-travel/visa-information',
     changeFrequency: 'monthly',
     priority: 0.6,
