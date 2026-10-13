@@ -246,7 +246,7 @@ export const partners = [
   },
   {
     name: 'GirlEffect',
-    logo: '/img/Logo/GirlEffect.webp',
+    logo: '/img/Logo/2026/girl-effect.png',
     slug: 'girl-effect',
     type: 'Civil Society Partner',
     description:
