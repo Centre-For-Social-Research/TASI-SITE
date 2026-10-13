@@ -70,6 +70,9 @@ export default function CheckInPanel() {
   const [scanSubmitting, setScanSubmitting] = useState(false);
   const [configWarning, setConfigWarning] = useState('');
   const [recentScans, setRecentScans] = useState([]);
+  const [activitySearch, setActivitySearch] = useState('');
+  const [activityResults, setActivityResults] = useState(null);
+  const [activityLoading, setActivityLoading] = useState(false);
   const [exporting, setExporting] = useState('');
   const [exportError, setExportError] = useState('');
   const videoRef = useRef(null);
@@ -360,35 +363,83 @@ export default function CheckInPanel() {
     };
   }, []);
 
+  const fetchScans = useCallback(
+    async (search = '') => {
+      const params = new URLSearchParams({ eventDay: selectedEventDay });
+      if (search) params.set('search', search);
+      const response = await fetch(`/api/check-in/recent?${params}`, {
+        cache: 'no-store',
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to load scans.');
+      return data.scans || [];
+    },
+    [selectedEventDay]
+  );
+
+  const refreshActivity = useCallback(async () => {
+    const search = activitySearch.trim();
+    try {
+      const [recent, matches] = await Promise.all([
+        fetchScans(),
+        search ? fetchScans(search) : Promise.resolve(null),
+      ]);
+      setRecentScans(recent);
+      setActivityResults(matches);
+    } catch {
+      // Keep refresh action silent when the network is unstable on-site.
+    }
+  }, [activitySearch, fetchScans]);
+
   useEffect(() => {
     let active = true;
 
-    async function loadRecentScans() {
-      try {
-        const response = await fetch(
-          `/api/check-in/recent?eventDay=${encodeURIComponent(selectedEventDay)}`,
-          {
-            cache: 'no-store',
-          }
-        );
-        const data = await response.json();
-
-        if (!active || !response.ok) {
-          return;
-        }
-
-        setRecentScans(data.scans || []);
-      } catch {
+    fetchScans()
+      .then((scans) => {
+        if (active) setRecentScans(scans);
+      })
+      .catch(() => {
         // Keep check-in usable even if the recent scans widget cannot load.
-      }
-    }
-
-    void loadRecentScans();
+      });
 
     return () => {
       active = false;
     };
-  }, [selectedEventDay]);
+  }, [fetchScans]);
+
+  useEffect(() => {
+    const search = activitySearch.trim();
+    let active = true;
+    const timer = setTimeout(
+      () => {
+        if (!search) {
+          setActivityResults(null);
+          setActivityLoading(false);
+          return;
+        }
+        setActivityLoading(true);
+        fetchScans(search)
+          .then((scans) => {
+            if (active) setActivityResults(scans);
+          })
+          .catch(() => {
+            if (active) setActivityResults([]);
+          })
+          .finally(() => {
+            if (active) setActivityLoading(false);
+          });
+      },
+      search ? 300 : 0
+    );
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [activitySearch, fetchScans]);
+
+  const searchingActivity = Boolean(activitySearch.trim());
+  const activityRows = searchingActivity ? activityResults || [] : recentScans;
 
   useEffect(
     () => () => {
@@ -495,7 +546,7 @@ export default function CheckInPanel() {
           label="Recent Total"
           value={activityStats.total}
           tone="info"
-          detail={`${selectedEventDayLabel} rows shown below`}
+          detail={`${selectedEventDayLabel} latest scans`}
         />
       </section>
 
@@ -644,75 +695,105 @@ export default function CheckInPanel() {
         </div>
       </section>
 
-      <section className="rounded-[10px] border border-zinc-200 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <section className="overflow-hidden rounded-[10px] border border-zinc-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-zinc-200 px-5 py-4 dark:border-white/[0.06]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-purple-600">
               Recent Activity
             </p>
             <h2 className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-              Last validated scans
+              {searchingActivity ? 'Matching scans' : 'Last validated scans'}
+              <span className="ml-2 text-xs font-normal text-zinc-400 dark:text-zinc-500">
+                {activityLoading
+                  ? 'Searching…'
+                  : `${activityRows.length} ${activityRows.length === 1 ? 'scan' : 'scans'} · ${selectedEventDayLabel}`}
+              </span>
             </h2>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              void (async () => {
-                try {
-                  const response = await fetch(
-                    `/api/check-in/recent?eventDay=${encodeURIComponent(selectedEventDay)}`,
-                    {
-                      cache: 'no-store',
-                    }
-                  );
-                  const data = await response.json();
-                  if (response.ok) {
-                    setRecentScans(data.scans || []);
-                  }
-                } catch {
-                  // Keep refresh action silent when the network is unstable on-site.
-                }
-              })();
-            }}
-            className="h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
-          >
-            Refresh Activity
-          </button>
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+            <input
+              type="search"
+              value={activitySearch}
+              onChange={(event) => setActivitySearch(event.target.value)}
+              className="h-10 min-w-0 flex-1 rounded-[10px] border border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-900 sm:w-72 sm:flex-none dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100"
+              placeholder="Search checked-in name or code…"
+              aria-label="Search scans by attendee name or registration code"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                void refreshActivity();
+              }}
+              className="h-10 rounded-full border border-zinc-200 bg-white px-4 text-sm text-zinc-700 transition hover:border-zinc-300 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10"
+            >
+              Refresh Activity
+            </button>
+          </div>
         </div>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          {recentScans.map((scan) => (
-            <div
-              key={scan.id}
-              className="rounded-[10px] border border-zinc-200 bg-zinc-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.04]"
-            >
-              <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                {scan.registration?.first_name} {scan.registration?.last_name}
-              </p>
-              <div className="mt-2">
-                <AdminStatusBadge
-                  tone={getCheckInFeedbackTone(scan.scan_result)}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px] text-left text-sm">
+            <thead className="bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500 dark:bg-white/[0.04] dark:text-zinc-400">
+              <tr>
+                {['Attendee', 'Result', 'Desk', 'Day', 'Scanned at'].map(
+                  (label) => (
+                    <th key={label} className="px-5 py-3 font-semibold">
+                      {label}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {activityRows.map((scan) => (
+                <tr
+                  key={scan.id}
+                  className="border-t border-zinc-100 transition hover:bg-zinc-50/70 dark:border-white/[0.06] dark:hover:bg-white/[0.03]"
                 >
-                  {scan.scan_result.replaceAll('_', ' ')}
-                </AdminStatusBadge>
-              </div>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {scan.registration?.registration_code} |{' '}
-                {scan.registration?.organization}
-              </p>
-              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
-                {scan.desk_label || 'Desk not set'} |{' '}
-                {getCheckInDayShortLabel(scan.event_day)} |{' '}
-                {formatDate(scan.created_at)}
-              </p>
-            </div>
-          ))}
-          {!recentScans.length ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Recent scan activity will appear here after the first successful
-              validation.
-            </p>
-          ) : null}
+                  <td className="px-5 py-3">
+                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                      {scan.registration?.first_name}{' '}
+                      {scan.registration?.last_name}
+                    </p>
+                    <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                      {scan.registration?.registration_code}
+                    </p>
+                    <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+                      {scan.registration?.organization || 'Independent'}
+                    </p>
+                  </td>
+                  <td className="px-5 py-3">
+                    <AdminStatusBadge
+                      tone={getCheckInFeedbackTone(scan.scan_result)}
+                    >
+                      {scan.scan_result.replaceAll('_', ' ')}
+                    </AdminStatusBadge>
+                  </td>
+                  <td className="px-5 py-3 text-zinc-700 dark:text-zinc-200">
+                    {scan.desk_label || 'Desk not set'}
+                  </td>
+                  <td className="px-5 py-3 text-zinc-700 dark:text-zinc-200">
+                    {getCheckInDayShortLabel(scan.event_day)}
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 text-zinc-500 dark:text-zinc-400">
+                    {formatDate(scan.created_at)}
+                  </td>
+                </tr>
+              ))}
+              {!activityRows.length && !activityLoading ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-5 py-10 text-center text-sm text-zinc-400 dark:text-zinc-500"
+                  >
+                    {searchingActivity
+                      ? `No ${selectedEventDayLabel} scans match "${activitySearch.trim()}". Walk-ins are listed on the Spot Registrations page.`
+                      : 'Recent scan activity will appear here after the first successful validation.'}
+                  </td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
         </div>
       </section>
 
