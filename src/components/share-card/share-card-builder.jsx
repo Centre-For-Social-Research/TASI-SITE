@@ -343,13 +343,16 @@ export default function ShareCardBuilder() {
   const linkedInUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(CARD_CAPTION)}`;
   const hasName = details.name.trim().length > 0;
   const field =
-    'mt-1.5 w-full rounded-xl border border-white/20 bg-white px-4 py-3 text-base text-stone-900 outline-none focus:border-[#ffd919] focus:ring-2 focus:ring-[#ffd919]/40';
+    'mt-1.5 w-full rounded-lg border border-white/20 bg-white px-4 py-3 text-base text-stone-900 outline-none focus:border-[#ffd919] focus:ring-2 focus:ring-[#ffd919]/40';
   const button =
-    'inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-50';
+    'inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-50';
 
   return (
     <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch">
-      <div className="rounded-3xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8">
+      <div className="rounded-xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8">
+        <p className="mb-6 border-b border-white/15 pb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/70">
+          Your details
+        </p>
         <label className="block text-sm font-semibold">
           Your name
           <input
@@ -447,7 +450,7 @@ export default function ShareCardBuilder() {
             height={HEIGHT}
             aria-label="Preview of your TASI 2026 card"
             role="img"
-            className="h-auto w-full rounded-2xl shadow-2xl shadow-black/40"
+            className="h-auto w-full rounded-lg shadow-2xl shadow-black/40"
           />
           {!ready && (
             <p className="mt-3 text-center text-sm text-white/70">

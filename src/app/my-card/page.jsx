@@ -61,7 +61,7 @@ export default function Page() {
           <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 md:grid-cols-3 md:px-8">
             {STEPS.map(({ icon: Icon, title, text }) => (
               <div key={title} className="flex gap-4">
-                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-[#ffd919] text-[#350265]">
+                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-[#ffd919] text-[#350265]">
                   <Icon className="h-5 w-5" />
                 </span>
                 <div>
