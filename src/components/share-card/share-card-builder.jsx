@@ -437,13 +437,35 @@ export default function ShareCardBuilder() {
             </button>
           )}
         </div>
+      </div>
 
-        <div className="mt-7 rounded-2xl bg-black/20 p-4">
+      <div className="order-first mx-auto w-full max-w-xs sm:max-w-md lg:order-none">
+        <div className="lg:sticky lg:top-24">
+          <canvas
+            ref={canvasRef}
+            width={WIDTH}
+            height={HEIGHT}
+            aria-label="Preview of your TASI 2026 card"
+            role="img"
+            className="h-auto w-full rounded-2xl shadow-2xl shadow-black/40"
+          />
+          {!ready && (
+            <p className="mt-3 text-center text-sm text-white/70">
+              Loading your card…
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="rounded-3xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8 lg:col-span-2 lg:grid lg:grid-cols-[1fr_auto] lg:items-center lg:gap-10">
+        <div>
           <p className="text-sm font-semibold">Caption to post with it</p>
           <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-white/85">
             {CARD_CAPTION}
           </p>
-          <div className="mt-4 flex flex-wrap gap-3">
+        </div>
+        <div className="mt-5 lg:mt-0">
+          <div className="flex flex-wrap gap-3">
             <button
               type="button"
               onClick={copyCaption}
@@ -466,28 +488,10 @@ export default function ShareCardBuilder() {
               Post on LinkedIn
             </a>
           </div>
-          <p className="mt-3 text-xs text-white/60">
+          <p className="mt-3 max-w-sm text-xs text-white/60">
             On LinkedIn, download the card first, then add it to your post. Tag
             Centre for Social Research India and Trust &amp; Safety Forum.
           </p>
-        </div>
-      </div>
-
-      <div className="order-first mx-auto w-full max-w-xs sm:max-w-md lg:order-none">
-        <div className="lg:sticky lg:top-24">
-          <canvas
-            ref={canvasRef}
-            width={WIDTH}
-            height={HEIGHT}
-            aria-label="Preview of your TASI 2026 card"
-            role="img"
-            className="h-auto w-full rounded-2xl shadow-2xl shadow-black/40"
-          />
-          {!ready && (
-            <p className="mt-3 text-center text-sm text-white/70">
-              Loading your card…
-            </p>
-          )}
         </div>
       </div>
     </div>
