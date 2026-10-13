@@ -268,15 +268,6 @@ export const programmeSessions2026 = [
   ),
   // Wednesday, 14 October: parallel rooms.
   makeSession(
-    84,
-    'oct14',
-    '10:00–10:30',
-    'Workshop Room',
-    'workshop',
-    'Not Another Chatbot: Public Interest AI and Community Knowledge as Trust and Safety Infrastructure',
-    'A session on public-interest AI and community knowledge, and how they can serve as trust and safety infrastructure beyond another chatbot.'
-  ),
-  makeSession(
     80,
     'oct14',
     '10:00–11:00',
@@ -331,13 +322,13 @@ export const programmeSessions2026 = [
     'A roundtable on raising children in the AI era, and how families, law and platforms can balance privacy, trust and safety.'
   ),
   makeSession(
-    69,
+    84,
     'oct14',
     '14:45–15:30',
     'Workshop Room',
-    'panel',
-    'Panel: Growing Up and Parenting in the Digital Age',
-    'A conversation with young people and parents on growing up and parenting in the digital age, and what families need to stay safe online.'
+    'workshop',
+    'Not Another Chatbot: Public Interest AI and Community Knowledge as Trust and Safety Infrastructure',
+    'A session on public-interest AI and community knowledge, and how they can serve as trust and safety infrastructure beyond another chatbot.'
   ),
   makeSession(
     58,
@@ -464,8 +455,8 @@ export const programmeSessions2026 = [
     '13:45–14:00',
     'Main Hall',
     'spotlight',
-    'Spotlight: GroSafe',
-    'A spotlight from GroSafe.'
+    'Spotlight: GroSafe: A Technology-Enabled Solution to Build Societal Resilience Against Child Grooming',
+    'A spotlight on GroSafe, a technology-enabled solution that builds societal resilience against child grooming.'
   ),
   makeSession(
     27,
