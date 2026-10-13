@@ -30,6 +30,7 @@ export const receptions2026 = [
         'The evening before the festival brought delegates and partners together at the Goethe-Institut for welcome remarks from CSR and the deputy ambassadors of France and Germany, then five short Safety Spotlights from global safety innovators.',
     },
     // Shown in the 2025-style reception recap once the evening has happened.
+    // Photo order is the organiser's numbering (1-3 beside the text, 4-9 below).
     // Running order and roles from the reception programme of 13 October 2026.
     recap: {
       accentLabel: 'Opening Reception',
@@ -40,17 +41,17 @@ export const receptions2026 = [
       summary:
         'On the evening before the festival, delegates, speakers and partners gathered at the Goethe-Institut for the TASI 2026 curtain raiser. The Deputy Chiefs of Mission of Germany and France welcomed guests, Dr. Ranjana Kumari introduced the festival, and five Safety Spotlights followed: on children’s agency online, protecting journalists, youth well-being in Australia, technology against trafficking, and the Tech Coalition’s Project Lantern. The festival co-founders closed the session and opened the reception.',
       gallery: [
-        '/img/receptions/2026/opening/2e1a1924.webp',
         '/img/receptions/2026/opening/2e1a1970.webp',
-        '/img/receptions/2026/opening/2e1a2070.webp',
+        '/img/receptions/2026/opening/2e1a2088.webp',
+        '/img/receptions/2026/opening/2e1a2048.webp',
       ],
       moreGallery: [
-        '/img/receptions/2026/opening/2e1a1851.webp',
+        '/img/receptions/2026/opening/2e1a2070.webp',
+        '/img/receptions/2026/opening/2e1a1924.webp',
         '/img/receptions/2026/opening/2e1a1959.webp',
-        '/img/receptions/2026/opening/2e1a1903.webp',
         '/img/receptions/2026/opening/2e1a1937.webp',
-        '/img/receptions/2026/opening/2e1a2048.webp',
-        '/img/receptions/2026/opening/2e1a2088.webp',
+        '/img/receptions/2026/opening/2e1a1903.webp',
+        '/img/receptions/2026/opening/2e1a1851.webp',
       ],
       featuredPeople: [
         {
