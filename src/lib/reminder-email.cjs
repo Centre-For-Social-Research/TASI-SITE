@@ -16,12 +16,21 @@ const REMINDER_EVENT = {
     'https://www.google.com/maps/search/?api=1&query=India+International+Centre+New+Delhi',
   checkIn: 'Check-in from 9:00 AM',
   siteUrl: 'https://trustandsafetyindia.org',
+  onSiteMapUrl: 'https://trustandsafetyindia.org/venue-map',
   // Same calendar links as the QR pass email.
   googleCalendarUrl:
     'https://calendar.google.com/calendar/render?action=TEMPLATE&text=TASI+2026&dates=20261014%2F20261016&location=India+International+Centre%2C+New+Delhi',
   outlookCalendarUrl:
     'https://outlook.office.com/calendar/0/deeplink/compose?subject=TASI%202026&startdt=2026-10-14T09%3A00%3A00%2B05%3A30&enddt=2026-10-15T18%3A00%3A00%2B05%3A30&location=India%20International%20Centre%2C%20New%20Delhi',
 };
+
+// Where things are inside IIC. Matches src/data/venue-map.js.
+const WAYFINDING = [
+  ['Main Hall', 'Ground Floor, Kamaladevi Complex'],
+  ['Registration & Exhibition', 'Outside the Main Hall'],
+  ['Lunch', 'Rose Garden, next to the Kamaladevi Complex'],
+  ['Workshops & Roundtables', 'First Floor (Seminar Halls 1, 2 & 3)'],
+];
 
 const REMINDER_CALENDAR_FILENAME = 'tasi-2026-calendar.ics';
 
@@ -219,6 +228,14 @@ const AGENDA_LINE =
   'Filter sessions, save favourites to your calendar and download your own PDF agenda.';
 
 // Plan-your-days block, then the QR pass email's calendar and explore links.
+function renderWayfindingHtml() {
+  const rows = WAYFINDING.map(
+    ([place, where]) =>
+      `<tr><td style="padding:3px 8px 3px 0;color:#202124;font-weight:600;text-align:right;vertical-align:top;white-space:nowrap">${escapeHtml(place)}</td><td style="padding:3px 0 3px 8px;color:#3c4043;text-align:left;vertical-align:top">${escapeHtml(where)}</td></tr>`
+  ).join('');
+  return `<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:14px;line-height:21px"><p style="margin:0 0 8px;font-size:16px;font-weight:600;color:#202124">Finding your way</p><table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto">${rows}</table><p style="margin:12px 0 0"><a href="${escapeHtml(REMINDER_EVENT.onSiteMapUrl)}" style="${LINK_STYLE};font-weight:600">See the venue map</a></p></td></tr>${DIVIDER}`;
+}
+
 function renderPlanAheadHtml() {
   const site = REMINDER_EVENT.siteUrl;
   return `<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 0 6px;font-size:16px;font-weight:600;color:#202124">Plan your two days</p><p style="margin:0 auto;max-width:420px">${escapeHtml(AGENDA_LINE)}</p><p style="margin:10px 0 0"><a href="${site}/programme" style="${LINK_STYLE};font-weight:600">Build my agenda</a></p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 27px;color:#3c4043;font-size:14px;line-height:23px"><p style="${LABEL_STYLE}">Add the festival to your calendar</p><p style="margin:0 0 15px"><a href="${escapeHtml(REMINDER_EVENT.googleCalendarUrl)}" style="${LINK_STYLE}">Google Calendar</a>${DOT}<a href="${escapeHtml(REMINDER_EVENT.outlookCalendarUrl)}" style="${LINK_STYLE}">Outlook Calendar</a>${DOT}<span style="color:#5f6368">Attached .ics</span></p><p style="${LABEL_STYLE}">Explore TASI</p><p style="margin:0"><a href="${site}/" style="${LINK_STYLE}">TASI 2026</a>${DOT}<a href="${site}/programme" style="${LINK_STYLE}">Programme</a>${DOT}<a href="${site}/speakers?year=2026" style="${LINK_STYLE}">Speakers</a></p></td></tr>`;
@@ -229,7 +246,7 @@ function renderReminderHtml({ bodyHtml, preheader, replyEmail, test }) {
   const testBanner = test
     ? '<tr><td align="center" bgcolor="#fef7e0" style="padding:10px 40px;background-color:#fef7e0;color:#7a4f01;font-size:13px;line-height:19px">Test email. This was not sent to any registrant.</td></tr>'
     : '';
-  return `<!doctype html><html><body style="margin:0;padding:0;background:#022d5d;font-family:Inter,Arial,Helvetica,sans-serif;"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;line-height:1px;mso-hide:all">${escapeHtml(preheader)}</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#022d5d" style="background:#022d5d;background:linear-gradient(135deg,#022d5d 0%,#43358a 52%,#b34b5c 100%)"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="610" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:610px;background-color:#ffffff;border:1px solid #e8eaed">${testBanner}<tr><td align="center" bgcolor="#ffffff" style="padding:31px 40px 18px;background:#ffffff"><img src="cid:tasi-logo" width="194" height="54" alt="Trust &amp; Safety Festival - TASI. People First. Safety Always." style="display:block;width:194px;height:54px;border:0;outline:none;text-decoration:none" /></td></tr><tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px;text-align:center">${bodyHtml}</td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 0 5px;font-size:16px;font-weight:600;color:#202124">${escapeHtml(REMINDER_EVENT.dates)}</p><p style="margin:0"><a href="${escapeHtml(REMINDER_EVENT.venueMapUrl)}" style="${LINK_STYLE}">${escapeHtml(REMINDER_EVENT.venue)} &middot; Venue map</a></p><p style="margin:9px 0 0">${escapeHtml(REMINDER_EVENT.checkIn)}</p></td></tr>${DIVIDER}${renderPlanAheadHtml()}<tr><td style="padding:0 40px"><div style="border-top:1px solid #dadce0"></div></td></tr><tr><td align="center" style="padding:20px 40px;color:#5f6368;font-size:12px;line-height:18px"><p style="margin:0 0 5px">Questions? Reply to this email or write to <a href="mailto:${safeReplyEmail}" style="${LINK_STYLE}">${safeReplyEmail}</a>.</p><p style="margin:0">${escapeHtml(REMINDER_EVENT.festivalName)} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="cid:tasi-delhi-footer" width="610" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
+  return `<!doctype html><html><body style="margin:0;padding:0;background:#022d5d;font-family:Inter,Arial,Helvetica,sans-serif;"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;line-height:1px;mso-hide:all">${escapeHtml(preheader)}</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#022d5d" style="background:#022d5d;background:linear-gradient(135deg,#022d5d 0%,#43358a 52%,#b34b5c 100%)"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="610" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:610px;background-color:#ffffff;border:1px solid #e8eaed">${testBanner}<tr><td align="center" bgcolor="#ffffff" style="padding:31px 40px 18px;background:#ffffff"><img src="cid:tasi-logo" width="194" height="54" alt="Trust &amp; Safety Festival - TASI. People First. Safety Always." style="display:block;width:194px;height:54px;border:0;outline:none;text-decoration:none" /></td></tr><tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px;text-align:center">${bodyHtml}</td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 0 5px;font-size:16px;font-weight:600;color:#202124">${escapeHtml(REMINDER_EVENT.dates)}</p><p style="margin:0"><a href="${escapeHtml(REMINDER_EVENT.venueMapUrl)}" style="${LINK_STYLE}">${escapeHtml(REMINDER_EVENT.venue)} &middot; Directions</a></p><p style="margin:9px 0 0">${escapeHtml(REMINDER_EVENT.checkIn)}</p></td></tr>${DIVIDER}${renderWayfindingHtml()}${renderPlanAheadHtml()}<tr><td style="padding:0 40px"><div style="border-top:1px solid #dadce0"></div></td></tr><tr><td align="center" style="padding:20px 40px;color:#5f6368;font-size:12px;line-height:18px"><p style="margin:0 0 5px">Questions? Reply to this email or write to <a href="mailto:${safeReplyEmail}" style="${LINK_STYLE}">${safeReplyEmail}</a>.</p><p style="margin:0">${escapeHtml(REMINDER_EVENT.festivalName)} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="cid:tasi-delhi-footer" width="610" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
 }
 
 function buildReminderEmail({
@@ -254,8 +271,12 @@ function buildReminderEmail({
       '',
       REMINDER_EVENT.dates,
       REMINDER_EVENT.venue,
-      `Venue map: ${REMINDER_EVENT.venueMapUrl}`,
+      `Directions: ${REMINDER_EVENT.venueMapUrl}`,
       REMINDER_EVENT.checkIn,
+      '',
+      'Finding your way',
+      ...WAYFINDING.map(([place, where]) => `${place}: ${where}`),
+      `Venue map: ${REMINDER_EVENT.onSiteMapUrl}`,
       '',
       'Plan your two days',
       AGENDA_LINE,

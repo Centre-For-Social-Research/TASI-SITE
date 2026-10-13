@@ -24,6 +24,7 @@ export const travelTabs = [
   { label: 'Overview', href: '/plan-your-travel' },
   { label: 'General Info', href: '/plan-your-travel/general-info' },
   { label: 'How to Reach', href: '/plan-your-travel/how-to-reach' },
+  { label: 'Venue Map', href: '/plan-your-travel/venue-map' },
   { label: 'Visa Information', href: '/plan-your-travel/visa-information' },
   { label: 'Accommodation', href: '/plan-your-travel/accommodation' },
 ];

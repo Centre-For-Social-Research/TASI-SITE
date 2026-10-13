@@ -170,6 +170,12 @@ const nextConfig = {
         destination: '/downloads/tasi-2026-agenda.pdf',
         permanent: false,
       },
+      // Short link for emails and printed signage.
+      {
+        source: '/venue-map',
+        destination: '/plan-your-travel/venue-map',
+        permanent: false,
+      },
       // The profile was first published with a misspelled name.
       {
         source: '/speakers/2026/uma-submanian',
