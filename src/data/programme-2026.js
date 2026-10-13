@@ -509,8 +509,8 @@ export const programmeSessions2026 = [
     '16:10–16:50',
     'Main Hall',
     'panel',
-    'Closing Plenary: Trust & Safety at a Crossroads',
-    'How should we rethink safety, responsibility and human wellbeing for the next era of technology? Leaders reflect on two days of TASI and the road ahead.'
+    'Closing Plenary: Trust & Safety at a Crossroads. How Should We Rethink Safety, Responsibility and Human Wellbeing for the Next Era of Technology?',
+    'Leaders from government, industry and civil society reflect on two days of TASI and the road ahead for safety, responsibility and human wellbeing in the next era of technology.'
   ),
   makeSession(
     48,
