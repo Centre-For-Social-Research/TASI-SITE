@@ -494,7 +494,7 @@ export default function ShareCardBuilder() {
             </div>
             <p className="mt-3 text-xs leading-relaxed text-white/60">
               On LinkedIn, download the card first, then add it to your post.
-              Tag Centre for Social Research India and Trust &amp; Safety Forum.
+              Tag Centre for Social Research India and TASI.
             </p>
           </div>
         </div>
