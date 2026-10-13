@@ -14,7 +14,7 @@ import {
   receptionsAttendance2026,
 } from '@/data/receptions-2026';
 
-import { ReceptionOverviewCard } from './reception-ui';
+import { ReceptionDetailSection, ReceptionOverviewCard } from './reception-ui';
 
 function toOverviewCard(event) {
   const venue = event.venue || event.session.venue;
@@ -134,14 +134,34 @@ function EventRow({ event }) {
 
 export default function Reception2026Update() {
   const { note, contactEmail } = receptionsAttendance2026;
+  const pastEvents = receptions2026.filter((event) => event.recap);
+  const upcomingEvents = receptions2026.filter((event) => !event.recap);
 
   return (
     <>
       <ReceptionOverview2026 />
+      {pastEvents.length ? (
+        <section className="bg-white pt-section-sm dark:bg-stone-950 md:pt-section-md">
+          <div className="mx-auto w-full max-w-[1300px] space-y-10 px-4 md:px-8 lg:px-16">
+            {pastEvents.map((event, index) => (
+              <ReceptionDetailSection
+                key={event.slug}
+                reception={{
+                  ...event.recap,
+                  slug: event.slug,
+                  hosts: event.hosts,
+                  networkingWindow: event.session.time,
+                }}
+                index={index}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
       <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-md">
         <div className="mx-auto w-full max-w-[1000px] px-4 md:px-8">
           <div className="divide-y divide-stone-200 border-y border-stone-200 dark:divide-slate-800 dark:border-slate-800">
-            {receptions2026.map((event) => (
+            {upcomingEvents.map((event) => (
               <EventRow key={event.slug} event={event} />
             ))}
           </div>
