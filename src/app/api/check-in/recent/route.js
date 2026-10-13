@@ -17,7 +17,11 @@ export async function GET(request) {
     const eventDay = normalizeCheckInDay(
       searchParams.get('eventDay') || searchParams.get('event_day')
     );
-    const scans = await listRecentEntryScans({ eventDay });
+    const scans = await listRecentEntryScans({
+      eventDay,
+      search: searchParams.get('search') || '',
+      limit: searchParams.get('search') ? 100 : 25,
+    });
     return Response.json({
       success: true,
       scans,

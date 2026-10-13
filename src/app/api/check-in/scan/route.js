@@ -1,4 +1,4 @@
-import { requireAdminOperator } from '@/lib/registration-auth';
+import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import {
   completeCheckIn,
   getCheckInRecordByToken,
@@ -11,7 +11,8 @@ import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 const { normalizeCheckInDay } = checkInDayUtils;
 
 export async function POST(request) {
-  const authResult = await requireAdminOperator({
+  // Reviewers staff the registration desk, so they can check guests in.
+  const authResult = await requireAuthorizedOperator({
     route: 'api.checkin.scan',
   });
   if (!authResult.ok) {
