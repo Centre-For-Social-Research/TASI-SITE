@@ -141,7 +141,7 @@ export const sessionSpeakers2026 = {
   'tasi26-63': ['Satviki Varma'],
   'tasi26-46': [
     'Triveni Acharya',
-    { name: 'Ravi Kant', title: 'National Convenor, Just Rights for Children' },
+    'Ravi Kant',
     'Hasina Kharbhih',
     'Aishwarya Dongre',
     'Smita Mitra',
