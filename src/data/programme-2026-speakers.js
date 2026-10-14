@@ -139,15 +139,13 @@ export const sessionSpeakers2026 = {
     },
   ],
   'tasi26-63': ['Satviki Varma'],
-  'tasi26-27': ['Smriti Irani', 'Dr. Ranjana Kumari'],
   'tasi26-46': [
     'Triveni Acharya',
-    { name: 'Ravi Kant', title: 'Co-Founder, Shakti Vahini' },
+    { name: 'Ravi Kant', title: 'National Convenor, Just Rights for Children' },
     'Hasina Kharbhih',
     'Aishwarya Dongre',
     'Smita Mitra',
   ],
-  'tasi26-86': ['Lin Yuan Chong'],
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
     {
