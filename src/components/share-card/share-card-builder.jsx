@@ -188,6 +188,9 @@ export default function ShareCardBuilder() {
   const [loadFailed, setLoadFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [copied, setCopied] = useState(false);
+  // '', 'working', 'downloaded' or 'shared': feedback after the buttons.
+  const [saveState, setSaveState] = useState('');
+  const saveTimerRef = useRef(null);
   const canShareFiles = useSyncExternalStore(
     subscribe,
     getCanShareFiles,
@@ -235,15 +238,30 @@ export default function ShareCardBuilder() {
     []
   );
 
+  // One redraw per frame at most, so fast typing on a phone stays smooth.
   useEffect(() => {
     if (!ready || !canvasRef.current) return;
-    drawCard(
-      canvasRef.current.getContext('2d'),
-      templateRef.current,
-      photo,
-      details
-    );
+    const frame = requestAnimationFrame(() => {
+      if (!canvasRef.current) return;
+      drawCard(
+        canvasRef.current.getContext('2d'),
+        templateRef.current,
+        photo,
+        details
+      );
+    });
+    return () => cancelAnimationFrame(frame);
   }, [ready, fontsLoaded, photo, details]);
+
+  useEffect(() => () => clearTimeout(saveTimerRef.current), []);
+
+  const showSaveState = (state) => {
+    clearTimeout(saveTimerRef.current);
+    setSaveState(state);
+    if (state === 'downloaded' || state === 'shared') {
+      saveTimerRef.current = setTimeout(() => setSaveState(''), 6000);
+    }
+  };
 
   const update = (field) => (event) =>
     setDetails((current) => ({ ...current, [field]: event.target.value }));
@@ -275,26 +293,37 @@ export default function ShareCardBuilder() {
   );
 
   const download = async () => {
+    showSaveState('working');
     const blob = await toBlob();
-    if (!blob) return;
+    if (!blob) {
+      showSaveState('');
+      return;
+    }
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = cardFileName(details.name);
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showSaveState('downloaded');
   };
 
   const share = async () => {
+    showSaveState('working');
     const blob = await toBlob();
-    if (!blob) return;
+    if (!blob) {
+      showSaveState('');
+      return;
+    }
     const file = new File([blob], cardFileName(details.name), {
       type: 'image/png',
     });
     try {
       await navigator.share({ files: [file], text: CARD_CAPTION });
+      showSaveState('shared');
     } catch {
       // The person closed the share sheet.
+      showSaveState('');
     }
   };
 
@@ -317,7 +346,7 @@ export default function ShareCardBuilder() {
 
   return (
     <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch">
-      <div className="rounded-xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8">
+      <div className="rounded-xl border border-white/15 bg-white/10 p-6 text-left text-white md:p-8 md:backdrop-blur">
         <p className="mb-6 border-b border-white/15 pb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/70">
           Your details
         </p>
@@ -390,17 +419,25 @@ export default function ShareCardBuilder() {
           <button
             type="button"
             onClick={download}
-            disabled={!ready || !hasName}
+            disabled={!ready || !hasName || saveState === 'working'}
             className={`${button} bg-[#ffd919] text-[#350265] hover:brightness-105`}
           >
-            <Download className="h-4 w-4" />
-            Download card
+            {saveState === 'downloaded' ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            {saveState === 'working'
+              ? 'Preparing…'
+              : saveState === 'downloaded'
+                ? 'Downloaded'
+                : 'Download card'}
           </button>
           {canShareFiles && (
             <button
               type="button"
               onClick={share}
-              disabled={!ready || !hasName}
+              disabled={!ready || !hasName || saveState === 'working'}
               className={`${button} bg-white text-[#350265] hover:bg-white/90`}
             >
               <Share2 className="h-4 w-4" />
@@ -408,6 +445,19 @@ export default function ShareCardBuilder() {
             </button>
           )}
         </div>
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-3 min-h-[1.25rem] text-sm text-white/80"
+        >
+          {!hasName && ready
+            ? 'Add your name to download your card.'
+            : saveState === 'downloaded'
+              ? 'Your card is saved. Find it in your Downloads, or in Files or Photos on a phone. Copy the caption below to post it.'
+              : saveState === 'shared'
+                ? 'Shared. Thanks for spreading the word!'
+                : ''}
+        </p>
       </div>
 
       <div className="order-first mx-auto w-full max-w-xs sm:max-w-md lg:order-none">
@@ -444,7 +494,7 @@ export default function ShareCardBuilder() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/15 bg-white/10 p-6 text-left text-white backdrop-blur md:p-8 lg:col-span-2">
+      <div className="rounded-xl border border-white/15 bg-white/10 p-6 text-left text-white md:p-8 md:backdrop-blur lg:col-span-2">
         <p className="border-b border-white/15 pb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/70">
           Caption to post with it
         </p>
