@@ -45,6 +45,10 @@ const NAVY = '#00327d';
 const TEXT = '#383737';
 const PHOTO = { cx: 540, cy: 580, r: 195 };
 const TEXT_W = 720;
+// Fonts only refine the lettering. If they are slow or blocked (Lockdown
+// Mode, some in-app browsers), draw with the fallback after this long and
+// redraw once they arrive.
+const FONT_WAIT_MS = 2500;
 
 // Phones that can share files open the native share sheet (LinkedIn,
 // Instagram, WhatsApp) with the card attached. Decided on the client only.
@@ -175,6 +179,9 @@ export default function ShareCardBuilder() {
   });
   const [photo, setPhoto] = useState(null);
   const [ready, setReady] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [copied, setCopied] = useState(false);
   const canShareFiles = useSyncExternalStore(
     subscribe,
@@ -184,21 +191,44 @@ export default function ShareCardBuilder() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([
-      loadImage(BACKGROUND_SRC),
-      document.fonts.load(`800 56px ${montserrat.style.fontFamily}`),
-      document.fonts.load(`500 31px ${montserrat.style.fontFamily}`),
-      document.fonts.load(`400 31px ${montserrat.style.fontFamily}`),
-    ]).then(([template]) => {
-      if (cancelled) return;
-      templateRef.current = template;
-      setReady(true);
-    });
+    const family = montserrat.style.fontFamily;
+    const fonts = Promise.all(
+      ['800 56px', '500 31px', '400 31px'].map((spec) =>
+        document.fonts ? document.fonts.load(`${spec} ${family}`) : null
+      )
+    )
+      .then(() => {
+        if (!cancelled) setFontsLoaded(true);
+      })
+      .catch(() => {});
+    const fontsOrTimeout = Promise.race([
+      fonts,
+      new Promise((resolve) => setTimeout(resolve, FONT_WAIT_MS)),
+    ]);
+
+    loadImage(`${BACKGROUND_SRC}${attempt ? `?retry=${attempt}` : ''}`)
+      .then(async (template) => {
+        await fontsOrTimeout;
+        if (cancelled) return;
+        templateRef.current = template;
+        setLoadFailed(false);
+        setReady(true);
+      })
+      .catch(() => {
+        if (!cancelled) setLoadFailed(true);
+      });
+
     return () => {
       cancelled = true;
-      if (photoUrlRef.current) URL.revokeObjectURL(photoUrlRef.current);
     };
-  }, []);
+  }, [attempt]);
+
+  useEffect(
+    () => () => {
+      if (photoUrlRef.current) URL.revokeObjectURL(photoUrlRef.current);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!ready || !canvasRef.current) return;
@@ -208,7 +238,7 @@ export default function ShareCardBuilder() {
       photo,
       details
     );
-  }, [ready, photo, details]);
+  }, [ready, fontsLoaded, photo, details]);
 
   const update = (field) => (event) =>
     setDetails((current) => ({ ...current, [field]: event.target.value }));
@@ -385,9 +415,25 @@ export default function ShareCardBuilder() {
             role="img"
             className="h-auto w-full rounded-lg shadow-2xl shadow-black/40"
           />
-          {!ready && (
+          {!ready && !loadFailed && (
             <p className="mt-3 text-center text-sm text-white/70">
               Loading your card…
+            </p>
+          )}
+          {!ready && loadFailed && (
+            <p className="mt-3 text-center text-sm text-white/80">
+              The card could not load. Check your connection and{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setLoadFailed(false);
+                  setAttempt((current) => current + 1);
+                }}
+                className="font-bold text-[#ffd919] underline underline-offset-2"
+              >
+                try again
+              </button>
+              .
             </p>
           )}
         </div>
