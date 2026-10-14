@@ -34,7 +34,9 @@ export default function Page() {
     <>
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <BrandedPageHero className="py-14 md:py-20">
+        {/* No particles here: the hero wraps the whole card builder, and
+            animating that much area made the page stutter on phones. */}
+        <BrandedPageHero className="py-14 md:py-20" particles={false}>
           <div className="mx-auto w-full max-w-6xl px-4 md:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-white/75">
