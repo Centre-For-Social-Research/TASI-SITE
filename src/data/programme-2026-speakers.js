@@ -131,30 +131,22 @@ export const sessionSpeakers2026 = {
     'Maroof Culmen',
     'Aman Taneja',
   ],
-  'tasi26-62': [
-    'Adam Seldow',
-    {
-      name: 'Vivek Abraham',
-      title: 'Managing Principal, Technology Strategy, The Asia Group',
-    },
-  ],
+  'tasi26-62': ['Adam Seldow', 'Vivek Abraham'],
   'tasi26-63': ['Satviki Varma'],
   'tasi26-46': [
     'Triveni Acharya',
-    { name: 'Ravi Kant', title: 'National Convenor, Just Rights for Children' },
+    'Ravi Kant',
     'Hasina Kharbhih',
     'Aishwarya Dongre',
     'Smita Mitra',
   ],
+  'tasi26-64': ['Pari Dua', 'Shruti Seth'],
+  'tasi26-65': ['Kartikeya Mitra'],
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
-    {
-      name: 'Shikha Dahiya',
-      title:
-        'Joint Director, Ministry of Electronics and Information Technology, Government of India',
-    },
+    'Shikha Dahiya',
     'Rob Lewington',
-    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
+    'Amlan Mohanty',
     {
       name: 'Manisha Kapoor',
       title:
