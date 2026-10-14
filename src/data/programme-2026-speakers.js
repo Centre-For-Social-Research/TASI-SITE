@@ -180,13 +180,7 @@ export const sessionSpeakers2026 = {
   'tasi26-75': [
     'Caroline Simangaliso Makumbe',
     'Margaret Gichanga',
-    // Left INHOPE in 2026. Her 2025 profile still says INHOPE, so it is
-    // not linked.
-    {
-      name: 'Abby Roberts',
-      title: 'Terre des Hommes',
-      photo: '/img/speakers/Abby Roberts.webp',
-    },
+    'George Kalu',
     'Pranay Dixit',
     'Maina Korir',
   ],
