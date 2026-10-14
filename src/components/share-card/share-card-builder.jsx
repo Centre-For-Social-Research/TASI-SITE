@@ -57,11 +57,16 @@ const getServerCanShareFiles = () => false;
 let canShareFilesCache;
 const getCanShareFiles = () => {
   if (canShareFilesCache === undefined) {
-    canShareFilesCache =
-      typeof navigator.canShare === 'function' &&
-      navigator.canShare({
-        files: [new File([''], 'card.png', { type: 'image/png' })],
-      });
+    // Some in-app browsers throw here instead of returning false.
+    try {
+      canShareFilesCache =
+        typeof navigator.canShare === 'function' &&
+        navigator.canShare({
+          files: [new File([''], 'card.png', { type: 'image/png' })],
+        });
+    } catch {
+      canShareFilesCache = false;
+    }
   }
   return canShareFilesCache;
 };
