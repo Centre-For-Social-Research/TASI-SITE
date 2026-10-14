@@ -20,6 +20,19 @@ export const sessionSpeakers2026 = {
   // Tuesday, 13 October: opening reception
   'tasi26-1': ['Dr. Ranjana Kumari', 'Jc Le Toquin', 'Caroline Humer'],
   'tasi26-49': ['Jyoti Vadehra'],
+  'tasi26-88': ['Marisa Gerards'],
+  'tasi26-89': [
+    'Jc Le Toquin',
+    {
+      name: 'Aparajita Bharti',
+      title: 'Co-Founder, The Quantum Hub',
+      photo: '/img/speakers/Aparajita Bharti.webp',
+      profile: '2025',
+    },
+    'Rob Lewington',
+    'Marisa Gerards',
+  ],
+  'tasi26-90': ['Dr. Ranjana Kumari'],
   'tasi26-2': ['Rahul Fernandes', 'Nandini Chatterjee Singh'],
   'tasi26-3': ['Kunal Majumder'],
   'tasi26-4': ['Lucy Thomas'],
