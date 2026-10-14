@@ -78,6 +78,9 @@ export default function ProgrammePageClient({
             receptionNotes={receptionNotes2026}
             dayDateMap={dayDateMap2026}
             showLiveStatus
+            // Day 1 is over, so the agenda opens on Day 2.
+            defaultDay="oct15"
+            syncWithUrl
           />
         </>
       )}

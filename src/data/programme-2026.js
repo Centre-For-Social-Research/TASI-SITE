@@ -503,14 +503,52 @@ export const programmeSessions2026 = [
     'Festival Closing',
     'The festival closing to end TASI 2026.'
   ),
+
+  // Thursday, 15 October: closing reception (own tab on the programme page).
   makeSession(
     68,
-    'oct15',
-    '18:00–20:00',
-    'Embassy of the Netherlands',
+    'oct15-reception',
+    '18:30–20:30',
+    'Residence of the Ambassador of the Netherlands',
     'special',
     'Closing Reception',
-    'A closing reception hosted by the Embassy of the Kingdom of the Netherlands, with reflections on two days of TASI 2026.'
+    'TASI 2026 closes with an evening reception hosted by the Embassy of the Kingdom of the Netherlands in India. Guests arrive from 18:30 for registration and a welcome drink, followed by welcome remarks, a closing panel reflecting on the festival, concluding remarks, and informal networking over drinks and dinner.'
+  ),
+  makeSession(
+    88,
+    'oct15-reception',
+    '19:00–19:05',
+    'Residence of the Ambassador of the Netherlands',
+    'opening',
+    'Welcome Remarks',
+    'Welcome remarks from H.E. Ms. Marisa Gerards, Ambassador of the Kingdom of the Netherlands.'
+  ),
+  makeSession(
+    89,
+    'oct15-reception',
+    '19:05–19:40',
+    'Residence of the Ambassador of the Netherlands',
+    'panel',
+    'Panel: From Conversation to Commitment: Reflections on TASI 2026',
+    'Rather than recapping sessions, this closing conversation asks what stayed with us from two days of TASI 2026, what remains unresolved, and what each of us is prepared to do next. Themes include moving from dialogue to delivery, what is distinctive about India’s context and what it can offer the global trust and safety community, whose voices are still missing from the room, the respective responsibilities of platforms, governments and civil society, and concrete commitments to carry forward before TASI 2027. Moderated by H.E. Ms. Marisa Gerards.'
+  ),
+  makeSession(
+    90,
+    'oct15-reception',
+    '19:40–19:45',
+    'Residence of the Ambassador of the Netherlands',
+    'special',
+    'Concluding Remarks and Thanks',
+    'Concluding remarks and thanks from Dr. Ranjana Kumari, Director, Centre for Social Research.'
+  ),
+  makeSession(
+    91,
+    'oct15-reception',
+    '19:45–20:30',
+    'Residence of the Ambassador of the Netherlands',
+    'special',
+    'Informal Networking, Drinks and Dinner',
+    'An informal evening of networking, drinks and dinner to close TASI 2026.'
   ),
 
   // Thursday, 15 October: parallel rooms.

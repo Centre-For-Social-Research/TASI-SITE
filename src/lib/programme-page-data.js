@@ -41,6 +41,7 @@ export const programmeDayLabels2026 = {
   oct13: 'October 13 - Opening Reception',
   oct14: 'October 14 - Conference Day 1',
   oct15: 'October 15 - Conference Day 2',
+  'oct15-reception': 'October 15 - Closing Reception',
 };
 
 // Used to build "Add to Calendar" links for the 2026 agenda.
@@ -48,6 +49,7 @@ export const programmeDayDateMap2026 = {
   oct13: '20261013',
   oct14: '20261014',
   oct15: '20261015',
+  'oct15-reception': '20261015',
 };
 
 export const programmeReceptionNotes2026 = [
@@ -61,11 +63,11 @@ export const programmeReceptionNotes2026 = [
   },
   {
     day: 'October 15',
-    venue: 'Embassy of the Netherlands, New Delhi',
+    venue: 'Residence of the Ambassador of the Netherlands, New Delhi',
     access: 'Invite only',
     note: 'This is an invitation-only event. Your festival pass does not include entry.',
     description:
-      'Closing reception for delegates and partners to reflect on the two-day programme and continue conversations across the trust and safety community.',
+      'Closing reception hosted by the Embassy of the Kingdom of the Netherlands, with a closing panel reflecting on two days of TASI 2026, followed by networking, drinks and dinner.',
   },
 ];
 

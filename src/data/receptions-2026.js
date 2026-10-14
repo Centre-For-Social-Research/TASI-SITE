@@ -154,12 +154,12 @@ export const receptions2026 = [
     hostLine:
       'Hosted by H.E. Marisa Gerards, Ambassador of the Kingdom of the Netherlands',
     card: {
-      theme: 'Reflections on Two Days of TASI 2026',
+      theme: 'From Conversation to Commitment',
       summary:
-        'The festival closes with a short fireside conversation on the key takeaways from TASI 2026, followed by food and drinks with delegates, speakers and partners.',
+        'The festival closes with a panel reflecting on TASI 2026 and the commitments to carry forward, followed by networking, drinks and dinner with delegates, speakers and partners.',
     },
     summary:
-      'The festival closes with a short fireside conversation looking back on two days of TASI 2026, then food and drinks with delegates, speakers and partners.',
+      'Welcome remarks from H.E. Marisa Gerards open the evening, followed by a closing panel, From Conversation to Commitment, with Jc Le Toquin, Aparajita Bharti and Rob Lewington, and concluding remarks from Dr. Ranjana Kumari. The evening ends with networking, drinks and dinner.',
   },
 ];
 

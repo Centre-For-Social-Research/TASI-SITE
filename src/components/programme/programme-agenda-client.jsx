@@ -54,6 +54,32 @@ const DEFAULT_DAY_LABELS = {
 };
 const EVENT_LOCATION = 'New Delhi, India';
 
+// The 2026 agenda keeps its day tab and page in the URL (?day=&page=), so
+// opening a session and pressing Back returns to the same place. Writes use
+// history.replaceState, which does not fire popstate, so listeners are
+// notified directly.
+const urlListeners = new Set();
+function subscribeToUrl(callback) {
+  urlListeners.add(callback);
+  window.addEventListener('popstate', callback);
+  return () => {
+    urlListeners.delete(callback);
+    window.removeEventListener('popstate', callback);
+  };
+}
+const getUrlSearch = () => window.location.search;
+const getServerUrlSearch = () => '';
+
+function replaceUrlParams(updates) {
+  const url = new URL(window.location.href);
+  for (const [key, value] of Object.entries(updates)) {
+    if (value === null) url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+  }
+  window.history.replaceState(window.history.state, '', url);
+  urlListeners.forEach((callback) => callback());
+}
+
 function cx(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -277,15 +303,22 @@ export default function ProgrammeAgendaClient({
   dayDateMap = DEFAULT_DAY_DATE_MAP,
   showLiveStatus = false,
   speakerEdition,
+  defaultDay = 'all',
+  syncWithUrl = false,
 }) {
   const clock = useFestivalClock();
   const liveClock = showLiveStatus ? clock : null;
   const [showAgendaBuilder, setShowAgendaBuilder] = useState(false);
-  const [activeDay, setActiveDay] = useState('all');
+  const [localDay, setLocalDay] = useState(defaultDay);
+  const [localPage, setLocalPage] = useState(1);
+  const urlSearch = useSyncExternalStore(
+    subscribeToUrl,
+    getUrlSearch,
+    getServerUrlSearch
+  );
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState('');
   const [venue, setVenue] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const editionYear = getEditionYear(dayDateMap);
   const agenda = useSavedAgenda(`tasi-my-agenda-${editionYear || 'default'}`);
   const closeAgendaBuilder = useCallback(() => setShowAgendaBuilder(false), []);
@@ -318,6 +351,30 @@ export default function ProgrammeAgendaClient({
     [dayLabels]
   );
   const dayKeys = useMemo(() => Object.keys(labels), [labels]);
+
+  const urlParams = useMemo(() => new URLSearchParams(urlSearch), [urlSearch]);
+  const urlDay = urlParams.get('day');
+  const activeDay = !syncWithUrl
+    ? localDay
+    : urlDay === 'all' || dayKeys.includes(urlDay)
+      ? urlDay
+      : defaultDay;
+  const currentPage = syncWithUrl
+    ? Math.max(1, Number.parseInt(urlParams.get('page'), 10) || 1)
+    : localPage;
+
+  const setActiveDay = (day) => {
+    if (syncWithUrl) replaceUrlParams({ day: day === defaultDay ? null : day });
+    else setLocalDay(day);
+  };
+  const setCurrentPage = (pageOrUpdate) => {
+    const next =
+      typeof pageOrUpdate === 'function'
+        ? pageOrUpdate(currentPage)
+        : pageOrUpdate;
+    if (syncWithUrl) replaceUrlParams({ page: next > 1 ? String(next) : null });
+    else setLocalPage(next);
+  };
 
   const filteredSessions = useMemo(() => {
     const q = query.trim().toLowerCase();

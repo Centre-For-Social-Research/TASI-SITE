@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
-const VALID_DAYS = new Set(['oct13', 'oct14', 'oct15']);
+const VALID_DAYS = new Set(['oct13', 'oct14', 'oct15', 'oct15-reception']);
 
 // Rooms that run a single session at a time. Reception and Lobby entries
 // deliberately share a slot (parallel spotlights, open networking windows).
