@@ -146,7 +146,7 @@ export const sessionSpeakers2026 = {
   'tasi26-67': [
     'Shikha Dahiya',
     'Rob Lewington',
-    { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
+    'Amlan Mohanty',
     {
       name: 'Manisha Kapoor',
       title:
