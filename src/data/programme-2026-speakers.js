@@ -131,13 +131,7 @@ export const sessionSpeakers2026 = {
     'Maroof Culmen',
     'Aman Taneja',
   ],
-  'tasi26-62': [
-    'Adam Seldow',
-    {
-      name: 'Vivek Abraham',
-      title: 'Managing Principal, Technology Strategy, The Asia Group',
-    },
-  ],
+  'tasi26-62': ['Adam Seldow', 'Vivek Abraham'],
   'tasi26-63': ['Satviki Varma'],
   'tasi26-46': [
     'Triveni Acharya',
