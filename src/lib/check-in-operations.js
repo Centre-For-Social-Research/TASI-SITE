@@ -272,3 +272,37 @@ export async function listRecentEntryScans(options = {}) {
 
   return data || [];
 }
+
+// Day totals for the check-in stat cards, counted in the database across
+// every desk rather than from the scan list on screen.
+export async function getCheckInDayStats({ eventDay } = {}) {
+  const supabase = getSupabase();
+  const day = getCheckInDayNumber(eventDay);
+  const count = async (query) => {
+    const { count: total, error } = await query;
+    if (error) throw new Error(error.message);
+    return total || 0;
+  };
+  const headCount = (table) =>
+    supabase
+      .from(table)
+      .select('id', { count: 'exact', head: true })
+      .eq('event_day', day);
+
+  const [checkedIn, walkIns, duplicates, blocked, totalScans] =
+    await Promise.all([
+      count(headCount('registration_daily_check_ins')),
+      count(headCount('spot_registrations')),
+      count(headCount('entry_scans').eq('scan_result', 'already_checked_in')),
+      count(
+        headCount('entry_scans').not(
+          'scan_result',
+          'in',
+          '(valid,already_checked_in)'
+        )
+      ),
+      count(headCount('entry_scans')),
+    ]);
+
+  return { checkedIn, walkIns, duplicates, blocked, totalScans };
+}
