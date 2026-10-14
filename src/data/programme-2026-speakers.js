@@ -140,6 +140,7 @@ export const sessionSpeakers2026 = {
     'Aishwarya Dongre',
     'Smita Mitra',
   ],
+  'tasi26-65': ['Kartikeya Mitra'],
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
     {
