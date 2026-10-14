@@ -144,11 +144,7 @@ export const sessionSpeakers2026 = {
   'tasi26-65': ['Kartikeya Mitra'],
   'tasi26-66': ['Rohit Kumar'],
   'tasi26-67': [
-    {
-      name: 'Shikha Dahiya',
-      title:
-        'Joint Director, Ministry of Electronics and Information Technology, Government of India',
-    },
+    'Shikha Dahiya',
     'Rob Lewington',
     { name: 'Amlan Mohanty', title: 'Head of Policy, India, Anthropic' },
     {
