@@ -70,6 +70,7 @@ export default function CheckInPanel() {
   const [scanSubmitting, setScanSubmitting] = useState(false);
   const [configWarning, setConfigWarning] = useState('');
   const [recentScans, setRecentScans] = useState([]);
+  const [dayStats, setDayStats] = useState(null);
   const [activitySearch, setActivitySearch] = useState('');
   const [activityResults, setActivityResults] = useState(null);
   const [activityLoading, setActivityLoading] = useState(false);
@@ -89,7 +90,19 @@ export default function CheckInPanel() {
     () => getCheckInDayShortLabel(selectedEventDay),
     [selectedEventDay]
   );
+  // Day totals come from the server. The counts from the latest scans on
+  // screen are only a fallback until the first response arrives.
   const activityStats = useMemo(() => {
+    if (dayStats && dayStats.day === selectedEventDay) {
+      return {
+        valid: dayStats.checkedIn + dayStats.walkIns,
+        checkedIn: dayStats.checkedIn,
+        walkIns: dayStats.walkIns,
+        duplicates: dayStats.duplicates,
+        blocked: dayStats.blocked,
+        total: dayStats.totalScans,
+      };
+    }
     const valid = recentScans.filter(
       (scan) => scan.scan_result === 'valid'
     ).length;
@@ -102,11 +115,13 @@ export default function CheckInPanel() {
 
     return {
       valid,
+      checkedIn: valid,
+      walkIns: 0,
       duplicates,
       blocked,
       total: recentScans.length,
     };
-  }, [recentScans]);
+  }, [dayStats, recentScans, selectedEventDay]);
 
   async function exportCheckIns(format) {
     setExporting(format);
@@ -170,6 +185,9 @@ export default function CheckInPanel() {
         }
 
         setRecentScans(data.recentScans || []);
+        if (data.stats) {
+          setDayStats({ ...data.stats, day: selectedEventDay });
+        }
         setScanMessage({
           tone: getCheckInFeedbackTone(data.result),
           title:
@@ -372,6 +390,9 @@ export default function CheckInPanel() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Unable to load scans.');
+      if (!search && data.stats) {
+        setDayStats({ ...data.stats, day: selectedEventDay });
+      }
       return data.scans || [];
     },
     [selectedEventDay]
@@ -394,16 +415,25 @@ export default function CheckInPanel() {
   useEffect(() => {
     let active = true;
 
-    fetchScans()
-      .then((scans) => {
-        if (active) setRecentScans(scans);
-      })
-      .catch(() => {
-        // Keep check-in usable even if the recent scans widget cannot load.
-      });
+    const load = () =>
+      fetchScans()
+        .then((scans) => {
+          if (active) setRecentScans(scans);
+        })
+        .catch(() => {
+          // Keep check-in usable even if the recent scans widget cannot load.
+        });
+
+    void load();
+    // Other desks check people in too: refresh the totals and recent scans
+    // every 15 seconds while this tab is visible.
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') void load();
+    }, 15_000);
 
     return () => {
       active = false;
+      window.clearInterval(timer);
     };
   }, [fetchScans]);
 
@@ -525,10 +555,10 @@ export default function CheckInPanel() {
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <AdminStatCard
-          label="Recent Valid"
+          label="Checked In"
           value={activityStats.valid}
           tone="success"
-          detail={`${selectedEventDayLabel} successful approvals`}
+          detail={`${selectedEventDayLabel}: ${activityStats.checkedIn} with pass, ${activityStats.walkIns} walk-ins`}
         />
         <AdminStatCard
           label="Duplicates"
@@ -543,10 +573,10 @@ export default function CheckInPanel() {
           detail={`${selectedEventDayLabel} rejected or waitlisted entries`}
         />
         <AdminStatCard
-          label="Recent Total"
+          label="Total Scans"
           value={activityStats.total}
           tone="info"
-          detail={`${selectedEventDayLabel} latest scans`}
+          detail={`${selectedEventDayLabel} scans at all desks`}
         />
       </section>
 

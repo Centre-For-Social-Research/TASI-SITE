@@ -1,6 +1,7 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import {
   completeCheckIn,
+  getCheckInDayStats,
   getCheckInRecordByToken,
   getCheckInRegistrationById,
   listRecentEntryScans,
@@ -73,6 +74,7 @@ export async function POST(request) {
         registration,
         eventDay,
         recentScans: await listRecentEntryScans({ eventDay }),
+        stats: await getCheckInDayStats({ eventDay }),
       });
     }
 
@@ -91,6 +93,7 @@ export async function POST(request) {
       registration: checkedIn.registration,
       eventDay,
       recentScans: await listRecentEntryScans({ eventDay }),
+      stats: await getCheckInDayStats({ eventDay }),
     });
   } catch (error) {
     console.error('Check-in scan failed.', error);

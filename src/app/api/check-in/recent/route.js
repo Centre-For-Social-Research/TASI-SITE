@@ -1,5 +1,8 @@
 import { requireAuthorizedOperator } from '@/lib/registration-auth';
-import { listRecentEntryScans } from '@/lib/check-in-operations';
+import {
+  getCheckInDayStats,
+  listRecentEntryScans,
+} from '@/lib/check-in-operations';
 import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
 const { normalizeCheckInDay } = checkInDayUtils;
@@ -17,14 +20,15 @@ export async function GET(request) {
     const eventDay = normalizeCheckInDay(
       searchParams.get('eventDay') || searchParams.get('event_day')
     );
-    const scans = await listRecentEntryScans({
-      eventDay,
-      search: searchParams.get('search') || '',
-      limit: searchParams.get('search') ? 100 : 25,
-    });
+    const search = searchParams.get('search') || '';
+    const [scans, stats] = await Promise.all([
+      listRecentEntryScans({ eventDay, search, limit: search ? 100 : 25 }),
+      search ? null : getCheckInDayStats({ eventDay }),
+    ]);
     return Response.json({
       success: true,
       scans,
+      stats,
       eventDay,
     });
   } catch (error) {
