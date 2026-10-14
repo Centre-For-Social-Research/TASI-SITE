@@ -398,7 +398,7 @@ export const programmeSessions2026 = [
   makeSession(
     34,
     'oct15',
-    '10:15–11:00',
+    '10:15–11:15',
     'Main Hall',
     'panel',
     'Panel: Trust, Safety & Equity: Journalism in a Changing Information Ecosystem',
@@ -407,7 +407,7 @@ export const programmeSessions2026 = [
   makeSession(
     61,
     'oct15',
-    '11:00–11:15',
+    '11:15–11:30',
     'Main Hall',
     'spotlight',
     'Spotlight: I4C, Saksham Senior and Meta Collaboration for Cyber Awareness Month',
@@ -416,7 +416,7 @@ export const programmeSessions2026 = [
   makeSession(
     44,
     'oct15',
-    '11:15–12:00',
+    '11:30–12:30',
     'Main Hall',
     'panel',
     'Panel: Reach, Revenue & Responsibility: What AI Changes for India’s Creators',
@@ -425,7 +425,7 @@ export const programmeSessions2026 = [
   makeSession(
     62,
     'oct15',
-    '12:00–12:30',
+    '12:30–13:00',
     'Main Hall',
     'fireside',
     'Fireside Chat: Technology, Learning, and the Next Generation',
@@ -434,7 +434,7 @@ export const programmeSessions2026 = [
   makeSession(
     63,
     'oct15',
-    '12:30–12:45',
+    '13:00–13:15',
     'Main Hall',
     'spotlight',
     'Spotlight: From Tech Hinsa to Tech Respect: Putting Young People at the Heart of a Safer Digital Future',
@@ -443,29 +443,11 @@ export const programmeSessions2026 = [
   makeSession(
     41,
     'oct15',
-    '12:45–13:45',
+    '13:15–14:20',
     'Lobby',
     'special',
     'Lunch Break',
     'Lunch for all delegates, with time to continue conversations from the morning sessions before the afternoon programme.'
-  ),
-  makeSession(
-    86,
-    'oct15',
-    '13:45–14:00',
-    'Main Hall',
-    'spotlight',
-    'Spotlight: GroSafe: A Technology-Enabled Solution to Build Societal Resilience Against Child Grooming',
-    'A spotlight on GroSafe, a technology-enabled solution that builds societal resilience against child grooming.'
-  ),
-  makeSession(
-    27,
-    'oct15',
-    '14:00–14:20',
-    'Main Hall',
-    'fireside',
-    'Leadership Dialogue: Women in Public Life: Building Safer Spaces for Stronger Democracy',
-    'A conversation on the abuse women in public life face online, and how parliament, platforms and civil society can build safer spaces for a stronger democracy.'
   ),
   makeSession(
     64,
@@ -518,8 +500,8 @@ export const programmeSessions2026 = [
     '16:50–17:00',
     'Main Hall',
     'special',
-    'Closing Remarks',
-    'Closing remarks to end TASI 2026.'
+    'Festival Closing',
+    'The festival closing to end TASI 2026.'
   ),
   makeSession(
     68,
@@ -538,8 +520,8 @@ export const programmeSessions2026 = [
     '10:15–11:15',
     'Roundtable Room',
     'roundtable',
-    'Roundtable: Continuum of Online and Offline Abuse',
-    'A roundtable on how online and offline abuse are connected, and what a joined-up response could look like.'
+    'Roundtable: Reframing Technology-Facilitated Forms of Gender-Based Violence',
+    'A roundtable on how we understand and name technology-facilitated gender-based violence, and what reframing it means for prevention, support and accountability.'
   ),
   makeSession(
     71,
