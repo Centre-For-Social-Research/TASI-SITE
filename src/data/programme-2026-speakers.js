@@ -150,7 +150,7 @@ export const sessionSpeakers2026 = {
     'Triveni Acharya',
     'Ravi Kant',
     'Hasina Kharbhih',
-    'Aishwarya Dongre',
+    { name: 'Manoj Kumar Meena', title: 'IPS, Ministry of Home Affairs' },
     'Smita Mitra',
   ],
   'tasi26-64': ['Pari Dua', 'Shruti Seth'],
