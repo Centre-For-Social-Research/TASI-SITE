@@ -231,8 +231,8 @@ test('quote, featured photo and profile link appear only when available', () => 
     hasPhoto: true,
   });
   assert.match(full.html, /cid:speaker-photo/);
-  assert.match(full.html, /Something you said that stayed with us:/);
-  assert.match(full.html, /&ldquo;Build it with them\.&rdquo;/);
+  assert.match(full.html, /Something you said that stayed with us/);
+  assert.match(full.html, /&ldquo;<\/div><p[^>]*>Build it with them\.<\/p>/);
   assert.match(full.html, /<em>Less Advising, More Doing<\/em>/);
   assert.match(full.html, /\/speakers\/2026\/lucy-thomas/);
   const bare = buildSpeakerPhotosEmail({

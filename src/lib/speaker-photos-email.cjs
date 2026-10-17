@@ -66,7 +66,7 @@ function festivalLine(hasSession) {
     : 'Over two days in New Delhi, more than 100 speakers from 20 countries came together to talk about keeping people safe online. Your contribution added a great deal to those conversations, and we are grateful you made the time to be with us.';
 }
 
-const QUOTE_LEAD = 'Something you said that stayed with us:';
+const QUOTE_LEAD = 'Something you said that stayed with us';
 
 function useNote(edition) {
   return `Feel free to download and share them. If you post, tag us with ${edition.hashtag} and we will share it too.`;
@@ -108,7 +108,7 @@ function buildSpeakerPhotosEmail({
     ? `<tr><td align="center" class="tasi-px" style="padding:4px 40px 10px"><img src="cid:${SPEAKER_PHOTO_CONTENT_ID}" width="100%" alt="${escapeHtml(speakerName)} at ${escapeHtml(edition.name)}" style="display:block;width:100%;max-width:470px;height:auto;border:0;border-radius:10px" /></td></tr>`
     : '';
   const quoteHtml = quote
-    ? `<p style="margin:20px auto 0;max-width:470px;font-size:14px;color:#5f6368">${escapeHtml(QUOTE_LEAD)}</p><div style="max-width:430px;margin:8px auto 0;padding:14px 18px;border-left:3px solid #43358a;background:#f4f2fa;border-radius:6px;text-align:left;color:#202124;font-size:16px;line-height:25px;font-style:italic">&ldquo;${escapeHtml(quote)}&rdquo;</div>`
+    ? `<div style="max-width:400px;margin:26px auto 4px;text-align:center"><div style="font-family:Georgia,'Times New Roman',serif;font-size:56px;line-height:40px;height:30px;color:#b34b5c">&ldquo;</div><p style="margin:8px 0 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:27px;color:#1f2a44">${escapeHtml(quote)}</p><p style="margin:12px 0 0;font-size:11px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;color:#8a8f98">${escapeHtml(QUOTE_LEAD)}</p></div>`
     : '';
   const profileHtml = profileUrl
     ? `<p style="margin:12px auto 0;max-width:470px">Your speaker profile is still live on the ${escapeHtml(edition.name)} website. <a href="${escapeHtml(profileUrl)}" style="${LINK};font-weight:600">View your profile</a></p>`
@@ -129,7 +129,7 @@ function buildSpeakerPhotosEmail({
     ...(session ? [sessionLineText(session), ''] : []),
     festival,
     '',
-    ...(quote ? [QUOTE_LEAD, `"${quote}"`, ''] : []),
+    ...(quote ? [`${QUOTE_LEAD}:`, `"${quote}"`, ''] : []),
     PHOTOS_LINE,
     '',
     `View your photos: ${driveUrl}`,
