@@ -56,7 +56,7 @@ function sessionLineText(line) {
 
 function sessionLineHtml(line) {
   return `${escapeHtml(line.lead)}${line.titles
-    .map((t) => `<em>${escapeHtml(t)}</em>`)
+    .map((t) => `&ldquo;${escapeHtml(t)}&rdquo;`)
     .join(' and ')}${escapeHtml(line.tail)}`;
 }
 
@@ -108,7 +108,7 @@ function buildSpeakerPhotosEmail({
     ? `<tr><td align="center" class="tasi-px" style="padding:4px 40px 10px"><img src="cid:${SPEAKER_PHOTO_CONTENT_ID}" width="100%" alt="${escapeHtml(speakerName)} at ${escapeHtml(edition.name)}" style="display:block;width:100%;max-width:470px;height:auto;border:0;border-radius:10px" /></td></tr>`
     : '';
   const quoteHtml = quote
-    ? `<div style="max-width:400px;margin:26px auto 4px;text-align:center"><div style="font-family:Georgia,'Times New Roman',serif;font-size:56px;line-height:40px;height:30px;color:#b34b5c">&ldquo;</div><p style="margin:8px 0 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:27px;color:#1f2a44">${escapeHtml(quote)}</p><p style="margin:12px 0 0;font-size:11px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;color:#8a8f98">${escapeHtml(QUOTE_LEAD)}</p></div>`
+    ? `${p(`${escapeHtml(QUOTE_LEAD)}:`)}<p style="margin:8px auto 0;max-width:430px;color:#022d5d">&ldquo;${escapeHtml(quote)}&rdquo;</p>`
     : '';
   const profileHtml = profileUrl
     ? `<p style="margin:12px auto 0;max-width:470px">Your speaker profile is still live on the ${escapeHtml(edition.name)} website. <a href="${escapeHtml(profileUrl)}" style="${LINK};font-weight:600">View your profile</a></p>`
