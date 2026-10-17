@@ -73,7 +73,7 @@ const structuredData = {
       eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
       eventStatus: 'https://schema.org/EventScheduled',
       image: [`${siteUrl}/opengraph-image`],
-      url: siteUrl,
+      url: `${siteUrl}/tasi-2026`,
       organizer: {
         '@id': `${siteUrl}/#organization`,
       },
@@ -81,15 +81,6 @@ const structuredData = {
         '@type': 'Organization',
         name: 'TASI 2026 speakers and panelists',
         url: `${siteUrl}/speakers`,
-      },
-      offers: {
-        '@type': 'Offer',
-        name: 'General access registration',
-        url: `${siteUrl}/register`,
-        price: '0',
-        priceCurrency: 'INR',
-        availability: 'https://schema.org/InStock',
-        validFrom: '2026-05-01T00:00:00+05:30',
       },
       location: {
         '@type': 'Place',

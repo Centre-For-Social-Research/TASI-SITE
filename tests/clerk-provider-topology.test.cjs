@@ -35,7 +35,7 @@ test('root metadata prioritizes Trust and Safety India Festival search terms', (
   assert.match(rootLayout, /'India trust and safety conference'/);
 });
 
-test('root event structured data includes Google recommended fields', () => {
+test('root event structured data describes the past TASI 2026 edition', () => {
   const rootLayout = readFile('src/app/layout.tsx');
 
   assert.match(rootLayout, /'@type': 'Event'/);
@@ -43,10 +43,10 @@ test('root event structured data includes Google recommended fields', () => {
   assert.match(rootLayout, /'Trust and Safety India Festival 2026'/);
   assert.match(rootLayout, /performer: \{/);
   assert.match(rootLayout, /name: 'TASI 2026 speakers and panelists'/);
-  assert.match(rootLayout, /offers: \{/);
-  assert.match(rootLayout, /'@type': 'Offer'/);
-  assert.match(rootLayout, /priceCurrency: 'INR'/);
-  assert.match(rootLayout, /url: `\$\{siteUrl\}\/register`/);
+  // TASI 2026 is over, so the event no longer advertises open registration.
+  assert.doesNotMatch(rootLayout, /'@type': 'Offer'/);
+  assert.doesNotMatch(rootLayout, /schema\.org\/InStock/);
+  assert.match(rootLayout, /url: `\$\{siteUrl\}\/tasi-2026`/);
 });
 
 test('shared auth provider proxies Clerk runtime through the app', () => {

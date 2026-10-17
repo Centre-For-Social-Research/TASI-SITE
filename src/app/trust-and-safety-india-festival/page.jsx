@@ -179,7 +179,7 @@ const structuredData = {
         `${siteUrl}/img/home-gallery/7T7A5237-new.webp`,
         `${siteUrl}/img/home-gallery/IMG_6768.webp`,
       ],
-      url: siteUrl,
+      url: `${siteUrl}/tasi-2026`,
       organizer: [
         {
           '@type': 'Organization',
@@ -200,15 +200,6 @@ const structuredData = {
           addressLocality: 'New Delhi',
           addressCountry: 'IN',
         },
-      },
-      offers: {
-        '@type': 'Offer',
-        name: 'Trust and Safety India Festival registration',
-        url: `${siteUrl}/register`,
-        price: '0',
-        priceCurrency: 'INR',
-        availability: 'https://schema.org/InStock',
-        validFrom: '2026-05-01T00:00:00+05:30',
       },
     },
     {
