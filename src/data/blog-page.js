@@ -29,11 +29,11 @@ export const blogIndexCopy = {
 };
 
 export const blogIndexCta = {
-  title: 'Ready to Join TASI 2026?',
+  title: 'Missed TASI 2026?',
   description:
-    'Register now and be part of the conversation shaping digital trust and safety in India.',
-  href: '/register',
-  label: 'Register Now',
+    'Read the recap: five ideas, launches and recommendations from the second Trust and Safety India Festival.',
+  href: '/tasi-2026',
+  label: 'Read the Recap',
 };
 
 export const blogPostFallbackCopy = {

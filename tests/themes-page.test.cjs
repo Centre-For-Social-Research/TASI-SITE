@@ -36,7 +36,7 @@ test('themes data owns page copy and all live theme records', async () => {
   assert.equal(data.themesPageHero.stats.length, 4);
   assert.equal(data.themesPageHero.title, 'TASI 2026');
   assert.equal(data.themesPageHero.titleAccent, 'Themes');
-  assert.equal(data.themesPageCta.href, '/register');
+  assert.equal(data.themesPageCta.href, '/tasi-2026');
   assert.equal(data.themesPageMetadata.title, 'Themes | TASI 2026');
   assert.equal(data.themesPageMetadata.alternates.canonical, '/themes');
 });

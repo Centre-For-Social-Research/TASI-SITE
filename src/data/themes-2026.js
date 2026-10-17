@@ -29,9 +29,9 @@ export const themesPageIntro = {
 };
 
 export const themesPageCta = {
-  title: 'Be Part of the Conversation',
-  href: '/register',
-  label: 'Register for TASI 2026',
+  title: 'See How TASI 2026 Unfolded',
+  href: '/tasi-2026',
+  label: 'Read the TASI 2026 Recap',
 };
 
 export const themes2026 = [

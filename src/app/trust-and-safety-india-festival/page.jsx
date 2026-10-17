@@ -107,10 +107,10 @@ const exploreLinks = [
     Icon: Mic,
   },
   {
-    href: '/register',
-    title: 'Register',
-    eyebrow: 'Attend TASI 2026',
-    body: 'Apply to attend the 2026 edition of the Trust and Safety India Festival in New Delhi.',
+    href: '/tasi-2026',
+    title: 'TASI 2026 Recap',
+    eyebrow: 'Second edition',
+    body: 'Highlights, launches, recommendations and session recaps from TASI 2026 in New Delhi.',
     Icon: Ticket,
   },
 ];

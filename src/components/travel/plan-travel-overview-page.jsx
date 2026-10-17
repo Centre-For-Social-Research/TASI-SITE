@@ -108,18 +108,19 @@ export default function PlanTravelOverviewPage() {
         <div className="mx-auto flex max-w-5xl flex-col gap-5 rounded-[10px] border border-[#350265]/15 bg-white px-6 py-8 dark:border-stone-700 dark:bg-stone-900 md:flex-row md:items-center md:justify-between md:px-8">
           <div>
             <p className="text-lg font-bold text-stone-900 dark:text-white">
-              Not registered yet?
+              TASI 2026 has ended
             </p>
             <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-              Register on the website to get your QR entry pass by email.
+              This travel guide is kept for reference. See what happened in the
+              TASI 2026 recap.
             </p>
           </div>
           <div className="flex flex-shrink-0 gap-3">
             <Link
-              href="/register"
+              href="/tasi-2026"
               className="rounded-full bg-[#350265] px-6 py-2.5 text-sm font-bold text-white transition hover:bg-[#55089e]"
             >
-              Register
+              Read the recap
             </Link>
             <Link
               href="/contact"
