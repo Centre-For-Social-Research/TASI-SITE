@@ -140,9 +140,9 @@ export const tasi2026Ideas = [
       role: 'Founder, ChildSafeNet',
       photo: '/img/speakers/2026/anil-raghuvanshi.webp',
     },
-    image: '/img/tasi-2026/idea-design-report-launch.webp',
+    image: '/img/tasi-2026/idea-design-report-launch-group.webp',
     imageAlt:
-      'Rohit Kumar presenting The Quantum Hub report, Designing for Online Safety',
+      'Speakers on stage holding The Quantum Hub report at its launch on 15 October',
     sessions: ['tasi26-66', 'tasi26-16', 'tasi26-73'],
   },
 ];
