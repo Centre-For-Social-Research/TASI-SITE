@@ -117,11 +117,16 @@ test('photo email links the speaker to their own folder', () => {
     photoCount: 42,
     siteUrl: 'https://trustandsafetyindia.org/',
   });
-  assert.equal(email.subject, 'Your photos from TASI 2026');
+  assert.equal(
+    email.subject,
+    'Thank you for speaking at TASI 2026: your photos'
+  );
   assert.match(email.html, /Dear Lucy Thomas,/);
   assert.ok(email.html.includes(`href="${FOLDER}"`));
   assert.match(email.html, /View your photos/);
-  assert.match(email.html, /the 42 photos of you/);
+  assert.doesNotMatch(email.html, /42/);
+  assert.match(email.html, /photos of you from the festival in one folder/);
+  assert.doesNotMatch(email.html, /not of you/);
   assert.match(email.html, /#TASI2026/);
   assert.match(email.html, /cid:tasi-logo/);
   assert.ok(email.text.includes(`View your photos: ${FOLDER}`));
@@ -129,27 +134,17 @@ test('photo email links the speaker to their own folder', () => {
   assert.doesNotMatch(email.html, /—/);
 });
 
-test('photo email handles one photo, no count, test sends and markup in names', () => {
-  const one = buildSpeakerPhotosEmail({
-    name: 'A',
-    edition: '2026',
-    driveUrl: FOLDER,
-    photoCount: 1,
-  });
-  assert.match(one.text, /the photo of you/);
-  const none = buildSpeakerPhotosEmail({
-    name: 'A',
-    edition: '2026',
-    driveUrl: FOLDER,
-  });
-  assert.match(none.text, /the photos of you/);
+test('photo email handles test sends and markup in names', () => {
   const testEmail = buildSpeakerPhotosEmail({
     name: '<b>X</b>',
     edition: '2026',
     driveUrl: FOLDER,
     test: true,
   });
-  assert.equal(testEmail.subject, '[TEST] Your photos from TASI 2026');
+  assert.equal(
+    testEmail.subject,
+    '[TEST] Thank you for speaking at TASI 2026: your photos'
+  );
   assert.match(testEmail.html, /Test email\. This was not sent/);
   assert.doesNotMatch(testEmail.html, /<b>X<\/b>/);
   assert.throws(
@@ -198,4 +193,80 @@ test('the badge tab is kept and the photos tab sits beside it', () => {
   );
   assert.match(tabs, /SpeakerCommunicationsPanel/);
   assert.match(tabs, /SpeakerPhotosPanel/);
+});
+
+test('session line names one or two sessions, and counts three or more', () => {
+  const base = { name: 'A', edition: '2026', driveUrl: FOLDER };
+  const one = buildSpeakerPhotosEmail({
+    ...base,
+    sessionTitles: ['Growing Up With AI'],
+  });
+  assert.match(
+    one.text,
+    /A special thank you for your session, "Growing Up With AI"\./
+  );
+  const two = buildSpeakerPhotosEmail({ ...base, sessionTitles: ['X', 'Y'] });
+  assert.match(two.text, /your sessions, "X" and "Y"\./);
+  const three = buildSpeakerPhotosEmail({
+    ...base,
+    sessionTitles: ['X', 'Y', 'Z'],
+  });
+  assert.match(
+    three.text,
+    /being part of three sessions at TASI 2026, including "X"\./
+  );
+  assert.doesNotMatch(three.text, /"Y"/);
+  const none = buildSpeakerPhotosEmail(base);
+  assert.doesNotMatch(none.text, /special thank you/);
+  assert.match(none.text, /Your contribution added a great deal/);
+});
+
+test('quote, featured photo and profile link appear only when available', () => {
+  const full = buildSpeakerPhotosEmail({
+    name: 'Lucy Thomas',
+    edition: '2026',
+    driveUrl: FOLDER,
+    sessionTitles: ['Less Advising, More Doing'],
+    quote: 'Build it with them.',
+    hasPhoto: true,
+  });
+  assert.match(full.html, /cid:speaker-photo/);
+  assert.match(full.html, /Something you said that stayed with us/);
+  assert.ok(
+    full.html.includes(
+      'font-style:italic;font-size:17px;line-height:27px;color:#1f2a44">Build it with them.</p>'
+    )
+  );
+  assert.ok(full.html.includes('&ldquo;Less Advising, More Doing&rdquo;'));
+  assert.doesNotMatch(full.html, /<em>/);
+  assert.match(full.html, /@CSR_India on X/);
+  assert.doesNotMatch(full.html, /View your profile|\/speakers\//);
+  const bare = buildSpeakerPhotosEmail({
+    name: 'Someone Not Listed',
+    edition: '2026',
+    driveUrl: FOLDER,
+  });
+  assert.doesNotMatch(bare.html, /cid:speaker-photo|stayed with us/);
+});
+
+test('session titles and quotes are cleaned on save', () => {
+  const input = normalizeSpeakerPhotoInput({
+    name: 'A',
+    sessionTitles: 'One\n\nTwo\nOne',
+    quote: '  "A line."  ',
+  });
+  assert.deepEqual(input.sessionTitles, ['One', 'Two']);
+  assert.equal(input.quote, 'A line.');
+  assert.equal(
+    normalizeSpeakerPhotoInput({ name: 'A', quote: ' ' }).quote,
+    null
+  );
+  assert.throws(
+    () =>
+      normalizeSpeakerPhotoInput({
+        name: 'A',
+        sessionTitles: '1\n2\n3\n4\n5\n6',
+      }),
+    /at most 5/
+  );
 });

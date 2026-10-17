@@ -35,6 +35,39 @@ function normalizePhotoCount(value) {
   return count;
 }
 
+// Session titles arrive one per line from the admin form, or as an array.
+function normalizeSessionTitles(value) {
+  const entries = Array.isArray(value)
+    ? value
+    : String(value ?? '').split(/\r?\n/);
+  const titles = Array.from(
+    new Set(
+      entries
+        .map((entry) =>
+          sanitizeSpeakerText(entry, {
+            fieldName: 'Session title',
+            maxLength: 200,
+          })
+        )
+        .filter(Boolean)
+    )
+  );
+  if (titles.length > 5) throw new Error('Add at most 5 session titles.');
+  return titles;
+}
+
+// The line quoted back to the speaker. Surrounding quote marks are added by
+// the email, so they are stripped here.
+function normalizeQuote(value) {
+  const quote = sanitizeSpeakerText(value, {
+    fieldName: 'Quote',
+    maxLength: 400,
+  })
+    .replace(/^["“”']+|["“”']+$/g, '')
+    .trim();
+  return quote || null;
+}
+
 function normalizeSpeakerPhotoInput(input = {}) {
   const name = sanitizeSpeakerText(input.name, {
     fieldName: 'Speaker name',
@@ -49,6 +82,8 @@ function normalizeSpeakerPhotoInput(input = {}) {
     emails: parseSpeakerEmails(input.emails ?? input.email),
     driveUrl: normalizeDriveUrl(input.driveUrl),
     photoCount: normalizePhotoCount(input.photoCount),
+    sessionTitles: normalizeSessionTitles(input.sessionTitles),
+    quote: normalizeQuote(input.quote),
   };
 }
 
@@ -82,6 +117,10 @@ function normalizeSpeakerPhotoRow(row = {}) {
         ? null
         : Number(row.photo_count),
     status: SPEAKER_PHOTO_STATUSES.has(row.status) ? row.status : 'draft',
+    sessionTitles: Array.isArray(row.session_titles) ? row.session_titles : [],
+    quote: row.quote || null,
+    hasFeaturedPhoto: Boolean(row.featured_photo_path),
+    featuredPhotoSha256: row.featured_photo_sha256 || null,
     lastSentDriveUrl: row.last_sent_drive_url || null,
     sendCount: Number(row.send_count || 0),
     firstSentAt: row.first_sent_at || null,
@@ -136,6 +175,8 @@ module.exports = {
   SPEAKER_PHOTO_STATUSES,
   deriveSpeakerPhotoState,
   normalizeDriveUrl,
+  normalizeQuote,
+  normalizeSessionTitles,
   normalizeSpeakerPhotoDelivery,
   normalizeSpeakerPhotoInput,
   normalizeSpeakerPhotoRow,

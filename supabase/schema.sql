@@ -1165,6 +1165,24 @@ revoke all on function public.finish_speaker_photo_send(uuid, text, text, text) 
 grant execute on function public.claim_speaker_photo_send(uuid, timestamptz, text, text) to service_role;
 grant execute on function public.finish_speaker_photo_send(uuid, text, text, text) to service_role;
 
+-- Personal touches for the speaker photo email: the sessions they spoke in,
+-- one line they said on stage, and one featured photo shown in the email.
+alter table public.speaker_photo_links
+  add column if not exists session_titles text[] not null default '{}'
+    check (cardinality(session_titles) <= 5),
+  add column if not exists quote text
+    check (quote is null or char_length(quote) <= 400),
+  add column if not exists featured_photo_path text,
+  add column if not exists featured_photo_sha256 text;
+
+-- Featured photos stay private; the server embeds them in the email.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('speaker-photo-picks', 'speaker-photo-picks', false, 3145728, array['image/jpeg'])
+on conflict (id) do update
+set public = false,
+    file_size_limit = excluded.file_size_limit,
+    allowed_mime_types = excluded.allowed_mime_types;
+
 
 -- Event reminders: T-minus reminder emails to confirmed registrants, sent
 -- from the admin Reminders tab. Separate from registration email jobs.

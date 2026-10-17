@@ -4,6 +4,7 @@ import {
   claimSpeakerPhotoSend,
   getActiveSpeakerPhotoAttempt,
   getSpeakerPhotoById,
+  getSpeakerPhotoForSend,
   markSpeakerPhotoFailed,
   markSpeakerPhotoSent,
   prepareSpeakerPhotoSendRequest,
@@ -13,11 +14,16 @@ import {
   getResendFromEmail,
   sendApplicantConfirmationEmail,
 } from '@/lib/resend';
+import { downloadFeaturedPhoto } from '@/lib/speaker-photos-storage';
 import speakerPhotosEmail from '@/lib/speaker-photos-email.cjs';
 import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
 
-const { SPEAKER_COMMS_REPLY_TO, buildSpeakerPhotosEmail } = speakerPhotosEmail;
+const {
+  SPEAKER_COMMS_REPLY_TO,
+  SPEAKER_PHOTO_CONTENT_ID,
+  buildSpeakerPhotosEmail,
+} = speakerPhotosEmail;
 const { parseSpeakerEmails } = speakerCommunicationsUtils;
 const { canRetryGuestSend, hashGuestEmailRequest } = guestSendAttempt;
 
@@ -51,16 +57,31 @@ async function getLogoAttachment() {
   };
 }
 
-function buildEmail(speaker, { test = false, name, driveUrl } = {}) {
+function buildEmail(speaker, { test = false, name, driveUrl, hasPhoto } = {}) {
   return buildSpeakerPhotosEmail({
     name: name || speaker.name,
     edition: speaker.edition,
     driveUrl: driveUrl || speaker.driveUrl,
-    photoCount: speaker.photoCount,
+    sessionTitles: speaker.sessionTitles,
+    quote: speaker.quote,
+    hasPhoto: hasPhoto ?? speaker.hasFeaturedPhoto,
     siteUrl: getSiteUrl(),
     replyEmail: SPEAKER_COMMS_REPLY_TO,
     test,
   });
+}
+
+// The logo, plus the speaker's featured photo when one is chosen.
+async function buildAttachments(featuredPhotoPath) {
+  const attachments = [await getLogoAttachment()];
+  if (featuredPhotoPath) {
+    attachments.push({
+      filename: 'tasi-2026-photo.jpg',
+      content: await downloadFeaturedPhoto(featuredPhotoPath),
+      contentId: SPEAKER_PHOTO_CONTENT_ID,
+    });
+  }
+  return attachments;
 }
 
 export async function previewSpeakerPhotosEmail(id) {
@@ -84,15 +105,18 @@ export async function sendSpeakerPhotosTest({ id, operator, to }) {
   if (!recipient) throw new Error('An email address is required for the test.');
   if (extra.length) throw new Error('Send a test to at most one address.');
 
-  const speaker = await getSpeakerPhotoById(id);
-  const email = buildEmail(speaker, { test: true });
+  const { speaker, featuredPhotoPath } = await getSpeakerPhotoForSend(id);
+  const email = buildEmail(speaker, {
+    test: true,
+    hasPhoto: Boolean(featuredPhotoPath),
+  });
   const delivery = await sendApplicantConfirmationEmail({
     to: recipient,
     subject: email.subject,
     text: email.text,
     html: email.html,
     replyTo: SPEAKER_COMMS_REPLY_TO,
-    attachments: [await getLogoAttachment()],
+    attachments: await buildAttachments(featuredPhotoPath),
   });
   if (!delivery.sent) {
     throw new Error(delivery.error || 'Resend did not accept the test email.');
@@ -114,7 +138,7 @@ export async function sendSpeakerPhotos({
   let providerContacted = false;
 
   try {
-    const speaker = await getSpeakerPhotoById(id);
+    const { speaker, featuredPhotoPath } = await getSpeakerPhotoForSend(id);
 
     if (retry) {
       attempt = await getActiveSpeakerPhotoAttempt(id);
@@ -140,11 +164,13 @@ export async function sendSpeakerPhotos({
     }
 
     const recipients = retry ? attempt.recipient_emails : speaker.emails;
-    const email = buildEmail(
-      speaker,
-      retry ? { name: attempt.speaker_name, driveUrl: attempt.drive_url } : {}
-    );
-    const attachments = [await getLogoAttachment()];
+    const email = buildEmail(speaker, {
+      hasPhoto: Boolean(featuredPhotoPath),
+      ...(retry
+        ? { name: attempt.speaker_name, driveUrl: attempt.drive_url }
+        : {}),
+    });
+    const attachments = await buildAttachments(featuredPhotoPath);
 
     if (!retry) {
       const claimed = await claimSpeakerPhotoSend({ id, operator });
