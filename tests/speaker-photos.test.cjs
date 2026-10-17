@@ -232,9 +232,13 @@ test('quote, featured photo and profile link appear only when available', () => 
   });
   assert.match(full.html, /cid:speaker-photo/);
   assert.match(full.html, /Something you said that stayed with us/);
-  assert.ok(full.html.includes('&ldquo;Build it with them.&rdquo;'));
+  assert.ok(
+    full.html.includes(
+      'font-style:italic;font-size:17px;line-height:27px;color:#1f2a44">Build it with them.</p>'
+    )
+  );
   assert.ok(full.html.includes('&ldquo;Less Advising, More Doing&rdquo;'));
-  assert.doesNotMatch(full.html, /<em>|Georgia|font-style:italic/);
+  assert.doesNotMatch(full.html, /<em>/);
   assert.match(full.html, /\/speakers\/2026\/lucy-thomas/);
   const bare = buildSpeakerPhotosEmail({
     name: 'Someone Not Listed',
