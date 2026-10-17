@@ -17,7 +17,7 @@ const initialForm = {
 
 function buildMessageBody(form) {
   return [
-    'Exhibition enquiry for TASI 2026',
+    'Exhibition enquiry for TASI',
     `Name: ${form.name.trim()}`,
     `Company: ${form.company.trim()}`,
     `Email: ${form.email.trim().toLowerCase()}`,

@@ -58,7 +58,7 @@ test('exhibition page component uses the live flagship pavilion sales story', ()
   );
   assert.match(
     source,
-    /Looking beyond the booth to the broader potential of TASI 2026/
+    /Looking beyond the booth to the broader potential of TASI$/m
   );
   assert.match(source, /GlobalCta/);
   assert.match(
@@ -169,7 +169,7 @@ test('exhibition enquiry form posts basic details through the shared messages pi
   assert.match(source, /name="phone"/);
   assert.match(source, /name="message"/);
   assert.match(source, /source:\s*'exhibition-enquiry'/);
-  assert.match(source, /Exhibition enquiry for TASI 2026/);
+  assert.match(source, /Exhibition enquiry for TASI'/);
   assert.match(source, /We received your enquiry\./);
 });
 
