@@ -5,6 +5,7 @@ import {
   ExternalLink,
   Eye,
   FlaskConical,
+  ImageUp,
   Images,
   Pencil,
   Send,
@@ -44,7 +45,14 @@ const STATE_FILTERS = [
   { value: 'attention', label: 'Needs attention' },
 ];
 
-const EMPTY_FORM = { name: '', emails: '', driveUrl: '', photoCount: '' };
+const EMPTY_FORM = {
+  name: '',
+  emails: '',
+  driveUrl: '',
+  photoCount: '',
+  sessionTitles: '',
+  quote: '',
+};
 
 function stateTone(state) {
   if (state === 'sent') return 'success';
@@ -131,13 +139,37 @@ const LABEL_STYLE = {
   textTransform: 'uppercase',
 };
 
-// The preview iframe is sandboxed, so embedded images load from the site.
-function emailPreviewHtml(html) {
+// The preview iframe is sandboxed and sends no session cookie, so the
+// private featured photo is embedded as a data URL rather than linked.
+function emailPreviewHtml(html, photoDataUrl) {
   if (!html || typeof window === 'undefined') return '';
-  return html.replaceAll(
-    'cid:tasi-logo',
-    `${window.location.origin}/img/email/tasi-festival-logo.png`
-  );
+  return html
+    .replaceAll('cid:speaker-photo', photoDataUrl || '')
+    .replaceAll(
+      'cid:tasi-logo',
+      `${window.location.origin}/img/email/tasi-festival-logo.png`
+    );
+}
+
+async function fetchPhotoDataUrl(speakerId) {
+  try {
+    const response = await fetch(
+      `/api/admin/speaker-photos/${speakerId}/photo`,
+      {
+        cache: 'no-store',
+      }
+    );
+    if (!response.ok) return '';
+    const blob = await response.blob();
+    return await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return '';
+  }
 }
 
 function sleep(ms) {
@@ -179,7 +211,9 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
   const [preview, setPreview] = useState(null);
   const [busy, setBusy] = useState('');
   const [clockNow, setClockNow] = useState(0);
+  const [photoVersion, setPhotoVersion] = useState(0);
   const stopBulkRef = useRef(false);
+  const photoInputRef = useRef(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -261,6 +295,8 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
           json.speaker.photoCount === null
             ? ''
             : String(json.speaker.photoCount),
+        sessionTitles: (json.speaker.sessionTitles || []).join('\n'),
+        quote: json.speaker.quote || '',
       });
     } catch (detailError) {
       setToast({ tone: 'danger', message: detailError.message });
@@ -305,9 +341,38 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
         { cache: 'no-store' }
       );
       const json = await readJson(response, 'Unable to preview email.');
-      setPreview(json.email);
+      const photoDataUrl = speaker.hasFeaturedPhoto
+        ? await fetchPhotoDataUrl(speaker.id)
+        : '';
+      setPreview({ ...json.email, photoDataUrl });
     } catch (previewError) {
       setToast({ tone: 'danger', message: previewError.message });
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function replacePhoto(fileList) {
+    const file = fileList?.[0];
+    if (!file || !selected) return;
+    setBusy('photo');
+    try {
+      const body = new FormData();
+      body.set('file', file);
+      const response = await fetch(
+        `/api/admin/speaker-photos/${selected.id}/photo`,
+        { method: 'POST', body }
+      );
+      const json = await readJson(response, 'Unable to upload photo.');
+      setToast({
+        tone: 'success',
+        message: `Photo updated for ${json.speaker.name}.`,
+      });
+      setPhotoVersion((version) => version + 1);
+      await load();
+      await openDetail(json.speaker);
+    } catch (photoError) {
+      setToast({ tone: 'danger', message: photoError.message });
     } finally {
       setBusy('');
     }
@@ -870,6 +935,52 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
               </AdminStatusBadge>
             </div>
 
+            {current.hasFeaturedPhoto ? (
+              // eslint-disable-next-line @next/next/no-img-element -- private, auth-gated image served by an admin route
+              <img
+                src={`/api/admin/speaker-photos/${current.id}/photo?v=${photoVersion}-${current.featuredPhotoSha256 || ''}`}
+                alt={`${current.name} at TASI ${current.edition}`}
+                style={{
+                  width: '100%',
+                  borderRadius: 10,
+                  border: '1px solid var(--adm-line)',
+                }}
+              />
+            ) : (
+              <AdminAlert
+                tone="info"
+                title="No featured photo"
+                description="The email will go without a photo. Upload one to add it."
+              />
+            )}
+            {canManage && current.status !== 'sending' ? (
+              <div>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  hidden
+                  onChange={(event) => {
+                    replacePhoto(event.target.files);
+                    event.target.value = '';
+                  }}
+                />
+                <button
+                  type="button"
+                  disabled={Boolean(busy)}
+                  style={buttonStyle()}
+                  onClick={() => photoInputRef.current?.click()}
+                >
+                  <ImageUp size={14} />{' '}
+                  {busy === 'photo'
+                    ? 'Uploading…'
+                    : current.hasFeaturedPhoto
+                      ? 'Replace photo'
+                      : 'Upload photo'}
+                </button>
+              </div>
+            ) : null}
+
             {current.driveUrl ? (
               <a
                 href={current.driveUrl}
@@ -917,6 +1028,33 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
                         }))
                       }
                       style={inputStyle()}
+                    />
+                  </label>
+                ))}
+                {[
+                  {
+                    key: 'sessionTitles',
+                    label: 'Sessions (one per line)',
+                    rows: 3,
+                  },
+                  {
+                    key: 'quote',
+                    label: 'Quote from their session (leave empty to skip)',
+                    rows: 4,
+                  },
+                ].map((field) => (
+                  <label key={field.key} style={{ display: 'grid', gap: 6 }}>
+                    <span style={LABEL_STYLE}>{field.label}</span>
+                    <textarea
+                      rows={field.rows}
+                      value={editForm[field.key]}
+                      onChange={(event) =>
+                        setEditForm((form) => ({
+                          ...form,
+                          [field.key]: event.target.value,
+                        }))
+                      }
+                      style={{ ...inputStyle(), resize: 'vertical' }}
                     />
                   </label>
                 ))}
@@ -1124,7 +1262,7 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
                 </div>
                 <iframe
                   title="Speaker photos email preview"
-                  srcDoc={emailPreviewHtml(preview.html)}
+                  srcDoc={emailPreviewHtml(preview.html, preview.photoDataUrl)}
                   sandbox=""
                   style={{
                     width: '100%',

@@ -17,6 +17,10 @@ const SPEAKER_PHOTO_SELECT = `
   emails,
   drive_url,
   photo_count,
+  session_titles,
+  quote,
+  featured_photo_path,
+  featured_photo_sha256,
   status,
   send_count,
   first_sent_at,
@@ -56,6 +60,45 @@ export async function listSpeakerPhotos({ edition } = {}) {
 
   if (error) throw new Error(error.message);
   return (data || []).map(normalizeSpeakerPhotoRow);
+}
+
+// Server-only: includes the featured photo's storage path.
+export async function getSpeakerPhotoForSend(id) {
+  const { data, error } = await getSupabase()
+    .from('speaker_photo_links')
+    .select(SPEAKER_PHOTO_SELECT)
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('Speaker not found.');
+  return {
+    speaker: normalizeSpeakerPhotoRow(data),
+    featuredPhotoPath: data.featured_photo_path || null,
+  };
+}
+
+export async function recordFeaturedPhoto({ id, path, sha256 }) {
+  const { data, error } = await getSupabase()
+    .from('speaker_photo_links')
+    .update({
+      featured_photo_path: path,
+      featured_photo_sha256: sha256,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .neq('status', 'sending')
+    .select(SPEAKER_PHOTO_SELECT)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  if (!data) {
+    await getSpeakerPhotoById(id);
+    throw new Error(
+      'This photo cannot be replaced while a send is unresolved.'
+    );
+  }
+  return normalizeSpeakerPhotoRow(data);
 }
 
 export async function getSpeakerPhotoById(id) {
@@ -102,6 +145,8 @@ export async function updateSpeakerPhoto({ id, input }) {
       emails: speaker.emails,
       drive_url: speaker.driveUrl,
       photo_count: speaker.photoCount,
+      session_titles: speaker.sessionTitles,
+      quote: speaker.quote,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)

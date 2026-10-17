@@ -194,3 +194,76 @@ test('the badge tab is kept and the photos tab sits beside it', () => {
   assert.match(tabs, /SpeakerCommunicationsPanel/);
   assert.match(tabs, /SpeakerPhotosPanel/);
 });
+
+test('session line names one or two sessions, and counts three or more', () => {
+  const base = { name: 'A', edition: '2026', driveUrl: FOLDER };
+  const one = buildSpeakerPhotosEmail({
+    ...base,
+    sessionTitles: ['Growing Up With AI'],
+  });
+  assert.match(
+    one.text,
+    /A special thank you for your session, "Growing Up With AI"\./
+  );
+  const two = buildSpeakerPhotosEmail({ ...base, sessionTitles: ['X', 'Y'] });
+  assert.match(two.text, /your sessions, "X" and "Y"\./);
+  const three = buildSpeakerPhotosEmail({
+    ...base,
+    sessionTitles: ['X', 'Y', 'Z'],
+  });
+  assert.match(
+    three.text,
+    /being part of three sessions at TASI 2026, including "X"\./
+  );
+  assert.doesNotMatch(three.text, /"Y"/);
+  const none = buildSpeakerPhotosEmail(base);
+  assert.doesNotMatch(none.text, /special thank you/);
+  assert.match(none.text, /Your contribution added a great deal/);
+});
+
+test('quote, featured photo and profile link appear only when available', () => {
+  const full = buildSpeakerPhotosEmail({
+    name: 'Lucy Thomas',
+    edition: '2026',
+    driveUrl: FOLDER,
+    sessionTitles: ['Less Advising, More Doing'],
+    quote: 'Build it with them.',
+    hasPhoto: true,
+  });
+  assert.match(full.html, /cid:speaker-photo/);
+  assert.match(full.html, /Something you said that stayed with us:/);
+  assert.match(full.html, /&ldquo;Build it with them\.&rdquo;/);
+  assert.match(full.html, /<em>Less Advising, More Doing<\/em>/);
+  assert.match(full.html, /\/speakers\/2026\/lucy-thomas/);
+  const bare = buildSpeakerPhotosEmail({
+    name: 'Someone Not Listed',
+    edition: '2026',
+    driveUrl: FOLDER,
+  });
+  assert.doesNotMatch(
+    bare.html,
+    /cid:speaker-photo|stayed with us|View your profile/
+  );
+});
+
+test('session titles and quotes are cleaned on save', () => {
+  const input = normalizeSpeakerPhotoInput({
+    name: 'A',
+    sessionTitles: 'One\n\nTwo\nOne',
+    quote: '  "A line."  ',
+  });
+  assert.deepEqual(input.sessionTitles, ['One', 'Two']);
+  assert.equal(input.quote, 'A line.');
+  assert.equal(
+    normalizeSpeakerPhotoInput({ name: 'A', quote: ' ' }).quote,
+    null
+  );
+  assert.throws(
+    () =>
+      normalizeSpeakerPhotoInput({
+        name: 'A',
+        sessionTitles: '1\n2\n3\n4\n5\n6',
+      }),
+    /at most 5/
+  );
+});
