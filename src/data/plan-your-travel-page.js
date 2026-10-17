@@ -17,7 +17,7 @@ export const travelShellCopy = {
   eyebrow: 'TASI 2026 · New Delhi',
   title: 'Plan Your Travel',
   description:
-    'TASI 2026 is at the India International Centre, Lodhi Estate, New Delhi, on 14-15 October. Here is how to get there, where to stay and what to bring.',
+    'TASI 2026 took place at the India International Centre, Lodhi Estate, New Delhi, on 14-15 October 2026. This guide is kept for reference; travel details for TASI 2027 will be shared once its venue is confirmed.',
 };
 
 export const travelTabs = [
@@ -32,7 +32,7 @@ export const travelTabs = [
 export const travelOverviewMetadata = {
   title: 'Plan Travel for Trust and Safety India Festival | TASI 2026',
   description:
-    'Getting to TASI 2026 at the India International Centre, New Delhi: directions, metro, hotels nearby, visas and practical tips for 14-15 October.',
+    'Travel guide from TASI 2026 at the India International Centre, New Delhi: directions, metro, hotels nearby, visas and practical tips.',
   alternates: {
     canonical: '/plan-your-travel',
   },
@@ -59,7 +59,7 @@ export const howToReachMetadata = {
 export const visaInformationMetadata = {
   title: 'Visa Information for Trust and Safety India Festival | TASI 2026',
   description:
-    'Visa and passport guidance for international participants at TASI 2026 in New Delhi, and how to request an invitation letter.',
+    'Visa and passport guidance for international participants travelling to New Delhi, kept from TASI 2026.',
   alternates: {
     canonical: '/plan-your-travel/visa-information',
   },
@@ -163,10 +163,9 @@ export const travelOverviewSections = [
   {
     icon: 'Shield',
     title: 'Visa Information',
-    description:
-      'Checking which visa you need, invitation letters from TASI and passport rules.',
+    description: 'Checking which visa you need and passport rules.',
     href: '/plan-your-travel/visa-information',
-    pills: ['Invitation letters on request', 'Apply early'],
+    pills: ['Conference and e-visas'],
   },
   {
     icon: 'Hotel',
@@ -216,7 +215,7 @@ export const generalInfoItems = [
   {
     icon: 'Wind',
     title: 'Air quality',
-    body: 'Air quality in Delhi is good at the moment. It often gets worse from mid-November, so if you have asthma or are sensitive to pollution, carry a mask and any medication you need.',
+    body: 'Air quality in Delhi often gets worse from mid-November, so if you have asthma or are sensitive to pollution, carry a mask and any medication you need.',
   },
   {
     icon: 'Droplets',
@@ -246,7 +245,7 @@ export const generalInfoItems = [
   {
     icon: 'Camera',
     title: 'Photography',
-    body: 'The festival will be photographed and filmed by official photographers. Photos and videos will be shared on the TASI website after the event.',
+    body: 'The festival was photographed and filmed by official photographers. See the photos and highlights video in the TASI 2026 recap.',
   },
 ];
 
@@ -339,16 +338,6 @@ export const visaSteps = [
     cta: {
       label: 'Indian visa portal',
       href: 'https://indianvisaonline.gov.in/',
-    },
-  },
-  {
-    icon: 'FileText',
-    title: 'Invitation letter from TASI',
-    description:
-      'If your visa application needs an invitation letter, email us your full name as it appears on your passport, your nationality, passport number and organisation. We will send the letter by email.',
-    cta: {
-      label: 'Request a letter',
-      href: `mailto:${TRAVEL_CONTACT_EMAIL}?subject=TASI%202026%20invitation%20letter`,
     },
   },
   {

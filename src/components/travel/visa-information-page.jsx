@@ -22,7 +22,7 @@ export default function VisaInformationPage() {
             </p>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2">
             {visaSteps.map((step) => {
               const Icon = travelIcons[step.icon];
               const isEmail = step.cta?.href.startsWith('mailto:');

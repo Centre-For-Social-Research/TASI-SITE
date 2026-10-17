@@ -8,7 +8,7 @@ export const venueMapPath = '/plan-your-travel/venue-map';
 export const venueMapMetadata = {
   title: 'Venue Map: Kamaladevi Complex, IIC | TASI 2026',
   description:
-    'Find your way around TASI 2026 at the Kamaladevi Complex, India International Centre: Main Hall, registration, exhibition, lunch, workshop and roundtable rooms.',
+    'How TASI 2026 used the Kamaladevi Complex, India International Centre: Main Hall, registration, exhibition, lunch, workshop and roundtable rooms.',
   alternates: {
     canonical: venueMapPath,
   },
@@ -31,7 +31,7 @@ export const venueMapZones = [
     key: 'connect',
     title: 'Registration, Exhibition & Lunch',
     description:
-      'Collect your badge, meet partners at the exhibition and join lunch in the Rose Garden.',
+      'Badge collection, the partner exhibition and lunch in the Rose Garden.',
   },
 ];
 
@@ -53,7 +53,6 @@ export const venueMapFloors = [
         zone: 'connect',
         name: 'Registration',
         room: 'At the entrance',
-        note: 'Keep your QR pass handy to collect your badge.',
       },
       {
         marker: '2',
