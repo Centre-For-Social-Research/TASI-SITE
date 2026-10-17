@@ -1,4 +1,7 @@
-const { getSpeakerEdition } = require('./speaker-communications-utils.cjs');
+const {
+  getSpeakerEdition,
+  hasSpeakerEditionEnded,
+} = require('./speaker-communications-utils.cjs');
 
 // Handles from the site footer. TASI has LinkedIn pages only; elsewhere it is
 // tagged through the edition hashtag.
@@ -30,15 +33,24 @@ function hashtags(edition) {
 
 // One caption per platform: the same message, each with that platform's
 // handles, and a shorter version for X's 280-character limit.
-function buildSpeakerShareCaptions({ edition: editionKey, badgePageUrl }) {
+function buildSpeakerShareCaptions({
+  edition: editionKey,
+  badgePageUrl,
+  now = new Date(),
+}) {
   const edition = getSpeakerEdition(editionKey);
   if (!edition) throw new Error(`Edition ${editionKey} is not configured.`);
+  const ended = hasSpeakerEditionEnded(edition, now);
 
   const long = (tags) =>
     [
-      `I'm delighted to be speaking at the ${edition.festivalName} (${edition.name}), ${edition.dates} at the ${edition.venue}.`,
+      ended
+        ? `It was a privilege to speak at the ${edition.festivalName} (${edition.name}), ${edition.dates} at the ${edition.venue}.`
+        : `I'm delighted to be speaking at the ${edition.festivalName} (${edition.name}), ${edition.dates} at the ${edition.venue}.`,
       '',
-      'Looking forward to conversations on building safer, more trustworthy digital spaces that put people first.',
+      ended
+        ? 'Grateful for the conversations on building safer, more trustworthy digital spaces that put people first.'
+        : 'Looking forward to conversations on building safer, more trustworthy digital spaces that put people first.',
       '',
       `Thank you ${tags.join(' and ')} for having me.`,
       '',
@@ -52,7 +64,7 @@ function buildSpeakerShareCaptions({ edition: editionKey, badgePageUrl }) {
     facebook: long(SOCIAL_TAGS.facebook),
     instagram: long(SOCIAL_TAGS.instagram),
     x: [
-      `Speaking at ${edition.name}, ${edition.dates}, New Delhi, on building safer digital spaces. Thank you ${SOCIAL_TAGS.x.join(' ')}!`,
+      `${ended ? 'Spoke' : 'Speaking'} at ${edition.name}, ${edition.dates}, New Delhi, on building safer digital spaces. Thank you ${SOCIAL_TAGS.x.join(' ')}!`,
       '',
       `${edition.hashtag} #TrustAndSafety`,
       badgePageUrl,

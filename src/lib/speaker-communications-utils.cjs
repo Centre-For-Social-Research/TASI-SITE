@@ -20,10 +20,18 @@ const SPEAKER_EDITIONS = {
     dates: '14-15 October 2026',
     venue: 'India International Centre, New Delhi',
     hashtag: '#TASI2026',
+    // Close of the last day. After this, share copy is in the past tense.
+    endsAt: '2026-10-15T18:00:00+05:30',
     venueMapUrl:
       'https://www.google.com/maps/search/?api=1&query=India+International+Centre+New+Delhi',
   },
 };
+
+function hasSpeakerEditionEnded(edition, now = new Date()) {
+  return (
+    Boolean(edition?.endsAt) && now.getTime() >= Date.parse(edition.endsAt)
+  );
+}
 
 const SPEAKER_BADGE_STATUSES = new Set(['draft', 'sending', 'sent', 'failed']);
 
@@ -277,6 +285,7 @@ module.exports = {
   buildSpeakerNameKey,
   deriveSpeakerBadgeState,
   getSpeakerEdition,
+  hasSpeakerEditionEnded,
   isValidDownloadToken,
   normalizeEdition,
   normalizeSpeakerBadgeDelivery,

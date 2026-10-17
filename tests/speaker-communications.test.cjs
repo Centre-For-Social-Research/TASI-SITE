@@ -581,3 +581,24 @@ test('speakers without profile-use consent are not published', () => {
     /withheldProfiles\.has\(name\)/
   );
 });
+
+test('speaker share captions switch to the past tense after the edition', () => {
+  const {
+    buildSpeakerShareCaptions,
+  } = require('../src/lib/speaker-badge-share.cjs');
+  const before = buildSpeakerShareCaptions({
+    edition: '2026',
+    badgePageUrl: 'https://example.org/badge/x',
+    now: new Date('2026-10-10T12:00:00+05:30'),
+  });
+  const after = buildSpeakerShareCaptions({
+    edition: '2026',
+    badgePageUrl: 'https://example.org/badge/x',
+    now: new Date('2026-10-17T12:00:00+05:30'),
+  });
+
+  assert.match(before.linkedin, /delighted to be speaking/);
+  assert.match(before.x, /^Speaking at TASI 2026/);
+  assert.match(after.linkedin, /privilege to speak/);
+  assert.match(after.x, /^Spoke at TASI 2026/);
+});

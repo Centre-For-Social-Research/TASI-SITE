@@ -7,6 +7,13 @@ Two days of conversations on online safety, AI and digital rights with the peopl
 
 #TASI2026 #TrustAndSafety #OnlineSafety`;
 
+// The "I'm attending" card only makes sense before and during the festival.
+const CARD_CLOSES_AT = Date.parse('2026-10-16T00:00:00+05:30');
+
+function isShareCardOpen(now = new Date()) {
+  return now.getTime() < CARD_CLOSES_AT;
+}
+
 function initialsFor(name) {
   return String(name || '')
     .trim()
@@ -72,6 +79,7 @@ module.exports = {
   cardFileName,
   fitFontSize,
   initialsFor,
+  isShareCardOpen,
   truncateToWidth,
   wrapLines,
 };
