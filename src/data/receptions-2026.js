@@ -113,7 +113,7 @@ export const receptions2026 = [
       ],
     },
     summary:
-      'The evening before the festival opens at the Goethe-Institut with welcome remarks from CSR and the deputy ambassadors of France and Germany, followed by the Safety Spotlights: short, solution-focused talks from people working on online safety around the world. The festival co-founders then open the reception for informal conversation.',
+      'The evening before the festival opened at the Goethe-Institut with welcome remarks from CSR and the deputy ambassadors of France and Germany, followed by the Safety Spotlights: short, solution-focused talks from people working on online safety around the world. The festival co-founders then opened the reception for informal conversation.',
   },
   {
     slug: 'match-group-policy-lab',
@@ -137,7 +137,7 @@ export const receptions2026 = [
         'A private, closed-door roundtable at the end of the first festival day on trust, authenticity and safety by design in online social discovery, followed by an evening reception in the Rose Garden.',
     },
     summary:
-      'A closed-door roundtable with policymakers, platforms, researchers and civil society on building online social discovery around trust, authenticity and safety by design, followed by an evening reception in the Rose Garden.',
+      'A closed-door roundtable brought policymakers, platforms, researchers and civil society together on building online social discovery around trust, authenticity and safety by design, followed by an evening reception in the Rose Garden.',
   },
   {
     slug: 'closing-reception-2026',
@@ -156,14 +156,65 @@ export const receptions2026 = [
     card: {
       theme: 'From Conversation to Commitment',
       summary:
-        'The festival closes with a panel reflecting on TASI 2026 and the commitments to carry forward, followed by networking, drinks and dinner with delegates, speakers and partners.',
+        'The festival closed with a panel reflecting on TASI 2026 and the commitments to carry forward, followed by networking, drinks and dinner with delegates, speakers and partners.',
+    },
+    // Running order from the reception programme of 15 October 2026; the
+    // evening was not recorded. Photos from the closing reception shoot.
+    recap: {
+      accentLabel: 'Closing Reception',
+      title: 'Closing Reception',
+      theme: 'From Conversation to Commitment',
+      date: 'Thursday, 15 October 2026',
+      venue: 'Residence of the Ambassador of the Netherlands, New Delhi',
+      summary:
+        'On the final evening, H.E. Marisa Gerards welcomed delegates, speakers and partners to the residence of the Ambassador of the Netherlands. A closing panel, From Conversation to Commitment, with Jc Le Toquin, Aparajita Bharti and Rob Lewington, reflected on two days of TASI 2026 and the commitments to carry forward, before concluding remarks from Dr. Ranjana Kumari. The evening ended with networking, drinks and dinner.',
+      gallery: [
+        '/img/receptions/2026/closing/2v8a7222.webp',
+        '/img/receptions/2026/closing/2v8a7295.webp',
+        '/img/receptions/2026/closing/2v8a6995.webp',
+      ],
+      moreGallery: [
+        '/img/receptions/2026/closing/2v8a7228.webp',
+        '/img/receptions/2026/closing/2v8a7180.webp',
+        '/img/receptions/2026/closing/2v8a7218.webp',
+        '/img/receptions/2026/closing/2v8a7318.webp',
+        '/img/receptions/2026/closing/2v8a7310.webp',
+        '/img/receptions/2026/closing/2v8a7093.webp',
+      ],
+      featuredPeople: [
+        {
+          name: 'H.E. Marisa Gerards',
+          role: 'Ambassador of the Kingdom of the Netherlands',
+          photo: '/img/speakers/2026/marisa-gerards.webp',
+        },
+        {
+          name: 'Jc Le Toquin',
+          role: 'Co-Founder, Trust & Safety India Festival',
+          photo: '/img/speakers/2026/jc-le-toquin.webp',
+        },
+        {
+          name: 'Aparajita Bharti',
+          role: 'Co-Founder, The Quantum Hub',
+          photo: '/img/speakers/Aparajita Bharti.webp',
+        },
+        {
+          name: 'Rob Lewington',
+          role: 'SVP, Head of Global Trust & Safety, TP',
+          photo: '/img/speakers/2026/rob-lewington.webp',
+        },
+        {
+          name: 'Dr. Ranjana Kumari',
+          role: 'Director, Centre for Social Research',
+          photo: '/img/speakers/2026/dr-ranjana-kumari.webp',
+        },
+      ],
     },
     summary:
-      'Welcome remarks from H.E. Marisa Gerards open the evening, followed by a closing panel, From Conversation to Commitment, with Jc Le Toquin, Aparajita Bharti and Rob Lewington, and concluding remarks from Dr. Ranjana Kumari. The evening ends with networking, drinks and dinner.',
+      'Welcome remarks from H.E. Marisa Gerards opened the evening, followed by a closing panel, From Conversation to Commitment, with Jc Le Toquin, Aparajita Bharti and Rob Lewington, and concluding remarks from Dr. Ranjana Kumari. The evening ended with networking, drinks and dinner.',
   },
 ];
 
 export const receptionsAttendance2026 = {
-  note: 'All TASI 2026 receptions and side events are by invitation only. Invited guests receive venue and entry details directly from the organising team or the host. A festival registration does not by itself include an invitation.',
+  note: 'All TASI 2026 receptions and side events were by invitation only.',
   contactEmail: 'india@trustandsafetyfestival.com',
 };

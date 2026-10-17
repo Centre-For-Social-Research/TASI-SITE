@@ -39,8 +39,8 @@ function ReceptionOverview2026() {
             Three evenings around the festival
           </h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-stone-600 dark:text-slate-300">
-            Two embassy receptions open and close TASI 2026, with a private
-            Match Group Policy Lab at the end of the first day. All are by
+            Two embassy receptions opened and closed TASI 2026, with a private
+            Match Group Policy Lab at the end of the first day. All were by
             invitation only.
           </p>
         </MotionReveal>
@@ -169,10 +169,10 @@ export default function Reception2026Update() {
           <MotionReveal>
             <div className="mt-10 flex flex-col gap-2 text-sm leading-relaxed text-stone-600 dark:text-slate-400 md:flex-row md:items-start md:gap-10">
               <p className="font-bold uppercase tracking-[0.16em] text-stone-500 dark:text-slate-500 md:w-[9rem] md:flex-none">
-                Attending
+                About
               </p>
               <p>
-                {note} Questions about an invitation? Write to{' '}
+                {note} Questions about the receptions? Write to{' '}
                 <a
                   href={`mailto:${contactEmail}`}
                   className="font-bold text-rc-primary underline-offset-4 hover:underline dark:text-amber-300"
