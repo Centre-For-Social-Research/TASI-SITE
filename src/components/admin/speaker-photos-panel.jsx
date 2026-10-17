@@ -950,7 +950,7 @@ export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
               <AdminAlert
                 tone="info"
                 title="No featured photo"
-                description="The email will go without a photo. Upload one to add it."
+                description="The email goes without a photo. Only upload one you have checked is this speaker; it appears at the top of their email."
               />
             )}
             {canManage && current.status !== 'sending' ? (
