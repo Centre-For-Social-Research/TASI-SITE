@@ -239,16 +239,14 @@ test('quote, featured photo and profile link appear only when available', () => 
   );
   assert.ok(full.html.includes('&ldquo;Less Advising, More Doing&rdquo;'));
   assert.doesNotMatch(full.html, /<em>/);
-  assert.match(full.html, /\/speakers\/2026\/lucy-thomas/);
+  assert.match(full.html, /@CSR_India on X/);
+  assert.doesNotMatch(full.html, /View your profile|\/speakers\//);
   const bare = buildSpeakerPhotosEmail({
     name: 'Someone Not Listed',
     edition: '2026',
     driveUrl: FOLDER,
   });
-  assert.doesNotMatch(
-    bare.html,
-    /cid:speaker-photo|stayed with us|View your profile/
-  );
+  assert.doesNotMatch(bare.html, /cid:speaker-photo|stayed with us/);
 });
 
 test('session titles and quotes are cleaned on save', () => {
