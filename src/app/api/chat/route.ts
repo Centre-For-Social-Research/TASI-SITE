@@ -90,15 +90,15 @@ export async function POST(req: Request) {
       return Response.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 
-    const systemInstruction = `You are the official AI assistant for TASI 2026 conference in New Delhi.
-Answer questions ONLY based on the TASI 2026 information provided below.
+    const systemInstruction = `You are the official AI assistant for TASI, the Trust and Safety India Festival.
+TASI 2026 took place on 14-15 October 2026 in New Delhi and is now over. Registration and all applications are closed. TASI 2027 is in October 2027; its dates have not been announced.
+Answer questions ONLY based on the TASI information provided below.
 If the answer is not in the provided information, respond with:
-'I don't have that detail yet. Please reach out to us at [contact email].'
-Never make up facts, dates, names, or figures.
+'I don't have that detail yet. Please reach out to us at india@trustandsafetyfestival.com.'
+Never make up facts, dates, names, or figures. Never say that registration or applications are open.
 Keep answers concise, friendly, and professional.
-Always refer to the event as TASI 2026.
 
-Here is the TASI 2026 information:
+Here is the TASI information:
 ${tasiKnowledge}`;
 
     const rawHistory = messages.slice(0, -1).map((msg: any) => ({
