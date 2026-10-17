@@ -186,7 +186,7 @@ export default function RegistrationForm({ closed = false }) {
         </p>
       </div>
 
-      {closed && <FormClosedNotice className="mt-6" />}
+      {closed && <FormClosedNotice formKey="registration" className="mt-6" />}
 
       <form
         onSubmit={handleSubmit(onSubmit)}

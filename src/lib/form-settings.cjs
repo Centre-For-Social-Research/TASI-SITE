@@ -1,30 +1,46 @@
 // Public forms that admins can open or close from Settings. A form with no
 // row in form_settings is open, so a fresh database changes nothing.
 const PUBLIC_FORMS = [
-  { key: 'registration', label: 'Delegate registration', path: '/register' },
+  {
+    key: 'registration',
+    label: 'Delegate registration',
+    path: '/register',
+    closedMessage: 'Registration for TASI 2026 has closed.',
+  },
   {
     key: 'speaker_application',
     label: 'Speaker application',
     path: '/speaker-application',
+    closedMessage: 'Speaker applications for TASI 2026 have closed.',
   },
   {
     key: 'volunteer_application',
     label: 'Volunteer application',
     path: '/volunteer-application',
+    closedMessage: 'Volunteer applications for TASI 2026 have closed.',
   },
   {
     key: 'media_accreditation',
     label: 'Media accreditation',
     path: '/media/accreditation',
+    closedMessage: 'Media accreditation for TASI 2026 has closed.',
   },
   {
     key: 'exhibition_enquiry',
     label: 'Exhibition enquiry',
     path: '/exhibition',
+    closedMessage: 'Exhibition enquiries for TASI 2026 have closed.',
   },
 ];
 
-const FORM_CLOSED_MESSAGE = 'Registrations for TASI 2026 are now closed.';
+const FORM_CLOSED_MESSAGE = 'This form is closed.';
+
+function getFormClosedMessage(key) {
+  return (
+    PUBLIC_FORMS.find((form) => form.key === key)?.closedMessage ||
+    FORM_CLOSED_MESSAGE
+  );
+}
 
 function isPublicFormKey(key) {
   return PUBLIC_FORMS.some((form) => form.key === key);
@@ -47,6 +63,7 @@ function buildFormStatuses(rows) {
 module.exports = {
   PUBLIC_FORMS,
   FORM_CLOSED_MESSAGE,
+  getFormClosedMessage,
   isPublicFormKey,
   buildFormStatuses,
 };

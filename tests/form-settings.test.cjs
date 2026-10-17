@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const {
   PUBLIC_FORMS,
   FORM_CLOSED_MESSAGE,
+  getFormClosedMessage,
   buildFormStatuses,
   isPublicFormKey,
 } = require('../src/lib/form-settings.cjs');
@@ -94,7 +95,19 @@ test('each form page shows the closed notice from its switch', () => {
   assert.ok(
     fs
       .readFileSync('src/components/ui/form-closed-notice.jsx', 'utf8')
-      .includes('FORM_CLOSED_MESSAGE')
+      .includes('getFormClosedMessage(formKey)')
   );
   assert.match(FORM_CLOSED_MESSAGE, /closed/);
+});
+
+test('each public form has its own closed message', () => {
+  for (const form of PUBLIC_FORMS) {
+    assert.match(getFormClosedMessage(form.key), /closed/, form.key);
+  }
+  assert.match(getFormClosedMessage('speaker_application'), /Speaker/);
+  assert.doesNotMatch(
+    getFormClosedMessage('speaker_application'),
+    /Registration/
+  );
+  assert.equal(getFormClosedMessage('unknown'), FORM_CLOSED_MESSAGE);
 });

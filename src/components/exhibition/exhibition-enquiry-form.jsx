@@ -99,7 +99,7 @@ export default function ExhibitionEnquiryForm({ closed = false }) {
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit}>
-      {closed && <FormClosedNotice />}
+      {closed && <FormClosedNotice formKey="exhibition_enquiry" />}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label

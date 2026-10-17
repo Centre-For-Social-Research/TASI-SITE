@@ -127,7 +127,9 @@ export default function MediaAccreditationSection({ closed = false }) {
             .
           </p>
 
-          {closed && <FormClosedNotice className="mt-6" />}
+          {closed && (
+            <FormClosedNotice formKey="media_accreditation" className="mt-6" />
+          )}
 
           <form className="mt-6 w-full" onSubmit={handleSubmit}>
             <div className="grid gap-4 md:grid-cols-2">

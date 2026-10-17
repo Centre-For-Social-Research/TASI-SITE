@@ -6,14 +6,14 @@ import {
 export const registerPageMetadata = {
   title: 'Trust and Safety India Festival Registration | TASI 2026',
   description:
-    'Register for Trust and Safety India Festival 2026, the TASI convening for online safety, platform accountability, responsible AI, policy, research, and civil society leaders.',
+    'Registration for Trust and Safety India Festival 2026 has closed. TASI returns in October 2027; see the TASI 2026 recap in the meantime.',
   alternates: {
     canonical: '/register',
   },
   openGraph: {
     title: 'Trust and Safety India Festival Registration | TASI 2026',
     description:
-      'Apply to attend TASI 2026 and join leaders working on online safety, platform accountability, responsible AI, and digital rights in India.',
+      'Registration for TASI 2026 has closed. TASI returns in October 2027.',
     url: '/register',
     type: 'website',
     images: ['/opengraph-image'],
@@ -22,7 +22,7 @@ export const registerPageMetadata = {
     card: 'summary_large_image',
     title: 'Trust and Safety India Festival Registration | TASI 2026',
     description:
-      "Apply to attend TASI 2026 and join India's trust and safety community.",
+      'Registration for TASI 2026 has closed. TASI returns in October 2027.',
     images: ['/twitter-image'],
   },
 };
