@@ -1,6 +1,6 @@
 const { escapeHtml } = require('./application-acknowledgement-email.cjs');
 const { getSpeakerEdition } = require('./speaker-communications-utils.cjs');
-const { COLLAB_NOTE, SOCIAL_PROFILES } = require('./speaker-badge-share.cjs');
+const { SOCIAL_PROFILES } = require('./speaker-badge-share.cjs');
 
 const SPEAKER_PHOTOS_TEMPLATE_KEY = 'speaker_photos_v1';
 const SPEAKER_COMMS_REPLY_TO = 'tasi.comms@csrindia.org';
@@ -19,30 +19,27 @@ const FOLLOW = [
 ];
 
 function photosLine(count) {
-  const what = !count
-    ? 'the photos'
-    : count === 1
-      ? 'the photo'
-      : `the ${count} photos`;
-  return `As a small thank you, our photographers' pictures of you are ready. We have put ${what} of you in one Google Drive folder, ready to view and download.`;
+  if (!count) {
+    return 'We have gathered the photos of you from the festival in one folder, ready for you to view and download.';
+  }
+  return count === 1
+    ? 'We have put the photo of you from the festival in a folder, ready for you to view and download.'
+    : `We have gathered the photos of you from the festival, ${count} of them, in one folder, ready for you to view and download.`;
 }
 
 // Body paragraphs shared by the HTML and plain-text versions.
 function paragraphs(edition, photoCount) {
   return [
-    `Thank you for speaking at ${edition.name}.`,
-    'Two days at the India International Centre, more than 100 speakers from 20 countries, and rooms full of people working to make the internet safer, especially for women and children. That only happens when speakers give their time and share what they know, and you did exactly that. We are very grateful.',
-    'We are still going through our notes from the sessions, and the ideas you shared will shape what we do next at the Centre for Social Research.',
+    `Thank you for joining us at ${edition.name} and for helping make it a resounding success.`,
+    'Over two days in New Delhi, more than 100 speakers from 20 countries came together to talk about keeping people safe online. Your contribution added a great deal to those conversations, and we are grateful you made the time to be with us.',
     photosLine(photoCount),
   ];
 }
 
 function useNote(edition) {
-  return `They are yours to use. If you post them, please use ${edition.hashtag} so we can find and share your post.`;
+  return `Feel free to download and share them. If you post, tag us with ${edition.hashtag} and we will share it too.`;
 }
-const CLOSING = 'We hope to see you again at the next edition of TASI.';
-const HELP_NOTE =
-  'If the folder does not open, or you spot a photo that is not of you, just reply to this email.';
+const CLOSING = 'We hope to see you again at the next TASI.';
 
 function buildSpeakerPhotosEmail({
   name,
@@ -77,7 +74,7 @@ function buildSpeakerPhotosEmail({
     )
     .join(
       ''
-    )}<p style="margin:24px 0 0"><a href="${escapeHtml(driveUrl)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">View your photos</a></p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 auto;max-width:470px">${escapeHtml(useNote(edition))}</p><p style="margin:12px auto 0;max-width:470px;font-size:13px;line-height:20px">${escapeHtml(COLLAB_NOTE)}</p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 auto;max-width:470px">${escapeHtml(CLOSING)}</p><p style="margin:14px 0 0">With warm regards and thanks,<br /><strong style="color:#202124">Team TASI</strong></p></td></tr><tr><td align="center" style="padding:20px 40px;color:#5f6368;font-size:12px;line-height:18px"><p style="margin:0 auto 5px;max-width:470px">${escapeHtml(HELP_NOTE)} You can also write to <a href="mailto:${safeReplyEmail}" style="${LINK}">${safeReplyEmail}</a>.</p><p style="margin:0 0 5px">Follow us: ${follow}</p><p style="margin:0">${escapeHtml(edition.festivalName)} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="${escapeHtml(siteUrl + FOOTER_IMAGE_PATH)}" width="610" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
+    )}<p style="margin:24px 0 0"><a href="${escapeHtml(driveUrl)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">View your photos</a></p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 auto;max-width:470px">${escapeHtml(useNote(edition))}</p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 auto;max-width:470px">${escapeHtml(CLOSING)}</p><p style="margin:14px 0 0">Warm regards,<br /><strong style="color:#202124">Team TASI</strong></p></td></tr><tr><td align="center" style="padding:20px 40px;color:#5f6368;font-size:12px;line-height:18px"><p style="margin:0 auto 5px;max-width:470px">Questions? Write to us at <a href="mailto:${safeReplyEmail}" style="${LINK}">${safeReplyEmail}</a>.</p><p style="margin:0 0 5px">Follow us: ${follow}</p><p style="margin:0">${escapeHtml(edition.festivalName)} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="${escapeHtml(siteUrl + FOOTER_IMAGE_PATH)}" width="610" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
 
   const text = [
     ...(test ? ['TEST EMAIL. This was not sent to the speaker.', ''] : []),
@@ -87,14 +84,13 @@ function buildSpeakerPhotosEmail({
     `View your photos: ${driveUrl}`,
     '',
     useNote(edition),
-    COLLAB_NOTE,
     '',
     CLOSING,
     '',
-    'With warm regards and thanks,',
+    'Warm regards,',
     'Team TASI',
     '',
-    `${HELP_NOTE} You can also write to ${replyEmail}.`,
+    `Questions? Write to us at ${replyEmail}.`,
     '',
     `Follow us: ${FOLLOW.map(({ key, label }) => `${label} ${SOCIAL_PROFILES[key]}`).join(' | ')}`,
     '',

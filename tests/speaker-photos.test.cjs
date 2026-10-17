@@ -124,7 +124,8 @@ test('photo email links the speaker to their own folder', () => {
   assert.match(email.html, /Dear Lucy Thomas,/);
   assert.ok(email.html.includes(`href="${FOLDER}"`));
   assert.match(email.html, /View your photos/);
-  assert.match(email.html, /the 42 photos of you/);
+  assert.match(email.html, /42 of them/);
+  assert.doesNotMatch(email.html, /not of you/);
   assert.match(email.html, /#TASI2026/);
   assert.match(email.html, /cid:tasi-logo/);
   assert.ok(email.text.includes(`View your photos: ${FOLDER}`));
@@ -139,13 +140,13 @@ test('photo email handles one photo, no count, test sends and markup in names', 
     driveUrl: FOLDER,
     photoCount: 1,
   });
-  assert.match(one.text, /the photo of you/);
+  assert.match(one.text, /the photo of you from the festival/);
   const none = buildSpeakerPhotosEmail({
     name: 'A',
     edition: '2026',
     driveUrl: FOLDER,
   });
-  assert.match(none.text, /the photos of you/);
+  assert.match(none.text, /the photos of you from the festival in one folder/);
   const testEmail = buildSpeakerPhotosEmail({
     name: '<b>X</b>',
     edition: '2026',
