@@ -18,21 +18,15 @@ const FOLLOW = [
   { key: 'instagram', label: 'Instagram' },
 ];
 
-function photosLine(count) {
-  if (!count) {
-    return 'We have gathered the photos of you from the festival in one folder, ready for you to view and download.';
-  }
-  return count === 1
-    ? 'We have put the photo of you from the festival in a folder, ready for you to view and download.'
-    : `We have gathered the photos of you from the festival, ${count} of them, in one folder, ready for you to view and download.`;
-}
+const PHOTOS_LINE =
+  'We have gathered the photos of you from the festival in one folder, ready for you to view and download.';
 
 // Body paragraphs shared by the HTML and plain-text versions.
-function paragraphs(edition, photoCount) {
+function paragraphs(edition) {
   return [
     `Thank you for joining us at ${edition.name} and for helping make it a resounding success.`,
     'Over two days in New Delhi, more than 100 speakers from 20 countries came together to talk about keeping people safe online. Your contribution added a great deal to those conversations, and we are grateful you made the time to be with us.',
-    photosLine(photoCount),
+    PHOTOS_LINE,
   ];
 }
 
@@ -45,7 +39,6 @@ function buildSpeakerPhotosEmail({
   name,
   edition: editionKey,
   driveUrl,
-  photoCount = null,
   siteUrl: rawSiteUrl,
   replyEmail = SPEAKER_COMMS_REPLY_TO,
   test = false,
@@ -56,7 +49,7 @@ function buildSpeakerPhotosEmail({
   const siteUrl = String(rawSiteUrl || DEFAULT_SITE_URL).replace(/\/+$/, '');
   const speakerName = name || 'there';
   const subject = `Thank you for speaking at ${edition.name}: your photos`;
-  const intro = paragraphs(edition, photoCount);
+  const intro = paragraphs(edition);
   const safeReplyEmail = escapeHtml(replyEmail);
 
   const testBanner = test

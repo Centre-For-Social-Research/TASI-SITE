@@ -56,7 +56,6 @@ function buildEmail(speaker, { test = false, name, driveUrl } = {}) {
     name: name || speaker.name,
     edition: speaker.edition,
     driveUrl: driveUrl || speaker.driveUrl,
-    photoCount: speaker.photoCount,
     siteUrl: getSiteUrl(),
     replyEmail: SPEAKER_COMMS_REPLY_TO,
     test,
