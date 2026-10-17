@@ -73,9 +73,9 @@ export const involvementOptions = [
   {
     title: 'Attend as Press',
     description:
-      'Apply for media accreditation to cover TASI, receive updates from the team, and access festival resources for newsroom planning.',
-    href: '/media/accreditation',
-    cta: 'Get Media Access',
+      'Covering trust and safety in India? Find the press kit, press releases and the TASI 2026 recap, or reach the team for interviews.',
+    href: '/media/press-kit',
+    cta: 'Open Press Kit',
     image: '/img/home-gallery/7T7A9837.webp',
     imageAlt: 'Press and audience coverage at TASI',
     eyebrow: 'Media',
@@ -103,9 +103,9 @@ export const involvementOptions = [
   {
     title: 'Speak at TASI',
     description:
-      'Share research, field experience, product insight, or policy thinking on stage with a cross-sector trust and safety audience.',
+      'Share research, field experience, product insight, or policy thinking on stage with a cross-sector trust and safety audience. Applications for TASI 2027 will open on this page.',
     href: '/speaker-application',
-    cta: 'Apply to Speak',
+    cta: 'Speaker Applications',
     image: '/img/home-gallery/IMG_7326.webp',
     imageAlt: 'Speaker session at TASI',
     eyebrow: 'Thought Leadership',
@@ -113,9 +113,9 @@ export const involvementOptions = [
   {
     title: 'Join as a Volunteer',
     description:
-      'Support delegates, speakers, and on-site operations while gaining hands-on experience inside the festival environment.',
+      'Support delegates, speakers, and on-site operations while gaining hands-on experience inside the festival environment. Applications for TASI 2027 will open on this page.',
     href: '/volunteer-application',
-    cta: 'Apply as Volunteer',
+    cta: 'Volunteer Applications',
     image: '/img/volunteers/volunteer-checkin.webp',
     imageAlt: 'Volunteer team handling attendee arrivals at TASI',
     eyebrow: 'Volunteer',
