@@ -10,6 +10,8 @@ const REMINDER_EVENT = {
   name: 'TASI 2026',
   festivalName: 'Trust & Safety India Festival 2026',
   startDate: '2026-10-14',
+  // Close of Day 2. Reminders are not sent after this.
+  endsAt: '2026-10-15T18:00:00+05:30',
   dates: '14-15 October 2026',
   venue: 'India International Centre, New Delhi',
   venueMapUrl:
@@ -313,6 +315,11 @@ Take a look at the programme and speakers below to plan your two days, and add t
 With warm regards,
 **Team TASI**`;
 
+// True once the festival is over, so a reminder can no longer count down.
+function hasEventEnded(now = new Date()) {
+  return now.getTime() >= Date.parse(REMINDER_EVENT.endsAt);
+}
+
 module.exports = {
   DEFAULT_REMINDER_BODY,
   DEFAULT_REMINDER_SUBJECT,
@@ -325,4 +332,5 @@ module.exports = {
   daysUntilEvent,
   escapeHtml,
   findUnknownPlaceholders,
+  hasEventEnded,
 };

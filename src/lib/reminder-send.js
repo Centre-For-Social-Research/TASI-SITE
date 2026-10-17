@@ -20,8 +20,12 @@ import reminderUtils from '@/lib/reminder-utils.cjs';
 import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
 import qrPassEmail from '@/lib/qr-pass-email.cjs';
 
-const { REMINDER_CALENDAR_FILENAME, REMINDER_REPLY_TO, buildReminderEmail } =
-  reminderEmail;
+const {
+  REMINDER_CALENDAR_FILENAME,
+  REMINDER_REPLY_TO,
+  buildReminderEmail,
+  hasEventEnded,
+} = reminderEmail;
 const { buildTasiCalendarIcs } = qrPassEmail;
 const { isDefiniteProviderRejection, isValidEmail } = reminderUtils;
 const { RETRY_BEFORE_MS, canRetryGuestSend, hashGuestEmailRequest } =
@@ -174,6 +178,13 @@ export async function sendReminder({
         );
       }
     } else {
+      // A new send after the festival would read "0 days away". Retries
+      // above still run so an attempt begun before the end can be settled.
+      if (hasEventEnded()) {
+        throw new Error(
+          'TASI 2026 is over, so reminders can no longer be sent.'
+        );
+      }
       if (!isValidEmail(registration.email)) {
         throw new Error(
           `${registration.email || 'This registrant'} is not a valid email address. Fix it in the registration first.`
