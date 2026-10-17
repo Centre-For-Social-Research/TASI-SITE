@@ -117,7 +117,10 @@ test('photo email links the speaker to their own folder', () => {
     photoCount: 42,
     siteUrl: 'https://trustandsafetyindia.org/',
   });
-  assert.equal(email.subject, 'Your photos from TASI 2026');
+  assert.equal(
+    email.subject,
+    'Thank you for speaking at TASI 2026: your photos'
+  );
   assert.match(email.html, /Dear Lucy Thomas,/);
   assert.ok(email.html.includes(`href="${FOLDER}"`));
   assert.match(email.html, /View your photos/);
@@ -149,7 +152,10 @@ test('photo email handles one photo, no count, test sends and markup in names', 
     driveUrl: FOLDER,
     test: true,
   });
-  assert.equal(testEmail.subject, '[TEST] Your photos from TASI 2026');
+  assert.equal(
+    testEmail.subject,
+    '[TEST] Thank you for speaking at TASI 2026: your photos'
+  );
   assert.match(testEmail.html, /Test email\. This was not sent/);
   assert.doesNotMatch(testEmail.html, /<b>X<\/b>/);
   assert.throws(

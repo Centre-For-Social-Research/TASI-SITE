@@ -19,23 +19,28 @@ const FOLLOW = [
 ];
 
 function photosLine(count) {
-  if (!count) {
-    return 'We have put the photos of you from the festival in one Google Drive folder, ready to view and download.';
-  }
-  return `We have put ${count === 1 ? 'the photo' : `the ${count} photos`} of you from the festival in one Google Drive folder, ready to view and download.`;
+  const what = !count
+    ? 'the photos'
+    : count === 1
+      ? 'the photo'
+      : `the ${count} photos`;
+  return `As a small thank you, our photographers' pictures of you are ready. We have put ${what} of you in one Google Drive folder, ready to view and download.`;
 }
 
 // Body paragraphs shared by the HTML and plain-text versions.
 function paragraphs(edition, photoCount) {
   return [
-    `Thank you for speaking at ${edition.name}. It was a pleasure to have you with us in New Delhi.`,
+    `Thank you for speaking at ${edition.name}.`,
+    'Two days at the India International Centre, more than 100 speakers from 20 countries, and rooms full of people working to make the internet safer, especially for women and children. That only happens when speakers give their time and share what they know, and you did exactly that. We are very grateful.',
+    'We are still going through our notes from the sessions, and the ideas you shared will shape what we do next at the Centre for Social Research.',
     photosLine(photoCount),
   ];
 }
 
 function useNote(edition) {
-  return `You are welcome to use them on your own channels. If you post, please use ${edition.hashtag} so we can find and share it.`;
+  return `They are yours to use. If you post them, please use ${edition.hashtag} so we can find and share your post.`;
 }
+const CLOSING = 'We hope to see you again at the next edition of TASI.';
 const HELP_NOTE =
   'If the folder does not open, or you spot a photo that is not of you, just reply to this email.';
 
@@ -53,7 +58,7 @@ function buildSpeakerPhotosEmail({
   if (!driveUrl) throw new Error('Add a Drive link for this speaker first.');
   const siteUrl = String(rawSiteUrl || DEFAULT_SITE_URL).replace(/\/+$/, '');
   const speakerName = name || 'there';
-  const subject = `Your photos from ${edition.name}`;
+  const subject = `Thank you for speaking at ${edition.name}: your photos`;
   const intro = paragraphs(edition, photoCount);
   const safeReplyEmail = escapeHtml(replyEmail);
 
@@ -65,14 +70,14 @@ function buildSpeakerPhotosEmail({
       `<a href="${escapeHtml(SOCIAL_PROFILES[key])}" style="color:#5f6368;text-decoration:underline">${label}</a>`
   ).join(DOT);
 
-  const html = `<!doctype html><html><body style="margin:0;padding:0;background:#022d5d;font-family:Inter,Arial,Helvetica,sans-serif;"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;line-height:1px;mso-hide:all">Your photos from ${escapeHtml(edition.name)}, ready to download.</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#022d5d" style="background:#022d5d;background:linear-gradient(135deg,#022d5d 0%,#43358a 52%,#b34b5c 100%)"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="610" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:610px;background-color:#ffffff;border:1px solid #e8eaed">${testBanner}<tr><td align="center" bgcolor="#ffffff" style="padding:31px 40px 18px;background:#ffffff"><img src="cid:tasi-logo" width="194" height="54" alt="Trust &amp; Safety Festival - TASI. People First. Safety Always." style="display:block;width:194px;height:54px;border:0;outline:none;text-decoration:none" /></td></tr><tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 0 16px">Dear ${escapeHtml(speakerName)},</p>${intro
+  const html = `<!doctype html><html><body style="margin:0;padding:0;background:#022d5d;font-family:Inter,Arial,Helvetica,sans-serif;"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;line-height:1px;mso-hide:all">Thank you for speaking at ${escapeHtml(edition.name)}. Your photos are ready to download.</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#022d5d" style="background:#022d5d;background:linear-gradient(135deg,#022d5d 0%,#43358a 52%,#b34b5c 100%)"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="610" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:610px;background-color:#ffffff;border:1px solid #e8eaed">${testBanner}<tr><td align="center" bgcolor="#ffffff" style="padding:31px 40px 18px;background:#ffffff"><img src="cid:tasi-logo" width="194" height="54" alt="Trust &amp; Safety Festival - TASI. People First. Safety Always." style="display:block;width:194px;height:54px;border:0;outline:none;text-decoration:none" /></td></tr><tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 0 16px">Dear ${escapeHtml(speakerName)},</p>${intro
     .map(
       (text, index) =>
         `<p style="margin:${index ? '16px' : '0'} auto 0;max-width:470px">${escapeHtml(text)}</p>`
     )
     .join(
       ''
-    )}<p style="margin:24px 0 0"><a href="${escapeHtml(driveUrl)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">View your photos</a></p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 auto;max-width:470px">${escapeHtml(useNote(edition))}</p><p style="margin:12px auto 0;max-width:470px;font-size:13px;line-height:20px">${escapeHtml(COLLAB_NOTE)}</p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0">Thank you again for being part of ${escapeHtml(edition.name)}.</p><p style="margin:14px 0 0">With warm regards,<br /><strong style="color:#202124">Team TASI</strong></p></td></tr><tr><td align="center" style="padding:20px 40px;color:#5f6368;font-size:12px;line-height:18px"><p style="margin:0 auto 5px;max-width:470px">${escapeHtml(HELP_NOTE)} You can also write to <a href="mailto:${safeReplyEmail}" style="${LINK}">${safeReplyEmail}</a>.</p><p style="margin:0 0 5px">Follow us: ${follow}</p><p style="margin:0">${escapeHtml(edition.festivalName)} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="${escapeHtml(siteUrl + FOOTER_IMAGE_PATH)}" width="610" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
+    )}<p style="margin:24px 0 0"><a href="${escapeHtml(driveUrl)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">View your photos</a></p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 auto;max-width:470px">${escapeHtml(useNote(edition))}</p><p style="margin:12px auto 0;max-width:470px;font-size:13px;line-height:20px">${escapeHtml(COLLAB_NOTE)}</p></td></tr>${DIVIDER}<tr><td align="center" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 auto;max-width:470px">${escapeHtml(CLOSING)}</p><p style="margin:14px 0 0">With warm regards and thanks,<br /><strong style="color:#202124">Team TASI</strong></p></td></tr><tr><td align="center" style="padding:20px 40px;color:#5f6368;font-size:12px;line-height:18px"><p style="margin:0 auto 5px;max-width:470px">${escapeHtml(HELP_NOTE)} You can also write to <a href="mailto:${safeReplyEmail}" style="${LINK}">${safeReplyEmail}</a>.</p><p style="margin:0 0 5px">Follow us: ${follow}</p><p style="margin:0">${escapeHtml(edition.festivalName)} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="${escapeHtml(siteUrl + FOOTER_IMAGE_PATH)}" width="610" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
 
   const text = [
     ...(test ? ['TEST EMAIL. This was not sent to the speaker.', ''] : []),
@@ -84,9 +89,9 @@ function buildSpeakerPhotosEmail({
     useNote(edition),
     COLLAB_NOTE,
     '',
-    `Thank you again for being part of ${edition.name}.`,
+    CLOSING,
     '',
-    'With warm regards,',
+    'With warm regards and thanks,',
     'Team TASI',
     '',
     `${HELP_NOTE} You can also write to ${replyEmail}.`,
