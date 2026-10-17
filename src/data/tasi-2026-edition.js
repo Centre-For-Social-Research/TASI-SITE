@@ -208,9 +208,8 @@ export const tasi2026Quotes = [
     text: "All these cyber securities, laws, regulations mean nothing. They'll be all on paper if the industry doesn't step forward and if you don't take responsibility, it means nothing.",
     author:
       'Jitin Prasada, Minister of State for Commerce & Industry and Electronics & IT, Government of India',
-    // PIB photo via Wikimedia Commons, Government Open Data License - India.
-    photo: '/img/speakers/2026/jitin-prasada.webp',
-    photoCredit: 'Photo: PIB, GODL-India',
+    // From the inaugural address at TASI 2026, 14 October (2E1A2671).
+    photo: '/img/speakers/2026/jitin-prasada-tasi-2026.webp',
   },
   {
     text: "The future of online safety shouldn't be something we build for young people. It has to be something we build with them.",
