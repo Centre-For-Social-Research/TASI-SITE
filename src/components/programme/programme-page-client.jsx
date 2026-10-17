@@ -16,7 +16,7 @@ const heroContent = {
   2026: {
     title: 'TASI 2026 Agenda',
     description:
-      'The working programme for 14-15 October 2026, curated around the theme "People First. Safety Always." Session titles are live and speakers are still being confirmed, so sessions, timings, and rooms may change.',
+      'The programme as delivered on 14-15 October 2026, curated around the theme "People First. Safety Always." Open a session for its speakers and details, or read the TASI 2026 recap for what came out of the rooms.',
   },
 };
 
@@ -64,6 +64,7 @@ export default function ProgrammePageClient({
           speakerDesignationMap={speakerDesignationMap}
           speakerPhotoMap={speakerPhotoMap}
           receptionNotes={receptionNotes}
+          showCalendarLinks={false}
         />
       ) : (
         <>
@@ -78,8 +79,7 @@ export default function ProgrammePageClient({
             receptionNotes={receptionNotes2026}
             dayDateMap={dayDateMap2026}
             showLiveStatus
-            // Day 1 is over, so the agenda opens on Day 2.
-            defaultDay="oct15"
+            showCalendarLinks={false}
             syncWithUrl
           />
         </>

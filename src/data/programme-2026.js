@@ -111,7 +111,7 @@ export const programmeSessions2026 = [
     'Lobby',
     'special',
     'Registration and Tea/Coffee',
-    'Collect your festival badge at the registration desk and meet fellow delegates over tea and coffee before the opening session. Please carry your QR pass and a valid government-issued photo ID.'
+    'Collect your festival badge at the registration desk and meet fellow delegates over tea and coffee before the opening session.'
   ),
   makeSession(
     9,
@@ -375,7 +375,7 @@ export const programmeSessions2026 = [
     'Lobby',
     'special',
     'Registration and Tea/Coffee',
-    'Registration opens for the second day of the festival, with tea and coffee. Please carry your QR pass and a valid government-issued photo ID.'
+    'Registration opens for the second day of the festival, with tea and coffee.'
   ),
   makeSession(
     32,

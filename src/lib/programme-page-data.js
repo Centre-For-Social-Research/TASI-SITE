@@ -57,7 +57,6 @@ export const programmeReceptionNotes2026 = [
     day: 'October 13',
     venue: 'Goethe-Institut, New Delhi',
     access: 'Invite only',
-    note: 'This is an invitation-only event. Your festival pass does not include entry.',
     description:
       'Opening evening reception jointly hosted by the Embassy of France and the German Embassy, bringing delegates and partners together for welcome remarks and Safety Spotlights to launch TASI 2026.',
   },
@@ -65,7 +64,6 @@ export const programmeReceptionNotes2026 = [
     day: 'October 15',
     venue: 'Residence of the Ambassador of the Netherlands, New Delhi',
     access: 'Invite only',
-    note: 'This is an invitation-only event. Your festival pass does not include entry.',
     description:
       'Closing reception hosted by the Embassy of the Kingdom of the Netherlands, with a closing panel reflecting on two days of TASI 2026, followed by networking, drinks and dinner.',
   },
