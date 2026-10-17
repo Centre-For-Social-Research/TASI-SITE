@@ -59,9 +59,9 @@ export const tasi2026Ideas = [
       role: 'Founder, Cyberlite',
       photo: '/img/speakers/2026/nina-bual.webp',
     },
-    image: '/img/tasi-2026/idea-youth-behind-the-chat.webp',
+    image: '/img/tasi-2026/idea-youth-behind-the-chat-speakers.webp',
     imageAlt:
-      'Speakers on stage at the Behind the Chat spotlight on AI companions',
+      'Speakers from the Behind the Chat spotlight on AI companions, on stage at TASI 2026',
     sessions: ['tasi26-24', 'tasi26-17', 'tasi26-4'],
   },
   {
