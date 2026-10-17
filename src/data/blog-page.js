@@ -1,7 +1,7 @@
 export const blogIndexMetadata = {
   title: 'Trust and Safety India Festival News and Blogs | TASI 2026',
   description:
-    'Read Trust and Safety India Festival news, TASI announcements, registration updates, community notes, and commentary on online safety, AI governance, and platform accountability.',
+    'Read Trust and Safety India Festival news, TASI announcements, festival recaps, community notes, and commentary on online safety, AI governance, and platform accountability.',
   alternates: {
     canonical: '/blog',
   },

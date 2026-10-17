@@ -5,6 +5,7 @@ import BreadcrumbJsonLd from '@/components/seo/breadcrumb-json-ld';
 import JsonLdScript from '@/components/seo/json-ld-script';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
+import { speakerCountries2026 } from '@/data/speaker-countries-2026';
 
 const siteUrl = 'https://trustandsafetyindia.org';
 const pagePath = '/trust-and-safety-india-festival';
@@ -116,10 +117,13 @@ const exploreLinks = [
 ];
 
 const proofPoints = [
-  { value: '500+', label: 'participants in 2025' },
-  { value: '100+', label: 'expert speakers' },
-  { value: '15', label: 'countries represented' },
-  { value: '30+', label: 'sessions and workshops' },
+  { value: '500+', label: 'participants in 2026' },
+  { value: '110+', label: 'expert speakers' },
+  {
+    value: String(speakerCountries2026.length),
+    label: 'countries represented',
+  },
+  { value: '55+', label: 'sessions and workshops' },
 ];
 
 const heroPhotos = [
@@ -318,10 +322,11 @@ export default function TrustAndSafetyIndiaFestivalPage() {
                   systems.
                 </p>
                 <p>
-                  The 2026 edition returns to New Delhi on October 14-15, 2026,
-                  but the festival identity is broader than one year. It is a
-                  shared platform for practical collaboration on online harms,
-                  platform governance, AI safety, and digital rights.
+                  The 2026 edition took place in New Delhi on 14-15 October
+                  2026, and TASI returns in October 2027. The festival identity
+                  is broader than one year. It is a shared platform for
+                  practical collaboration on online harms, platform governance,
+                  AI safety, and digital rights.
                 </p>
                 <p>
                   Convened by the Centre for Social Research and Trust and
@@ -392,7 +397,7 @@ export default function TrustAndSafetyIndiaFestivalPage() {
             </h2>
             <p className="mt-5 max-w-2xl text-base leading-8 text-white/72">
               Move from the festival overview into the pages that carry the full
-              story: context, agenda, people, and registration.
+              story: context, agenda, people, and the TASI 2026 recap.
             </p>
             <div className="mt-10 grid gap-5 md:grid-cols-2">
               {exploreLinks.map((link, index) => {
