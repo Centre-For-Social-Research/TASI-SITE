@@ -119,13 +119,13 @@ test('photo email links the speaker to their own folder', () => {
   });
   assert.equal(email.subject, 'Your photos from TASI 2026');
   assert.match(email.html, /Dear Lucy Thomas,/);
-  assert.match(email.html, new RegExp(`href="${FOLDER}"`));
+  assert.ok(email.html.includes(`href="${FOLDER}"`));
   assert.match(email.html, /View your photos/);
   assert.match(email.html, /the 42 photos of you/);
   assert.match(email.html, /#TASI2026/);
   assert.match(email.html, /cid:tasi-logo/);
-  assert.match(email.text, new RegExp(`View your photos: ${FOLDER}`));
-  assert.match(email.text, new RegExp(SPEAKER_COMMS_REPLY_TO));
+  assert.ok(email.text.includes(`View your photos: ${FOLDER}`));
+  assert.ok(email.text.includes(SPEAKER_COMMS_REPLY_TO));
   assert.doesNotMatch(email.html, /—/);
 });
 
