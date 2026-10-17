@@ -1,63 +1,49 @@
 # Trust and Safety India Festival (TASI)
 
-> The Trust and Safety India Festival (TASI) is a national summit in New Delhi convening government, industry, academia, and civil‑society to discuss trust, safety, and AI governance.
+> The Trust and Safety India Festival (TASI) is an annual national convening in New Delhi that brings together government, industry, academia, and civil society to discuss trust, safety, and AI governance. TASI 2026 took place on 14–15 October 2026 at the India International Centre, New Delhi. TASI returns in October 2027; dates have not been announced.
 
-The festival runs both in‑person and online, organized by the Centre for Social Research (CSR) in partnership with the Trust and Safety Festival, and includes panels, workshops, and networking sessions on topics such as child safety, digital wellbeing, platform policy, and AI ethics.
+TASI is organised by the Centre for Social Research (CSR) in partnership with the Trust and Safety Festival. TASI 2026 brought together 500+ attendees and 110+ speakers for 55+ sessions on child safety, age assurance, scams and fraud, women's safety online, platform regulation, and AI governance. Registration and applications for TASI 2026 are closed.
 
 ## Overview
-- [Home](https://trustandsafetyindia.org): main landing page for the festival.  
-- [About](https://trustandsafetyindia.org/about): background, mission, and organizers.  
-- [Themes](https://trustandsafetyindia.org/themes): key thematic areas covered at the event.  
-- [Get Involved](https://trustandsafetyindia.org/get-involved): ways for participants to contribute.  
-- [Contact](https://trustandsafetyindia.org/contact): contact information and inquiry form.  
-- [Media](https://trustandsafetyindia.org/media): media resources and assets.  
-- [Press Kit](https://trustandsafetyindia.org/media/press-kit): downloadable press materials.  
-- [Press Releases](https://trustandsafetyindia.org/media/press-releases): official announcements.  
-- [TASI 2025](https://trustandsafetyindia.org/tasi-2025): information for the 2025 edition.  
-- [TASI 2026](https://trustandsafetyindia.org/tasi-2026): information for the 2026 edition.  
+- [Home](https://trustandsafetyindia.org): main landing page for the festival.
+- [TASI 2026 Recap](https://trustandsafetyindia.org/tasi-2026): highlights video, five key ideas, launches, recommendations, and session recaps from the 2026 edition.
+- [TASI 2025](https://trustandsafetyindia.org/tasi-2025): recap of the first edition.
+- [About](https://trustandsafetyindia.org/about): background, mission, and organisers.
+- [Themes](https://trustandsafetyindia.org/themes): the thematic areas TASI covers.
+- [Contact](https://trustandsafetyindia.org/contact): contact information and enquiry form.
+- [Media](https://trustandsafetyindia.org/media): media resources and assets.
+- [Press Kit](https://trustandsafetyindia.org/media/press-kit): downloadable press materials.
+- [Press Releases](https://trustandsafetyindia.org/media/press-releases): official announcements.
 
 ## Programme
-- [Programme Overview](https://trustandsafetyindia.org/programme): full schedule of sessions and activities.  
-- [Opening Remarks (Session 1)](https://trustandsafetyindia.org/programme/session/tasi25-1-opening-remarks): inaugural address for the first day.  
-- [Keynote Speech (Session 9)](https://trustandsafetyindia.org/programme/session/tasi25-9-keynote-speech): featured keynote presentation.  
-- [Panel: AI for Safety (Session 13)](https://trustandsafetyindia.org/programme/session/tasi25-13-panel-ai-for-safety): discussion on AI applications for safety.  
-- [Closing Remarks (Session 52)](https://trustandsafetyindia.org/programme/session/tasi25-52-closing-remarks): final remarks for the conference.  
+- [Programme Overview](https://trustandsafetyindia.org/programme): the TASI 2026 and TASI 2025 programmes.
+- [Inaugural Address (2026)](https://trustandsafetyindia.org/programme/session/tasi26-13-opening-remarks-and-inaugural-address): opening remarks and the inaugural address by Minister of State Jitin Prasada.
+- [Opening Panel: Forces Reshaping Trust & Safety in 2026](https://trustandsafetyindia.org/programme/session/tasi26-11-opening-panel-forces-reshaping-trust-and-safety-in-2026): Roblox, OpenAI, Google, TP and The Quantum Hub on incentives and regulation.
+- [Age Assurance and Age-Appropriate Design (2026)](https://trustandsafetyindia.org/programme/session/tasi26-23-panel-age-assurance-and-age-appropriate-design-building-better-experiences-for-children): privacy-preserving age checks.
+- [Rethinking Women's Safety (2026)](https://trustandsafetyindia.org/programme/session/tasi26-40-panel-beyond-online-harm-rethinking-women-s-safety-in-a-changing-digital-world): moving the burden of safety from women to systems.
+- [Report Launch: Designing for Online Safety (2026)](https://trustandsafetyindia.org/programme/session/tasi26-66-report-launch-designing-for-online-safety-reimagining-india-s-digital-service-regulation): The Quantum Hub's proposal for a duty of care.
+- [Closing Plenary (2026)](https://trustandsafetyindia.org/programme/session/tasi26-67-closing-plenary-trust-and-safety-at-a-crossroads-how-should-we-rethink-safety-responsibility-and-human-wellbeing-for-the-next-era-of-technology): trust and safety at a crossroads.
 
 ## Speakers
-- [Speakers Index](https://trustandsafetyindia.org/speakers): list of all confirmed speakers.  
-- [Abby Roberts](https://trustandsafetyindia.org/speakers/abby-roberts): profile of speaker Abby Roberts.  
-- [Barkha Dutt](https://trustandsafetyindia.org/speakers/barkha-dutt): profile of journalist Barkha Dutt.  
-- [Henry Adams](https://trustandsafetyindia.org/speakers/henry-adams): profile of speaker Henry Adams.  
-- [Yannick Ragonneau](https://trustandsafetyindia.org/speakers/yannick-ragonneau): profile of speaker Yannick Ragonneau.  
+- [TASI 2026 Speakers](https://trustandsafetyindia.org/speakers?year=2026): profiles of the 2026 speakers.
+- [TASI 2025 Speakers](https://trustandsafetyindia.org/speakers?year=2025): profiles of the 2025 speakers.
 
-## Registration & Participation
-- [Register](https://trustandsafetyindia.org/register): registration portal for attendees.  
-- [Sponsor](https://trustandsafetyindia.org/sponsor): sponsorship opportunities and packages.  
-- [Exhibition](https://trustandsafetyindia.org/exhibition): exhibition details and exhibitor information.  
-- [Speaker Application](https://trustandsafetyindia.org/speaker-application): form to propose speaking slots.  
-- [Volunteer Application](https://trustandsafetyindia.org/volunteer-application): volunteer sign‑up form.  
+## Receptions
+- [Receptions](https://trustandsafetyindia.org/receptions): embassy-hosted receptions at TASI 2025 and TASI 2026.
 
-## Travel
-- [Plan Your Travel](https://trustandsafetyindia.org/plan-your-travel): travel guidance for visitors.  
-- [General Info](https://trustandsafetyindia.org/plan-your-travel/general-info): overview of travel logistics.  
-- [How to Reach](https://trustandsafetyindia.org/plan-your-travel/how-to-reach): directions to the venue.  
-- [Visa Information](https://trustandsafetyindia.org/plan-your-travel/visa-information): visa requirements for international guests.  
-- [Accommodation](https://trustandsafetyindia.org/plan-your-travel/accommodation): recommended hotels and lodging options.  
+## Partnering
+- [Sponsor](https://trustandsafetyindia.org/sponsor): partnership opportunities with TASI.
+- [Get Involved](https://trustandsafetyindia.org/get-involved): ways to take part in future editions.
 
 ## Blog
-- [Blog Home](https://trustandsafetyindia.org/blog): collection of festival‑related posts.  
-- [Early‑Bird Registration](https://trustandsafetyindia.org/blog/early-bird-registration): announcement of early registration discounts.  
-- [Call for Proposals Open](https://trustandsafetyindia.org/blog/call-for-proposals-open): invitation to submit session proposals.  
+- [Blog Home](https://trustandsafetyindia.org/blog): news and articles from TASI.
 
 ## Legal
-- [Privacy Policy](https://trustandsafetyindia.org/privacy-policy): privacy practices and data handling.  
-- [Terms of Service](https://trustandsafetyindia.org/terms-of-service): terms governing site use.  
+- [Privacy Policy](https://trustandsafetyindia.org/privacy-policy): privacy practices and data handling.
+- [Terms of Service](https://trustandsafetyindia.org/terms-of-service): terms governing site use.
 
 ## Optional
-- [All Speakers](https://trustandsafetyindia.org/speakers): full directory of over 100 speaker profiles.  
-- [All Programme Sessions](https://trustandsafetyindia.org/programme): complete list of session pages.  
-- [Receptions](https://trustandsafetyindia.org/receptions): information on networking receptions (2025 & 2026).  
-- [Partner: Meta](https://trustandsafetyindia.org/partners/meta): partnership details with Meta.  
-- [Partner: YouTube](https://trustandsafetyindia.org/partners/youtube): partnership details with YouTube.  
-- [Partner: Booking.com](https://trustandsafetyindia.org/partners/booking-com): partnership details with Booking.com.  
+- [Partner: Meta](https://trustandsafetyindia.org/partners/meta): partnership details with Meta.
+- [Partner: YouTube](https://trustandsafetyindia.org/partners/youtube): partnership details with YouTube.
+- [Partner: Booking.com](https://trustandsafetyindia.org/partners/booking-com): partnership details with Booking.com.
 - [Sitemap](https://trustandsafetyindia.org/sitemap.xml): XML sitemap for the site.
