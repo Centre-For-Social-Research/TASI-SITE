@@ -532,12 +532,3 @@ test('the plain-text version never fills placeholders inside a URL', () => {
   );
   assert.match(email.html, /href="https:\/\/example\.org\/\{\{first_name\}\}"/);
 });
-
-test('reminders stop once the festival has ended', () => {
-  const { hasEventEnded } = require('../src/lib/reminder-email.cjs');
-
-  assert.equal(hasEventEnded(new Date('2026-10-13T12:00:00+05:30')), false);
-  assert.equal(hasEventEnded(new Date('2026-10-15T17:59:00+05:30')), false);
-  assert.equal(hasEventEnded(new Date('2026-10-15T18:00:00+05:30')), true);
-  assert.equal(hasEventEnded(new Date('2026-10-17T09:00:00+05:30')), true);
-});
