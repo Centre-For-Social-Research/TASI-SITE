@@ -1,0 +1,1175 @@
+'use client';
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ExternalLink,
+  Eye,
+  FlaskConical,
+  Images,
+  Pencil,
+  Send,
+  Square,
+  X,
+} from 'lucide-react';
+import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
+import {
+  AdminAlert,
+  AdminStatCard,
+  AdminStatusBadge,
+  AdminToast,
+  SlideOverDrawer,
+} from '@/components/admin/admin-ui';
+
+const { canRetryGuestSend } = guestSendAttempt;
+
+// Resend's documented rate limit is a few requests per second; a short gap
+// between bulk sends keeps every request well inside it.
+const BULK_SEND_GAP_MS = 700;
+
+const STATE_LABELS = {
+  ready: 'Ready',
+  sent: 'Sent',
+  needs_email: 'Needs email',
+  needs_link: 'Needs Drive link',
+  link_updated: 'Link updated',
+  failed: 'Needs retry',
+  sending: 'Sending',
+};
+
+const STATE_FILTERS = [
+  { value: 'all', label: 'All speakers' },
+  { value: 'ready', label: 'Ready to send' },
+  { value: 'needs_email', label: 'Needs email' },
+  { value: 'sent', label: 'Sent' },
+  { value: 'attention', label: 'Needs attention' },
+];
+
+const EMPTY_FORM = { name: '', emails: '', driveUrl: '', photoCount: '' };
+
+function stateTone(state) {
+  if (state === 'sent') return 'success';
+  if (state === 'ready') return 'info';
+  if (state === 'failed') return 'danger';
+  if (state === 'sending' || state === 'link_updated') return 'warning';
+  return 'default';
+}
+
+function matchesFilter(speaker, filter) {
+  if (filter === 'all') return true;
+  if (filter === 'attention') {
+    return ['failed', 'sending', 'link_updated', 'needs_link'].includes(
+      speaker.state
+    );
+  }
+  return speaker.state === filter;
+}
+
+function canSendState(state) {
+  return ['ready', 'failed', 'link_updated'].includes(state);
+}
+
+function formatDate(value) {
+  if (!value) return '—';
+  return new Intl.DateTimeFormat('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Kolkata',
+  }).format(new Date(value));
+}
+
+function buttonStyle(primary = false, danger = false) {
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
+    borderRadius: 10,
+    padding: '9px 13px',
+    cursor: 'pointer',
+    fontSize: 12,
+    fontFamily: 'var(--adm-mono)',
+    letterSpacing: '.04em',
+    border: `1px solid ${
+      danger
+        ? 'var(--adm-bad)'
+        : primary
+          ? 'var(--adm-accent)'
+          : 'var(--adm-line-strong)'
+    }`,
+    background: danger
+      ? 'var(--adm-bad-soft)'
+      : primary
+        ? 'var(--adm-accent)'
+        : 'var(--adm-panel)',
+    color: danger
+      ? 'var(--adm-bad)'
+      : primary
+        ? 'var(--adm-accent-ink)'
+        : 'var(--adm-ink)',
+  };
+}
+
+function inputStyle() {
+  return {
+    width: '100%',
+    border: '1px solid var(--adm-line-strong)',
+    borderRadius: 10,
+    background: 'var(--adm-panel)',
+    color: 'var(--adm-ink)',
+    padding: '10px 12px',
+    fontSize: 13,
+    outline: 'none',
+    minHeight: 40,
+  };
+}
+
+const LABEL_STYLE = {
+  color: 'var(--adm-ink-2)',
+  fontFamily: 'var(--adm-mono)',
+  fontSize: 10,
+  letterSpacing: '.08em',
+  textTransform: 'uppercase',
+};
+
+// The preview iframe is sandboxed, so embedded images load from the site.
+function emailPreviewHtml(html) {
+  if (!html || typeof window === 'undefined') return '';
+  return html.replaceAll(
+    'cid:tasi-logo',
+    `${window.location.origin}/img/email/tasi-festival-logo.png`
+  );
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function readJson(response, fallback) {
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok || !json.success) throw new Error(json.error || fallback);
+  return json;
+}
+
+function SectionTitle({ children }) {
+  return (
+    <div style={{ color: 'var(--adm-ink)', fontSize: 14, fontWeight: 600 }}>
+      {children}
+    </div>
+  );
+}
+
+export default function SpeakerPhotosPanel({ canManage, operatorEmail }) {
+  const [edition, setEdition] = useState('2026');
+  const [editions, setEditions] = useState(['2026']);
+  const [speakers, setSpeakers] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [toast, setToast] = useState(null);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('all');
+  const [bulk, setBulk] = useState(null);
+  const [testResult, setTestResult] = useState(null);
+  const [testTo, setTestTo] = useState(operatorEmail || '');
+  const [selected, setSelected] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [editForm, setEditForm] = useState(EMPTY_FORM);
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const [busy, setBusy] = useState('');
+  const [clockNow, setClockNow] = useState(0);
+  const stopBulkRef = useRef(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch(
+        `/api/admin/speaker-photos?edition=${encodeURIComponent(edition)}`,
+        { cache: 'no-store' }
+      );
+      const json = await readJson(response, 'Unable to load speakers.');
+      setSpeakers(json.speakers || []);
+      setSummary(json.summary || null);
+      if (json.editions?.length) setEditions(json.editions);
+    } catch (loadError) {
+      setError(loadError.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [edition]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-change updates after an awaited request
+    load();
+  }, [load]);
+
+  useEffect(() => {
+    if (!toast?.message) return undefined;
+    const timer = window.setTimeout(() => setToast(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
+
+  const working = Boolean(bulk?.running);
+  useEffect(() => {
+    if (!working) return undefined;
+    const warn = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [working]);
+
+  const visible = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return speakers.filter(
+      (speaker) =>
+        matchesFilter(speaker, filter) &&
+        (!term ||
+          speaker.name.toLowerCase().includes(term) ||
+          speaker.emails.some((email) => email.includes(term)))
+    );
+  }, [speakers, search, filter]);
+
+  const readyIds = useMemo(
+    () =>
+      speakers
+        .filter((speaker) => speaker.state === 'ready')
+        .map((speaker) => speaker.id),
+    [speakers]
+  );
+
+  async function openDetail(speaker) {
+    setSelected(speaker);
+    setDetail(null);
+    setPreview(null);
+    setDetailLoading(true);
+    try {
+      const response = await fetch(`/api/admin/speaker-photos/${speaker.id}`, {
+        cache: 'no-store',
+      });
+      const json = await readJson(response, 'Unable to load speaker.');
+      setDetail(json);
+      setSelected(json.speaker);
+      setEditForm({
+        name: json.speaker.name || '',
+        emails: (json.speaker.emails || []).join(', '),
+        driveUrl: json.speaker.driveUrl || '',
+        photoCount:
+          json.speaker.photoCount === null
+            ? ''
+            : String(json.speaker.photoCount),
+      });
+    } catch (detailError) {
+      setToast({ tone: 'danger', message: detailError.message });
+      setSelected(null);
+    } finally {
+      setDetailLoading(false);
+    }
+  }
+
+  function closeDetail() {
+    setSelected(null);
+    setDetail(null);
+    setPreview(null);
+  }
+
+  async function saveSpeaker(event) {
+    event.preventDefault();
+    if (!selected) return;
+    setSavingEdit(true);
+    try {
+      const response = await fetch(`/api/admin/speaker-photos/${selected.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      });
+      const json = await readJson(response, 'Unable to update speaker.');
+      setToast({ tone: 'success', message: `${json.speaker.name} updated.` });
+      await load();
+      await openDetail(json.speaker);
+    } catch (saveError) {
+      setToast({ tone: 'danger', message: saveError.message });
+    } finally {
+      setSavingEdit(false);
+    }
+  }
+
+  async function showPreview(speaker) {
+    setBusy('preview');
+    try {
+      const response = await fetch(
+        `/api/admin/speaker-photos/${speaker.id}/preview`,
+        { cache: 'no-store' }
+      );
+      const json = await readJson(response, 'Unable to preview email.');
+      setPreview(json.email);
+    } catch (previewError) {
+      setToast({ tone: 'danger', message: previewError.message });
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function sendTest(speaker) {
+    setBusy('test');
+    try {
+      const response = await fetch(
+        `/api/admin/speaker-photos/${speaker.id}/test`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ to: testTo.trim() }),
+        }
+      );
+      const json = await readJson(response, 'Unable to send test email.');
+      const sentAt = new Intl.DateTimeFormat('en-IN', {
+        timeStyle: 'short',
+        timeZone: 'Asia/Kolkata',
+      }).format(new Date());
+      setTestResult({
+        speakerId: speaker.id,
+        ok: true,
+        message: `Test sent to ${json.recipient} at ${sentAt}. Check that inbox (and spam) in a minute.`,
+      });
+    } catch (testError) {
+      setTestResult({
+        speakerId: speaker.id,
+        ok: false,
+        message: testError.message,
+      });
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function postSend(speaker, { resend = false } = {}) {
+    const response = await fetch(
+      `/api/admin/speaker-photos/${speaker.id}/send`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resend }),
+      }
+    );
+    return readJson(response, 'Unable to send photos.');
+  }
+
+  async function sendOne(speaker) {
+    const isResend = speaker.state === 'sent';
+    const recipients = speaker.emails.join(', ');
+    const confirmed = window.confirm(
+      isResend
+        ? `${speaker.name} has already been sent their photos.\n\nSend the link again to ${recipients}?`
+        : `Send ${speaker.name}'s photo link to ${recipients}?`
+    );
+    if (!confirmed) return;
+
+    setBusy('send');
+    try {
+      const json = await postSend(speaker, { resend: isResend });
+      setToast({
+        tone: 'success',
+        message: `Photo link accepted for delivery to ${json.speaker.emails.join(', ')}.`,
+      });
+      await load();
+      if (selected?.id === speaker.id) await openDetail(json.speaker);
+    } catch (sendError) {
+      setToast({ tone: 'danger', message: sendError.message });
+      await load();
+      if (selected?.id === speaker.id) await openDetail(speaker);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function retrySend(speaker) {
+    if (
+      !window.confirm(
+        `Retry the same send for ${speaker.name}? Resend uses the original attempt ID, so the speaker cannot get a duplicate.`
+      )
+    )
+      return;
+    setBusy('retry');
+    try {
+      const response = await fetch(
+        `/api/admin/speaker-photos/${speaker.id}/retry`,
+        { method: 'POST' }
+      );
+      await readJson(response, 'Unable to retry this send safely.');
+      setToast({ tone: 'success', message: 'The original send is confirmed.' });
+      await load();
+      await openDetail(speaker);
+    } catch (retryError) {
+      setToast({ tone: 'danger', message: retryError.message });
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function sendAllReady() {
+    const queue = speakers.filter((speaker) => readyIds.includes(speaker.id));
+    if (!queue.length) return;
+    if (
+      !window.confirm(
+        `Send photo links to ${queue.length} speaker${queue.length === 1 ? '' : 's'} who have not been sent one yet?\n\nEach speaker gets only their own folder. Speakers already sent are skipped.`
+      )
+    )
+      return;
+
+    stopBulkRef.current = false;
+    const failures = [];
+    let sent = 0;
+    setBulk({ running: true, done: 0, total: queue.length, sent, failures });
+
+    for (const [index, speaker] of queue.entries()) {
+      if (stopBulkRef.current) break;
+      try {
+        await postSend(speaker);
+        sent += 1;
+      } catch (sendError) {
+        failures.push({ name: speaker.name, message: sendError.message });
+      }
+      setBulk({
+        running: true,
+        done: index + 1,
+        total: queue.length,
+        sent,
+        failures: [...failures],
+      });
+      if (index < queue.length - 1) await sleep(BULK_SEND_GAP_MS);
+    }
+
+    setBulk((current) => ({
+      ...current,
+      running: false,
+      stopped: stopBulkRef.current,
+    }));
+    await load();
+  }
+
+  const current = detail?.speaker || selected;
+  useEffect(() => {
+    if (current?.status !== 'sending') return undefined;
+    const timer = window.setInterval(() => setClockNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [current?.id, current?.status]);
+  const retryReady = canRetryGuestSend(detail?.activeAttempt, clockNow);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <section
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 16,
+          flexWrap: 'wrap',
+        }}
+      >
+        <p
+          style={{
+            margin: 0,
+            maxWidth: 650,
+            color: 'var(--adm-ink-3)',
+            fontSize: 14,
+            lineHeight: 1.55,
+          }}
+        >
+          Send each speaker a link to their own Google Drive folder of event
+          photos. The folder must be shared as &ldquo;Anyone with the
+          link&rdquo; before you send. Replies go to tasi.comms@csrindia.org.
+        </p>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {editions.length > 1 ? (
+            <select
+              aria-label="Edition"
+              value={edition}
+              disabled={working}
+              onChange={(event) => setEdition(event.target.value)}
+              style={{ ...inputStyle(), width: 'auto' }}
+            >
+              {editions.map((value) => (
+                <option key={value} value={value}>
+                  TASI {value}
+                </option>
+              ))}
+            </select>
+          ) : null}
+          {canManage ? (
+            <button
+              type="button"
+              disabled={working || !readyIds.length}
+              style={{
+                ...buttonStyle(true),
+                fontFamily: 'var(--adm-sans)',
+                fontSize: 14,
+                fontWeight: 600,
+                letterSpacing: 0,
+                opacity: working || !readyIds.length ? 0.55 : 1,
+              }}
+              onClick={sendAllReady}
+            >
+              <Send size={14} /> Send to all ready ({readyIds.length})
+            </button>
+          ) : null}
+        </div>
+      </section>
+
+      {!canManage ? (
+        <AdminAlert
+          tone="info"
+          title="Read-only access"
+          description="Reviewer accounts can view speakers and photo links, but only an admin can edit or send."
+        />
+      ) : null}
+
+      {summary ? (
+        <div
+          className="adm-photo-stats"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: 12,
+          }}
+        >
+          <AdminStatCard
+            label="Speakers"
+            value={summary.total}
+            detail={`${summary.photos.toLocaleString('en-IN')} photos`}
+          />
+          <AdminStatCard
+            label="Ready to send"
+            value={summary.ready}
+            tone="info"
+          />
+          <AdminStatCard label="Sent" value={summary.sent} tone="success" />
+          <AdminStatCard
+            label="Needs email"
+            value={summary.needsEmail}
+            tone={summary.needsEmail ? 'warning' : 'default'}
+          />
+        </div>
+      ) : null}
+
+      {bulk ? (
+        <AdminAlert
+          tone={
+            bulk.running ? 'info' : bulk.failures.length ? 'warning' : 'success'
+          }
+          title={
+            bulk.running
+              ? `Sending photo links… ${bulk.done} of ${bulk.total}`
+              : `${bulk.stopped ? 'Stopped. ' : ''}${bulk.sent} photo link${bulk.sent === 1 ? '' : 's'} accepted for delivery`
+          }
+          description={
+            bulk.failures.length ? (
+              <span style={{ display: 'grid', gap: 3, marginTop: 4 }}>
+                {bulk.failures.map((failure) => (
+                  <span
+                    key={failure.name}
+                    style={{ display: 'block', color: 'var(--adm-bad)' }}
+                  >
+                    {failure.name}: {failure.message}
+                  </span>
+                ))}
+              </span>
+            ) : bulk.running ? (
+              'Keep this page open until sending finishes.'
+            ) : null
+          }
+          actions={
+            bulk.running ? (
+              <button
+                type="button"
+                style={buttonStyle(false, true)}
+                onClick={() => {
+                  stopBulkRef.current = true;
+                }}
+              >
+                <Square size={14} /> Stop after this one
+              </button>
+            ) : (
+              <button
+                type="button"
+                style={buttonStyle()}
+                onClick={() => setBulk(null)}
+              >
+                <X size={14} /> Dismiss
+              </button>
+            )
+          }
+        />
+      ) : null}
+
+      {error ? (
+        <AdminAlert
+          tone="danger"
+          title="Could not load speakers"
+          description={error}
+          actions={
+            <button type="button" style={buttonStyle()} onClick={load}>
+              Try again
+            </button>
+          }
+        />
+      ) : null}
+
+      <section
+        style={{
+          border: '1px solid var(--adm-line)',
+          borderRadius: 10,
+          background: 'var(--adm-panel)',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          className="adm-photo-filters"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(220px, 1fr) 200px',
+            gap: 10,
+            padding: 18,
+            borderBottom: '1px solid var(--adm-line)',
+          }}
+        >
+          <input
+            aria-label="Search speakers"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search name or email…"
+            style={inputStyle()}
+          />
+          <select
+            aria-label="Filter speakers by status"
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
+            style={inputStyle()}
+          >
+            {STATE_FILTERS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style={{ overflowX: 'auto' }}>
+          <table
+            style={{ width: '100%', borderCollapse: 'collapse', minWidth: 860 }}
+          >
+            <thead>
+              <tr>
+                {['Speaker', 'Email', 'Photos', 'Status', 'Last sent', ''].map(
+                  (heading) => (
+                    <th
+                      key={heading}
+                      style={{
+                        padding: '11px 16px',
+                        textAlign: 'left',
+                        borderBottom: '1px solid var(--adm-line)',
+                        color: 'var(--adm-ink-3)',
+                        fontFamily: 'var(--adm-mono)',
+                        fontSize: 10,
+                        letterSpacing: '.08em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {heading}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    style={{ padding: 18, color: 'var(--adm-ink-3)' }}
+                  >
+                    Loading speakers…
+                  </td>
+                </tr>
+              ) : null}
+              {!loading && !visible.length ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    style={{
+                      padding: '54px 20px',
+                      textAlign: 'center',
+                      color: 'var(--adm-ink-3)',
+                    }}
+                  >
+                    <Images size={28} style={{ margin: '0 auto 10px' }} />
+                    <div>
+                      {speakers.length
+                        ? 'No speakers match this filter.'
+                        : 'No speaker photo folders yet.'}
+                    </div>
+                  </td>
+                </tr>
+              ) : null}
+              {!loading &&
+                visible.map((speaker) => (
+                  <tr
+                    key={speaker.id}
+                    style={{ borderBottom: '1px solid var(--adm-line)' }}
+                  >
+                    <td
+                      style={{
+                        padding: '13px 16px',
+                        color: 'var(--adm-ink)',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {speaker.name}
+                    </td>
+                    <td
+                      style={{
+                        padding: '13px 16px',
+                        color: speaker.emails.length
+                          ? 'var(--adm-ink-2)'
+                          : 'var(--adm-ink-3)',
+                        fontSize: 13,
+                      }}
+                    >
+                      {speaker.emails.length
+                        ? speaker.emails.join(', ')
+                        : 'No email yet'}
+                    </td>
+                    <td
+                      style={{
+                        padding: '13px 16px',
+                        color: 'var(--adm-ink-3)',
+                        fontSize: 12,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {speaker.driveUrl ? (
+                        <a
+                          href={speaker.driveUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            color: 'var(--adm-ink-2)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 5,
+                          }}
+                        >
+                          {speaker.photoCount ?? '—'} photos
+                          <ExternalLink size={12} />
+                        </a>
+                      ) : (
+                        'No link'
+                      )}
+                    </td>
+                    <td style={{ padding: '13px 16px' }}>
+                      <AdminStatusBadge tone={stateTone(speaker.state)}>
+                        {STATE_LABELS[speaker.state] || speaker.state}
+                      </AdminStatusBadge>
+                    </td>
+                    <td
+                      style={{
+                        padding: '13px 16px',
+                        color: 'var(--adm-ink-3)',
+                        fontSize: 12,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {speaker.lastSentAt
+                        ? formatDate(speaker.lastSentAt)
+                        : 'Not sent'}
+                    </td>
+                    <td
+                      style={{
+                        padding: '9px 16px',
+                        textAlign: 'right',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          gap: 8,
+                          justifyContent: 'flex-end',
+                        }}
+                      >
+                        {canManage && canSendState(speaker.state) ? (
+                          <button
+                            type="button"
+                            disabled={working || Boolean(busy)}
+                            style={buttonStyle(true)}
+                            onClick={() => sendOne(speaker)}
+                          >
+                            <Send size={14} /> Send
+                          </button>
+                        ) : null}
+                        <button
+                          type="button"
+                          style={buttonStyle()}
+                          onClick={() => openDetail(speaker)}
+                        >
+                          <Eye size={14} /> View
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div
+          style={{
+            padding: '13px 18px',
+            color: 'var(--adm-ink-3)',
+            fontSize: 12,
+          }}
+        >
+          Showing {visible.length} of {speakers.length} speakers
+        </div>
+      </section>
+
+      <SlideOverDrawer
+        open={Boolean(selected)}
+        onClose={closeDetail}
+        title="Speaker photos"
+      >
+        {detailLoading || !current ? (
+          <p style={{ color: 'var(--adm-ink-3)', fontSize: 13 }}>
+            Loading speaker…
+          </p>
+        ) : (
+          <div style={{ display: 'grid', gap: 18 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+              }}
+            >
+              <div>
+                <div className="adm-eyebrow">TASI {current.edition}</div>
+                <h3
+                  style={{
+                    margin: '5px 0 0',
+                    color: 'var(--adm-ink)',
+                    fontSize: 18,
+                  }}
+                >
+                  {current.name}
+                </h3>
+              </div>
+              <AdminStatusBadge tone={stateTone(current.state)}>
+                {STATE_LABELS[current.state] || current.state}
+              </AdminStatusBadge>
+            </div>
+
+            {current.driveUrl ? (
+              <a
+                href={current.driveUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{ ...buttonStyle(), justifySelf: 'start' }}
+              >
+                <ExternalLink size={14} /> Open Drive folder
+                {current.photoCount !== null
+                  ? ` (${current.photoCount} photos)`
+                  : ''}
+              </a>
+            ) : (
+              <AdminAlert
+                tone="warning"
+                title="No Drive link yet"
+                description="Add this speaker's Google Drive folder link before sending."
+              />
+            )}
+
+            {canManage && current.status !== 'sending' ? (
+              <form onSubmit={saveSpeaker} style={{ display: 'grid', gap: 12 }}>
+                <SectionTitle>Speaker details</SectionTitle>
+                {[
+                  { key: 'name', label: 'Name', required: true },
+                  {
+                    key: 'emails',
+                    label: 'Email (up to 3, separated by commas)',
+                  },
+                  { key: 'driveUrl', label: 'Google Drive folder link' },
+                  { key: 'photoCount', label: 'Number of photos' },
+                ].map((field) => (
+                  <label key={field.key} style={{ display: 'grid', gap: 6 }}>
+                    <span style={LABEL_STYLE}>{field.label}</span>
+                    <input
+                      required={field.required}
+                      inputMode={
+                        field.key === 'photoCount' ? 'numeric' : undefined
+                      }
+                      value={editForm[field.key]}
+                      onChange={(event) =>
+                        setEditForm((form) => ({
+                          ...form,
+                          [field.key]: event.target.value,
+                        }))
+                      }
+                      style={inputStyle()}
+                    />
+                  </label>
+                ))}
+                <button
+                  type="submit"
+                  disabled={savingEdit}
+                  style={buttonStyle()}
+                >
+                  <Pencil size={14} /> {savingEdit ? 'Saving…' : 'Save details'}
+                </button>
+              </form>
+            ) : null}
+
+            <div
+              style={{
+                display: 'flex',
+                gap: 8,
+                flexWrap: 'wrap',
+                paddingTop: 18,
+                borderTop: '1px solid var(--adm-line)',
+              }}
+            >
+              <button
+                type="button"
+                disabled={Boolean(busy) || !current.driveUrl}
+                onClick={() => showPreview(current)}
+                style={buttonStyle()}
+              >
+                <Eye size={14} />{' '}
+                {busy === 'preview' ? 'Loading…' : 'Preview email'}
+              </button>
+              {canManage &&
+              (canSendState(current.state) || current.state === 'sent') ? (
+                <button
+                  type="button"
+                  disabled={Boolean(busy) || working}
+                  onClick={() => sendOne(current)}
+                  style={buttonStyle(true)}
+                >
+                  <Send size={14} />
+                  {busy === 'send'
+                    ? 'Sending…'
+                    : current.state === 'sent'
+                      ? 'Resend link'
+                      : current.state === 'link_updated'
+                        ? 'Send updated link'
+                        : 'Send photo link'}
+                </button>
+              ) : null}
+            </div>
+            {canManage && current.driveUrl ? (
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  sendTest(current);
+                }}
+                style={{ display: 'grid', gap: 8 }}
+              >
+                <label htmlFor="speaker-photo-test-email" style={LABEL_STYLE}>
+                  Send a test to
+                </label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    id="speaker-photo-test-email"
+                    type="email"
+                    required
+                    value={testTo}
+                    onChange={(event) => setTestTo(event.target.value)}
+                    placeholder="name@example.org"
+                    style={{ ...inputStyle(), flex: 1 }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={Boolean(busy)}
+                    style={buttonStyle()}
+                  >
+                    <FlaskConical size={14} />{' '}
+                    {busy === 'test' ? 'Sending…' : 'Send test'}
+                  </button>
+                </div>
+                {testResult?.speakerId === current.id ? (
+                  <p
+                    role="status"
+                    style={{
+                      margin: 0,
+                      padding: '9px 12px',
+                      borderRadius: 10,
+                      fontSize: 13,
+                      lineHeight: 1.5,
+                      color: testResult.ok ? 'var(--adm-ok)' : 'var(--adm-bad)',
+                      background: testResult.ok
+                        ? 'var(--adm-ok-soft)'
+                        : 'var(--adm-bad-soft)',
+                    }}
+                  >
+                    {testResult.ok ? '✓ ' : ''}
+                    {testResult.message}
+                  </p>
+                ) : null}
+                <p
+                  style={{ margin: 0, color: 'var(--adm-ink-3)', fontSize: 12 }}
+                >
+                  The test uses this speaker’s link, is marked [TEST], and does
+                  not count as sent.
+                </p>
+              </form>
+            ) : null}
+
+            {current.status === 'sending' ? (
+              <AdminAlert
+                tone="warning"
+                title="Delivery needs confirmation"
+                description={
+                  retryReady
+                    ? 'The send has been pending for 10 minutes. Retry the same attempt below. Resend uses its original ID, so the speaker cannot get a duplicate.'
+                    : 'This send is locked while its outcome is uncertain. A safe retry becomes available after 10 minutes.'
+                }
+              />
+            ) : null}
+            {canManage && retryReady ? (
+              <button
+                type="button"
+                disabled={Boolean(busy)}
+                onClick={() => retrySend(current)}
+                style={buttonStyle()}
+              >
+                {busy === 'retry' ? 'Retrying…' : 'Retry same send safely'}
+              </button>
+            ) : null}
+            {current.lastError ? (
+              <AdminAlert
+                tone="danger"
+                title="Last delivery error"
+                description={current.lastError}
+              />
+            ) : null}
+
+            <div style={{ display: 'grid', gap: 9 }}>
+              <SectionTitle>Send history</SectionTitle>
+              <div style={{ color: 'var(--adm-ink-3)', fontSize: 12 }}>
+                Accepted sends: {current.sendCount} · Last:{' '}
+                {formatDate(current.lastSentAt)}
+                {detail?.lastEvent
+                  ? ` · Resend status: ${detail.lastEvent}`
+                  : ''}
+              </div>
+              {detail?.deliveries?.length ? (
+                detail.deliveries.map((delivery) => (
+                  <div
+                    key={delivery.id}
+                    style={{
+                      border: '1px solid var(--adm-line)',
+                      borderRadius: 10,
+                      padding: '10px 12px',
+                      color: 'var(--adm-ink-2)',
+                      fontSize: 12,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <AdminStatusBadge
+                      tone={
+                        delivery.status === 'accepted'
+                          ? 'success'
+                          : delivery.status === 'sending'
+                            ? 'warning'
+                            : 'danger'
+                      }
+                    >
+                      {delivery.status}
+                    </AdminStatusBadge>
+                    <div style={{ marginTop: 7 }}>
+                      {formatDate(delivery.createdAt)}
+                      {delivery.actorEmail ? ` · ${delivery.actorEmail}` : ''}
+                    </div>
+                    <div style={{ marginTop: 2 }}>
+                      To: {delivery.recipientEmails.join(', ')}
+                    </div>
+                    {delivery.failureReason ? (
+                      <div style={{ marginTop: 2, color: 'var(--adm-bad)' }}>
+                        {delivery.failureReason}
+                      </div>
+                    ) : null}
+                  </div>
+                ))
+              ) : (
+                <div style={{ color: 'var(--adm-ink-3)', fontSize: 12 }}>
+                  No sends yet.
+                </div>
+              )}
+            </div>
+
+            {preview ? (
+              <div
+                style={{
+                  display: 'grid',
+                  gap: 8,
+                  paddingTop: 18,
+                  borderTop: '1px solid var(--adm-line)',
+                }}
+              >
+                <SectionTitle>{preview.subject}</SectionTitle>
+                <div style={{ color: 'var(--adm-ink-3)', fontSize: 12 }}>
+                  To:{' '}
+                  {preview.to?.length ? preview.to.join(', ') : 'No email yet'}
+                </div>
+                <iframe
+                  title="Speaker photos email preview"
+                  srcDoc={emailPreviewHtml(preview.html)}
+                  sandbox=""
+                  style={{
+                    width: '100%',
+                    height: 620,
+                    border: '1px solid var(--adm-line-strong)',
+                    borderRadius: 10,
+                    background: '#ffffff',
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
+        )}
+      </SlideOverDrawer>
+
+      {/* Pinned above the drawer so results are visible wherever you are. */}
+      {toast?.message ? (
+        <div
+          style={{
+            position: 'fixed',
+            right: 20,
+            bottom: 20,
+            zIndex: 60,
+            width: 'min(420px, calc(100vw - 40px))',
+            boxShadow: '0 12px 32px rgba(17,17,17,.12)',
+            borderRadius: 10,
+            background: 'var(--adm-panel)',
+          }}
+        >
+          <AdminToast
+            message={toast.message}
+            tone={toast.tone}
+            onDismiss={() => setToast(null)}
+          />
+        </div>
+      ) : null}
+
+      <style jsx>{`
+        @media (max-width: 760px) {
+          .adm-photo-filters,
+          .adm-photo-stats {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}

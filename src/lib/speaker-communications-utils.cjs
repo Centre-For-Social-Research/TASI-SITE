@@ -283,6 +283,7 @@ module.exports = {
   normalizeSpeakerBadgeRow,
   normalizeSpeakerInput,
   parseSpeakerEmails,
+  sanitizeSpeakerText,
   speakerBadgeDownloadFilename,
   speakerErrorStatus,
   speakerNameFromFilename,
