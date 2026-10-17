@@ -20,10 +20,7 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      <HomeNavbar
-        primaryCtaHref="/tasi-2026"
-        primaryCtaLabel="TASI 2026 RECAP"
-      />
+      <HomeNavbar />
       <main>
         <HomeHero />
         <div className="bg-[radial-gradient(ellipse_at_80%_20%,#2a1a5e_0%,transparent_55%),linear-gradient(180deg,#0d0b1f_0%,#120a26_100%)]">

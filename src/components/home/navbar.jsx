@@ -12,10 +12,10 @@ const navItems = [
   { label: 'Receptions', href: '/receptions' },
   {
     label: 'TASI Editions',
-    href: '/tasi-2025',
+    href: '/tasi-2026',
     children: [
-      { label: 'TASI 2025', href: '/tasi-2025' },
       { label: 'TASI 2026', href: '/tasi-2026' },
+      { label: 'TASI 2025', href: '/tasi-2025' },
     ],
   },
   { label: 'Sponsors', href: '/sponsor' },
@@ -33,8 +33,8 @@ const navItems = [
 
 export default function HomeNavbar({
   forceSolid = false,
-  primaryCtaHref = '/register',
-  primaryCtaLabel = 'REGISTER NOW',
+  primaryCtaHref = '/tasi-2026',
+  primaryCtaLabel = 'TASI 2026 RECAP',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
