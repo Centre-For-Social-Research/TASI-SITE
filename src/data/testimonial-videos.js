@@ -76,15 +76,6 @@ const testimonialVideos = [
   },
   {
     edition: 'TASI 2025',
-    speaker: 'Siddharth P.',
-    title: 'Co-Founder & Director, RATI Foundation',
-    iframeSrc:
-      'https://player.mux.com/FdIoj00Ax8kLMOP2mt01011jDkqAnIE023ptJHMp301QUkvU?metadata-video-title=Siddharth+P.+Co-Founder+%26+Director%2C+RATI+Foundation&video-title=Siddharth+P.+Co-Founder+%26+Director%2C+RATI+Foundation',
-    quote:
-      'Community-first safety efforts become sustainable when local organizations co-create solutions with policy and platform teams.',
-  },
-  {
-    edition: 'TASI 2025',
     speaker: 'Kriti Trehan',
     title: 'Founder, Data & Co - Law & Policy Advisors',
     iframeSrc:

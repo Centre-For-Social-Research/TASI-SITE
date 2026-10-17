@@ -5,6 +5,7 @@ import RadialOrbitalTimeline from '@/components/editions/radial-orbital-timeline
 import Tasi2025TrackIllustration from '@/components/editions/tasi-2025-track-illustration';
 import {
   tasi2025FuturePriorities,
+  tasi2025HighlightsVideoSrc,
   tasi2025Impacts,
   tasi2025JourneyEditorialNotes,
   tasi2025JourneyTimeline,
@@ -65,6 +66,36 @@ export function Tasi2025AboutSection() {
             />
           </div>
         </article>
+      </div>
+    </section>
+  );
+}
+
+export function Tasi2025HighlightsVideoSection() {
+  return (
+    <section
+      id="festival-highlights"
+      className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
+    >
+      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
+          Festival Highlights
+        </p>
+        <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
+          See What Happened at India&apos;s First Trust &amp; Safety Festival
+        </h2>
+        <div className="mt-10 overflow-hidden rounded-[10px] border border-stone-200 bg-black shadow-xl shadow-stone-200/40 dark:border-slate-800">
+          <div className="relative aspect-video w-full">
+            <iframe
+              src={tasi2025HighlightsVideoSrc}
+              title="TASI 2025 Highlights"
+              className="absolute inset-0 h-full w-full border-0"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

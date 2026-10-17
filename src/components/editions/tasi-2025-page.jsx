@@ -1,6 +1,7 @@
 import Tasi2025Quotes from '@/components/editions/tasi-2025-quotes';
 import {
   Tasi2025AboutSection,
+  Tasi2025HighlightsVideoSection,
   Tasi2025InauguralKeynoteSection,
   Tasi2025JourneySection,
   Tasi2025KeynotesSection,
@@ -61,6 +62,7 @@ export default function Tasi2025Page() {
         </BrandedPageHero>
 
         <Tasi2025AboutSection />
+        <Tasi2025HighlightsVideoSection />
         <Tasi2025JourneySection />
         <Tasi2025KeynotesSection />
         <Tasi2025TracksSection />

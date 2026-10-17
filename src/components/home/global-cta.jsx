@@ -9,16 +9,16 @@ export default function GlobalCta() {
           Be Part of the Conversation
         </h2>
         <p className="mx-auto mt-4 max-w-3xl text-lg md:text-[22px] text-gray-800 dark:text-gray-200 font-normal leading-relaxed text-center">
-          Join 500+ delegates shaping the future of digital trust, safety and AI
-          governance in India and beyond.
+          Stay connected with the community shaping the future of digital trust,
+          safety and AI governance in India and beyond.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row w-full sm:w-auto">
           {/* Primary Button - Accent Orange */}
           <Link
-            href="/register"
+            href="/get-involved"
             className="flex w-full sm:min-w-[220px] sm:w-auto items-center justify-center rounded-3xl bg-gradient-to-r from-[#55089e] via-[#9f0099] to-[#ff0080] px-8 py-2.5 text-[16px] font-bold leading-6 text-white transition-transform hover:scale-[1.02] hover:opacity-90"
           >
-            Register
+            Get Involved
           </Link>
 
           {/* Tertiary Button - Accent Alternative */}

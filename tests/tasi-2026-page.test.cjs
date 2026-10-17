@@ -29,60 +29,67 @@ test('TASI 2026 route delegates to the tracked edition page component', () => {
   assert.doesNotMatch(source, /ThemesPreview/);
 });
 
-test('TASI 2026 page shell composes live sections from shared data', () => {
+test('TASI 2026 page shell composes the post-event recap sections', () => {
   const source = readFile('src/components/editions/tasi-2026-page.jsx');
 
-  assert.match(source, /Tasi2026FormatSection/);
-  assert.match(source, /Tasi2026StructureSection/);
-  assert.match(source, /Tasi2026ThemesSection/);
-  assert.match(source, /Tasi2026AudienceSection/);
+  assert.match(
+    source,
+    /Tasi2026NumbersBand[\s\S]*Tasi2026AboutSection[\s\S]*Tasi2026HighlightsVideoSection[\s\S]*Tasi2026IdeasSection[\s\S]*Tasi2026LaunchesSection[\s\S]*Tasi2026VoicesSection[\s\S]*Tasi2026SessionsSection[\s\S]*Tasi2026RecommendationsSection[\s\S]*Tasi2026GallerySection[\s\S]*Tasi2026LookingAheadSection/
+  );
   assert.match(source, /<GlobalCta \/>/);
   assert.match(source, /tasi2026HeroPills/);
   assert.match(source, /tasi2026HeroActions/);
-  assert.doesNotMatch(source, /const formatItems = \[/);
-  assert.doesNotMatch(source, /const audience = \[/);
-  assert.doesNotMatch(source, /const stats = \[/);
-  assert.doesNotMatch(source, /const formats = \[/);
+  assert.doesNotMatch(source, /Register For TASI 2026/);
 });
 
-test('TASI 2026 edition data keeps only live page datasets', async () => {
+test('TASI 2026 edition data holds the recap content', async () => {
   const data = await importModule('src/data/tasi-2026-edition.js');
 
   assert.deepEqual(data.tasi2026HeroPills, [
     '14-15 October 2026',
     'India International Centre, New Delhi',
+    '500+ Participants',
   ]);
   assert.deepEqual(
     data.tasi2026HeroActions.map((action) => action.label),
-    ['Register For TASI 2026']
+    ['Watch the Highlights', 'Explore the Programme']
   );
-  assert.equal(data.tasi2026FormatItems.length, 4);
-  assert.equal(data.tasi2026StructureStats.length, 3);
-  assert.equal(data.tasi2026StructureFormats.length, 6);
-  assert.equal(data.tasi2026AudienceSegments.length, 4);
-  assert.equal(
-    data.tasi2026FormatItems.some((item) => item.title === 'Spotlights'),
-    true
-  );
+  assert.equal(data.tasi2026Ideas.length, 5);
+  assert.equal(data.tasi2026Launches.length, 6);
+  assert.equal(data.tasi2026Recommendations.length, 8);
+  assert.equal(data.tasi2026SessionRecaps.length, 12);
+  assert.equal(data.tasi2026Stats.length, 6);
+  for (const idea of data.tasi2026Ideas) {
+    assert.ok(idea.stat.source, `${idea.title} credits its figure`);
+    assert.ok(idea.sessions.length > 0, `${idea.title} links sessions`);
+  }
 });
 
-test('TASI 2026 sections render the expected content flow from data modules', () => {
+test('TASI 2026 recap never cites Chatham House sessions', async () => {
+  const data = await importModule('src/data/tasi-2026-edition.js');
+  const chathamHouse = ['tasi26-60', 'tasi26-74', 'tasi26-83'];
+  const linked = [
+    ...data.tasi2026Ideas.flatMap((idea) => idea.sessions),
+    ...data.tasi2026SessionRecaps.map((recap) => recap.id),
+  ];
+
+  for (const id of chathamHouse) {
+    assert.equal(linked.includes(id), false, id);
+  }
+});
+
+test('TASI 2026 sections render the recap content flow from data modules', () => {
   const source = readFile('src/components/editions/tasi-2026-sections.jsx');
 
-  assert.match(source, /What to Expect at/);
-  assert.match(source, /Convening/);
-  assert.match(source, /Strategic Focus/);
-  assert.match(source, /Who Will You/);
-  assert.match(
-    source,
-    /Tasi2026FormatSection[\s\S]*Tasi2026StructureSection[\s\S]*Tasi2026ThemesSection[\s\S]*Tasi2026AudienceSection/
-  );
-  assert.match(source, /tasi2026FormatItems/);
-  assert.match(source, /tasi2026StructureStats/);
-  assert.match(source, /tasi2026StructureFormats/);
-  assert.match(source, /tasi2026AudienceSegments/);
-  assert.match(source, /themes2026/);
-  assert.match(source, /themeIconMap/);
+  assert.match(source, /From Naming Harms to Owning Them/);
+  assert.match(source, /Five Things TASI 2026 Made Clear/);
+  assert.match(source, /Launched at TASI 2026/);
+  assert.match(source, /What Leaders Said/);
+  assert.match(source, /Looking Ahead to TASI 2027/);
+  assert.match(source, /tasi2026Ideas/);
+  assert.match(source, /tasi2026SessionRecaps/);
+  assert.match(source, /getProgrammeSessionPath/);
+  assert.doesNotMatch(source, /What to Expect at/);
 });
 
 test('old TASI 2026 component iteration files stay removed', () => {

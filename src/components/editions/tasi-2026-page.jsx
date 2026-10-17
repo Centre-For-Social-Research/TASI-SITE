@@ -1,14 +1,22 @@
 import Link from 'next/link';
 
 import {
-  Tasi2026AudienceSection,
-  Tasi2026FormatSection,
-  Tasi2026StructureSection,
-  Tasi2026ThemesSection,
+  Tasi2026AboutSection,
+  Tasi2026GallerySection,
+  Tasi2026HighlightsVideoSection,
+  Tasi2026IdeasSection,
+  Tasi2026LaunchesSection,
+  Tasi2026LookingAheadSection,
+  Tasi2026NumbersBand,
+  Tasi2026RecommendationsSection,
+  Tasi2026SessionsSection,
+  Tasi2026VoicesSection,
 } from '@/components/editions/tasi-2026-sections';
 import GlobalCta from '@/components/home/global-cta';
 import HomeNavbar from '@/components/home/navbar';
+import PartnersMarqueeStrip from '@/components/sponsor/partners-marquee-strip';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
+import { tasi2026Partners } from '@/data/partners-2026';
 import {
   tasi2026HeroActions,
   tasi2026HeroPills,
@@ -38,10 +46,9 @@ export default function Tasi2026Page() {
               </span>
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/90 md:text-lg">
-              Explore what to expect at TASI 2026, how the convening is
-              structured, the strategic themes shaping the programme, and the
-              leaders you&apos;ll meet across policy, industry, civil society,
-              and global institutions.
+              Two days in New Delhi where government, platforms, researchers,
+              survivors&apos; advocates and young people moved trust and safety
+              from naming harms to assigning responsibility for them.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3 pb-4">
               {tasi2026HeroPills.map((pill) => (
@@ -67,10 +74,22 @@ export default function Tasi2026Page() {
           </div>
         </BrandedPageHero>
 
-        <Tasi2026FormatSection />
-        <Tasi2026StructureSection />
-        <Tasi2026ThemesSection />
-        <Tasi2026AudienceSection />
+        <Tasi2026NumbersBand />
+        <Tasi2026AboutSection />
+        <Tasi2026HighlightsVideoSection />
+        <Tasi2026IdeasSection />
+        <Tasi2026LaunchesSection />
+        <Tasi2026VoicesSection />
+        <Tasi2026SessionsSection />
+        <Tasi2026RecommendationsSection />
+        <Tasi2026GallerySection />
+        <PartnersMarqueeStrip
+          eyebrow="Our Network"
+          title="Partners of TASI 2026"
+          description="The organisations that partnered with us to make the second Trust and Safety India Festival possible."
+          partners={tasi2026Partners}
+        />
+        <Tasi2026LookingAheadSection />
         <GlobalCta />
       </main>
     </>

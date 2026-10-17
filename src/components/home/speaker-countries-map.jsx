@@ -180,8 +180,7 @@ export default function SpeakerCountriesMap() {
           <div className={styles.intro}>
             <p>
               Across borders, united by a safer digital world. Explore the
-              countries that will be represented in our TASI 2026 speaker
-              community.
+              countries our TASI 2026 speakers came from.
             </p>
             <p className={styles.stat}>
               <strong>{speakerCountries2026.length}</strong> countries{' '}
@@ -415,9 +414,7 @@ export default function SpeakerCountriesMap() {
             </p>
           </div>
         </div>
-        <p className={styles.footnote}>
-          Based on TASI 2026 speaker profiles received as of 13 October 2026.
-        </p>
+        <p className={styles.footnote}>Based on TASI 2026 speaker profiles.</p>
       </div>
     </section>
   );

@@ -133,6 +133,9 @@ export const tasi2025JourneyTimeline = [
   },
 ];
 
+export const tasi2025HighlightsVideoSrc =
+  'https://player.mux.com/WOZbrSwPSYqEFylGFgp5Z8qUGGvCRmJ3eVptCQZ1YSg?metadata-video-title=Trust+and+Safety+India+Festival+2025&video-title=Trust+and+Safety+India+Festival+2025';
+
 export const tasi2025KeynoteVideos = [
   {
     iframeSrc:

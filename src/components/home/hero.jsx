@@ -77,10 +77,10 @@ export default function HomeHero() {
                 Delhi
               </SparklesText>
               <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white mb-2">
-                IN PERSON & ONLINE
+                HELD OCT 14 - 15, 2026
               </p>
               <p className="text-sm md:text-base font-bold tracking-[0.15em] text-white">
-                OCT 14 - 15, 2026
+                THANK YOU FOR JOINING US
               </p>
             </div>
           </div>
@@ -98,10 +98,10 @@ export default function HomeHero() {
             People First. Safety Always.
           </p>
           <p className="mb-8 max-w-4xl text-sm leading-relaxed text-white/95 [text-shadow:0_2px_12px_rgba(0,0,0,0.45)] md:text-lg">
-            Trust and Safety India Festival brings leaders across AI, digital
-            rights, regulation, tech policy, and platform safety together to
-            collaborate on emerging trends and practical solutions for digital
-            spaces.
+            The second Trust and Safety India Festival brought leaders across
+            AI, digital rights, regulation, tech policy, and platform safety
+            together in New Delhi to work on practical solutions for safer
+            digital spaces.
           </p>
 
           <p className="mb-8 text-sm font-semibold uppercase tracking-[0.14em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] md:text-base">
@@ -117,20 +117,16 @@ export default function HomeHero() {
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a
-              href="/agenda"
-              target="_blank"
-              rel="noopener"
+              href="/tasi-2026"
               className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary dark:border-white/70 dark:text-white transition-all hover:bg-rc-secondary hover:text-slate-950 dark:hover:bg-white dark:hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
-              Download Agenda
+              TASI 2026 Recap
             </a>
             <a
-              href="https://drive.google.com/file/d/1oG8biMtiPTBxKnABevMPAOsqx2paykwS/view?usp=sharing"
-              target="_blank"
-              rel="noreferrer"
+              href="/programme"
               className="inline-flex rounded-full border border-rc-accent px-[28px] py-[10px] text-[15px] font-semibold uppercase tracking-[0.12em] text-rc-secondary dark:border-white/70 dark:text-white transition-all hover:bg-rc-secondary hover:text-slate-950 dark:hover:bg-white dark:hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
-              Download Brochure
+              Explore the Programme
             </a>
             <a
               href="https://drive.google.com/file/d/1S9dHlHQg8pm0-HjsjkXK0dwOSUCYqhxn/view?usp=sharing"
