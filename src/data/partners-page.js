@@ -28,9 +28,7 @@ export const partnersPageHero = {
     2026: {
       title: 'Partners of TASI 2026',
       description:
-        'The technology companies, civil society organisations, diplomatic missions, and research institutions partnering with us to shape the trust and safety conversation at TASI 2026.',
-      updateNote:
-        'This list will be updated as additional partners are confirmed.',
+        'The technology companies, civil society organisations, diplomatic missions, and research institutions who partnered with us to shape the trust and safety conversation at TASI 2026.',
     },
     2025: {
       title: 'Partners of TASI 2025',
