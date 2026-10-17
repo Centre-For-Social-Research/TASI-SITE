@@ -15,34 +15,32 @@ export const MEDIA_COVERAGE_DAYS = [
 ];
 
 export const mediaAccreditationMetadata = {
-  title: 'Media Accreditation | Trust and Safety India Festival 2026',
+  title: 'Media Accreditation | Trust and Safety India Festival',
   description:
-    'Apply for TASI 2026 media accreditation in New Delhi. Press access is available to journalists, editors, broadcasters, news agencies, podcasters, and eligible freelance reporters.',
+    'Media accreditation for TASI 2026 has closed. For interviews and media requests, contact the TASI team; the press kit and TASI 2026 recap are on the media page.',
   alternates: {
     canonical: '/media/accreditation',
   },
   openGraph: {
-    title: 'Media Accreditation | Trust and Safety India Festival 2026',
-    description:
-      'Apply for press access to cover Trust and Safety India Festival 2026 in New Delhi.',
+    title: 'Media Accreditation | Trust and Safety India Festival',
+    description: 'Media accreditation for TASI 2026 has closed.',
     url: '/media/accreditation',
     type: 'website',
     images: ['/opengraph-image'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TASI 2026 Media Accreditation',
-    description:
-      'Apply for press access to cover Trust and Safety India Festival 2026.',
+    title: 'TASI Media Accreditation',
+    description: 'Media accreditation for TASI 2026 has closed.',
     images: ['/twitter-image'],
   },
 };
 
 export const mediaAccreditationHero = {
-  eyebrow: 'TASI 2026 Media',
-  title: 'Apply For Media Accreditation',
+  eyebrow: 'TASI Media',
+  title: 'Media Accreditation',
   description:
-    'Request press access for the Trust and Safety India Festival on 14 and 15 October 2026 in New Delhi.',
+    'Accreditation for TASI 2026 has closed. For interviews and media requests, contact the TASI team; the press kit and the TASI 2026 recap are on the media page.',
 };
 
 export const mediaAccreditationGuidance = {

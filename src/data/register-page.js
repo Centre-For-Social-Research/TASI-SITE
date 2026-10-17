@@ -28,11 +28,11 @@ export const registerPageMetadata = {
 };
 
 export const registerPageHero = {
-  eyebrow: 'TASI 2026 Registration',
-  title: 'Apply First.',
-  titleAccent: 'Confirm Later.',
+  eyebrow: 'TASI Registration',
+  title: 'TASI 2026',
+  titleAccent: 'Has Closed.',
   description:
-    'TASI 2026 follows an approval-based delegate process. Submission acknowledges your application, while confirmed attendees receive QR access closer to the event.',
+    'Thank you to everyone who joined us in New Delhi. TASI returns in October 2027, and registration will open on this page.',
 };
 
 export const generalAccessIntro = {
@@ -43,7 +43,7 @@ export const generalAccessIntro = {
 
 export const registrationOverview = {
   audience:
-    'Registration is open to government stakeholders, industry leaders, civil society, researchers, students, media, and international participants aligned with trust and safety.',
+    'TASI welcomes government stakeholders, industry leaders, civil society, researchers, students, media, and international participants aligned with trust and safety.',
   review:
     'Every application is manually reviewed. If you are confirmed, your QR pass will be shared {{QR_PASS_RELEASE_TIMING}} and your pre-printed badge will be available at the name-sorted registration desk.',
 };
