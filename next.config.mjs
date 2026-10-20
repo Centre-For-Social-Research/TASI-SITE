@@ -126,6 +126,7 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/api/certificates/**': ['./src/assets/certificates/**/*'],
     '/api/admin/certificates/**': ['./src/assets/certificates/**/*'],
+    '/certificates/verify/**': ['./src/assets/certificates/**/*'],
   },
   turbopack: {
     root: workspaceRoot,

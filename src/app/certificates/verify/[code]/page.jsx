@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import Link from 'next/link';
 import { BadgeCheck, CircleAlert, CircleX } from 'lucide-react';
 
@@ -19,10 +20,33 @@ export const dynamic = 'force-dynamic';
 
 // Shows only what is printed on the certificate: no email, organisation or
 // attendance detail.
-export const metadata = {
-  title: 'Certificate Verification | TASI 2026',
-  robots: { index: false, follow: false },
-};
+const lookup = cache(async (rawCode) => {
+  const code = normalizeCertificateCode(decodeURIComponent(rawCode));
+  const record = isValidCertificateCode(code)
+    ? await getCertificateForVerification(code)
+    : null;
+  return { code, record };
+});
+
+// The title and description become the LinkedIn / X share card text, so an
+// active certificate names its holder. Unknown or revoked IDs stay generic.
+export async function generateMetadata({ params }) {
+  const { record } = await lookup((await params).code);
+  const active = record?.status === 'active';
+  const title = active
+    ? `${record.name} · Certificate of Participation · TASI 2026`
+    : 'Certificate Verification | TASI 2026';
+  const description = active
+    ? `${record.name} took part in the Trust & Safety India Festival 2026, 14–15 October 2026, New Delhi. Certificate ${record.code}, issued by the Centre for Social Research.`
+    : 'Check a TASI 2026 certificate of participation.';
+  return {
+    title: { absolute: title },
+    description,
+    robots: { index: false, follow: false },
+    openGraph: { title, description, type: 'website', siteName: 'TASI 2026' },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
 
 const VIEWS = {
   valid: {
@@ -43,12 +67,7 @@ const VIEWS = {
 };
 
 export default async function Page({ params }) {
-  const code = normalizeCertificateCode(
-    decodeURIComponent((await params).code)
-  );
-  const record = isValidCertificateCode(code)
-    ? await getCertificateForVerification(code)
-    : null;
+  const { code, record } = await lookup((await params).code);
   const edition = record ? getCertificateEdition(record.edition) : null;
   const state = !record
     ? 'missing'

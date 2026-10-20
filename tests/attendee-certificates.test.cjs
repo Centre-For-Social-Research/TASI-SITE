@@ -378,3 +378,23 @@ test('the file check sends only a fingerprint and the preview has no signature',
   assert.doesNotMatch(preview, /signature.(png|jpe?g|webp)/i);
   assert.ok(fs.existsSync('public/img/certificates/tasi-2026-preview-bg.webp'));
 });
+
+test('the share card names only active holders and never shows the signature', () => {
+  const card = read('src/app/certificates/verify/[code]/opengraph-image.js');
+  assert.match(card, /record\.status !== 'active'/);
+  assert.match(card, /FallbackCard/);
+  assert.match(card, /og-certificate-bg\.jpg/);
+  assert.doesNotMatch(card, /signature|attendee-template/i);
+  assert.ok(fs.existsSync('src/assets/certificates/og-certificate-bg.jpg'));
+  assert.match(
+    read('src/app/certificates/verify/[code]/twitter-image.js'),
+    /from '\.\/opengraph-image'/
+  );
+  const page = read('src/app/certificates/verify/[code]/page.jsx');
+  assert.match(page, /record\?\.status === 'active'/);
+  assert.match(page, /summary_large_image/);
+  assert.match(
+    read('next.config.mjs'),
+    /'\/certificates\/verify\/\*\*': \['\.\/src\/assets\/certificates\/\*\*\/\*'\]/
+  );
+});
