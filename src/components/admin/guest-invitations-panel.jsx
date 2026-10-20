@@ -17,7 +17,24 @@ const EMPTY_FORM = {
   designation: '',
   organization: '',
 };
-const { canRetryGuestSend } = guestSendAttempt;
+const { canRetryGuestSend, RETRY_AFTER_MS, RETRY_BEFORE_MS } = guestSendAttempt;
+
+// Retry only becomes possible, and later impossible, at two fixed moments
+// after an attempt starts. Re-check the clock at those moments instead of
+// re-rendering the whole panel every second.
+function scheduleRetryWindowChecks(startedAt, setNow) {
+  const started = Date.parse(startedAt || '');
+  if (!Number.isFinite(started)) return undefined;
+  const now = Date.now();
+  const timers = [
+    0,
+    started + RETRY_AFTER_MS - now + 50,
+    started + RETRY_BEFORE_MS - now + 50,
+  ]
+    .filter((delay) => delay >= 0 && delay < 2 ** 31)
+    .map((delay) => window.setTimeout(() => setNow(Date.now()), delay));
+  return () => timers.forEach((timer) => window.clearTimeout(timer));
+}
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All invitations' },
@@ -225,28 +242,33 @@ export default function GuestInvitationsPanel({ canManage }) {
     return params.toString();
   }, [page, search, status]);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch(
-        `/api/admin/guest-invitations?${queryString}`,
-        { cache: 'no-store' }
-      );
-      const json = await response.json();
-      if (!response.ok || !json.success) {
-        throw new Error(json.error || 'Unable to load guest invitations.');
+  // A background refresh keeps the table on screen instead of swapping it for
+  // skeleton rows; used after an action whose result is already shown.
+  const load = useCallback(
+    async ({ background = false } = {}) => {
+      if (!background) setLoading(true);
+      setError('');
+      try {
+        const response = await fetch(
+          `/api/admin/guest-invitations?${queryString}`,
+          { cache: 'no-store' }
+        );
+        const json = await response.json();
+        if (!response.ok || !json.success) {
+          throw new Error(json.error || 'Unable to load guest invitations.');
+        }
+        setResult({
+          invitations: json.invitations || [],
+          meta: json.meta || { page: 1, pageSize: 50, total: 0, totalPages: 1 },
+        });
+      } catch (loadError) {
+        setError(loadError.message);
+      } finally {
+        setLoading(false);
       }
-      setResult({
-        invitations: json.invitations || [],
-        meta: json.meta || { page: 1, pageSize: 50, total: 0, totalPages: 1 },
-      });
-    } catch (loadError) {
-      setError(loadError.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [queryString]);
+    },
+    [queryString]
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-change updates after an awaited request
@@ -257,35 +279,52 @@ export default function GuestInvitationsPanel({ canManage }) {
     setter((current) => ({ ...current, [key]: value }));
   }
 
+  async function fetchDetail(invitationId) {
+    const response = await fetch(
+      `/api/admin/guest-invitations/${invitationId}`,
+      {
+        cache: 'no-store',
+      }
+    );
+    const json = await response.json();
+    if (!response.ok || !json.success) {
+      throw new Error(json.error || 'Unable to load guest invitation.');
+    }
+    setDetail(json);
+    setEditForm({
+      name: json.invitation.name || '',
+      email: json.invitation.email || '',
+      designation: json.invitation.designation || '',
+      organization: json.invitation.organization || '',
+    });
+  }
+
   async function openDetail(invitation) {
     setSelected(invitation);
     setDetail(null);
     setDetailLoading(true);
     setPreview(null);
     try {
-      const response = await fetch(
-        `/api/admin/guest-invitations/${invitation.id}`,
-        {
-          cache: 'no-store',
-        }
-      );
-      const json = await response.json();
-      if (!response.ok || !json.success) {
-        throw new Error(json.error || 'Unable to load guest invitation.');
-      }
-      setDetail(json);
-      setEditForm({
-        name: json.invitation.name || '',
-        email: json.invitation.email || '',
-        designation: json.invitation.designation || '',
-        organization: json.invitation.organization || '',
-      });
+      await fetchDetail(invitation.id);
     } catch (detailError) {
       setToast({ tone: 'danger', message: detailError.message });
       setSelected(null);
     } finally {
       setDetailLoading(false);
     }
+  }
+
+  // Refresh the open drawer in place after an action, without blanking it.
+  async function refreshDetail(invitation) {
+    try {
+      await fetchDetail(invitation.id);
+    } catch (detailError) {
+      setToast({ tone: 'danger', message: detailError.message });
+    }
+  }
+
+  function refreshAfterAction(invitation) {
+    return Promise.all([load({ background: true }), refreshDetail(invitation)]);
   }
 
   async function createInvitation(event) {
@@ -307,8 +346,10 @@ export default function GuestInvitationsPanel({ canManage }) {
         tone: 'success',
         message: 'Draft invitation created. Preview it before sending.',
       });
-      await load();
-      await openDetail(json.invitation);
+      await Promise.all([
+        load({ background: true }),
+        openDetail(json.invitation),
+      ]);
     } catch (createError) {
       setToast({ tone: 'danger', message: createError.message });
     } finally {
@@ -338,7 +379,7 @@ export default function GuestInvitationsPanel({ canManage }) {
         current ? { ...current, invitation: json.invitation } : current
       );
       setToast({ tone: 'success', message: 'Guest details updated.' });
-      await load();
+      void load({ background: true });
     } catch (saveError) {
       setToast({ tone: 'danger', message: saveError.message });
     } finally {
@@ -396,12 +437,10 @@ export default function GuestInvitationsPanel({ canManage }) {
       setDetail((current) =>
         current ? { ...current, invitation: json.invitation } : current
       );
-      await load();
-      await openDetail(json.invitation);
+      await refreshAfterAction(json.invitation);
     } catch (sendError) {
       setToast({ tone: 'danger', message: sendError.message });
-      await load();
-      await openDetail(invitation);
+      await refreshAfterAction(invitation);
     } finally {
       setSendingId(null);
     }
@@ -430,23 +469,32 @@ export default function GuestInvitationsPanel({ canManage }) {
         tone: 'success',
         message: 'The original invitation attempt was confirmed by Resend.',
       });
-      await load();
-      await openDetail(json.invitation);
+      if (json.invitation) {
+        setSelected(json.invitation);
+        setDetail((current) =>
+          current ? { ...current, invitation: json.invitation } : current
+        );
+      }
+      await refreshAfterAction(json.invitation || invitation);
     } catch (retryError) {
       setToast({ tone: 'danger', message: retryError.message });
-      await load();
-      await openDetail(invitation);
+      await refreshAfterAction(invitation);
     } finally {
       setSendingId(null);
     }
   }
 
   const currentInvitation = detail?.invitation || selected;
-  useEffect(() => {
-    if (currentInvitation?.status !== 'sending') return undefined;
-    const timer = window.setInterval(() => setClockNow(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, [currentInvitation?.id, currentInvitation?.status]);
+  const attemptStartedAt =
+    detail?.activeAttempt?.created_at || detail?.activeAttempt?.createdAt;
+  useEffect(
+    () =>
+      scheduleRetryWindowChecks(
+        currentInvitation?.status === 'sending' ? attemptStartedAt : null,
+        setClockNow
+      ),
+    [currentInvitation?.id, currentInvitation?.status, attemptStartedAt]
+  );
   const retryReady = canRetryGuestSend(detail?.activeAttempt, clockNow);
   const firstRow = (result.meta.page - 1) * (result.meta.pageSize || 50) + 1;
   const lastRow = Math.min(

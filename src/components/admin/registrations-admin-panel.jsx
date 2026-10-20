@@ -3,6 +3,7 @@
 import '@1771technologies/lytenyte-core/light-dark.css';
 import Image from 'next/image';
 import {
+  memo,
   useCallback,
   createContext,
   useContext,
@@ -105,8 +106,19 @@ function statusHint(status) {
   return 'Pending keeps the record open for operator review without sending a decision email.';
 }
 
+const TEXT_FILTER_KEYS = ['search', 'city', 'country', 'organization'];
+
 // ── LyteNyte Grid ─ shared context, cell renderers, and column definitions ───
 const RegistrationGridCtx = createContext(null);
+
+// Re-renders only when its rows or columns change, not on every keystroke in
+// the filters or the review drawer.
+const RegistrationGrid = memo(function RegistrationGrid({
+  columns,
+  rowSource,
+}) {
+  return <Grid columns={columns} rowSource={rowSource} rowHeight={72} />;
+});
 
 function SelectAllHeader() {
   const ctx = useContext(RegistrationGridCtx);
@@ -126,7 +138,7 @@ function SelectAllHeader() {
 function CheckboxCell({ row }) {
   const ctx = useContext(RegistrationGridCtx);
   if (!row.data || !ctx) return null;
-  const selected = ctx.selectedIds.includes(row.data.id);
+  const selected = ctx.selectedSet.has(row.data.id);
   return (
     <div
       className="flex h-full items-center justify-center"
@@ -869,14 +881,34 @@ export default function RegistrationsAdminPanel({ operator }) {
     reject: false,
   });
   const [qrLoading, setQrLoading] = useState(false);
-  const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
+  // Free-text filters wait until typing pauses, so each keystroke does not
+  // fire a request or clear the selection.
+  const [debouncedText, setDebouncedText] = useState({
+    search: filters.search,
+    city: filters.city,
+    country: filters.country,
+    organization: filters.organization,
+  });
+  const debouncedTextRef = useRef(debouncedText);
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(filters.search), 300);
+    const timer = setTimeout(() => {
+      const next = {
+        search: filters.search,
+        city: filters.city,
+        country: filters.country,
+        organization: filters.organization,
+      };
+      const current = debouncedTextRef.current;
+      if (TEXT_FILTER_KEYS.every((key) => current[key] === next[key])) return;
+      debouncedTextRef.current = next;
+      setSelectedIds([]);
+      setDebouncedText(next);
+    }, 300);
     return () => clearTimeout(timer);
-  }, [filters.search]);
+  }, [filters.search, filters.city, filters.country, filters.organization]);
   const queryString = useMemo(
-    () => buildDashboardQueryString({ ...filters, search: debouncedSearch }),
-    [debouncedSearch, filters]
+    () => buildDashboardQueryString({ ...filters, ...debouncedText }),
+    [debouncedText, filters]
   );
   const hasConfigError = isSupabaseAdminConfigError(state.error);
   const selectionSummary = summarizeSelection({
@@ -1007,7 +1039,7 @@ export default function RegistrationsAdminPanel({ operator }) {
   );
 
   const loadDetail = useCallback(
-    async (registrationId, { force = false } = {}) => {
+    async (registrationId, { force = false, background = false } = {}) => {
       if (!registrationId) return;
       const requestId = ++detailRequestRef.current;
       detailAbortRef.current?.abort();
@@ -1027,7 +1059,9 @@ export default function RegistrationsAdminPanel({ operator }) {
         return;
       }
 
-      setDetailState((current) => ({ ...current, loading: true, error: '' }));
+      // A background refresh keeps the drawer content on screen.
+      if (!background)
+        setDetailState((current) => ({ ...current, loading: true, error: '' }));
       try {
         const response = await fetch(
           `/api/admin/registrations/${registrationId}`,
@@ -1035,6 +1069,8 @@ export default function RegistrationsAdminPanel({ operator }) {
         );
         const data = await response.json();
         if (requestId !== detailRequestRef.current) return;
+        // A failed background refresh leaves the shown detail as it is.
+        if (!response.ok && background) return;
         if (!response.ok)
           return setDetailState({
             loading: false,
@@ -1056,7 +1092,8 @@ export default function RegistrationsAdminPanel({ operator }) {
       } catch (error) {
         if (
           requestId !== detailRequestRef.current ||
-          error?.name === 'AbortError'
+          error?.name === 'AbortError' ||
+          background
         )
           return;
         setDetailState({
@@ -1079,7 +1116,10 @@ export default function RegistrationsAdminPanel({ operator }) {
         return;
       void loadRegistrations({ background: true, force: true });
       if (drawerOpen && activeRegistrationId) {
-        void loadDetail(activeRegistrationId, { force: true });
+        void loadDetail(activeRegistrationId, {
+          force: true,
+          background: true,
+        });
       }
     };
     window.addEventListener('focus', refreshIfStale);
@@ -1101,22 +1141,26 @@ export default function RegistrationsAdminPanel({ operator }) {
   );
 
   const setFilterValue = (key, value) => {
-    setSelectedIds([]);
+    // Text filters clear the selection once the debounced query changes.
+    if (!TEXT_FILTER_KEYS.includes(key)) setSelectedIds([]);
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
   };
-  const toggleSelection = (registrationId) =>
-    setSelectedIds((current) =>
-      current.includes(registrationId)
-        ? current.filter((id) => id !== registrationId)
-        : [...current, registrationId]
-    );
+  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const toggleSelection = useCallback(
+    (registrationId) =>
+      setSelectedIds((current) =>
+        current.includes(registrationId)
+          ? current.filter((id) => id !== registrationId)
+          : [...current, registrationId]
+      ),
+    []
+  );
   const toggleVisibleSelection = () => {
     const visibleIds = orderedRegistrations.map(
       (registration) => registration.id
     );
     const allSelected =
-      visibleIds.length > 0 &&
-      visibleIds.every((id) => selectedIds.includes(id));
+      visibleIds.length > 0 && visibleIds.every((id) => selectedSet.has(id));
     setSelectedIds((current) =>
       allSelected
         ? current.filter((id) => !visibleIds.includes(id))
@@ -1231,7 +1275,10 @@ export default function RegistrationsAdminPanel({ operator }) {
       invalidateAdminCaches(registrationIds);
       void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId) {
-        void loadDetail(activeRegistrationId, { force: true });
+        void loadDetail(activeRegistrationId, {
+          force: true,
+          background: true,
+        });
       }
     } catch {
       showToast('Network error while queueing QR email job.', 'danger');
@@ -1296,7 +1343,10 @@ export default function RegistrationsAdminPanel({ operator }) {
       applySavedRegistrations(data.registrations || []);
       void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId) {
-        void loadDetail(activeRegistrationId, { force: true });
+        void loadDetail(activeRegistrationId, {
+          force: true,
+          background: true,
+        });
       }
     } catch (error) {
       showToast(
@@ -1391,7 +1441,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       applySavedRegistrations([statusResult.registration]);
       void loadRegistrations({ background: true, force: true });
       if (activeRegistrationId === registration.id)
-        void loadDetail(registration.id, { force: true });
+        void loadDetail(registration.id, { force: true, background: true });
     } catch (error) {
       showToast(
         error instanceof Error
@@ -1434,7 +1484,7 @@ export default function RegistrationsAdminPanel({ operator }) {
       invalidateAdminCaches([registrationId]);
       applySavedRegistrations([data.registration]);
       void loadRegistrations({ background: true, force: true });
-      void loadDetail(registrationId, { force: true });
+      void loadDetail(registrationId, { force: true, background: true });
     } catch (error) {
       showToast(
         error instanceof Error
@@ -1474,7 +1524,7 @@ export default function RegistrationsAdminPanel({ operator }) {
         'success'
       );
       invalidateAdminCaches([registrationId]);
-      void loadDetail(registrationId, { force: true });
+      void loadDetail(registrationId, { force: true, background: true });
     } catch {
       showToast('Network error while resending attendee email.', 'danger');
     }
@@ -1508,18 +1558,56 @@ export default function RegistrationsAdminPanel({ operator }) {
 
   const allVisibleSelected =
     orderedRegistrations.length > 0 &&
-    orderedRegistrations.every((r) => selectedIds.includes(r.id));
+    orderedRegistrations.every((r) => selectedSet.has(r.id));
 
-  const gridCtxValue = {
-    selectedIds,
-    toggleSelection,
-    toggleVisibleSelection,
-    allVisibleSelected,
-    openDrawerFor,
-    handleQuickAction,
-    pendingActions,
-    disabled: state.loading || hasConfigError,
-  };
+  // Cells call the latest handlers through stable wrappers, so the context
+  // value only changes when selection, pending actions or loading change.
+  const gridHandlersRef = useRef({});
+  useEffect(() => {
+    gridHandlersRef.current = {
+      openDrawerFor,
+      handleQuickAction,
+      toggleVisibleSelection,
+    };
+  });
+  const stableOpenDrawerFor = useCallback(
+    (registrationId) => gridHandlersRef.current.openDrawerFor(registrationId),
+    []
+  );
+  const stableHandleQuickAction = useCallback(
+    (registration, actionKey) =>
+      gridHandlersRef.current.handleQuickAction(registration, actionKey),
+    []
+  );
+  const stableToggleVisibleSelection = useCallback(
+    () => gridHandlersRef.current.toggleVisibleSelection(),
+    []
+  );
+  const gridDisabled = state.loading || hasConfigError;
+  const gridCtxValue = useMemo(
+    () => ({
+      selectedSet,
+      toggleSelection,
+      toggleVisibleSelection: stableToggleVisibleSelection,
+      allVisibleSelected,
+      openDrawerFor: stableOpenDrawerFor,
+      handleQuickAction: stableHandleQuickAction,
+      pendingActions,
+      disabled: gridDisabled,
+    }),
+    [
+      selectedSet,
+      toggleSelection,
+      stableToggleVisibleSelection,
+      allVisibleSelected,
+      stableOpenDrawerFor,
+      stableHandleQuickAction,
+      pendingActions,
+      gridDisabled,
+    ]
+  );
+  // Skeleton rows only on a first load; reloads keep the grid in place.
+  const showGridSkeleton = state.loading && orderedRegistrations.length === 0;
 
   return (
     <div className="space-y-6">
@@ -1667,10 +1755,15 @@ export default function RegistrationsAdminPanel({ operator }) {
                 {state.count} registrants
               </span>
             ) : null}
+            {state.loading && !showGridSkeleton ? (
+              <span className="ml-2 inline-flex items-center gap-1 text-xs font-normal text-zinc-400 dark:text-zinc-500">
+                <Loader2 className="h-3 w-3 animate-spin" /> Updating
+              </span>
+            ) : null}
           </p>
         </div>
         <RegistrationGridCtx.Provider value={gridCtxValue}>
-          {state.loading ? (
+          {showGridSkeleton ? (
             <div className="overflow-auto">
               <table className="min-w-full">
                 <tbody>
@@ -1683,7 +1776,7 @@ export default function RegistrationsAdminPanel({ operator }) {
               className="admin-grid-navy ln-grid"
               style={{ height: '560px' }}
             >
-              <Grid columns={gridColumns} rowSource={ds} rowHeight={72} />
+              <RegistrationGrid columns={gridColumns} rowSource={ds} />
             </div>
           )}
         </RegistrationGridCtx.Provider>

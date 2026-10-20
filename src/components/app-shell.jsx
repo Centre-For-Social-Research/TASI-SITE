@@ -1,10 +1,18 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { Toaster } from 'sonner';
-import CookieConsentBanner from '@/components/ui/cookie-consent-banner';
-import { Footer } from '@/components/ui/demo';
 import LenisProvider from '@/components/lenis-provider';
+
+// Public-site-only pieces load as their own chunks, so /admin and /studio
+// (which return early below) don't download them.
+const CookieConsentBanner = dynamic(
+  () => import('@/components/ui/cookie-consent-banner')
+);
+const Footer = dynamic(() =>
+  import('@/components/ui/demo').then((mod) => mod.Footer)
+);
 
 export default function AppShell({ children }) {
   const pathname = usePathname();

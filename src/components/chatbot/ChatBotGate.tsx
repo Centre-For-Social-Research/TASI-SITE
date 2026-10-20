@@ -1,7 +1,11 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import ChatBot from './ChatBot';
+
+// Split into its own chunk so the admin console, which never shows the
+// chatbot, does not download it.
+const ChatBot = dynamic(() => import('./ChatBot'));
 
 export default function ChatBotGate() {
   const pathname = usePathname();

@@ -21,7 +21,24 @@ import {
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
 
-const { canRetryGuestSend } = guestSendAttempt;
+const { canRetryGuestSend, RETRY_AFTER_MS, RETRY_BEFORE_MS } = guestSendAttempt;
+
+// Retry only becomes possible, and later impossible, at two fixed moments
+// after an attempt starts. Re-check the clock at those moments instead of
+// re-rendering the whole panel every second.
+function scheduleRetryWindowChecks(startedAt, setNow) {
+  const started = Date.parse(startedAt || '');
+  if (!Number.isFinite(started)) return undefined;
+  const now = Date.now();
+  const timers = [
+    0,
+    started + RETRY_AFTER_MS - now + 50,
+    started + RETRY_BEFORE_MS - now + 50,
+  ]
+    .filter((delay) => delay >= 0 && delay < 2 ** 31)
+    .map((delay) => window.setTimeout(() => setNow(Date.now()), delay));
+  return () => timers.forEach((timer) => window.clearTimeout(timer));
+}
 
 // Resend's documented rate limit is a few requests per second; a short gap
 // between bulk sends keeps every request well inside it.
@@ -206,24 +223,29 @@ export default function SpeakerCommunicationsPanel({
   const replaceInputRef = useRef(null);
   const stopBulkRef = useRef(false);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch(
-        `/api/admin/speaker-communications?edition=${encodeURIComponent(edition)}`,
-        { cache: 'no-store' }
-      );
-      const json = await readJson(response, 'Unable to load speakers.');
-      setSpeakers(json.speakers || []);
-      setSummary(json.summary || null);
-      if (json.editions?.length) setEditions(json.editions);
-    } catch (loadError) {
-      setError(loadError.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [edition]);
+  // A background refresh keeps the table on screen instead of swapping it for
+  // "Loading speakers…"; used after an action whose result is already shown.
+  const load = useCallback(
+    async ({ background = false } = {}) => {
+      if (!background) setLoading(true);
+      setError('');
+      try {
+        const response = await fetch(
+          `/api/admin/speaker-communications?edition=${encodeURIComponent(edition)}`,
+          { cache: 'no-store' }
+        );
+        const json = await readJson(response, 'Unable to load speakers.');
+        setSpeakers(json.speakers || []);
+        setSummary(json.summary || null);
+        if (json.editions?.length) setEditions(json.editions);
+      } catch (loadError) {
+        setError(loadError.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [edition]
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-change updates after an awaited request
@@ -267,31 +289,48 @@ export default function SpeakerCommunicationsPanel({
     [speakers]
   );
 
+  async function fetchDetail(speakerId) {
+    const response = await fetch(
+      `/api/admin/speaker-communications/${speakerId}`,
+      { cache: 'no-store' }
+    );
+    const json = await readJson(response, 'Unable to load speaker.');
+    setDetail(json);
+    setSelected(json.speaker);
+    setEditForm({
+      name: json.speaker.name || '',
+      emails: (json.speaker.emails || []).join(', '),
+      designation: json.speaker.designation || '',
+      organization: json.speaker.organization || '',
+    });
+  }
+
   async function openDetail(speaker) {
     setSelected(speaker);
     setDetail(null);
     setPreview(null);
     setDetailLoading(true);
     try {
-      const response = await fetch(
-        `/api/admin/speaker-communications/${speaker.id}`,
-        { cache: 'no-store' }
-      );
-      const json = await readJson(response, 'Unable to load speaker.');
-      setDetail(json);
-      setSelected(json.speaker);
-      setEditForm({
-        name: json.speaker.name || '',
-        emails: (json.speaker.emails || []).join(', '),
-        designation: json.speaker.designation || '',
-        organization: json.speaker.organization || '',
-      });
+      await fetchDetail(speaker.id);
     } catch (detailError) {
       setToast({ tone: 'danger', message: detailError.message });
       setSelected(null);
     } finally {
       setDetailLoading(false);
     }
+  }
+
+  // After an action, refresh the list in the background and the open drawer in
+  // place, together, without blanking either.
+  function refreshAfterAction(speaker) {
+    return Promise.all([
+      load({ background: true }),
+      speaker && selected?.id === speaker.id
+        ? fetchDetail(speaker.id).catch((detailError) =>
+            setToast({ tone: 'danger', message: detailError.message })
+          )
+        : null,
+    ]);
   }
 
   function closeDetail() {
@@ -348,8 +387,7 @@ export default function SpeakerCommunicationsPanel({
       results,
     });
     setBadgeVersion((version) => version + 1);
-    await load();
-    if (speakerId && selected?.id === speakerId) await openDetail(selected);
+    await refreshAfterAction(speakerId ? selected : null);
   }
 
   async function saveSpeaker(event) {
@@ -367,8 +405,7 @@ export default function SpeakerCommunicationsPanel({
       );
       const json = await readJson(response, 'Unable to update speaker.');
       setToast({ tone: 'success', message: `${json.speaker.name} updated.` });
-      await load();
-      await openDetail(json.speaker);
+      await refreshAfterAction(json.speaker);
     } catch (saveError) {
       setToast({ tone: 'danger', message: saveError.message });
     } finally {
@@ -392,7 +429,8 @@ export default function SpeakerCommunicationsPanel({
       await readJson(response, 'Unable to remove speaker.');
       setToast({ tone: 'success', message: `${speaker.name} removed.` });
       closeDetail();
-      await load();
+      setSpeakers((list) => list.filter((item) => item.id !== speaker.id));
+      await load({ background: true });
     } catch (removeError) {
       setToast({ tone: 'danger', message: removeError.message });
     } finally {
@@ -480,12 +518,10 @@ export default function SpeakerCommunicationsPanel({
         tone: 'success',
         message: `Badge accepted for delivery to ${json.speaker.emails.join(', ')}.`,
       });
-      await load();
-      if (selected?.id === speaker.id) await openDetail(json.speaker);
+      await refreshAfterAction(json.speaker);
     } catch (sendError) {
       setToast({ tone: 'danger', message: sendError.message });
-      await load();
-      if (selected?.id === speaker.id) await openDetail(speaker);
+      await refreshAfterAction(speaker);
     } finally {
       setBusy('');
     }
@@ -506,8 +542,7 @@ export default function SpeakerCommunicationsPanel({
       );
       await readJson(response, 'Unable to retry this send safely.');
       setToast({ tone: 'success', message: 'The original send is confirmed.' });
-      await load();
-      await openDetail(speaker);
+      await refreshAfterAction(speaker);
     } catch (retryError) {
       setToast({ tone: 'danger', message: retryError.message });
     } finally {
@@ -553,15 +588,20 @@ export default function SpeakerCommunicationsPanel({
       running: false,
       stopped: stopBulkRef.current,
     }));
-    await load();
+    await load({ background: true });
   }
 
   const current = detail?.speaker || selected;
-  useEffect(() => {
-    if (current?.status !== 'sending') return undefined;
-    const timer = window.setInterval(() => setClockNow(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, [current?.id, current?.status]);
+  const attemptStartedAt =
+    detail?.activeAttempt?.created_at || detail?.activeAttempt?.createdAt;
+  useEffect(
+    () =>
+      scheduleRetryWindowChecks(
+        current?.status === 'sending' ? attemptStartedAt : null,
+        setClockNow
+      ),
+    [current?.id, current?.status, attemptStartedAt]
+  );
   const retryReady = canRetryGuestSend(detail?.activeAttempt, clockNow);
 
   return (
