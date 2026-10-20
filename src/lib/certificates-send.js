@@ -28,7 +28,7 @@ function getSiteUrl() {
 }
 
 let cachedLogo = null;
-async function logoAttachment() {
+export async function logoAttachment() {
   if (!cachedLogo) {
     cachedLogo = await fs.readFile(
       path.join(

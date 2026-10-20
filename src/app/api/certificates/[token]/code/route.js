@@ -5,6 +5,7 @@ import {
 } from '@/lib/certificate-access';
 import { createCertificateEmailCode } from '@/lib/certificates-db';
 import { sendApplicantConfirmationEmail } from '@/lib/resend';
+import { logoAttachment } from '@/lib/certificates-send';
 import certificatesEmail from '@/lib/certificates-email.cjs';
 import certificateSession from '@/lib/certificate-session.cjs';
 
@@ -40,6 +41,7 @@ export async function POST(request, context) {
       text: email.text,
       html: email.html,
       replyTo: CERTIFICATE_REPLY_TO,
+      attachments: [await logoAttachment()],
     });
     if (!delivery.sent)
       throw new Error(
