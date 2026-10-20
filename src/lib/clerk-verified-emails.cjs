@@ -19,4 +19,19 @@ function getVerifiedUserEmails(user) {
   };
 }
 
-module.exports = { getVerifiedUserEmails };
+// The Clerk session token can carry the primary email so a request needs no
+// Backend API call. Configure it once in Clerk → Sessions → Customize session
+// token (the TASi-App shares the instance; extra claims do not affect it):
+//   { "primary_email": "{{user.primary_email_address}}",
+//     "full_name": "{{user.full_name}}" }
+// Clerk only lets a verified address be primary, so this claim is verified.
+function getSessionClaimIdentity(sessionClaims) {
+  const email = String(sessionClaims?.primary_email || '')
+    .trim()
+    .toLowerCase();
+  if (!email || !email.includes('@')) return null;
+  const fullName = String(sessionClaims?.full_name || '').trim();
+  return { emails: [email], primaryEmail: email, fullName };
+}
+
+module.exports = { getVerifiedUserEmails, getSessionClaimIdentity };
