@@ -15,9 +15,11 @@ import {
 } from '@/lib/resend';
 import certificatesEmail from '@/lib/certificates-email.cjs';
 import guestSendAttempt from '@/lib/guest-send-attempt.cjs';
+import certificateReminders from '@/lib/certificate-reminders.cjs';
 
 const { CERTIFICATE_REPLY_TO, buildCertificateEmail } = certificatesEmail;
 const { hashGuestEmailRequest } = guestSendAttempt;
+const { reminderBlocker } = certificateReminders;
 
 function getSiteUrl() {
   return (
@@ -48,13 +50,14 @@ export async function logoAttachment() {
 }
 
 // Preview uses a placeholder token; it never creates a working link.
-export async function previewCertificateEmail(id) {
+export async function previewCertificateEmail(id, { reminder = false } = {}) {
   const certificate = await getCertificateById(id);
   const email = buildCertificateEmail({
     name: certificate.name,
     edition: certificate.edition,
     token: 'preview-link',
     siteUrl: getSiteUrl(),
+    reminder,
   });
   return {
     subject: email.subject,
@@ -66,7 +69,7 @@ export async function previewCertificateEmail(id) {
 
 // A test goes to one address and uses a placeholder link, so it can never
 // hand out a working download link for someone else's certificate.
-export async function sendCertificateTest({ id, to }) {
+export async function sendCertificateTest({ id, to, reminder = false }) {
   if (!getResendClient()) throw new Error('Resend is not configured.');
   const recipient = String(to || '')
     .trim()
@@ -81,6 +84,7 @@ export async function sendCertificateTest({ id, to }) {
     token: 'test-link-not-valid',
     siteUrl: getSiteUrl(),
     test: true,
+    reminder,
   });
   const delivery = await sendApplicantConfirmationEmail({
     to: recipient,
@@ -97,19 +101,33 @@ export async function sendCertificateTest({ id, to }) {
 
 // Sends the certificate email with a fresh personal link. Earlier links stop
 // working. If the provider's answer is lost, the attempt is closed as failed
-// with a note, so an organiser checks Resend before sending again.
-export async function sendCertificateEmail({ id, operator, resend = false }) {
+// with a note, so an organiser checks Resend before sending again. A reminder
+// is the same email with reminder wording, sent once to people who have not
+// downloaded; the database refuses a second one.
+export async function sendCertificateEmail({
+  id,
+  operator,
+  resend = false,
+  reminder = false,
+}) {
   if (!getResendClient()) throw new Error('Resend is not configured.');
   const certificate = await getCertificateById(id);
   if (certificate.status !== 'active')
     throw new Error('This certificate has been revoked.');
-  if (certificate.emailStatus === 'sent' && !resend) {
+  if (reminder) {
+    const blocker = reminderBlocker(certificate);
+    if (blocker) throw new Error(`${certificate.name}: ${blocker}`);
+  } else if (certificate.emailStatus === 'sent' && !resend) {
     throw new Error(
       `${certificate.name} has already been sent their certificate. Use Resend to send it again.`
     );
   }
 
-  const attempt = await claimCertificateSend({ certificate, operator });
+  const attempt = await claimCertificateSend({
+    certificate,
+    operator,
+    kind: reminder ? 'reminder' : 'certificate',
+  });
   let providerContacted = false;
   try {
     const token = await rotateClaimToken(certificate.id);
@@ -118,6 +136,7 @@ export async function sendCertificateEmail({ id, operator, resend = false }) {
       edition: certificate.edition,
       token,
       siteUrl: getSiteUrl(),
+      reminder,
     });
     const attachments = [await logoAttachment()];
     await prepareCertificateSendRequest(

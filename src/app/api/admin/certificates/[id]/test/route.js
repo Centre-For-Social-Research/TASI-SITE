@@ -16,7 +16,11 @@ export async function POST(request, context) {
         : authResult.operator?.primaryEmail;
     return adminJson({
       success: true,
-      ...(await sendCertificateTest({ id, to })),
+      ...(await sendCertificateTest({
+        id,
+        to,
+        reminder: body?.reminder === true,
+      })),
     });
   } catch (error) {
     const message =

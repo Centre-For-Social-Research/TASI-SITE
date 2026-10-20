@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Ban,
+  BellRing,
   Eye,
   FileText,
   FlaskConical,
@@ -21,6 +22,9 @@ import {
   AdminToast,
   SlideOverDrawer,
 } from '@/components/admin/admin-ui';
+import certificateReminders from '@/lib/certificate-reminders.cjs';
+
+const { REMINDER_AFTER_DAYS, reminderBlocker } = certificateReminders;
 
 // Resend allows a few requests per second; a short gap keeps bulk sends safe.
 const BULK_SEND_GAP_MS = 700;
@@ -30,6 +34,7 @@ const FILTERS = [
   { value: 'not_emailed', label: 'Not emailed yet' },
   { value: 'emailed', label: 'Emailed' },
   { value: 'not_downloaded', label: 'Emailed, not downloaded' },
+  { value: 'reminder_due', label: 'Reminder due' },
   { value: 'failed', label: 'Email failed' },
   { value: 'revoked', label: 'Revoked' },
 ];
@@ -44,6 +49,7 @@ const EVENT_LABELS = {
   code_sent: 'Email code sent',
   code_verified: 'Email code verified',
   code_failed: 'Wrong email code',
+  reminded: 'Reminder sent',
   downloaded: 'Downloaded',
   revoked: 'Revoked',
   reinstated: 'Reinstated',
@@ -55,6 +61,7 @@ function matches(c, filter) {
   if (filter === 'emailed') return c.emailStatus === 'sent';
   if (filter === 'not_downloaded')
     return c.emailStatus === 'sent' && !c.downloadCount;
+  if (filter === 'reminder_due') return !reminderBlocker(c);
   if (filter === 'failed') return c.emailStatus === 'failed';
   if (filter === 'revoked') return c.status === 'revoked';
   return true;
@@ -155,6 +162,7 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
   const [form, setForm] = useState({ name: '', email: '' });
   const [preview, setPreview] = useState(null);
   const [testTo, setTestTo] = useState(operatorEmail || '');
+  const [testReminder, setTestReminder] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState({ name: '', email: '' });
   const stopRef = useRef(false);
@@ -202,6 +210,10 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
   const unsent = useMemo(
     () =>
       rows.filter((c) => c.status === 'active' && c.emailStatus === 'draft'),
+    [rows]
+  );
+  const reminderDue = useMemo(
+    () => rows.filter((c) => !reminderBlocker(c)),
     [rows]
   );
 
@@ -281,12 +293,12 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
     }
   }
 
-  async function postSend(c, resend) {
+  async function postSend(c, resend, reminder = false) {
     return readJson(
       await fetch(`/api/admin/certificates/${c.id}/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resend }),
+        body: JSON.stringify({ resend, reminder }),
       }),
       'Unable to send certificate.'
     );
@@ -319,7 +331,7 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
     }
   }
 
-  async function sendAll() {
+  function sendAll() {
     const queue = [...unsent];
     if (
       !queue.length ||
@@ -328,14 +340,38 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
       )
     )
       return;
+    return runBulk(queue, { reminder: false });
+  }
+
+  function sendReminders() {
+    const queue = [...reminderDue];
+    if (
+      !queue.length ||
+      !window.confirm(
+        `Send a reminder to ${queue.length} attendee${queue.length === 1 ? '' : 's'} who were emailed at least ${REMINDER_AFTER_DAYS} days ago and haven't downloaded?\n\nEach gets a fresh link; their earlier link stops working. Nobody gets more than one reminder.`
+      )
+    )
+      return;
+    return runBulk(queue, { reminder: true });
+  }
+
+  async function runBulk(queue, { reminder }) {
     stopRef.current = false;
     const failures = [];
     let sent = 0;
-    setBulk({ running: true, done: 0, total: queue.length, sent, failures });
+    const kind = reminder ? 'reminder' : 'certificate email';
+    setBulk({
+      running: true,
+      done: 0,
+      total: queue.length,
+      sent,
+      failures,
+      kind,
+    });
     for (const [index, c] of queue.entries()) {
       if (stopRef.current) break;
       try {
-        await postSend(c, false);
+        await postSend(c, false, reminder);
         sent += 1;
       } catch (sendError) {
         failures.push({ name: c.name, message: sendError.message });
@@ -346,6 +382,7 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
         total: queue.length,
         sent,
         failures: [...failures],
+        kind,
       });
       if (index < queue.length - 1)
         await new Promise((r) => window.setTimeout(r, BULK_SEND_GAP_MS));
@@ -416,15 +453,18 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
     }
   }
 
-  async function showPreview(c) {
+  async function showPreview(c, reminder = false) {
     setBusy('preview');
     try {
       setPreview(
         (
           await readJson(
-            await fetch(`/api/admin/certificates/${c.id}/preview`, {
-              cache: 'no-store',
-            }),
+            await fetch(
+              `/api/admin/certificates/${c.id}/preview${reminder ? '?reminder=1' : ''}`,
+              {
+                cache: 'no-store',
+              }
+            ),
             'Unable to preview.'
           )
         ).email
@@ -443,7 +483,7 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
         await fetch(`/api/admin/certificates/${c.id}/test`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to: testTo.trim() }),
+          body: JSON.stringify({ to: testTo.trim(), reminder: testReminder }),
         }),
         'Unable to send test.'
       );
@@ -517,6 +557,18 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
             >
               <Send size={14} /> Email all not yet emailed ({unsent.length})
             </button>
+            <button
+              type="button"
+              title={`One reminder, ${REMINDER_AFTER_DAYS}+ days after the certificate email, to people who haven't downloaded`}
+              style={{
+                ...btn(),
+                opacity: working || !reminderDue.length ? 0.55 : 1,
+              }}
+              disabled={working || Boolean(busy) || !reminderDue.length}
+              onClick={sendReminders}
+            >
+              <BellRing size={14} /> Send reminder ({reminderDue.length})
+            </button>
           </div>
         ) : null}
       </section>
@@ -569,8 +621,8 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
           }
           title={
             bulk.running
-              ? `Sending certificates… ${bulk.done} of ${bulk.total}`
-              : `${bulk.stopped ? 'Stopped. ' : ''}${bulk.sent} certificate email${bulk.sent === 1 ? '' : 's'} accepted`
+              ? `Sending ${bulk.kind}s… ${bulk.done} of ${bulk.total}`
+              : `${bulk.stopped ? 'Stopped. ' : ''}${bulk.sent} ${bulk.kind}${bulk.sent === 1 ? '' : 's'} accepted`
           }
           description={
             bulk.failures.length ? (
@@ -926,6 +978,16 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
                 <Eye size={14} />{' '}
                 {busy === 'preview' ? 'Loading…' : 'Preview email'}
               </button>
+              {current.emailStatus === 'sent' ? (
+                <button
+                  type="button"
+                  style={btn()}
+                  disabled={Boolean(busy)}
+                  onClick={() => showPreview(current, true)}
+                >
+                  <BellRing size={14} /> Preview reminder
+                </button>
+              ) : null}
               {canManage && current.status === 'active' ? (
                 <button
                   type="button"
@@ -991,6 +1053,22 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
                     {busy === 'test' ? 'Sending…' : 'Send test'}
                   </button>
                 </div>
+                <label
+                  style={{
+                    display: 'flex',
+                    gap: 6,
+                    alignItems: 'center',
+                    fontSize: 12,
+                    color: 'var(--adm-ink-3)',
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={testReminder}
+                    onChange={(e) => setTestReminder(e.target.checked)}
+                  />
+                  Send the reminder version
+                </label>
                 <p
                   style={{ margin: 0, color: 'var(--adm-ink-3)', fontSize: 12 }}
                 >
@@ -1012,6 +1090,9 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
                 Issued {formatDate(current.issuedAt)} · Downloads{' '}
                 {current.downloadCount} · Last emailed{' '}
                 {formatDate(current.lastSentAt)}
+                {current.lastRemindedAt
+                  ? ` · Reminded ${formatDate(current.lastRemindedAt)}`
+                  : ''}
               </div>
               <div>
                 Name{' '}

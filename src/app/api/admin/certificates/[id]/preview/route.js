@@ -2,7 +2,7 @@ import { requireAuthorizedOperator } from '@/lib/registration-auth';
 import { adminJson } from '@/lib/admin-api-cache';
 import { previewCertificateEmail } from '@/lib/certificates-send';
 
-export async function GET(_request, context) {
+export async function GET(request, context) {
   const authResult = await requireAuthorizedOperator({
     route: 'api.admin.certificates.preview',
   });
@@ -11,7 +11,9 @@ export async function GET(_request, context) {
     const { id } = await context.params;
     return adminJson({
       success: true,
-      email: await previewCertificateEmail(id),
+      email: await previewCertificateEmail(id, {
+        reminder: new URL(request.url).searchParams.get('reminder') === '1',
+      }),
     });
   } catch (error) {
     const message =

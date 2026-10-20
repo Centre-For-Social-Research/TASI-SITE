@@ -398,3 +398,61 @@ test('the share card names only active holders and never shows the signature', (
     /'\/certificates\/verify\/\*\*': \['\.\/src\/assets\/certificates\/\*\*\/\*'\]/
   );
 });
+
+test('one reminder, only for emailed attendees who have not downloaded', () => {
+  const {
+    REMINDER_AFTER_DAYS,
+    reminderBlocker,
+  } = require('../src/lib/certificate-reminders.cjs');
+  const now = Date.parse('2026-10-30T00:00:00Z');
+  const due = {
+    status: 'active',
+    emailStatus: 'sent',
+    downloadCount: 0,
+    reminderCount: 0,
+    lastSentAt: '2026-10-22T00:00:00Z',
+  };
+  assert.equal(reminderBlocker(due, now), null);
+  assert.ok(reminderBlocker({ ...due, downloadCount: 1 }, now));
+  assert.ok(reminderBlocker({ ...due, reminderCount: 1 }, now));
+  assert.ok(reminderBlocker({ ...due, status: 'revoked' }, now));
+  assert.ok(reminderBlocker({ ...due, emailStatus: 'draft' }, now));
+  assert.ok(reminderBlocker({ ...due, emailStatus: 'failed' }, now));
+  const tooSoon = now - (REMINDER_AFTER_DAYS * 24 - 1) * 60 * 60 * 1000;
+  assert.ok(
+    reminderBlocker(
+      { ...due, lastSentAt: new Date(tooSoon).toISOString() },
+      now
+    )
+  );
+  assert.ok(reminderBlocker({ ...due, lastSentAt: null }, now));
+
+  const email = buildCertificateEmail({
+    name: 'Ana',
+    edition: '2026',
+    token: 'T'.repeat(43),
+    reminder: true,
+  });
+  assert.equal(
+    email.subject,
+    'Reminder: your TASI 2026 certificate is waiting'
+  );
+  assert.match(email.text, /fresh link/);
+  assert.match(email.html, /still waiting/);
+  assert.doesNotMatch(email.html, /—/);
+
+  const migration = read(
+    'supabase/migrations/20261020200000_attendee_certificate_reminders.sql'
+  );
+  assert.match(migration, /check \(reminder_count between 0 and 1\)/);
+  assert.match(
+    migration,
+    /p_kind = 'reminder' and email_status = 'sent'\s+and download_count = 0 and reminder_count = 0/
+  );
+  assert.match(migration, /'reminded'/);
+  assert.match(
+    read('src/lib/certificates-send.js'),
+    /reminderBlocker\(certificate\)/
+  );
+  assert.doesNotMatch(read('src/lib/certificate-reminders.cjs'), /require\(/);
+});

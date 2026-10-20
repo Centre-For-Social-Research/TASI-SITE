@@ -14,6 +14,7 @@ export async function POST(request, context) {
       id,
       operator: authResult.operator,
       resend: body?.resend === true,
+      reminder: body?.reminder === true,
     });
     return adminJson({ success: true, certificate });
   } catch (error) {
@@ -21,7 +22,11 @@ export async function POST(request, context) {
       error instanceof Error ? error.message : 'Unable to send certificate.';
     return adminJson(
       { error: message },
-      { status: /already|revoked/i.test(message) ? 409 : 502 }
+      {
+        status: /already|revoked|reminder|downloaded|first/i.test(message)
+          ? 409
+          : 502,
+      }
     );
   }
 }

@@ -25,7 +25,8 @@ const CERT_SELECT = `
   revoked_by_email, issued_at, download_count, first_downloaded_at,
   last_downloaded_at, email_status, send_count, last_sent_at,
   last_provider_message_id, last_error, created_by_email, created_at, updated_at,
-  token_expires_at, name_confirmed_at, pdf_sha256
+  token_expires_at, name_confirmed_at, pdf_sha256, reminder_count,
+  last_reminded_at
 `;
 
 const db = () => getSupabaseAdmin();
@@ -65,6 +66,8 @@ export function normalizeCertificateRow(row = {}) {
     tokenExpiresAt: row.token_expires_at || null,
     nameConfirmedAt: row.name_confirmed_at || null,
     pdfSha256: row.pdf_sha256 || null,
+    reminderCount: Number(row.reminder_count || 0),
+    lastRemindedAt: row.last_reminded_at || null,
   };
 }
 
@@ -442,12 +445,17 @@ export async function rotateClaimToken(id) {
   return token;
 }
 
-export async function claimCertificateSend({ certificate, operator }) {
+export async function claimCertificateSend({
+  certificate,
+  operator,
+  kind = 'certificate',
+}) {
   const { data, error } = await db().rpc('claim_attendee_certificate_send', {
     p_certificate_id: certificate.id,
     p_expected_updated_at: certificate.updatedAt,
     p_actor_clerk_id: operator?.userId || null,
     p_actor_email: operator?.primaryEmail || null,
+    p_kind: kind,
   });
   if (error || !data) {
     throw new Error(
