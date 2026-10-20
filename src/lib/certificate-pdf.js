@@ -172,14 +172,14 @@ export async function renderCertificatePdf({
   drawCentered(page, config.title.toUpperCase(), {
     font: semibold,
     size: 12,
-    top: 50,
+    top: 47,
     color: PURPLE,
     tracking: 3.8,
   });
   drawCentered(page, 'This is to certify that', {
     font: regular,
     size: 12.5,
-    top: 62,
+    top: 59,
     color: MUTED,
   });
 
@@ -191,12 +191,12 @@ export async function renderCertificatePdf({
   drawCentered(page, name, {
     font: display,
     size: nameSize,
-    top: 80,
+    top: 77,
     color: NAVY,
   });
   page.drawLine({
-    start: { x: PAGE_W / 2 - x(60), y: y(87) },
-    end: { x: PAGE_W / 2 + x(60), y: y(87) },
+    start: { x: PAGE_W / 2 - x(60), y: y(84) },
+    end: { x: PAGE_W / 2 + x(60), y: y(84) },
     thickness: 0.6,
     color: RULE,
   });
@@ -206,35 +206,35 @@ export async function renderCertificatePdf({
   drawRuns(
     page,
     [plain('participated in the '), strong(config.eventName), plain(',')],
-    { top: 97, size: 12.5 }
+    { top: 94, size: 12.5 }
   );
   drawRuns(
     page,
     [plain('held on '), strong(config.dates), plain(` at ${config.venue},`)],
-    { top: 104.5, size: 12.5 }
+    { top: 101.5, size: 12.5 }
   );
   drawRuns(page, [plain(`organised by ${config.organisers}.`)], {
-    top: 112,
+    top: 109,
     size: 12.5,
   });
 
   // Signature block: the signature itself is part of the template.
   page.drawLine({
-    start: { x: x(29), y: y(140) },
-    end: { x: x(91), y: y(140) },
+    start: { x: x(29), y: y(135) },
+    end: { x: x(91), y: y(135) },
     thickness: 0.6,
     color: BODY,
   });
   page.drawText(config.signatory, {
     x: x(29),
-    y: y(146),
+    y: y(141),
     size: 11,
     font: bold,
     color: INK,
   });
   page.drawText(config.signatoryRole, {
     x: x(29),
-    y: y(150.5),
+    y: y(145.5),
     size: 9.5,
     font: regular,
     color: MUTED,
@@ -250,12 +250,12 @@ export async function renderCertificatePdf({
       color: { dark: '#022d5d', light: '#ffffff' },
     })
   );
-  page.drawImage(qr, { x: x(247), y: y(153), width: x(21), height: x(21) });
+  page.drawImage(qr, { x: x(247), y: y(148), width: x(21), height: x(21) });
   drawRight(page, `Certificate ID: ${code}`, {
     font: semibold,
     size: 9,
     right: 243,
-    top: 142,
+    top: 137,
     color: INK,
   });
   drawRight(
@@ -267,7 +267,7 @@ export async function renderCertificatePdf({
       font: regular,
       size: 8,
       right: 243,
-      top: 146.5,
+      top: 141.5,
       color: MUTED,
     }
   );
@@ -275,7 +275,7 @@ export async function renderCertificatePdf({
     font: regular,
     size: 8,
     right: 243,
-    top: 151,
+    top: 146,
     color: MUTED,
   });
 
