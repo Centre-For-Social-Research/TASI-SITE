@@ -573,43 +573,55 @@ export async function createCertificateEmailCode(certificateId) {
   return code;
 }
 
+// Any unused, unexpired code works, so asking for a second code does not
+// break the first. Wrong guesses count against every live code, so the
+// attempt limit still holds across them.
 export async function verifyCertificateEmailCode({ certificateId, code }) {
   const clean = String(code || '').replace(/\D/g, '');
-  const { data: row, error } = await db()
+  const { data: rows, error } = await db()
     .from('attendee_certificate_codes')
-    .select('id,code_hash,expires_at,attempts,consumed_at')
+    .select('id,code_hash,attempts')
     .eq('certificate_id', certificateId)
     .is('consumed_at', null)
+    .gt('expires_at', new Date().toISOString())
     .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(5);
   if (error) throw new Error(error.message);
-  if (!row || Date.parse(row.expires_at) <= Date.now()) {
+  if (!rows?.length) {
     throw new Error('This code has expired. Please request a new one.');
   }
-  if (row.attempts >= MAX_CODE_ATTEMPTS) {
+  // Codes that hit the attempt limit are out; a newly requested code is not.
+  const live = rows.filter((row) => row.attempts < MAX_CODE_ATTEMPTS);
+  if (!live.length) {
     throw new Error('Too many wrong attempts. Please request a new code.');
   }
-  if (
-    clean.length !== 6 ||
-    hashEmailCode({ certificateId, code: clean }) !== row.code_hash
-  ) {
-    await db()
-      .from('attendee_certificate_codes')
-      .update({ attempts: row.attempts + 1 })
-      .eq('id', row.id);
+  const hash =
+    clean.length === 6 ? hashEmailCode({ certificateId, code: clean }) : null;
+  const match = hash ? live.find((row) => row.code_hash === hash) : null;
+  if (!match) {
+    for (const row of live) {
+      await db()
+        .from('attendee_certificate_codes')
+        .update({ attempts: row.attempts + 1 })
+        .eq('id', row.id);
+    }
     await logCertificateEvent(certificateId, 'code_failed');
-    const left = MAX_CODE_ATTEMPTS - row.attempts - 1;
+    // Attempts left on the freshest code, the one they are most likely using.
+    const left = MAX_CODE_ATTEMPTS - live[0].attempts - 1;
     throw new Error(
       left > 0
         ? `That code is not right. ${left} attempt${left === 1 ? '' : 's'} left.`
         : 'Too many wrong attempts. Please request a new code.'
     );
   }
+  // Use up every live code once one works.
   await db()
     .from('attendee_certificate_codes')
     .update({ consumed_at: new Date().toISOString() })
-    .eq('id', row.id);
+    .in(
+      'id',
+      rows.map((row) => row.id)
+    );
   await logCertificateEvent(certificateId, 'code_verified');
 }
 

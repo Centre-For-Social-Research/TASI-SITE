@@ -517,3 +517,52 @@ test('admin pages rely on the admin layout for the shell', () => {
     );
   }
 });
+
+test('the code email links straight to the page with the code filled in', () => {
+  const openUrl =
+    'https://trustandsafetyindia.org/certificates/' +
+    'T'.repeat(43) +
+    '?code=012345';
+  const email = buildCertificateCodeEmail({
+    name: 'Ana',
+    code: '012345',
+    openUrl,
+  });
+  assert.ok(email.html.includes('?code=012345'));
+  assert.match(email.html, /Open your certificate with this code/);
+  assert.ok(email.text.includes(openUrl));
+  const plain = buildCertificateCodeEmail({ name: 'Ana', code: '012345' });
+  assert.doesNotMatch(plain.html, /Open your certificate with this code/);
+  assert.match(
+    read('src/app/api/certificates/[token]/code/route.js'),
+    /openUrl: `\$\{buildClaimUrl\(\{ siteUrl: siteUrl\(\), token \}\)\}\?code=\$\{code\}`/
+  );
+});
+
+test('a code in the link is only pre-filled, never used without a tap', () => {
+  const page = read('src/app/certificates/[token]/page.jsx');
+  assert.ok(page.includes(String.raw`/^\d{6}$/.test(codeParam)`));
+  assert.match(
+    page,
+    /initialCode=\{initialStep === 'verify' \? initialCode : ''\}/
+  );
+  const claim = read('src/components/certificates/certificate-claim.jsx');
+  assert.match(claim, /useState\(initialCode\)/);
+  assert.match(claim, /Already have a code from us\? Enter it here\./);
+  // the code box is not hidden behind "Email me a code"
+  assert.doesNotMatch(claim, /\{codeSent \? \(\s*<form/);
+  // the page does not post the code on load
+  assert.doesNotMatch(claim, /useEffect/);
+});
+
+test('any live code works and wrong guesses still count', () => {
+  const db = read('src/lib/certificates-db.js');
+  const fn = db.slice(
+    db.indexOf('export async function verifyCertificateEmailCode')
+  );
+  assert.match(fn, /\.gt\('expires_at'/);
+  assert.match(fn, /row\.attempts < MAX_CODE_ATTEMPTS/);
+  assert.match(fn, /live\.find\(\(row\) => row\.code_hash === hash\)/);
+  assert.match(fn, /attempts: row\.attempts \+ 1/);
+  assert.match(fn, /consumed_at: new Date\(\)\.toISOString\(\)/);
+});
