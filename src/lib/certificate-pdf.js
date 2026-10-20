@@ -145,12 +145,12 @@ export async function renderCertificatePdf({
 
   // Personal microtext: the holder's name and certificate ID in a fine line
   // just inside the top and bottom of the border. Too small to retype
-  // cleanly, and it must match the name and ID printed above. Along the
-  // bottom it stops either side of the skyline (66–231 mm).
+  // cleanly, and it must match the name and ID printed above. The bottom
+  // line sits in the coloured border, below the full-width skyline.
   const micro = `${name.toUpperCase()} · ${code} · `;
   const microSize = 4.2;
   const microColor = rgb(67 / 255, 53 / 255, 138 / 255);
-  const microRun = (left, width, top) => {
+  const microRun = (left, width, top, color = microColor, opacity = 0.55) => {
     let line = micro.repeat(
       Math.ceil(x(width) / regular.widthOfTextAtSize(micro, microSize)) + 1
     );
@@ -162,25 +162,24 @@ export async function renderCertificatePdf({
       y: y(top),
       size: microSize,
       font: regular,
-      color: microColor,
-      opacity: 0.55,
+      color,
+      opacity,
     });
   };
   microRun(10, 277, 9.6);
-  microRun(10, 52, 201.6);
-  microRun(235, 52, 201.6);
+  microRun(10, 277, 207.6, rgb(1, 1, 1), 0.7);
 
   drawCentered(page, config.title.toUpperCase(), {
     font: semibold,
     size: 12,
-    top: 56,
+    top: 50,
     color: PURPLE,
     tracking: 3.8,
   });
   drawCentered(page, 'This is to certify that', {
     font: regular,
     size: 12.5,
-    top: 68,
+    top: 62,
     color: MUTED,
   });
 
@@ -192,12 +191,12 @@ export async function renderCertificatePdf({
   drawCentered(page, name, {
     font: display,
     size: nameSize,
-    top: 86,
+    top: 80,
     color: NAVY,
   });
   page.drawLine({
-    start: { x: PAGE_W / 2 - x(60), y: y(93) },
-    end: { x: PAGE_W / 2 + x(60), y: y(93) },
+    start: { x: PAGE_W / 2 - x(60), y: y(87) },
+    end: { x: PAGE_W / 2 + x(60), y: y(87) },
     thickness: 0.6,
     color: RULE,
   });
@@ -207,35 +206,35 @@ export async function renderCertificatePdf({
   drawRuns(
     page,
     [plain('participated in the '), strong(config.eventName), plain(',')],
-    { top: 103, size: 12.5 }
+    { top: 97, size: 12.5 }
   );
   drawRuns(
     page,
     [plain('held on '), strong(config.dates), plain(` at ${config.venue},`)],
-    { top: 110.5, size: 12.5 }
+    { top: 104.5, size: 12.5 }
   );
   drawRuns(page, [plain(`organised by ${config.organisers}.`)], {
-    top: 118,
+    top: 112,
     size: 12.5,
   });
 
   // Signature block: the signature itself is part of the template.
   page.drawLine({
-    start: { x: x(29), y: y(152) },
-    end: { x: x(91), y: y(152) },
+    start: { x: x(29), y: y(140) },
+    end: { x: x(91), y: y(140) },
     thickness: 0.6,
     color: BODY,
   });
   page.drawText(config.signatory, {
     x: x(29),
-    y: y(158),
+    y: y(146),
     size: 11,
     font: bold,
     color: INK,
   });
   page.drawText(config.signatoryRole, {
     x: x(29),
-    y: y(162.5),
+    y: y(150.5),
     size: 9.5,
     font: regular,
     color: MUTED,
@@ -251,12 +250,12 @@ export async function renderCertificatePdf({
       color: { dark: '#022d5d', light: '#ffffff' },
     })
   );
-  page.drawImage(qr, { x: x(247), y: y(165), width: x(21), height: x(21) });
+  page.drawImage(qr, { x: x(247), y: y(153), width: x(21), height: x(21) });
   drawRight(page, `Certificate ID: ${code}`, {
     font: semibold,
     size: 9,
     right: 243,
-    top: 154,
+    top: 142,
     color: INK,
   });
   drawRight(
@@ -268,7 +267,7 @@ export async function renderCertificatePdf({
       font: regular,
       size: 8,
       right: 243,
-      top: 158.5,
+      top: 146.5,
       color: MUTED,
     }
   );
@@ -276,7 +275,7 @@ export async function renderCertificatePdf({
     font: regular,
     size: 8,
     right: 243,
-    top: 163,
+    top: 151,
     color: MUTED,
   });
 

@@ -42,7 +42,7 @@ export default function CertificatePreview({
         <p
           className="absolute inset-x-0 font-semibold uppercase"
           style={{
-            top: mm(52),
+            top: mm(46),
             fontSize: mm(4.2),
             letterSpacing: '0.3em',
             color: '#43358a',
@@ -52,14 +52,14 @@ export default function CertificatePreview({
         </p>
         <p
           className="absolute inset-x-0"
-          style={{ top: mm(63.5), fontSize: mm(4.4), color: '#5f6368' }}
+          style={{ top: mm(57.5), fontSize: mm(4.4), color: '#5f6368' }}
         >
           This is to certify that
         </p>
         <p
           className={`${display.className} absolute inset-x-0 truncate px-[8%]`}
           style={{
-            top: mm(73),
+            top: mm(67),
             fontSize: mm(12),
             lineHeight: 1.1,
             color: '#022d5d',
@@ -70,7 +70,7 @@ export default function CertificatePreview({
         <div
           className="absolute left-1/2 -translate-x-1/2"
           style={{
-            top: mm(93),
+            top: mm(87),
             width: mm(120),
             height: 1,
             background: '#dadce0',
@@ -78,7 +78,7 @@ export default function CertificatePreview({
         />
         <p
           className="absolute inset-x-0 px-[10%]"
-          style={{ top: mm(99), fontSize: mm(4.4), lineHeight: 1.6 }}
+          style={{ top: mm(93), fontSize: mm(4.4), lineHeight: 1.6 }}
         >
           participated in the{' '}
           <b style={{ color: '#202124', fontWeight: 600 }}>
@@ -95,7 +95,7 @@ export default function CertificatePreview({
           className="absolute text-left"
           style={{
             left: mm(29),
-            top: mm(148),
+            top: mm(136),
             fontSize: mm(3.8),
             color: '#202124',
           }}
@@ -117,7 +117,7 @@ export default function CertificatePreview({
           className="absolute text-right"
           style={{
             right: mm(30),
-            top: mm(150),
+            top: mm(138),
             fontSize: mm(3.2),
             color: '#5f6368',
           }}
