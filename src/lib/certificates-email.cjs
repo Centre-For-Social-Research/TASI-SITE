@@ -22,7 +22,7 @@ const FOLLOW = [
 ];
 
 const THANKS = (edition) =>
-  `Thank you for joining us at ${edition.shortName} in New Delhi. Over two days, people from government, industry, academia and civil society came together to talk about keeping people safe online, and we are glad you were in the room.`;
+  `Thank you for joining us at ${edition.shortName} and for helping make it a resounding success. Over two days in New Delhi, more than 100 speakers from 20 countries came together to talk about keeping people safe online, and we are glad you were in the room.`;
 
 const CERTIFICATE_LINES = [
   "Your certificate of participation is ready. When you open the link, we'll email you a one-time code to confirm it's you. Then check that your name is spelled the way you want it. Once you confirm it, the name is locked and printed on your certificate.",
@@ -36,9 +36,6 @@ const REMINDER_LINES = (edition) => [
 const LINKEDIN_LINE =
   'You can also add it to the Licenses & certifications section of your LinkedIn profile from the same page.';
 
-const PHOTO_CONSENT_LINE =
-  "We found you using the photo you shared when you registered. If you'd rather we hadn't, reply to this email and we'll delete the folder.";
-
 const FEEDBACK_LINE = (edition) =>
   `Tell us how ${edition.shortName} went so we can make the next one better. It takes about two minutes.`;
 
@@ -50,8 +47,8 @@ const TAG_NOTE =
 
 function photoLine(count) {
   return count === 1
-    ? 'We went through the festival photos and found a photo of you. It is in a folder, ready to view and download.'
-    : `We went through the festival photos and found ${count} of you. They are in one folder, ready to view and download.`;
+    ? 'Your photo from the festival is in a folder, ready to view and download.'
+    : `Your ${count} photos from the festival are in one folder, ready to view and download.`;
 }
 
 // The certificate email doubles as the TASI thank-you email: certificate,
@@ -88,9 +85,9 @@ function buildCertificateEmail({
   const heading = (text) =>
     `<p style="margin:0 auto 10px;max-width:470px;color:#022d5d;font-size:13px;line-height:18px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">${escapeHtml(text)}</p>`;
   const solid = (href, label) =>
-    `<p style="margin:20px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
+    `<p style="margin:16px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:8px 18px;border-radius:8px;background:#022d5d;color:#ffffff;font-size:14px;line-height:20px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
   const outline = (href, label) =>
-    `<p style="margin:18px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:10px 22px;border-radius:10px;border:1.5px solid #022d5d;color:#022d5d;font-size:15px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
+    `<p style="margin:16px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:7px 17px;border-radius:8px;border:1px solid #022d5d;color:#022d5d;font-size:14px;line-height:20px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
   const section = (inner, size = 16, line = 25) =>
     `<tr><td align="center" class="tasi-px tasi-body" style="padding:20px 40px 0;color:#3c4043;font-size:${size}px;line-height:${line}px">${inner}</td></tr>`;
   const testBanner = test
@@ -117,7 +114,7 @@ function buildCertificateEmail({
     blocks.push(
       DIVIDER,
       section(
-        `${heading('Your photos')}${p(photoLine(photo.count), true)}${outline(photo.url, 'See your photos')}${p(PHOTO_CONSENT_LINE)}`
+        `${heading('Your photos')}${p(photoLine(photo.count), true)}${outline(photo.url, 'See your photos')}`
       )
     );
   }
@@ -155,8 +152,6 @@ function buildCertificateEmail({
           'YOUR PHOTOS',
           photoLine(photo.count),
           `See your photos: ${photo.url}`,
-          '',
-          PHOTO_CONSENT_LINE,
           '',
         ]
       : []),

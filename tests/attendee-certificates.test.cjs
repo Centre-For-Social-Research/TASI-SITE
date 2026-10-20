@@ -476,15 +476,16 @@ test('the thank-you email adds photos and feedback when available', () => {
     withPhotos.subject,
     'Thank you for joining TASI 2026: your certificate and photos'
   );
-  assert.match(withPhotos.text, /found 12 of you/);
+  assert.match(withPhotos.text, /Your 12 photos from the festival/);
   assert.match(withPhotos.html, /drive\.google\.com\/drive\/folders\/abc_123/);
-  assert.match(withPhotos.text, /photo you shared when you registered/);
+  assert.doesNotMatch(withPhotos.text, /found|registered/);
+  assert.match(withPhotos.text, /more than 100 speakers from 20 countries/);
   assert.match(withPhotos.text, /https:\/\/tally\.so\/r\/dbWapr/);
   const one = buildCertificateEmail({
     ...base,
     photos: { url: 'https://drive.google.com/drive/folders/x', count: 1 },
   });
-  assert.match(one.text, /found a photo of you/);
+  assert.match(one.text, /Your photo from the festival/);
   const without = buildCertificateEmail(base);
   assert.doesNotMatch(without.text, /YOUR PHOTOS/);
   assert.match(without.text, /Share your feedback/);
