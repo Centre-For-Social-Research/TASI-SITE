@@ -56,7 +56,7 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
-export default function CheckInPanel() {
+export default function CheckInPanel({ canExport = false }) {
   const [deskLabel, setDeskLabel] = useState('Main Desk');
   const [selectedEventDay, setSelectedEventDay] = useState(() =>
     getDefaultCheckInDay()
@@ -485,7 +485,7 @@ export default function CheckInPanel() {
           description="Scan or look up attendees at the desk. Exports include actual check-ins across both event days, including spot registrations. Each day attended has a row; use email to count unique people."
           actions={
             <div className="flex flex-wrap gap-2">
-              {['csv', 'xlsx'].map((format) => (
+              {(canExport ? ['csv', 'xlsx'] : []).map((format) => (
                 <button
                   key={format}
                   type="button"

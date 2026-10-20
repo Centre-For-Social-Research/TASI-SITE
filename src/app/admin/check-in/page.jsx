@@ -28,7 +28,7 @@ export default async function AdminCheckInPage() {
   return (
     <AdminShell operator={sessionOperator} currentPath="/admin/check-in">
       {logOperatorEvent('admin.checkin.shell', 'admin.checkin.page', operator)}
-      <CheckInPanel operator={sessionOperator} />
+      <CheckInPanel canExport={operator.role === 'admin'} />
     </AdminShell>
   );
 }

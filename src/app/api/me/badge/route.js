@@ -1,5 +1,8 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import clerkVerifiedEmails from '@/lib/clerk-verified-emails.cjs';
+
+const { getVerifiedUserEmails } = clerkVerifiedEmails;
 
 const SELECT = `
   id,
@@ -48,8 +51,9 @@ export async function GET() {
   }
 
   const user = await currentUser();
-  const emails = (user?.emailAddresses || [])
-    .map((entry) => normalizeEmail(entry.emailAddress))
+  // Unverified addresses must not unlock someone else's registration.
+  const emails = getVerifiedUserEmails(user)
+    .emails.map(normalizeEmail)
     .filter(Boolean);
 
   if (emails.length === 0) {

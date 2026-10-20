@@ -5,6 +5,7 @@ import {
   addStoredEmail,
   removeStoredEmail,
 } from '@/lib/admin-email-store';
+import { recordAdminAuditEvent } from '@/lib/admin-audit';
 import {
   getAzureWhatsAppConfig,
   isAzureWhatsAppConfigured,
@@ -180,12 +181,13 @@ export async function PATCH(request) {
     );
   }
 
+  // Split the same way as registration-auth so both agree on the env lists.
   const envAdminEmails = (process.env.CLERK_ADMIN_EMAILS || '')
-    .split(',')
+    .split(/[,\n]+/)
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
   const envReviewerEmails = (process.env.CLERK_REVIEWER_EMAILS || '')
-    .split(',')
+    .split(/[,\n]+/)
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
   const normalised = email.toLowerCase().trim();
@@ -195,6 +197,20 @@ export async function PATCH(request) {
       return Response.json(
         { ok: false, error: 'Role must be admin or reviewer' },
         { status: 400 }
+      );
+    }
+    try {
+      await recordAdminAuditEvent(authResult.operator, {
+        action: 'operator_email.granted',
+        targetType: 'operator_email',
+        targetId: normalised,
+        details: { role },
+      });
+    } catch (error) {
+      console.error(error);
+      return Response.json(
+        { ok: false, error: 'Failed to save' },
+        { status: 500 }
       );
     }
     const ok = await addStoredEmail(normalised, role, actorEmail);
@@ -213,6 +229,19 @@ export async function PATCH(request) {
             'Env-var emails cannot be removed here — update CLERK_ADMIN_EMAILS or CLERK_REVIEWER_EMAILS in your environment.',
         },
         { status: 400 }
+      );
+    }
+    try {
+      await recordAdminAuditEvent(authResult.operator, {
+        action: 'operator_email.removed',
+        targetType: 'operator_email',
+        targetId: normalised,
+      });
+    } catch (error) {
+      console.error(error);
+      return Response.json(
+        { ok: false, error: 'Failed to remove' },
+        { status: 500 }
       );
     }
     const ok = await removeStoredEmail(normalised);

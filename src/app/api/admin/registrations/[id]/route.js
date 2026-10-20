@@ -4,8 +4,10 @@ import {
 } from '@/lib/registration-auth';
 import {
   getRegistrationDetail,
+  getRegistrationAuditSnapshot,
   deleteRegistration,
 } from '@/lib/registration-ops-db';
+import { recordAdminAuditEvent } from '@/lib/admin-audit';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { PROFILE_BUCKET } from '@/lib/registration-utils';
 import { adminJson } from '@/lib/admin-api-cache';
@@ -58,6 +60,17 @@ export async function DELETE(_request, context) {
 
   try {
     const params = await context.params;
+    const snapshot = await getRegistrationAuditSnapshot(params.id);
+    if (!snapshot) {
+      return adminJson({ error: 'Registration not found.' }, { status: 404 });
+    }
+    // Record first: if the audit write fails, the delete does not happen.
+    await recordAdminAuditEvent(authResult.operator, {
+      action: 'registration.deleted',
+      targetType: 'registration',
+      targetId: snapshot.id,
+      details: snapshot,
+    });
     await deleteRegistration(params.id);
     return adminJson({ success: true });
   } catch (error) {

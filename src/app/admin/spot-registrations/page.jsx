@@ -30,7 +30,7 @@ export default async function SpotRegistrationsPage() {
       currentPath="/admin/spot-registrations"
     >
       {/* Admins and reviewers both work the desk and can register walk-ins. */}
-      <SpotRegistrationsPanel canManage />
+      <SpotRegistrationsPanel canManage canExport={operator.role === 'admin'} />
     </AdminShell>
   );
 }

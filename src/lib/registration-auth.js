@@ -2,9 +2,11 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { getClerkConfigDiagnostics } from '@/lib/clerk-config';
 import operatorAuthUi from '@/lib/operator-auth-ui.cjs';
 import operatorSession from '@/lib/operator-session.cjs';
+import clerkVerifiedEmails from '@/lib/clerk-verified-emails.cjs';
 import { getStoredAdminEmails } from '@/lib/admin-email-store';
 
 const { getOperatorNavbarState } = operatorAuthUi;
+const { getVerifiedUserEmails } = clerkVerifiedEmails;
 const { toOperatorSession, logOperatorEvent } = operatorSession;
 
 function parseEmailList(value) {
@@ -73,10 +75,9 @@ export async function getAuthorizedOperator(context = {}) {
 
     const user = await currentUser();
     const currentUserResolved = Boolean(user?.id);
-    const emails = (user?.emailAddresses || []).map((entry) =>
-      entry.emailAddress.toLowerCase()
-    );
-    const primaryEmail = emails[0] || '';
+    const { emails, primaryEmail: verifiedPrimary } =
+      getVerifiedUserEmails(user);
+    const primaryEmail = verifiedPrimary || emails[0] || '';
     const envAdminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
     const envReviewerEmails = parseEmailList(process.env.CLERK_REVIEWER_EMAILS);
     const stored = await getStoredAdminEmails();

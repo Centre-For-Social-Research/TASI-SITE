@@ -25,9 +25,9 @@ const SOURCES = [
       'id, status, total_items, sent_items, failed_items, created_by_email, created_at',
   },
   {
-    table: 'admin_email_overrides',
-    actor: 'added_by',
-    select: 'id, email, role, added_by, created_at',
+    table: 'admin_audit_events',
+    actor: 'actor_email',
+    select: 'id, action, actor_email, target_id, details, created_at',
   },
   {
     table: 'form_setting_changes',
@@ -37,6 +37,46 @@ const SOURCES = [
 ];
 
 const FORM_LABELS = new Map(PUBLIC_FORMS.map((form) => [form.key, form.label]));
+
+function describeAuditEvent(event) {
+  const details = event.details || {};
+  switch (event.action) {
+    case 'registration.deleted': {
+      const name = [details.first_name, details.last_name]
+        .filter(Boolean)
+        .join(' ');
+      const label = details.registration_code || event.target_id?.slice(0, 8);
+      return {
+        kind: 'delete',
+        action: `deleted registration ${label}${name ? ` · ${name}` : ''}`,
+      };
+    }
+    case 'speaker.deleted':
+      return {
+        kind: 'delete',
+        action: `removed speaker ${details.speakerName || event.target_id}`,
+      };
+    case 'reminder.deleted':
+      return {
+        kind: 'delete',
+        action: `removed reminder ${event.target_id?.slice(0, 8)}`,
+      };
+    case 'operator_email.granted':
+      return {
+        kind: 'settings',
+        action: `added ${event.target_id} as ${details.role}`,
+      };
+    case 'operator_email.removed':
+      return { kind: 'settings', action: `removed ${event.target_id}` };
+    case 'data.exported':
+      return {
+        kind: 'export',
+        action: `exported ${event.target_id} · ${details.rows ?? '?'} rows · ${details.format || ''}`,
+      };
+    default:
+      return { kind: 'settings', action: event.action };
+  }
+}
 
 function readCursor(value) {
   if (!value) return SOURCES.map(() => 0);
@@ -93,7 +133,7 @@ export async function GET(request) {
     statusHistoryResult,
     emailJobsResult,
     passJobsResult,
-    emailOverridesResult,
+    auditEventsResult,
     formChangesResult,
   ] = results;
 
@@ -183,18 +223,17 @@ export async function GET(request) {
     }
   }
 
-  if (!emailOverridesResult.error) {
-    for (const o of emailOverridesResult.data || []) {
-      const actor = o.added_by || 'system';
-      const action = `added ${o.email} as ${o.role}`;
+  if (!auditEventsResult.error) {
+    for (const e of auditEventsResult.data || []) {
+      const { action, kind } = describeAuditEvent(e);
       entries.push({
-        actor,
+        actor: e.actor_email || 'system',
         action,
-        ts: o.created_at,
-        kind: 'settings',
-        ref: o.email,
+        ts: e.created_at,
+        kind,
+        ref: e.target_id,
         source: 3,
-        rowId: o.id,
+        rowId: e.id,
       });
     }
   }
