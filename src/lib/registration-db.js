@@ -407,8 +407,16 @@ export async function getConfirmedRegistrationsForPassIssue() {
   );
 }
 
-export async function issuePassForRegistration({ registrationId, operator }) {
-  const registration = await getRegistrationById(registrationId);
+export async function issuePassForRegistration({
+  registrationId,
+  registration: loadedRegistration = null,
+  operator,
+}) {
+  // Callers that already hold the full row (the QR worker) pass it in.
+  const registration =
+    loadedRegistration?.id === registrationId
+      ? loadedRegistration
+      : await getRegistrationById(registrationId);
 
   if (registration.status !== 'confirmed') {
     throw new Error('Only confirmed attendees can receive a QR pass.');

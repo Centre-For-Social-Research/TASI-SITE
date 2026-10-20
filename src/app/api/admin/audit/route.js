@@ -34,6 +34,44 @@ const SOURCES = [
     actor: 'changed_by_email',
     select: 'id, form_key, is_open, changed_by_email, created_at',
   },
+  // Individual sends from the reminders, guest and speaker tabs. Each row is
+  // one email attempt, recorded by the tab that sent it.
+  {
+    table: 'reminder_deliveries',
+    actor: 'actor_email',
+    select:
+      'id, delivery_status, recipient_email, actor_email, created_at, campaign:reminder_campaigns(name)',
+    describeSend: (row) => {
+      const campaign = Array.isArray(row.campaign)
+        ? row.campaign[0]
+        : row.campaign;
+      return `reminder · ${campaign?.name || 'campaign'} → ${row.recipient_email}`;
+    },
+    ref: (row) => row.recipient_email,
+  },
+  {
+    table: 'guest_invitation_deliveries',
+    actor: 'actor_email',
+    select:
+      'id, delivery_status, recipient_email, guest_name, actor_email, created_at',
+    describeSend: (row) =>
+      `guest invitation → ${row.guest_name || row.recipient_email}`,
+    ref: (row) => row.recipient_email,
+  },
+  {
+    table: 'speaker_badge_deliveries',
+    actor: 'actor_email',
+    select: 'id, delivery_status, speaker_name, actor_email, created_at',
+    describeSend: (row) => `speaker badge → ${row.speaker_name}`,
+    ref: (row) => row.speaker_name,
+  },
+  {
+    table: 'speaker_photo_deliveries',
+    actor: 'actor_email',
+    select: 'id, delivery_status, speaker_name, actor_email, created_at',
+    describeSend: (row) => `speaker photos → ${row.speaker_name}`,
+    ref: (row) => row.speaker_name,
+  },
 ];
 
 const FORM_LABELS = new Map(PUBLIC_FORMS.map((form) => [form.key, form.label]));
@@ -252,6 +290,21 @@ export async function GET(request) {
       });
     }
   }
+
+  SOURCES.forEach((source, index) => {
+    if (!source.describeSend) return;
+    for (const row of results[index].data || []) {
+      entries.push({
+        actor: row.actor_email || 'system',
+        action: `${source.describeSend(row)} · ${row.delivery_status || 'queued'}`,
+        ts: row.created_at,
+        kind: 'send',
+        ref: source.ref(row),
+        source: index,
+        rowId: row.id,
+      });
+    }
+  });
 
   entries.sort(
     (a, b) =>

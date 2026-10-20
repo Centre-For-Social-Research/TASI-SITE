@@ -59,6 +59,7 @@ const KIND_COLOR = {
   settings: 'var(--adm-ink-3)',
   delete: 'var(--adm-bad)',
   export: 'var(--adm-warn)',
+  send: 'var(--adm-accent)',
 };
 
 const KIND_LABEL = {
@@ -69,6 +70,7 @@ const KIND_LABEL = {
   settings: 'CFG',
   delete: 'DEL',
   export: 'EXPORT',
+  send: 'SEND',
 };
 
 function Btn({
