@@ -119,8 +119,29 @@
 }
 
 .admin-v2 .adm-page-content {
-  animation: adm-fade-up 0.4s ease-out forwards;
   opacity: 1;
+}
+
+/* Route-change placeholder (src/app/admin/loading.jsx) */
+.admin-v2 .adm-route-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-v2 .adm-route-loading-bar {
+  border-radius: 10px;
+  background: var(--adm-panel-2);
+  animation: adm-route-pulse 1.2s ease-in-out infinite;
+}
+@keyframes adm-route-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-v2 .adm-route-loading-bar {
+    animation: none;
+  }
 }
 
 /* ── Nav button hover ───────────────────────────────────────────────────── */

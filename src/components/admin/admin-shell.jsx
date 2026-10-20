@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Toaster } from 'sonner';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { buildAdminNavigation } from '@/lib/admin-shell-utils.cjs';
 import AdminCommandPalette from '@/components/admin/admin-command-palette';
@@ -322,7 +322,7 @@ function getInitials(name) {
 }
 
 /* ── Sidebar ────────────────────────────────────────────────────────────── */
-function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
+function Sidebar({ currentPath, navSections, operator, onSignOut }) {
   const isActive = (href) => currentPath.startsWith(href);
 
   const navLabels = {};
@@ -401,13 +401,16 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
           const active = isActive(href);
           const label = PAGE_TITLES[href]?.title || href;
           return (
-            <button
+            <Link
               key={href}
+              href={href}
               className="adm-nav-btn"
-              onClick={() => navigate(href)}
+              aria-current={active ? 'page' : undefined}
               style={{
                 width: '100%',
                 textAlign: 'left',
+                textDecoration: 'none',
+                boxSizing: 'border-box',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
@@ -460,7 +463,7 @@ function Sidebar({ currentPath, navigate, navSections, operator, onSignOut }) {
                   {meta.badgeCount}
                 </span>
               )}
-            </button>
+            </Link>
           );
         })}
       </nav>
@@ -817,10 +820,11 @@ function TopBar({ currentPath, onPalette, operator }) {
 }
 
 /* ── Main shell ──────────────────────────────────────────────────────────── */
-export default function AdminShell({ operator, currentPath, children }) {
+export default function AdminShell({ operator, children }) {
   const { signOut } = useClerk();
   const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
+  const currentPath = usePathname() || '/admin/registrations';
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   useEffect(() => {
@@ -866,7 +870,6 @@ export default function AdminShell({ operator, currentPath, children }) {
     >
       <Sidebar
         currentPath={currentPath}
-        navigate={router.push}
         navSections={navSections}
         operator={operator}
         onSignOut={handleSignOut}
@@ -886,7 +889,6 @@ export default function AdminShell({ operator, currentPath, children }) {
         />
         <main
           className="adm-page-content"
-          key={currentPath}
           style={{ flex: 1, padding: '24px 28px 48px 28px' }}
         >
           {children}
