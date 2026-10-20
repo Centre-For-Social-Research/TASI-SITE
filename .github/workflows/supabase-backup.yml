@@ -87,6 +87,12 @@ jobs:
           S3_ENDPOINT: ${{ secrets.SUPABASE_S3_ENDPOINT }}
         run: |
           set -euo pipefail
+          # AWS CLI 2.38 made the CRT transfer client the default everywhere.
+          # Its split, ranged downloads are rejected by Supabase's S3-compatible
+          # storage (every GetObject failed with an empty error from the
+          # 2026-10-18 runner image onwards), so pin the classic client.
+          aws --version
+          aws configure set default.s3.preferred_transfer_client classic
           for bucket in registration-profile-photos registration-pass-images chat-attachments; do
             echo "Syncing bucket: ${bucket}"
             mkdir -p "${BACKUP_DIR}/storage/${bucket}"
