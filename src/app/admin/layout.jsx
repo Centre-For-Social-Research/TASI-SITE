@@ -22,7 +22,7 @@ export default async function AdminLayout({ children }) {
   const operator = await getAuthorizedOperator({ route: 'admin.layout' });
 
   return (
-    <TasiClerkProvider>
+    <TasiClerkProvider dynamic>
       <AdminExitGuard>
         {operator.authorized ? (
           <AdminShell operator={toOperatorSession(operator)}>
