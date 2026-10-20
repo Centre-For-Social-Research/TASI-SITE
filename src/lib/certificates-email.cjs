@@ -30,17 +30,17 @@ function paragraphs(edition, reminder) {
   }
   return [
     `Thank you for joining us at ${edition.shortName}. It was good to have you in the room.`,
-    `Your certificate of participation is ready. Please check that your name is spelled the way you want it before you download it. You can correct it once or twice on the same page.`,
+    `Your certificate of participation is ready. When you open the link, we'll email you a one-time code to confirm it's you. Then check that your name is spelled the way you want it. Once you confirm it, the name is locked and printed on your certificate.`,
   ];
 }
 
 const AFTER_BUTTON = [
   'You can also add it to the Licenses & certifications section of your LinkedIn profile from the same page.',
-  'The link is personal to you, so please do not forward this email.',
+  'The link is personal to you and works for 30 days, so please do not forward this email. If it expires, you can ask for a new one at trustandsafetyindia.org/certificates.',
 ];
 
 const TAG_NOTE =
-  'If you post about TASI, tag us: Centre for Social Research India and TASI on LinkedIn, @CSR_India on X, and @csr_india on Instagram.';
+  'If you post about TASI, tag us: Centre for Social Research India and TASI on LinkedIn, @CSR_India on X, and @csr_india on Instagram. Use #TASI2026 so we can find your posts.';
 
 function buildCertificateEmail({
   name,
@@ -58,7 +58,7 @@ function buildCertificateEmail({
   const claimUrl = buildClaimUrl({ siteUrl, token });
   const subject = reminder
     ? `Reminder: your ${edition.shortName} certificate is waiting`
-    : `Your ${edition.shortName} certificate of participation`;
+    : `Your ${edition.shortName} certificate is ready`;
   const preheader = reminder
     ? `Your ${edition.shortName} certificate is still waiting. Here is a fresh link.`
     : `Your ${edition.shortName} certificate of participation is ready to download.`;

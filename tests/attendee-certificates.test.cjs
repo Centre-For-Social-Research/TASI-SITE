@@ -134,7 +134,10 @@ test('the certificate email links to the private page and escapes names', () => 
     token: 'T'.repeat(43),
     siteUrl: 'https://trustandsafetyindia.org',
   });
-  assert.equal(email.subject, 'Your TASI 2026 certificate of participation');
+  assert.equal(email.subject, 'Your TASI 2026 certificate is ready');
+  assert.match(email.text, /one-time code/);
+  assert.match(email.text, /works for 30 days/);
+  assert.match(email.text, /#TASI2026/);
   assert.ok(
     email.html.includes(
       `https://trustandsafetyindia.org/certificates/${'T'.repeat(43)}`
