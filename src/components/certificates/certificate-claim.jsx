@@ -79,6 +79,7 @@ export default function CertificateClaim({
   code,
   maskedEmail,
   initialStep,
+  initialCode = '',
   initialName,
   initialChangesLeft,
   issuedOn,
@@ -90,11 +91,17 @@ export default function CertificateClaim({
   const [draft, setDraft] = useState(initialName);
   const [changesLeft, setChangesLeft] = useState(initialChangesLeft);
   const [editing, setEditing] = useState(false);
-  const [codeSent, setCodeSent] = useState(false);
-  const [codeInput, setCodeInput] = useState('');
+  // A code arriving in the link (from the code email) is filled in; the
+  // attendee still taps Verify, so a link scanner opening it uses nothing.
+  const [codeSent, setCodeSent] = useState(Boolean(initialCode));
+  const [codeInput, setCodeInput] = useState(initialCode);
   const [understood, setUnderstood] = useState(false);
   const [busy, setBusy] = useState('');
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState(
+    initialCode
+      ? { ok: true, text: 'Your code is filled in. Tap Verify to continue.' }
+      : null
+  );
   const [copied, setCopied] = useState(false);
   const base = `/api/certificates/${encodeURIComponent(token)}`;
 
@@ -181,51 +188,62 @@ export default function CertificateClaim({
                 </p>
               </div>
             </div>
-            {codeSent ? (
-              <form
-                onSubmit={verifyCode}
-                className="mt-6 flex flex-col gap-3 sm:flex-row"
-              >
-                <Input
-                  value={codeInput}
-                  onChange={(event) =>
-                    setCodeInput(
-                      event.target.value.replace(/\D/g, '').slice(0, 6)
-                    )
-                  }
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  placeholder="6-digit code"
-                  aria-label="6-digit code"
-                  className="h-12 flex-1 rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900"
-                />
+            {codeSent ? null : (
+              <div className="mt-6">
                 <Button
-                  type="submit"
-                  disabled={busy === 'verify' || codeInput.length !== 6}
+                  type="button"
+                  onClick={sendCode}
+                  disabled={busy === 'code'}
                   className={PRIMARY}
                 >
-                  {busy === 'verify' ? 'Checking…' : 'Verify'}
+                  {busy === 'code' ? 'Sending…' : 'Email me a code'}
                 </Button>
-              </form>
-            ) : null}
-            <div className="mt-4">
+                <p className="mt-6 text-xs font-semibold text-stone-500 dark:text-slate-400">
+                  Already have a code from us? Enter it here.
+                </p>
+              </div>
+            )}
+            <form
+              onSubmit={verifyCode}
+              className={`${codeSent ? 'mt-6' : 'mt-2'} flex flex-col gap-3 sm:flex-row`}
+            >
+              <Input
+                value={codeInput}
+                onChange={(event) =>
+                  setCodeInput(
+                    event.target.value.replace(/\D/g, '').slice(0, 6)
+                  )
+                }
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="6-digit code"
+                aria-label="6-digit code"
+                className="h-12 flex-1 rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900"
+              />
               <Button
-                type="button"
-                onClick={sendCode}
-                disabled={busy === 'code'}
+                type="submit"
+                disabled={busy === 'verify' || codeInput.length !== 6}
                 className={
                   codeSent
-                    ? `${BTN} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`
-                    : PRIMARY
+                    ? PRIMARY
+                    : `${BTN} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`
                 }
               >
-                {busy === 'code'
-                  ? 'Sending…'
-                  : codeSent
-                    ? 'Send a new code'
-                    : 'Email me a code'}
+                {busy === 'verify' ? 'Checking…' : 'Verify'}
               </Button>
-            </div>
+            </form>
+            {codeSent ? (
+              <div className="mt-4">
+                <Button
+                  type="button"
+                  onClick={sendCode}
+                  disabled={busy === 'code'}
+                  className={`${BTN} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`}
+                >
+                  {busy === 'code' ? 'Sending…' : 'Send a new code'}
+                </Button>
+              </div>
+            ) : null}
           </div>
         ) : null}
 

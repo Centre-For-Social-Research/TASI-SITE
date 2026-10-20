@@ -51,8 +51,13 @@ const PROBLEMS = {
   ],
 };
 
-export default async function Page({ params }) {
+export default async function Page({ params, searchParams }) {
   const { token } = await params;
+  // The code email links here with ?code=123456 so the attendee does not
+  // have to copy it. Only a well-formed code is passed on; nothing is used
+  // until they tap Verify.
+  const codeParam = String((await searchParams)?.code || '');
+  const initialCode = /^\d{6}$/.test(codeParam) ? codeParam : '';
   const link = await resolveCertificateLink(token);
   const certificate = link.certificate;
   let initialStep = 'verify';
@@ -96,6 +101,7 @@ export default async function Page({ params }) {
                   code={certificate.code}
                   maskedEmail={maskEmail(certificate.email)}
                   initialStep={initialStep}
+                  initialCode={initialStep === 'verify' ? initialCode : ''}
                   initialName={certificate.name}
                   initialChangesLeft={Math.max(
                     0,

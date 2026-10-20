@@ -8,9 +8,19 @@ import { sendApplicantConfirmationEmail } from '@/lib/resend';
 import { logoAttachment } from '@/lib/certificates-send';
 import certificatesEmail from '@/lib/certificates-email.cjs';
 import certificateSession from '@/lib/certificate-session.cjs';
+import certificateUtils from '@/lib/certificate-utils.cjs';
 
 const { CERTIFICATE_REPLY_TO, buildCertificateCodeEmail } = certificatesEmail;
 const { maskEmail } = certificateSession;
+const { buildClaimUrl } = certificateUtils;
+
+function siteUrl() {
+  return (
+    process.env.SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'https://trustandsafetyindia.org'
+  );
+}
 
 // Sends a one-time code to the email the certificate was issued to. The
 // code, not the link alone, is what opens the certificate.
@@ -34,6 +44,7 @@ export async function POST(request, context) {
     const email = buildCertificateCodeEmail({
       name: link.certificate.name,
       code,
+      openUrl: `${buildClaimUrl({ siteUrl: siteUrl(), token })}?code=${code}`,
     });
     const delivery = await sendApplicantConfirmationEmail({
       to: link.certificate.email,
