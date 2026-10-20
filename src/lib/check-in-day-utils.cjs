@@ -36,6 +36,24 @@ function formatDateInTimeZone(value, timeZone = CHECK_IN_TIME_ZONE) {
   return `${byType.year}-${byType.month}-${byType.day}`;
 }
 
+function shiftIsoDate(isoDate, days) {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+// Passes check people in from the day before the first event day to the day
+// after the last (India time). Outside that window a scan is refused, so a
+// QR pass stops working once the event is over. Update CHECK_IN_DAYS for the
+// next edition and the window moves with it.
+function isCheckInWindowOpen(now = new Date()) {
+  const localDate = formatDateInTimeZone(now);
+  if (!localDate) return false;
+  const opens = shiftIsoDate(CHECK_IN_DAYS[0].date, -1);
+  const closes = shiftIsoDate(CHECK_IN_DAYS[CHECK_IN_DAYS.length - 1].date, 1);
+  return localDate >= opens && localDate <= closes;
+}
+
 function getDefaultCheckInDay(now = new Date()) {
   const localDate = formatDateInTimeZone(now);
   const exactDay = CHECK_IN_DAYS.find((day) => day.date === localDate);
@@ -178,6 +196,7 @@ module.exports = {
   getCheckInDayShortLabel,
   getDefaultCheckInDay,
   getCheckInForDay,
+  isCheckInWindowOpen,
   isCheckedInForDay,
   normalizeCheckInDay,
   normalizeCheckIns,

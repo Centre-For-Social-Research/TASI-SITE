@@ -73,7 +73,7 @@ test('auth-only layouts mount the shared Clerk provider', () => {
   const notAuthorizedLayout = readFile('src/app/not-authorized/layout.tsx');
 
   assert.match(adminLayout, /import TasiClerkProvider/);
-  assert.match(adminLayout, /<TasiClerkProvider>/);
+  assert.match(adminLayout, /<TasiClerkProvider dynamic>/);
   assert.match(adminLayout, /<AdminExitGuard>[\s\S]*<\/AdminExitGuard>/);
   assert.match(
     adminLayout,
@@ -133,7 +133,17 @@ test('global proxy runs Clerk middleware only for auth-backed routing', () => {
   assert.match(proxy, /if \(isClerkBackedRoute\(request\)\) \{/);
   assert.match(
     proxy,
-    /const response = \(await clerkProxy\(request, event\)\) \?\? NextResponse\.next\(\);/
+    /const handler = isAdminPage\(request\) \? clerkAdminPageProxy : clerkProxy;/
+  );
+  assert.match(
+    proxy,
+    /const response = \(await handler\(request, event\)\) \?\? NextResponse\.next\(\);/
+  );
+  // Only admin pages get Clerk's strict nonce CSP; sign-in may be static.
+  assert.match(proxy, /contentSecurityPolicy: \{\s*strict: true,/);
+  assert.match(
+    proxy,
+    /const isAdminPage = createRouteMatcher\(\['\/admin\(\.\*\)'\]\);/
   );
   assert.match(
     proxy,

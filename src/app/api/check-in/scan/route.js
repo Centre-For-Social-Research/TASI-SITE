@@ -9,7 +9,7 @@ import {
 } from '@/lib/check-in-operations';
 import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
-const { normalizeCheckInDay } = checkInDayUtils;
+const { isCheckInWindowOpen, normalizeCheckInDay } = checkInDayUtils;
 
 export async function POST(request) {
   // Reviewers staff the registration desk, so they can check guests in.
@@ -18,6 +18,16 @@ export async function POST(request) {
   });
   if (!authResult.ok) {
     return authResult.response;
+  }
+
+  if (!isCheckInWindowOpen()) {
+    return Response.json(
+      {
+        error: 'Check-in is closed outside the event dates.',
+        code: 'CHECK_IN_CLOSED',
+      },
+      { status: 403 }
+    );
   }
 
   try {
@@ -44,6 +54,16 @@ export async function POST(request) {
 
     if (!registration) {
       return Response.json({ error: 'Attendee not found.' }, { status: 404 });
+    }
+
+    // A revoked pass must not check anyone in, even for a confirmed attendee.
+    if (pass && pass.status !== 'issued') {
+      return Response.json({
+        success: false,
+        result: 'invalid',
+        registration,
+        eventDay,
+      });
     }
 
     if (registration.status !== 'confirmed') {
