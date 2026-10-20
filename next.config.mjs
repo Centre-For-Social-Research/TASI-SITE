@@ -121,6 +121,12 @@ const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   outputFileTracingRoot: workspaceRoot,
+  // Certificate PDFs read their private template and fonts from disk at
+  // runtime, so the serverless bundles for those routes must include them.
+  outputFileTracingIncludes: {
+    '/api/certificates/**': ['./src/assets/certificates/**/*'],
+    '/api/admin/certificates/**': ['./src/assets/certificates/**/*'],
+  },
   turbopack: {
     root: workspaceRoot,
   },

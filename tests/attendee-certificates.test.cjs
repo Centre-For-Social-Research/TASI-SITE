@@ -1,0 +1,246 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const {
+  CODE_ALPHABET,
+  buildLinkedInAddUrl,
+  buildVerifyUrl,
+  certificateFileName,
+  cleanCertificateName,
+  isValidCertificateCode,
+  isValidClaimToken,
+  nameFromRegistration,
+  newCertificateCode,
+  newClaimToken,
+  normalizeCertificateCode,
+  smartTitleCase,
+  validateCertificateName,
+} = require('../src/lib/certificate-utils.cjs');
+const { buildCertificateEmail } = require('../src/lib/certificates-email.cjs');
+const { buildAdminNavigation } = require('../src/lib/admin-shell-utils.cjs');
+
+const read = (file) => fs.readFileSync(path.join(process.cwd(), file), 'utf8');
+
+test('certificate codes are random, unambiguous and well formed', () => {
+  const codes = new Set(
+    Array.from({ length: 2000 }, () => newCertificateCode('2026'))
+  );
+  assert.equal(codes.size, 2000);
+  for (const code of codes) {
+    assert.match(code, /^TASI26-[A-Z0-9]{8}$/);
+    assert.ok(isValidCertificateCode(code));
+    assert.doesNotMatch(code.slice(7), /[01OIL]/);
+  }
+  assert.ok(!/[01OIL]/.test(CODE_ALPHABET));
+  assert.ok(isValidCertificateCode(' tasi26-abcd2345 '));
+  assert.equal(
+    normalizeCertificateCode(' tasi26-abcd2345 '),
+    'TASI26-ABCD2345'
+  );
+  assert.ok(!isValidCertificateCode('TASI26-ABCD0345'));
+  assert.ok(!isValidCertificateCode('TASI26-ABC'));
+});
+
+test('download links use 256-bit tokens', () => {
+  const token = newClaimToken();
+  assert.ok(isValidClaimToken(token));
+  assert.equal(Buffer.from(token, 'base64url').length, 32);
+  assert.ok(!isValidClaimToken('short'));
+  assert.ok(!isValidClaimToken(`${token}!`));
+});
+
+test('names are tidied only when typed all in one case', () => {
+  assert.equal(smartTitleCase('RAHUL RAWAT'), 'Rahul Rawat');
+  assert.equal(smartTitleCase('kanzil rodrigues'), 'Kanzil Rodrigues');
+  assert.equal(smartTitleCase("o'BRIEN-smith"), "o'BRIEN-smith");
+  assert.equal(smartTitleCase('McDonald'), 'McDonald');
+  assert.equal(
+    nameFromRegistration({ firstName: ' PRASANTH ', lastName: 'PR' }),
+    'Prasanth Pr'
+  );
+  assert.equal(cleanCertificateName('  Ana   María  '), 'Ana María');
+});
+
+test('certificate names allow Latin letters and accents only', () => {
+  assert.equal(
+    validateCertificateName('Jarūnė Preikšaitė'),
+    'Jarūnė Preikšaitė'
+  );
+  assert.equal(
+    validateCertificateName('Dr. Seán O’Neil-Smith'),
+    'Dr. Seán O’Neil-Smith'
+  );
+  for (const bad of [
+    '',
+    'A',
+    '<b>Hi</b>',
+    'Name 123',
+    'नमस्ते',
+    'x'.repeat(81),
+    'https://evil.example',
+  ]) {
+    assert.throws(() => validateCertificateName(bad));
+  }
+});
+
+test('verification and LinkedIn links point at the public verify page', () => {
+  const url = buildVerifyUrl({
+    siteUrl: 'https://trustandsafetyindia.org/',
+    code: 'TASI26-ABCD2345',
+  });
+  assert.equal(
+    url,
+    'https://trustandsafetyindia.org/certificates/verify/TASI26-ABCD2345'
+  );
+  const li = new URL(
+    buildLinkedInAddUrl({
+      edition: '2026',
+      code: 'TASI26-ABCD2345',
+      siteUrl: 'https://trustandsafetyindia.org',
+    })
+  );
+  assert.equal(li.hostname, 'www.linkedin.com');
+  assert.equal(li.searchParams.get('certId'), 'TASI26-ABCD2345');
+  assert.equal(li.searchParams.get('certUrl'), url);
+  assert.equal(
+    li.searchParams.get('organizationName'),
+    'Centre for Social Research'
+  );
+  assert.equal(
+    certificateFileName({ name: 'Jarūnė Preikšaitė', code: 'TASI26-ABCD2345' }),
+    'TASI-2026-Certificate-Jarune-Preiksaite-TASI26-ABCD2345.pdf'
+  );
+});
+
+test('the certificate email links to the private page and escapes names', () => {
+  const email = buildCertificateEmail({
+    name: '<b>Ana</b>',
+    edition: '2026',
+    token: 'T'.repeat(43),
+    siteUrl: 'https://trustandsafetyindia.org',
+  });
+  assert.equal(email.subject, 'Your TASI 2026 certificate of participation');
+  assert.ok(
+    email.html.includes(
+      `https://trustandsafetyindia.org/certificates/${'T'.repeat(43)}`
+    )
+  );
+  assert.doesNotMatch(email.html, /<b>Ana<\/b>/);
+  assert.match(
+    email.text,
+    /Get your certificate: https:\/\/trustandsafetyindia\.org\/certificates\//
+  );
+  assert.doesNotMatch(email.html, /—/);
+  const testEmail = buildCertificateEmail({
+    name: 'A',
+    edition: '2026',
+    token: 'x',
+    test: true,
+  });
+  assert.match(testEmail.subject, /^\[TEST\]/);
+});
+
+test('the certificate is not a public file and the signature stays private', () => {
+  assert.ok(
+    fs.existsSync('src/assets/certificates/tasi-2026-attendee-template.jpg')
+  );
+  assert.ok(!fs.existsSync('public/certificates'));
+  const pdf = read('src/lib/certificate-pdf.js');
+  assert.match(pdf, /src', 'assets', 'certificates'/);
+  assert.doesNotMatch(pdf, /path\.join\([^)]*'public'/);
+});
+
+test('tokens are stored hashed and never selected for clients', () => {
+  const db = read('src/lib/certificates-db.js');
+  assert.match(db, /createHash\('sha256'\)/);
+  const select = db.slice(
+    db.indexOf('const CERT_SELECT'),
+    db.indexOf('`;', db.indexOf('const CERT_SELECT'))
+  );
+  assert.doesNotMatch(select, /claim_token/);
+  const migration = read(
+    'supabase/migrations/20261020120000_attendee_certificates.sql'
+  );
+  assert.match(migration, /claim_token_hash text not null unique/);
+  assert.doesNotMatch(migration, /claim_token text/);
+  assert.match(read('supabase/schema.sql'), /attendee_certificate_events/);
+});
+
+test('public routes are rate limited, validate input and leak nothing', () => {
+  for (const file of [
+    'src/app/api/certificates/[token]/pdf/route.js',
+    'src/app/api/certificates/[token]/name/route.js',
+    'src/app/api/certificates/request/route.js',
+  ]) {
+    const source = read(file);
+    assert.match(source, /protectPublic(Post)?Route/, file);
+  }
+  assert.match(
+    read('src/app/api/certificates/[token]/pdf/route.js'),
+    /isValidClaimToken\(token\)/
+  );
+  assert.match(
+    read('src/app/api/certificates/[token]/pdf/route.js'),
+    /no-store/
+  );
+  assert.match(
+    read('src/app/api/certificates/request/route.js'),
+    /NEUTRAL_MESSAGE/
+  );
+  const verify = read('src/app/certificates/verify/[code]/page.jsx');
+  assert.doesNotMatch(verify, /record\.(email|organization|registration)/);
+  assert.match(
+    read('src/lib/certificates-db.js'),
+    /select\('code,edition,recipient_name,status,issued_at'\)/
+  );
+  assert.match(
+    read('src/app/certificates/[token]/page.jsx'),
+    /referrer: 'no-referrer'/
+  );
+});
+
+test('every admin change requires an admin; reads allow reviewers', () => {
+  const base = 'src/app/api/admin/certificates';
+  for (const file of [
+    '[id]/send/route.js',
+    '[id]/test/route.js',
+    '[id]/revoke/route.js',
+  ]) {
+    const source = read(`${base}/${file}`);
+    assert.match(source, /requireAdminOperator/, file);
+    assert.doesNotMatch(source, /requireAuthorizedOperator/, file);
+  }
+  assert.match(
+    read(`${base}/route.js`),
+    /export async function POST[\s\S]*requireAdminOperator/
+  );
+  assert.match(
+    read(`${base}/[id]/route.js`),
+    /export async function PATCH[\s\S]*requireAdminOperator/
+  );
+  assert.match(read(`${base}/[id]/pdf/route.js`), /sample: true/);
+});
+
+test('eligibility excludes speakers and walk-ins', () => {
+  const migration = read(
+    'supabase/migrations/20261020120000_attendee_certificates.sql'
+  );
+  assert.match(migration, /r\.status = 'confirmed'/);
+  assert.match(migration, /r\.speaker_flag = false/);
+  assert.match(migration, /r\.priority_tier <> 'Speakers'/);
+  assert.doesNotMatch(
+    migration.slice(migration.indexOf('attendee_certificate_eligible')),
+    /spot_registrations r/
+  );
+});
+
+test('admin navigation lists Certificates', () => {
+  const items = buildAdminNavigation({
+    pathname: '/admin/certificates',
+  }).flatMap((group) => group.items);
+  const item = items.find((entry) => entry.href === '/admin/certificates');
+  assert.equal(item.label, 'Certificates');
+  assert.equal(item.active, true);
+});

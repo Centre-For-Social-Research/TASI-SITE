@@ -220,6 +220,7 @@ const NAV_ICONS = {
   '/admin/guest-invitations': Ico.ticket,
   '/admin/speaker-communications': Ico.badge,
   '/admin/reminders': Ico.bell,
+  '/admin/certificates': Ico.audit,
   '/admin/spot-registrations': Ico.users,
   '/admin/email-jobs': Ico.mail,
   '/admin/delivery': Ico.truck,
@@ -253,6 +254,11 @@ const PAGE_TITLES = {
     kicker: 'REGISTRANTS · REMINDERS',
     title: 'Event Reminders',
     meta: 'Editable copy · Confirmed registrants',
+  },
+  '/admin/certificates': {
+    kicker: 'ATTENDEES · CERTIFICATES',
+    title: 'Certificates',
+    meta: 'Participation certificates · Checked-in attendees',
   },
   '/admin/spot-registrations': {
     kicker: 'DAY-OF · WALK-INS',
@@ -288,6 +294,7 @@ const ADM_NAV_ITEMS = [
   '/admin/guest-invitations',
   '/admin/speaker-communications',
   '/admin/reminders',
+  '/admin/certificates',
   '/admin/spot-registrations',
   '/admin/email-jobs',
   '/admin/delivery',
