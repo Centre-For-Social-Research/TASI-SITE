@@ -1,18 +1,9 @@
-import { after } from 'next/server';
 import { requireAdminOperator } from '@/lib/registration-auth';
-import {
-  StaleRegistrationUpdateError,
-  updateRegistrationStatus,
-} from '@/lib/registration-db';
-import {
-  processRegistrationEmailJob,
-  queueRegistrationEmailJob,
-} from '@/lib/registration-email-job-service';
+import { applyRegistrationReviews } from '@/lib/registration-db';
+import { scheduleRegistrationEmailJob } from '@/lib/registration-email-job-schedule';
+import { MAX_JOB_RETRIES } from '@/lib/registration-job-utils.cjs';
 import { normalizeRegistrationStatus } from '@/lib/registration-utils';
 import { adminJson } from '@/lib/admin-api-cache';
-import reviewEmail from '@/lib/registration-review-email.cjs';
-
-const { getReviewEmailTemplate } = reviewEmail;
 
 export async function POST(request) {
   const authResult = await requireAdminOperator({
@@ -33,8 +24,13 @@ export async function POST(request) {
       );
     }
 
-    const updatedRegistration = await updateRegistrationStatus({
-      registrationId,
+    const result = await applyRegistrationReviews({
+      updates: [
+        {
+          registrationId,
+          expectedUpdatedAt: String(body?.expectedUpdatedAt || '').trim(),
+        },
+      ],
       status: normalizeRegistrationStatus(body?.status),
       reviewNotes:
         typeof body?.reviewNotes === 'string'
@@ -44,71 +40,37 @@ export async function POST(request) {
         typeof body?.speakerFlag === 'boolean' ? body.speakerFlag : undefined,
       vipFlag: typeof body?.vipFlag === 'boolean' ? body.vipFlag : undefined,
       operator: authResult.operator,
-      expectedUpdatedAt: String(body?.expectedUpdatedAt || '').trim(),
+      maxEmailAttempts: MAX_JOB_RETRIES,
     });
 
-    const templateType = getReviewEmailTemplate(
-      updatedRegistration.previousStatus,
-      updatedRegistration.status
-    );
-    let queueResult = { queued: false, notRequired: true };
-    if (templateType) {
-      try {
-        queueResult = await queueRegistrationEmailJob({
-          registrationId: updatedRegistration.id,
-          templateType,
-          recipientEmail: updatedRegistration.email,
-          operator: authResult.operator,
-        });
-      } catch (error) {
-        console.error(
-          'Status saved but registration email could not be queued.',
-          error
-        );
-        queueResult = { queued: false, error: 'Email could not be queued.' };
-      }
+    if (result.missingIds.length) {
+      return adminJson({ error: 'Registration not found.' }, { status: 404 });
     }
 
-    if (queueResult.queued && queueResult.jobId)
-      after(async () => {
-        try {
-          await processRegistrationEmailJob({
-            jobId: queueResult.jobId,
-            operator: {
-              userId: 'system-after-trigger',
-              primaryEmail: 'system-after-trigger@local',
-            },
-          });
-        } catch (error) {
-          console.error(
-            'Failed to process registration email job in background:',
-            error
-          );
-        }
-      });
-
-    return adminJson({
-      success: true,
-      registration: updatedRegistration,
-      emailResult: {
-        queued: Boolean(queueResult.queued),
-        notRequired: Boolean(queueResult.notRequired),
-        sent: false,
-        error: queueResult.queued ? null : queueResult.error || null,
-      },
-    });
-  } catch (error) {
-    if (error instanceof StaleRegistrationUpdateError) {
+    if (result.conflictIds.length) {
       return adminJson(
         {
           error:
             'This registration was changed by another operator. Refresh the attendee and try again.',
-          code: error.code,
+          code: 'STALE_REGISTRATION_UPDATE',
         },
         { status: 409 }
       );
     }
 
+    scheduleRegistrationEmailJob(result.jobId);
+
+    return adminJson({
+      success: true,
+      registration: result.registrations[0],
+      emailResult: {
+        queued: Boolean(result.jobId),
+        notRequired: result.emailCount === 0,
+        sent: false,
+        error: null,
+      },
+    });
+  } catch (error) {
     console.error('Failed to update registration status.', error);
     return adminJson(
       { error: 'Unable to update registration.' },

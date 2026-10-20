@@ -286,9 +286,10 @@ export async function getRegistrationQueueSummary(filters = {}) {
 }
 
 export async function getRegistrationDetail(registrationId) {
-  const registration = await getRegistrationById(registrationId);
   const supabase = getSupabase();
-  const [historyResult, notificationsResult] = await Promise.all([
+  // All three only need the id, so they run together.
+  const [registration, historyResult, notificationsResult] = await Promise.all([
+    getRegistrationById(registrationId),
     supabase
       .from('registration_status_history')
       .select(
@@ -755,49 +756,22 @@ export async function releaseStalePassIssueEmailJobItems(jobId) {
 
 export async function claimPassIssueEmailJobItems({ jobId, limit = 20 } = {}) {
   await releaseStalePassIssueEmailJobItems(jobId);
+  return claimJobItems('claim_pass_issue_email_job_items', jobId, limit);
+}
 
-  const supabase = getSupabase();
-  const { data: items, error } = await supabase
-    .from('pass_issue_email_job_items')
-    .select('id, job_id, registration_id, status, attempt_count, max_attempts')
-    .eq('job_id', jobId)
-    .in('status', ['queued', 'retrying'])
-    .order('created_at', { ascending: true })
-    .limit(limit);
-
+// One statement claims the whole chunk (see the claim_*_job_items RPCs);
+// rows come back unordered, so restore queue order.
+async function claimJobItems(rpcName, jobId, limit) {
+  const { data, error } = await getSupabase().rpc(rpcName, {
+    p_job_id: jobId,
+    p_limit: limit,
+  });
   if (error) {
     throw new Error(error.message);
   }
-
-  const claimed = [];
-
-  for (const item of items || []) {
-    const nextAttemptCount = Number(item.attempt_count || 0) + 1;
-    const { data: updatedItem, error: updateError } = await supabase
-      .from('pass_issue_email_job_items')
-      .update({
-        status: 'processing',
-        attempt_count: nextAttemptCount,
-        last_attempt_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', item.id)
-      .eq('status', item.status)
-      .select(
-        'id, job_id, registration_id, status, attempt_count, max_attempts'
-      )
-      .maybeSingle();
-
-    if (updateError) {
-      throw new Error(updateError.message);
-    }
-
-    if (updatedItem) {
-      claimed.push(updatedItem);
-    }
-  }
-
-  return claimed;
+  return (data || []).sort((a, b) =>
+    String(a.created_at).localeCompare(String(b.created_at))
+  );
 }
 
 export async function updatePassIssueEmailJobItem(itemId, fields) {
@@ -974,50 +948,7 @@ export async function claimRegistrationEmailJobItems({
   jobId,
   limit = 20,
 } = {}) {
-  const supabase = getSupabase();
-  const { data: items, error } = await supabase
-    .from('registration_email_job_items')
-    .select(
-      'id, job_id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
-    )
-    .eq('job_id', jobId)
-    .in('status', ['queued', 'retrying'])
-    .order('created_at', { ascending: true })
-    .limit(limit);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const claimed = [];
-
-  for (const item of items || []) {
-    const nextAttemptCount = Number(item.attempt_count || 0) + 1;
-    const { data: updatedItem, error: updateError } = await supabase
-      .from('registration_email_job_items')
-      .update({
-        status: 'processing',
-        attempt_count: nextAttemptCount,
-        last_attempt_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', item.id)
-      .eq('status', item.status)
-      .select(
-        'id, job_id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
-      )
-      .maybeSingle();
-
-    if (updateError) {
-      throw new Error(updateError.message);
-    }
-
-    if (updatedItem) {
-      claimed.push(updatedItem);
-    }
-  }
-
-  return claimed;
+  return claimJobItems('claim_registration_email_job_items', jobId, limit);
 }
 
 export async function listRegistrationEmailJobItems({
