@@ -22,6 +22,9 @@ export default function CertificatePreview({
   code,
   issuedOn,
   label = 'Preview',
+  // Public verify page: a "Digitally signed" mark sits where the signature
+  // is on the PDF; the real signature is never shown on a public page.
+  signed = false,
 }) {
   return (
     <figure
@@ -91,6 +94,43 @@ export default function CertificatePreview({
           at the India International Centre, New Delhi, organised by the Centre
           for Social Research and the Trust &amp; Safety Festival.
         </p>
+        {signed ? (
+          <div
+            className="absolute flex items-center font-semibold"
+            style={{
+              left: mm(29),
+              top: mm(141),
+              gap: mm(1.2),
+              fontSize: mm(3.4),
+              color: '#9e1b1e',
+              letterSpacing: '0.02em',
+            }}
+          >
+            <svg
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              style={{ width: mm(3.6), height: mm(3.6) }}
+            >
+              <circle
+                cx="8"
+                cy="8"
+                r="7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M4.8 8.3l2.1 2.1 4.3-4.6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Digitally signed
+          </div>
+        ) : null}
         <div
           className="absolute text-left"
           style={{

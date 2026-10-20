@@ -548,11 +548,26 @@ test('a code in the link is only pre-filled, never used without a tap', () => {
   );
   const claim = read('src/components/certificates/certificate-claim.jsx');
   assert.match(claim, /useState\(initialCode\)/);
-  assert.match(claim, /Already have a code from us\? Enter it here\./);
-  // the code box is not hidden behind "Email me a code"
-  assert.doesNotMatch(claim, /\{codeSent \? \(\s*<form/);
+  // a code from the link opens the code box straight away
+  assert.match(claim, /useState\(Boolean\(initialCode\)\)/);
+  assert.doesNotMatch(claim, /Already have a code/);
   // the page does not post the code on load
   assert.doesNotMatch(claim, /useEffect/);
+});
+
+test('the public verify page marks the certificate signed without the signature', () => {
+  const preview = read('src/components/certificates/certificate-preview.jsx');
+  assert.match(preview, /signed = false/);
+  assert.match(preview, /Digitally signed/);
+  assert.doesNotMatch(preview, /signature\.(png|jpe?g|webp)/i);
+  assert.match(
+    read('src/app/certificates/verify/[code]/page.jsx'),
+    /<CertificatePreview\s+signed/
+  );
+  assert.doesNotMatch(
+    read('src/components/certificates/certificate-claim.jsx'),
+    /<CertificatePreview[^>]*\bsigned\b/
+  );
 });
 
 test('any live code works and wrong guesses still count', () => {
