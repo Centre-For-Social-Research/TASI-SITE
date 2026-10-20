@@ -145,26 +145,30 @@ export async function renderCertificatePdf({
 
   // Personal microtext: the holder's name and certificate ID in a fine line
   // just inside the top and bottom of the border. Too small to retype
-  // cleanly, and it must match the name and ID printed above.
+  // cleanly, and it must match the name and ID printed above. Along the
+  // bottom it stops either side of the skyline (66–231 mm).
   const micro = `${name.toUpperCase()} · ${code} · `;
   const microSize = 4.2;
-  let microLine = micro.repeat(
-    Math.ceil(x(277) / regular.widthOfTextAtSize(micro, microSize)) + 1
-  );
-  while (regular.widthOfTextAtSize(microLine, microSize) > x(277)) {
-    microLine = microLine.slice(0, -1);
-  }
   const microColor = rgb(67 / 255, 53 / 255, 138 / 255);
-  for (const top of [9.6, 201.6]) {
-    page.drawText(microLine, {
-      x: x(10),
+  const microRun = (left, width, top) => {
+    let line = micro.repeat(
+      Math.ceil(x(width) / regular.widthOfTextAtSize(micro, microSize)) + 1
+    );
+    while (regular.widthOfTextAtSize(line, microSize) > x(width)) {
+      line = line.slice(0, -1);
+    }
+    page.drawText(line, {
+      x: x(left),
       y: y(top),
       size: microSize,
       font: regular,
       color: microColor,
       opacity: 0.55,
     });
-  }
+  };
+  microRun(10, 277, 9.6);
+  microRun(10, 52, 201.6);
+  microRun(235, 52, 201.6);
 
   drawCentered(page, config.title.toUpperCase(), {
     font: semibold,
