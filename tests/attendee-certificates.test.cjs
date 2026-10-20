@@ -311,7 +311,20 @@ test('email codes are six digits, stored hashed per certificate', () => {
   });
   assert.match(email.subject, /^012345 /);
   assert.doesNotMatch(email.html, /<i>Ana<\/i>/);
-  assert.match(email.text, /\n\nTeam TASI$/);
+  assert.match(email.text, /\nWarm regards,\nTeam TASI$/);
+  assert.match(email.html, /cid:tasi-logo/);
+  const local = buildCertificateEmail({
+    name: 'A',
+    edition: '2026',
+    token: 'x',
+    siteUrl: 'http://localhost:3131',
+  });
+  for (const built of [email, local]) {
+    assert.match(
+      built.html,
+      /src="https:\/\/trustandsafetyindia\.org\/img\/email\/tasi-2026-delhi-footer\.jpeg"/
+    );
+  }
   const db = read('src/lib/certificates-db.js');
   assert.match(db, /MAX_CODE_ATTEMPTS/);
   const migration = read(
