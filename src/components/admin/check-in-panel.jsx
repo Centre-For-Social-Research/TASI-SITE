@@ -1,6 +1,5 @@
 'use client';
 
-import jsQR from 'jsqr';
 import { Download } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import scanSessionUtils from '@/lib/check-in-scan-session.cjs';
@@ -18,6 +17,34 @@ const {
   shouldRetryCameraRequest,
 } = checkInUtils;
 const { createScanSession } = scanSessionUtils;
+
+// QR codes decode reliably at this width and it keeps per-frame work small.
+const MAX_DECODE_WIDTH = 640;
+
+// Uses the browser's native QR detector when it has one; otherwise loads jsQR
+// only once the camera starts, so the check-in page bundle stays small.
+async function createQrDecoder() {
+  if (typeof window !== 'undefined' && 'BarcodeDetector' in window) {
+    try {
+      const formats = await window.BarcodeDetector.getSupportedFormats?.();
+      if (!formats || formats.includes('qr_code')) {
+        const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
+        return async (canvas) => {
+          const [code] = await detector.detect(canvas);
+          return code?.rawValue || '';
+        };
+      }
+    } catch {
+      // Fall back to jsQR below.
+    }
+  }
+
+  const { default: jsQR } = await import('jsqr');
+  return async (canvas, ctx) => {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    return jsQR(imageData.data, canvas.width, canvas.height)?.data || '';
+  };
+}
 const {
   CHECK_IN_DAYS,
   getCheckInDayShortLabel,
@@ -265,37 +292,52 @@ export default function CheckInPanel({ canExport = false }) {
     await video.play();
     setCameraState('active');
 
+    const decode = await createQrDecoder();
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    let decoding = false;
+
+    // Draw and decode only on the frames the scan session asks for, at a
+    // reduced size, so the desk phone is not redrawing full frames at 60fps.
     function scanFrame() {
+      const currentVideo = videoRef.current;
       if (
-        !videoRef.current ||
-        videoRef.current.readyState < videoRef.current.HAVE_ENOUGH_DATA
+        !currentVideo ||
+        currentVideo.readyState < currentVideo.HAVE_ENOUGH_DATA ||
+        !currentVideo.videoWidth
       ) {
         animationFrameRef.current = requestAnimationFrame(scanFrame);
         return;
       }
 
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-      const now = Date.now();
-      if (scanSessionRef.current.shouldDecode(now)) {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const result = jsQR(imageData.data, canvas.width, canvas.height);
-        if (result?.data) {
-          const token = result.data.trim();
-          if (
-            scanSessionRef.current.shouldSubmitToken(token, now) &&
-            !scanSessionRef.current.isSubmitting()
-          ) {
-            stopCamera();
-            setManualToken(token);
-            void completeCheckIn({ token });
-            return;
-          }
+      if (!decoding && scanSessionRef.current.shouldDecode(Date.now())) {
+        const scale = Math.min(1, MAX_DECODE_WIDTH / currentVideo.videoWidth);
+        const width = Math.round(currentVideo.videoWidth * scale);
+        const height = Math.round(currentVideo.videoHeight * scale);
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
         }
+        ctx.drawImage(currentVideo, 0, 0, width, height);
+        decoding = true;
+        decode(canvas, ctx)
+          .then((raw) => {
+            decoding = false;
+            const token = String(raw || '').trim();
+            if (
+              token &&
+              streamRef.current === stream &&
+              scanSessionRef.current.shouldSubmitToken(token, Date.now()) &&
+              !scanSessionRef.current.isSubmitting()
+            ) {
+              stopCamera();
+              setManualToken(token);
+              void completeCheckIn({ token });
+            }
+          })
+          .catch(() => {
+            decoding = false;
+          });
       }
 
       animationFrameRef.current = requestAnimationFrame(scanFrame);

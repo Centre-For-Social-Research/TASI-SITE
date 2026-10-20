@@ -21,7 +21,12 @@ test('delivery jobs panel still surfaces queue-unavailable state and drives pace
   // send: never a new request while one is in flight, with a pause between.
   assert.match(generic, /queueUnavailable/);
   assert.match(generic, /const PROCESS_CHUNK_SIZE = 5;/);
-  assert.match(generic, /const PROCESS_GAP_MS = 700;/);
+  assert.match(generic, /const PROCESS_GAP_MS = 1500;/);
+  // The pause backs off while nothing changes, waits while the tab is hidden,
+  // and the loop stops for a job that has stalled.
+  assert.match(generic, /const PROCESS_MAX_GAP_MS = 10_000;/);
+  assert.match(generic, /await waitForVisiblePage\(\)/);
+  assert.match(generic, /setProcessingStalled\(true\)/);
   assert.match(generic, /processingRef\.current/);
   assert.match(generic, /chunkSize: PROCESS_CHUNK_SIZE/);
   assert.doesNotMatch(generic, /setInterval\(async/);

@@ -24,6 +24,7 @@ import {
   AdminStatusBadge,
   AdminToast,
 } from '@/components/admin/admin-ui';
+import AdminPagination from '@/components/admin/admin-pagination';
 
 const { RETRY_BEFORE_MS, canRetryGuestSend } = guestSendAttempt;
 const {
@@ -60,6 +61,19 @@ const STATE_FILTERS = [
 ];
 
 const EMPTY_FORM = { name: '', subject: '', body: '' };
+
+const RECIPIENTS_PAGE_SIZE = 50;
+
+// Lets typing stay instant while expensive work (filtering every recipient,
+// rebuilding the preview iframe) waits for a pause.
+function useDebouncedValue(value, delayMs) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebounced(value), delayMs);
+    return () => window.clearTimeout(timer);
+  }, [value, delayMs]);
+  return debounced;
+}
 
 function stateTone(state) {
   if (state === 'sent') return 'success';
@@ -327,14 +341,20 @@ export default function RemindersPanel({
     return name && !name.includes('@') ? name.split(/\s+/)[0] : 'there';
   }, [operatorName]);
 
+  const previewSubject = useDebouncedValue(form.subject, 300);
+  const previewBody = useDebouncedValue(form.body, 300);
   const preview = useMemo(() => {
-    if (!form.subject && !form.body) return null;
+    if (!previewSubject && !previewBody) return null;
     return buildReminderEmail({
-      subject: form.subject,
-      body: form.body,
+      subject: previewSubject,
+      body: previewBody,
       recipient: { firstName: previewName },
     });
-  }, [form.subject, form.body, previewName]);
+  }, [previewSubject, previewBody, previewName]);
+  const previewHtml = useMemo(
+    () => emailPreviewHtml(preview?.html),
+    [preview?.html]
+  );
 
   const unknownPlaceholders = useMemo(
     () => findUnknownPlaceholders(`${form.subject}\n${form.body}`),
@@ -349,8 +369,9 @@ export default function RemindersPanel({
     [recipients]
   );
 
+  const debouncedSearch = useDebouncedValue(search, 250);
   const visible = useMemo(() => {
-    const term = search.trim().toLowerCase();
+    const term = debouncedSearch.trim().toLowerCase();
     return recipients.filter(
       (row) =>
         matchesFilter(row, filter) &&
@@ -360,7 +381,27 @@ export default function RemindersPanel({
           row.email.toLowerCase().includes(term) ||
           row.organization.toLowerCase().includes(term))
     );
-  }, [recipients, search, filter, category]);
+  }, [recipients, debouncedSearch, filter, category]);
+
+  // Render one page of recipients at a time; any filter change starts at 1.
+  const recipientFilterKey = `${selectedId}|${debouncedSearch}|${filter}|${category}`;
+  const [recipientPaging, setRecipientPaging] = useState({ key: '', page: 1 });
+  const recipientTotalPages = Math.max(
+    1,
+    Math.ceil(visible.length / RECIPIENTS_PAGE_SIZE)
+  );
+  const recipientPage = Math.min(
+    recipientPaging.key === recipientFilterKey ? recipientPaging.page : 1,
+    recipientTotalPages
+  );
+  const pagedRecipients = useMemo(
+    () =>
+      visible.slice(
+        (recipientPage - 1) * RECIPIENTS_PAGE_SIZE,
+        recipientPage * RECIPIENTS_PAGE_SIZE
+      ),
+    [visible, recipientPage]
+  );
 
   const bulkQueue = useMemo(
     () => recipients.filter(isBulkSendable),
@@ -617,8 +658,7 @@ export default function RemindersPanel({
       setToast({ tone: 'danger', message: sendError.message });
     } finally {
       setBusy('');
-      await loadRecipients(campaign.id);
-      await loadCampaigns();
+      await Promise.all([loadRecipients(campaign.id), loadCampaigns()]);
     }
   }
 
@@ -721,8 +761,7 @@ export default function RemindersPanel({
       running: false,
       stopped: stopBulkRef.current,
     }));
-    await loadRecipients(campaign.id);
-    await loadCampaigns();
+    await Promise.all([loadRecipients(campaign.id), loadCampaigns()]);
   }
 
   const sendBlockedReason = dirty
@@ -1238,7 +1277,7 @@ export default function RemindersPanel({
             </div>
             <iframe
               title="Reminder email preview"
-              srcDoc={emailPreviewHtml(preview?.html)}
+              srcDoc={previewHtml}
               sandbox=""
               style={{
                 width: '100%',
@@ -1554,7 +1593,7 @@ export default function RemindersPanel({
                       </td>
                     </tr>
                   ) : null}
-                  {visible.map((row) => {
+                  {pagedRecipients.map((row) => {
                     const retryReady =
                       row.state === 'sending' &&
                       canRetryGuestSend(row.activeAttempt, clockNow);
@@ -1719,16 +1758,16 @@ export default function RemindersPanel({
                 </tbody>
               </table>
             </div>
-            <div
-              style={{
-                padding: '13px 18px',
-                color: 'var(--adm-ink-3)',
-                fontSize: 12,
-              }}
-            >
-              Showing {visible.length} of {recipients.length} confirmed
-              registrants
-            </div>
+            <AdminPagination
+              page={recipientPage}
+              pageSize={RECIPIENTS_PAGE_SIZE}
+              total={visible.length}
+              totalPages={recipientTotalPages}
+              onPage={(page) =>
+                setRecipientPaging({ key: recipientFilterKey, page })
+              }
+              label="matching registrants"
+            />
           </section>
         </>
       ) : null}

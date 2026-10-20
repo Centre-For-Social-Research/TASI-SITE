@@ -195,9 +195,14 @@ test('registrations speaker filter only narrows the list when set to speakers', 
   assert.match(panel, /speakerFlag: '',/);
   assert.match(panel, /<option value="yes">Speakers only<\/option>/);
   // Changing a filter must clear the selection, so a bulk QR send never
-  // carries rows over from another view.
+  // carries rows over from another view. Select filters clear at once; text
+  // filters clear when their debounced value actually changes.
   assert.match(
     panel,
-    /const setFilterValue = \(key, value\) => \{\s*setSelectedIds\(\[\]\);/
+    /if \(!TEXT_FILTER_KEYS\.includes\(key\)\) setSelectedIds\(\[\]\);/
+  );
+  assert.match(
+    panel,
+    /debouncedTextRef\.current = next;\s*setSelectedIds\(\[\]\);/
   );
 });
