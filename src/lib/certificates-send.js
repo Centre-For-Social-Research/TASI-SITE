@@ -1,3 +1,4 @@
+import { isValidEmail } from '@/lib/input-sanitizers';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {
@@ -76,7 +77,7 @@ export async function sendCertificateTest({ id, to, reminder = false }) {
   const recipient = String(to || '')
     .trim()
     .toLowerCase();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+  if (!isValidEmail(recipient)) {
     throw new Error('An email address is required for the test.');
   }
   const certificate = await getCertificateById(id);

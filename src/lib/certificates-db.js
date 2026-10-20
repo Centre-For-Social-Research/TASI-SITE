@@ -1,3 +1,4 @@
+import { isValidEmail } from '@/lib/input-sanitizers';
 import { createHash } from 'node:crypto';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import certificateUtils from '@/lib/certificate-utils.cjs';
@@ -205,7 +206,7 @@ export async function issueManualCertificate({
   const cleanEmail = String(email || '')
     .trim()
     .toLowerCase();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+  if (!isValidEmail(cleanEmail)) {
     throw new Error('A valid email address is required.');
   }
   const { data: reg } = await db()
@@ -364,7 +365,7 @@ export async function updateCertificateByAdmin({ id, name, email, operator }) {
   }
   if (email !== undefined) {
     const clean = String(email).trim().toLowerCase();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean))
+    if (!isValidEmail(clean))
       throw new Error('A valid email address is required.');
     if (clean !== current.email) {
       patch.email = clean;

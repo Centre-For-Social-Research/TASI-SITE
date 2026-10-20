@@ -65,7 +65,6 @@ function Logo({ src }) {
         background: '#ffffff',
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element -- rendered to PNG */}
       <img src={src} width={200} height={55} alt="" />
     </div>
   );
@@ -257,7 +256,6 @@ export default async function Image({ params }) {
           background: '#ffffff',
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- rendered to PNG */}
         <img
           src={background}
           width={560}
