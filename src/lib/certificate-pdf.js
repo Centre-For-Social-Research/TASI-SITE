@@ -145,41 +145,38 @@ export async function renderCertificatePdf({
 
   // Personal microtext: the holder's name and certificate ID in a fine line
   // just inside the top and bottom of the border. Too small to retype
-  // cleanly, and it must match the name and ID printed above. The bottom
-  // line sits in the coloured border, below the full-width skyline.
+  // cleanly, and it must match the name and ID printed above.
   const micro = `${name.toUpperCase()} · ${code} · `;
   const microSize = 4.2;
+  let microLine = micro.repeat(
+    Math.ceil(x(277) / regular.widthOfTextAtSize(micro, microSize)) + 1
+  );
+  while (regular.widthOfTextAtSize(microLine, microSize) > x(277)) {
+    microLine = microLine.slice(0, -1);
+  }
   const microColor = rgb(67 / 255, 53 / 255, 138 / 255);
-  const microRun = (left, width, top, color = microColor, opacity = 0.55) => {
-    let line = micro.repeat(
-      Math.ceil(x(width) / regular.widthOfTextAtSize(micro, microSize)) + 1
-    );
-    while (regular.widthOfTextAtSize(line, microSize) > x(width)) {
-      line = line.slice(0, -1);
-    }
-    page.drawText(line, {
-      x: x(left),
+  for (const top of [9.6, 201.6]) {
+    page.drawText(microLine, {
+      x: x(10),
       y: y(top),
       size: microSize,
       font: regular,
-      color,
-      opacity,
+      color: microColor,
+      opacity: 0.55,
     });
-  };
-  microRun(10, 277, 9.6);
-  microRun(10, 277, 207.6, rgb(1, 1, 1), 0.7);
+  }
 
   drawCentered(page, config.title.toUpperCase(), {
     font: semibold,
     size: 12,
-    top: 47,
+    top: 56,
     color: PURPLE,
     tracking: 3.8,
   });
   drawCentered(page, 'This is to certify that', {
     font: regular,
     size: 12.5,
-    top: 59,
+    top: 68,
     color: MUTED,
   });
 
@@ -191,12 +188,12 @@ export async function renderCertificatePdf({
   drawCentered(page, name, {
     font: display,
     size: nameSize,
-    top: 77,
+    top: 86,
     color: NAVY,
   });
   page.drawLine({
-    start: { x: PAGE_W / 2 - x(60), y: y(84) },
-    end: { x: PAGE_W / 2 + x(60), y: y(84) },
+    start: { x: PAGE_W / 2 - x(60), y: y(93) },
+    end: { x: PAGE_W / 2 + x(60), y: y(93) },
     thickness: 0.6,
     color: RULE,
   });
@@ -206,35 +203,35 @@ export async function renderCertificatePdf({
   drawRuns(
     page,
     [plain('participated in the '), strong(config.eventName), plain(',')],
-    { top: 94, size: 12.5 }
+    { top: 103, size: 12.5 }
   );
   drawRuns(
     page,
     [plain('held on '), strong(config.dates), plain(` at ${config.venue},`)],
-    { top: 101.5, size: 12.5 }
+    { top: 110.5, size: 12.5 }
   );
   drawRuns(page, [plain(`organised by ${config.organisers}.`)], {
-    top: 109,
+    top: 118,
     size: 12.5,
   });
 
   // Signature block: the signature itself is part of the template.
   page.drawLine({
-    start: { x: x(29), y: y(135) },
-    end: { x: x(91), y: y(135) },
+    start: { x: x(29), y: y(152) },
+    end: { x: x(91), y: y(152) },
     thickness: 0.6,
     color: BODY,
   });
   page.drawText(config.signatory, {
     x: x(29),
-    y: y(141),
+    y: y(158),
     size: 11,
     font: bold,
     color: INK,
   });
   page.drawText(config.signatoryRole, {
     x: x(29),
-    y: y(145.5),
+    y: y(162.5),
     size: 9.5,
     font: regular,
     color: MUTED,
@@ -250,12 +247,12 @@ export async function renderCertificatePdf({
       color: { dark: '#022d5d', light: '#ffffff' },
     })
   );
-  page.drawImage(qr, { x: x(247), y: y(148), width: x(21), height: x(21) });
+  page.drawImage(qr, { x: x(247), y: y(165), width: x(21), height: x(21) });
   drawRight(page, `Certificate ID: ${code}`, {
     font: semibold,
     size: 9,
     right: 243,
-    top: 137,
+    top: 154,
     color: INK,
   });
   drawRight(
@@ -267,7 +264,7 @@ export async function renderCertificatePdf({
       font: regular,
       size: 8,
       right: 243,
-      top: 141.5,
+      top: 158.5,
       color: MUTED,
     }
   );
@@ -275,7 +272,7 @@ export async function renderCertificatePdf({
     font: regular,
     size: 8,
     right: 243,
-    top: 146,
+    top: 163,
     color: MUTED,
   });
 

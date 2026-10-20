@@ -272,7 +272,7 @@ export default async function Image({ params }) {
             alignItems: 'center',
             position: 'absolute',
             left: 0,
-            top: 79,
+            top: 96,
             width: 560,
             color: '#3c4043',
           }}
@@ -324,7 +324,7 @@ export default async function Image({ params }) {
           style={{
             position: 'absolute',
             right: 56,
-            top: 254,
+            top: 286,
             fontSize: 9,
             fontWeight: 700,
             color: '#202124',
