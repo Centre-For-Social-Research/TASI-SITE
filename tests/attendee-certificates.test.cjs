@@ -502,3 +502,18 @@ test('the thank-you email adds photos and feedback when available', () => {
     /getCertificatePhotos\(certificate\)/
   );
 });
+
+test('admin pages rely on the admin layout for the shell', () => {
+  const pages = fs
+    .readdirSync('src/app/admin', { recursive: true })
+    .map((p) => String(p).split(path.sep).join('/'))
+    .filter((p) => p.endsWith('page.jsx'));
+  assert.ok(pages.includes('certificates/page.jsx'));
+  for (const page of pages) {
+    assert.doesNotMatch(
+      read(`src/app/admin/${page}`),
+      /components\/admin\/admin-shell'/,
+      page
+    );
+  }
+});
