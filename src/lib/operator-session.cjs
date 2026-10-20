@@ -8,7 +8,7 @@ function toOperatorSession(operator) {
     primaryEmail: operator.primaryEmail || '',
     displayName: operator.displayName || 'TASI Operator',
     role: operator.role || null,
-    accessMode: operator.accessMode || 'both',
+    accessMode: operator.accessMode || 'email_allowlist',
   };
 }
 

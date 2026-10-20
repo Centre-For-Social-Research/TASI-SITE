@@ -200,9 +200,7 @@ function IntegrationRow({ label, ok, optional }) {
 }
 
 const ACCESS_MODE_LABEL = {
-  email_allowlist: 'Email allowlist only',
-  metadata_roles: 'Clerk metadata roles only',
-  both: 'Allowlist + metadata roles · active',
+  email_allowlist: 'Email allowlist · managed below',
 };
 
 /* ── Email chip (single row in the list) ────────────────────────────────── */
@@ -710,7 +708,7 @@ export default function SettingsPanel() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 <MonoRow
                   color={
-                    data.access.mode === 'both'
+                    data.access.mode === 'email_allowlist'
                       ? 'var(--adm-accent)'
                       : undefined
                   }

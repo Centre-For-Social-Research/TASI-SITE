@@ -21,13 +21,13 @@ export async function GET() {
   });
   if (!authResult.ok) return authResult.response;
 
-  const accessMode = process.env.CLERK_ACCESS_MODE || 'both';
+  const accessMode = 'email_allowlist';
   const envAdminEmails = (process.env.CLERK_ADMIN_EMAILS || '')
-    .split(',')
+    .split(/[,\n]+/)
     .map((s) => s.trim())
     .filter(Boolean);
   const envReviewerEmails = (process.env.CLERK_REVIEWER_EMAILS || '')
-    .split(',')
+    .split(/[,\n]+/)
     .map((s) => s.trim())
     .filter(Boolean);
 
