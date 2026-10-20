@@ -23,13 +23,24 @@ test('a changed decision queues its matching email, while returning to pending d
   assert.equal(getReviewEmailTemplate('rejected', 'pending'), null);
 });
 
-test('both status endpoints apply the decision guard before creating email jobs', () => {
-  for (const route of [
-    'src/app/api/admin/registrations/status/route.js',
-    'src/app/api/admin/registrations/status/batch/route.js',
-  ]) {
-    const source = fs.readFileSync(path.join(process.cwd(), route), 'utf8');
-    assert.match(source, /getReviewEmailTemplate/);
-    assert.match(source, /if \(templateType\)/);
-  }
+test('the review RPC applies the same decision guard before creating email jobs', () => {
+  const migration = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      'supabase/migrations/20261020130000_apply_registration_reviews.sql'
+    ),
+    'utf8'
+  );
+  const guard = migration.match(
+    /if p_status in \(([^)]*)\)\s+and v_previous is distinct from p_status then/
+  );
+  assert.ok(guard, 'RPC must guard on status and a changed decision');
+  const sqlStatuses = guard[1]
+    .split(',')
+    .map((value) => value.trim().replace(/'/g, ''))
+    .sort();
+  const jsStatuses = ['pending', 'confirmed', 'waitlisted', 'rejected']
+    .filter((status) => getReviewEmailTemplate('pending', status))
+    .sort();
+  assert.deepEqual(sqlStatuses, jsStatuses);
 });

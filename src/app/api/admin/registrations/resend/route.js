@@ -75,18 +75,22 @@ export async function POST(request) {
       actorClerkId: authResult.operator.userId,
       actorEmail: authResult.operator.primaryEmail,
     });
+    // Record a successful resend as 'resent' in the same write that stores
+    // the provider id, instead of a second update afterwards.
     const result = await deliverRegistrationEmail({
       registration,
       templateType,
       notificationId,
-      db: { markNotificationDelivery },
+      db: {
+        markNotificationDelivery: (id, fields) =>
+          markNotificationDelivery(
+            id,
+            fields.delivery_status === 'sent'
+              ? { ...fields, delivery_status: 'resent' }
+              : fields
+          ),
+      },
     });
-
-    if (result.sent) {
-      await markNotificationDelivery(notificationId, {
-        delivery_status: 'resent',
-      });
-    }
 
     return adminJson({ success: true, result });
   } catch (error) {
