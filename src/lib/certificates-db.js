@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import certificateUtils from '@/lib/certificate-utils.cjs';
+import certificateSession from '@/lib/certificate-session.cjs';
 
 const {
   nameFromRegistration,
@@ -9,6 +10,13 @@ const {
   normalizeCertificateEdition,
   validateCertificateName,
 } = certificateUtils;
+const {
+  CODE_TTL_MS,
+  MAX_CODE_ATTEMPTS,
+  hashEmailCode,
+  linkExpiryFrom,
+  newEmailCode,
+} = certificateSession;
 
 // Never select claim_token_hash into anything returned to a client.
 const CERT_SELECT = `
@@ -16,7 +24,8 @@ const CERT_SELECT = `
   name_change_count, email, source, status, revoked_reason, revoked_at,
   revoked_by_email, issued_at, download_count, first_downloaded_at,
   last_downloaded_at, email_status, send_count, last_sent_at,
-  last_provider_message_id, last_error, created_by_email, created_at, updated_at
+  last_provider_message_id, last_error, created_by_email, created_at, updated_at,
+  token_expires_at, name_confirmed_at, pdf_sha256
 `;
 
 const db = () => getSupabaseAdmin();
@@ -53,6 +62,9 @@ export function normalizeCertificateRow(row = {}) {
     lastProviderMessageId: row.last_provider_message_id || null,
     lastError: row.last_error || null,
     updatedAt: row.updated_at,
+    tokenExpiresAt: row.token_expires_at || null,
+    nameConfirmedAt: row.name_confirmed_at || null,
+    pdfSha256: row.pdf_sha256 || null,
   };
 }
 
@@ -62,14 +74,12 @@ export async function logCertificateEvent(
   detail = {},
   actorEmail = null
 ) {
-  const { error } = await db()
-    .from('attendee_certificate_events')
-    .insert({
-      certificate_id: certificateId,
-      event_type: eventType,
-      detail,
-      actor_email: actorEmail,
-    });
+  const { error } = await db().from('attendee_certificate_events').insert({
+    certificate_id: certificateId,
+    event_type: eventType,
+    detail,
+    actor_email: actorEmail,
+  });
   if (error) console.error('Certificate event not logged.', error.message);
 }
 
@@ -345,6 +355,7 @@ export async function updateCertificateByAdmin({ id, name, email, operator }) {
     const clean = validateCertificateName(name);
     if (clean !== current.name) {
       patch.recipient_name = clean;
+      patch.pdf_sha256 = null;
       detail.name = { from: current.name, to: clean };
     }
   }
@@ -422,7 +433,10 @@ export async function rotateClaimToken(id) {
   const token = newClaimToken();
   const { error } = await db()
     .from('attendee_certificates')
-    .update({ claim_token_hash: hashClaimToken(token) })
+    .update({
+      claim_token_hash: hashClaimToken(token),
+      token_expires_at: linkExpiryFrom(),
+    })
     .eq('id', id);
   if (error) throw new Error(error.message);
   return token;
@@ -487,4 +501,105 @@ export async function prepareCertificateSendRequest(attemptId, requestSha256) {
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) throw new Error('This send attempt is no longer open.');
+}
+
+export async function confirmCertificateNameByToken(token) {
+  const { data, error } = await db().rpc('confirm_attendee_certificate_name', {
+    p_token_hash: hashClaimToken(token),
+  });
+  if (error) {
+    if (error.code === 'P0002') throw new Error('Certificate not found.');
+    throw new Error(error.message);
+  }
+  return normalizeCertificateRow(data);
+}
+
+// The fingerprint of the PDF as issued, so a file can be checked later.
+export async function recordCertificatePdfHash(id, sha256) {
+  const { error } = await db()
+    .from('attendee_certificates')
+    .update({ pdf_sha256: sha256 })
+    .eq('id', id);
+  if (error)
+    console.error('Certificate fingerprint not stored.', error.message);
+}
+
+export async function findCertificateByPdfHash(sha256) {
+  const { data, error } = await db()
+    .from('attendee_certificates')
+    .select('code,recipient_name,status')
+    .eq('pdf_sha256', sha256)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data
+    ? { code: data.code, name: data.recipient_name, status: data.status }
+    : null;
+}
+
+// Issues a one-time email code. At most three codes per 15 minutes per
+// certificate; each code lasts 10 minutes and allows five attempts.
+export async function createCertificateEmailCode(certificateId) {
+  const since = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+  const { count, error: countError } = await db()
+    .from('attendee_certificate_codes')
+    .select('id', { count: 'exact', head: true })
+    .eq('certificate_id', certificateId)
+    .gte('created_at', since);
+  if (countError) throw new Error(countError.message);
+  if ((count || 0) >= 3) {
+    throw new Error(
+      'Too many codes requested. Please wait 15 minutes and try again.'
+    );
+  }
+  const code = newEmailCode();
+  const { error } = await db()
+    .from('attendee_certificate_codes')
+    .insert({
+      certificate_id: certificateId,
+      code_hash: hashEmailCode({ certificateId, code }),
+      expires_at: new Date(Date.now() + CODE_TTL_MS).toISOString(),
+    });
+  if (error) throw new Error(error.message);
+  await logCertificateEvent(certificateId, 'code_sent');
+  return code;
+}
+
+export async function verifyCertificateEmailCode({ certificateId, code }) {
+  const clean = String(code || '').replace(/\D/g, '');
+  const { data: row, error } = await db()
+    .from('attendee_certificate_codes')
+    .select('id,code_hash,expires_at,attempts,consumed_at')
+    .eq('certificate_id', certificateId)
+    .is('consumed_at', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!row || Date.parse(row.expires_at) <= Date.now()) {
+    throw new Error('This code has expired. Please request a new one.');
+  }
+  if (row.attempts >= MAX_CODE_ATTEMPTS) {
+    throw new Error('Too many wrong attempts. Please request a new code.');
+  }
+  if (
+    clean.length !== 6 ||
+    hashEmailCode({ certificateId, code: clean }) !== row.code_hash
+  ) {
+    await db()
+      .from('attendee_certificate_codes')
+      .update({ attempts: row.attempts + 1 })
+      .eq('id', row.id);
+    await logCertificateEvent(certificateId, 'code_failed');
+    const left = MAX_CODE_ATTEMPTS - row.attempts - 1;
+    throw new Error(
+      left > 0
+        ? `That code is not right. ${left} attempt${left === 1 ? '' : 's'} left.`
+        : 'Too many wrong attempts. Please request a new code.'
+    );
+  }
+  await db()
+    .from('attendee_certificate_codes')
+    .update({ consumed_at: new Date().toISOString() })
+    .eq('id', row.id);
+  await logCertificateEvent(certificateId, 'code_verified');
 }

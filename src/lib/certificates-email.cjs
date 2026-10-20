@@ -83,4 +83,24 @@ function buildCertificateEmail({
   return { subject: test ? `[TEST] ${subject}` : subject, text, html };
 }
 
-module.exports = { CERTIFICATE_REPLY_TO, buildCertificateEmail };
+// The one-time code email. Short and plain so it is easy to read on a phone.
+function buildCertificateCodeEmail({ name, code }) {
+  const subject = `${code} is your TASI 2026 certificate code`;
+  const text = [
+    `Dear ${name},`,
+    '',
+    `Your code to open your TASI 2026 certificate is ${code}.`,
+    '',
+    'It works for 10 minutes. If you did not ask for it, you can ignore this email; nobody can open your certificate without this code.',
+    '',
+    'Team TASI',
+  ].join('\n');
+  const html = `<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body style="margin:0;padding:24px 12px;background:#f4f5f7;font-family:Inter,Arial,Helvetica,sans-serif;color:#3c4043"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td align="center"><table role="presentation" width="480" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:480px;background:#ffffff;border:1px solid #e8eaed;border-radius:10px"><tr><td style="padding:28px 32px;font-size:16px;line-height:25px"><p style="margin:0 0 14px">Dear ${escapeHtml(name)},</p><p style="margin:0 0 18px">Your code to open your TASI 2026 certificate is:</p><p style="margin:0 0 18px;font-size:32px;line-height:40px;font-weight:700;letter-spacing:.3em;color:#022d5d">${escapeHtml(code)}</p><p style="margin:0 0 18px;font-size:14px;line-height:22px;color:#5f6368">It works for 10 minutes. If you did not ask for it, you can ignore this email; nobody can open your certificate without this code.</p><p style="margin:0">Team TASI</p></td></tr></table></td></tr></table></body></html>`;
+  return { subject, text, html };
+}
+
+module.exports = {
+  CERTIFICATE_REPLY_TO,
+  buildCertificateCodeEmail,
+  buildCertificateEmail,
+};

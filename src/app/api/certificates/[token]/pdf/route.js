@@ -1,12 +1,17 @@
+import { createHash } from 'node:crypto';
 import { protectPublicRoute } from '@/lib/api-security';
 import {
-  getCertificateByToken,
+  hasCertificateSession,
+  resolveCertificateLink,
+} from '@/lib/certificate-access';
+import {
   recordCertificateDownload,
+  recordCertificatePdfHash,
 } from '@/lib/certificates-db';
 import { renderCertificatePdf } from '@/lib/certificate-pdf';
 import certificateUtils from '@/lib/certificate-utils.cjs';
 
-const { certificateFileName, isValidClaimToken } = certificateUtils;
+const { certificateFileName } = certificateUtils;
 
 export const runtime = 'nodejs';
 
@@ -16,6 +21,9 @@ const NO_STORE = {
   'Referrer-Policy': 'no-referrer',
 };
 
+// Downloads need an unexpired link, the emailed-code session, and a
+// confirmed name. The PDF is identical on every download, so its
+// fingerprint can be checked on the verification page.
 export async function GET(request, context) {
   const protection = await protectPublicRoute(request, 'certificate-pdf', {
     windowMs: 10 * 60 * 1000,
@@ -24,19 +32,25 @@ export async function GET(request, context) {
   if (!protection.ok) return protection.response;
 
   const { token } = await context.params;
-  // Validate the token's shape before touching the database.
-  if (!isValidClaimToken(token)) {
-    return Response.json(
-      { error: 'Not found.' },
-      { status: 404, headers: NO_STORE }
-    );
-  }
   try {
-    const certificate = await getCertificateByToken(token);
-    if (!certificate || certificate.status !== 'active') {
+    const link = await resolveCertificateLink(token);
+    if (link.state !== 'ok') {
       return Response.json(
         { error: 'Not found.' },
         { status: 404, headers: NO_STORE }
+      );
+    }
+    if (!(await hasCertificateSession(link))) {
+      return Response.json(
+        { error: 'Please enter the code we emailed you first.' },
+        { status: 401, headers: NO_STORE }
+      );
+    }
+    const { certificate } = link;
+    if (!certificate.nameConfirmedAt) {
+      return Response.json(
+        { error: 'Please confirm your name first.' },
+        { status: 409, headers: NO_STORE }
       );
     }
     const pdf = await renderCertificatePdf({
@@ -46,14 +60,16 @@ export async function GET(request, context) {
       issuedAt: certificate.issuedAt,
       siteUrl: process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL,
     });
+    const sha256 = createHash('sha256').update(pdf).digest('hex');
+    if (sha256 !== certificate.pdfSha256)
+      await recordCertificatePdfHash(certificate.id, sha256);
     await recordCertificateDownload(certificate);
-    const inline = new URL(request.url).searchParams.get('view') === '1';
     return new Response(pdf, {
       headers: {
         ...NO_STORE,
         ...protection.headers,
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `${inline ? 'inline' : 'attachment'}; filename="${certificateFileName({ name: certificate.name, code: certificate.code })}"`,
+        'Content-Disposition': `attachment; filename="${certificateFileName({ name: certificate.name, code: certificate.code })}"`,
       },
     });
   } catch (error) {

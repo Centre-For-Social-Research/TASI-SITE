@@ -1,9 +1,19 @@
 import { protectPublicPostRoute } from '@/lib/api-security';
-import { changeCertificateNameByToken } from '@/lib/certificates-db';
+import {
+  LINK_STATE_MESSAGES,
+  hasCertificateSession,
+  resolveCertificateLink,
+} from '@/lib/certificate-access';
+import {
+  changeCertificateNameByToken,
+  confirmCertificateNameByToken,
+} from '@/lib/certificates-db';
 import certificateUtils from '@/lib/certificate-utils.cjs';
 
-const { MAX_NAME_CHANGES, isValidClaimToken } = certificateUtils;
+const { MAX_NAME_CHANGES } = certificateUtils;
 
+// Edits the name (before it is confirmed) or confirms and locks it. Both
+// need the session opened with the emailed code.
 export async function POST(request, context) {
   const protection = await protectPublicPostRoute(request, 'certificate-name', {
     windowMs: 10 * 60 * 1000,
@@ -12,21 +22,35 @@ export async function POST(request, context) {
   if (!protection.ok) return protection.response;
 
   const { token } = await context.params;
-  if (!isValidClaimToken(token)) {
-    return Response.json({ error: 'Not found.' }, { status: 404 });
-  }
-  let name = '';
+  let body = {};
   try {
-    name = (await request.json())?.name;
+    body = (await request.json()) || {};
   } catch {
-    name = '';
+    body = {};
   }
   try {
-    const certificate = await changeCertificateNameByToken({ token, name });
+    const link = await resolveCertificateLink(token);
+    if (link.state !== 'ok') {
+      return Response.json(
+        { error: LINK_STATE_MESSAGES[link.state] },
+        { status: 404, headers: protection.headers }
+      );
+    }
+    if (!(await hasCertificateSession(link))) {
+      return Response.json(
+        { error: 'Please enter the code we emailed you first.' },
+        { status: 401, headers: protection.headers }
+      );
+    }
+    const certificate =
+      body.action === 'confirm'
+        ? await confirmCertificateNameByToken(token)
+        : await changeCertificateNameByToken({ token, name: body.name });
     return Response.json(
       {
         ok: true,
         name: certificate.name,
+        confirmed: Boolean(certificate.nameConfirmedAt),
         changesLeft: Math.max(
           0,
           MAX_NAME_CHANGES - certificate.nameChangeCount
@@ -37,10 +61,12 @@ export async function POST(request, context) {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'Unable to update the name.';
-    const status = /not found/i.test(message) ? 404 : 400;
     return Response.json(
       { error: message },
-      { status, headers: protection.headers }
+      {
+        status: /not found/i.test(message) ? 404 : 400,
+        headers: protection.headers,
+      }
     );
   }
 }

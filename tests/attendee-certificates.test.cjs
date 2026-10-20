@@ -18,7 +18,20 @@ const {
   smartTitleCase,
   validateCertificateName,
 } = require('../src/lib/certificate-utils.cjs');
-const { buildCertificateEmail } = require('../src/lib/certificates-email.cjs');
+const {
+  buildCertificateCodeEmail,
+  buildCertificateEmail,
+} = require('../src/lib/certificates-email.cjs');
+const {
+  SESSION_TTL_MS,
+  createSessionValue,
+  hashEmailCode,
+  isLinkExpired,
+  linkExpiryFrom,
+  maskEmail,
+  newEmailCode,
+  readSessionValue,
+} = require('../src/lib/certificate-session.cjs');
 const { buildAdminNavigation } = require('../src/lib/admin-shell-utils.cjs');
 
 const read = (file) => fs.readFileSync(path.join(process.cwd(), file), 'utf8');
@@ -173,12 +186,15 @@ test('public routes are rate limited, validate input and leak nothing', () => {
     'src/app/api/certificates/[token]/pdf/route.js',
     'src/app/api/certificates/[token]/name/route.js',
     'src/app/api/certificates/request/route.js',
+    'src/app/api/certificates/[token]/code/route.js',
+    'src/app/api/certificates/[token]/session/route.js',
+    'src/app/api/certificates/check/route.js',
   ]) {
     const source = read(file);
     assert.match(source, /protectPublic(Post)?Route/, file);
   }
   assert.match(
-    read('src/app/api/certificates/[token]/pdf/route.js'),
+    read('src/lib/certificate-access.js'),
     /isValidClaimToken\(token\)/
   );
   assert.match(
@@ -243,4 +259,109 @@ test('admin navigation lists Certificates', () => {
   const item = items.find((entry) => entry.href === '/admin/certificates');
   assert.equal(item.label, 'Certificates');
   assert.equal(item.active, true);
+});
+
+test('sessions are signed, bound to the current link and expire', () => {
+  process.env.CERTIFICATE_SESSION_SECRET = 's'.repeat(40);
+  const tokenHash = 'a'.repeat(64);
+  const now = Date.now();
+  const value = createSessionValue({ certificateId: 'c1', tokenHash, now });
+  assert.ok(readSessionValue(value, { certificateId: 'c1', tokenHash, now }));
+  assert.ok(!readSessionValue(value, { certificateId: 'c2', tokenHash, now }));
+  assert.ok(
+    !readSessionValue(value, {
+      certificateId: 'c1',
+      tokenHash: 'b'.repeat(64),
+      now,
+    })
+  );
+  assert.ok(
+    !readSessionValue(value, {
+      certificateId: 'c1',
+      tokenHash,
+      now: now + SESSION_TTL_MS + 1,
+    })
+  );
+  const [payload, signature] = value.split('.');
+  const forged = Buffer.from(
+    JSON.stringify({ c: 'c2', t: tokenHash.slice(0, 16), e: now + 1e9 })
+  ).toString('base64url');
+  assert.ok(
+    !readSessionValue(`${forged}.${signature}`, {
+      certificateId: 'c2',
+      tokenHash,
+      now,
+    })
+  );
+  assert.ok(
+    !readSessionValue(`${payload}.x`, { certificateId: 'c1', tokenHash, now })
+  );
+  assert.ok(!readSessionValue('', { certificateId: 'c1', tokenHash, now }));
+});
+
+test('email codes are six digits, stored hashed per certificate', () => {
+  for (let i = 0; i < 200; i += 1) assert.match(newEmailCode(), /^\d{6}$/);
+  const hash = hashEmailCode({ certificateId: 'c1', code: '012345' });
+  assert.match(hash, /^[a-f0-9]{64}$/);
+  assert.notEqual(hash, hashEmailCode({ certificateId: 'c2', code: '012345' }));
+  assert.equal(hash, hashEmailCode({ certificateId: 'c1', code: ' 012345 ' }));
+  const email = buildCertificateCodeEmail({
+    name: '<i>Ana</i>',
+    code: '012345',
+  });
+  assert.match(email.subject, /^012345 /);
+  assert.doesNotMatch(email.html, /<i>Ana<\/i>/);
+  assert.match(email.text, /\n\nTeam TASI$/);
+  const db = read('src/lib/certificates-db.js');
+  assert.match(db, /MAX_CODE_ATTEMPTS/);
+  const migration = read(
+    'supabase/migrations/20261020180000_attendee_certificate_security.sql'
+  );
+  assert.match(migration, /code_hash text not null/);
+  assert.doesNotMatch(migration, /[^_]code text/);
+});
+
+test('links expire after 30 days and emails are masked', () => {
+  const now = Date.parse('2026-10-20T00:00:00Z');
+  const expiry = linkExpiryFrom(now);
+  assert.equal(expiry, '2026-11-19T00:00:00.000Z');
+  assert.ok(!isLinkExpired(expiry, now));
+  assert.ok(isLinkExpired(expiry, Date.parse(expiry)));
+  assert.ok(!isLinkExpired(null, now));
+  assert.equal(maskEmail('saquib@csrindia.org'), 'sa••••@csrindia.org');
+  assert.equal(maskEmail('ab@x.org'), 'a•••@x.org');
+  assert.equal(maskEmail('nope'), '');
+});
+
+test('downloads need a session and a confirmed, locked name', () => {
+  const pdf = read('src/app/api/certificates/[token]/pdf/route.js');
+  assert.match(pdf, /hasCertificateSession/);
+  assert.match(pdf, /nameConfirmedAt/);
+  assert.match(pdf, /recordCertificatePdfHash/);
+  const name = read('src/app/api/certificates/[token]/name/route.js');
+  assert.match(name, /hasCertificateSession/);
+  assert.match(name, /confirm/);
+  const migration = read(
+    'supabase/migrations/20261020180000_attendee_certificate_security.sql'
+  );
+  assert.match(migration, /name_confirmed_at is not null/);
+  assert.match(migration, /confirm_attendee_certificate_name/);
+  const cookie = read('src/lib/certificate-access.js');
+  assert.match(cookie, /httpOnly: true/);
+  assert.match(cookie, /sameSite: 'strict'/);
+});
+
+test('the file check sends only a fingerprint and the preview has no signature', () => {
+  const check = read('src/components/certificates/certificate-file-check.jsx');
+  assert.match(check, /crypto\.subtle\.digest\(\s*'SHA-256'/);
+  assert.match(check, /JSON\.stringify\(\{ sha256/);
+  assert.doesNotMatch(check, /FormData/);
+  assert.match(
+    read('src/app/api/certificates/check/route.js'),
+    /\^\[a-f0-9\]\{64\}\$/
+  );
+  const preview = read('src/components/certificates/certificate-preview.jsx');
+  assert.match(preview, /tasi-2026-preview-bg\.webp/);
+  assert.doesNotMatch(preview, /signature.(png|jpe?g|webp)/i);
+  assert.ok(fs.existsSync('public/img/certificates/tasi-2026-preview-bg.webp'));
 });

@@ -135,10 +135,36 @@ export async function renderCertificatePdf({
   doc.setKeywords([config.shortName, 'certificate', code]);
   doc.setCreator('trustandsafetyindia.org');
   doc.setProducer('TASI certificates');
+  // Fixed dates keep the file byte-for-byte identical on every download,
+  // so its SHA-256 fingerprint can be checked later.
   doc.setCreationDate(new Date(issuedAt));
+  doc.setModificationDate(new Date(issuedAt));
 
   const page = doc.addPage([PAGE_W, PAGE_H]);
   page.drawImage(background, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
+
+  // Personal microtext: the holder's name and certificate ID in a fine line
+  // just inside the top and bottom of the border. Too small to retype
+  // cleanly, and it must match the name and ID printed above.
+  const micro = `${name.toUpperCase()} · ${code} · `;
+  const microSize = 4.2;
+  let microLine = micro.repeat(
+    Math.ceil(x(277) / regular.widthOfTextAtSize(micro, microSize)) + 1
+  );
+  while (regular.widthOfTextAtSize(microLine, microSize) > x(277)) {
+    microLine = microLine.slice(0, -1);
+  }
+  const microColor = rgb(67 / 255, 53 / 255, 138 / 255);
+  for (const top of [9.6, 201.6]) {
+    page.drawText(microLine, {
+      x: x(10),
+      y: y(top),
+      size: microSize,
+      font: regular,
+      color: microColor,
+      opacity: 0.55,
+    });
+  }
 
   drawCentered(page, config.title.toUpperCase(), {
     font: semibold,

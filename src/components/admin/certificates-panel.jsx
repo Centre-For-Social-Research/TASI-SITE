@@ -40,6 +40,10 @@ const EVENT_LABELS = {
   email_failed: 'Email failed',
   link_reissued: 'New link requested',
   name_changed: 'Name or email changed',
+  name_confirmed: 'Name confirmed and locked',
+  code_sent: 'Email code sent',
+  code_verified: 'Email code verified',
+  code_failed: 'Wrong email code',
   downloaded: 'Downloaded',
   revoked: 'Revoked',
   reinstated: 'Reinstated',
@@ -1009,6 +1013,20 @@ export default function CertificatesPanel({ canManage, operatorEmail }) {
                 {current.downloadCount} · Last emailed{' '}
                 {formatDate(current.lastSentAt)}
               </div>
+              <div>
+                Name{' '}
+                {current.nameConfirmedAt
+                  ? `confirmed and locked ${formatDate(current.nameConfirmedAt)}`
+                  : 'not confirmed yet'}{' '}
+                · Link expires {formatDate(current.tokenExpiresAt)}
+              </div>
+              {current.pdfSha256 ? (
+                <div
+                  style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}
+                >
+                  PDF fingerprint {current.pdfSha256}
+                </div>
+              ) : null}
             </div>
 
             <div style={{ display: 'grid', gap: 8 }}>

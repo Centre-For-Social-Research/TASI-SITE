@@ -3,15 +3,20 @@ import Link from 'next/link';
 import HomeNavbar from '@/components/home/navbar';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
 import CertificateClaim from '@/components/certificates/certificate-claim';
-import { getCertificateByToken } from '@/lib/certificates-db';
+import {
+  hasCertificateSession,
+  resolveCertificateLink,
+} from '@/lib/certificate-access';
 import certificateUtils from '@/lib/certificate-utils.cjs';
+import certificateSession from '@/lib/certificate-session.cjs';
 
 const {
   MAX_NAME_CHANGES,
   buildLinkedInAddUrl,
   buildVerifyUrl,
-  isValidClaimToken,
+  formatIssueDate,
 } = certificateUtils;
+const { maskEmail } = certificateSession;
 
 export const dynamic = 'force-dynamic';
 
@@ -31,46 +36,73 @@ function siteUrl() {
   );
 }
 
+const PROBLEMS = {
+  not_found: [
+    'This link is not valid',
+    'Check you used the full link from your email, or ask for a new one.',
+  ],
+  expired: [
+    'This link has expired',
+    'Links work for 30 days, and each new email replaces the last one. Ask for a fresh link below.',
+  ],
+  revoked: [
+    'This certificate is no longer active',
+    'If you think this is a mistake, write to tasi.comms@csrindia.org.',
+  ],
+};
+
 export default async function Page({ params }) {
   const { token } = await params;
-  const certificate = isValidClaimToken(token)
-    ? await getCertificateByToken(token)
-    : null;
-  const active = certificate?.status === 'active';
+  const link = await resolveCertificateLink(token);
+  const certificate = link.certificate;
+  let initialStep = 'verify';
+  if (link.state === 'ok' && (await hasCertificateSession(link))) {
+    initialStep = certificate.nameConfirmedAt ? 'ready' : 'confirm';
+  }
+  const [title, note] = PROBLEMS[link.state] || [];
 
   return (
     <>
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <BrandedPageHero className="py-16 md:py-24">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 md:px-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="text-center lg:text-left">
+        <BrandedPageHero className="py-14 md:py-20">
+          <div className="mx-auto grid w-full max-w-6xl items-start gap-10 px-4 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="text-center lg:pt-6 lg:text-left">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-white/75">
-                TASI 2026 · 14–15 October
+                TASI 2026 · Certificate of Participation
               </p>
-              <h1 className="mt-4 text-4xl font-black leading-[1.05] tracking-tight text-white md:text-6xl">
-                {active ? 'Your certificate' : 'This link is no longer valid'}
-                {active ? (
-                  <span className="mt-2 block text-[#ffd919]">is ready.</span>
-                ) : null}
+              <h1 className="mt-4 text-4xl font-black leading-[1.05] tracking-tight text-white md:text-5xl">
+                {link.state === 'ok' ? (
+                  <>
+                    Your certificate,
+                    <span className="mt-2 block text-[#ffd919]">
+                      {certificate.name.split(' ')[0]}.
+                    </span>
+                  </>
+                ) : (
+                  title
+                )}
               </h1>
-              <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-white/85 md:text-lg lg:mx-0">
-                {active
-                  ? 'Check the spelling of your name, then download your certificate of participation.'
-                  : 'Each new email gets a fresh link, and older links stop working. You can ask for a new one below.'}
+              <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-white/85 lg:mx-0">
+                {link.state === 'ok'
+                  ? 'Three quick steps: confirm it is you, check your name, then download and share. Your certificate carries a unique ID anyone can verify.'
+                  : note}
               </p>
             </div>
             <div className="mx-auto w-full max-w-xl lg:max-w-none">
-              {active ? (
+              {link.state === 'ok' ? (
                 <CertificateClaim
                   token={token}
                   code={certificate.code}
+                  maskedEmail={maskEmail(certificate.email)}
+                  initialStep={initialStep}
                   initialName={certificate.name}
                   initialChangesLeft={Math.max(
                     0,
                     MAX_NAME_CHANGES - certificate.nameChangeCount
                   )}
-                  linkedInUrl={buildLinkedInAddUrl({
+                  issuedOn={formatIssueDate(certificate.issuedAt)}
+                  linkedInAddUrl={buildLinkedInAddUrl({
                     edition: certificate.edition,
                     code: certificate.code,
                     siteUrl: siteUrl(),
