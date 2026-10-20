@@ -101,6 +101,44 @@ test('audit cursor reaches older actions across every source without duplicates'
         created_at: '2026-09-25T00:00:00.000Z',
       },
     ],
+    reminder_deliveries: [
+      {
+        id: 'rd-1',
+        delivery_status: 'sent',
+        recipient_email: 'attendee@example.com',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T02:00:00.000Z',
+        campaign: { name: 'T-minus 1' },
+      },
+    ],
+    guest_invitation_deliveries: [
+      {
+        id: 'gd-1',
+        delivery_status: 'sent',
+        recipient_email: 'guest@example.com',
+        guest_name: 'Guest One',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T03:00:00.000Z',
+      },
+    ],
+    speaker_badge_deliveries: [
+      {
+        id: 'sb-1',
+        delivery_status: 'failed',
+        speaker_name: 'Speaker One',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T04:00:00.000Z',
+      },
+    ],
+    speaker_photo_deliveries: [
+      {
+        id: 'sp-1',
+        delivery_status: 'sent',
+        speaker_name: 'Speaker Two',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T05:00:00.000Z',
+      },
+    ],
     admin_audit_events: [
       {
         id: 1,
@@ -143,8 +181,12 @@ test('audit cursor reaches older actions across every source without duplicates'
     cursor = body.nextCursor || '';
     if (!body.hasMore) break;
   }
-  assert.equal(found.length, 119);
-  assert.equal(new Set(found).size, 119);
+  assert.equal(found.length, 123);
+  assert.equal(new Set(found).size, 123);
+  assert.ok(found.includes('send:attendee@example.com'));
+  assert.ok(found.includes('send:guest@example.com'));
+  assert.ok(found.includes('send:Speaker One'));
+  assert.ok(found.includes('send:Speaker Two'));
   assert.ok(found.includes('settings:admin@example.com'));
   assert.ok(found.includes('delete:deleted-registration'));
   assert.ok(found.includes('settings:registration'));

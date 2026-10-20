@@ -18,10 +18,9 @@ import {
 } from '@/lib/registration-job-utils.cjs';
 import {
   claimPassIssueEmailJobItems,
-  createPassIssueEmailJobRecord,
+  createPassIssueEmailJobWithItems,
   getPassIssueEmailJob,
   getNextPassIssueEmailJob,
-  insertPassIssueEmailJobItems,
   listPassIssueEmailJobItems,
   listRegistrationsForPassJob,
   refreshPassIssueEmailJob,
@@ -44,8 +43,10 @@ async function sendPassEmail({ item, registration, operator, resendExisting }) {
     });
   }
 
+  // Reuse the row the worker just loaded instead of fetching it again.
   const issued = await issuePassForRegistration({
     registrationId: registration.id,
+    registration,
     operator,
   });
 
@@ -120,24 +121,24 @@ export async function createPassIssueEmailJob({
     resendExisting,
   });
 
-  const registrations = await listRegistrationsForPassJob({
-    filters: selection.filters,
-    registrationIds: selection.registrationIds,
-  });
+  // Explicit ids go straight to the RPC, which keeps only confirmed rows;
+  // filtered sends resolve their ids first.
+  const jobRegistrationIds = selection.registrationIds.length
+    ? selection.registrationIds
+    : (
+        await listRegistrationsForPassJob({
+          filters: selection.filters,
+          registrationIds: [],
+        })
+      ).map((registration) => registration.id);
 
   try {
-    const job = await createPassIssueEmailJobRecord({
+    return await createPassIssueEmailJobWithItems({
       selection,
+      registrationIds: jobRegistrationIds,
       operator,
-    });
-
-    await insertPassIssueEmailJobItems({
-      jobId: job.id,
-      registrations,
       maxAttempts: MAX_JOB_RETRIES,
     });
-
-    return refreshPassIssueEmailJob(job.id);
   } catch (error) {
     assertQueueInfrastructureAvailable(
       error,

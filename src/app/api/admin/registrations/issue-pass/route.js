@@ -1,7 +1,13 @@
+import { after } from 'next/server';
 import { requireAdminOperator } from '@/lib/registration-auth';
 import { deriveJobProgress } from '@/lib/registration-job-utils.cjs';
-import { createPassIssueEmailJob } from '@/lib/pass-issue-job-service';
+import {
+  createPassIssueEmailJob,
+  processPassIssueEmailJob,
+} from '@/lib/pass-issue-job-service';
 import { adminJson } from '@/lib/admin-api-cache';
+
+export const maxDuration = 60;
 
 export async function POST(request) {
   const authResult = await requireAdminOperator({
@@ -26,6 +32,25 @@ export async function POST(request) {
       registrationIds: [registrationId],
       operator: authResult.operator,
     });
+
+    // Send this pass right after the response, like bulk QR jobs do,
+    // instead of waiting for the admin tab or the cron to pick it up.
+    if (Number(job.total_items || 0) > 0) {
+      after(async () => {
+        try {
+          await processPassIssueEmailJob({
+            jobId: job.id,
+            operator: {
+              userId: 'system-after-trigger',
+              primaryEmail: 'system-after-trigger@local',
+            },
+            chunkSize: 1,
+          });
+        } catch (error) {
+          console.error('Failed to send the QR pass in background:', error);
+        }
+      });
+    }
 
     return adminJson({
       success: true,
