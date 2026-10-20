@@ -23,7 +23,7 @@ export default async function AdminSubmissionsPage() {
       operator={toOperatorSession(operator)}
       currentPath="/admin/submissions"
     >
-      <SubmissionsPanel />
+      <SubmissionsPanel canExport={operator.role === 'admin'} />
     </AdminShell>
   );
 }

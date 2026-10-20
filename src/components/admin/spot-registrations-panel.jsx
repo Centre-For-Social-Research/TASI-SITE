@@ -28,7 +28,10 @@ const fieldClass =
 const buttonClass =
   'inline-flex h-10 items-center justify-center gap-2 rounded-[10px] border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-800 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-100';
 
-export default function SpotRegistrationsPanel({ canManage }) {
+export default function SpotRegistrationsPanel({
+  canManage,
+  canExport = false,
+}) {
   const [today, setToday] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
@@ -257,7 +260,7 @@ export default function SpotRegistrationsPanel({ canManage }) {
               <option value="2">15 Oct</option>
             </select>
           </label>
-          {['csv', 'xlsx'].map((format) => (
+          {(canExport ? ['csv', 'xlsx'] : []).map((format) => (
             <button
               key={format}
               type="button"

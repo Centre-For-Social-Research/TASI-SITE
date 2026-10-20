@@ -101,13 +101,22 @@ test('audit cursor reaches older actions across every source without duplicates'
         created_at: '2026-09-25T00:00:00.000Z',
       },
     ],
-    admin_email_overrides: [
+    admin_audit_events: [
       {
         id: 1,
-        email: 'admin@example.com',
-        role: 'admin',
-        added_by: 'operator@example.com',
+        action: 'operator_email.granted',
+        actor_email: 'operator@example.com',
+        target_id: 'admin@example.com',
+        details: { role: 'admin' },
         created_at: '2026-09-26T00:00:00.000Z',
+      },
+      {
+        id: 2,
+        action: 'registration.deleted',
+        actor_email: 'operator@example.com',
+        target_id: 'deleted-registration',
+        details: { registration_code: 'TASI-9', first_name: 'Ada' },
+        created_at: '2026-09-26T01:00:00.000Z',
       },
     ],
   };
@@ -134,9 +143,10 @@ test('audit cursor reaches older actions across every source without duplicates'
     cursor = body.nextCursor || '';
     if (!body.hasMore) break;
   }
-  assert.equal(found.length, 118);
-  assert.equal(new Set(found).size, 118);
+  assert.equal(found.length, 119);
+  assert.equal(new Set(found).size, 119);
   assert.ok(found.includes('settings:admin@example.com'));
+  assert.ok(found.includes('delete:deleted-registration'));
   assert.ok(found.includes('settings:registration'));
   assert.ok(found.includes('registration:registration-84'));
 });

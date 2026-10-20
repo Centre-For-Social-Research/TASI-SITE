@@ -1,6 +1,7 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import { ADMIN_NO_STORE_HEADERS, adminJson } from '@/lib/admin-api-cache';
 import { listAllSubmissions } from '@/lib/submission-db';
+import { recordExportAuditEvent } from '@/lib/admin-audit';
 import submissionUtils from '@/lib/submission-utils.cjs';
 import exportUtils from '@/lib/submission-export-utils.cjs';
 
@@ -13,7 +14,7 @@ function attachment(filename) {
 }
 
 export async function GET(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.submissions.export',
   });
   if (!authResult.ok) return authResult.response;
@@ -31,6 +32,10 @@ export async function GET(request) {
     const rows = submissions.map(submissionToExportRow);
     const stamp = new Date().toISOString().slice(0, 10);
     const basename = `tasi-${type}-submissions-${stamp}`;
+    await recordExportAuditEvent(authResult.operator, basename, {
+      format,
+      rows: rows.length,
+    });
     const commonHeaders = {
       ...ADMIN_NO_STORE_HEADERS,
       'Content-Disposition': attachment(`${basename}.${format}`),

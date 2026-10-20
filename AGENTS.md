@@ -28,7 +28,7 @@ npm run loadtest:messages:prod-safe
 
 **Environment:** Copy `.env.example` to `.env.local` and fill in all values before running locally.
 
-**CI (`.github/workflows/ci.yml`, Node 24):** PRs to `main` must pass lint, `format:check`, `tsc --noEmit`, tests, `npm audit --audit-level=high`, and build — run these before pushing.
+**CI (`.github/workflows/ci.yml`, Node 24):** PRs to `main` must pass lint, `format:check`, `tsc --noEmit`, tests, `npm run audit:ci` (high/critical advisories, with dated exceptions in `scripts/audit-check.mjs`), and build — run these before pushing.
 
 ## Architecture
 
@@ -40,7 +40,7 @@ npm run loadtest:messages:prod-safe
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | **Supabase (PostgreSQL)** | All transactional data: registrations, passes, email jobs, guest invitations, speaker badges, reminders, check-ins        |
 | **Sanity CMS**            | Blog posts only; Studio accessible at `/studio`                                                                           |
-| **Clerk**                 | Auth (OIDC/OAuth). Access mode controlled by `CLERK_ACCESS_MODE` env var (`email_allowlist`, `metadata_roles`, or `both`) |
+| **Clerk**                 | Auth (OIDC/OAuth). Console access = verified emails in `CLERK_*_EMAILS` + the Settings allowlist (metadata roles ignored) |
 | **Resend**                | Transactional email (pass issuance, confirmations, bulk jobs); delivery webhooks hit `/api/resend/webhooks`               |
 | **Upstash Redis**         | Rate limiting; falls back to in-memory if not configured                                                                  |
 | **Sentry**                | Error tracking; only enabled in `NODE_ENV === 'production'` (10% trace sampling)                                          |

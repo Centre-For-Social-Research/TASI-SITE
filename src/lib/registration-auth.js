@@ -2,9 +2,11 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { getClerkConfigDiagnostics } from '@/lib/clerk-config';
 import operatorAuthUi from '@/lib/operator-auth-ui.cjs';
 import operatorSession from '@/lib/operator-session.cjs';
+import clerkVerifiedEmails from '@/lib/clerk-verified-emails.cjs';
 import { getStoredAdminEmails } from '@/lib/admin-email-store';
 
 const { getOperatorNavbarState } = operatorAuthUi;
+const { getVerifiedUserEmails } = clerkVerifiedEmails;
 const { toOperatorSession, logOperatorEvent } = operatorSession;
 
 function parseEmailList(value) {
@@ -16,21 +18,11 @@ function parseEmailList(value) {
   );
 }
 
-function getAccessMode() {
-  const mode = String(process.env.CLERK_ACCESS_MODE || 'both')
-    .trim()
-    .toLowerCase();
-
-  if (
-    mode === 'email_allowlist' ||
-    mode === 'metadata_roles' ||
-    mode === 'both'
-  ) {
-    return mode;
-  }
-
-  return 'both';
-}
+// Access comes only from the email lists (CLERK_*_EMAILS plus the ones admins
+// manage in Settings). Clerk publicMetadata roles are ignored on purpose: the
+// TASi-App shares this Clerk instance and uses publicMetadata.role for its own
+// admins, which must not open this console.
+const ACCESS_MODE = 'email_allowlist';
 
 function isDynamicServerUsageError(error) {
   return (
@@ -73,10 +65,9 @@ export async function getAuthorizedOperator(context = {}) {
 
     const user = await currentUser();
     const currentUserResolved = Boolean(user?.id);
-    const emails = (user?.emailAddresses || []).map((entry) =>
-      entry.emailAddress.toLowerCase()
-    );
-    const primaryEmail = emails[0] || '';
+    const { emails, primaryEmail: verifiedPrimary } =
+      getVerifiedUserEmails(user);
+    const primaryEmail = verifiedPrimary || emails[0] || '';
     const envAdminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
     const envReviewerEmails = parseEmailList(process.env.CLERK_REVIEWER_EMAILS);
     const stored = await getStoredAdminEmails();
@@ -88,35 +79,11 @@ export async function getAuthorizedOperator(context = {}) {
       ...envReviewerEmails,
       ...stored.reviewerEmails.map((e) => e.toLowerCase()),
     ]);
-    const accessMode = getAccessMode();
-    // Only trust publicMetadata — it is server-set. unsafeMetadata is
-    // user-writable from the browser and must never grant roles.
-    const metadataRole =
-      user?.publicMetadata?.tasiRole || user?.publicMetadata?.role;
-
+    const accessMode = ACCESS_MODE;
     const hasAdminEmail = emails.some((email) => adminEmails.has(email));
     const hasReviewerEmail = emails.some((email) => reviewerEmails.has(email));
-    const metadataRoleMatch =
-      metadataRole === 'admin' || metadataRole === 'reviewer'
-        ? metadataRole
-        : null;
-
-    let role = null;
-    let allowlistSource = null;
-
-    if (accessMode === 'email_allowlist' || accessMode === 'both') {
-      role = hasAdminEmail ? 'admin' : hasReviewerEmail ? 'reviewer' : role;
-      if (role) {
-        allowlistSource = 'email_allowlist';
-      }
-    }
-
-    if (!role && (accessMode === 'metadata_roles' || accessMode === 'both')) {
-      role = metadataRoleMatch;
-      if (role) {
-        allowlistSource = 'metadata_roles';
-      }
-    }
+    const role = hasAdminEmail ? 'admin' : hasReviewerEmail ? 'reviewer' : null;
+    const allowlistSource = role ? 'email_allowlist' : null;
 
     if (!role) {
       const result = {

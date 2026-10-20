@@ -1101,6 +1101,20 @@ export async function updateRegistrationEmailJobItem(itemId, fields) {
   return data;
 }
 
+// Deleting a registration cascades away its status history, so the audit
+// event keeps enough to say who and what was removed.
+export async function getRegistrationAuditSnapshot(id) {
+  const { data, error } = await getSupabase()
+    .from('event_registrations')
+    .select(
+      'id, registration_code, first_name, last_name, email, organization, status, attendee_category, created_at'
+    )
+    .eq('id', id)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
 export async function deleteRegistration(id) {
   const supabase = getSupabase();
   const { error } = await supabase

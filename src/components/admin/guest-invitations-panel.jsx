@@ -503,7 +503,7 @@ export default function GuestInvitationsPanel({ canManage }) {
             </p>
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {['csv', 'xlsx'].map((format) => (
+            {(canManage ? ['csv', 'xlsx'] : []).map((format) => (
               <button
                 key={format}
                 type="button"

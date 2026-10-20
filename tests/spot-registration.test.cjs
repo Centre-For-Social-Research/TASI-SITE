@@ -76,15 +76,18 @@ test('roster CSV and Excel exports neutralize spreadsheet formulas', async () =>
   assert.equal(workbook.getWorksheet('Test').getCell('A2').value[0], "'");
 });
 
-test('spot and guest exports require operator auth and check-in export uses attendance rows', () => {
+test('PII exports require the admin role and check-in export uses attendance rows', () => {
   const root = path.join(__dirname, '..', 'src', 'app', 'api', 'admin');
   for (const route of [
     'spot-registrations/export/route.js',
     'guest-invitations/export/route.js',
     'check-in/export/route.js',
+    'submissions/export/route.js',
+    'badges/export/route.js',
   ]) {
     const source = fs.readFileSync(path.join(root, route), 'utf8');
-    assert.match(source, /requireAuthorizedOperator/);
+    assert.match(source, /requireAdminOperator/);
+    assert.doesNotMatch(source, /requireAuthorizedOperator/);
   }
   const checkIn = fs.readFileSync(
     path.join(root, 'check-in/export/route.js'),

@@ -57,6 +57,8 @@ const KIND_COLOR = {
   pass_job: 'var(--adm-ok)',
   payment: 'var(--adm-warn)',
   settings: 'var(--adm-ink-3)',
+  delete: 'var(--adm-bad)',
+  export: 'var(--adm-warn)',
 };
 
 const KIND_LABEL = {
@@ -65,6 +67,8 @@ const KIND_LABEL = {
   pass_job: 'PASS',
   payment: 'PAY',
   settings: 'CFG',
+  delete: 'DEL',
+  export: 'EXPORT',
 };
 
 function Btn({

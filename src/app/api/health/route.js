@@ -39,15 +39,13 @@ export async function GET(request) {
   const clerkSecretKeyConfigured = Boolean(
     process.env.CLERK_SECRET_KEY?.trim()
   );
-  const clerkAccessMode = String(process.env.CLERK_ACCESS_MODE || 'both')
-    .trim()
-    .toLowerCase();
+  const clerkAccessMode = 'email_allowlist';
   const clerkAdminEmails = String(process.env.CLERK_ADMIN_EMAILS || '')
-    .split(',')
+    .split(/[,\n]+/)
     .map((value) => value.trim())
     .filter(Boolean);
   const clerkReviewerEmails = String(process.env.CLERK_REVIEWER_EMAILS || '')
-    .split(',')
+    .split(/[,\n]+/)
     .map((value) => value.trim())
     .filter(Boolean);
   const supabaseUrlConfigured = Boolean(process.env.SUPABASE_URL?.trim());

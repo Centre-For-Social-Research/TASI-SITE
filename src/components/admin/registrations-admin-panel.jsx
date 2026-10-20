@@ -1528,22 +1528,24 @@ export default function RegistrationsAdminPanel({ operator }) {
         description="Review registrations in date order, act inline, and open richer registrant detail from the review drawer."
         actions={
           <div className="flex flex-wrap gap-2">
-            {['csv', 'xlsx'].map((format) => (
-              <button
-                key={format}
-                type="button"
-                disabled={exportLoading[format] || hasConfigError}
-                onClick={() => handleExport(format)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10 dark:hover:bg-white/10"
-              >
-                {exportLoading[format] ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                ) : (
-                  <Download className="h-3 w-3" />
-                )}
-                {format === 'csv' ? 'Export CSV' : 'Export Excel'}
-              </button>
-            ))}
+            {(operator?.role === 'admin' ? ['csv', 'xlsx'] : []).map(
+              (format) => (
+                <button
+                  key={format}
+                  type="button"
+                  disabled={exportLoading[format] || hasConfigError}
+                  onClick={() => handleExport(format)}
+                  className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-200 dark:hover:border-white/10 dark:hover:bg-white/10"
+                >
+                  {exportLoading[format] ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <Download className="h-3 w-3" />
+                  )}
+                  {format === 'csv' ? 'Export CSV' : 'Export Excel'}
+                </button>
+              )
+            )}
           </div>
         }
       />
