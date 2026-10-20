@@ -112,6 +112,7 @@ export default async function Page({ params }) {
                     }
                   >
                     <CertificatePreview
+                      signed
                       name={record.name}
                       code={record.code}
                       issuedOn={formatIssueDate(record.issuedAt)}

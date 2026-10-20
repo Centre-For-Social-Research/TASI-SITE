@@ -123,7 +123,7 @@ export default function CertificateClaim({
       setCodeSent(true);
       setMessage({
         ok: true,
-        text: `We sent a 6-digit code to ${maskedEmail}. It works for 10 minutes.`,
+        text: `We sent a 6-digit code to ${maskedEmail}. Enter it below, or tap the link in that email. It works for 10 minutes.`,
       });
     });
 
@@ -188,62 +188,51 @@ export default function CertificateClaim({
                 </p>
               </div>
             </div>
-            {codeSent ? null : (
-              <div className="mt-6">
+            {codeSent ? (
+              <form
+                onSubmit={verifyCode}
+                className="mt-6 flex flex-col gap-3 sm:flex-row"
+              >
+                <Input
+                  value={codeInput}
+                  onChange={(event) =>
+                    setCodeInput(
+                      event.target.value.replace(/\D/g, '').slice(0, 6)
+                    )
+                  }
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  placeholder="6-digit code"
+                  aria-label="6-digit code"
+                  className="h-12 flex-1 rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900"
+                />
                 <Button
-                  type="button"
-                  onClick={sendCode}
-                  disabled={busy === 'code'}
+                  type="submit"
+                  disabled={busy === 'verify' || codeInput.length !== 6}
                   className={PRIMARY}
                 >
-                  {busy === 'code' ? 'Sending…' : 'Email me a code'}
+                  {busy === 'verify' ? 'Checking…' : 'Verify'}
                 </Button>
-                <p className="mt-6 text-xs font-semibold text-stone-500 dark:text-slate-400">
-                  Already have a code from us? Enter it here.
-                </p>
-              </div>
-            )}
-            <form
-              onSubmit={verifyCode}
-              className={`${codeSent ? 'mt-6' : 'mt-2'} flex flex-col gap-3 sm:flex-row`}
-            >
-              <Input
-                value={codeInput}
-                onChange={(event) =>
-                  setCodeInput(
-                    event.target.value.replace(/\D/g, '').slice(0, 6)
-                  )
-                }
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                placeholder="6-digit code"
-                aria-label="6-digit code"
-                className="h-12 flex-1 rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900"
-              />
+              </form>
+            ) : null}
+            <div className="mt-4">
               <Button
-                type="submit"
-                disabled={busy === 'verify' || codeInput.length !== 6}
+                type="button"
+                onClick={sendCode}
+                disabled={busy === 'code'}
                 className={
                   codeSent
-                    ? PRIMARY
-                    : `${BTN} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`
+                    ? `${BTN} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`
+                    : PRIMARY
                 }
               >
-                {busy === 'verify' ? 'Checking…' : 'Verify'}
+                {busy === 'code'
+                  ? 'Sending…'
+                  : codeSent
+                    ? 'Send a new code'
+                    : 'Email me a code'}
               </Button>
-            </form>
-            {codeSent ? (
-              <div className="mt-4">
-                <Button
-                  type="button"
-                  onClick={sendCode}
-                  disabled={busy === 'code'}
-                  className={`${BTN} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`}
-                >
-                  {busy === 'code' ? 'Sending…' : 'Send a new code'}
-                </Button>
-              </div>
-            ) : null}
+            </div>
           </div>
         ) : null}
 
