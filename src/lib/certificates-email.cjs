@@ -84,11 +84,9 @@ function buildCertificateEmail({
     `<p style="margin:${first ? '0' : '16px'} auto 0;max-width:470px">${escapeHtml(text)}</p>`;
   const heading = (text) =>
     `<p style="margin:0 auto 10px;max-width:470px;color:#022d5d;font-size:13px;line-height:18px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">${escapeHtml(text)}</p>`;
-  // Crimson buttons: filled for the certificate, outlined for the extras.
-  const solid = (href, label) =>
-    `<p style="margin:16px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:8px 18px;border-radius:8px;background:#9e1b1e;color:#ffffff;font-size:14px;line-height:20px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
-  const outline = (href, label) =>
-    `<p style="margin:16px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:7px 17px;border-radius:8px;border:1px solid #9e1b1e;color:#9e1b1e;font-size:14px;line-height:20px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
+  // Actions are plain crimson text links with an arrow, not buttons.
+  const action = (href, label) =>
+    `<p style="margin:12px 0 0"><a href="${escapeHtml(href)}" style="color:#9e1b1e;font-size:16px;line-height:24px;font-weight:700;text-decoration:none">${escapeHtml(label)}&nbsp;&rarr;</a></p>`;
   const section = (inner, size = 16, line = 25) =>
     `<tr><td align="center" class="tasi-px tasi-body" style="padding:20px 40px 0;color:#3c4043;font-size:${size}px;line-height:${line}px">${inner}</td></tr>`;
   const testBanner = test
@@ -108,14 +106,14 @@ function buildCertificateEmail({
     ),
     DIVIDER,
     section(
-      `${heading('Your certificate')}${certificateLines.map((t, i) => p(t, i === 0)).join('')}${solid(claimUrl, 'Get your certificate')}${p(LINKEDIN_LINE)}`
+      `${heading('Your certificate')}${certificateLines.map((t, i) => p(t, i === 0)).join('')}${action(claimUrl, 'Get your certificate')}${p(LINKEDIN_LINE)}`
     ),
   ];
   if (photo) {
     blocks.push(
       DIVIDER,
       section(
-        `${heading('Your photos')}${p(photoLine(photo.count), true)}${outline(photo.url, 'See your photos')}`
+        `${heading('Your photos')}${p(photoLine(photo.count), true)}${action(photo.url, 'See your photos')}`
       )
     );
   }
@@ -123,7 +121,7 @@ function buildCertificateEmail({
     blocks.push(
       DIVIDER,
       section(
-        `${heading('Two minutes for us?')}${p(FEEDBACK_LINE(edition), true)}${outline(feedbackUrl, 'Share your feedback')}`
+        `${heading('Two minutes for us?')}${p(FEEDBACK_LINE(edition), true)}${action(feedbackUrl, 'Share your feedback')}`
       )
     );
   }
