@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
-import AdminShell from '@/components/admin/admin-shell';
 import GuestInvitationsPanel from '@/components/admin/guest-invitations-panel';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
@@ -26,11 +25,8 @@ export default async function GuestInvitationsPage() {
   }
 
   return (
-    <AdminShell
-      operator={toOperatorSession(operator)}
-      currentPath="/admin/guest-invitations"
-    >
+    <>
       <GuestInvitationsPanel canManage={operator.role === 'admin'} />
-    </AdminShell>
+    </>
   );
 }

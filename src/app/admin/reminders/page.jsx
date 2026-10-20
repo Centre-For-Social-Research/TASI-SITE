@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
-import AdminShell from '@/components/admin/admin-shell';
 import RemindersPanel from '@/components/admin/reminders-panel';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
@@ -22,15 +21,12 @@ export default async function RemindersPage() {
   }
 
   return (
-    <AdminShell
-      operator={toOperatorSession(operator)}
-      currentPath="/admin/reminders"
-    >
+    <>
       <RemindersPanel
         canManage={operator.role === 'admin'}
         operatorEmail={operator.primaryEmail || ''}
         operatorName={operator.displayName || ''}
       />
-    </AdminShell>
+    </>
   );
 }

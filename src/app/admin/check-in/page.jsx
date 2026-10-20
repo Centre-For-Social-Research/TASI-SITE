@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import CheckInPanel from '@/components/admin/check-in-panel';
-import AdminShell from '@/components/admin/admin-shell';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
@@ -26,9 +25,9 @@ export default async function AdminCheckInPage() {
   const sessionOperator = toOperatorSession(operator);
 
   return (
-    <AdminShell operator={sessionOperator} currentPath="/admin/check-in">
+    <>
       {logOperatorEvent('admin.checkin.shell', 'admin.checkin.page', operator)}
       <CheckInPanel canExport={operator.role === 'admin'} />
-    </AdminShell>
+    </>
   );
 }

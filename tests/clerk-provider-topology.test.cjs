@@ -74,7 +74,11 @@ test('auth-only layouts mount the shared Clerk provider', () => {
 
   assert.match(adminLayout, /import TasiClerkProvider/);
   assert.match(adminLayout, /<TasiClerkProvider>/);
-  assert.match(adminLayout, /<AdminExitGuard>\{children\}<\/AdminExitGuard>/);
+  assert.match(adminLayout, /<AdminExitGuard>[\s\S]*<\/AdminExitGuard>/);
+  assert.match(
+    adminLayout,
+    /operator\.authorized \? \(\s*<AdminShell[\s\S]*\{children\}[\s\S]*<\/AdminShell>\s*\) : \(\s*children\s*\)/
+  );
   assert.match(signInLayout, /import TasiClerkProvider/);
   assert.match(
     signInLayout,

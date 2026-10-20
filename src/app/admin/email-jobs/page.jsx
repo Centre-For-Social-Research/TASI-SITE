@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation';
-import AdminShell from '@/components/admin/admin-shell';
 import EmailJobsPanel from '@/components/admin/email-jobs-panel';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
@@ -28,13 +27,13 @@ export default async function AdminEmailJobsPage() {
   const sessionOperator = toOperatorSession(operator);
 
   return (
-    <AdminShell operator={sessionOperator} currentPath="/admin/email-jobs">
+    <>
       {logOperatorEvent(
         'admin.email.jobs.shell',
         'admin.email.jobs.page',
         operator
       )}
       <EmailJobsPanel operator={sessionOperator} />
-    </AdminShell>
+    </>
   );
 }
