@@ -3,6 +3,7 @@ import path from 'node:path';
 import {
   claimCertificateSend,
   getCertificateById,
+  getCertificatePhotos,
   markCertificateSendFailed,
   markCertificateSent,
   prepareCertificateSendRequest,
@@ -58,6 +59,7 @@ export async function previewCertificateEmail(id, { reminder = false } = {}) {
     token: 'preview-link',
     siteUrl: getSiteUrl(),
     reminder,
+    photos: await getCertificatePhotos(certificate),
   });
   return {
     subject: email.subject,
@@ -85,6 +87,7 @@ export async function sendCertificateTest({ id, to, reminder = false }) {
     siteUrl: getSiteUrl(),
     test: true,
     reminder,
+    photos: await getCertificatePhotos(certificate),
   });
   const delivery = await sendApplicantConfirmationEmail({
     to: recipient,
@@ -137,6 +140,7 @@ export async function sendCertificateEmail({
       token,
       siteUrl: getSiteUrl(),
       reminder,
+      photos: await getCertificatePhotos(certificate),
     });
     const attachments = [await logoAttachment()];
     await prepareCertificateSendRequest(

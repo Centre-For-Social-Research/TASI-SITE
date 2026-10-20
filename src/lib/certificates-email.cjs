@@ -21,27 +21,41 @@ const FOLLOW = [
   { key: 'instagram', label: 'Instagram' },
 ];
 
-function paragraphs(edition, reminder) {
-  if (reminder) {
-    return [
-      `A quick reminder that your ${edition.shortName} certificate of participation is still waiting for you.`,
-      `It takes a minute: check your name, then download the PDF. This email has a fresh link, and the one we sent earlier no longer works.`,
-    ];
-  }
-  return [
-    `Thank you for joining us at ${edition.shortName}. It was good to have you in the room.`,
-    `Your certificate of participation is ready. When you open the link, we'll email you a one-time code to confirm it's you. Then check that your name is spelled the way you want it. Once you confirm it, the name is locked and printed on your certificate.`,
-  ];
-}
+const THANKS = (edition) =>
+  `Thank you for joining us at ${edition.shortName} in New Delhi. Over two days, people from government, industry, academia and civil society came together to talk about keeping people safe online, and we are glad you were in the room.`;
 
-const AFTER_BUTTON = [
-  'You can also add it to the Licenses & certifications section of your LinkedIn profile from the same page.',
-  'The link is personal to you and works for 30 days, so please do not forward this email. If it expires, you can ask for a new one at trustandsafetyindia.org/certificates.',
+const CERTIFICATE_LINES = [
+  "Your certificate of participation is ready. When you open the link, we'll email you a one-time code to confirm it's you. Then check that your name is spelled the way you want it. Once you confirm it, the name is locked and printed on your certificate.",
 ];
 
-const TAG_NOTE =
-  'If you post about TASI, tag us: Centre for Social Research India and TASI on LinkedIn, @CSR_India on X, and @csr_india on Instagram. Use #TASI2026 so we can find your posts.';
+const REMINDER_LINES = (edition) => [
+  `A quick reminder that your ${edition.shortName} certificate of participation is still waiting for you.`,
+  'It takes a minute: check your name, then download the PDF. This email has a fresh link, and the one we sent earlier no longer works.',
+];
 
+const LINKEDIN_LINE =
+  'You can also add it to the Licenses & certifications section of your LinkedIn profile from the same page.';
+
+const PHOTO_CONSENT_LINE =
+  "We found you using the photo you shared when you registered. If you'd rather we hadn't, reply to this email and we'll delete the folder.";
+
+const FEEDBACK_LINE = (edition) =>
+  `Tell us how ${edition.shortName} went so we can make the next one better. It takes about two minutes.`;
+
+const KEEP_PRIVATE = (photos) =>
+  `${photos ? 'These links are' : 'This link is'} personal to you, so please do not forward this email. The certificate link works for 30 days; if it expires, you can ask for a new one at trustandsafetyindia.org/certificates.`;
+
+const TAG_NOTE =
+  'If you post about TASI, use #TASI2026 and tag us: Centre for Social Research India and TASI on LinkedIn, @CSR_India on X, and @csr_india on Instagram.';
+
+function photoLine(count) {
+  return count === 1
+    ? 'We went through the festival photos and found a photo of you. It is in a folder, ready to view and download.'
+    : `We went through the festival photos and found ${count} of you. They are in one folder, ready to view and download.`;
+}
+
+// The certificate email doubles as the TASI thank-you email: certificate,
+// the attendee's photo folder (when we have one) and the feedback form.
 function buildCertificateEmail({
   name,
   edition: editionKey,
@@ -50,22 +64,35 @@ function buildCertificateEmail({
   replyEmail = CERTIFICATE_REPLY_TO,
   test = false,
   reminder = false,
+  photos = null,
 }) {
   const edition = getCertificateEdition(editionKey);
   if (!edition) throw new Error(`Edition ${editionKey} is not configured.`);
   if (!token) throw new Error('A download link is required.');
   const siteUrl = String(rawSiteUrl || DEFAULT_SITE_URL).replace(/\/+$/, '');
   const claimUrl = buildClaimUrl({ siteUrl, token });
+  const photo =
+    photos && photos.url && Number(photos.count) > 0
+      ? { url: String(photos.url), count: Number(photos.count) }
+      : null;
+  const feedbackUrl = edition.feedbackUrl || null;
   const subject = reminder
     ? `Reminder: your ${edition.shortName} certificate is waiting`
-    : `Your ${edition.shortName} certificate is ready`;
+    : `Thank you for joining ${edition.shortName}: your certificate${photo ? ' and photos' : ''}`;
   const preheader = reminder
     ? `Your ${edition.shortName} certificate is still waiting. Here is a fresh link.`
-    : `Your ${edition.shortName} certificate of participation is ready to download.`;
-  const intro = paragraphs(edition, reminder);
+    : `Your certificate of participation${photo ? ' and your photos from the festival are' : ' is'} ready.`;
   const safeReply = escapeHtml(replyEmail);
   const p = (text, first = false) =>
     `<p style="margin:${first ? '0' : '16px'} auto 0;max-width:470px">${escapeHtml(text)}</p>`;
+  const heading = (text) =>
+    `<p style="margin:0 auto 10px;max-width:470px;color:#022d5d;font-size:13px;line-height:18px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">${escapeHtml(text)}</p>`;
+  const solid = (href, label) =>
+    `<p style="margin:20px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
+  const outline = (href, label) =>
+    `<p style="margin:18px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:10px 22px;border-radius:10px;border:1.5px solid #022d5d;color:#022d5d;font-size:15px;font-weight:600;text-decoration:none">${escapeHtml(label)}</a></p>`;
+  const section = (inner, size = 16, line = 25) =>
+    `<tr><td align="center" class="tasi-px tasi-body" style="padding:20px 40px 0;color:#3c4043;font-size:${size}px;line-height:${line}px">${inner}</td></tr>`;
   const testBanner = test
     ? '<tr><td align="center" style="padding:10px 40px;background:#fef7e0;color:#7a4f01;font-size:13px;line-height:19px">Test email. This was not sent to the attendee.</td></tr>'
     : '';
@@ -74,16 +101,75 @@ function buildCertificateEmail({
       `<a href="${escapeHtml(SOCIAL_PROFILES[key])}" style="color:#5f6368;text-decoration:underline">${label}</a>`
   ).join(DOT);
 
-  const html = `<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="x-apple-disable-message-reformatting" /><style>@media only screen and (max-width:620px){.tasi-outer{padding:12px 6px !important}.tasi-px{padding-left:20px !important;padding-right:20px !important}.tasi-body{font-size:17px !important;line-height:27px !important}.tasi-body p{max-width:100% !important}}</style></head><body style="margin:0;padding:0;background:#022d5d;font-family:Inter,Arial,Helvetica,sans-serif;"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;line-height:1px;mso-hide:all">${escapeHtml(preheader)}</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#022d5d" style="background:#022d5d;background:linear-gradient(135deg,#022d5d 0%,#43358a 52%,#b34b5c 100%)"><tr><td align="center" class="tasi-outer" style="padding:32px 12px"><table role="presentation" width="610" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:610px;background-color:#ffffff;border:1px solid #e8eaed">${testBanner}<tr><td align="center" bgcolor="#ffffff" class="tasi-px" style="padding:31px 40px 18px;background:#ffffff"><img src="cid:tasi-logo" width="194" height="54" alt="Trust &amp; Safety Festival - TASI. People First. Safety Always." style="display:block;width:194px;height:54px;border:0" /></td></tr><tr><td align="center" class="tasi-px tasi-body" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 0 16px">Dear ${escapeHtml(name)},</p>${intro.map((t, i) => p(t, i === 0)).join('')}<p style="margin:24px 0 0"><a href="${escapeHtml(claimUrl)}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#022d5d;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">Get your certificate</a></p>${AFTER_BUTTON.map((t) => p(t)).join('')}</td></tr>${DIVIDER}<tr><td align="center" class="tasi-px tasi-body" style="padding:20px 40px 0;color:#3c4043;font-size:15px;line-height:24px"><p style="margin:0 auto;max-width:470px">${escapeHtml(TAG_NOTE)}</p></td></tr>${DIVIDER}<tr><td align="center" class="tasi-px tasi-body" style="padding:20px 40px 0;color:#3c4043;font-size:16px;line-height:25px"><p style="margin:0 auto;max-width:470px">We hope to see you at the next TASI.</p><p style="margin:14px 0 0">Warm regards,<br /><strong style="color:#202124">Team TASI</strong></p></td></tr><tr><td align="center" class="tasi-px" style="padding:20px 40px;color:#5f6368;font-size:13px;line-height:19px"><p style="margin:0 auto 5px;max-width:470px">Questions? Write to us at <a href="mailto:${safeReply}" style="${LINK}">${safeReply}</a>.</p><p style="margin:0 0 5px">Follow us: ${follow}</p><p style="margin:0">${escapeHtml(edition.eventName.replace(/ \(.*\)$/, ''))} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="${FOOTER_IMAGE_URL}" width="100%" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
+  const opening = reminder ? REMINDER_LINES(edition) : [THANKS(edition)];
+  const certificateLines = reminder ? [] : CERTIFICATE_LINES;
+
+  const blocks = [
+    section(
+      `<p style="margin:0 0 16px">Dear ${escapeHtml(name)},</p>${opening.map((t, i) => p(t, i === 0)).join('')}`
+    ),
+    DIVIDER,
+    section(
+      `${heading('Your certificate')}${certificateLines.map((t, i) => p(t, i === 0)).join('')}${solid(claimUrl, 'Get your certificate')}${p(LINKEDIN_LINE)}`
+    ),
+  ];
+  if (photo) {
+    blocks.push(
+      DIVIDER,
+      section(
+        `${heading('Your photos')}${p(photoLine(photo.count), true)}${outline(photo.url, 'See your photos')}${p(PHOTO_CONSENT_LINE)}`
+      )
+    );
+  }
+  if (feedbackUrl) {
+    blocks.push(
+      DIVIDER,
+      section(
+        `${heading('Two minutes for us?')}${p(FEEDBACK_LINE(edition), true)}${outline(feedbackUrl, 'Share your feedback')}`
+      )
+    );
+  }
+  blocks.push(
+    DIVIDER,
+    section(`${p(KEEP_PRIVATE(Boolean(photo)), true)}${p(TAG_NOTE)}`, 15, 24),
+    section(
+      `<p style="margin:0 auto;max-width:470px">We hope to see you at the next TASI.</p><p style="margin:14px 0 0">Warm regards,<br /><strong style="color:#202124">Team TASI</strong></p>`
+    )
+  );
+
+  const html = `<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="x-apple-disable-message-reformatting" /><style>@media only screen and (max-width:620px){.tasi-outer{padding:12px 6px !important}.tasi-px{padding-left:20px !important;padding-right:20px !important}.tasi-body{font-size:17px !important;line-height:27px !important}.tasi-body p{max-width:100% !important}}</style></head><body style="margin:0;padding:0;background:#022d5d;font-family:Inter,Arial,Helvetica,sans-serif;"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;line-height:1px;mso-hide:all">${escapeHtml(preheader)}</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#022d5d" style="background:#022d5d;background:linear-gradient(135deg,#022d5d 0%,#43358a 52%,#b34b5c 100%)"><tr><td align="center" class="tasi-outer" style="padding:32px 12px"><table role="presentation" width="610" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:610px;background-color:#ffffff;border:1px solid #e8eaed">${testBanner}<tr><td align="center" bgcolor="#ffffff" class="tasi-px" style="padding:31px 40px 18px;background:#ffffff"><img src="cid:tasi-logo" width="194" height="54" alt="Trust &amp; Safety Festival - TASI. People First. Safety Always." style="display:block;width:194px;height:54px;border:0" /></td></tr>${blocks.join('')}<tr><td align="center" class="tasi-px" style="padding:20px 40px;color:#5f6368;font-size:13px;line-height:19px"><p style="margin:0 auto 5px;max-width:470px">Questions? Write to us at <a href="mailto:${safeReply}" style="${LINK}">${safeReply}</a>.</p><p style="margin:0 0 5px">Follow us: ${follow}</p><p style="margin:0">${escapeHtml(edition.eventName.replace(/ \(.*\)$/, ''))} &middot; People First. Safety Always.</p></td></tr><tr><td><img src="${FOOTER_IMAGE_URL}" width="100%" alt="Trust and Safety India Festival - New Delhi" style="display:block;width:100%;height:auto;border:0" /></td></tr></table></td></tr></table></body></html>`;
 
   const text = [
     ...(test ? ['TEST EMAIL. This was not sent to the attendee.', ''] : []),
     `Dear ${name},`,
     '',
-    ...intro.flatMap((t) => [t, '']),
+    ...opening.flatMap((t) => [t, '']),
+    'YOUR CERTIFICATE',
+    ...certificateLines.flatMap((t) => [t, '']),
     `Get your certificate: ${claimUrl}`,
     '',
-    ...AFTER_BUTTON.flatMap((t) => [t, '']),
+    LINKEDIN_LINE,
+    '',
+    ...(photo
+      ? [
+          'YOUR PHOTOS',
+          photoLine(photo.count),
+          `See your photos: ${photo.url}`,
+          '',
+          PHOTO_CONSENT_LINE,
+          '',
+        ]
+      : []),
+    ...(feedbackUrl
+      ? [
+          'TWO MINUTES FOR US?',
+          FEEDBACK_LINE(edition),
+          `Share your feedback: ${feedbackUrl}`,
+          '',
+        ]
+      : []),
+    KEEP_PRIVATE(Boolean(photo)),
+    '',
     TAG_NOTE,
     '',
     'We hope to see you at the next TASI.',

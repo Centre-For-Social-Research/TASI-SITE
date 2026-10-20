@@ -20,6 +20,7 @@ const CERTIFICATE_EDITIONS = {
     signatory: 'Dr. Ranjana Kumari',
     signatoryRole: 'Director, Centre for Social Research',
     codePrefix: 'TASI26',
+    feedbackUrl: 'https://tally.so/r/dbWapr',
   },
 };
 const DEFAULT_EDITION = '2026';

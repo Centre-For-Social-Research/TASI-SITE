@@ -134,7 +134,10 @@ test('the certificate email links to the private page and escapes names', () => 
     token: 'T'.repeat(43),
     siteUrl: 'https://trustandsafetyindia.org',
   });
-  assert.equal(email.subject, 'Your TASI 2026 certificate is ready');
+  assert.equal(
+    email.subject,
+    'Thank you for joining TASI 2026: your certificate'
+  );
   assert.match(email.text, /one-time code/);
   assert.match(email.text, /works for 30 days/);
   assert.match(email.text, /#TASI2026/);
@@ -458,4 +461,43 @@ test('one reminder, only for emailed attendees who have not downloaded', () => {
     /reminderBlocker\(certificate\)/
   );
   assert.doesNotMatch(read('src/lib/certificate-reminders.cjs'), /require\(/);
+});
+
+test('the thank-you email adds photos and feedback when available', () => {
+  const base = { name: 'Ana', edition: '2026', token: 'T'.repeat(43) };
+  const withPhotos = buildCertificateEmail({
+    ...base,
+    photos: {
+      url: 'https://drive.google.com/drive/folders/abc_123',
+      count: 12,
+    },
+  });
+  assert.equal(
+    withPhotos.subject,
+    'Thank you for joining TASI 2026: your certificate and photos'
+  );
+  assert.match(withPhotos.text, /found 12 of you/);
+  assert.match(withPhotos.html, /drive\.google\.com\/drive\/folders\/abc_123/);
+  assert.match(withPhotos.text, /photo you shared when you registered/);
+  assert.match(withPhotos.text, /https:\/\/tally\.so\/r\/dbWapr/);
+  const one = buildCertificateEmail({
+    ...base,
+    photos: { url: 'https://drive.google.com/drive/folders/x', count: 1 },
+  });
+  assert.match(one.text, /found a photo of you/);
+  const without = buildCertificateEmail(base);
+  assert.doesNotMatch(without.text, /YOUR PHOTOS/);
+  assert.match(without.text, /Share your feedback/);
+  assert.doesNotMatch(withPhotos.html, /—/);
+  const migration = read(
+    'supabase/migrations/20261021100000_attendee_certificate_photos.sql'
+  );
+  assert.ok(
+    migration.includes(String.raw`^https://drive\.google\.com/drive/folders/`)
+  );
+  assert.match(migration, /enable row level security/);
+  assert.match(
+    read('src/lib/certificates-send.js'),
+    /getCertificatePhotos\(certificate\)/
+  );
 });

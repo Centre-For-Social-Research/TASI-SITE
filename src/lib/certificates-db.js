@@ -611,3 +611,16 @@ export async function verifyCertificateEmailCode({ certificateId, code }) {
     .eq('id', row.id);
   await logCertificateEvent(certificateId, 'code_verified');
 }
+
+// The attendee's festival photo folder, if we found them in the photos.
+export async function getCertificatePhotos(certificate) {
+  if (!certificate?.registrationId) return null;
+  const { data, error } = await db()
+    .from('attendee_certificate_photos')
+    .select('folder_url, photo_count')
+    .eq('registration_id', certificate.registrationId)
+    .eq('edition', certificate.edition)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data ? { url: data.folder_url, count: data.photo_count } : null;
+}
