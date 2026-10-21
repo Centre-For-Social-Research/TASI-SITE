@@ -52,6 +52,7 @@ test('speaker directory helpers build categories, initials, links, and photos', 
     '/speakers/2026/yoel-roth'
   );
   assert.equal(isVipSpeaker(speakers[0]), true);
+  assert.equal(isVipSpeaker('Jitin Prasada'), true);
   assert.equal(isVipSpeaker('Yoel Roth'), false);
   assert.match(
     getSpeakerLinkedInUrl(speakers[2]),

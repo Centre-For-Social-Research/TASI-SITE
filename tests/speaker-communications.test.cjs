@@ -561,11 +561,7 @@ test('speakers without profile-use consent are not published', () => {
     findSpeakerProfilePath,
   } = require('../src/lib/speaker-badge-profile.cjs');
   const speakers = require('../src/data/speakers-2026.json');
-  for (const name of [
-    'Ashwini Vaishnaw',
-    'Deepak Goel',
-    'Dr. Sanjeev Sharma',
-  ]) {
+  for (const name of ['Ashwini Vaishnaw', 'Deepak Goel']) {
     assert.ok(!speakers.some((entry) => entry.name === name), name);
     assert.equal(findSpeakerProfilePath({ name, edition: '2026' }), null);
     const email = buildSpeakerBadgeEmail({

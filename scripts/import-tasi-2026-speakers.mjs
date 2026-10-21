@@ -32,14 +32,13 @@ const consentOverrides = new Set([
   'Nicky Jackson Colaco',
   'Faye D’Souza',
   'Adam Seldow',
+  'Dr. Sanjeev Sharma',
+  'Aditi Agrawal',
+  'Jitin Prasada',
 ]);
 // Form rows without profile-use consent that the organizer chose not to
 // publish. They are skipped rather than failing the import.
-const withheldProfiles = new Set([
-  'Ashwini Vaishnaw',
-  'Deepak Goel',
-  'Dr. Sanjeev Sharma',
-]);
+const withheldProfiles = new Set(['Ashwini Vaishnaw', 'Deepak Goel']);
 const knownPhotoExceptions = new Set(['Uma Subramanian']);
 // Names the form submitted with a typo, published as corrected.
 const nameCorrections = new Map([['Uma Submanian', 'Uma Subramanian']]);

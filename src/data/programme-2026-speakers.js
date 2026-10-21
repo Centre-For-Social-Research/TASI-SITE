@@ -56,25 +56,14 @@ export const sessionSpeakers2026 = {
     'Faye D’Souza',
   ],
   'tasi26-12': ['Rahul Fernandes', 'Nandini Chatterjee Singh'],
-  'tasi26-13': [
-    'Dr. Ranjana Kumari',
-    {
-      name: 'Jitin Prasada',
-      title:
-        'Minister of State for Commerce & Industry and Electronics & IT, Government of India',
-    },
-  ],
+  'tasi26-13': ['Dr. Ranjana Kumari', 'Jitin Prasada'],
   'tasi26-16': ['Lisa Morrison', 'Madeline Shepherd', 'Karuna Nain'],
   'tasi26-85': ['Madeline Shepherd', 'Nina Bual'],
   'tasi26-18': [
     'Uthara Ganesh',
     'Laura Higgins',
     'Mahima Kaul',
-    {
-      name: 'Dr. Sanjeev Sharma',
-      title:
-        'Member Secretary, National Commission for Protection of Child Rights (NCPCR)',
-    },
+    'Dr. Sanjeev Sharma',
     'Lucy Thomas',
     'Barkha Dutt',
   ],
