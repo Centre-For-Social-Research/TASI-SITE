@@ -26,7 +26,7 @@ export default function Page() {
     <>
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <BrandedPageHero className="py-16 md:py-24">
+        <BrandedPageHero className="py-16 md:py-24" compactParticles>
           <div className="mx-auto w-full max-w-xl px-4 text-center md:px-8">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-white/75">
               TASI 2026 · Certificates

@@ -16,7 +16,7 @@ export default function Page() {
     <>
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <BrandedPageHero className="py-16 md:py-24">
+        <BrandedPageHero className="py-16 md:py-24" compactParticles>
           <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 md:px-8 lg:grid-cols-[1fr_0.95fr]">
             <div className="text-center lg:text-left">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-white/75">

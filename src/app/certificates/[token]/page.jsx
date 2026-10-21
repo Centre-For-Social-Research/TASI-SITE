@@ -70,7 +70,7 @@ export default async function Page({ params, searchParams }) {
     <>
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <BrandedPageHero className="py-14 md:py-20">
+        <BrandedPageHero className="py-14 md:py-20" compactParticles>
           <div className="mx-auto grid w-full max-w-6xl items-start gap-10 px-4 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="text-center lg:pt-6 lg:text-left">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
