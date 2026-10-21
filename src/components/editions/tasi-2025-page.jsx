@@ -1,15 +1,15 @@
 import Tasi2025Quotes from '@/components/editions/tasi-2025-quotes';
 import {
   Tasi2025AboutSection,
+  Tasi2025HighlightsVideoSection,
   Tasi2025InauguralKeynoteSection,
   Tasi2025JourneySection,
   Tasi2025KeynotesSection,
-  Tasi2025LookingAheadSection,
   Tasi2025RecommendationsSection,
   Tasi2025ResearchSpotlightsSection,
   Tasi2025TracksSection,
 } from '@/components/editions/tasi-2025-sections';
-import GlobalCta from '@/components/home/global-cta';
+import HighlightsGallery from '@/components/home/highlights-gallery';
 import HomeNavbar from '@/components/home/navbar';
 import PartnersMarqueeStrip from '@/components/sponsor/partners-marquee-strip';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
@@ -62,20 +62,20 @@ export default function Tasi2025Page() {
 
         <Tasi2025AboutSection />
         <Tasi2025JourneySection />
+        <Tasi2025HighlightsVideoSection />
         <Tasi2025KeynotesSection />
         <Tasi2025TracksSection />
         <Tasi2025InauguralKeynoteSection />
         <Tasi2025ResearchSpotlightsSection />
         <Tasi2025RecommendationsSection />
         <Tasi2025Quotes />
+        <HighlightsGallery />
         <PartnersMarqueeStrip
           eyebrow="Our Network"
           title="Partners of TASI 2025"
           description="The organizations that partnered with us to make the inaugural Trust and Safety India Festival possible."
           partners={tasi2025Partners}
         />
-        <Tasi2025LookingAheadSection />
-        <GlobalCta />
       </main>
     </>
   );

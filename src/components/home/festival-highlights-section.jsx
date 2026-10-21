@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { MotionReveal } from '@/components/ui/motion-reveal';
-
-const MUX_EMBED_URL =
-  'https://player.mux.com/WOZbrSwPSYqEFylGFgp5Z8qUGGvCRmJ3eVptCQZ1YSg?autoplay=true&muted=true&metadata-video-title=Trust+and+Safety+India+Festival+2025&video-title=Trust+and+Safety+India+Festival+2025';
+import { tasi2025HighlightsVideoUrl } from '@/data/tasi-2025-edition';
 
 export default function FestivalHighlightsSection() {
   return (
@@ -66,7 +64,7 @@ export default function FestivalHighlightsSection() {
                 {/* Video container */}
                 <div className="relative w-full aspect-video bg-black">
                   <iframe
-                    src={MUX_EMBED_URL}
+                    src={tasi2025HighlightsVideoUrl}
                     title="Trust and Safety India Festival Highlights"
                     className="absolute inset-0 h-full w-full border-0 object-cover"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
