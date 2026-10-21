@@ -73,7 +73,7 @@ export default async function Page({ params, searchParams }) {
         <BrandedPageHero className="py-14 md:py-20">
           <div className="mx-auto grid w-full max-w-6xl items-start gap-10 px-4 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="text-center lg:pt-6 lg:text-left">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-white/75">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
                 TASI 2026 · Certificate of Participation
               </p>
               <h1 className="mt-4 text-4xl font-black leading-[1.05] tracking-tight text-white md:text-5xl">

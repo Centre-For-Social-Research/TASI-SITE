@@ -50,7 +50,7 @@ function Stepper({ step }) {
       {STEPS.map((s, index) => (
         <li key={s.key} className="flex flex-1 items-center gap-2">
           <span
-            className={`flex h-7 w-7 flex-none items-center justify-center rounded-full text-xs font-black ${
+            className={`flex h-7 w-7 flex-none items-center justify-center rounded-full text-xs font-semibold ${
               index < current
                 ? 'bg-emerald-600 text-white'
                 : index === current
@@ -61,7 +61,7 @@ function Stepper({ step }) {
             {index < current ? <Check className="h-4 w-4" /> : index + 1}
           </span>
           <span
-            className={`hidden text-xs font-bold sm:block ${index === current ? 'text-stone-900 dark:text-white' : 'text-stone-500'}`}
+            className={`hidden text-xs font-medium sm:block ${index === current ? 'text-stone-900 dark:text-white' : 'text-stone-500'}`}
           >
             {s.label}
           </span>
@@ -130,8 +130,15 @@ export default function CertificateClaim({
   const verifyCode = (event) => {
     event.preventDefault();
     return run('verify', async () => {
-      await post(`${base}/session`, { code: codeInput });
-      setStep('confirm');
+      const data = await post(`${base}/session`, { code: codeInput });
+      if (data.name) {
+        setName(data.name);
+        setDraft(data.name);
+      }
+      if (typeof data.changesLeft === 'number')
+        setChangesLeft(data.changesLeft);
+      // A name confirmed on an earlier visit stays locked: skip the edit step.
+      setStep(data.confirmed ? 'ready' : 'confirm');
     });
   };
 
@@ -176,43 +183,48 @@ export default function CertificateClaim({
             <div className="flex items-start gap-3">
               <Mail className="mt-1 h-5 w-5 flex-none text-[#350265] dark:text-amber-300" />
               <div>
-                <h2 className="text-xl font-extrabold text-stone-900 dark:text-white">
-                  First, let&apos;s check it&apos;s you
+                <h2 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white">
+                  Verify your email
                 </h2>
                 <p className="mt-1 text-sm leading-relaxed text-stone-600 dark:text-slate-400">
                   We&apos;ll email a one-time code to{' '}
-                  <b className="text-stone-900 dark:text-white">
+                  <span className="font-medium text-stone-900 dark:text-white">
                     {maskedEmail}
-                  </b>
+                  </span>
                   , the address your certificate was issued to.
                 </p>
               </div>
             </div>
             {codeSent ? (
-              <form
-                onSubmit={verifyCode}
-                className="mt-6 flex flex-col gap-3 sm:flex-row"
-              >
-                <Input
-                  value={codeInput}
-                  onChange={(event) =>
-                    setCodeInput(
-                      event.target.value.replace(/\D/g, '').slice(0, 6)
-                    )
-                  }
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  placeholder="6-digit code"
-                  aria-label="6-digit code"
-                  className="h-12 w-full rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900 sm:flex-1"
-                />
-                <Button
-                  type="submit"
-                  disabled={busy === 'verify' || codeInput.length !== 6}
-                  className={PRIMARY}
+              <form onSubmit={verifyCode} className="mt-6">
+                <label
+                  htmlFor="certificate-code"
+                  className="mb-2 block text-sm font-medium text-stone-800 dark:text-slate-200"
                 >
-                  {busy === 'verify' ? 'Checking…' : 'Verify'}
-                </Button>
+                  Code from the email
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Input
+                    id="certificate-code"
+                    value={codeInput}
+                    onChange={(event) =>
+                      setCodeInput(
+                        event.target.value.replace(/\D/g, '').slice(0, 6)
+                      )
+                    }
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    className="h-12 w-full rounded-[10px] border-stone-200 bg-white px-4 text-lg tabular-nums tracking-[0.2em] text-stone-900 sm:flex-1"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={busy === 'verify' || codeInput.length !== 6}
+                    className={PRIMARY}
+                  >
+                    {busy === 'verify' ? 'Checking…' : 'Verify'}
+                  </Button>
+                </div>
               </form>
             ) : null}
             <div className="mt-4">
@@ -238,7 +250,7 @@ export default function CertificateClaim({
 
         {step === 'confirm' ? (
           <div>
-            <h2 className="text-xl font-extrabold text-stone-900 dark:text-white">
+            <h2 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white">
               Is your name right?
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-stone-600 dark:text-slate-400">
@@ -289,7 +301,7 @@ export default function CertificateClaim({
                   <button
                     type="button"
                     onClick={() => setEditing(true)}
-                    className="inline-flex items-center gap-1.5 text-sm font-bold text-rc-primary underline-offset-4 hover:underline dark:text-amber-300"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-rc-primary underline-offset-4 hover:underline dark:text-amber-300"
                   >
                     <Pencil className="h-4 w-4" /> Fix the spelling of my name
                   </button>
@@ -322,7 +334,7 @@ export default function CertificateClaim({
 
         {step === 'ready' ? (
           <div>
-            <div className="flex items-center gap-2 text-sm font-bold text-emerald-700 dark:text-emerald-400">
+            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700 dark:text-emerald-400">
               <ShieldCheck className="h-5 w-5" /> Verified and ready
             </div>
             <div className="mt-4">
@@ -344,7 +356,7 @@ export default function CertificateClaim({
                 <Linkedin className="h-4 w-4" /> Add to LinkedIn profile
               </a>
             </div>
-            <p className="mt-6 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500 dark:text-slate-400">
+            <p className="mt-6 text-sm font-semibold text-stone-800 dark:text-slate-200">
               Share your certificate
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -379,7 +391,7 @@ export default function CertificateClaim({
             </div>
             <p className="mt-6 border-t border-stone-200 pt-5 text-sm leading-relaxed text-stone-600 dark:border-slate-800 dark:text-slate-400">
               Your certificate ID is{' '}
-              <span className="font-mono font-bold text-stone-900 dark:text-white">
+              <span className="font-mono font-medium text-stone-900 dark:text-white">
                 {code}
               </span>
               . Anyone can confirm it is genuine with the verification link. The
