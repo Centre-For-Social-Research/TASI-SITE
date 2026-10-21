@@ -26,9 +26,13 @@ test('TASI 2025 page shell delegates the edition sections instead of owning stal
   assert.match(source, /Tasi2025InauguralKeynoteSection/);
   assert.match(source, /Tasi2025ResearchSpotlightsSection/);
   assert.match(source, /Tasi2025RecommendationsSection/);
-  assert.match(source, /Tasi2025LookingAheadSection/);
+  assert.match(source, /Tasi2025HighlightsVideoSection/);
   assert.match(source, /Tasi2025Quotes/);
-  assert.match(source, /<GlobalCta \/>/);
+  // The homepage gallery sits just above the partners strip; the Looking
+  // Ahead and "Be Part of the Conversation" sections were retired.
+  assert.match(source, /<HighlightsGallery \/>\s*<PartnersMarqueeStrip/);
+  assert.doesNotMatch(source, /LookingAhead/);
+  assert.doesNotMatch(source, /GlobalCta/);
   assert.match(source, /tasi2025HeroPills/);
   assert.doesNotMatch(source, /const tracks = \[/);
   assert.doesNotMatch(source, /function TrackIllustration/);
