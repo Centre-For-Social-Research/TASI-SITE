@@ -40,24 +40,33 @@ export default function Page() {
             </p>
             <form
               action={lookUp}
-              className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
+              className="mx-auto mt-8 max-w-md rounded-[10px] border border-stone-200 bg-white p-6 text-left shadow-xl shadow-stone-900/10 dark:border-slate-800 dark:bg-slate-900 md:p-8"
             >
-              <input
-                name="code"
-                required
-                maxLength={20}
-                autoComplete="off"
-                spellCheck={false}
-                placeholder="TASI26-XXXXXXXX"
-                aria-label="Certificate ID"
-                className="h-12 flex-1 rounded-[10px] border border-white/30 bg-white px-4 font-mono text-base uppercase text-stone-900 placeholder:text-stone-400"
-              />
-              <button
-                type="submit"
-                className="h-12 rounded-[10px] bg-[#ffd919] px-6 text-xs font-black uppercase tracking-[0.14em] text-[#350265] hover:bg-[#ffe34d]"
+              <label
+                htmlFor="certificate-code"
+                className="mb-2 block text-xs font-black uppercase tracking-[0.12em] text-stone-800 dark:text-slate-200"
               >
-                Verify
-              </button>
+                Certificate ID
+              </label>
+              <div className="flex flex-col gap-3">
+                <input
+                  id="certificate-code"
+                  name="code"
+                  required
+                  maxLength={20}
+                  autoComplete="off"
+                  autoCapitalize="characters"
+                  spellCheck={false}
+                  placeholder="TASI26-XXXXXXXX"
+                  className="h-12 w-full rounded-[10px] border border-stone-200 bg-white px-4 font-mono text-base uppercase tracking-[0.08em] text-stone-900 placeholder:text-stone-400 focus:border-[#350265] focus:outline-none focus:ring-2 focus:ring-[#350265]/20"
+                />
+                <button
+                  type="submit"
+                  className="h-12 w-full rounded-[10px] bg-[#350265] px-6 text-xs font-black uppercase tracking-[0.14em] text-white hover:bg-[#2a0150]"
+                >
+                  Verify certificate
+                </button>
+              </div>
             </form>
           </div>
         </BrandedPageHero>
