@@ -8,7 +8,7 @@ export const contactMetadata = {
   openGraph: {
     title: 'Contact Trust and Safety India Festival | TASI 2026',
     description:
-      'Reach TASI organizers for registration, sponsorship, media, partnerships, and festival coordination.',
+      'Reach TASI organisers about TASI 2027, delegations, partnerships, sponsorships, media requests, and the TASI 2026 recap.',
     url: '/contact',
     type: 'website',
     images: ['/opengraph-image'],

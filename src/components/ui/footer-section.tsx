@@ -122,10 +122,16 @@ function Footerdemo() {
                 Speakers
               </Link>
               <Link
+                href="/tasi-2026"
+                className="transition-colors hover:text-white"
+              >
+                TASI 2026
+              </Link>
+              <Link
                 href="/tasi-2025"
                 className="transition-colors hover:text-white"
               >
-                TASI Editions
+                TASI 2025
               </Link>
               <Link
                 href="/sponsor"
