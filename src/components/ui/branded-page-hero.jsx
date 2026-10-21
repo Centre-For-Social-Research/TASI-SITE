@@ -6,6 +6,7 @@ export default function BrandedPageHero({
   className = '',
   backgroundLayer = null,
   particles = true,
+  compactParticles = false,
 }) {
   return (
     <section
@@ -16,11 +17,17 @@ export default function BrandedPageHero({
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(85,8,158,0)_-7.06%,rgba(159,0,153,0)_16.19%,rgba(255,0,188,0)_39.45%,rgba(239,87,0,0.25)_85.96%,rgba(255,255,0,0.85)_109.21%)]" />
       <div className="pointer-events-none absolute -top-20 left-[-8%] h-64 w-64 rounded-full bg-[#5547ec]/45 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-28 right-[-8%] h-72 w-72 rounded-full bg-[#ff2bbf]/35 blur-3xl" />
+      {/* The particle canvas redraws every frame and its particle count grows
+          with its area. Heroes that hold a whole card (certificates) pass
+          compactParticles to keep it at banner height; a canvas several
+          screens tall makes scrolling stutter on phones. */}
       {particles ? (
-        <>
+        <div
+          className={`pointer-events-none absolute inset-0 ${compactParticles ? 'max-h-[360px] [mask-image:linear-gradient(to_bottom,black_70%,transparent)]' : ''}`.trim()}
+        >
           <LightHeroParticles />
           <DarkHeroParticles />
-        </>
+        </div>
       ) : null}
       {backgroundLayer}
       <div className="relative z-10">{children}</div>
