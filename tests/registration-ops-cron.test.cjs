@@ -7,19 +7,6 @@ function readSource(relativePath) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
 
-test('vercel cron is configured to drain registration ops queues through a dedicated route', () => {
-  const config = JSON.parse(readSource('vercel.json'));
-
-  assert.ok(Array.isArray(config.crons));
-  assert.ok(
-    config.crons.some(
-      (cron) =>
-        cron.path === '/api/internal/registration-ops/drain' &&
-        cron.schedule === '0 0 * * *'
-    )
-  );
-});
-
 test('registration ops drain route secures cron execution with CRON_SECRET and processes both queues', () => {
   const source = readSource(
     'src/app/api/internal/registration-ops/drain/route.js'

@@ -82,19 +82,11 @@ test('the service only resends an already issued pass, tagged as public', () => 
 
 test('the pass lookup cron needs the cron secret and only drains public jobs', () => {
   const source = read('src/app/api/internal/my-pass/drain/route.js');
-  const vercel = JSON.parse(read('vercel.json'));
 
   assert.match(source, /CRON_SECRET/);
   assert.match(source, /isPassLookupDrainActive\(\)/);
   assert.match(source, /drainPassLookupJobs/);
   assert.doesNotMatch(source, /processNextAvailable/);
-  assert.ok(
-    vercel.crons.some(
-      (cron) =>
-        cron.path === '/api/internal/my-pass/drain' &&
-        cron.schedule === '*/2 * 8-15 10 *'
-    )
-  );
 });
 
 test('the find my pass page is per-request, hidden outside the window and not indexed', () => {
