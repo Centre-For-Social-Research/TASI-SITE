@@ -4,8 +4,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const {
+  areSpeakerBadgeLinksOpen,
   buildSpeakerNameKey,
   deriveSpeakerBadgeState,
+  getSpeakerEdition,
   isValidDownloadToken,
   normalizeEdition,
   normalizeSpeakerBadgeRow,
@@ -597,4 +599,24 @@ test('speaker share captions switch to the past tense after the edition', () => 
   assert.match(before.x, /^Speaking at TASI 2026/);
   assert.match(after.linkedin, /privilege to speak/);
   assert.match(after.x, /^Spoke at TASI 2026/);
+});
+
+test('public badge links close after the edition and sends are blocked', () => {
+  const edition = getSpeakerEdition('2026');
+  assert.equal(
+    areSpeakerBadgeLinksOpen(edition, new Date('2026-10-20T12:00:00+05:30')),
+    true
+  );
+  assert.equal(
+    areSpeakerBadgeLinksOpen(edition, new Date('2026-10-21T00:00:00+05:30')),
+    false
+  );
+  assert.equal(areSpeakerBadgeLinksOpen(null), false);
+
+  const page = readSource('src/app/badge/[token]/page.jsx');
+  const image = readSource('src/app/badge/[token]/image/route.js');
+  const send = readSource('src/lib/speaker-badge-send.js');
+  assert.match(page, /areSpeakerBadgeLinksOpen\(edition\)\) notFound\(\)/);
+  assert.match(image, /areSpeakerBadgeLinksOpen\(getSpeakerEdition/);
+  assert.match(send, /Badge links for .* are closed/);
 });

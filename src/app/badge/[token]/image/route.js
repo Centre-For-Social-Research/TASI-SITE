@@ -3,8 +3,12 @@ import { getSpeakerBadgeByDownloadToken } from '@/lib/speaker-communications-db'
 import { downloadSpeakerBadgeImage } from '@/lib/speaker-badge-storage';
 import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 
-const { isValidDownloadToken, speakerBadgeDownloadFilename } =
-  speakerCommunicationsUtils;
+const {
+  areSpeakerBadgeLinksOpen,
+  getSpeakerEdition,
+  isValidDownloadToken,
+  speakerBadgeDownloadFilename,
+} = speakerCommunicationsUtils;
 
 const ERROR_HEADERS = {
   'Cache-Control': 'no-store',
@@ -34,7 +38,10 @@ export async function GET(request, context) {
 
   try {
     const badge = await getSpeakerBadgeByDownloadToken(token);
-    if (!badge?.badge_path) {
+    if (
+      !badge?.badge_path ||
+      !areSpeakerBadgeLinksOpen(getSpeakerEdition(badge.edition))
+    ) {
       return new Response('This badge link is not valid.', {
         status: 404,
         headers: ERROR_HEADERS,

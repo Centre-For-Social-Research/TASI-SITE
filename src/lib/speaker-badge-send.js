@@ -24,8 +24,12 @@ const {
   SPEAKER_COMMS_REPLY_TO,
   buildSpeakerBadgeEmail,
 } = speakerBadgeEmail;
-const { parseSpeakerEmails, speakerBadgeDownloadFilename } =
-  speakerCommunicationsUtils;
+const {
+  areSpeakerBadgeLinksOpen,
+  getSpeakerEdition,
+  parseSpeakerEmails,
+  speakerBadgeDownloadFilename,
+} = speakerCommunicationsUtils;
 const { canRetryGuestSend, hashGuestEmailRequest } = guestSendAttempt;
 
 function getSiteUrl() {
@@ -72,6 +76,13 @@ function speakerBadgeIdempotencyKey(attemptId) {
 
 async function buildBadgeMessage({ speaker, badgePath, downloadToken, test }) {
   if (!badgePath) throw new Error('Upload a badge for this speaker first.');
+  // The email links to the public badge page, so don't send once it's closed.
+  const edition = getSpeakerEdition(speaker.edition);
+  if (!areSpeakerBadgeLinksOpen(edition)) {
+    throw new Error(
+      `Badge links for ${edition?.name || 'this edition'} are closed.`
+    );
+  }
   const email = buildSpeakerBadgeEmail({
     name: speaker.name,
     edition: speaker.edition,

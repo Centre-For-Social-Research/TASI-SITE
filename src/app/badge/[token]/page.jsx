@@ -7,8 +7,12 @@ import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 import speakerBadgeShare from '@/lib/speaker-badge-share.cjs';
 import speakerBadgeEmail from '@/lib/speaker-badge-email.cjs';
 
-const { getSpeakerEdition, hasSpeakerEditionEnded, isValidDownloadToken } =
-  speakerCommunicationsUtils;
+const {
+  areSpeakerBadgeLinksOpen,
+  getSpeakerEdition,
+  hasSpeakerEditionEnded,
+  isValidDownloadToken,
+} = speakerCommunicationsUtils;
 const {
   COLLAB_NOTE,
   SOCIAL_PROFILES,
@@ -32,7 +36,7 @@ async function getBadgeOrNotFound(token) {
   if (!isValidDownloadToken(token)) notFound();
   const badge = await getSpeakerBadgeByDownloadToken(token);
   const edition = getSpeakerEdition(badge?.edition);
-  if (!badge?.badge_path || !edition) notFound();
+  if (!badge?.badge_path || !areSpeakerBadgeLinksOpen(edition)) notFound();
   return { badge, edition };
 }
 
