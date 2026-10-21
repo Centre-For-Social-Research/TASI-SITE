@@ -22,6 +22,8 @@ export default function LegalLayout({
 
   const handleLogoClick = (event) => {
     event.preventDefault();
+    // A full page load back to the homepage, not a client-side transition.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = '/';
   };
 
