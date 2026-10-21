@@ -367,7 +367,8 @@ test('downloads need a session and a confirmed, locked name', () => {
   assert.match(migration, /confirm_attendee_certificate_name/);
   const cookie = read('src/lib/certificate-access.js');
   assert.match(cookie, /httpOnly: true/);
-  assert.match(cookie, /sameSite: 'strict'/);
+  // Lax so the emailed link opens a live session without a refresh.
+  assert.match(cookie, /sameSite: 'lax'/);
 });
 
 test('the file check sends only a fingerprint and the preview has no signature', () => {
