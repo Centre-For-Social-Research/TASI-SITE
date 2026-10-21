@@ -1,14 +1,14 @@
 export const getInvolvedMetadata = {
   title: 'Get Involved With Trust and Safety India Festival | TASI 2026',
   description:
-    'Get involved with Trust and Safety India Festival 2026 through sponsorship, speaking, media participation, volunteer roles, partner events, and curated delegations.',
+    'Get involved with the Trust and Safety India Festival ahead of TASI 2027 through sponsorship, speaking, media participation, volunteer roles, partner events, and curated delegations.',
   alternates: {
     canonical: '/get-involved',
   },
   openGraph: {
     title: 'Get Involved With Trust and Safety India Festival | TASI 2026',
     description:
-      'Ways to participate in TASI 2026 as a sponsor, speaker, media partner, volunteer, delegate, or ecosystem collaborator.',
+      'Ways to take part in TASI 2027 as a sponsor, speaker, media partner, volunteer, delegate, or ecosystem collaborator.',
     url: '/get-involved',
     type: 'website',
     images: ['/opengraph-image'],

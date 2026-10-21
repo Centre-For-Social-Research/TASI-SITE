@@ -164,6 +164,8 @@ export default function SubmissionsPanel({ canExport = false }) {
     if (search) params.set('search', search);
     if (dateFrom) params.set('dateFrom', dateFrom);
     if (dateTo) params.set('dateTo', dateTo);
+    // A file download from an API route, not a page, so the router can't do it.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign(
       `/api/admin/submissions/export?${params.toString()}`
     );

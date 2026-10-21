@@ -22,6 +22,9 @@ const SPEAKER_EDITIONS = {
     hashtag: '#TASI2026',
     // Close of the last day. After this, share copy is in the past tense.
     endsAt: '2026-10-15T18:00:00+05:30',
+    // Public badge links (/badge/[token]) stop working from here; the badge
+    // rows stay in the database.
+    badgeLinksCloseAt: '2026-10-21T00:00:00+05:30',
     venueMapUrl:
       'https://www.google.com/maps/search/?api=1&query=India+International+Centre+New+Delhi',
   },
@@ -30,6 +33,16 @@ const SPEAKER_EDITIONS = {
 function hasSpeakerEditionEnded(edition, now = new Date()) {
   return (
     Boolean(edition?.endsAt) && now.getTime() >= Date.parse(edition.endsAt)
+  );
+}
+
+function areSpeakerBadgeLinksOpen(edition, now = new Date()) {
+  return (
+    Boolean(edition) &&
+    !(
+      edition.badgeLinksCloseAt &&
+      now.getTime() >= Date.parse(edition.badgeLinksCloseAt)
+    )
   );
 }
 
@@ -285,6 +298,7 @@ module.exports = {
   buildSpeakerNameKey,
   deriveSpeakerBadgeState,
   getSpeakerEdition,
+  areSpeakerBadgeLinksOpen,
   hasSpeakerEditionEnded,
   isValidDownloadToken,
   normalizeEdition,

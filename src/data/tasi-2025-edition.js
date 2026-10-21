@@ -118,10 +118,10 @@ export const tasi2025JourneyTimeline = [
     title: 'TASI 2026',
     date: 'Stop 05',
     content:
-      'The inaugural edition closed with a forward path for stronger Global South leadership, year-round engagement, and a more ambitious TASI 2026.',
+      'The inaugural edition closed with a forward path for stronger Global South leadership and year-round engagement. TASI 2026 followed on 14–15 October 2026 at the India International Centre, New Delhi.',
     icon: 'future',
     relatedIds: [4],
-    status: 'in-progress',
+    status: 'completed',
     energy: 82,
   },
 ];
