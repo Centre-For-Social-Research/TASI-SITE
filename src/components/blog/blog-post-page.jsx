@@ -41,7 +41,7 @@ function SanityBodyBlock({ block }) {
       );
     case 'blockquote':
       return (
-        <blockquote className="my-6 border-l-4 border-rc-accent pl-6 text-stone-600 italic dark:text-stone-400">
+        <blockquote className="my-8 whitespace-pre-line border-l-4 border-rc-accent pl-6 text-xl leading-relaxed text-stone-700 italic dark:text-stone-300">
           {children}
         </blockquote>
       );
