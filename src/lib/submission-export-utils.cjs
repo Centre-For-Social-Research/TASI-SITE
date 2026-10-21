@@ -1,9 +1,5 @@
 const ExcelJS = require('exceljs');
-
-function escapeCsv(value) {
-  const text = String(value ?? '');
-  return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
-}
+const { escapeCsv } = require('./csv-cell.cjs');
 
 function columnsForRows(rows) {
   return [...new Set(rows.flatMap((row) => Object.keys(row)))];

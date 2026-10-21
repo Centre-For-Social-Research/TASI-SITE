@@ -88,6 +88,20 @@ test('claiming QR pass items first recovers items stuck by an interrupted send',
   );
 });
 
+test('job items are claimed in one statement that skips rows another worker holds', () => {
+  const source = readSource('src/lib/registration-ops-db.js');
+  const migration = readSource(
+    'supabase/migrations/20261020140000_claim_job_items.sql'
+  );
+  assert.match(source, /claimJobItems\('claim_registration_email_job_items'/);
+  assert.match(source, /claimJobItems\('claim_pass_issue_email_job_items'/);
+  assert.equal((migration.match(/for update skip locked/g) || []).length, 2);
+  assert.match(
+    migration,
+    /revoke all on function public\.claim_registration_email_job_items\(uuid, integer\) from public, anon, authenticated/
+  );
+});
+
 test('stuck processing items are retried, or failed when out of attempts, only after 10 minutes', () => {
   const {
     STALE_PROCESSING_MS,

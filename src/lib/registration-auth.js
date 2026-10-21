@@ -1,10 +1,13 @@
+import { cache } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { getClerkConfigDiagnostics } from '@/lib/clerk-config';
 import operatorAuthUi from '@/lib/operator-auth-ui.cjs';
 import operatorSession from '@/lib/operator-session.cjs';
+import clerkVerifiedEmails from '@/lib/clerk-verified-emails.cjs';
 import { getStoredAdminEmails } from '@/lib/admin-email-store';
 
 const { getOperatorNavbarState } = operatorAuthUi;
+const { getVerifiedUserEmails, getSessionClaimIdentity } = clerkVerifiedEmails;
 const { toOperatorSession, logOperatorEvent } = operatorSession;
 
 function parseEmailList(value) {
@@ -16,21 +19,11 @@ function parseEmailList(value) {
   );
 }
 
-function getAccessMode() {
-  const mode = String(process.env.CLERK_ACCESS_MODE || 'both')
-    .trim()
-    .toLowerCase();
-
-  if (
-    mode === 'email_allowlist' ||
-    mode === 'metadata_roles' ||
-    mode === 'both'
-  ) {
-    return mode;
-  }
-
-  return 'both';
-}
+// Access comes only from the email lists (CLERK_*_EMAILS plus the ones admins
+// manage in Settings). Clerk publicMetadata roles are ignored on purpose: the
+// TASi-App shares this Clerk instance and uses publicMetadata.role for its own
+// admins, which must not open this console.
+const ACCESS_MODE = 'email_allowlist';
 
 function isDynamicServerUsageError(error) {
   return (
@@ -54,108 +47,12 @@ export async function getAuthorizedOperator(context = {}) {
     return result;
   }
 
+  const startedAt = Date.now();
   try {
-    const session = await auth();
-    const sessionUserIdPresent = Boolean(session?.userId);
-
-    if (!session?.userId) {
-      const result = {
-        authorized: false,
-        reason: 'unauthenticated',
-        clerkConfig,
-        sessionUserIdPresent,
-        currentUserResolved: false,
-      };
-
-      logOperatorEvent('operator.resolved', route, result);
-      return result;
-    }
-
-    const user = await currentUser();
-    const currentUserResolved = Boolean(user?.id);
-    const emails = (user?.emailAddresses || []).map((entry) =>
-      entry.emailAddress.toLowerCase()
-    );
-    const primaryEmail = emails[0] || '';
-    const envAdminEmails = parseEmailList(process.env.CLERK_ADMIN_EMAILS);
-    const envReviewerEmails = parseEmailList(process.env.CLERK_REVIEWER_EMAILS);
-    const stored = await getStoredAdminEmails();
-    const adminEmails = new Set([
-      ...envAdminEmails,
-      ...stored.adminEmails.map((e) => e.toLowerCase()),
-    ]);
-    const reviewerEmails = new Set([
-      ...envReviewerEmails,
-      ...stored.reviewerEmails.map((e) => e.toLowerCase()),
-    ]);
-    const accessMode = getAccessMode();
-    // Only trust publicMetadata — it is server-set. unsafeMetadata is
-    // user-writable from the browser and must never grant roles.
-    const metadataRole =
-      user?.publicMetadata?.tasiRole || user?.publicMetadata?.role;
-
-    const hasAdminEmail = emails.some((email) => adminEmails.has(email));
-    const hasReviewerEmail = emails.some((email) => reviewerEmails.has(email));
-    const metadataRoleMatch =
-      metadataRole === 'admin' || metadataRole === 'reviewer'
-        ? metadataRole
-        : null;
-
-    let role = null;
-    let allowlistSource = null;
-
-    if (accessMode === 'email_allowlist' || accessMode === 'both') {
-      role = hasAdminEmail ? 'admin' : hasReviewerEmail ? 'reviewer' : role;
-      if (role) {
-        allowlistSource = 'email_allowlist';
-      }
-    }
-
-    if (!role && (accessMode === 'metadata_roles' || accessMode === 'both')) {
-      role = metadataRoleMatch;
-      if (role) {
-        allowlistSource = 'metadata_roles';
-      }
-    }
-
-    if (!role) {
-      const result = {
-        authorized: false,
-        reason: 'unauthorized',
-        primaryEmail,
-        accessMode,
-        clerkConfig,
-        sessionUserIdPresent,
-        currentUserResolved,
-        allowlistSource,
-      };
-
-      logOperatorEvent('operator.resolved', route, result);
-      return result;
-    }
-
-    const result = {
-      authorized: true,
-      role,
-      userId: user?.id,
-      primaryEmail,
-      displayName: user?.fullName || primaryEmail || 'TASI Operator',
-      accessMode,
-      clerkConfig,
-      sessionUserIdPresent,
-      currentUserResolved,
-      allowlistSource,
-      operatorSession: toOperatorSession({
-        authorized: true,
-        role,
-        userId: user?.id,
-        primaryEmail,
-        displayName: user?.fullName || primaryEmail || 'TASI Operator',
-        accessMode,
-      }),
-    };
-
-    logOperatorEvent('operator.resolved', route, result);
+    const result = await resolveOperator();
+    logOperatorEvent('operator.resolved', route, result, {
+      durationMs: Date.now() - startedAt,
+    });
     return result;
   } catch (error) {
     if (isDynamicServerUsageError(error)) {
@@ -172,10 +69,105 @@ export async function getAuthorizedOperator(context = {}) {
 
     logOperatorEvent('operator.resolved', route, result, {
       errorMessage: error instanceof Error ? error.message : 'unknown',
+      durationMs: Date.now() - startedAt,
     });
     return result;
   }
 }
+
+// Reads the operator's identity without a Clerk Backend API call when the
+// session token carries primary_email (see clerk-verified-emails.cjs). Falls
+// back to currentUser() for tokens that do not have the claim yet.
+async function resolveIdentity(session) {
+  const fromClaims = getSessionClaimIdentity(session.sessionClaims);
+  if (fromClaims) {
+    return { ...fromClaims, userId: session.userId, source: 'session_claims' };
+  }
+
+  const user = await currentUser();
+  const { emails, primaryEmail } = getVerifiedUserEmails(user);
+  return {
+    emails,
+    primaryEmail: primaryEmail || emails[0] || '',
+    fullName: user?.fullName || '',
+    userId: user?.id || session.userId,
+    source: user?.id ? 'current_user' : null,
+  };
+}
+
+// One lookup per request even when the layout, page and helpers all ask.
+const resolveOperator = cache(async () => {
+  const clerkConfig = getClerkConfigDiagnostics();
+  const session = await auth();
+  const sessionUserIdPresent = Boolean(session?.userId);
+
+  if (!session?.userId) {
+    return {
+      authorized: false,
+      reason: 'unauthenticated',
+      clerkConfig,
+      sessionUserIdPresent,
+      currentUserResolved: false,
+    };
+  }
+
+  const [identity, stored] = await Promise.all([
+    resolveIdentity(session),
+    getStoredAdminEmails(),
+  ]);
+  const { emails, primaryEmail, userId } = identity;
+  const currentUserResolved = Boolean(identity.source);
+  const adminEmails = new Set([
+    ...parseEmailList(process.env.CLERK_ADMIN_EMAILS),
+    ...stored.adminEmails.map((e) => e.toLowerCase()),
+  ]);
+  const reviewerEmails = new Set([
+    ...parseEmailList(process.env.CLERK_REVIEWER_EMAILS),
+    ...stored.reviewerEmails.map((e) => e.toLowerCase()),
+  ]);
+  const accessMode = ACCESS_MODE;
+  const hasAdminEmail = emails.some((email) => adminEmails.has(email));
+  const hasReviewerEmail = emails.some((email) => reviewerEmails.has(email));
+  const role = hasAdminEmail ? 'admin' : hasReviewerEmail ? 'reviewer' : null;
+  const allowlistSource = role ? 'email_allowlist' : null;
+
+  if (!role) {
+    return {
+      authorized: false,
+      reason: 'unauthorized',
+      primaryEmail,
+      accessMode,
+      clerkConfig,
+      sessionUserIdPresent,
+      currentUserResolved,
+      allowlistSource,
+      identitySource: identity.source,
+    };
+  }
+
+  const displayName = identity.fullName || primaryEmail || 'TASI Operator';
+  return {
+    authorized: true,
+    role,
+    userId,
+    primaryEmail,
+    displayName,
+    accessMode,
+    clerkConfig,
+    sessionUserIdPresent,
+    currentUserResolved,
+    allowlistSource,
+    identitySource: identity.source,
+    operatorSession: toOperatorSession({
+      authorized: true,
+      role,
+      userId,
+      primaryEmail,
+      displayName,
+      accessMode,
+    }),
+  };
+});
 
 export async function requireAuthorizedOperator(context = {}) {
   const operator = await getAuthorizedOperator(context);

@@ -13,6 +13,12 @@ const localClerkRuntimeProps =
       }
     : {};
 
-export default function TasiClerkProvider({ children }) {
-  return <ClerkProvider {...localClerkRuntimeProps}>{children}</ClerkProvider>;
+// `dynamic` lets ClerkProvider read the per-request CSP nonce (set for /admin
+// in src/proxy.ts) and attach it to the clerk-js script it loads.
+export default function TasiClerkProvider({ children, dynamic = false }) {
+  return (
+    <ClerkProvider {...localClerkRuntimeProps} dynamic={dynamic}>
+      {children}
+    </ClerkProvider>
+  );
 }

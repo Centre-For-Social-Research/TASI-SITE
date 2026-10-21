@@ -1,4 +1,4 @@
-import { requireAuthorizedOperator } from '@/lib/registration-auth';
+import { requireAdminOperator } from '@/lib/registration-auth';
 import { adminJson } from '@/lib/admin-api-cache';
 import { rosterExportResponse } from '@/lib/admin-roster-export-response';
 import { listAllDailyCheckIns } from '@/lib/attendance-export-db';
@@ -16,7 +16,7 @@ const COLUMNS = [
 ];
 
 export async function GET(request) {
-  const authResult = await requireAuthorizedOperator({
+  const authResult = await requireAdminOperator({
     route: 'api.admin.check-in.export',
   });
   if (!authResult.ok) return authResult.response;
@@ -63,6 +63,7 @@ export async function GET(request) {
     ].sort((a, b) => b.checkedInAt.localeCompare(a.checkedInAt));
 
     return await rosterExportResponse({
+      operator: authResult.operator,
       format,
       columns: COLUMNS,
       rows,

@@ -3,6 +3,7 @@ import {
   requireAuthorizedOperator,
 } from '@/lib/registration-auth';
 import { adminJson } from '@/lib/admin-api-cache';
+import { recordAdminAuditEvent } from '@/lib/admin-audit';
 import {
   deleteSpeakerBadge,
   getSpeakerBadgeDetail,
@@ -79,6 +80,19 @@ export async function DELETE(_request, context) {
   try {
     const { id } = await context.params;
     const removed = await deleteSpeakerBadge(id);
+    try {
+      await recordAdminAuditEvent(authResult.operator, {
+        action: 'speaker.deleted',
+        targetType: 'speaker_badge',
+        targetId: removed.id,
+        details: {
+          speakerName: removed.speaker_name,
+          organization: removed.organization,
+        },
+      });
+    } catch (auditError) {
+      console.error(auditError);
+    }
     try {
       await removeSpeakerBadgeImages([removed.badge_path]);
     } catch (storageError) {

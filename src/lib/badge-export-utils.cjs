@@ -1,13 +1,5 @@
 const ExcelJS = require('exceljs');
-
-function escapeCsvValue(value) {
-  const stringValue = String(value ?? '');
-  if (/[",\n\r]/.test(stringValue)) {
-    return `"${stringValue.replace(/"/g, '""')}"`;
-  }
-
-  return stringValue;
-}
+const { escapeCsv: escapeCsvValue } = require('./csv-cell.cjs');
 
 function buildCsvExport(rows = []) {
   if (!rows.length) {

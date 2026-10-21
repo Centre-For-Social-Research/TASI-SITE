@@ -101,13 +101,60 @@ test('audit cursor reaches older actions across every source without duplicates'
         created_at: '2026-09-25T00:00:00.000Z',
       },
     ],
-    admin_email_overrides: [
+    reminder_deliveries: [
+      {
+        id: 'rd-1',
+        delivery_status: 'sent',
+        recipient_email: 'attendee@example.com',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T02:00:00.000Z',
+        campaign: { name: 'T-minus 1' },
+      },
+    ],
+    guest_invitation_deliveries: [
+      {
+        id: 'gd-1',
+        delivery_status: 'sent',
+        recipient_email: 'guest@example.com',
+        guest_name: 'Guest One',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T03:00:00.000Z',
+      },
+    ],
+    speaker_badge_deliveries: [
+      {
+        id: 'sb-1',
+        delivery_status: 'failed',
+        speaker_name: 'Speaker One',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T04:00:00.000Z',
+      },
+    ],
+    speaker_photo_deliveries: [
+      {
+        id: 'sp-1',
+        delivery_status: 'sent',
+        speaker_name: 'Speaker Two',
+        actor_email: 'operator@example.com',
+        created_at: '2026-09-26T05:00:00.000Z',
+      },
+    ],
+    admin_audit_events: [
       {
         id: 1,
-        email: 'admin@example.com',
-        role: 'admin',
-        added_by: 'operator@example.com',
+        action: 'operator_email.granted',
+        actor_email: 'operator@example.com',
+        target_id: 'admin@example.com',
+        details: { role: 'admin' },
         created_at: '2026-09-26T00:00:00.000Z',
+      },
+      {
+        id: 2,
+        action: 'registration.deleted',
+        actor_email: 'operator@example.com',
+        target_id: 'deleted-registration',
+        details: { registration_code: 'TASI-9', first_name: 'Ada' },
+        created_at: '2026-09-26T01:00:00.000Z',
       },
     ],
   };
@@ -134,9 +181,14 @@ test('audit cursor reaches older actions across every source without duplicates'
     cursor = body.nextCursor || '';
     if (!body.hasMore) break;
   }
-  assert.equal(found.length, 118);
-  assert.equal(new Set(found).size, 118);
+  assert.equal(found.length, 123);
+  assert.equal(new Set(found).size, 123);
+  assert.ok(found.includes('send:attendee@example.com'));
+  assert.ok(found.includes('send:guest@example.com'));
+  assert.ok(found.includes('send:Speaker One'));
+  assert.ok(found.includes('send:Speaker Two'));
   assert.ok(found.includes('settings:admin@example.com'));
+  assert.ok(found.includes('delete:deleted-registration'));
   assert.ok(found.includes('settings:registration'));
   assert.ok(found.includes('registration:registration-84'));
 });

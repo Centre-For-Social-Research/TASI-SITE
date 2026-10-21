@@ -3,6 +3,7 @@ import {
   requireAuthorizedOperator,
 } from '@/lib/registration-auth';
 import { adminJson } from '@/lib/admin-api-cache';
+import { recordAdminAuditEvent } from '@/lib/admin-audit';
 import {
   deleteReminderCampaign,
   getReminderCampaign,
@@ -63,6 +64,16 @@ export async function DELETE(_request, context) {
   try {
     const { id } = await context.params;
     const attachments = await deleteReminderCampaign(id);
+    try {
+      await recordAdminAuditEvent(authResult.operator, {
+        action: 'reminder.deleted',
+        targetType: 'reminder_campaign',
+        targetId: id,
+        details: { attachments: attachments.length },
+      });
+    } catch (auditError) {
+      console.error(auditError);
+    }
     try {
       await removeReminderAttachmentFiles(
         attachments.map((row) => row.storage_path)

@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
-import AdminShell from '@/components/admin/admin-shell';
-import SpeakerCommunicationsPanel from '@/components/admin/speaker-communications-panel';
+import SpeakerCommunicationsTabs from '@/components/admin/speaker-communications-tabs';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
 
@@ -26,14 +25,11 @@ export default async function SpeakerCommunicationsPage() {
   }
 
   return (
-    <AdminShell
-      operator={toOperatorSession(operator)}
-      currentPath="/admin/speaker-communications"
-    >
-      <SpeakerCommunicationsPanel
+    <>
+      <SpeakerCommunicationsTabs
         canManage={operator.role === 'admin'}
         operatorEmail={operator.primaryEmail || ''}
       />
-    </AdminShell>
+    </>
   );
 }

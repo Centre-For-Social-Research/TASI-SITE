@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation';
-import AdminShell from '@/components/admin/admin-shell';
 import SubmissionsPanel from '@/components/admin/submissions-panel';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
@@ -19,11 +18,8 @@ export default async function AdminSubmissionsPage() {
   }
 
   return (
-    <AdminShell
-      operator={toOperatorSession(operator)}
-      currentPath="/admin/submissions"
-    >
-      <SubmissionsPanel />
-    </AdminShell>
+    <>
+      <SubmissionsPanel canExport={operator.role === 'admin'} />
+    </>
   );
 }

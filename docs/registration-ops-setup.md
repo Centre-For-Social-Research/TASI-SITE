@@ -1,25 +1,18 @@
 # TASI 2026 Registration Ops Setup
 
-## Clerk access mode
+## Admin console access
 
-The app now supports three authorization modes for internal registration tools:
+Access comes only from verified email addresses on two lists:
 
-- `email_allowlist`
-- `metadata_roles`
-- `both`
+- `CLERK_ADMIN_EMAILS` / `CLERK_REVIEWER_EMAILS` in the environment. Keep these
+  to one or two break-glass owners.
+- The admin and reviewer emails added in **Admin → Settings → Access Control**.
+  This is the normal way to give or remove access; it needs no redeploy, and
+  every change is written to the audit log.
 
-Current default:
-
-```env
-CLERK_ACCESS_MODE=both
-```
-
-Recommended launch setup:
-
-- Keep `CLERK_ACCESS_MODE=both`
-- Put the final approval owner in `CLERK_ADMIN_EMAILS`
-- Put screening reviewers in `CLERK_REVIEWER_EMAILS`
-- Optionally also set Clerk public metadata `tasiRole=admin` or `tasiRole=reviewer` for longer-term role management
+Clerk `publicMetadata` roles do not grant access. The TASi-App shares this Clerk
+instance and uses `publicMetadata.role` for its own admins. `CLERK_ACCESS_MODE`
+is no longer read.
 
 Example:
 
@@ -66,7 +59,6 @@ Minimum registration/admin setup:
 RESEND_API_KEY=...
 RESEND_FROM_EMAIL=Saquib@csrindia.org
 RESEND_WEBHOOK_SECRET=...
-CLERK_ACCESS_MODE=both
 CLERK_ADMIN_EMAILS=saquib@csrindia.org
 CLERK_REVIEWER_EMAILS=reviewer1@csrindia.org,reviewer2@csrindia.org
 BADGE_LOGO_FILE_PATH=

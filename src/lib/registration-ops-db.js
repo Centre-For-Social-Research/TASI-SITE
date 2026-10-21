@@ -286,9 +286,10 @@ export async function getRegistrationQueueSummary(filters = {}) {
 }
 
 export async function getRegistrationDetail(registrationId) {
-  const registration = await getRegistrationById(registrationId);
   const supabase = getSupabase();
-  const [historyResult, notificationsResult] = await Promise.all([
+  // All three only need the id, so they run together.
+  const [registration, historyResult, notificationsResult] = await Promise.all([
+    getRegistrationById(registrationId),
     supabase
       .from('registration_status_history')
       .select(
@@ -355,20 +356,24 @@ export async function listRegistrationsForPassJob({
   return data || [];
 }
 
-export async function createPassIssueEmailJobRecord({ selection, operator }) {
-  const supabase = getSupabase();
-  const { data, error } = await supabase
-    .from('pass_issue_email_jobs')
-    .insert({
-      status: 'queued',
-      selection_mode: selection.selectionMode,
-      filters: selection.filters,
-      resend_existing: selection.resendExisting,
-      created_by_clerk_id: operator.userId,
-      created_by_email: operator.primaryEmail,
-      updated_at: new Date().toISOString(),
+// One transaction writes the job, an item per still-confirmed registration
+// and the counters (see create_pass_issue_email_job).
+export async function createPassIssueEmailJobWithItems({
+  selection,
+  registrationIds,
+  operator,
+  maxAttempts = 3,
+}) {
+  const { data, error } = await getSupabase()
+    .rpc('create_pass_issue_email_job', {
+      p_registration_ids: registrationIds,
+      p_selection_mode: selection.selectionMode,
+      p_filters: selection.filters,
+      p_resend_existing: selection.resendExisting,
+      p_actor_clerk_id: operator?.userId || null,
+      p_actor_email: operator?.primaryEmail || null,
+      p_max_attempts: maxAttempts,
     })
-    .select('*')
     .single();
 
   if (error) {
@@ -378,98 +383,11 @@ export async function createPassIssueEmailJobRecord({ selection, operator }) {
   return data;
 }
 
-export async function insertPassIssueEmailJobItems({
-  jobId,
-  registrations = [],
-  maxAttempts = 3,
-}) {
-  if (!registrations.length) {
-    return [];
-  }
-
-  const supabase = getSupabase();
-  const payload = registrations.map((registration) => ({
-    job_id: jobId,
-    registration_id: registration.id,
-    status: 'queued',
-    max_attempts: maxAttempts,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  }));
-
-  const { data, error } = await supabase
-    .from('pass_issue_email_job_items')
-    .insert(payload)
-    .select('id, registration_id, status, attempt_count, max_attempts');
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data || [];
-}
-
 export async function refreshPassIssueEmailJob(jobId) {
-  const supabase = getSupabase();
-  const { data: items, error } = await supabase
-    .from('pass_issue_email_job_items')
-    .select('status')
-    .eq('job_id', jobId);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const counters = {
-    total_items: items.length,
-    queued_items: 0,
-    processing_items: 0,
-    sent_items: 0,
-    skipped_items: 0,
-    failed_items: 0,
-    retrying_items: 0,
-  };
-
-  for (const item of items) {
-    if (item.status === 'queued') counters.queued_items += 1;
-    if (item.status === 'processing') counters.processing_items += 1;
-    if (item.status === 'sent') counters.sent_items += 1;
-    if (item.status === 'skipped') counters.skipped_items += 1;
-    if (item.status === 'failed') counters.failed_items += 1;
-    if (item.status === 'retrying') counters.retrying_items += 1;
-  }
-
-  let status = 'queued';
-  let completedAt = null;
-  if (counters.processing_items > 0 || counters.retrying_items > 0) {
-    status = 'processing';
-  } else if (counters.queued_items > 0) {
-    status = 'queued';
-  } else if (counters.failed_items > 0) {
-    status = 'failed';
-    completedAt = new Date().toISOString();
-  } else {
-    status = 'completed';
-    completedAt = new Date().toISOString();
-  }
-
-  const { data, error: updateError } = await supabase
-    .from('pass_issue_email_jobs')
-    .update({
-      ...counters,
-      status,
-      completed_at: completedAt,
-      last_processed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', jobId)
-    .select('*')
+  const { data, error } = await getSupabase()
+    .rpc('refresh_pass_issue_email_job', { p_job_id: jobId })
     .single();
-
-  if (updateError) {
-    throw new Error(updateError.message);
-  }
-
+  if (error) throw new Error(error.message);
   return data;
 }
 
@@ -755,49 +673,22 @@ export async function releaseStalePassIssueEmailJobItems(jobId) {
 
 export async function claimPassIssueEmailJobItems({ jobId, limit = 20 } = {}) {
   await releaseStalePassIssueEmailJobItems(jobId);
+  return claimJobItems('claim_pass_issue_email_job_items', jobId, limit);
+}
 
-  const supabase = getSupabase();
-  const { data: items, error } = await supabase
-    .from('pass_issue_email_job_items')
-    .select('id, job_id, registration_id, status, attempt_count, max_attempts')
-    .eq('job_id', jobId)
-    .in('status', ['queued', 'retrying'])
-    .order('created_at', { ascending: true })
-    .limit(limit);
-
+// One statement claims the whole chunk (see the claim_*_job_items RPCs);
+// rows come back unordered, so restore queue order.
+async function claimJobItems(rpcName, jobId, limit) {
+  const { data, error } = await getSupabase().rpc(rpcName, {
+    p_job_id: jobId,
+    p_limit: limit,
+  });
   if (error) {
     throw new Error(error.message);
   }
-
-  const claimed = [];
-
-  for (const item of items || []) {
-    const nextAttemptCount = Number(item.attempt_count || 0) + 1;
-    const { data: updatedItem, error: updateError } = await supabase
-      .from('pass_issue_email_job_items')
-      .update({
-        status: 'processing',
-        attempt_count: nextAttemptCount,
-        last_attempt_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', item.id)
-      .eq('status', item.status)
-      .select(
-        'id, job_id, registration_id, status, attempt_count, max_attempts'
-      )
-      .maybeSingle();
-
-    if (updateError) {
-      throw new Error(updateError.message);
-    }
-
-    if (updatedItem) {
-      claimed.push(updatedItem);
-    }
-  }
-
-  return claimed;
+  return (data || []).sort((a, b) =>
+    String(a.created_at).localeCompare(String(b.created_at))
+  );
 }
 
 export async function updatePassIssueEmailJobItem(itemId, fields) {
@@ -974,50 +865,7 @@ export async function claimRegistrationEmailJobItems({
   jobId,
   limit = 20,
 } = {}) {
-  const supabase = getSupabase();
-  const { data: items, error } = await supabase
-    .from('registration_email_job_items')
-    .select(
-      'id, job_id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
-    )
-    .eq('job_id', jobId)
-    .in('status', ['queued', 'retrying'])
-    .order('created_at', { ascending: true })
-    .limit(limit);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const claimed = [];
-
-  for (const item of items || []) {
-    const nextAttemptCount = Number(item.attempt_count || 0) + 1;
-    const { data: updatedItem, error: updateError } = await supabase
-      .from('registration_email_job_items')
-      .update({
-        status: 'processing',
-        attempt_count: nextAttemptCount,
-        last_attempt_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', item.id)
-      .eq('status', item.status)
-      .select(
-        'id, job_id, registration_id, notification_id, template_type, status, attempt_count, max_attempts'
-      )
-      .maybeSingle();
-
-    if (updateError) {
-      throw new Error(updateError.message);
-    }
-
-    if (updatedItem) {
-      claimed.push(updatedItem);
-    }
-  }
-
-  return claimed;
+  return claimJobItems('claim_registration_email_job_items', jobId, limit);
 }
 
 export async function listRegistrationEmailJobItems({
@@ -1098,6 +946,20 @@ export async function updateRegistrationEmailJobItem(itemId, fields) {
     throw new Error(error.message);
   }
 
+  return data;
+}
+
+// Deleting a registration cascades away its status history, so the audit
+// event keeps enough to say who and what was removed.
+export async function getRegistrationAuditSnapshot(id) {
+  const { data, error } = await getSupabase()
+    .from('event_registrations')
+    .select(
+      'id, registration_code, first_name, last_name, email, organization, status, attendee_category, created_at'
+    )
+    .eq('id', id)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
   return data;
 }
 

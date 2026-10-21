@@ -1,9 +1,11 @@
 import rosterExport from '@/lib/admin-roster-export.cjs';
 import { ADMIN_NO_STORE_HEADERS } from '@/lib/admin-api-cache';
+import { recordExportAuditEvent } from '@/lib/admin-audit';
 
 const { buildRosterCsv, buildRosterExcel } = rosterExport;
 
 export async function rosterExportResponse({
+  operator,
   format,
   columns,
   rows,
@@ -14,6 +16,10 @@ export async function rosterExportResponse({
   const file = isExcel
     ? await buildRosterExcel(columns, rows, sheetName)
     : buildRosterCsv(columns, rows);
+  await recordExportAuditEvent(operator, basename, {
+    format,
+    rows: rows.length,
+  });
   return new Response(file, {
     headers: {
       ...ADMIN_NO_STORE_HEADERS,

@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import AdminAccessFallback from '@/components/admin/admin-access-fallback';
-import AdminShell from '@/components/admin/admin-shell';
 import SpotRegistrationsPanel from '@/components/admin/spot-registrations-panel';
 import { getAuthorizedOperator } from '@/lib/registration-auth';
 import operatorSession from '@/lib/operator-session.cjs';
@@ -25,12 +24,9 @@ export default async function SpotRegistrationsPage() {
   }
 
   return (
-    <AdminShell
-      operator={toOperatorSession(operator)}
-      currentPath="/admin/spot-registrations"
-    >
+    <>
       {/* Admins and reviewers both work the desk and can register walk-ins. */}
-      <SpotRegistrationsPanel canManage />
-    </AdminShell>
+      <SpotRegistrationsPanel canManage canExport={operator.role === 'admin'} />
+    </>
   );
 }

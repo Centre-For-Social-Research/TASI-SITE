@@ -9,7 +9,7 @@ import reviewUpdate from '@/lib/registration-review-update.cjs';
 import checkInDayUtils from '@/lib/check-in-day-utils.cjs';
 
 const { normalizeRegistrationRecord, getIssuedEntryPass } = passUtils;
-const { resolveRegistrationReviewFields } = reviewUpdate;
+const { buildRegistrationReviewItems } = reviewUpdate;
 const { getCheckInDayNumber, isCheckedInForDay, normalizeCheckInDay } =
   checkInDayUtils;
 
@@ -19,14 +19,6 @@ function getSupabase() {
 
 function isUniqueViolation(error) {
   return error?.code === '23505' || /duplicate key/i.test(error?.message || '');
-}
-
-export class StaleRegistrationUpdateError extends Error {
-  constructor(message = 'Registration changed before this update could save.') {
-    super(message);
-    this.name = 'StaleRegistrationUpdateError';
-    this.code = 'STALE_REGISTRATION_UPDATE';
-  }
 }
 
 function baseRegistrationSelect() {
@@ -328,78 +320,73 @@ export async function listRegistrations(filters = {}) {
   };
 }
 
-export async function updateRegistrationStatus({
-  registrationId,
+// One snapshot read plus one transactional RPC for a single or bulk review:
+// status, history, notifications and the email job are written together.
+export async function applyRegistrationReviews({
+  updates,
   status,
   reviewNotes,
   speakerFlag,
   vipFlag,
   operator,
-  expectedUpdatedAt,
-  existingRegistration,
+  maxEmailAttempts = 3,
 }) {
-  const existing =
-    existingRegistration || (await getRegistrationById(registrationId));
-  const reviewFields = resolveRegistrationReviewFields(existing, {
+  const ids = [
+    ...new Set(
+      updates
+        .map((update) => String(update?.registrationId || '').trim())
+        .filter(Boolean)
+    ),
+  ];
+  const snapshots = await getRegistrationReviewSnapshots(ids);
+  const { items, missingIds } = buildRegistrationReviewItems({
+    updates,
+    snapshots,
     reviewNotes,
     speakerFlag,
     vipFlag,
+    getBadgeColor,
   });
-  const nextSpeakerFlag = reviewFields.speakerFlag;
-  const nextVipFlag = reviewFields.vipFlag;
-  const badgeColor = getBadgeColor({
-    attendeeCategory: existing.attendee_category,
-    speakerFlag: nextSpeakerFlag,
-    vipFlag: nextVipFlag,
-  });
-  const exceptionBadgeRequired = status === 'confirmed' && isAfterBadgeFreeze();
-  const supabase = getSupabase();
-  let updateQuery = supabase
-    .from('event_registrations')
-    .update({
-      status,
-      review_notes: reviewFields.reviewNotes || null,
-      speaker_flag: nextSpeakerFlag,
-      vip_flag: nextVipFlag,
-      badge_color_label: badgeColor.label,
-      badge_color_hex: badgeColor.hex,
-      reviewed_at: new Date().toISOString(),
-      reviewed_by_clerk_id: operator.userId,
-      reviewed_by_email: operator.primaryEmail,
-      exception_badge_required: exceptionBadgeRequired,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', registrationId);
 
-  if (expectedUpdatedAt) {
-    updateQuery = updateQuery.eq('updated_at', expectedUpdatedAt);
+  if (!items.length) {
+    return {
+      registrations: [],
+      conflictIds: [],
+      missingIds,
+      jobId: null,
+      emailCount: 0,
+    };
   }
 
-  const { data, error } = await updateQuery
-    .select(baseRegistrationSelect())
-    .maybeSingle();
+  const { data, error } = await getSupabase().rpc(
+    'apply_registration_reviews',
+    {
+      p_items: items,
+      p_status: status,
+      p_exception_badge_required:
+        status === 'confirmed' && isAfterBadgeFreeze(),
+      p_history_notes:
+        typeof reviewNotes === 'string' ? reviewNotes.trim() || null : null,
+      p_actor_clerk_id: operator?.userId || null,
+      p_actor_email: operator?.primaryEmail || null,
+      p_max_attempts: maxEmailAttempts,
+    }
+  );
 
   if (error) {
     throw new Error(error.message);
   }
 
-  if (!data) {
-    throw new StaleRegistrationUpdateError();
-  }
-
-  await appendStatusHistory({
-    registrationId,
-    previousStatus: existing.status,
-    nextStatus: status,
-    actorClerkId: operator.userId,
-    actorEmail: operator.primaryEmail,
-    actionType: 'status_updated',
-    notes: typeof reviewNotes === 'string' ? reviewNotes.trim() || null : null,
-  });
-
+  const previousStatuses = data?.previous_statuses || {};
   return {
-    ...normalizeRegistrationRecord(data),
-    previousStatus: existing.status,
+    registrations: (data?.registrations || []).map((registration) => ({
+      ...normalizeRegistrationRecord(registration),
+      previousStatus: previousStatuses[registration.id] ?? null,
+    })),
+    conflictIds: data?.conflict_ids || [],
+    missingIds,
+    jobId: data?.job_id || null,
+    emailCount: data?.email_count || 0,
   };
 }
 
@@ -420,8 +407,16 @@ export async function getConfirmedRegistrationsForPassIssue() {
   );
 }
 
-export async function issuePassForRegistration({ registrationId, operator }) {
-  const registration = await getRegistrationById(registrationId);
+export async function issuePassForRegistration({
+  registrationId,
+  registration: loadedRegistration = null,
+  operator,
+}) {
+  // Callers that already hold the full row (the QR worker) pass it in.
+  const registration =
+    loadedRegistration?.id === registrationId
+      ? loadedRegistration
+      : await getRegistrationById(registrationId);
 
   if (registration.status !== 'confirmed') {
     throw new Error('Only confirmed attendees can receive a QR pass.');

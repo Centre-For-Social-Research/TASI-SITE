@@ -1,14 +1,5 @@
 const ExcelJS = require('exceljs');
-
-function safeCell(value) {
-  const text = String(value ?? '');
-  return /^[\s]*[=+\-@]/.test(text) ? `'${text}` : text;
-}
-
-function escapeCsv(value) {
-  const text = safeCell(value);
-  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
-}
+const { safeCell, escapeCsv } = require('./csv-cell.cjs');
 
 function buildRosterCsv(columns, rows) {
   return `${[

@@ -187,15 +187,30 @@ test('batch status route replaces client-side request storms and supports stale 
     /selectedIds\.map\(\(registrationId\) =>\s*updateRegistrationStatus/s
   );
   assert.match(batchRoute, /conflictIds/);
-  assert.match(batchRoute, /queueRegistrationEmailBatchJob/);
   assert.match(statusRoute, /status: 409/);
-  assert.match(registrationDb, /expectedUpdatedAt/);
-  assert.match(registrationDb, /StaleRegistrationUpdateError/);
-  assert.match(batchRoute, /getRegistrationReviewSnapshots/);
-  assert.match(batchRoute, /existingRegistration: snapshots\.get/);
+  // Both routes take one snapshot read and one transactional RPC.
+  assert.match(batchRoute, /applyRegistrationReviews/);
+  assert.match(statusRoute, /applyRegistrationReviews/);
+  assert.match(registrationDb, /getRegistrationReviewSnapshots\(ids\)/);
+  assert.match(registrationDb, /\.rpc\(\s*'apply_registration_reviews'/);
+  assert.doesNotMatch(batchRoute, /for \(const update of updates\)/);
+});
+
+test('review RPC locks on updated_at and writes the email job in one transaction', () => {
+  const migration = readSource(
+    'supabase/migrations/20261020130000_apply_registration_reviews.sql'
+  );
   assert.match(
-    registrationDb,
-    /existingRegistration \|\| \(await getRegistrationById/
+    migration,
+    /updated_at = \(v_item ->> 'expected_updated_at'\)::timestamptz\s+for update/
+  );
+  assert.match(migration, /insert into public\.registration_status_history/);
+  assert.match(migration, /insert into public\.registration_notifications/);
+  assert.match(migration, /insert into public\.registration_email_job_items/);
+  assert.match(migration, /security invoker/);
+  assert.match(
+    migration,
+    /revoke all on function public\.apply_registration_reviews\([^)]*\) from public, anon, authenticated/
   );
 });
 

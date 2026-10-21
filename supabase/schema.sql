@@ -983,6 +983,750 @@ set public = false,
     file_size_limit = excluded.file_size_limit,
     allowed_mime_types = excluded.allowed_mime_types;
 
+-- Speaker photo links: per-edition Google Drive folders of each speaker's
+-- event photos, sent from the Photos tab of Speaker Communications. Separate
+-- from speaker_badges so the badge tab and its send history stay as they are.
+create table if not exists public.speaker_photo_links (
+  id uuid primary key default gen_random_uuid(),
+  edition text not null default '2026',
+  speaker_name text not null,
+  name_key text not null,
+  emails text[] not null default '{}'
+    check (cardinality(emails) <= 3),
+  drive_url text,
+  photo_count integer check (photo_count is null or photo_count >= 0),
+  status text not null default 'draft'
+    check (status in ('draft', 'sending', 'sent', 'failed')),
+  send_count integer not null default 0 check (send_count >= 0),
+  first_sent_at timestamptz,
+  last_sent_at timestamptz,
+  last_sent_drive_url text,
+  last_provider_message_id text,
+  last_error text,
+  created_by_email text,
+  last_sent_by_clerk_id text,
+  last_sent_by_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists idx_speaker_photo_links_edition_name_key
+  on public.speaker_photo_links (edition, name_key);
+
+-- A delivery row is also the durable send attempt. Its id is the Resend
+-- idempotency key, created before contacting the provider.
+create table if not exists public.speaker_photo_deliveries (
+  id uuid primary key default gen_random_uuid(),
+  speaker_photo_link_id uuid not null
+    references public.speaker_photo_links(id) on delete cascade,
+  template_key text not null default 'speaker_photos_v1',
+  delivery_status text not null
+    check (delivery_status in ('sending', 'accepted', 'failed')),
+  recipient_emails text[] not null,
+  speaker_name text not null,
+  drive_url text not null,
+  request_sha256 text,
+  provider_message_id text,
+  failure_reason text,
+  actor_clerk_id text,
+  actor_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_speaker_photo_deliveries_link
+  on public.speaker_photo_deliveries (speaker_photo_link_id, created_at desc);
+create unique index if not exists idx_speaker_photo_one_active_send
+  on public.speaker_photo_deliveries (speaker_photo_link_id)
+  where delivery_status = 'sending';
+
+alter table public.speaker_photo_links enable row level security;
+alter table public.speaker_photo_deliveries enable row level security;
+
+drop policy if exists "Deny speaker photo links api access" on public.speaker_photo_links;
+create policy "Deny speaker photo links api access"
+  on public.speaker_photo_links
+  for all to anon, authenticated
+  using (false)
+  with check (false);
+
+drop policy if exists "Deny speaker photo deliveries api access"
+  on public.speaker_photo_deliveries;
+create policy "Deny speaker photo deliveries api access"
+  on public.speaker_photo_deliveries
+  for all to anon, authenticated
+  using (false)
+  with check (false);
+
+revoke all on public.speaker_photo_links, public.speaker_photo_deliveries from anon, authenticated;
+grant select, insert, update, delete on public.speaker_photo_links, public.speaker_photo_deliveries to service_role;
+
+create or replace function public.claim_speaker_photo_send(
+  p_speaker_photo_link_id uuid,
+  p_expected_updated_at timestamptz,
+  p_actor_clerk_id text,
+  p_actor_email text
+)
+returns public.speaker_photo_deliveries
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_link public.speaker_photo_links;
+  v_attempt public.speaker_photo_deliveries;
+begin
+  update public.speaker_photo_links
+  set status = 'sending', last_error = null, updated_at = now()
+  where id = p_speaker_photo_link_id
+    and status in ('draft', 'sent', 'failed')
+    and updated_at = p_expected_updated_at
+    and cardinality(emails) > 0
+    and nullif(trim(drive_url), '') is not null
+  returning * into v_link;
+  if not found then
+    raise exception 'Speaker photos changed or are already being sent.' using errcode = 'P0001';
+  end if;
+
+  insert into public.speaker_photo_deliveries (
+    speaker_photo_link_id, delivery_status, recipient_emails, speaker_name,
+    drive_url, actor_clerk_id, actor_email
+  ) values (
+    v_link.id, 'sending', v_link.emails, v_link.speaker_name,
+    v_link.drive_url, p_actor_clerk_id, p_actor_email
+  ) returning * into v_attempt;
+  return v_attempt;
+end;
+$$;
+
+create or replace function public.finish_speaker_photo_send(
+  p_attempt_id uuid,
+  p_outcome text,
+  p_provider_message_id text default null,
+  p_failure_reason text default null
+)
+returns public.speaker_photo_links
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_attempt public.speaker_photo_deliveries;
+  v_link public.speaker_photo_links;
+  v_now timestamptz := now();
+begin
+  if p_outcome is null or p_outcome not in ('accepted', 'failed') then
+    raise exception 'Invalid speaker photo send outcome.' using errcode = '22023';
+  end if;
+  if p_outcome = 'accepted' and nullif(trim(p_provider_message_id), '') is null then
+    raise exception 'Accepted speaker photo send requires a provider message ID.' using errcode = '22023';
+  end if;
+
+  select * into v_attempt from public.speaker_photo_deliveries
+  where id = p_attempt_id for update;
+  if not found then
+    raise exception 'Speaker photo send attempt not found.' using errcode = 'P0002';
+  end if;
+  if v_attempt.delivery_status = 'accepted' and p_outcome = 'accepted'
+    and v_attempt.provider_message_id = p_provider_message_id then
+    select * into v_link from public.speaker_photo_links
+    where id = v_attempt.speaker_photo_link_id;
+    return v_link;
+  end if;
+  if v_attempt.delivery_status <> 'sending' then
+    raise exception 'Speaker photo send attempt is already resolved.' using errcode = 'P0001';
+  end if;
+
+  update public.speaker_photo_links
+  set status = case when p_outcome = 'accepted' then 'sent' else 'failed' end,
+      send_count = send_count + case when p_outcome = 'accepted' then 1 else 0 end,
+      first_sent_at = case when p_outcome = 'accepted' then coalesce(first_sent_at, v_now) else first_sent_at end,
+      last_sent_at = case when p_outcome = 'accepted' then v_now else last_sent_at end,
+      last_sent_drive_url = case when p_outcome = 'accepted' then v_attempt.drive_url else last_sent_drive_url end,
+      last_provider_message_id = case when p_outcome = 'accepted' then p_provider_message_id else last_provider_message_id end,
+      last_sent_by_clerk_id = case when p_outcome = 'accepted' then v_attempt.actor_clerk_id else last_sent_by_clerk_id end,
+      last_sent_by_email = case when p_outcome = 'accepted' then v_attempt.actor_email else last_sent_by_email end,
+      last_error = case when p_outcome = 'accepted' then null else left(coalesce(p_failure_reason, 'Email was not sent.'), 1000) end,
+      updated_at = v_now
+  where id = v_attempt.speaker_photo_link_id and status = 'sending'
+  returning * into v_link;
+  if not found then
+    raise exception 'Speaker photos are no longer sending.' using errcode = 'P0001';
+  end if;
+
+  update public.speaker_photo_deliveries
+  set delivery_status = p_outcome,
+      provider_message_id = case when p_outcome = 'accepted' then p_provider_message_id else null end,
+      failure_reason = case when p_outcome = 'failed' then left(coalesce(p_failure_reason, 'Email was not sent.'), 1000) else null end,
+      updated_at = v_now
+  where id = p_attempt_id;
+  return v_link;
+end;
+$$;
+
+revoke all on function public.claim_speaker_photo_send(uuid, timestamptz, text, text) from public, anon, authenticated;
+revoke all on function public.finish_speaker_photo_send(uuid, text, text, text) from public, anon, authenticated;
+grant execute on function public.claim_speaker_photo_send(uuid, timestamptz, text, text) to service_role;
+grant execute on function public.finish_speaker_photo_send(uuid, text, text, text) to service_role;
+
+-- Personal touches for the speaker photo email: the sessions they spoke in,
+-- one line they said on stage, and one featured photo shown in the email.
+alter table public.speaker_photo_links
+  add column if not exists session_titles text[] not null default '{}'
+    check (cardinality(session_titles) <= 5),
+  add column if not exists quote text
+    check (quote is null or char_length(quote) <= 400),
+  add column if not exists featured_photo_path text,
+  add column if not exists featured_photo_sha256 text;
+
+-- Featured photos stay private; the server embeds them in the email.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('speaker-photo-picks', 'speaker-photo-picks', false, 3145728, array['image/jpeg'])
+on conflict (id) do update
+set public = false,
+    file_size_limit = excluded.file_size_limit,
+    allowed_mime_types = excluded.allowed_mime_types;
+
+
+-- Attendee certificates of participation, issued from the admin Certificates tab.
+-- One certificate per attendee registration per edition. The public
+-- certificate code is printed on the PDF and used for verification; the
+-- download link carries a separate secret token, stored only as a hash.
+create table if not exists public.attendee_certificates (
+  id uuid primary key default gen_random_uuid(),
+  edition text not null default '2026',
+  registration_id uuid
+    references public.event_registrations(id) on delete set null,
+  code text not null unique
+    check (code ~ '^TASI[0-9]{2}-[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{8}$'),
+  claim_token_hash text not null unique,
+  recipient_name text not null
+    check (char_length(recipient_name) between 2 and 80),
+  original_name text not null,
+  name_change_count integer not null default 0
+    check (name_change_count between 0 and 2),
+  email text not null,
+  source text not null default 'check-in'
+    check (source in ('check-in', 'manual')),
+  status text not null default 'active'
+    check (status in ('active', 'revoked')),
+  revoked_reason text,
+  revoked_at timestamptz,
+  revoked_by_email text,
+  issued_at timestamptz not null default now(),
+  download_count integer not null default 0 check (download_count >= 0),
+  first_downloaded_at timestamptz,
+  last_downloaded_at timestamptz,
+  email_status text not null default 'draft'
+    check (email_status in ('draft', 'sending', 'sent', 'failed')),
+  send_count integer not null default 0 check (send_count >= 0),
+  last_sent_at timestamptz,
+  last_provider_message_id text,
+  last_error text,
+  created_by_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists idx_attendee_certificates_edition_registration
+  on public.attendee_certificates (edition, registration_id)
+  where registration_id is not null;
+create index if not exists idx_attendee_certificates_edition_email
+  on public.attendee_certificates (edition, lower(email));
+
+-- Every change to a certificate, including each download and name change.
+create table if not exists public.attendee_certificate_events (
+  id uuid primary key default gen_random_uuid(),
+  certificate_id uuid not null
+    references public.attendee_certificates(id) on delete cascade,
+  event_type text not null
+    check (event_type in ('issued', 'emailed', 'email_failed', 'link_reissued',
+      'name_changed', 'downloaded', 'revoked', 'reinstated')),
+  detail jsonb not null default '{}'::jsonb,
+  actor_email text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_attendee_certificate_events_certificate
+  on public.attendee_certificate_events (certificate_id, created_at desc);
+
+-- A delivery row is the durable send attempt; its id is the Resend
+-- idempotency key, created before contacting the provider.
+create table if not exists public.attendee_certificate_deliveries (
+  id uuid primary key default gen_random_uuid(),
+  certificate_id uuid not null
+    references public.attendee_certificates(id) on delete cascade,
+  delivery_status text not null
+    check (delivery_status in ('sending', 'accepted', 'failed')),
+  recipient_email text not null,
+  request_sha256 text,
+  provider_message_id text,
+  failure_reason text,
+  actor_clerk_id text,
+  actor_email text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_attendee_certificate_deliveries_certificate
+  on public.attendee_certificate_deliveries (certificate_id, created_at desc);
+create unique index if not exists idx_attendee_certificate_one_active_send
+  on public.attendee_certificate_deliveries (certificate_id)
+  where delivery_status = 'sending';
+
+alter table public.attendee_certificates enable row level security;
+alter table public.attendee_certificate_events enable row level security;
+alter table public.attendee_certificate_deliveries enable row level security;
+
+drop policy if exists "Deny attendee certificates api access" on public.attendee_certificates;
+create policy "Deny attendee certificates api access"
+  on public.attendee_certificates for all to anon, authenticated
+  using (false) with check (false);
+drop policy if exists "Deny attendee certificate events api access" on public.attendee_certificate_events;
+create policy "Deny attendee certificate events api access"
+  on public.attendee_certificate_events for all to anon, authenticated
+  using (false) with check (false);
+drop policy if exists "Deny attendee certificate deliveries api access" on public.attendee_certificate_deliveries;
+create policy "Deny attendee certificate deliveries api access"
+  on public.attendee_certificate_deliveries for all to anon, authenticated
+  using (false) with check (false);
+
+revoke all on public.attendee_certificates, public.attendee_certificate_events,
+  public.attendee_certificate_deliveries from anon, authenticated;
+grant select, insert, update, delete on public.attendee_certificates,
+  public.attendee_certificate_events, public.attendee_certificate_deliveries
+  to service_role;
+
+-- Everyone eligible for an attendee certificate: confirmed, checked in on at
+-- least one day, and not a speaker. Walk-ins live in spot_registrations and
+-- are never in this list.
+create or replace view public.attendee_certificate_eligible
+with (security_invoker = true) as
+select r.id as registration_id, r.first_name, r.last_name, r.email,
+  r.organization, r.attended_days, r.checked_in_at
+from public.event_registrations r
+where r.status = 'confirmed'
+  and (r.checked_in_at is not null or cardinality(r.attended_days) > 0)
+  and r.speaker_flag = false
+  and r.priority_tier <> 'Speakers'
+  and r.source <> 'tasi-2026-speaker-import';
+
+revoke all on public.attendee_certificate_eligible from anon, authenticated;
+grant select on public.attendee_certificate_eligible to service_role;
+
+create or replace function public.claim_attendee_certificate_send(
+  p_certificate_id uuid,
+  p_expected_updated_at timestamptz,
+  p_actor_clerk_id text,
+  p_actor_email text
+)
+returns public.attendee_certificate_deliveries
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_cert public.attendee_certificates;
+  v_attempt public.attendee_certificate_deliveries;
+begin
+  update public.attendee_certificates
+  set email_status = 'sending', last_error = null, updated_at = now()
+  where id = p_certificate_id
+    and status = 'active'
+    and email_status in ('draft', 'sent', 'failed')
+    and updated_at = p_expected_updated_at
+  returning * into v_cert;
+  if not found then
+    raise exception 'Certificate changed or is already being sent.' using errcode = 'P0001';
+  end if;
+
+  insert into public.attendee_certificate_deliveries (
+    certificate_id, delivery_status, recipient_email, actor_clerk_id, actor_email
+  ) values (
+    v_cert.id, 'sending', v_cert.email, p_actor_clerk_id, p_actor_email
+  ) returning * into v_attempt;
+  return v_attempt;
+end;
+$$;
+
+create or replace function public.finish_attendee_certificate_send(
+  p_attempt_id uuid,
+  p_outcome text,
+  p_provider_message_id text default null,
+  p_failure_reason text default null
+)
+returns public.attendee_certificates
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_attempt public.attendee_certificate_deliveries;
+  v_cert public.attendee_certificates;
+  v_now timestamptz := now();
+begin
+  if p_outcome is null or p_outcome not in ('accepted', 'failed') then
+    raise exception 'Invalid certificate send outcome.' using errcode = '22023';
+  end if;
+  if p_outcome = 'accepted' and nullif(trim(p_provider_message_id), '') is null then
+    raise exception 'Accepted certificate send requires a provider message ID.' using errcode = '22023';
+  end if;
+
+  select * into v_attempt from public.attendee_certificate_deliveries
+  where id = p_attempt_id for update;
+  if not found then
+    raise exception 'Certificate send attempt not found.' using errcode = 'P0002';
+  end if;
+  if v_attempt.delivery_status = 'accepted' and p_outcome = 'accepted'
+    and v_attempt.provider_message_id = p_provider_message_id then
+    select * into v_cert from public.attendee_certificates where id = v_attempt.certificate_id;
+    return v_cert;
+  end if;
+  if v_attempt.delivery_status <> 'sending' then
+    raise exception 'Certificate send attempt is already resolved.' using errcode = 'P0001';
+  end if;
+
+  update public.attendee_certificates
+  set email_status = case when p_outcome = 'accepted' then 'sent' else 'failed' end,
+      send_count = send_count + case when p_outcome = 'accepted' then 1 else 0 end,
+      last_sent_at = case when p_outcome = 'accepted' then v_now else last_sent_at end,
+      last_provider_message_id = case when p_outcome = 'accepted' then p_provider_message_id else last_provider_message_id end,
+      last_error = case when p_outcome = 'accepted' then null else left(coalesce(p_failure_reason, 'Email was not sent.'), 1000) end,
+      updated_at = v_now
+  where id = v_attempt.certificate_id and email_status = 'sending'
+  returning * into v_cert;
+  if not found then
+    raise exception 'Certificate is no longer sending.' using errcode = 'P0001';
+  end if;
+
+  update public.attendee_certificate_deliveries
+  set delivery_status = p_outcome,
+      provider_message_id = case when p_outcome = 'accepted' then p_provider_message_id else null end,
+      failure_reason = case when p_outcome = 'failed' then left(coalesce(p_failure_reason, 'Email was not sent.'), 1000) else null end,
+      updated_at = v_now
+  where id = p_attempt_id;
+
+  insert into public.attendee_certificate_events (certificate_id, event_type, detail, actor_email)
+  values (v_cert.id, case when p_outcome = 'accepted' then 'emailed' else 'email_failed' end,
+    jsonb_build_object('attempt_id', p_attempt_id), v_attempt.actor_email);
+  return v_cert;
+end;
+$$;
+
+-- A name change by the attendee: at most two, each one logged.
+create or replace function public.change_attendee_certificate_name(
+  p_token_hash text,
+  p_new_name text
+)
+returns public.attendee_certificates
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_cert public.attendee_certificates;
+  v_old text;
+begin
+  select * into v_cert from public.attendee_certificates
+  where claim_token_hash = p_token_hash for update;
+  if not found then
+    raise exception 'Certificate not found.' using errcode = 'P0002';
+  end if;
+  if v_cert.status <> 'active' then
+    raise exception 'This certificate is no longer active.' using errcode = 'P0001';
+  end if;
+  if v_cert.recipient_name = p_new_name then
+    return v_cert;
+  end if;
+  if v_cert.name_change_count >= 2 then
+    raise exception 'This name has already been changed twice. Write to us to change it again.' using errcode = 'P0001';
+  end if;
+  v_old := v_cert.recipient_name;
+  update public.attendee_certificates
+  set recipient_name = p_new_name, name_change_count = name_change_count + 1, updated_at = now()
+  where id = v_cert.id
+  returning * into v_cert;
+  insert into public.attendee_certificate_events (certificate_id, event_type, detail)
+  values (v_cert.id, 'name_changed', jsonb_build_object('from', v_old, 'to', p_new_name));
+  return v_cert;
+end;
+$$;
+
+revoke all on function public.claim_attendee_certificate_send(uuid, timestamptz, text, text) from public, anon, authenticated;
+revoke all on function public.finish_attendee_certificate_send(uuid, text, text, text) from public, anon, authenticated;
+revoke all on function public.change_attendee_certificate_name(text, text) from public, anon, authenticated;
+grant execute on function public.claim_attendee_certificate_send(uuid, timestamptz, text, text) to service_role;
+grant execute on function public.finish_attendee_certificate_send(uuid, text, text, text) to service_role;
+grant execute on function public.change_attendee_certificate_name(text, text) to service_role;
+
+-- Claim security for attendee certificates:
+--  * download links expire (token_expires_at);
+--  * opening a link needs a one-time code sent to the attendee's email;
+--  * the attendee confirms their name once, after which it is locked;
+--  * the SHA-256 of the issued PDF is kept so a file can be checked later.
+alter table public.attendee_certificates
+  add column if not exists token_expires_at timestamptz,
+  add column if not exists name_confirmed_at timestamptz,
+  add column if not exists pdf_sha256 text;
+
+create index if not exists idx_attendee_certificates_pdf_sha256
+  on public.attendee_certificates (pdf_sha256)
+  where pdf_sha256 is not null;
+
+-- One-time email codes. Only a hash of each code is stored.
+create table if not exists public.attendee_certificate_codes (
+  id uuid primary key default gen_random_uuid(),
+  certificate_id uuid not null
+    references public.attendee_certificates(id) on delete cascade,
+  code_hash text not null,
+  expires_at timestamptz not null,
+  attempts integer not null default 0 check (attempts between 0 and 10),
+  consumed_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_attendee_certificate_codes_certificate
+  on public.attendee_certificate_codes (certificate_id, created_at desc);
+
+alter table public.attendee_certificate_codes enable row level security;
+drop policy if exists "Deny attendee certificate codes api access" on public.attendee_certificate_codes;
+create policy "Deny attendee certificate codes api access"
+  on public.attendee_certificate_codes for all to anon, authenticated
+  using (false) with check (false);
+revoke all on public.attendee_certificate_codes from anon, authenticated;
+grant select, insert, update, delete on public.attendee_certificate_codes to service_role;
+
+alter table public.attendee_certificate_events
+  drop constraint if exists attendee_certificate_events_event_type_check;
+alter table public.attendee_certificate_events
+  add constraint attendee_certificate_events_event_type_check
+  check (event_type in ('issued', 'emailed', 'email_failed', 'link_reissued',
+    'name_changed', 'name_confirmed', 'code_sent', 'code_verified',
+    'code_failed', 'downloaded', 'revoked', 'reinstated'));
+
+-- Attendee name edits are allowed only until the name is confirmed.
+create or replace function public.change_attendee_certificate_name(
+  p_token_hash text,
+  p_new_name text
+)
+returns public.attendee_certificates
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_cert public.attendee_certificates;
+  v_old text;
+begin
+  select * into v_cert from public.attendee_certificates
+  where claim_token_hash = p_token_hash for update;
+  if not found then
+    raise exception 'Certificate not found.' using errcode = 'P0002';
+  end if;
+  if v_cert.status <> 'active' then
+    raise exception 'This certificate is no longer active.' using errcode = 'P0001';
+  end if;
+  if v_cert.name_confirmed_at is not null then
+    raise exception 'Your name is already confirmed. Write to tasi.comms@csrindia.org to change it.' using errcode = 'P0001';
+  end if;
+  if v_cert.recipient_name = p_new_name then
+    return v_cert;
+  end if;
+  if v_cert.name_change_count >= 2 then
+    raise exception 'This name has already been changed twice. Write to tasi.comms@csrindia.org to change it again.' using errcode = 'P0001';
+  end if;
+  v_old := v_cert.recipient_name;
+  update public.attendee_certificates
+  set recipient_name = p_new_name, name_change_count = name_change_count + 1,
+      pdf_sha256 = null, updated_at = now()
+  where id = v_cert.id
+  returning * into v_cert;
+  insert into public.attendee_certificate_events (certificate_id, event_type, detail)
+  values (v_cert.id, 'name_changed', jsonb_build_object('from', v_old, 'to', p_new_name));
+  return v_cert;
+end;
+$$;
+
+-- Locks the name. The PDF fingerprint is stored on first download.
+create or replace function public.confirm_attendee_certificate_name(
+  p_token_hash text
+)
+returns public.attendee_certificates
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_cert public.attendee_certificates;
+begin
+  update public.attendee_certificates
+  set name_confirmed_at = coalesce(name_confirmed_at, now()), updated_at = now()
+  where claim_token_hash = p_token_hash and status = 'active'
+  returning * into v_cert;
+  if not found then
+    raise exception 'Certificate not found.' using errcode = 'P0002';
+  end if;
+  insert into public.attendee_certificate_events (certificate_id, event_type, detail)
+  values (v_cert.id, 'name_confirmed', jsonb_build_object('name', v_cert.recipient_name));
+  return v_cert;
+end;
+$$;
+
+revoke all on function public.confirm_attendee_certificate_name(text) from public, anon, authenticated;
+grant execute on function public.confirm_attendee_certificate_name(text) to service_role;
+
+-- One reminder email for attendees who were emailed but have not downloaded.
+-- The database enforces the rules, so a double click or two open admin tabs
+-- can never remind someone twice.
+alter table public.attendee_certificates
+  add column if not exists reminder_count integer not null default 0
+    check (reminder_count between 0 and 1),
+  add column if not exists last_reminded_at timestamptz;
+
+alter table public.attendee_certificate_deliveries
+  add column if not exists kind text not null default 'certificate'
+    check (kind in ('certificate', 'reminder'));
+
+alter table public.attendee_certificate_events
+  drop constraint if exists attendee_certificate_events_event_type_check;
+alter table public.attendee_certificate_events
+  add constraint attendee_certificate_events_event_type_check
+  check (event_type in ('issued', 'emailed', 'email_failed', 'link_reissued',
+    'name_changed', 'name_confirmed', 'code_sent', 'code_verified',
+    'code_failed', 'reminded', 'downloaded', 'revoked', 'reinstated'));
+
+drop function if exists public.claim_attendee_certificate_send(uuid, timestamptz, text, text);
+
+create or replace function public.claim_attendee_certificate_send(
+  p_certificate_id uuid,
+  p_expected_updated_at timestamptz,
+  p_actor_clerk_id text,
+  p_actor_email text,
+  p_kind text default 'certificate'
+)
+returns public.attendee_certificate_deliveries
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_cert public.attendee_certificates;
+  v_attempt public.attendee_certificate_deliveries;
+begin
+  if p_kind is null or p_kind not in ('certificate', 'reminder') then
+    raise exception 'Invalid certificate send kind.' using errcode = '22023';
+  end if;
+
+  update public.attendee_certificates
+  set email_status = 'sending', last_error = null, updated_at = now()
+  where id = p_certificate_id
+    and status = 'active'
+    and updated_at = p_expected_updated_at
+    and (
+      (p_kind = 'certificate' and email_status in ('draft', 'sent', 'failed'))
+      or (p_kind = 'reminder' and email_status = 'sent'
+        and download_count = 0 and reminder_count = 0)
+    )
+  returning * into v_cert;
+  if not found then
+    raise exception 'Certificate changed or is already being sent.' using errcode = 'P0001';
+  end if;
+
+  insert into public.attendee_certificate_deliveries (
+    certificate_id, delivery_status, recipient_email, actor_clerk_id, actor_email, kind
+  ) values (
+    v_cert.id, 'sending', v_cert.email, p_actor_clerk_id, p_actor_email, p_kind
+  ) returning * into v_attempt;
+  return v_attempt;
+end;
+$$;
+
+create or replace function public.finish_attendee_certificate_send(
+  p_attempt_id uuid,
+  p_outcome text,
+  p_provider_message_id text default null,
+  p_failure_reason text default null
+)
+returns public.attendee_certificates
+language plpgsql security invoker set search_path = ''
+as $$
+declare
+  v_attempt public.attendee_certificate_deliveries;
+  v_cert public.attendee_certificates;
+  v_now timestamptz := now();
+  v_reminder boolean;
+begin
+  if p_outcome is null or p_outcome not in ('accepted', 'failed') then
+    raise exception 'Invalid certificate send outcome.' using errcode = '22023';
+  end if;
+  if p_outcome = 'accepted' and nullif(trim(p_provider_message_id), '') is null then
+    raise exception 'Accepted certificate send requires a provider message ID.' using errcode = '22023';
+  end if;
+
+  select * into v_attempt from public.attendee_certificate_deliveries
+  where id = p_attempt_id for update;
+  if not found then
+    raise exception 'Certificate send attempt not found.' using errcode = 'P0002';
+  end if;
+  if v_attempt.delivery_status = 'accepted' and p_outcome = 'accepted'
+    and v_attempt.provider_message_id = p_provider_message_id then
+    select * into v_cert from public.attendee_certificates where id = v_attempt.certificate_id;
+    return v_cert;
+  end if;
+  if v_attempt.delivery_status <> 'sending' then
+    raise exception 'Certificate send attempt is already resolved.' using errcode = 'P0001';
+  end if;
+  v_reminder := v_attempt.kind = 'reminder';
+
+  -- A failed reminder leaves the certificate as sent: the first email still
+  -- reached them, and the reminder can be tried again.
+  update public.attendee_certificates
+  set email_status = case
+        when p_outcome = 'accepted' or v_reminder then 'sent' else 'failed' end,
+      send_count = send_count + case when p_outcome = 'accepted' then 1 else 0 end,
+      reminder_count = reminder_count
+        + case when p_outcome = 'accepted' and v_reminder then 1 else 0 end,
+      last_reminded_at = case
+        when p_outcome = 'accepted' and v_reminder then v_now else last_reminded_at end,
+      last_sent_at = case when p_outcome = 'accepted' then v_now else last_sent_at end,
+      last_provider_message_id = case when p_outcome = 'accepted' then p_provider_message_id else last_provider_message_id end,
+      last_error = case when p_outcome = 'accepted' then null else left(coalesce(p_failure_reason, 'Email was not sent.'), 1000) end,
+      updated_at = v_now
+  where id = v_attempt.certificate_id and email_status = 'sending'
+  returning * into v_cert;
+  if not found then
+    raise exception 'Certificate is no longer sending.' using errcode = 'P0001';
+  end if;
+
+  update public.attendee_certificate_deliveries
+  set delivery_status = p_outcome,
+      provider_message_id = case when p_outcome = 'accepted' then p_provider_message_id else null end,
+      failure_reason = case when p_outcome = 'failed' then left(coalesce(p_failure_reason, 'Email was not sent.'), 1000) else null end,
+      updated_at = v_now
+  where id = p_attempt_id;
+
+  insert into public.attendee_certificate_events (certificate_id, event_type, detail, actor_email)
+  values (v_cert.id,
+    case when p_outcome = 'failed' then 'email_failed'
+      when v_reminder then 'reminded' else 'emailed' end,
+    jsonb_build_object('attempt_id', p_attempt_id, 'kind', v_attempt.kind),
+    v_attempt.actor_email);
+  return v_cert;
+end;
+$$;
+
+revoke all on function public.claim_attendee_certificate_send(uuid, timestamptz, text, text, text) from public, anon, authenticated;
+grant execute on function public.claim_attendee_certificate_send(uuid, timestamptz, text, text, text) to service_role;
+revoke all on function public.finish_attendee_certificate_send(uuid, text, text, text) from public, anon, authenticated;
+grant execute on function public.finish_attendee_certificate_send(uuid, text, text, text) to service_role;
+
+-- Each attendee's festival photo folder (a Google Drive link), added to their
+-- certificate email. Keyed by registration so it is ready before or after the
+-- certificate is issued. Attendees without a row get the email without photos.
+create table if not exists public.attendee_certificate_photos (
+  registration_id uuid primary key,
+  edition text not null default '2026',
+  folder_url text not null
+    check (folder_url ~ '^https://drive\.google\.com/drive/folders/[A-Za-z0-9_-]+$'),
+  photo_count integer not null check (photo_count > 0),
+  created_at timestamptz not null default now()
+);
+
+alter table public.attendee_certificate_photos enable row level security;
+drop policy if exists "Deny attendee certificate photos api access" on public.attendee_certificate_photos;
+create policy "Deny attendee certificate photos api access"
+  on public.attendee_certificate_photos for all to anon, authenticated
+  using (false) with check (false);
+revoke all on public.attendee_certificate_photos from anon, authenticated;
+grant select, insert, update, delete on public.attendee_certificate_photos to service_role;
+
+
+
+
 -- Event reminders: T-minus reminder emails to confirmed registrants, sent
 -- from the admin Reminders tab. Separate from registration email jobs.
 -- A campaign is one reminder email (T-10, T-7, ...) with its own copy and
@@ -1234,5 +1978,465 @@ alter table public.form_setting_changes enable row level security;
 grant select, insert, update, delete on public.form_settings to service_role;
 grant select, insert, update, delete on public.form_setting_changes to service_role;
 grant usage, select on all sequences in schema public to service_role;
+
+notify pgrst, 'reload schema';
+
+-- Admin audit events (keep in sync with migrations/20261020120000_admin_audit_events.sql).
+-- Append-only record of admin actions that leave no other trace: deleting a
+-- registration (which cascades away its status history), removing an admin or
+-- reviewer email, and exporting personal data. Rows can be added and read but
+-- never changed or removed, including by the service role.
+create table if not exists public.admin_audit_events (
+  id bigint generated always as identity primary key,
+  action text not null,
+  actor_email text,
+  actor_user_id text,
+  target_type text,
+  target_id text,
+  details jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_admin_audit_events_created
+  on public.admin_audit_events (created_at desc, id desc);
+
+alter table public.admin_audit_events enable row level security;
+
+revoke all on public.admin_audit_events from anon, authenticated, service_role;
+grant select, insert on public.admin_audit_events to service_role;
+grant usage, select on all sequences in schema public to service_role;
+
+create or replace function public.prevent_admin_audit_event_change()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  raise exception 'admin_audit_events is append-only';
+end;
+$$;
+
+drop trigger if exists admin_audit_events_append_only
+  on public.admin_audit_events;
+create trigger admin_audit_events_append_only
+  before update or delete on public.admin_audit_events
+  for each row execute function public.prevent_admin_audit_event_change();
+
+drop trigger if exists admin_audit_events_no_truncate
+  on public.admin_audit_events;
+create trigger admin_audit_events_no_truncate
+  before truncate on public.admin_audit_events
+  for each statement execute function public.prevent_admin_audit_event_change();
+
+-- Carry existing grants over so the audit feed can read every grant from here.
+insert into public.admin_audit_events
+  (action, actor_email, target_type, target_id, details, created_at)
+select
+  'operator_email.granted',
+  overrides.added_by,
+  'operator_email',
+  overrides.email,
+  jsonb_build_object('role', overrides.role, 'backfilled', true),
+  overrides.created_at
+from public.admin_email_overrides overrides
+where not exists (
+  select 1
+  from public.admin_audit_events existing
+  where existing.action = 'operator_email.granted'
+    and existing.target_id = overrides.email
+);
+
+notify pgrst, 'reload schema';
+
+-- Registration review RPC (keep in sync with migrations/20261020130000_apply_registration_reviews.sql).
+-- Same shape as baseRegistrationSelect() in src/lib/registration-db.js.
+create or replace function public.registration_admin_json(r public.event_registrations)
+returns jsonb
+language sql
+stable
+security invoker
+set search_path = ''
+as $$
+  select jsonb_build_object(
+    'id', r.id,
+    'registration_code', r.registration_code,
+    'first_name', r.first_name,
+    'last_name', r.last_name,
+    'email', r.email,
+    'phone', r.phone,
+    'organization', r.organization,
+    'designation', r.designation,
+    'attendee_category', r.attendee_category,
+    'city', r.city,
+    'country', r.country,
+    'linkedin_url', r.linkedin_url,
+    'attendance_reason', r.attendance_reason,
+    'priority_tier', r.priority_tier,
+    'source', r.source,
+    'status', r.status,
+    'speaker_flag', r.speaker_flag,
+    'vip_flag', r.vip_flag,
+    'exception_badge_required', r.exception_badge_required,
+    'badge_color_label', r.badge_color_label,
+    'badge_color_hex', r.badge_color_hex,
+    'profile_photo_path', r.profile_photo_path,
+    'profile_photo_size_bytes', r.profile_photo_size_bytes,
+    'profile_photo_width', r.profile_photo_width,
+    'profile_photo_height', r.profile_photo_height,
+    'qr_pass_issued_at', r.qr_pass_issued_at,
+    'checked_in_at', r.checked_in_at,
+    'created_at', r.created_at,
+    'updated_at', r.updated_at,
+    'reviewed_at', r.reviewed_at,
+    'reviewed_by_clerk_id', r.reviewed_by_clerk_id,
+    'reviewed_by_email', r.reviewed_by_email,
+    'review_notes', r.review_notes,
+    'last_badge_export_batch_id', r.last_badge_export_batch_id
+  ) || jsonb_build_object(
+    'entry_passes', (
+      select jsonb_build_object(
+        'id', p.id,
+        'token', p.token,
+        'status', p.status,
+        'issued_at', p.issued_at,
+        'revoked_at', p.revoked_at
+      )
+      from public.entry_passes p
+      where p.registration_id = r.id
+    ),
+    'registration_daily_check_ins', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'event_day', c.event_day,
+        'checked_in_at', c.checked_in_at,
+        'desk_label', c.desk_label,
+        'actor_email', c.actor_email
+      ) order by c.event_day)
+      from public.registration_daily_check_ins c
+      where c.registration_id = r.id
+    ), '[]'::jsonb)
+  );
+$$;
+
+revoke all on function public.registration_admin_json(public.event_registrations) from public, anon, authenticated;
+grant execute on function public.registration_admin_json(public.event_registrations) to service_role;
+
+-- p_items: [{ id, expected_updated_at, review_notes, speaker_flag, vip_flag,
+--             badge_color_label, badge_color_hex }]
+-- A row whose updated_at no longer matches expected_updated_at is skipped and
+-- reported in conflict_ids, so a stale snapshot never overwrites newer work.
+create or replace function public.apply_registration_reviews(
+  p_items jsonb,
+  p_status text,
+  p_exception_badge_required boolean,
+  p_history_notes text,
+  p_actor_clerk_id text,
+  p_actor_email text,
+  p_max_attempts integer default 3
+)
+returns jsonb
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_now timestamptz := clock_timestamp();
+  v_item jsonb;
+  v_id uuid;
+  v_previous text;
+  v_updated uuid[] := '{}';
+  v_previous_statuses jsonb := '{}'::jsonb;
+  v_conflicts text[] := '{}';
+  v_email_ids uuid[] := '{}';
+  v_email_count integer;
+  v_job_id uuid;
+begin
+  if p_status not in ('pending', 'confirmed', 'waitlisted', 'rejected') then
+    raise exception 'Unsupported registration status %', p_status
+      using errcode = '22023';
+  end if;
+
+  for v_item in select value from jsonb_array_elements(coalesce(p_items, '[]'::jsonb))
+  loop
+    v_id := (v_item ->> 'id')::uuid;
+
+    select status into v_previous
+    from public.event_registrations
+    where id = v_id
+      and updated_at = (v_item ->> 'expected_updated_at')::timestamptz
+    for update;
+
+    if not found then
+      v_conflicts := v_conflicts || v_id::text;
+      continue;
+    end if;
+
+    update public.event_registrations
+    set status = p_status,
+        review_notes = nullif(v_item ->> 'review_notes', ''),
+        speaker_flag = coalesce((v_item ->> 'speaker_flag')::boolean, false),
+        vip_flag = coalesce((v_item ->> 'vip_flag')::boolean, false),
+        badge_color_label = v_item ->> 'badge_color_label',
+        badge_color_hex = v_item ->> 'badge_color_hex',
+        reviewed_at = v_now,
+        reviewed_by_clerk_id = p_actor_clerk_id,
+        reviewed_by_email = p_actor_email,
+        exception_badge_required = p_exception_badge_required,
+        updated_at = v_now
+    where id = v_id;
+
+    insert into public.registration_status_history (
+      registration_id, previous_status, next_status, action_type, notes,
+      actor_clerk_id, actor_email, created_at
+    ) values (
+      v_id, v_previous, p_status, 'status_updated', nullif(p_history_notes, ''),
+      p_actor_clerk_id, p_actor_email, v_now
+    );
+
+    v_updated := v_updated || v_id;
+    v_previous_statuses := v_previous_statuses || jsonb_build_object(v_id::text, v_previous);
+
+    -- Mirrors getReviewEmailTemplate in registration-review-email.cjs.
+    if p_status in ('confirmed', 'waitlisted', 'rejected')
+      and v_previous is distinct from p_status then
+      v_email_ids := v_email_ids || v_id;
+    end if;
+  end loop;
+
+  v_email_count := coalesce(array_length(v_email_ids, 1), 0);
+
+  if v_email_count > 0 then
+    insert into public.registration_email_jobs (
+      status, template_type, total_items, queued_items,
+      created_by_clerk_id, created_by_email, last_processed_at, updated_at
+    ) values (
+      'queued', p_status, v_email_count, v_email_count,
+      p_actor_clerk_id, p_actor_email, v_now, v_now
+    )
+    returning id into v_job_id;
+
+    with notifications as (
+      insert into public.registration_notifications (
+        registration_id, template_type, recipient_email, delivery_status,
+        actor_clerk_id, actor_email, created_at, updated_at
+      )
+      select r.id, p_status, r.email, 'queued',
+        p_actor_clerk_id, p_actor_email, v_now, v_now
+      from public.event_registrations r
+      where r.id = any(v_email_ids)
+      returning id, registration_id
+    )
+    insert into public.registration_email_job_items (
+      job_id, registration_id, notification_id, template_type, status,
+      max_attempts, created_at, updated_at
+    )
+    select v_job_id, n.registration_id, n.id, p_status, 'queued',
+      p_max_attempts, v_now, v_now
+    from notifications n;
+  end if;
+
+  return jsonb_build_object(
+    'registrations', coalesce((
+      select jsonb_agg(public.registration_admin_json(r))
+      from public.event_registrations r
+      where r.id = any(v_updated)
+    ), '[]'::jsonb),
+    'previous_statuses', v_previous_statuses,
+    'conflict_ids', to_jsonb(v_conflicts),
+    'job_id', v_job_id,
+    'email_count', v_email_count
+  );
+end;
+$$;
+
+revoke all on function public.apply_registration_reviews(jsonb, text, boolean, text, text, text, integer) from public, anon, authenticated;
+grant execute on function public.apply_registration_reviews(jsonb, text, boolean, text, text, text, integer) to service_role;
+
+notify pgrst, 'reload schema';
+
+-- Job item claims (keep in sync with migrations/20261020140000_claim_job_items.sql).
+
+create or replace function public.claim_registration_email_job_items(
+  p_job_id uuid,
+  p_limit integer default 20
+)
+returns setof public.registration_email_job_items
+language sql
+security invoker
+set search_path = ''
+as $$
+  with picked as (
+    select id
+    from public.registration_email_job_items
+    where job_id = p_job_id
+      and status in ('queued', 'retrying')
+    order by created_at asc
+    limit greatest(p_limit, 0)
+    for update skip locked
+  )
+  update public.registration_email_job_items item
+  set status = 'processing',
+      attempt_count = item.attempt_count + 1,
+      last_attempt_at = clock_timestamp(),
+      updated_at = clock_timestamp()
+  from picked
+  where item.id = picked.id
+  returning item.*;
+$$;
+
+revoke all on function public.claim_registration_email_job_items(uuid, integer) from public, anon, authenticated;
+grant execute on function public.claim_registration_email_job_items(uuid, integer) to service_role;
+
+create or replace function public.claim_pass_issue_email_job_items(
+  p_job_id uuid,
+  p_limit integer default 20
+)
+returns setof public.pass_issue_email_job_items
+language sql
+security invoker
+set search_path = ''
+as $$
+  with picked as (
+    select id
+    from public.pass_issue_email_job_items
+    where job_id = p_job_id
+      and status in ('queued', 'retrying')
+    order by created_at asc
+    limit greatest(p_limit, 0)
+    for update skip locked
+  )
+  update public.pass_issue_email_job_items item
+  set status = 'processing',
+      attempt_count = item.attempt_count + 1,
+      last_attempt_at = clock_timestamp(),
+      updated_at = clock_timestamp()
+  from picked
+  where item.id = picked.id
+  returning item.*;
+$$;
+
+revoke all on function public.claim_pass_issue_email_job_items(uuid, integer) from public, anon, authenticated;
+grant execute on function public.claim_pass_issue_email_job_items(uuid, integer) to service_role;
+
+notify pgrst, 'reload schema';
+
+-- QR pass job RPCs (keep in sync with migrations/20261020150000_pass_issue_job_rpcs.sql).
+
+-- Counts item statuses under a row lock, so overlapping workers (admin tab,
+-- after(), cron) never write stale counters. Mirrors
+-- refresh_registration_email_job, plus the skipped state QR jobs have.
+create or replace function public.refresh_pass_issue_email_job(p_job_id uuid)
+returns setof public.pass_issue_email_jobs
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_job public.pass_issue_email_jobs%rowtype;
+  v_total integer;
+  v_queued integer;
+  v_processing integer;
+  v_sent integer;
+  v_skipped integer;
+  v_failed integer;
+  v_retrying integer;
+  v_status text;
+begin
+  select * into v_job
+  from public.pass_issue_email_jobs
+  where id = p_job_id
+  for update;
+
+  if not found then
+    raise exception 'QR pass job % not found', p_job_id
+      using errcode = 'P0002';
+  end if;
+
+  select
+    count(*)::integer,
+    count(*) filter (where status = 'queued')::integer,
+    count(*) filter (where status = 'processing')::integer,
+    count(*) filter (where status = 'sent')::integer,
+    count(*) filter (where status = 'skipped')::integer,
+    count(*) filter (where status = 'failed')::integer,
+    count(*) filter (where status = 'retrying')::integer
+  into v_total, v_queued, v_processing, v_sent, v_skipped, v_failed, v_retrying
+  from public.pass_issue_email_job_items
+  where job_id = p_job_id;
+
+  v_status := case
+    when v_processing > 0 or v_retrying > 0 then 'processing'
+    when v_queued > 0 then 'queued'
+    when v_failed > 0 then 'failed'
+    else 'completed'
+  end;
+
+  update public.pass_issue_email_jobs
+  set total_items = v_total,
+      queued_items = v_queued,
+      processing_items = v_processing,
+      sent_items = v_sent,
+      skipped_items = v_skipped,
+      failed_items = v_failed,
+      retrying_items = v_retrying,
+      status = v_status,
+      completed_at = case when v_status in ('failed', 'completed') then clock_timestamp() else null end,
+      last_processed_at = clock_timestamp(),
+      updated_at = clock_timestamp()
+  where id = p_job_id
+  returning * into v_job;
+
+  return next v_job;
+  return;
+end;
+$$;
+
+revoke all on function public.refresh_pass_issue_email_job(uuid) from public, anon, authenticated;
+grant execute on function public.refresh_pass_issue_email_job(uuid) to service_role;
+
+-- Writes the job, one item per still-confirmed registration, and its counters
+-- together. Registrations that are no longer confirmed are left out here
+-- rather than in a separate lookup.
+create or replace function public.create_pass_issue_email_job(
+  p_registration_ids uuid[],
+  p_selection_mode text,
+  p_filters jsonb,
+  p_resend_existing boolean,
+  p_actor_clerk_id text,
+  p_actor_email text,
+  p_max_attempts integer default 3
+)
+returns setof public.pass_issue_email_jobs
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_now timestamptz := clock_timestamp();
+  v_job_id uuid;
+begin
+  insert into public.pass_issue_email_jobs (
+    status, selection_mode, filters, resend_existing,
+    created_by_clerk_id, created_by_email, updated_at
+  ) values (
+    'queued', p_selection_mode, coalesce(p_filters, '{}'::jsonb),
+    coalesce(p_resend_existing, false), p_actor_clerk_id, p_actor_email, v_now
+  )
+  returning id into v_job_id;
+
+  insert into public.pass_issue_email_job_items (
+    job_id, registration_id, status, max_attempts, created_at, updated_at
+  )
+  select v_job_id, r.id, 'queued', p_max_attempts, v_now, v_now
+  from public.event_registrations r
+  where r.id = any(coalesce(p_registration_ids, '{}'::uuid[]))
+    and r.status = 'confirmed'
+  order by r.created_at asc;
+
+  return query select * from public.refresh_pass_issue_email_job(v_job_id);
+end;
+$$;
+
+revoke all on function public.create_pass_issue_email_job(uuid[], text, jsonb, boolean, text, text, integer) from public, anon, authenticated;
+grant execute on function public.create_pass_issue_email_job(uuid[], text, jsonb, boolean, text, text, integer) to service_role;
 
 notify pgrst, 'reload schema';

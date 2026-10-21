@@ -14,3 +14,6 @@ dev-server.log
 dev-server.err
 *.pdf
 public
+
+# Certificate background source, rendered to a fixed 300 dpi template; keep its exact markup
+scripts/certificates/attendee-template.html

@@ -61,7 +61,7 @@ function inputStyle() {
   };
 }
 
-export default function SubmissionsPanel() {
+export default function SubmissionsPanel({ canExport = false }) {
   const [type, setType] = useState('speaker');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -209,22 +209,24 @@ export default function SubmissionsPanel() {
                 the website.
               </p>
             </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                style={buttonStyle()}
-                onClick={() => exportRows('csv')}
-              >
-                <Download size={14} /> CSV
-              </button>
-              <button
-                type="button"
-                style={buttonStyle(true)}
-                onClick={() => exportRows('xlsx')}
-              >
-                <FileSpreadsheet size={14} /> Excel
-              </button>
-            </div>
+            {canExport ? (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  style={buttonStyle()}
+                  onClick={() => exportRows('csv')}
+                >
+                  <Download size={14} /> CSV
+                </button>
+                <button
+                  type="button"
+                  style={buttonStyle(true)}
+                  onClick={() => exportRows('xlsx')}
+                >
+                  <FileSpreadsheet size={14} /> Excel
+                </button>
+              </div>
+            ) : null}
           </div>
           <div
             role="tablist"

@@ -4,6 +4,9 @@ import {
   type NextRequest,
   NextResponse,
 } from 'next/server';
+import crossSiteRequest from '@/lib/cross-site-request.cjs';
+
+const { isCrossSiteStateChange } = crossSiteRequest;
 
 const isClerkBackedRoute = createRouteMatcher([
   '/__clerk(.*)',
@@ -53,21 +56,58 @@ const CLERK_PROXY_PATH = '/__clerk';
 // rejects with `host_invalid`.
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-const clerkProxy = clerkMiddleware(
-  async (auth, request) => {
-    if (isProtectedRoute(request) && !isJobProcessorRoute(request)) {
-      await auth.protect();
+const clerkOptions = isDevelopment
+  ? {
+      frontendApiProxy: {
+        enabled: true,
+        path: CLERK_PROXY_PATH,
+      },
     }
+  : {};
+
+const protectRoute = async (
+  auth: { protect: () => Promise<unknown> },
+  request: NextRequest
+) => {
+  if (isProtectedRoute(request) && !isJobProcessorRoute(request)) {
+    await auth.protect();
+  }
+};
+
+const clerkProxy = clerkMiddleware(protectRoute, clerkOptions);
+
+// Admin pages get a strict, per-request nonce CSP from Clerk on top of the
+// site-wide policy in next.config.mjs. Browsers enforce both, so an injected
+// inline script without the nonce is blocked even though the site-wide
+// policy allows 'unsafe-inline'. Admin pages render dynamically, so Next.js
+// picks the nonce up from the request headers for its own scripts.
+const isAdminPage = createRouteMatcher(['/admin(.*)']);
+const clerkAdminPageProxy = clerkMiddleware(protectRoute, {
+  ...clerkOptions,
+  contentSecurityPolicy: {
+    strict: true,
+    directives: {
+      'img-src': [
+        'data:',
+        'blob:',
+        'https://*.supabase.co',
+        'https://*.clerk.com',
+        'https://cdn.sanity.io',
+      ],
+      'connect-src': [
+        'https://*.supabase.co',
+        'https://*.clerk.com',
+        'https://*.ingest.sentry.io',
+        'https://*.ingest.us.sentry.io',
+      ],
+      'font-src': ['self', 'data:', 'https://fonts.gstatic.com'],
+      'style-src': ['https://fonts.googleapis.com'],
+      'object-src': ['none'],
+      'base-uri': ['self'],
+      'frame-ancestors': ['self'],
+    },
   },
-  isDevelopment
-    ? {
-        frontendApiProxy: {
-          enabled: true,
-          path: CLERK_PROXY_PATH,
-        },
-      }
-    : {}
-);
+});
 
 function normalizeSameRouteClerkRewrite(
   response: Response,
@@ -98,8 +138,24 @@ export default async function proxy(
   request: NextRequest,
   event: NextFetchEvent
 ) {
+  if (
+    isProtectedRoute(request) &&
+    isCrossSiteStateChange({
+      method: request.method,
+      url: request.url,
+      origin: request.headers.get('origin'),
+      secFetchSite: request.headers.get('sec-fetch-site'),
+    })
+  ) {
+    return NextResponse.json(
+      { error: 'Cross-site requests are not allowed.' },
+      { status: 403 }
+    );
+  }
+
   if (isClerkBackedRoute(request)) {
-    const response = (await clerkProxy(request, event)) ?? NextResponse.next();
+    const handler = isAdminPage(request) ? clerkAdminPageProxy : clerkProxy;
+    const response = (await handler(request, event)) ?? NextResponse.next();
 
     return normalizeSameRouteClerkRewrite(response, request);
   }

@@ -38,7 +38,39 @@ function formatDate(value) {
 // a few items per request, and a short pause before the next one. Requests
 // never overlap, so sends stay steady instead of arriving in bursts.
 const PROCESS_CHUNK_SIZE = 5;
-const PROCESS_GAP_MS = 700;
+// The pause grows while a round changes nothing and resets on progress, so an
+// idle or stuck queue is not polled several times a second.
+const PROCESS_GAP_MS = 1500;
+const PROCESS_MAX_GAP_MS = 10_000;
+const PROCESS_GAP_GROWTH = 1.6;
+// Stop looping when a job reports no progress for this long.
+const PROCESS_STALL_MS = 2 * 60 * 1000;
+
+function jobProgressFingerprint(job) {
+  if (!job) return 'none';
+  return [
+    job.id,
+    job.status,
+    job.sent_items,
+    job.failed_items,
+    job.skipped_items,
+    job.retrying_items,
+  ].join(':');
+}
+
+function waitForVisiblePage() {
+  if (typeof document === 'undefined' || !document.hidden) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    const onChange = () => {
+      if (document.hidden) return;
+      document.removeEventListener('visibilitychange', onChange);
+      resolve();
+    };
+    document.addEventListener('visibilitychange', onChange);
+  });
+}
 
 function formatTime(value) {
   if (!value) return '';
@@ -395,21 +427,34 @@ export default function JobManagerPanel({ config }) {
   // True while a process request is in flight, shared across loop restarts
   // so two requests are never sent at once.
   const processingRef = useRef(false);
+  // Set when the loop gave up on a job that stopped moving; a manual process
+  // or retry clears it and restarts the loop.
+  const [processingStalled, setProcessingStalled] = useState(false);
 
   useEffect(() => {
-    if (!hasActiveJobs) return undefined;
+    if (!hasActiveJobs || processingStalled) return undefined;
     let cancelled = false;
 
     const run = async () => {
+      let gapMs = PROCESS_GAP_MS;
+      let lastFingerprint = '';
+      let lastProgressAt = Date.now();
+
       while (!cancelled) {
+        await waitForVisiblePage();
+        if (cancelled) break;
+
+        let fingerprint = lastFingerprint;
         if (!processingRef.current) {
           processingRef.current = true;
           try {
-            await fetch(endpoints.process, {
+            const response = await fetch(endpoints.process, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ chunkSize: PROCESS_CHUNK_SIZE }),
             });
+            const json = await response.json().catch(() => ({}));
+            fingerprint = jobProgressFingerprint(json?.job);
           } catch {
             // The next round retries; the queue keeps the item.
           } finally {
@@ -421,9 +466,20 @@ export default function JobManagerPanel({ config }) {
         const { selectedJobId, ...refresh } = refreshRef.current;
         void refresh.loadJobs();
         if (selectedJobId) void refresh.loadJobDetail(selectedJobId);
-        await new Promise((resolve) =>
-          window.setTimeout(resolve, PROCESS_GAP_MS)
-        );
+
+        if (fingerprint !== lastFingerprint) {
+          lastFingerprint = fingerprint;
+          lastProgressAt = Date.now();
+          gapMs = PROCESS_GAP_MS;
+        } else {
+          gapMs = Math.min(gapMs * PROCESS_GAP_GROWTH, PROCESS_MAX_GAP_MS);
+          if (Date.now() - lastProgressAt > PROCESS_STALL_MS) {
+            setProcessingStalled(true);
+            break;
+          }
+        }
+
+        await new Promise((resolve) => window.setTimeout(resolve, gapMs));
       }
     };
 
@@ -431,9 +487,10 @@ export default function JobManagerPanel({ config }) {
     return () => {
       cancelled = true;
     };
-  }, [endpoints.process, hasActiveJobs]);
+  }, [endpoints.process, hasActiveJobs, processingStalled]);
 
   const processJob = async (jobId = '') => {
+    setProcessingStalled(false);
     try {
       await fetch(endpoints.process, {
         method: 'POST',
@@ -451,6 +508,7 @@ export default function JobManagerPanel({ config }) {
   };
 
   const retryJob = async (jobId) => {
+    setProcessingStalled(false);
     try {
       await fetch(endpoints.retry(jobId), { method: 'POST' });
       void loadJobs();
@@ -499,6 +557,13 @@ export default function JobManagerPanel({ config }) {
           title={alertTitle}
           description={jobsState.error}
           tone="danger"
+        />
+      ) : null}
+      {processingStalled && hasActiveJobs ? (
+        <AdminAlert
+          title="Automatic processing paused"
+          description="A job has made no progress for two minutes, so this page stopped sending it. The scheduled worker can still pick it up. Retry or process the job to start again."
+          tone="warning"
         />
       ) : null}
       {trackQueueUnavailable && jobsState.queueUnavailable ? (

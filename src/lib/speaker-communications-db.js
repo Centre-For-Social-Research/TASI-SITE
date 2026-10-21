@@ -253,7 +253,7 @@ export async function deleteSpeakerBadge(id) {
     .eq('id', id)
     .eq('send_count', 0)
     .neq('status', 'sending')
-    .select('id,badge_path')
+    .select('id,badge_path,speaker_name,organization')
     .maybeSingle();
 
   if (error) throw new Error(error.message);
