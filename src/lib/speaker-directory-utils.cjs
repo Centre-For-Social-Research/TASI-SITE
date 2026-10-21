@@ -1,7 +1,7 @@
 const ALL_SPEAKERS_LABEL = 'All Speakers';
 const VIP_LABEL = 'Keynote Speaker';
 const SPEAKERS_PER_PAGE = 9;
-const VIP_SPEAKERS = new Set(['Dr. Subrahmanyam Jaishankar']);
+const VIP_SPEAKERS = new Set(['Dr. Subrahmanyam Jaishankar', 'Jitin Prasada']);
 
 function getSpeakerInitials(name) {
   const words = String(name || '')

@@ -1,5 +1,18 @@
 [
   {
+    "name": "Jitin Prasada",
+    "designation": "Minister of State for Commerce & Industry and Electronics & IT",
+    "organisation": "Government of India",
+    "country": "India",
+    "category": "Government",
+    "bio": "Jitin Prasada is the Chief Guest of TASI 2026. He is the Union Minister of State for Commerce and Industry and for Electronics and Information Technology, a post he has held since June 2024, and is the Member of Parliament for Pilibhit, Uttar Pradesh. He previously served as Union Minister of State for Steel, Petroleum and Natural Gas, Road Transport and Highways, and Human Resource Development between 2008 and 2014, and as a Cabinet Minister in the Uttar Pradesh government for Technical Education and for Public Works. He studied at The Doon School, Shri Ram College of Commerce and the International Management Institute, New Delhi.",
+    "photo": "/img/speakers/2026/jitin-prasada.webp",
+    "linkedinUrl": "",
+    "xUrl": "",
+    "instagramUrl": "",
+    "edition": "2026"
+  },
+  {
     "name": "Abhilash Mallick",
     "designation": "Editor, Fact-Check",
     "organisation": "The Quint",
@@ -21,6 +34,19 @@
     "bio": "Dr. Adam Seldow serves as Senior Director of Education Policy at Roblox with the goal of contributing to the next generation of creators. Dr. Seldow taught secondary school mathematics and led technology in large US school districts. He earned his undergraduate degree from the United States Military Academy at West Point and his master's and doctoral degrees in education policy and leadership from Harvard University.",
     "photo": "/img/speakers/2026/adam-seldow.webp",
     "linkedinUrl": "https://www.linkedin.com/in/aseldow/",
+    "edition": "2026"
+  },
+  {
+    "name": "Aditi Agrawal",
+    "designation": "Journalist",
+    "organisation": "Independent",
+    "country": "India",
+    "category": "Media & Journalism",
+    "bio": "Aditi Agrawal is an independent journalist who reports on technology policy including privacy, surveillance, online speech and cybersecurity. She publishes her own newsletter, The Tech Trace, where she reports and analyses latest policy developments. She has previously worked at Hindustan Times, Forbes India, Newslaundry and Medianama, and has reported for Al Jazeera, The Hindu, The Print and The News Minute.",
+    "photo": "/img/speakers/2026/aditi-agrawal.webp",
+    "linkedinUrl": "",
+    "xUrl": "",
+    "instagramUrl": "",
     "edition": "2026"
   },
   {
@@ -224,6 +250,19 @@
     "edition": "2026"
   },
   {
+    "name": "Chitra Iyer",
+    "designation": "Co-Founder and CEO",
+    "organisation": "Space2Grow",
+    "country": "India",
+    "category": "Other",
+    "bio": "A social entrepreneur with over two decades of experience in child protection, digital safety, anti-human trafficking and Education/skill development, Chitra Iyer is a recognised thought leader and expert on child safety and child protection. Her work cuts across the intersection of offline and online harms, from trafficking and exploitation to cyberbullying and tech-facilitated abuse. She has led several research studies with partners both nationally and internationally. She combines this evidence with hands-on action, building collaborations and shaping policies that keep children safe.",
+    "photo": "/img/speakers/2026/chitra-iyer.webp",
+    "linkedinUrl": "",
+    "xUrl": "",
+    "instagramUrl": "",
+    "edition": "2026"
+  },
+  {
     "name": "Dhara Mungra",
     "designation": "Co-Founder and CTO",
     "organisation": "SimPPL",
@@ -309,6 +348,32 @@
     "bio": "Dr. Rupa Munakarmi is an educator, researcher, and policy consultant with more than twenty five years of professional engagement in Nepal’s education sector. She holds a PhD in Development Studies (Education) from Kathmandu University as a Danida Fellowship (DFC) scholar. Dr. Munakarmi is currently serving as an Assistant Professor and Head of Department at the Department of Inclusive Education, Early Childhood Development and Professional Studies (DIEP), Kathmandu University School of Education (KUSOED). She teaches from the Master’s to PhD levels and is actively engaged in supervising graduate and doctoral students in their research, including thesis and dissertation research at KU, Tribhuvan University (TU), and Farwest University.\n\nShe is also an education advisor at Kathmandu Metropolitan City. She currently holds key leadership positions, including Chairperson of Loo Niva Child Concern Group and Chairperson and Vice Chair at Visionary Voice Nepal and Nepal GoodWeave Foundation, contributing to organizational governance, strategic direction, and rights-based advocacy. In addition, she serves as a Central Member of the National Election Observation Committee, supporting democratic accountability and civic oversight.\n\nDr. Munakarmi has led and contributed to a wide range of qualitative and mixed-methods studies related to education policy, AI in education, governance, curriculum, assessment, ECED, Education financing, Country Inequalities, and child rights. Her publications include peer-reviewed journal articles, national research reports, and policy-oriented studies.",
     "photo": "/img/speakers/2026/dr-rupa-munakarmi.webp",
     "linkedinUrl": "https://www.linkedin.com/in/rupa-munakarmi-b2763071/",
+    "edition": "2026"
+  },
+  {
+    "name": "Dr. Sanjeev Sharma",
+    "designation": "Member Secretary",
+    "organisation": "National Commission for Protection of Child Rights (NCPCR)",
+    "country": "India",
+    "category": "Government",
+    "bio": "Dr. Sanjeev Sharma is a senior officer, who is working as Member Secretary, in the National Commission for Protection of Child Rights (NCPCR).\n\nDr. Sharma is an Engineering graduate in Electronics Engineering, who has done MBA from Management Development Institute, Gurgaon. He did his Ph.D. in Financing of Technical Education from National Institute of Technology, Delhi.\n\nHe possesses wide experience of 34 years of serving the various Ministries and Departments of Government of India. He has served in Department of Higher Education, Department of School Education, Ministry of Water Resources, Department of Posts and Department of Telecommunication. He has contributed significantly in the areas of telecom reforms, postal reforms, common counseling for admission of students in IITs, IIITs, NITs, educational reforms in NITs, New Education Policy, National Mission of cleaning Ganga, financial inclusion of rural masses and protection of child rights.\n\nAs Member Secretary, National Commission for Protection of Child Rights, he is responsible for overall functioning of the Commission. In his leadership, several reforms have been initiated which will go a long way to improve the functioning of the Commission.",
+    "photo": "/img/speakers/2026/sanjeev-sharma.webp",
+    "linkedinUrl": "",
+    "xUrl": "",
+    "instagramUrl": "",
+    "edition": "2026"
+  },
+  {
+    "name": "Dr. Srividya Sheshadri",
+    "designation": "Associate Director",
+    "organisation": "Center for Women's Empowerment & Gender Equality, Amrita Vishwa Vidyapeetham",
+    "country": "India",
+    "category": "Academia & Research",
+    "bio": "Dr. Srividya Sheshadri is the Associate Director at the Center for Women’s Empowerment & Gender Equality (CWEGE), Amrita Vishwa Vidyapeetham. Her research and implementation work focuses on social inclusion, community-led development, systems thinking, and mixed-methods evaluation in real-world settings. She specializes in the responsible integration of technology and AI in under-resourced communities, alongside directing women-led livelihood initiatives, to design interventions that are adaptive, sustainable, and scalable.",
+    "photo": "/img/speakers/2026/srividya-sheshadri.webp",
+    "linkedinUrl": "https://www.linkedin.com/in/srividyasheshadri/",
+    "xUrl": "",
+    "instagramUrl": "",
     "edition": "2026"
   },
   {
@@ -709,6 +774,19 @@
     "edition": "2026"
   },
   {
+    "name": "Mira Swaminathan",
+    "designation": "Government Affairs and Public Policy Manager",
+    "organisation": "YouTube, Google",
+    "country": "India",
+    "category": "Technology",
+    "bio": "Mira Swaminathan is a Government Affairs and Public Policy Manager at YouTube, Google. She engages with government, industry and civil society stakeholders to shape the tech policy dialogue in India.",
+    "photo": "/img/speakers/2026/mira-swaminathan.webp",
+    "linkedinUrl": "https://in.linkedin.com/in/mira-swaminathan-474666233",
+    "xUrl": "",
+    "instagramUrl": "",
+    "edition": "2026"
+  },
+  {
     "name": "Nandini Chatterjee Singh",
     "designation": "Professor, Dept. of Psychology and Cognitive Science",
     "organisation": "Ashoka University",
@@ -972,6 +1050,19 @@
     "category": "Media & Journalism",
     "bio": "Sayoni Aiyar is a media professional with over 20 years experience in newsrooms, from TV to digital. She's led teams working in ten Indian languages, and shaped media strategies tailored to very distinct, and fast evolving news environments.",
     "photo": "/img/speakers/2026/sayoni-aiyar.webp",
+    "edition": "2026"
+  },
+  {
+    "name": "Seema Kumar",
+    "designation": "Director, Programme",
+    "organisation": "Smile Foundation",
+    "country": "India",
+    "category": "Civil Society",
+    "bio": "Seema Kumar, currently a Director at Smile Foundation, is a leader in the development sector who has dedicated her life to working with women, children and differently abled individuals. With over 35 years of professional experience, her journey spans education planning and policy at NCERT, work towards promoting inclusion of persons with disabilities, along with extensive work in women’s empowerment and education initiatives. She also specialises in design and execution of CSR projects. Throughout her career, she has consistently championed the rights and opportunities of adolescent girls, women, and marginalized communities.\nAt present, her work focuses on making education accessible for everyone, strengthening life skills education, Social Emotional Learning (SEL), entrepreneurship development. These initiatives aim to equip young people, especially girls, with the confidence, resilience, and practical skills needed to lead empowered and independent lives in the twenty-first century.",
+    "photo": "/img/speakers/2026/seema-kumar.webp",
+    "linkedinUrl": "https://in.linkedin.com/in/seema-kumar-37453a2a",
+    "xUrl": "",
+    "instagramUrl": "",
     "edition": "2026"
   },
   {
