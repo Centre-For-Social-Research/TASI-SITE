@@ -96,10 +96,17 @@ test('TASI 2026 partner list is ordered and shown on the homepage strip and spon
   const fs = require('node:fs');
   const path = require('node:path');
   const { pathToFileURL } = require('node:url');
-  const { tasi2026Partners, tasi2026PartnerSlugs } = await import(
-    pathToFileURL(path.join(process.cwd(), 'src/data/partners-2026.js'))
-  );
+  const { tasi2026Partners, tasi2026PartnerSlugs, tasi2026AllPartners } =
+    await import(
+      pathToFileURL(path.join(process.cwd(), 'src/data/partners-2026.js'))
+    );
   assert.equal(tasi2026Partners.length, 22);
+  assert.equal(tasi2026AllPartners.length, 36);
+  assert.deepEqual(
+    tasi2026AllPartners.slice(0, 22).map((partner) => partner.slug),
+    tasi2026PartnerSlugs
+  );
+  assert.ok(tasi2026AllPartners.some((partner) => partner.slug === 'giz'));
   assert.deepEqual(tasi2026PartnerSlugs.slice(0, 7), [
     'google',
     'netflix',
@@ -142,7 +149,7 @@ test('TASI 2026 partner list is ordered and shown on the homepage strip and spon
   assert.match(strip, /from '@\/data\/partners-2026'/);
   assert.match(strip, /Partners of TASI 2026/);
   const sponsor = read('src/components/sponsor/sponsor-page.jsx');
-  assert.match(sponsor, /partners=\{tasi2026Partners\}/);
+  assert.match(sponsor, /partners=\{tasi2026AllPartners\}/);
   assert.match(
     read('next.config.mjs'),
     /source: '\/partners\/obhan-associates',\s*destination: '\/partners\/obhan-mason'/

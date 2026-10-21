@@ -2,7 +2,6 @@
 // the session transcripts (D:\TASI 2026\_transcripts\WEBSITE_CONTENT.md);
 // every quote is word for word. Sessions held under the Chatham House Rule
 // (tasi26-60, tasi26-74, tasi26-83) are deliberately left out.
-import { speakerCountries2026 } from './speaker-countries-2026.js';
 
 export const tasi2026HeroPills = [
   '14-15 October 2026',
@@ -29,15 +28,6 @@ export const tasi2026PerspectiveQuote = {
   text: 'We created those technologies, we retain the responsibility to shape their purpose.',
   author: 'Dr. Ranjana Kumari, Director, Centre for Social Research',
 };
-
-export const tasi2026Stats = [
-  ['500+', 'Attendees'],
-  ['110+', 'Speakers'],
-  ['55+', 'Sessions'],
-  [String(speakerCountries2026.length), 'Countries Represented'],
-  ['2', 'Days of Sessions'],
-  ['3', 'Rooms'],
-];
 
 // Five ideas that came up across sessions. Figures are claims made on stage,
 // credited to the speaker who cited them, not numbers TASI has verified.
@@ -202,46 +192,149 @@ export const tasi2026Recommendations = [
   'Align South Asian principles so small markets are not left behind.',
 ];
 
+// Messages from the diplomatic partners. Quotes are as supplied by each
+// embassy. Georg Enzweiler has no photo yet, so the card shows initials.
 export const tasi2026Quotes = [
   {
-    text: "All these cyber securities, laws, regulations mean nothing. They'll be all on paper if the industry doesn't step forward and if you don't take responsibility, it means nothing.",
-    author:
-      'Jitin Prasada, Minister of State for Commerce & Industry and Electronics & IT, Government of India',
-    // From the inaugural address at TASI 2026, 14 October (2E1A2671).
-    photo: '/img/speakers/2026/jitin-prasada-tasi-2026.webp',
+    text: 'Sweden welcomes the opportunity to partner with India through the Trust & Safety Festival. Using our mutual strengths, we can shape the future of digitalization and AI through innovation, building trust, and applying good ethics and human-centric design. We look forward to working together for an open, safe, secure and sustainable digital future for all.',
+    author: 'H.E. Petra Menander',
+    role: 'Ambassador of Sweden to India',
+    photo: '/img/tasi-2026/voice-petra-menander.webp',
   },
   {
-    text: "The future of online safety shouldn't be something we build for young people. It has to be something we build with them.",
-    author: 'Lucy Thomas, CEO, PROJECT ROCKIT',
-    photo: '/img/speakers/2026/lucy-thomas.webp',
+    text: 'Building safer and more trusted digital spaces requires technology to be developed with security, resilience and inclusion at its core. Lithuania’s experience as a digitally advanced and innovation-driven country demonstrates the importance of empowering women to participate fully in the digital economy and of strengthening international cooperation to ensure that digital transformation creates opportunities and trust for all.',
+    author: 'H.E. Diana Mickevičienė',
+    role: 'Ambassador of Lithuania to India',
+    photo: '/img/tasi-2026/voice-diana-mickeviciene.webp',
   },
   {
-    text: 'Getting platforms to face more litigation, which is content by content, is not going to force them to redesign. What you need instead is penalties for lack of redesign, which is called a duty of care approach.',
-    author: 'Rohit Kumar, Founding Partner, The Quantum Hub',
-    photo: '/img/speakers/2026/rohit-kumar.webp',
+    text: 'Technology knows no borders, and neither should our responsibility to make it safe. It takes international cooperation and a shared commitment from governments, industry and civil society to ensure that technological progress goes hand in hand with human rights, trust and responsibility.',
+    author: 'Georg Enzweiler',
+    role: 'Deputy Chief of Mission, Embassy of Germany to India',
+    photo: '/img/tasi-2026/voice-georg-enzweiler.webp',
   },
 ];
 
-export const tasi2026FuturePriorities = [
-  'Platform child safety reports, called for before the next TASI',
-  'An on-site child safety hackathon, proposed for TASI 2027',
-  'A draft South Asian framework for child online safety',
-  'NCPCR child-safety guidelines, open for public comment',
+// Four recap posts for the opening reception, each day and the closing
+// ceremony. Facts follow the programme and the session recaps in this file.
+export const tasi2026DayStories = [
+  {
+    id: 'opening-reception',
+    eyebrow: 'Opening Reception · 13 October',
+    title: 'An Evening at the Goethe‑Institut',
+    paragraphs: [
+      'TASI 2026 began on the evening of 13 October at the Goethe-Institut in New Delhi, hosted with the embassies of Germany and France. Dr. Ranjana Kumari welcomed guests, and the hosting embassies opened the evening with remarks.',
+      'Jyoti Vadehra then introduced the Safety Spotlight, a run of short talks that set out the festival’s themes before guests moved on to an informal reception.',
+    ],
+    cardTitle: 'The Safety Spotlight',
+    items: [
+      'Children’s capacity to navigate information, with Rahul Fernandes and Prof. Nandini Chatterjee Singh',
+      'Journalist safety, with Kunal Majumder of the Committee to Protect Journalists',
+      'Youth participation in online safety, with Lucy Thomas of PROJECT ROCKIT',
+      'Rescue, rehabilitation and repatriation, with Triveni Acharya of Rescue Foundation',
+      'Lantern and shared signals, with Lisa Morrison of the Tech Coalition',
+    ],
+    image: '/img/tasi-2026/day-opening-reception.webp',
+    imageAlt:
+      'A speaker addressing guests at the TASI 2026 opening reception at the Goethe-Institut',
+  },
+  {
+    id: 'day-one',
+    eyebrow: 'Day One · 14 October',
+    title: 'The Festival Opens in the Main Hall',
+    paragraphs: [
+      'Day one opened at the India International Centre with a welcome from Jyoti Vadehra and Caroline Humer, a keynote from Snigdha Bhardwaj of Google on what safety means for children growing up with AI, and the inaugural address from Chief Guest Jitin Prasada.',
+      'The opening panel, moderated by Faye D’Souza, asked what is reshaping trust and safety in 2026. Panels on young people, age assurance and women’s safety followed in the Main Hall, while workshops and roundtables ran in the smaller rooms.',
+    ],
+    cardTitle: 'Highlights',
+    items: [
+      'Inaugural address by Jitin Prasada, Minister of State for Commerce & Industry and Electronics & IT',
+      'Opening panel: Forces Reshaping Trust & Safety in 2026',
+      'Growing Up Digital, moderated by Barkha Dutt',
+      'Age assurance and age-appropriate design',
+      'A fireside chat with Yoel Roth of Match Group',
+    ],
+    image: '/img/tasi-2026/gallery-age-panel-group.webp',
+    imageAlt:
+      'Speakers from the age assurance panel on stage in the Main Hall on day one',
+  },
+  {
+    id: 'day-two',
+    eyebrow: 'Day Two · 15 October',
+    title: 'From Journalism to Regulation',
+    paragraphs: [
+      'Day two began with a keynote from Marisa Gerards, Ambassador of the Netherlands, on journalism, democracy and trust in the age of AI, followed by a panel on trust, safety and equity in a changing information ecosystem.',
+      'The day moved through creators and AI, trafficking and exploitation, and open-source AI. It closed in on regulation with the launch of The Quantum Hub’s report, Designing for Online Safety.',
+    ],
+    cardTitle: 'Highlights',
+    items: [
+      'Keynote on journalism, democracy and trust in the age of AI',
+      'Reach, Revenue & Responsibility: what AI changes for India’s creators',
+      'Combatting trafficking: building stronger partnerships',
+      'Report launch: Designing for Online Safety, by The Quantum Hub',
+      'Workshops and roundtables in the Workshop and Roundtable Rooms',
+    ],
+    image: '/img/tasi-2026/idea-design-report-launch-group.webp',
+    imageAlt:
+      'Speakers on stage holding The Quantum Hub report at its launch on day two',
+  },
+  {
+    id: 'closing-ceremony',
+    eyebrow: 'Closing Ceremony · 15 October',
+    title: 'Safety at a Crossroads',
+    paragraphs: [
+      'The festival closed in the Main Hall with a plenary on how to rethink safety, responsibility and human wellbeing, with Shikha Dahiya of MeitY, Rob Lewington of TP, Amlan Mohanty of Anthropic, Manisha Kapoor of ASCI and Rajesh Ranjan of Google, moderated by Sayoni Aiyar.',
+      'Guests then gathered at the Residence of the Ambassador of the Netherlands for the closing reception, welcomed by Ambassador Marisa Gerards, with calls to carry the festival’s recommendations to policymakers.',
+    ],
+    cardTitle: 'Carried forward',
+    items: [
+      'Platform child safety reports, called for before the next TASI',
+      'An on-site child safety hackathon, proposed for TASI 2027',
+      'A draft South Asian framework for child online safety',
+      'NCPCR child-safety guidelines, open for public comment',
+    ],
+    image: '/img/tasi-2026/day-closing.webp',
+    imageAlt:
+      'Guests listening at the closing reception at the Netherlands Residence',
+  },
 ];
 
-export const tasi2026MoreQuotes = [
-  {
-    text: 'Nothing about the image itself has changed, but the context, the audience, the intent of sharing, the consent to share, and the potential harm are all completely different.',
-    author: 'Dr Abigail Bentley',
-    role: 'AB Research Consulting',
-    photo: '/img/speakers/2026/dr-abigail-bentley.webp',
-  },
-  {
-    text: "It's not enough for safety mechanisms to exist. It's equally and more important for young people to be empowered and to feel safe enough to use it.",
-    author: 'Satviki Varma',
-    role: 'Program Lead, Girl Effect',
-    photo: '/img/speakers/2026/satviki-varma.webp',
-  },
+// The inaugural address on 14 October. The quote is word for word from the
+// recording (2E1A2671); the summary follows the session recap for tasi26-13.
+export const tasi2026ChiefGuest = {
+  name: 'Jitin Prasada',
+  role: 'Minister of State for Commerce & Industry and Electronics & IT, Government of India',
+  photo: '/img/speakers/2026/jitin-prasada-tasi-2026.webp',
+  photoAlt: 'Jitin Prasada addressing the TASI 2026 inaugural session',
+  summary:
+    "Jitin Prasada said India's AI Mission targets for 2026 were met but are already obsolete, and that India is now exploring regulation that protects women and children. He asked for the festival's ideas to reach government.",
+  quote:
+    "All these cyber securities, laws, regulations mean nothing. They'll be all on paper if the industry doesn't step forward and if you don't take responsibility, it means nothing.",
+  profileHref: '/speakers/2026/jitin-prasada',
+  sessionId: 'tasi26-13',
+};
+
+// Speakers shown on the "Voices in the Room" cards. Chosen from Jev ratings of
+// the speaker headshots (formal dress, camera quality, clean framing and a
+// pleasant expression), weighted by how prominent each speaker was. Only
+// people who spoke in a programme session are eligible. Names must match
+// speakers-2026.json (a test checks each has a profile and a photo).
+export const tasi2026FeaturedSpeakers = [
+  'Jitin Prasada',
+  'Yoel Roth',
+  'Akash Pugalia',
+  'Faye D’Souza',
+  'Karuna Nain',
+  'Ji-yeon Lee',
+  'Kunal Majumder',
+  'Adam Seldow',
+  'Urvashi Kapoor',
+  'Nina Bual',
+  'Keemin Ngiam',
+  'Barkha Dutt',
+  'Maroof Culmen',
+  'Caroline Simangaliso Makumbe',
+  'Rob Lewington',
 ];
 
 // Short recaps for flagship sessions, keyed by programme session id.
@@ -312,41 +405,276 @@ export const tasi2026Gallery = [
   {
     src: '/img/tasi-2026/gallery-main-hall.webp',
     alt: 'A full Main Hall during a panel at TASI 2026',
+    caption: 'Main Hall',
   },
   {
     src: '/img/tasi-2026/gallery-opening-panel.webp',
     alt: 'The opening panel, Forces Reshaping Trust and Safety in 2026',
+    caption: 'Opening Panel',
   },
   {
     src: '/img/tasi-2026/gallery-opening-reception.webp',
     alt: 'The audience at the TASI 2026 opening reception',
+    caption: 'Opening Reception',
   },
   {
     src: '/img/tasi-2026/gallery-networking.webp',
     alt: 'Delegates talking between sessions',
+    caption: 'Between Sessions',
   },
   {
     src: '/img/tasi-2026/gallery-women-panel-group.webp',
     alt: "Speakers from the women's safety panel on stage",
+    caption: 'Panel Group',
   },
   {
     src: '/img/tasi-2026/gallery-workshop.webp',
     alt: 'A session in the Workshop Room',
+    caption: 'Workshop Room',
   },
   {
     src: '/img/tasi-2026/gallery-age-panel-group.webp',
     alt: 'Speakers from the age assurance panel on stage',
+    caption: 'Panel Group',
   },
   {
     src: '/img/tasi-2026/gallery-reception-connections.webp',
     alt: 'Guests in conversation at the Goethe-Institut opening reception',
+    caption: 'Reception Connections',
   },
   {
     src: '/img/tasi-2026/gallery-closing-panel.webp',
     alt: 'The closing panel at the Netherlands Residence',
+    caption: 'Closing Panel',
   },
   {
     src: '/img/tasi-2026/gallery-closing-residence.webp',
     alt: 'The Netherlands Residence at dusk before the closing reception',
+    caption: 'Netherlands Residence',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-01.webp',
+    alt: 'Delegates in conversation at the opening reception at the Goethe-Institut',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-02.webp',
+    alt: 'Delegates in conversation at the opening reception at the Goethe-Institut',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-03.webp',
+    alt: 'Speakers and delegates posing together at the opening reception at the Goethe-Institut',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-04.webp',
+    alt: 'Delegates in conversation at the opening reception at the Goethe-Institut',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-05.webp',
+    alt: 'Delegates in conversation at the opening reception at the Goethe-Institut',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-06.webp',
+    alt: 'Speakers and delegates posing together at the opening reception at the Goethe-Institut',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-07.webp',
+    alt: 'Speakers on stage at the opening reception at the Goethe-Institut',
+    caption: 'On Stage',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-08.webp',
+    alt: 'The audience listening at the opening reception at the Goethe-Institut',
+    caption: 'Listening In',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-11.webp',
+    alt: 'The audience listening at the opening reception at the Goethe-Institut',
+    caption: 'Listening In',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-13oct-reception-12.webp',
+    alt: 'Speakers on stage at the opening reception at the Goethe-Institut',
+    caption: 'On Stage',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-01.webp',
+    alt: 'Delegates in conversation on day one',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-02.webp',
+    alt: 'Delegates in conversation on day one',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-03.webp',
+    alt: 'Delegates in conversation on day one',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-04.webp',
+    alt: 'Delegates in conversation on day one',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-06.webp',
+    alt: 'Speakers and delegates posing together on day one',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-07.webp',
+    alt: 'Speakers and delegates posing together on day one',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-14oct-08.webp',
+    alt: 'Speakers and delegates posing together on day one',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-01.webp',
+    alt: 'Delegates in conversation on day two',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-02.webp',
+    alt: 'Delegates in conversation on day two',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-03.webp',
+    alt: 'Speakers on stage on day two',
+    caption: 'On Stage',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-04.webp',
+    alt: 'Delegates in conversation on day two',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-05.webp',
+    alt: 'Speakers and delegates posing together on day two',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-06.webp',
+    alt: 'Speakers on stage on day two',
+    caption: 'On Stage',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-07.webp',
+    alt: 'Speakers and delegates posing together on day two',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-08.webp',
+    alt: 'Speakers and delegates posing together on day two',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-09.webp',
+    alt: 'Speakers and delegates posing together on day two',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-10.webp',
+    alt: 'Delegates in conversation on day two',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-01.webp',
+    alt: 'Guests at the reception at the closing reception at the Netherlands Residence',
+    caption: 'Reception Moments',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-02.webp',
+    alt: 'Delegates in conversation at the closing reception at the Netherlands Residence',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-03.webp',
+    alt: 'Speakers and delegates posing together at the closing reception at the Netherlands Residence',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-04.webp',
+    alt: 'Delegates in conversation at the closing reception at the Netherlands Residence',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-05.webp',
+    alt: 'Delegates in conversation at the closing reception at the Netherlands Residence',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-06.webp',
+    alt: 'Speakers on stage at the closing reception at the Netherlands Residence',
+    caption: 'On Stage',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-07.webp',
+    alt: 'Speakers on stage at the closing reception at the Netherlands Residence',
+    caption: 'On Stage',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-08.webp',
+    alt: 'Guests at the reception at the closing reception at the Netherlands Residence',
+    caption: 'Reception Moments',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-09.webp',
+    alt: 'Delegates in conversation at the closing reception at the Netherlands Residence',
+    caption: 'In Conversation',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-10.webp',
+    alt: 'Speakers and delegates posing together at the closing reception at the Netherlands Residence',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-11.webp',
+    alt: 'Speakers and delegates posing together at the closing reception at the Netherlands Residence',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-15oct-closing-12.webp',
+    alt: 'Speakers and delegates posing together at the closing reception at the Netherlands Residence',
+    caption: 'Group Portrait',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-food-01.webp',
+    alt: 'Guests with drinks at the closing reception at the Netherlands Residence',
+    caption: 'Over Drinks',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-food-02.webp',
+    alt: 'Delegates with drinks at the closing reception at the Netherlands Residence',
+    caption: 'Over Drinks',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-food-03.webp',
+    alt: 'Guests chatting over drinks at the closing reception at the Netherlands Residence',
+    caption: 'Over Drinks',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-food-04.webp',
+    alt: 'Two delegates talking over a drink at the closing reception at the Netherlands Residence',
+    caption: 'Over Drinks',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-food-05.webp',
+    alt: 'Delegates at the lunch buffet on day one',
+    caption: 'Lunch Break',
+  },
+  {
+    src: '/img/tasi-2026/gallery/gallery-food-06.webp',
+    alt: 'Delegates talking over coffee on day two',
+    caption: 'Coffee Break',
   },
 ];

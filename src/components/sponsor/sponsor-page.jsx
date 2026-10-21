@@ -7,7 +7,7 @@ import {
   SponsorStorySection,
   SponsorshipTiersSection,
 } from '@/components/sponsor/sponsor-sections';
-import { tasi2026Partners } from '@/data/partners-2026';
+import { tasi2026AllPartners } from '@/data/partners-2026';
 import { sponsorHero } from '@/data/sponsor-page';
 
 export default function SponsorPage() {
@@ -36,7 +36,7 @@ export default function SponsorPage() {
         <PartnersMarqueeStrip
           title="Partners of TASI 2026"
           description="The organizations partnering with us to shape the trust and safety conversation at TASI 2026."
-          partners={tasi2026Partners}
+          partners={tasi2026AllPartners}
         />
       </main>
     </>

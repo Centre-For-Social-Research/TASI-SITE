@@ -34,9 +34,10 @@ test('TASI 2026 page shell composes the post-event recap sections', () => {
 
   assert.match(
     source,
-    /<Tasi2026NumbersBand[\s\S]*<Tasi2026HighlightsVideoSection[\s\S]*<Tasi2026AboutSection[\s\S]*<Tasi2026IdeasSection[\s\S]*<Tasi2026LaunchesSection[\s\S]*<Tasi2026VoicesSection[\s\S]*<Tasi2026SessionsSection[\s\S]*<Tasi2026RecommendationsSection[\s\S]*<Tasi2026GallerySection[\s\S]*<Tasi2026GetInvolvedSection/
+    /<Tasi2026HighlightsVideoSection[\s\S]*<Tasi2026DayStoriesSection[\s\S]*<Tasi2026ChiefGuestSection[\s\S]*<Tasi2026LaunchesSection[\s\S]*<Tasi2026RecommendationsSection[\s\S]*<Tasi2026VoicesSection[\s\S]*<Tasi2026ArticleSection[\s\S]*<Tasi2026SpeakersWallSection[\s\S]*<Tasi2026Gallery/
   );
-  assert.match(source, /<Tasi2026GetInvolvedSection \/>/);
+  assert.doesNotMatch(source, /Tasi2026SessionsSection/);
+  assert.doesNotMatch(source, /GlobalCta/);
   assert.match(source, /tasi2026HeroPills/);
   assert.match(source, /tasi2026HeroActions/);
   assert.doesNotMatch(source, /Register For TASI 2026/);
@@ -58,7 +59,6 @@ test('TASI 2026 edition data holds the recap content', async () => {
   assert.equal(data.tasi2026Launches.length, 6);
   assert.equal(data.tasi2026Recommendations.length, 8);
   assert.equal(data.tasi2026SessionRecaps.length, 12);
-  assert.equal(data.tasi2026Stats.length, 6);
   for (const idea of data.tasi2026Ideas) {
     assert.ok(idea.stat.source, `${idea.title} credits its figure`);
     assert.ok(idea.sessions.length > 0, `${idea.title} links sessions`);
@@ -81,17 +81,13 @@ test('TASI 2026 recap never cites Chatham House sessions', async () => {
 test('TASI 2026 sections render the recap content flow from data modules', () => {
   const source = readFile('src/components/editions/tasi-2026-sections.jsx');
 
-  assert.match(source, /From Naming Harms to Owning Them/);
-  assert.match(source, /Five Things TASI 2026 Made Clear/);
+  assert.doesNotMatch(source, /From Naming Harms to Owning Them/);
+  assert.doesNotMatch(source, /Five Things TASI 2026 Made Clear/);
   assert.match(source, /Introduced at TASI 2026/);
   assert.match(source, /What Leaders Said/);
-  assert.match(source, /Help Shape What Comes Next/);
-  assert.match(source, /href="\/get-involved"/);
-  assert.match(source, /href="\/sponsor"/);
   assert.doesNotMatch(source, /TASI returns in October 2027/);
-  assert.match(source, /tasi2026Ideas/);
-  assert.match(source, /tasi2026SessionRecaps/);
-  assert.match(source, /getProgrammeSessionPath/);
+  assert.match(source, /tasi2026ChiefGuest/);
+  assert.doesNotMatch(source, /Explore the Conversations/);
   assert.doesNotMatch(source, /What to Expect at/);
 });
 
@@ -126,5 +122,25 @@ test('TASI 2026 recap ships its public sizzler, captions and curated photos', as
     ...data.tasi2026Ideas.map((idea) => idea.image),
   ]) {
     assert.ok(fs.existsSync(absolutePath(`public${src}`)), src);
+  }
+});
+
+test('TASI 2026 chief guest, journey and speaker wall use real assets and profiles', async () => {
+  const data = await importModule('src/data/tasi-2026-edition.js');
+  const speakers = JSON.parse(readFile('src/data/speakers-2026.json'));
+  const names = new Set(speakers.map((speaker) => speaker.name));
+
+  assert.equal(data.tasi2026ChiefGuest.name, 'Jitin Prasada');
+  assert.ok(
+    fs.existsSync(absolutePath(`public${data.tasi2026ChiefGuest.photo}`))
+  );
+  assert.ok(names.has(data.tasi2026ChiefGuest.name));
+  for (const name of data.tasi2026FeaturedSpeakers) {
+    const speaker = speakers.find((entry) => entry.name === name);
+    assert.ok(speaker, `${name} needs a 2026 profile`);
+    assert.ok(
+      fs.existsSync(absolutePath(`public${speaker.photo}`)),
+      `${name} needs a photo`
+    );
   }
 });

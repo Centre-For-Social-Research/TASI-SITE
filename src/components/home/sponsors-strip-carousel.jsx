@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { tasi2026Partners as partners } from '@/data/partners-2026';
+import { tasi2026AllPartners as partners } from '@/data/partners-2026';
 
 export default function SponsorsStripCarousel() {
   // We duplicate the partners list to create a seamless infinite loop.
