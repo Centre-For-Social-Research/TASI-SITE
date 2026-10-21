@@ -32,9 +32,11 @@ export default function CertificatePreview({
       className={`${body.className} relative w-full overflow-hidden rounded-[6px] shadow-xl ring-1 ring-black/5`}
       style={{ containerType: 'inline-size', aspectRatio: '297 / 210' }}
     >
+      {/* /img/ is cached for a year as immutable, so a changed background
+          gets a new file name (bump -vN) rather than an in-place edit. */}
       {/* eslint-disable-next-line @next/next/no-img-element -- fixed decorative background */}
       <img
-        src="/img/certificates/tasi-2026-preview-bg.webp"
+        src="/img/certificates/tasi-2026-preview-bg-v2.webp"
         alt=""
         className="absolute inset-0 h-full w-full"
       />

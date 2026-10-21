@@ -381,9 +381,11 @@ test('the file check sends only a fingerprint and the preview has no signature',
     /\^\[a-f0-9\]\{64\}\$/
   );
   const preview = read('src/components/certificates/certificate-preview.jsx');
-  assert.match(preview, /tasi-2026-preview-bg\.webp/);
+  assert.match(preview, /tasi-2026-preview-bg-v2\.webp/);
   assert.doesNotMatch(preview, /signature.(png|jpe?g|webp)/i);
-  assert.ok(fs.existsSync('public/img/certificates/tasi-2026-preview-bg.webp'));
+  assert.ok(
+    fs.existsSync('public/img/certificates/tasi-2026-preview-bg-v2.webp')
+  );
 });
 
 test('the share card names only active holders and never shows the signature', () => {
