@@ -1,8 +1,15 @@
+import { notFound } from 'next/navigation';
 import { Download, ImageIcon, ShieldCheck } from 'lucide-react';
 
 import HomeNavbar from '@/components/home/navbar';
 import ShareCardBuilder from '@/components/share-card/share-card-builder';
 import BrandedPageHero from '@/components/ui/branded-page-hero';
+import shareCardUtils from '@/lib/share-card-utils.cjs';
+
+const { isShareCardOpen } = shareCardUtils;
+
+// Checked per request so the page closes on time without a redeploy.
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: "I'm Attending TASI 2026 | Make Your Card",
@@ -30,6 +37,8 @@ const STEPS = [
 ];
 
 export default function Page() {
+  if (!isShareCardOpen()) notFound();
+
   return (
     <>
       <HomeNavbar />

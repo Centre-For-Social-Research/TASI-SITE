@@ -17,7 +17,7 @@ const siteUrl = 'https://trustandsafetyindia.org';
 const siteName = 'Trust and Safety India Festival';
 const siteTitle = 'Trust and Safety India Festival | TASI 2026';
 const siteDescription =
-  "Trust and Safety India Festival is India's first national convening focused on trust and safety, digital safety, platform accountability, and responsible AI. The 2026 edition, TASI 2026, is convened by the Centre for Social Research (CSR) and Trust and Safety Festival, bringing together government, industry, academia, and civil society.";
+  "Trust and Safety India Festival is India's first national convening focused on trust and safety, digital safety, platform accountability, and responsible AI. Convened by the Centre for Social Research (CSR) and Trust and Safety Festival, it brings together government, industry, academia, and civil society. TASI 2026 took place on 14-15 October 2026 in New Delhi; TASI returns in October 2027.";
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -73,7 +73,7 @@ const structuredData = {
       eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
       eventStatus: 'https://schema.org/EventScheduled',
       image: [`${siteUrl}/opengraph-image`],
-      url: siteUrl,
+      url: `${siteUrl}/tasi-2026`,
       organizer: {
         '@id': `${siteUrl}/#organization`,
       },
@@ -81,15 +81,6 @@ const structuredData = {
         '@type': 'Organization',
         name: 'TASI 2026 speakers and panelists',
         url: `${siteUrl}/speakers`,
-      },
-      offers: {
-        '@type': 'Offer',
-        name: 'General access registration',
-        url: `${siteUrl}/register`,
-        price: '0',
-        priceCurrency: 'INR',
-        availability: 'https://schema.org/InStock',
-        validFrom: '2026-05-01T00:00:00+05:30',
       },
       location: {
         '@type': 'Place',

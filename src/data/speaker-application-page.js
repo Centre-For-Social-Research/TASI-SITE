@@ -1,14 +1,14 @@
 export const speakerApplicationMetadata = {
-  title: 'Apply to Speak at Trust and Safety India Festival | TASI 2026',
+  title: 'Speak at Trust and Safety India Festival | TASI',
   description:
-    'Submit your speaker application for Trust and Safety India Festival 2026 and help shape conversations on trust and safety, AI governance, child safety, platform accountability, and digital wellbeing.',
+    'Speaker applications for TASI 2026 have closed. Applications for TASI 2027, in October 2027, will open on this page.',
   alternates: {
     canonical: '/speaker-application',
   },
   openGraph: {
-    title: 'Apply to Speak at Trust and Safety India Festival | TASI 2026',
+    title: 'Speak at Trust and Safety India Festival | TASI',
     description:
-      'Speaker applications for TASI 2026 across online safety, platform governance, AI governance, child safety, and digital wellbeing.',
+      'Speaker applications for TASI 2026 have closed. Applications for TASI 2027 will open on this page.',
     url: '/speaker-application',
     type: 'website',
     images: ['/opengraph-image'],
@@ -16,10 +16,10 @@ export const speakerApplicationMetadata = {
 };
 
 export const speakerApplicationHero = {
-  eyebrow: 'TASI 2026',
-  title: 'Apply to Speak at TASI 2026',
+  eyebrow: 'Speak at TASI',
+  title: 'Speaker Applications',
   description:
-    'Bring a sharp perspective, a real-world case study, or a conversation that can move the field forward. We are looking for speakers who can turn trust and safety challenges into actionable dialogue.',
+    'Speaker applications for TASI 2026 have closed. Applications for TASI 2027, in October 2027, will open on this page; until then, write to the TASI team to register your interest.',
 };
 
 export const speakerHighlightSeeds = [

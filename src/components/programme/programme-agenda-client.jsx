@@ -305,6 +305,8 @@ export default function ProgrammeAgendaClient({
   speakerEdition,
   defaultDay = 'all',
   syncWithUrl = false,
+  // Off for an edition that is over: its sessions can no longer be attended.
+  showCalendarLinks = true,
 }) {
   const clock = useFestivalClock();
   const liveClock = showLiveStatus ? clock : null;
@@ -407,14 +409,22 @@ export default function ProgrammeAgendaClient({
     () =>
       filteredSessions.map((session) => ({
         ...session,
-        calendar: buildCalendarMetadata(
-          session,
-          normalizedSessions,
-          labels,
-          dayDateMap
-        ),
+        calendar: showCalendarLinks
+          ? buildCalendarMetadata(
+              session,
+              normalizedSessions,
+              labels,
+              dayDateMap
+            )
+          : null,
       })),
-    [dayDateMap, filteredSessions, labels, normalizedSessions]
+    [
+      dayDateMap,
+      filteredSessions,
+      labels,
+      normalizedSessions,
+      showCalendarLinks,
+    ]
   );
 
   const totalPages = Math.max(

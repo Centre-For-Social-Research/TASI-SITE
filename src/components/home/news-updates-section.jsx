@@ -3,15 +3,20 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import CountUpNumber from '@/components/ui/count-up-number';
 import { getBlogPosts } from '@/lib/blog';
+import { speakerCountries2026 } from '@/data/speaker-countries-2026';
 import SponsorsStripCarousel from './sponsors-strip-carousel';
 
 const tasiStats = [
-  { value: 500, suffix: '+', label: 'Participants Attended (2025)' },
-  { value: 100, suffix: '+', label: 'Expert Speakers' },
-  { value: 15, suffix: '', label: 'Countries Represented' },
-  { value: 32, suffix: '', label: 'Partner Organisations' },
-  { value: 30, suffix: '+', label: 'Sessions (Panels, Workshops)' },
-  { value: 10, suffix: '+', label: 'Dedicated Workshops' },
+  { value: 500, suffix: '+', label: 'Attendees' },
+  { value: 110, suffix: '+', label: 'Speakers' },
+  { value: 55, suffix: '+', label: 'Sessions' },
+  {
+    value: speakerCountries2026.length,
+    suffix: '',
+    label: 'Countries Represented',
+  },
+  { value: 2, suffix: '', label: 'Days' },
+  { value: 3, suffix: '', label: 'Rooms' },
 ];
 
 export default async function NewsUpdatesSection() {
@@ -153,7 +158,7 @@ export default async function NewsUpdatesSection() {
         <section className="relative mt-0 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] py-10 md:py-12">
           <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
             <p className="mb-5 text-xs md:text-sm font-semibold uppercase tracking-[0.14em] text-white/75">
-              TASI in Numbers
+              TASI 2026 in Numbers
             </p>
             <div className="flex flex-nowrap items-start gap-10 overflow-x-auto pb-2 md:gap-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {tasiStats.map((stat) => (

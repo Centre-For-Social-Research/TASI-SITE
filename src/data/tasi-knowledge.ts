@@ -2,12 +2,28 @@
 // No code changes needed — just update the text.
 
 export const tasiKnowledge = `
-ABOUT TASI 2026:
+CURRENT STATUS (read this first):
+- TASI 2026 is over. It took place on 14–15 October 2026 at the India International Centre, New Delhi, with an opening reception on 13 October.
+- Registration, speaker applications, volunteer applications, exhibition enquiries and media accreditation for TASI 2026 are all closed.
+- TASI returns in October 2027. Dates and venue for TASI 2027 have not been announced yet.
+- The TASI 2026 recap (highlights video, five key ideas, launches, recommendations and session recaps) is at /tasi-2026.
+
+ABOUT TASI:
 TASI (Trust and Safety India Festival) is India's foremost trust and safety convening, bringing together government, industry, civil society, and international organizations. It is India's first national convening focused on trust and safety, led by civil society.
-- Dates: 14–15 October 2026
-- Venue: India International Centre, New Delhi, India (in-person and online)
-- Format: 2-day policy forum and convening
-- Expected Participants: 500+ delegates, 14 key themes, 50+ sessions
+- TASI 2025 (first edition): 7–8 October 2025, New Delhi
+- TASI 2026 (second edition): 14–15 October 2026, India International Centre, New Delhi
+- TASI 2026 in numbers: 500+ attendees, 110+ speakers, 55+ sessions across two days in three rooms (Main Hall, Roundtable Room, Workshop Room)
+
+TASI 2026 RECAP (details at /tasi-2026):
+Five ideas that came up across sessions:
+1. Children want a say, not just a shield. In a CSR and Roblox study, only about 8% of children turn to a trusted adult when something goes wrong online.
+2. Age checks are coming; the debate is over how. Speakers criticised self-declared age and argued for privacy-preserving checks that work on shared family phones.
+3. Scams have become an industry. TP cited ₹22,495 crore lost to cyber fraud in India last year.
+4. For women, the gap is justice. Uma Subramanian (RATI Foundation) cited 3,288 cybercrime cases against women in 2024 NCRB data.
+5. Regulate design, not just content. The Quantum Hub's report proposes a duty of care for platforms.
+Launched at TASI 2026: The Quantum Hub's report "Designing for Online Safety"; an NCPCR AI tool to detect child sexual abuse material; Newslink (a classroom news practice); Behind the Chat by Microsoft and Cyberlite; Snap's My Digital Wellbeing Journal; and Main Scam Mein Nahi Aaungi by Saksham Senior with I4C, supported by Meta.
+The inaugural address was given by Jitin Prasada, Minister of State for Commerce & Industry and Electronics & IT.
+Figures above were cited by speakers on stage.
 
 WHY TASI EXISTS:
 India stands at the center of global digital transformation with one of the world's largest online populations, yet many trust and safety frameworks are shaped without grounding in Indian realities and Global South contexts. TASI helps close that gap.
@@ -31,7 +47,7 @@ CENTRE FOR SOCIAL RESEARCH (CSR):
 - Email: india@trustandsafetyfestival.com
 - Website: www.csrindia.org
 
-14 STRATEGIC THEMES FOR 2026:
+14 STRATEGIC THEMES OF TASI 2026:
 1. Responsible AI Governance and Regulation
 2. Platform Accountability and Safety-by-Design
 3. Online Fraud, Scams, and Financial Exploitation
@@ -47,7 +63,7 @@ CENTRE FOR SOCIAL RESEARCH (CSR):
 13. Supporting Parents and Strengthening Parent-Child Safety Online
 14. Protecting and Empowering Seniors in Digital Environments
 
-SPEAKERS: TASI 2026 speaker profiles are available at /speakers?year=2026. The following examples are from TASI 2025 (100+ speakers):
+SPEAKERS: TASI 2026 speaker profiles (110+ speakers) are at /speakers?year=2026. The following examples are from TASI 2025 (100+ speakers):
 Government Leaders:
 - Dr. Subrahmanyam Jaishankar — External Affairs Minister, Govt. of India
 - S. Krishnan — Secretary, MeitY
@@ -88,54 +104,24 @@ Child Safety:
 - Abby Roberts — Project Manager, INHOPE
 - Ioanna Noula — Founder, COR Sandbox
 
-2025 PROGRAMME STRUCTURE (Reference for 2026 format):
+TASI 2025 PROGRAMME:
 - Day 0 (Oct 6): Opening Reception at Embassy of France
 - Day 1 (Oct 7): Conference at Taj Ambassador — Keynotes, panels on AI for Safety, Child Protection, Gender-Based Violence, Women's Digital Safety, Human Trafficking, Fraud Prevention; Evening reception at Embassy of Netherlands
 - Day 2 (Oct 8): Fireside chats on dating and online safety, regulatory sandboxes, closing reflections; Evening reception at Swedish Embassy
 
-REGISTRATION:
-TASI 2026 follows an approval-based delegate process:
-- Step 1: Submit application — complete form with delegate details, LinkedIn profile, profile photo
-- Step 2: Team reviews and sends status (confirmed, waitlisted, or not approved)
-- Step 3: Confirmed attendees receive QR-based entry pass; collect pre-printed badge at venue
-- Non-transferable: Registrations are strictly non-transferable, valid only for the approved individual
-- On event day: Carry your QR pass and valid government-issued ID
-- Email for support: india@trustandsafetyfestival.com
+REGISTRATION AND APPLICATIONS:
+- Registration for TASI 2026 is closed because the event is over. Never tell anyone that registration is open.
+- Registration for TASI 2027 has not opened. People can email india@trustandsafetyfestival.com to register interest.
+- Speaker, volunteer, exhibition and media accreditation applications for TASI 2026 are closed. For TASI 2027, people can register interest at the same email.
 
-REGISTRATION FAQs:
-- Will I be confirmed immediately? No. Submission acknowledged first, then status email later.
-- Can I transfer registration? No. Strictly non-transferable.
-- What if I cannot attend? Inform the team in advance at india@trustandsafetyfestival.com
-
-SPONSORSHIP TIERS:
-- Platinum ($30,000, exclusive/1): Keynote + panel + spotlight + workshop; 10 passes; exhibit booth; strategic co-creation
-- Gold ($20,000, 3 available): Panel + one activation; 5 passes; exhibit booth; full visibility
-- Silver ($10,000, 5 available): Panel participation; 2 passes; optional add-ons ($5K each)
-- Supporter ($5,000, limited): One activation (spotlight, workshop, or keynote); 2 passes; branding
-
-Add-Ons:
-- Support Global South participation: $2,500 per expert
-- Host a networking reception
-- Custom partnerships available
-
-SPEAKING AT TASI:
-- Topics welcomed: Panels, fireside chats, solo talks, case studies, research findings, product safety insights
-- Submit: Proposed topic, audience problem it addresses, why your voice is relevant for TASI 2026
-- Apply on the speaker-application page of the website
-
-VOLUNTEERING:
-Tracks: Registration/attendee welcome, speaker/backstage coordination, room support, partner/logistics assistance
-Process:
-- Step 1: Register interest with availability and preferred support area
-- Step 2: Shortlisted volunteers contacted with role details
-- Step 3: Selected volunteers receive shift guidance before festival
-Apply on the volunteer-application page.
+SPONSORSHIP:
+- Sponsorship and exhibition opportunities for TASI 2027 have not been announced. Organisations can enquire at india@trustandsafetyfestival.com or via /sponsor.
 
 MEDIA & PRESS:
 - 50+ news outlets covered TASI 2025
 - Media Partners: The Hindu, The Print, Business Standard, Financial Express, ANI, DD News
-- Resources: Press releases, press kit, photo gallery, media accreditation
-- Apply for media access: india@trustandsafetyfestival.com
+- Resources: press releases, press kit and photo gallery at /media
+- Media enquiries: india@trustandsafetyfestival.com
 
 PARTNERS & SPONSORS:
 Technology Platforms: Booking.com, Meta, Snapchat, YouTube, Truecaller, Match Group, X, Resolver, Google, Roblox
@@ -143,45 +129,10 @@ Government & Embassies: French Embassy, Swedish Embassy, Netherlands Embassy, Au
 Civil Society & Research: Alliance for Cyber Trust and Safety (ACTS), The Dialogue, The Asia Foundation, Safetipin, INHOPE, Quantum Hub, COR Sandbox, GroSafe, FRIDA Fund
 Other: TP, VYS, GirlEffect, UN Women, GSMA, Dhirubhai Ambani University, ASCI
 
-TRAVEL & GETTING TO NEW DELHI:
-Time Zone: IST (GMT +5:30)
-Currency: INR (Indian Rupee) | ~₹92 = 1 USD
-Electricity: 220-240V, Plug Types C and D
-Emergency: 112 (Police, Fire, Ambulance)
-Climate in October: 20°C to 34°C — light clothing for day, light jacket for evenings; formal business attire for events
-
-By Air:
-- Indira Gandhi International Airport T3 (International): 16 km
-- Domestic T1: 15 km | Domestic T2: 14 km
-- Hindon Airport, Ghaziabad: 35 km
-
-By Rail:
-- New Delhi Railway Station (~5 km)
-- Hazrat Nizamuddin Railway Station (~6 km)
-- Old Delhi Railway Station (~8 km)
-
-Local Transport: Delhi Blue Line Metro, Uber, Ola, Auto-Rickshaws, hotel transfers
-
-Nearby Attractions: Akshardham Temple (0.5 km), Dilli Haat (1 km), Red Fort (1 km), India Gate (1.5 km), Rashtrapati Bhavan (4.5 km)
-
-VISA INFORMATION:
-1. Visa Waiver Agreements — for Diplomatic/Official/Service Passport holders with bilateral agreements; see mea.gov.in/bvwa-menu.htm
-2. Regular Conference Visa — multiple entry, gratis for accredited delegates and accompanying spouses; apply via indianvisaonline.gov.in
-3. e-Conference Visa — for Ordinary Passport holders from eligible countries; apply at indianvisaonline.gov.in/evisa/tvoa.html
-OCI Cardholders: Must obtain prior permission from Ministry of Home Affairs; apply at ociservices.gov.in
-Passport Must: Minimum 6 months validity beyond arrival date, at least 2 blank pages
-
-RECOMMENDED HOTELS IN NEW DELHI (book independently):
-Aerocity: Aloft New Delhi Aerocity, Andaz Delhi, JW Marriott, Pride Plaza, Pullman New Delhi, Roseate New Delhi
-Central Delhi: Claridges, Eros Hotel, Hyatt Regency Delhi, Imperial Hotel, ITC Maurya, Le Méridien, Shangri-La Eros, Sheraton New Delhi, Taj Mahal Hotel, Taj Palace, The Ashok, The Lalit, The Leela, The Lodhi, The Oberoi, Vivanta by Taj
-
-Practical: Drink sealed bottled water; currency exchange at airport/hotels; major credit cards accepted.
-
-RECEPTIONS 2026 (all invitation only; invited guests receive timing, venue and entry details directly):
-- Opening Reception, Tuesday 13 October: jointly hosted by the Embassy of France and the German Embassy — welcome remarks, Safety Spotlights from global safety innovators, networking
-- Match Group Policy Lab, Wednesday 14 October, India International Centre: private closed-door roundtable on building trusted human connections by designing for safety, authenticity and inclusion, followed by a networking reception
-- Closing Reception, Thursday 15 October: hosted by the Embassy of the Kingdom of the Netherlands — reflections on the festival and networking
-- A festival registration does not by itself include a reception invitation. Enquiries: india@trustandsafetyfestival.com
+RECEPTIONS 2026 (past; all were by invitation only):
+- Opening Reception, Tuesday 13 October 2026: at the Goethe-Institut, hosted with the embassies of Germany and France, with welcome remarks, Safety Spotlights from global safety innovators, and networking
+- Match Group Policy Lab, Wednesday 14 October 2026, India International Centre: a closed-door roundtable on building trusted human connections by designing for safety, authenticity and inclusion, followed by a networking reception
+- Closing Reception, Thursday 15 October 2026: hosted by the Embassy of the Kingdom of the Netherlands, with a closing panel, From Conversation to Commitment, followed by networking, drinks and dinner
 
 RECEPTIONS 2025 (past edition):
 - Opening Reception: Embassy of France — diplomatic welcome, international perspectives

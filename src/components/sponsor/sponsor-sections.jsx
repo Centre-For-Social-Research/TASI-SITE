@@ -126,7 +126,7 @@ export function SponsorshipTiersSection() {
           <PricingSection
             plans={sponsorPricingPlans}
             heading="Sponsorship tiers with one cohesive system"
-            description="Choose the level of presence, programming, and relationship-building that fits your goals at TASI 2026."
+            description="Choose the level of presence, programming, and relationship-building that fits your goals at TASI."
             columnsClassName="md:grid-cols-2 xl:grid-cols-3"
           />
         </div>

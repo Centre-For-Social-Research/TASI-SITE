@@ -7,7 +7,8 @@ import speakerCommunicationsUtils from '@/lib/speaker-communications-utils.cjs';
 import speakerBadgeShare from '@/lib/speaker-badge-share.cjs';
 import speakerBadgeEmail from '@/lib/speaker-badge-email.cjs';
 
-const { getSpeakerEdition, isValidDownloadToken } = speakerCommunicationsUtils;
+const { getSpeakerEdition, hasSpeakerEditionEnded, isValidDownloadToken } =
+  speakerCommunicationsUtils;
 const {
   COLLAB_NOTE,
   SOCIAL_PROFILES,
@@ -38,7 +39,9 @@ async function getBadgeOrNotFound(token) {
 export async function generateMetadata({ params }) {
   const { token } = await params;
   const { badge, edition } = await getBadgeOrNotFound(token);
-  const title = `${badge.speaker_name} is speaking at ${edition.name}`;
+  const title = hasSpeakerEditionEnded(edition)
+    ? `${badge.speaker_name} spoke at ${edition.name}`
+    : `${badge.speaker_name} is speaking at ${edition.name}`;
   const description = `${edition.festivalName}, ${edition.dates}, ${edition.venue}.`;
   const image = `/badge/${token}/image`;
 

@@ -1,14 +1,14 @@
 export const volunteerApplicationMetadata = {
-  title: 'Volunteer at Trust and Safety India Festival | TASI 2026',
+  title: 'Volunteer at Trust and Safety India Festival | TASI',
   description:
-    "Apply to volunteer at Trust and Safety India Festival 2026 and support registration, speaker coordination, attendee experience, media flow, and India's trust and safety convening.",
+    'Volunteer applications for TASI 2026 have closed. Applications for TASI 2027, in October 2027, will open on this page.',
   alternates: {
     canonical: '/volunteer-application',
   },
   openGraph: {
-    title: 'Volunteer at Trust and Safety India Festival | TASI 2026',
+    title: 'Volunteer at Trust and Safety India Festival | TASI',
     description:
-      'Volunteer opportunities for TASI 2026 across registration, speaker support, room coordination, guest care, and festival operations.',
+      'Volunteer applications for TASI 2026 have closed. Applications for TASI 2027 will open on this page.',
     url: '/volunteer-application',
     type: 'website',
     images: ['/opengraph-image'],
@@ -16,10 +16,10 @@ export const volunteerApplicationMetadata = {
 };
 
 export const volunteerApplicationHero = {
-  eyebrow: 'TASI 2026',
+  eyebrow: 'Volunteer at TASI',
   title: 'Volunteer and be part of the festival from the inside',
   description:
-    'Help us welcome attendees, support speakers, and keep the experience calm, thoughtful, and well-run. We are looking for volunteers who are dependable, warm, and excited to contribute to TASI 2026.',
+    'Thank you to everyone who volunteered at TASI 2026. Applications for TASI 2027, in October 2027, will open on this page; until then, write to the TASI team to register your interest.',
 };
 
 export const volunteerBenefits = [

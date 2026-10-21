@@ -23,7 +23,7 @@ function getSpeakerOrNotFound(slug) {
 function buildSpeakerDescription(speaker) {
   const role = speaker.designation ? `${speaker.designation}. ` : '';
   const bio = speaker.bio || '';
-  return `${speaker.name} is a TASI 2026 speaker. ${role}${bio}`
+  return `${speaker.name} spoke at TASI 2026. ${role}${bio}`
     .replace(/\s+/g, ' ')
     .slice(0, 300);
 }

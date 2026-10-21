@@ -17,7 +17,7 @@ const initialForm = {
 
 function buildMessageBody(form) {
   return [
-    'Exhibition enquiry for TASI 2026',
+    'Exhibition enquiry for TASI',
     `Name: ${form.name.trim()}`,
     `Company: ${form.company.trim()}`,
     `Email: ${form.email.trim().toLowerCase()}`,
@@ -99,7 +99,7 @@ export default function ExhibitionEnquiryForm({ closed = false }) {
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit}>
-      {closed && <FormClosedNotice />}
+      {closed && <FormClosedNotice formKey="exhibition_enquiry" />}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label

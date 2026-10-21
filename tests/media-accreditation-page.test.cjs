@@ -32,16 +32,14 @@ test('media accreditation has a dedicated public page without changing its API',
   assert.doesNotMatch(api, /event_registrations/);
 });
 
-test('media discovery links point to the dedicated accreditation page', () => {
+test('closed media accreditation stays reachable but is not promoted', () => {
   const mediaData = read('src', 'data', 'media-page.js');
   const involvementData = read('src', 'data', 'get-involved-page.js');
   const sitemap = read('src', 'app', 'sitemap.ts');
 
-  assert.match(mediaData, /href: '\/media\/accreditation'/);
-  assert.match(
-    mediaData,
-    /label: 'Apply for TASI 2026 Media Accreditation',[\s\S]*href: '\/media\/accreditation'/
-  );
-  assert.match(involvementData, /href: '\/media\/accreditation'/);
+  // TASI 2026 is over: the media pages point to the recap and press kit.
+  assert.doesNotMatch(mediaData, /href: '\/media\/accreditation'/);
+  assert.doesNotMatch(involvementData, /href: '\/media\/accreditation'/);
+  assert.match(mediaData, /href: '\/tasi-2026'/);
   assert.match(sitemap, /path: '\/media\/accreditation'/);
 });

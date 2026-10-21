@@ -110,7 +110,7 @@ test('get involved data owns live parent-page participation paths', async () => 
     data.involvementOptions.some((item) => item.href === '/exhibition')
   );
   assert.ok(
-    data.involvementOptions.some((item) => item.href === '/media/accreditation')
+    data.involvementOptions.some((item) => item.href === '/media/press-kit')
   );
   assert.ok(
     data.involvementOptions.some(

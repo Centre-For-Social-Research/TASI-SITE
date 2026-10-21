@@ -1,7 +1,7 @@
 export const contactMetadata = {
   title: 'Contact Trust and Safety India Festival | TASI 2026',
   description:
-    'Contact the Trust and Safety India Festival team for TASI 2026 registration, delegate participation, partnerships, sponsorships, media requests, and festival coordination.',
+    'Contact the Trust and Safety India Festival team about TASI 2027, delegations, partnerships, sponsorships, media requests, and the TASI 2026 recap.',
   alternates: {
     canonical: '/contact',
   },

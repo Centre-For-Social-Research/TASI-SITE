@@ -12,19 +12,19 @@ export default function MediaAccreditationCallout() {
             TASI 2026 Media
           </p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-white md:text-5xl">
-            Cover TASI 2026
+            Writing about TASI 2026?
           </h2>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/88">
-            Journalists, editors, broadcasters, news agencies, podcasters, and
-            eligible freelance reporters can request media accreditation on a
-            dedicated application page.
+            The recap has the five ideas, launches and recommendations from the
+            festival, with verified quotes and session recaps. For interviews,
+            write to the TASI team.
           </p>
           <div className="mt-7">
             <a
-              href="/media/accreditation"
+              href="/tasi-2026"
               className="inline-flex min-h-11 items-center justify-center rounded-[10px] bg-white px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#2d1748] transition hover:bg-stone-100"
             >
-              Apply for media accreditation
+              Read the TASI 2026 recap
             </a>
           </div>
         </div>

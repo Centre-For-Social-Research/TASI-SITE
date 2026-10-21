@@ -1,281 +1,481 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Accessibility,
-  Baby,
-  BadgeAlert,
-  Bot,
-  BriefcaseBusiness,
-  Coins,
-  FileSearch,
-  Globe2,
-  HeartHandshake,
-  Plane,
-  Scale,
-  Shield,
-  ShieldAlert,
-  Users,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-import CountUpNumber from '@/components/ui/count-up-number';
+import Tasi2026SpeakersWall from '@/components/editions/tasi-2026-speakers-wall';
+import Tasi2025TrackIllustration from '@/components/editions/tasi-2025-track-illustration';
+import { MotionReveal } from '@/components/ui/motion-reveal';
 import {
-  MotionItem,
-  MotionReveal,
-  MotionStagger,
-} from '@/components/ui/motion-reveal';
-import {
-  tasi2026AudienceSegments,
-  tasi2026FormatItems,
-  tasi2026StructureFormats,
-  tasi2026StructureStats,
+  tasi2026ChiefGuest,
+  tasi2026DayStories,
+  tasi2026HighlightsVideoSrc,
+  tasi2026Launches,
+  tasi2026Quotes,
+  tasi2026Recommendations,
 } from '@/data/tasi-2026-edition';
-import { themes2026 } from '@/data/themes-2026';
+function initials(name) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('');
+}
 
-const themeIconMap = {
-  accessibility: Accessibility,
-  baby: Baby,
-  badgeAlert: BadgeAlert,
-  bot: Bot,
-  briefcase: BriefcaseBusiness,
-  coins: Coins,
-  fileSearch: FileSearch,
-  globe: Globe2,
-  heartHandshake: HeartHandshake,
-  plane: Plane,
-  scale: Scale,
-  shield: Shield,
-  shieldAlert: ShieldAlert,
-  users: Users,
-};
-
-export function Tasi2026FormatSection() {
+function Avatar({ name, photo, size = 'h-12 w-12' }) {
   return (
-    <section className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg">
-      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <MotionReveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
-            Overview
-          </p>
-          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
-            What to Expect at{' '}
-            <span className="text-rc-primary dark:text-white">TASI 2026</span>
-          </h2>
-          <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
-            TASI 2026 blends high-level dialogue with practical exchange so
-            delegates leave with sharper insights, stronger networks, and
-            clearer pathways to action.
-          </p>
-        </MotionReveal>
-
-        <MotionStagger className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {tasi2026FormatItems.map((item, index) => (
-            <MotionItem key={item.title}>
-              <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
-                <div className="relative aspect-[1.5/1] w-full">
-                  <Image
-                    src={item.image}
-                    alt={item.imageAlt}
-                    fill
-                    className={`object-cover transition-transform duration-500 ${item.imageClassName || ''}`}
-                    sizes="(min-width: 1280px) 23vw, (min-width: 768px) 50vw, 100vw"
-                  />
-                </div>
-                <div className="flex h-full flex-col p-5 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-rc-primary text-sm font-black text-white dark:bg-white dark:text-slate-950">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-stone-400 dark:text-slate-500">
-                      Experience
-                    </span>
-                  </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-                    {item.desc}
-                  </p>
-                </div>
-              </article>
-            </MotionItem>
-          ))}
-        </MotionStagger>
-      </div>
-    </section>
+    <div
+      className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-stone-200 bg-white dark:border-slate-700 dark:bg-slate-900 ${size}`}
+    >
+      {photo ? (
+        <Image
+          src={photo}
+          alt={name}
+          fill
+          className="object-cover"
+          sizes="64px"
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="text-sm font-black text-rc-primary dark:text-white"
+        >
+          {initials(name)}
+        </span>
+      )}
+    </div>
   );
 }
 
-export function Tasi2026StructureSection() {
+function SectionIntro({ eyebrow, title, children, dark = false }) {
   return (
-    <section className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg">
-      <div className="mx-auto max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <MotionReveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
-            Structure
-          </p>
-          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
-            Convening{' '}
-            <span className="text-rc-primary dark:text-white">Format</span>
-          </h2>
-          <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
-            TASI 2026 is designed as a multi-layered convening that moves from
-            headline policy dialogue into practical, implementation-focused
-            exchange, carrying delegates from vision into execution.
-          </p>
-        </MotionReveal>
+    <div className="max-w-3xl">
+      <p
+        className={`mb-4 text-xs font-black uppercase tracking-[0.18em] md:text-sm ${
+          dark
+            ? 'text-rc-secondary dark:text-white'
+            : 'text-rc-accent dark:text-white'
+        }`}
+      >
+        {eyebrow}
+      </p>
+      <h2
+        className={`text-4xl font-extrabold tracking-tight md:text-5xl lg:text-[3.2rem] ${
+          dark ? 'text-white' : 'text-stone-900 dark:text-white'
+        }`}
+      >
+        {title}
+      </h2>
+      {children ? (
+        <p
+          className={`mt-5 text-body-lg ${
+            dark ? 'text-white/80' : 'text-stone-700 dark:text-slate-300'
+          }`}
+        >
+          {children}
+        </p>
+      ) : null}
+    </div>
+  );
+}
 
-        <div className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-10">
-          <MotionStagger className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:gap-5">
-            {tasi2026StructureStats.map((stat) => (
-              <MotionItem key={stat.label}>
-                <div className="flex h-full flex-col justify-center rounded-[10px] bg-[linear-gradient(145deg,#350265_0%,#4a0c7f_100%)] p-6 text-left shadow-xl shadow-[#350265]/20 transition-transform duration-300 hover:-translate-y-1 md:p-8">
-                  <CountUpNumber
-                    end={stat.value}
-                    suffix={stat.suffix || ''}
-                    className="text-5xl font-black text-rc-secondary dark:text-white md:text-6xl"
-                  />
-                  <p className="mt-3 text-sm font-bold uppercase tracking-[0.16em] text-white/80">
-                    {stat.label}
-                  </p>
+export function Tasi2026HighlightsVideoSection() {
+  return (
+    <section
+      id="festival-highlights"
+      className="scroll-mt-24 bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] px-6 py-section-sm text-white md:py-section-md lg:px-16 lg:py-section-lg"
+    >
+      <div className="mx-auto w-full max-w-[1300px]">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
+          <div className="flex-1 pr-0 lg:max-w-xl">
+            <MotionReveal>
+              <span className="mb-4 block text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white md:text-sm">
+                Festival Highlights
+              </span>
+              <h2 className="mb-8 text-4xl font-extrabold leading-[1.05] tracking-tight text-white md:text-5xl lg:text-[3.2rem]">
+                A Minute of{' '}
+                <span className="text-rc-secondary dark:text-white">
+                  TASI 2026
+                </span>
+              </h2>
+              <div className="space-y-6 text-base font-normal leading-[1.6] text-white/90 md:text-[17px]">
+                <p>
+                  The people, conversations and connections behind two days of
+                  trust and safety in New Delhi, on{' '}
+                  <span className="font-bold text-white">
+                    14-15 October 2026
+                  </span>
+                  .
+                </p>
+                <p>
+                  Scenes from the festival, with remarks by Jitin Prasada on
+                  human-centred technology and shared responsibility. English
+                  captions are available in the player.
+                </p>
+                <p>
+                  More than 500 delegates and 110 speakers filled the Main Hall,
+                  the Workshop Room and the Roundtable Room across 55 sessions.
+                  The film moves from the opening reception at the
+                  Goethe-Institut, through panels on children, age assurance and
+                  women&apos;s safety, to the report launch and the closing
+                  evening at the Netherlands Residence.
+                </p>
+                <p>
+                  Watch it for the faces and the conversations. The full
+                  panel-by-panel coverage will follow on the TASI blog.
+                </p>
+              </div>
+            </MotionReveal>
+          </div>
+
+          <div className="relative w-full flex-1">
+            <MotionReveal delay={0.2} className="w-full">
+              <div className="w-full overflow-hidden rounded-[10px] border border-white/5 bg-[#1b0d36] shadow-2xl">
+                <div className="relative aspect-video w-full bg-black">
+                  <video
+                    className="absolute inset-0 h-full w-full"
+                    controls
+                    autoPlay
+                    muted
+                    playsInline
+                    preload="auto"
+                    poster="/img/tasi-2026/highlights-poster.webp"
+                    aria-label="TASI 2026 festival highlights"
+                    width="1280"
+                    height="720"
+                  >
+                    <source src={tasi2026HighlightsVideoSrc} type="video/mp4" />
+                    <track
+                      kind="captions"
+                      src="/video/tasi-2026-highlights-v3.en.vtt"
+                      srcLang="en"
+                      label="English"
+                    />
+                    Your browser does not support video playback.{' '}
+                    <a href={tasi2026HighlightsVideoSrc}>
+                      Download the TASI 2026 highlights.
+                    </a>
+                  </video>
                 </div>
-              </MotionItem>
-            ))}
-          </MotionStagger>
-
-          <MotionStagger className="grid w-full gap-6 md:grid-cols-2">
-            {tasi2026StructureFormats.map((item) => (
-              <MotionItem key={item.title}>
-                <article className="h-full rounded-[10px] border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 md:p-8">
-                  <h3 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
-                    {item.title}
+                <div className="p-6 md:p-8">
+                  <span className="mb-2 block text-[11px] font-black uppercase tracking-widest text-white/60 md:text-xs">
+                    TASI 2026 Highlights
+                  </span>
+                  <h3 className="text-lg font-bold tracking-tight text-white md:text-xl">
+                    Relive Two Days of TASI 2026 in New Delhi
                   </h3>
-                  <div className="mt-5 h-1 w-14 rounded-full bg-rc-accent dark:bg-white" />
-                  <p className="mt-5 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
-                    {item.text}
-                  </p>
-                </article>
-              </MotionItem>
-            ))}
-          </MotionStagger>
+                </div>
+              </div>
+            </MotionReveal>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-export function Tasi2026ThemesSection() {
+export function Tasi2026LaunchesSection() {
   return (
-    <section className="bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] py-section-sm text-white md:py-section-lg">
-      <div className="mx-auto max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <MotionReveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white md:text-sm">
-            Strategic Focus
-          </p>
-          <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-[3.2rem]">
-            TASI 2026{' '}
-            <span className="text-rc-secondary dark:text-white">Themes</span>
-          </h2>
-          <p className="mt-5 text-body-lg leading-relaxed text-white/80">
-            The festival convenes leaders across government, industry, academia,
-            and civil society to examine the urgent questions shaping AI
-            governance, platform accountability, digital wellbeing, and trust
-            online.
-          </p>
-        </MotionReveal>
-
-        <MotionStagger className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {themes2026.map((theme) => {
-            const Icon = themeIconMap[theme.iconKey];
-
-            return (
-              <MotionItem key={theme.num}>
-                <Link href="/themes" className="group block h-full">
-                  <article className="relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-[10px] border border-white/10 bg-white/[0.08] p-7 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.14] md:p-8">
-                    <div
-                      className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br ${theme.accent}`}
-                    />
-                    <div className="pointer-events-none absolute right-5 top-5 rounded-[10px] border border-white/10 bg-white/10 p-3 text-white/65 backdrop-blur-sm transition duration-300 group-hover:scale-110 group-hover:text-rc-secondary dark:group-hover:text-white">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <div className="relative">
-                      <p className="text-5xl font-black text-white/15 transition-colors duration-300 group-hover:text-rc-accent dark:group-hover:text-white md:text-6xl">
-                        {theme.num}
-                      </p>
-                      <span
-                        className={`mt-5 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${theme.chip}`}
-                      >
-                        {theme.tag}
-                      </span>
-                    </div>
-                    <h3 className="relative mt-8 max-w-[85%] text-2xl font-bold leading-tight text-white">
-                      {theme.title}
-                    </h3>
-                  </article>
-                </Link>
-              </MotionItem>
-            );
-          })}
-        </MotionStagger>
-
-        <MotionReveal className="mt-16 text-center md:mt-24" delay={0.12}>
-          <Link
-            href="/themes"
-            className="inline-block rounded-full bg-rc-secondary px-8 py-3 text-sm font-black uppercase tracking-[0.16em] text-rc-primary transition hover:scale-105 hover:bg-white hover:text-slate-950 focus:outline-none focus:ring-4 focus:ring-[#ffd919]/50 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 dark:hover:text-slate-950 md:px-10 md:py-4 md:text-base"
-          >
-            Explore All Themes
-          </Link>
-        </MotionReveal>
+    <section
+      id="launches"
+      className="scroll-mt-24 bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
+    >
+      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <SectionIntro
+          eyebrow="New at the Festival"
+          title="Introduced at TASI 2026"
+        >
+          Reports, resources and initiatives shared or announced during the
+          festival.
+        </SectionIntro>
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {tasi2026Launches.map((launch, index) => (
+            <article
+              key={launch.title}
+              className="relative rounded-[10px] border border-stone-200 bg-stone-50/70 p-7 shadow-lg shadow-stone-200/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 md:p-8"
+            >
+              <span className="absolute right-6 top-6 text-sm font-black text-stone-300 dark:text-slate-600">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <Tasi2025TrackIllustration variant={launch.illustration} />
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-primary dark:text-white/70">
+                {launch.by}
+              </p>
+              <h3 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                {launch.title}
+              </h3>
+              <div className="mt-5 h-1 w-14 rounded-full bg-rc-accent dark:bg-white" />
+              <p className="mt-5 text-body-md leading-relaxed text-stone-600 dark:text-slate-300">
+                {launch.description}
+              </p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-export function Tasi2026AudienceSection() {
+export function Tasi2026VoicesSection() {
+  const quotes = tasi2026Quotes;
+
   return (
-    <section className="bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm text-stone-900 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] dark:text-stone-100 md:py-section-lg">
-      <div className="mx-auto max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <MotionReveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
-            Audience
+    <section
+      id="voices"
+      className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
+    >
+      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <div className="mb-12 max-w-3xl md:mb-16">
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-orange-300 md:text-sm">
+            Voices from TASI
           </p>
-          <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-[3.2rem]">
-            Who Will You{' '}
-            <span className="text-rc-primary dark:text-white">Meet?</span>
+          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
+            What Leaders Said
           </h2>
           <p className="mt-5 text-body-lg text-stone-700 dark:text-slate-300">
-            TASI brings together the cross-sector community shaping India&apos;s
-            trust, safety, and AI governance agenda.
+            Messages from the ambassadors and diplomats who partnered with TASI
+            2026.
           </p>
-        </MotionReveal>
-
-        <MotionStagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {tasi2026AudienceSegments.map((item) => (
-            <MotionItem key={item.title}>
-              <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-300/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
-                <div className="relative aspect-[1.5/1] w-full">
-                  <Image
-                    src={item.image}
-                    alt={item.imageAlt}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1280px) 23vw, (min-width: 768px) 50vw, 100vw"
-                  />
-                </div>
-                <div className="flex h-full flex-col p-5 md:p-6">
-                  <div className="inline-block rounded-[10px] bg-rc-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white dark:bg-white dark:text-slate-950">
-                    {item.tag}
-                  </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.35rem]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-                    {item.text}
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {quotes.map((quote) => (
+            <blockquote
+              key={quote.author}
+              className="flex h-full flex-col rounded-[10px] border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-7 text-stone-700 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)] dark:text-slate-300 dark:shadow-[0_18px_40px_rgba(0,0,0,0.35)] md:p-8"
+            >
+              <p className="flex-grow text-base leading-relaxed text-stone-800 dark:text-slate-200">
+                &ldquo;{quote.text}&rdquo;
+              </p>
+              <div className="mt-6 flex items-center gap-4 border-t border-stone-200 pt-6 dark:border-slate-700">
+                <Avatar
+                  name={quote.author}
+                  photo={quote.photo}
+                  size="h-16 w-16"
+                />
+                <div>
+                  <p className="text-sm font-semibold text-stone-900 dark:text-white">
+                    {quote.author}
+                  </p>
+                  <p className="text-xs leading-relaxed text-stone-500 dark:text-slate-400">
+                    {quote.role}
                   </p>
                 </div>
-              </article>
-            </MotionItem>
+              </div>
+            </blockquote>
           ))}
-        </MotionStagger>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Tasi2026DayStoriesSection() {
+  return (
+    <>
+      {tasi2026DayStories.map((story, index) => {
+        const reversed = index % 2 === 1;
+        return (
+          <section
+            key={story.id}
+            id={story.id}
+            className={`scroll-mt-24 py-section-sm md:py-section-lg ${
+              reversed
+                ? 'bg-white dark:bg-stone-950'
+                : 'bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)]'
+            }`}
+          >
+            <div
+              className={`mx-auto grid w-full max-w-[1300px] items-stretch gap-10 px-4 md:px-8 lg:px-16 ${
+                reversed
+                  ? 'md:grid-cols-[0.85fr_1.15fr]'
+                  : 'md:grid-cols-[1.15fr_0.85fr]'
+              }`}
+            >
+              <div className={reversed ? 'md:order-2' : undefined}>
+                <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
+                  {story.eyebrow}
+                </p>
+                <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3rem]">
+                  {story.title}
+                </h2>
+                <p className="mt-5 text-body-lg leading-relaxed text-stone-700 dark:text-slate-300">
+                  {story.paragraphs[0]}
+                </p>
+                <p className="mt-4 text-body-md leading-relaxed text-stone-600 dark:text-slate-400">
+                  {story.paragraphs[1]}
+                </p>
+                <div className="mt-8 rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none md:p-7">
+                  <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-white">
+                    {story.cardTitle}
+                  </p>
+                  <ul className="space-y-2.5 text-base leading-relaxed text-stone-800 dark:text-slate-200">
+                    {story.items.map((item) => (
+                      <li key={item} className="flex gap-3">
+                        <span
+                          aria-hidden="true"
+                          className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-rc-accent"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <article
+                className={`group relative aspect-[4/3] overflow-hidden rounded-[10px] border border-stone-200 bg-stone-200 shadow-xl shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 md:aspect-auto md:min-h-[22rem] ${
+                  reversed ? 'md:order-1' : ''
+                }`}
+              >
+                <Image
+                  src={story.image}
+                  alt={story.imageAlt}
+                  fill
+                  className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                />
+              </article>
+            </div>
+          </section>
+        );
+      })}
+    </>
+  );
+}
+
+export function Tasi2026ChiefGuestSection() {
+  const guest = tasi2026ChiefGuest;
+  return (
+    <section
+      id="chief-guest"
+      className="scroll-mt-24 bg-[linear-gradient(180deg,#f5f1ea_0%,#ffffff_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#0b1220_0%,#111827_100%)] md:py-section-lg"
+    >
+      <div className="mx-auto grid w-full max-w-[1300px] gap-10 px-4 md:grid-cols-[0.9fr_1.1fr] md:items-stretch md:px-8 lg:px-16">
+        <article className="relative aspect-[4/3] overflow-hidden rounded-[10px] border border-stone-200 bg-stone-200 shadow-lg shadow-orange-100/60 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none md:aspect-auto md:min-h-[22rem]">
+          <Image
+            src={guest.photo}
+            alt={guest.photoAlt}
+            fill
+            className="object-cover object-top"
+            sizes="(min-width: 768px) 40vw, 100vw"
+          />
+        </article>
+
+        <div>
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white md:text-sm">
+            Chief Guest
+          </p>
+          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3rem]">
+            The Minister of State Opened the Festival
+          </h2>
+          <p className="mt-2 text-sm font-semibold text-stone-500 dark:text-slate-400">
+            {guest.name}, {guest.role}
+          </p>
+          <p className="mt-5 text-body-lg leading-relaxed text-stone-700 dark:text-slate-300">
+            {guest.summary}
+          </p>
+          <div className="mt-8 rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none md:p-7">
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-primary dark:text-white">
+              Key Message
+            </p>
+            <p className="text-xl leading-relaxed text-stone-900 dark:text-slate-100 md:text-2xl">
+              &quot;{guest.quote}&quot;
+            </p>
+            <p className="mt-5 text-sm font-medium text-stone-500 dark:text-slate-400">
+              {guest.name}, inaugural address, 14 October
+            </p>
+          </div>
+          <Link
+            href={guest.profileHref}
+            className="mt-6 inline-flex items-center gap-2 text-sm font-bold leading-none text-rc-primary underline decoration-[1.5px] underline-offset-4 dark:text-white"
+          >
+            Read his profile{' '}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Tasi2026ArticleSection() {
+  return (
+    <section
+      id="full-coverage"
+      className="scroll-mt-24 bg-white py-section-sm dark:bg-stone-950 md:py-section-md"
+    >
+      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:flex-row md:items-center md:p-10">
+          <div className="max-w-2xl">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">
+              The Full Story
+            </p>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">
+              Panel-by-panel coverage is coming to the blog
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-white/80">
+              This page is the short version. We are writing up the panels,
+              workshops and roundtables in a separate article on the TASI blog.
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#140f26] transition hover:scale-[1.02] hover:bg-white/90"
+          >
+            Visit the blog <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Tasi2026SpeakersWallSection() {
+  return <Tasi2026SpeakersWall />;
+}
+
+export function Tasi2026RecommendationsSection() {
+  return (
+    <section
+      id="core-takeaways"
+      className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg"
+    >
+      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <SectionIntro
+          eyebrow="Recommendations"
+          title="What the Room Recommended"
+        />
+        <div className="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-[10px] bg-[linear-gradient(135deg,#350265_0%,#5c0f4f_100%)] p-8 text-white shadow-xl shadow-[#350265]/20 md:p-10 lg:sticky lg:top-28 lg:self-start">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-rc-secondary dark:text-white">
+              Carried Forward
+            </p>
+            <h3 className="mt-4 text-3xl font-extrabold tracking-tight md:text-4xl">
+              From the room to policymakers
+            </h3>
+            <p className="mt-5 text-base leading-relaxed text-white/80">
+              Recommendations heard across sessions on 14 and 15 October, with
+              calls for policymakers, platforms and civil society to turn ideas
+              into practical change.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            {tasi2026Recommendations.map((item, index) => (
+              <article
+                key={item}
+                className="rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none md:p-7"
+              >
+                <p className="mb-4 text-xs font-black uppercase tracking-[0.16em] text-rc-primary dark:text-white/70">
+                  Priority {String(index + 1).padStart(2, '0')}
+                </p>
+                <p className="text-body-md leading-relaxed text-stone-800 dark:text-slate-200">
+                  {item}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

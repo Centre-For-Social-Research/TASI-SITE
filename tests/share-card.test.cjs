@@ -65,3 +65,10 @@ test('long names shrink and long lines wrap', () => {
     'A very long…'
   );
 });
+
+test('the attending card closes once TASI 2026 is over', () => {
+  const { isShareCardOpen } = require('../src/lib/share-card-utils.cjs');
+
+  assert.equal(isShareCardOpen(new Date('2026-10-15T20:00:00+05:30')), true);
+  assert.equal(isShareCardOpen(new Date('2026-10-16T00:00:00+05:30')), false);
+});

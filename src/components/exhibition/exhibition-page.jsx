@@ -39,7 +39,7 @@ export default function ExhibitionPage({ closed = false }) {
                   Branding Opportunities
                 </p>
                 <h2 className="mb-5 text-display-lg font-black text-stone-900 dark:text-white">
-                  Looking beyond the booth to the broader potential of TASI 2026
+                  Looking beyond the booth to the broader potential of TASI
                 </h2>
                 <div className="space-y-6 text-body-md leading-relaxed text-stone-700 dark:text-stone-300">
                   <p>
@@ -50,7 +50,7 @@ export default function ExhibitionPage({ closed = false }) {
                     footprints can be when merged with core session content.
                   </p>
                   <p>
-                    For 2026, exhibition spaces span from premium central
+                    At TASI, exhibition spaces span from premium central
                     pavilions to intimate brand walls, each crafted using sleek
                     lines, timber accents, and clean lighting to ensure
                     organizational credibility.

@@ -99,7 +99,7 @@ export default function SpeakerApplicationForm({ closed = false }) {
 
       {closed && (
         <div className="px-6 pt-6 sm:px-8">
-          <FormClosedNotice />
+          <FormClosedNotice formKey="speaker_application" />
         </div>
       )}
 

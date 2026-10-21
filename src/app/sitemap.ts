@@ -4,6 +4,7 @@ import { partners } from '@/data/partners';
 import { speakers } from '@/data/speakers';
 import speakers2026 from '@/data/speakers-2026.json';
 import { programmeSessions2025 } from '@/data/programme-2025';
+import { programmeSessions2026 } from '@/data/programme-2026';
 import programmeAgendaUtils from '@/lib/programme-agenda-utils.cjs';
 import speakerDirectoryUtils from '@/lib/speaker-directory-utils.cjs';
 
@@ -33,48 +34,44 @@ const staticRoutes: Route[] = [
   { path: '/themes', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/speakers', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/programme', changeFrequency: 'weekly', priority: 0.8 },
-  { path: '/register', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/sponsor', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/partners', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/exhibition', changeFrequency: 'monthly', priority: 0.6 },
+  { path: '/exhibition', changeFrequency: 'monthly', priority: 0.4 },
   // ── Get Involved ────────────────────────────────────────────────────────────
   { path: '/get-involved', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/speaker-application', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/volunteer-application', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/contact', changeFrequency: 'monthly', priority: 0.6 },
   // ── Media ────────────────────────────────────────────────────────────────────
   { path: '/media', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/media/accreditation', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/media/press-kit', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/media/press-releases', changeFrequency: 'weekly', priority: 0.6 },
   // ── Blog ─────────────────────────────────────────────────────────────────────
   { path: '/blog', changeFrequency: 'weekly', priority: 0.8 },
-  // ── Plan Your Travel ─────────────────────────────────────────────────────────
-  { path: '/plan-your-travel', changeFrequency: 'monthly', priority: 0.7 },
+  // ── Plan Your Travel (2026 reference) ─────────────────────────────────────────────────────────
+  { path: '/plan-your-travel', changeFrequency: 'yearly', priority: 0.3 },
   {
     path: '/plan-your-travel/general-info',
-    changeFrequency: 'monthly',
-    priority: 0.6,
+    changeFrequency: 'yearly',
+    priority: 0.3,
   },
   {
     path: '/plan-your-travel/how-to-reach',
-    changeFrequency: 'monthly',
-    priority: 0.6,
+    changeFrequency: 'yearly',
+    priority: 0.3,
   },
   {
     path: '/plan-your-travel/venue-map',
-    changeFrequency: 'monthly',
-    priority: 0.6,
+    changeFrequency: 'yearly',
+    priority: 0.3,
   },
   {
     path: '/plan-your-travel/visa-information',
-    changeFrequency: 'monthly',
-    priority: 0.6,
+    changeFrequency: 'yearly',
+    priority: 0.3,
   },
   {
     path: '/plan-your-travel/accommodation',
-    changeFrequency: 'monthly',
-    priority: 0.6,
+    changeFrequency: 'yearly',
+    priority: 0.3,
   },
   // ── Receptions ───────────────────────────────────────────────────────────────
   { path: '/receptions', changeFrequency: 'monthly', priority: 0.6 },
@@ -82,7 +79,12 @@ const staticRoutes: Route[] = [
   { path: '/receptions/2026', changeFrequency: 'monthly', priority: 0.6 },
   // ── Past editions ────────────────────────────────────────────────────────────
   { path: '/tasi-2025', changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/tasi-2026', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/tasi-2026', changeFrequency: 'weekly', priority: 0.9 },
+  // ── Closed until the next edition opens them ───────────────────────────────
+  { path: '/register', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/speaker-application', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/volunteer-application', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/media/accreditation', changeFrequency: 'yearly', priority: 0.3 },
   // ── Legal ────────────────────────────────────────────────────────────────────
   { path: '/privacy-policy', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/terms-of-service', changeFrequency: 'yearly', priority: 0.3 },
@@ -139,7 +141,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const programmeSessionEntries: MetadataRoute.Sitemap =
     sortProgrammeSessionsForAgenda(
-      programmeSessions2025.filter(shouldShowProgrammeSession)
+      [...programmeSessions2026, ...programmeSessions2025].filter(
+        shouldShowProgrammeSession
+      )
     ).map((session) => ({
       url: `${BASE}${getProgrammeSessionPath(session)}`,
       changeFrequency: 'monthly' as const,

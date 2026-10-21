@@ -1,14 +1,14 @@
 export const sponsorMetadata = {
   title: 'Trust and Safety India Festival Sponsors | TASI Partnerships',
   description:
-    'Explore sponsorship and partnership opportunities for Trust and Safety India Festival 2026, connecting brands with policy, platform, civil society, research, and AI governance leaders.',
+    'Explore sponsorship and partnership opportunities with the Trust and Safety India Festival, connecting brands with policy, platform, civil society, research, and AI governance leaders.',
   alternates: {
     canonical: '/sponsor',
   },
   openGraph: {
     title: 'Trust and Safety India Festival Sponsors | TASI Partnerships',
     description:
-      'Partner with TASI 2026 to reach trust and safety, online safety, responsible AI, and platform governance decision-makers.',
+      'Partner with TASI to reach trust and safety, online safety, responsible AI, and platform governance decision-makers.',
     url: '/sponsor',
     type: 'website',
     images: ['/opengraph-image'],
@@ -17,16 +17,16 @@ export const sponsorMetadata = {
     card: 'summary_large_image',
     title: 'Trust and Safety India Festival Sponsors | TASI Partnerships',
     description:
-      'Sponsorship and partnership opportunities for Trust and Safety India Festival 2026.',
+      'Sponsorship and partnership opportunities with the Trust and Safety India Festival.',
     images: ['/twitter-image'],
   },
 };
 
 export const sponsorHero = {
-  eyebrow: 'Partner With TASI 2026',
+  eyebrow: 'Partner With TASI',
   title: 'Sponsorship Opportunities',
   description:
-    'Align with a high-level policy forum shaping trust and safety outcomes in India and globally.',
+    'Align with a high-level policy forum shaping trust and safety outcomes in India and globally. Packages for TASI 2027, in October 2027, are being finalised.',
 };
 
 export const sponsorMetrics = [
@@ -90,7 +90,6 @@ const sponsorshipTiers = [
   {
     name: 'Gold',
     price: '$20,000',
-    availability: '3 available',
     cta: 'Enquire Now',
     info: 'Lead a Key Conversation',
     features: [
@@ -103,7 +102,6 @@ const sponsorshipTiers = [
   {
     name: 'Silver',
     price: '$10,000',
-    availability: '5 available',
     cta: 'Enquire Now',
     info: 'Contribute to the Dialogue',
     features: [
@@ -116,7 +114,6 @@ const sponsorshipTiers = [
   {
     name: 'Supporter',
     price: '$5,000',
-    availability: 'Limited slots',
     cta: 'Enquire Now',
     info: 'Showcase Your Work',
     features: [

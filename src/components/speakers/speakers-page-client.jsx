@@ -14,11 +14,9 @@ const heroContent = {
       'TASI 2025 featured 100+ speakers from government, industry, civil society, and international organisations.',
   },
   2026: {
-    title: 'Speakers for TASI 2026',
+    title: 'Speakers from TASI 2026',
     description:
-      'Meet the speakers joining us in New Delhi to advance conversations on digital trust, safety, and AI governance.',
-    updateNote:
-      'This list will be updated as additional speakers are confirmed.',
+      'TASI 2026 brought 110+ speakers to New Delhi to advance conversations on digital trust, safety, and AI governance.',
   },
 };
 
@@ -39,7 +37,7 @@ export default function SpeakersPageClient({ initialYear = '2026' }) {
           <p className="mx-auto mt-4 max-w-3xl text-white/90">
             {hero.description}
           </p>
-          {year === '2026' && (
+          {hero.updateNote && (
             <p className="mx-auto mt-2 max-w-3xl font-semibold text-yellow-300">
               {hero.updateNote}
             </p>

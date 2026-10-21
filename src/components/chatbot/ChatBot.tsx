@@ -14,7 +14,7 @@ export default function ChatBot() {
     {
       role: 'assistant',
       content:
-        "Hi! I'm the TASI Chatbot. Ask me anything about the conference — schedule, speakers, registration, or venue.",
+        "Hi! I'm the TASI Chatbot. Ask me about TASI 2026 highlights, speakers, sessions, or what's next for TASI.",
     },
   ]);
   const [input, setInput] = useState('');

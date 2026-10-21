@@ -187,7 +187,7 @@ export default function VenueMapPage() {
             </div>
             <div>
               <h2 className="text-2xl font-black text-stone-900 dark:text-white">
-                Finding your way at TASI 2026
+                How TASI 2026 used the venue
               </h2>
               <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
                 Everything happens in and around the Kamaladevi Complex,{' '}

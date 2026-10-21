@@ -1,14 +1,14 @@
 export const exhibitionMetadata = {
-  title: 'Participation & Exhibition | TASI 2026',
+  title: 'Participation & Exhibition | TASI',
   description:
-    "Explore TASI 2026 exhibition and participation opportunities for organisations that want to show up inside India's trust and safety gathering with relevance and intent.",
+    "Explore TASI exhibition and participation opportunities for organisations that want to show up inside India's trust and safety gathering with relevance and intent.",
   alternates: {
     canonical: '/exhibition',
   },
 };
 
 export const exhibitionHero = {
-  eyebrow: 'TASI 2026',
+  eyebrow: 'TASI',
   title: 'Participation & Exhibition',
   description:
     "An enquiry-led invitation for organisations that want to show up inside India's leading trust and safety gathering with more relevance, more presence, and more intent.",

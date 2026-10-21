@@ -6,14 +6,14 @@ import {
 export const registerPageMetadata = {
   title: 'Trust and Safety India Festival Registration | TASI 2026',
   description:
-    'Register for Trust and Safety India Festival 2026, the TASI convening for online safety, platform accountability, responsible AI, policy, research, and civil society leaders.',
+    'Registration for Trust and Safety India Festival 2026 has closed. TASI returns in October 2027; see the TASI 2026 recap in the meantime.',
   alternates: {
     canonical: '/register',
   },
   openGraph: {
     title: 'Trust and Safety India Festival Registration | TASI 2026',
     description:
-      'Apply to attend TASI 2026 and join leaders working on online safety, platform accountability, responsible AI, and digital rights in India.',
+      'Registration for TASI 2026 has closed. TASI returns in October 2027.',
     url: '/register',
     type: 'website',
     images: ['/opengraph-image'],
@@ -22,17 +22,17 @@ export const registerPageMetadata = {
     card: 'summary_large_image',
     title: 'Trust and Safety India Festival Registration | TASI 2026',
     description:
-      "Apply to attend TASI 2026 and join India's trust and safety community.",
+      'Registration for TASI 2026 has closed. TASI returns in October 2027.',
     images: ['/twitter-image'],
   },
 };
 
 export const registerPageHero = {
-  eyebrow: 'TASI 2026 Registration',
-  title: 'Apply First.',
-  titleAccent: 'Confirm Later.',
+  eyebrow: 'TASI Registration',
+  title: 'TASI 2026',
+  titleAccent: 'Has Closed.',
   description:
-    'TASI 2026 follows an approval-based delegate process. Submission acknowledges your application, while confirmed attendees receive QR access closer to the event.',
+    'Thank you to everyone who joined us in New Delhi. TASI returns in October 2027, and registration will open on this page.',
 };
 
 export const generalAccessIntro = {
@@ -43,7 +43,7 @@ export const generalAccessIntro = {
 
 export const registrationOverview = {
   audience:
-    'Registration is open to government stakeholders, industry leaders, civil society, researchers, students, media, and international participants aligned with trust and safety.',
+    'TASI welcomes government stakeholders, industry leaders, civil society, researchers, students, media, and international participants aligned with trust and safety.',
   review:
     'Every application is manually reviewed. If you are confirmed, your QR pass will be shared {{QR_PASS_RELEASE_TIMING}} and your pre-printed badge will be available at the name-sorted registration desk.',
 };

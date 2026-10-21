@@ -85,7 +85,7 @@ test('plan-your-travel shared data owns all live route datasets', async () => {
   assert.equal(data.railwayStations.length, 3);
   assert.equal(data.metroStations.length, 2);
   assert.equal(data.nearbyPlaces.length, 5);
-  assert.equal(data.visaSteps.length, 3);
+  assert.equal(data.visaSteps.length, 2);
   assert.equal(data.hotels.length, 11);
 
   assert.equal(

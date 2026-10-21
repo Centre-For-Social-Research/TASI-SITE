@@ -30,8 +30,8 @@ export const tasi2026PartnerSlugs = [
 
 // Organisations hosting a workshop, roundtable or session at TASI 2026,
 // in alphabetical order. They have their own section on the partners page
-// and stay out of the sponsor list above, the homepage strip and the
-// sponsor page.
+// and stay out of the sponsor list above. The homepage strip, sponsor page and
+// TASI 2026 page show them too, through tasi2026AllPartners below.
 export const tasi2026SessionPartnerSlugs = [
   'ab-research-consulting',
   'adobe',
@@ -49,6 +49,27 @@ export const tasi2026SessionPartnerSlugs = [
   'yuvaa',
 ];
 
+// Everyone shown together on the homepage strip, the sponsor page and the
+// TASI 2026 page: the sponsors above, then the session partners. The partners
+// page keeps the two groups apart.
+export const tasi2026AllPartnerSlugs = [
+  ...tasi2026PartnerSlugs,
+  'adobe',
+  'the-quint',
+  'yuvaa',
+  'asci',
+  'frida-fund',
+  'tattle',
+  'ab-research-consulting',
+  'ifdc',
+  'kutunga',
+  'moxii-africa',
+  'sflc-in',
+  'engage-ai',
+  'meedan',
+  'giz',
+];
+
 const bySlug = new Map(partners.map((partner) => [partner.slug, partner]));
 
 const resolve = (slug) => {
@@ -60,3 +81,5 @@ const resolve = (slug) => {
 export const tasi2026Partners = tasi2026PartnerSlugs.map(resolve);
 
 export const tasi2026SessionPartners = tasi2026SessionPartnerSlugs.map(resolve);
+
+export const tasi2026AllPartners = tasi2026AllPartnerSlugs.map(resolve);

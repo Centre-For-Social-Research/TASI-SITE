@@ -66,7 +66,7 @@ test('blog data owns page metadata and copy', async () => {
   );
   assert.equal(data.blogIndexHero.eyebrow, 'Blog & News');
   assert.equal(data.blogIndexCopy.allPostsLabel, 'All Posts');
-  assert.equal(data.blogIndexCta.href, '/register');
+  assert.equal(data.blogIndexCta.href, '/tasi-2026');
   assert.equal(
     data.blogPostFallbackCopy.defaultSiteUrl,
     'https://trustandsafetyindia.org'

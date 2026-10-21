@@ -17,13 +17,13 @@ export const getInvolvedMetadata = {
 
 export const getInvolvedHero = {
   eyebrow: 'Get Involved',
-  title: 'Find your way into TASI 2026',
+  title: 'Find your way into TASI',
   description:
     "From sponsorships and speaking opportunities to media access, partner events, and delegation planning, there are multiple ways to take part in India's leading trust and safety convening.",
 };
 
 export const getInvolvedQuickLinks = [
-  { label: 'Register', href: '/register' },
+  { label: '2026 Recap', href: '/tasi-2026' },
   { label: 'Programme', href: '/programme' },
   { label: 'Media', href: '/media' },
   { label: 'Volunteer', href: '/volunteer-application' },
@@ -31,11 +31,11 @@ export const getInvolvedQuickLinks = [
 
 export const involvementOptions = [
   {
-    title: 'Attend TASI 2026',
+    title: 'Attend TASI 2027',
     description:
-      'Join policymakers, platform teams, researchers, and civil society leaders at TASI 2026 for conversations on digital trust and safety.',
-    href: '/register',
-    cta: 'Explore Registration',
+      'TASI returns in October 2027. Write to us to hear when registration opens or to plan a delegation.',
+    href: '/contact',
+    cta: 'Register Interest',
     image: '/img/home-gallery/7T7A5237-new.webp',
     imageAlt: 'Audience attending a panel at TASI',
     eyebrow: 'Attend',
@@ -73,9 +73,9 @@ export const involvementOptions = [
   {
     title: 'Attend as Press',
     description:
-      'Apply for media accreditation to cover TASI, receive updates from the team, and access festival resources for newsroom planning.',
-    href: '/media/accreditation',
-    cta: 'Get Media Access',
+      'Covering trust and safety in India? Find the press kit, press releases and the TASI 2026 recap, or reach the team for interviews.',
+    href: '/media/press-kit',
+    cta: 'Open Press Kit',
     image: '/img/home-gallery/7T7A9837.webp',
     imageAlt: 'Press and audience coverage at TASI',
     eyebrow: 'Media',
@@ -103,9 +103,9 @@ export const involvementOptions = [
   {
     title: 'Speak at TASI',
     description:
-      'Share research, field experience, product insight, or policy thinking on stage with a cross-sector trust and safety audience.',
+      'Share research, field experience, product insight, or policy thinking on stage with a cross-sector trust and safety audience. Applications for TASI 2027 will open on this page.',
     href: '/speaker-application',
-    cta: 'Apply to Speak',
+    cta: 'Speaker Applications',
     image: '/img/home-gallery/IMG_7326.webp',
     imageAlt: 'Speaker session at TASI',
     eyebrow: 'Thought Leadership',
@@ -113,9 +113,9 @@ export const involvementOptions = [
   {
     title: 'Join as a Volunteer',
     description:
-      'Support delegates, speakers, and on-site operations while gaining hands-on experience inside the festival environment.',
+      'Support delegates, speakers, and on-site operations while gaining hands-on experience inside the festival environment. Applications for TASI 2027 will open on this page.',
     href: '/volunteer-application',
-    cta: 'Apply as Volunteer',
+    cta: 'Volunteer Applications',
     image: '/img/volunteers/volunteer-checkin.webp',
     imageAlt: 'Volunteer team handling attendee arrivals at TASI',
     eyebrow: 'Volunteer',
@@ -166,6 +166,6 @@ export const getInvolvedTailoredCta = {
     'If your team is exploring a delegation, a partner activation, a hosted roundtable, a research launch, or a media collaboration, we can help route you to the right format quickly.',
   actions: [
     { label: 'Contact TASI', href: '/contact', primary: true },
-    { label: 'Register as Delegate', href: '/register' },
+    { label: 'See the 2026 Recap', href: '/tasi-2026' },
   ],
 };
