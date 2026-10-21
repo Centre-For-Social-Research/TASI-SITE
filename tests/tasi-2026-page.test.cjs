@@ -34,9 +34,9 @@ test('TASI 2026 page shell composes the post-event recap sections', () => {
 
   assert.match(
     source,
-    /Tasi2026NumbersBand[\s\S]*Tasi2026AboutSection[\s\S]*Tasi2026HighlightsVideoSection[\s\S]*Tasi2026IdeasSection[\s\S]*Tasi2026LaunchesSection[\s\S]*Tasi2026VoicesSection[\s\S]*Tasi2026SessionsSection[\s\S]*Tasi2026RecommendationsSection[\s\S]*Tasi2026GallerySection[\s\S]*Tasi2026LookingAheadSection/
+    /<Tasi2026NumbersBand[\s\S]*<Tasi2026HighlightsVideoSection[\s\S]*<Tasi2026AboutSection[\s\S]*<Tasi2026IdeasSection[\s\S]*<Tasi2026LaunchesSection[\s\S]*<Tasi2026VoicesSection[\s\S]*<Tasi2026SessionsSection[\s\S]*<Tasi2026RecommendationsSection[\s\S]*<Tasi2026GallerySection[\s\S]*<Tasi2026GetInvolvedSection/
   );
-  assert.match(source, /<GlobalCta \/>/);
+  assert.match(source, /<Tasi2026GetInvolvedSection \/>/);
   assert.match(source, /tasi2026HeroPills/);
   assert.match(source, /tasi2026HeroActions/);
   assert.doesNotMatch(source, /Register For TASI 2026/);
@@ -83,9 +83,12 @@ test('TASI 2026 sections render the recap content flow from data modules', () =>
 
   assert.match(source, /From Naming Harms to Owning Them/);
   assert.match(source, /Five Things TASI 2026 Made Clear/);
-  assert.match(source, /Launched at TASI 2026/);
+  assert.match(source, /Introduced at TASI 2026/);
   assert.match(source, /What Leaders Said/);
-  assert.match(source, /Looking Ahead to TASI 2027/);
+  assert.match(source, /Help Shape What Comes Next/);
+  assert.match(source, /href="\/get-involved"/);
+  assert.match(source, /href="\/sponsor"/);
+  assert.doesNotMatch(source, /TASI returns in October 2027/);
   assert.match(source, /tasi2026Ideas/);
   assert.match(source, /tasi2026SessionRecaps/);
   assert.match(source, /getProgrammeSessionPath/);
@@ -102,5 +105,26 @@ test('old TASI 2026 component iteration files stay removed', () => {
 
   for (const file of removedFiles) {
     assert.equal(fs.existsSync(absolutePath(file)), false, file);
+  }
+});
+
+test('TASI 2026 recap ships its public sizzler, captions and curated photos', async () => {
+  const data = await importModule('src/data/tasi-2026-edition.js');
+  assert.equal(
+    data.tasi2026HighlightsVideoSrc,
+    '/video/tasi-2026-highlights-v3.mp4'
+  );
+  const video = fs.statSync(
+    absolutePath(`public${data.tasi2026HighlightsVideoSrc}`)
+  );
+  assert.ok(video.size > 0 && video.size < 25 * 1024 * 1024);
+  const captions = readFile('public/video/tasi-2026-highlights-v3.en.vtt');
+  assert.ok(captions.startsWith('WEBVTT'));
+  assert.match(captions, /human-centric/);
+  for (const src of [
+    ...data.tasi2026Gallery.map((photo) => photo.src),
+    ...data.tasi2026Ideas.map((idea) => idea.image),
+  ]) {
+    assert.ok(fs.existsSync(absolutePath(`public${src}`)), src);
   }
 });

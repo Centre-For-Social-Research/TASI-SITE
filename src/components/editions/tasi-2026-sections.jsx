@@ -6,12 +6,10 @@ import Tasi2025TrackIllustration from '@/components/editions/tasi-2025-track-ill
 import { MotionReveal } from '@/components/ui/motion-reveal';
 import { programmeSessions2026 } from '@/data/programme-2026';
 import {
-  tasi2026FuturePriorities,
   tasi2026Gallery,
   tasi2026HighlightsVideoSrc,
   tasi2026Ideas,
   tasi2026Launches,
-  tasi2026MoreQuotes,
   tasi2026PerspectiveQuote,
   tasi2026Quotes,
   tasi2026Recommendations,
@@ -184,115 +182,129 @@ export function Tasi2026HighlightsVideoSection() {
       id="festival-highlights"
       className="scroll-mt-24 bg-[#0d0b1f] py-section-sm text-white md:py-section-lg"
     >
-      <div className="mx-auto grid w-full max-w-[1300px] items-center gap-10 px-4 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-16">
-        <SectionIntro
-          eyebrow="Festival Highlights"
-          title="Relive Two Days of TASI 2026"
-          dark
-        >
-          Keynotes, panels, roundtables and receptions across the Main Hall, the
-          Roundtable Room and the Workshop Room, in one minute.
-        </SectionIntro>
-        <div className="overflow-hidden rounded-[10px] border border-white/10 bg-black shadow-2xl shadow-black/40">
-          <div className="relative aspect-video w-full">
-            <iframe
-              src={tasi2026HighlightsVideoSrc}
-              title="TASI 2026 Highlights"
-              className="absolute inset-0 h-full w-full border-0"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
-              allowFullScreen
-              loading="lazy"
-            />
-          </div>
+      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
+        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <SectionIntro
+            eyebrow="The Festival Film"
+            title="A Minute of TASI 2026"
+            dark
+          >
+            The people, conversations and connections behind two days of trust
+            and safety.
+          </SectionIntro>
+          <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-white/65">
+            New Delhi · October 2026
+          </p>
         </div>
+        <div className="overflow-hidden rounded-[10px] border border-white/15 bg-black shadow-2xl shadow-black/30">
+          <video
+            className="aspect-video w-full"
+            controls
+            playsInline
+            preload="none"
+            poster="/img/tasi-2026/highlights-poster.webp"
+            aria-label="TASI 2026 festival highlights"
+            aria-describedby="highlights-description"
+            width="1280"
+            height="720"
+          >
+            <source src={tasi2026HighlightsVideoSrc} type="video/mp4" />
+            <track
+              kind="captions"
+              src="/video/tasi-2026-highlights-v3.en.vtt"
+              srcLang="en"
+              label="English"
+            />
+            Your browser does not support video playback.{' '}
+            <a href={tasi2026HighlightsVideoSrc}>
+              Download the TASI 2026 highlights.
+            </a>
+          </video>
+        </div>
+        <p
+          id="highlights-description"
+          className="mt-4 max-w-3xl text-sm leading-relaxed text-white/65"
+        >
+          Scenes from the festival, with remarks by Jitin Prasada on
+          human-centred technology and shared responsibility. English captions
+          available in the player.
+        </p>
       </div>
     </section>
   );
 }
 
-function IdeaChapter({ idea, flip }) {
+function IdeaChapter({ idea, featured = false }) {
   return (
-    <MotionReveal>
-      <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
-        <div className={`relative lg:col-span-7 ${flip ? 'lg:order-2' : ''}`}>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[10px] shadow-2xl shadow-stone-900/15">
-            <Image
-              src={idea.image}
-              alt={idea.imageAlt}
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 55vw, 100vw"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-          </div>
-          <span
-            aria-hidden="true"
-            className={`absolute -top-8 text-[6rem] font-black leading-none text-rc-secondary drop-shadow-[0_6px_18px_rgba(53,2,101,0.35)] md:-top-12 md:text-[9rem] ${
-              flip ? 'right-4 md:-right-4' : 'left-4 md:-left-4'
-            }`}
-          >
-            {idea.number}
-          </span>
+    <article
+      className={`overflow-hidden rounded-[10px] border border-stone-200 bg-white dark:border-slate-800 dark:bg-slate-900 ${featured ? 'md:col-span-2 lg:grid lg:grid-cols-2' : ''}`}
+    >
+      <div
+        className={`relative ${featured ? 'aspect-[16/10] lg:aspect-auto lg:min-h-[400px]' : 'aspect-[16/9]'}`}
+      >
+        <Image
+          src={idea.image}
+          alt={idea.imageAlt}
+          fill
+          className="object-cover"
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
+        <span className="absolute bottom-4 left-4 rounded-[10px] bg-rc-primary px-3 py-2 text-sm font-black text-white">
+          Idea {idea.number}
+        </span>
+      </div>
+      <div className="p-6 md:p-8">
+        <h3 className="text-2xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-3xl">
+          {idea.title}
+        </h3>
+        <p className="mt-4 text-base leading-relaxed text-stone-600 dark:text-slate-300">
+          {idea.body}
+        </p>
+        <div className="mt-5 border-l-2 border-rc-accent pl-4">
+          <p className="text-3xl font-black text-rc-primary dark:text-rc-secondary">
+            {idea.stat.value}
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-stone-700 dark:text-slate-200">
+            {idea.stat.label}
+          </p>
+          <p className="mt-2 text-xs text-stone-500 dark:text-slate-400">
+            Cited by {idea.stat.source}
+          </p>
         </div>
-
-        <div className="lg:col-span-5">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
-            Idea {idea.number}
-          </p>
-          <h3 className="text-3xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-4xl">
-            {idea.title}
-          </h3>
-          <p className="mt-4 text-body-md leading-relaxed text-stone-700 dark:text-slate-300">
-            {idea.body}
-          </p>
-
-          <div className="mt-6 rounded-[10px] border-l-4 border-rc-secondary bg-[#350265] p-5 text-white shadow-lg shadow-[#350265]/20">
-            <p className="text-4xl font-black leading-none text-rc-secondary md:text-5xl">
-              {idea.stat.value}
+        <details className="mt-6 border-t border-stone-200 pt-4 dark:border-slate-700">
+          <summary className="cursor-pointer text-sm font-bold text-rc-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 dark:text-white">
+            The voices and sessions behind this idea
+          </summary>
+          <blockquote className="mt-5">
+            <p className="text-base leading-relaxed text-stone-800 dark:text-slate-200">
+              &ldquo;{idea.quote.text}&rdquo;
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/90">
-              {idea.stat.label}
-            </p>
-            <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60">
-              Cited by {idea.stat.source}
-            </p>
-          </div>
-
-          <blockquote className="mt-6 flex gap-4">
-            <Avatar name={idea.quote.author} photo={idea.quote.photo} />
-            <div>
-              <p className="text-lg font-semibold leading-snug text-stone-900 dark:text-white">
-                &ldquo;{idea.quote.text}&rdquo;
-              </p>
-              <cite className="mt-2 block text-sm not-italic text-stone-500 dark:text-slate-400">
-                <span className="font-semibold text-stone-700 dark:text-slate-200">
-                  {idea.quote.author}
-                </span>
-                , {idea.quote.role}
-              </cite>
-            </div>
+            <cite className="mt-3 block text-sm not-italic text-stone-500 dark:text-slate-400">
+              {idea.quote.author}, {idea.quote.role}
+            </cite>
           </blockquote>
-
-          <div className="mt-6 flex flex-wrap gap-2">
+          <ul className="mt-4 space-y-3">
             {idea.sessions
               .map((id) => sessionsById.get(id))
               .filter(Boolean)
               .map((session) => (
-                <Link
-                  key={session.id}
-                  href={getProgrammeSessionPath(session)}
-                  className="inline-flex max-w-full items-center gap-1.5 rounded-[10px] border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 transition hover:border-rc-primary hover:text-rc-primary dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-white dark:hover:text-white"
-                >
-                  <span className="truncate">
+                <li key={session.id}>
+                  <Link
+                    href={getProgrammeSessionPath(session)}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-rc-primary underline underline-offset-4 dark:text-white"
+                  >
                     {shortSessionTitle(session.title)}
-                  </span>
-                  <ArrowRight className="h-3 w-3 shrink-0" aria-hidden="true" />
-                </Link>
+                    <ArrowRight
+                      className="h-3 w-3 shrink-0"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </li>
               ))}
-          </div>
-        </div>
-      </article>
-    </MotionReveal>
+          </ul>
+        </details>
+      </div>
+    </article>
   );
 }
 
@@ -300,20 +312,19 @@ export function Tasi2026IdeasSection() {
   return (
     <section
       id="five-ideas"
-      className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#0b1220_0%,#111827_100%)] md:py-section-lg"
+      className="scroll-mt-24 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#0b1220_0%,#111827_100%)] md:py-section-lg"
     >
       <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
         <SectionIntro
           eyebrow="What We Heard"
           title="Five Things TASI 2026 Made Clear"
         >
-          Across 55+ sessions, the same five ideas surfaced again and again,
-          from different people in different rooms. Each came with evidence: a
-          study, a launch, or a commitment made on stage.
+          Five themes from the discussions: whose safety matters, where
+          responsibility sits, and what needs to change.
         </SectionIntro>
-        <div className="mt-20 grid gap-24 md:mt-24 md:gap-32">
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
           {tasi2026Ideas.map((idea, index) => (
-            <IdeaChapter key={idea.number} idea={idea} flip={index % 2 === 1} />
+            <IdeaChapter key={idea.number} idea={idea} featured={index === 0} />
           ))}
         </div>
         <p className="mt-16 max-w-3xl text-xs leading-relaxed text-stone-500 dark:text-slate-400">
@@ -329,15 +340,15 @@ export function Tasi2026LaunchesSection() {
   return (
     <section
       id="launches"
-      className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
+      className="scroll-mt-24 bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
     >
       <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
         <SectionIntro
           eyebrow="New at the Festival"
-          title="Launched at TASI 2026"
+          title="Introduced at TASI 2026"
         >
-          Reports, tools and campaigns that partners unveiled on stage in New
-          Delhi.
+          Reports, resources and initiatives shared or announced during the
+          festival.
         </SectionIntro>
         <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {tasi2026Launches.map((launch, index) => (
@@ -374,7 +385,6 @@ export function Tasi2026VoicesSection() {
       const [author, ...role] = quote.author.split(',');
       return { ...quote, author, role: role.join(',').trim() };
     }),
-    ...tasi2026MoreQuotes,
   ];
   const [featuredName, ...featuredRole] = featured.author.split(',');
 
@@ -452,6 +462,28 @@ export function Tasi2026VoicesSection() {
   );
 }
 
+function SessionRecapCard({ recap: { summary, session } }) {
+  return (
+    <Link
+      href={getProgrammeSessionPath(session)}
+      className="group flex h-full flex-col rounded-[10px] border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-rc-primary/40 hover:shadow-xl dark:border-slate-800 dark:bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)] md:p-7"
+    >
+      <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white/70">
+        {dayLabels[session.day] || session.day} · {session.venue}
+      </p>
+      <h3 className="mt-3 text-lg font-bold leading-snug text-stone-900 dark:text-white">
+        {shortSessionTitle(session.title)}
+      </h3>
+      <p className="mt-3 flex-grow text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+        {summary}
+      </p>
+      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-rc-primary transition-all group-hover:gap-2.5 dark:text-white">
+        Session page <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </span>
+    </Link>
+  );
+}
+
 export function Tasi2026SessionsSection() {
   const recaps = tasi2026SessionRecaps
     .map((recap) => ({ ...recap, session: sessionsById.get(recap.id) }))
@@ -466,7 +498,7 @@ export function Tasi2026SessionsSection() {
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <SectionIntro
             eyebrow="Inside the Sessions"
-            title="Twelve Sessions to Start With"
+            title="Explore the Conversations"
           >
             What was said in the rooms that shaped the festival&apos;s story.
           </SectionIntro>
@@ -477,29 +509,21 @@ export function Tasi2026SessionsSection() {
             Full programme <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
-        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {recaps.map(({ id, summary, session }) => (
-            <Link
-              key={id}
-              href={getProgrammeSessionPath(session)}
-              className="group flex h-full flex-col rounded-[10px] border border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-rc-primary/40 hover:shadow-xl dark:border-slate-800 dark:bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)] md:p-7"
-            >
-              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white/70">
-                {dayLabels[session.day] || session.day} · {session.venue}
-              </p>
-              <h3 className="mt-3 text-lg font-bold leading-snug text-stone-900 dark:text-white">
-                {shortSessionTitle(session.title)}
-              </h3>
-              <p className="mt-3 flex-grow text-sm leading-relaxed text-stone-600 dark:text-slate-300">
-                {summary}
-              </p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-rc-primary transition-all group-hover:gap-2.5 dark:text-white">
-                Session page{' '}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </span>
-            </Link>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {recaps.slice(0, 6).map((recap) => (
+            <SessionRecapCard key={recap.id} recap={recap} />
           ))}
         </div>
+        <details className="mt-8 rounded-[10px] border border-stone-200 p-6 dark:border-slate-800">
+          <summary className="cursor-pointer text-base font-bold text-rc-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 dark:text-white">
+            Explore six more session highlights
+          </summary>
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {recaps.slice(6).map((recap) => (
+              <SessionRecapCard key={recap.id} recap={recap} />
+            ))}
+          </div>
+        </details>
       </div>
     </section>
   );
@@ -525,9 +549,9 @@ export function Tasi2026RecommendationsSection() {
               From the room to policymakers
             </h3>
             <p className="mt-5 text-base leading-relaxed text-white/80">
-              Recommendations heard across sessions on 14 and 15 October. TASI
-              will carry them to policymakers and platforms, as the Minister
-              asked: the festival&apos;s ideas should reach government.
+              Recommendations heard across sessions on 14 and 15 October, with
+              calls for policymakers, platforms and civil society to turn ideas
+              into practical change.
             </p>
           </div>
 
@@ -554,32 +578,32 @@ export function Tasi2026RecommendationsSection() {
 
 // Collage spans for the 10 gallery photos on a 4-column grid.
 const gallerySpans = [
-  'col-span-2 row-span-2',
+  'md:col-span-2 md:row-span-2',
   '',
   '',
-  'col-span-2',
+  'md:col-span-2',
   '',
   '',
-  'col-span-2 row-span-2',
+  'md:col-span-2 md:row-span-2',
   '',
   '',
-  'col-span-2',
+  'md:col-span-2',
 ];
 
 export function Tasi2026GallerySection() {
   return (
     <section
       id="gallery"
-      className="bg-[#0d0b1f] py-section-sm text-white md:py-section-lg"
+      className="scroll-mt-24 bg-[#0d0b1f] py-section-sm text-white md:py-section-lg"
     >
       <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
         <SectionIntro eyebrow="In Pictures" title="Scenes from TASI 2026" dark>
           From the opening reception at the Goethe-Institut to the closing
           evening at the Netherlands Residence.
         </SectionIntro>
-        <div className="mt-12 grid auto-rows-[140px] grid-cols-2 gap-3 md:auto-rows-[200px] md:grid-cols-4 md:gap-4">
+        <div className="mt-10 grid auto-rows-[180px] grid-cols-1 gap-3 sm:grid-cols-2 md:auto-rows-[200px] md:grid-cols-4 md:gap-4">
           {tasi2026Gallery.map((photo, index) => (
-            <div
+            <figure
               key={photo.src}
               className={`group relative overflow-hidden rounded-[10px] ${gallerySpans[index] || ''}`}
             >
@@ -588,9 +612,12 @@ export function Tasi2026GallerySection() {
                 alt={photo.alt}
                 fill
                 className="object-cover transition duration-500 group-hover:scale-105"
-                sizes="(min-width: 768px) 50vw, 100vw"
+                sizes="(min-width: 768px) 50vw, (min-width: 640px) 50vw, 100vw"
               />
-            </div>
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-4 pb-3 pt-8 text-xs leading-relaxed text-white">
+                {photo.alt}
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
@@ -598,36 +625,37 @@ export function Tasi2026GallerySection() {
   );
 }
 
-export function Tasi2026LookingAheadSection() {
+export function Tasi2026GetInvolvedSection() {
   return (
     <section
-      id="looking-ahead"
-      className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg"
+      id="get-involved"
+      className="scroll-mt-24 border-t border-stone-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] px-4 py-section-sm dark:border-slate-800 dark:bg-[linear-gradient(180deg,#111827_0%,#0b1220_100%)] md:py-section-lg"
     >
-      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <SectionIntro
-          eyebrow="What Comes Next"
-          title="Looking Ahead to TASI 2027"
-        >
-          TASI returns in October 2027. These commitments and proposals from the
-          2026 sessions point the way.
-        </SectionIntro>
-        <div className="mt-12 overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
-          <div className="grid gap-0 md:grid-cols-2">
-            {tasi2026FuturePriorities.map((item, index) => (
-              <article
-                key={item}
-                className="border-b border-stone-200 p-6 last:border-b-0 dark:border-slate-800 md:border-r md:p-8 md:last:border-r-0 md:[&:nth-last-child(-n+2)]:border-b-0"
-              >
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent dark:text-white/70">
-                  Next {String(index + 1).padStart(2, '0')}
-                </p>
-                <p className="mt-4 text-lg font-semibold leading-relaxed text-stone-900 dark:text-white">
-                  {item}
-                </p>
-              </article>
-            ))}
-          </div>
+      <div className="mx-auto max-w-3xl text-center">
+        <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
+          The Conversation Continues
+        </p>
+        <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl">
+          Help Shape What Comes Next
+        </h2>
+        <p className="mt-5 text-lg leading-relaxed text-stone-600 dark:text-slate-300">
+          TASI 2026 brought our community together. Keep the work moving:
+          contribute your expertise, connect with the community, or partner with
+          us to put people first in digital safety.
+        </p>
+        <div className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
+          <Link
+            href="/get-involved"
+            className="flex w-full items-center justify-center rounded-3xl bg-gradient-to-r from-[#55089e] via-[#9f0099] to-[#ff0080] px-8 py-2.5 text-[16px] font-bold leading-6 text-white transition-transform hover:scale-[1.02] hover:opacity-90 sm:w-auto sm:min-w-[220px]"
+          >
+            Get Involved
+          </Link>
+          <Link
+            href="/sponsor"
+            className="flex w-full items-center justify-center rounded-3xl bg-rc-primary px-8 py-2.5 text-[16px] font-bold leading-6 text-rc-primary-foreground transition-transform hover:scale-[1.02] hover:opacity-90 dark:bg-white dark:text-slate-950 sm:w-auto sm:min-w-[220px]"
+          >
+            Partner with us
+          </Link>
         </div>
       </div>
     </section>

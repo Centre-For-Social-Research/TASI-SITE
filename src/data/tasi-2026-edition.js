@@ -23,8 +23,7 @@ export const tasi2026HeroActions = [
   },
 ];
 
-export const tasi2026HighlightsVideoSrc =
-  'https://player.mux.com/81M00mV2JqGFdX78lWxkZ0002vLJIv02NMJ31ArM7FJ9Kj8?metadata-video-title=TAS+2026+Highlights&video-title=TAS+2026+Highlights';
+export const tasi2026HighlightsVideoSrc = '/video/tasi-2026-highlights-v3.mp4';
 
 export const tasi2026PerspectiveQuote = {
   text: 'We created those technologies, we retain the responsibility to shape their purpose.',
@@ -159,7 +158,7 @@ export const tasi2026Launches = [
     title: 'AI Tool to Detect CSAM',
     by: 'NCPCR',
     description:
-      'An AI tool to proactively detect child sexual abuse material, for all state police, alongside forthcoming child-safety guidelines for platforms.',
+      'The NCPCR announced plans for an AI tool to proactively detect child sexual abuse material for state police, alongside forthcoming child-safety guidelines for platforms.',
     illustration: 'shield',
   },
   {
@@ -319,7 +318,7 @@ export const tasi2026Gallery = [
     alt: 'The opening panel, Forces Reshaping Trust and Safety in 2026',
   },
   {
-    src: '/img/tasi-2026/gallery-audience.webp',
+    src: '/img/tasi-2026/gallery-opening-reception.webp',
     alt: 'The audience at the TASI 2026 opening reception',
   },
   {
@@ -339,8 +338,8 @@ export const tasi2026Gallery = [
     alt: 'Speakers from the age assurance panel on stage',
   },
   {
-    src: '/img/tasi-2026/gallery-spotlight.webp',
-    alt: 'Speakers after a spotlight session in the Main Hall',
+    src: '/img/tasi-2026/gallery-reception-connections.webp',
+    alt: 'Guests in conversation at the Goethe-Institut opening reception',
   },
   {
     src: '/img/tasi-2026/gallery-closing-panel.webp',
