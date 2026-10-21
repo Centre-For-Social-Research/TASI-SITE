@@ -80,7 +80,7 @@ export default async function Page({ params }) {
     <>
       <HomeNavbar />
       <main className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <BrandedPageHero className="py-14 md:py-20">
+        <BrandedPageHero className="py-14 md:py-20" compactParticles>
           <div className="mx-auto w-full max-w-5xl px-4 md:px-8">
             <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-white/75">
               Trust &amp; Safety India Festival · Certificate verification

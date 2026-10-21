@@ -3,14 +3,13 @@ import Image from 'next/image';
 import KeynoteVideoPlayer from '@/components/editions/keynote-video-player';
 import RadialOrbitalTimeline from '@/components/editions/radial-orbital-timeline';
 import Tasi2025TrackIllustration from '@/components/editions/tasi-2025-track-illustration';
+import { MotionReveal } from '@/components/ui/motion-reveal';
 import {
-  tasi2025FuturePriorities,
-  tasi2025HighlightsVideoSrc,
+  tasi2025HighlightsVideoUrl,
   tasi2025Impacts,
   tasi2025JourneyEditorialNotes,
   tasi2025JourneyTimeline,
   tasi2025KeynoteVideos,
-  tasi2025MediaLinks,
   tasi2025Recommendations,
   tasi2025Tracks,
 } from '@/data/tasi-2025-edition';
@@ -66,36 +65,6 @@ export function Tasi2025AboutSection() {
             />
           </div>
         </article>
-      </div>
-    </section>
-  );
-}
-
-export function Tasi2025HighlightsVideoSection() {
-  return (
-    <section
-      id="festival-highlights"
-      className="bg-white py-section-sm dark:bg-stone-950 md:py-section-lg"
-    >
-      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-rc-accent dark:text-white">
-          Festival Highlights
-        </p>
-        <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white md:text-5xl lg:text-[3.2rem]">
-          See What Happened at India&apos;s First Trust &amp; Safety Festival
-        </h2>
-        <div className="mt-10 overflow-hidden rounded-[10px] border border-stone-200 bg-black shadow-xl shadow-stone-200/40 dark:border-slate-800">
-          <div className="relative aspect-video w-full">
-            <iframe
-              src={tasi2025HighlightsVideoSrc}
-              title="TASI 2025 Highlights"
-              className="absolute inset-0 h-full w-full border-0"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
-              allowFullScreen
-              loading="lazy"
-            />
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -353,56 +322,71 @@ export function Tasi2025RecommendationsSection() {
   );
 }
 
-export function Tasi2025LookingAheadSection() {
+// Two columns like the homepage highlights section: story on the left, the
+// highlights reel (autoplaying muted) on the right.
+export function Tasi2025HighlightsVideoSection() {
   return (
     <section
-      id="looking-ahead"
-      className="bg-[linear-gradient(180deg,#fffdf8_0%,#f6efe6_100%)] py-section-sm md:py-section-lg"
+      id="festival-highlights"
+      className="bg-gradient-to-br from-[#5c0f4f] via-[#360454] to-[#15002b] px-6 py-section-sm md:py-section-md lg:px-16 lg:py-section-lg"
     >
-      <div className="mx-auto w-full max-w-[1300px] px-4 md:px-8 lg:px-16">
-        <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
-          What Comes Next
-        </p>
-        <h2 className="max-w-3xl text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl lg:text-[3.2rem]">
-          Looking Ahead to TASI 2026
-        </h2>
-        <div className="mt-12 overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-lg shadow-stone-200/40">
-          <div className="grid gap-0 md:grid-cols-2">
-            {tasi2025FuturePriorities.map((item, index) => (
-              <article
-                key={item}
-                className="border-b border-stone-200 p-6 last:border-b-0 md:border-r md:p-8 md:last:border-r-0 md:[&:nth-last-child(-n+2)]:border-b-0"
-              >
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-rc-accent">
-                  Next {String(index + 1).padStart(2, '0')}
+      <div className="mx-auto w-full max-w-[1300px]">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
+          <div className="flex-1 text-white lg:max-w-xl">
+            <MotionReveal>
+              <span className="mb-4 block text-xs font-black uppercase tracking-widest text-rc-secondary dark:text-white md:text-sm">
+                Festival Highlights
+              </span>
+              <h2 className="mb-8 text-4xl font-extrabold leading-[1.05] tracking-tight text-white md:text-5xl lg:text-[3.2rem]">
+                Two Days That Started{' '}
+                <span className="text-rc-secondary dark:text-white">
+                  India&apos;s Trust and Safety
+                </span>{' '}
+                Conversation
+              </h2>
+              <div className="space-y-6 text-base font-normal leading-[1.6] text-white/90 md:text-[17px]">
+                <p>
+                  On{' '}
+                  <span className="font-bold text-white">7-8 October 2025</span>
+                  , the first Trust and Safety India Festival brought 500+
+                  participants from 15 countries to The Ambassador Hotel, New
+                  Delhi.
                 </p>
-                <p className="mt-4 text-lg font-semibold leading-relaxed text-stone-900">
-                  {item}
+                <p>
+                  Across 30+ sessions on AI governance, child safety, policy and
+                  digital wellbeing, government, platforms, researchers and
+                  civil society worked through the problems together. The
+                  highlights reel captures the keynotes, panels and
+                  conversations from the two days.
                 </p>
-              </article>
-            ))}
+              </div>
+            </MotionReveal>
           </div>
-        </div>
 
-        <div className="mt-12 rounded-[10px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/40 md:p-8">
-          <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-rc-accent md:text-sm">
-            Media Coverage
-          </p>
-          <h3 className="text-3xl font-extrabold tracking-tight text-stone-900">
-            Coverage Highlights
-          </h3>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {tasi2025MediaLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target={link.external ? '_blank' : undefined}
-                rel={link.external ? 'noreferrer' : undefined}
-                className="rounded-[10px] border border-stone-200 bg-stone-50 px-5 py-4 text-sm font-semibold text-stone-800 transition hover:border-stone-400 hover:bg-white"
-              >
-                {link.label}
-              </a>
-            ))}
+          <div className="relative w-full flex-1">
+            <MotionReveal delay={0.2} className="w-full">
+              <div className="w-full overflow-hidden rounded-[10px] border border-white/5 bg-[#1b0d36] shadow-2xl">
+                <div className="relative aspect-video w-full bg-black">
+                  <iframe
+                    src={tasi2025HighlightsVideoUrl}
+                    title="Trust and Safety India Festival 2025 Highlights"
+                    className="absolute inset-0 h-full w-full border-0 object-cover"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-6 md:p-8">
+                  <span className="mb-2 block text-[11px] font-black uppercase tracking-widest text-white/60 md:text-xs">
+                    TASI 2025 Highlights
+                  </span>
+                  <h3 className="text-lg font-bold tracking-tight text-white md:text-xl">
+                    See What Happened at India&apos;s First Trust &amp; Safety
+                    Festival
+                  </h3>
+                </div>
+              </div>
+            </MotionReveal>
           </div>
         </div>
       </div>

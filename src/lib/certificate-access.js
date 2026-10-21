@@ -31,6 +31,10 @@ export async function hasCertificateSession({ certificate, tokenHash }) {
   });
 }
 
+// Lax, not strict: opening the emailed link is a navigation from another
+// site, and a strict cookie is left off it, so a verified attendee was shown
+// the code step until they refreshed. Lax still keeps the cookie off
+// cross-site POSTs, and those routes also check the request origin.
 export async function startCertificateSession({ certificate, tokenHash }) {
   const store = await cookies();
   store.set(
@@ -39,7 +43,7 @@ export async function startCertificateSession({ certificate, tokenHash }) {
     {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/',
       maxAge: Math.floor(SESSION_TTL_MS / 1000),
     }

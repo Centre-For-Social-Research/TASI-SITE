@@ -63,13 +63,6 @@ export const tasi2025Recommendations = [
   'Institutionalize care by design for trust and safety workers.',
 ];
 
-export const tasi2025FuturePriorities = [
-  'Stronger Global South leadership',
-  'Trust and Safety Index for measurable progress',
-  'Regional and state-level dialogues across India',
-  'Broader cross-industry participation',
-];
-
 export const tasi2025JourneyEditorialNotes = [
   'A compact map of how TASI 2025 moved from convening to policy direction.',
   "Each stop links the edition's momentum to the wider TASI 2026 conversation.",
@@ -133,9 +126,6 @@ export const tasi2025JourneyTimeline = [
   },
 ];
 
-export const tasi2025HighlightsVideoSrc =
-  'https://player.mux.com/WOZbrSwPSYqEFylGFgp5Z8qUGGvCRmJ3eVptCQZ1YSg?metadata-video-title=Trust+and+Safety+India+Festival+2025&video-title=Trust+and+Safety+India+Festival+2025';
-
 export const tasi2025KeynoteVideos = [
   {
     iframeSrc:
@@ -171,23 +161,10 @@ export const tasi2025Quotes = [
   },
 ];
 
-export const tasi2025MediaLinks = [
-  {
-    label: 'Open Media Dossier',
-    href: '/downloads/tasi-2025-media-coverage-dossier.pdf',
-    external: true,
-  },
-  {
-    label: 'Open Media Coverage Report',
-    href: '/downloads/tasi-2025-media-coverage-report.pdf',
-    external: true,
-  },
-  {
-    label: 'View Media Page',
-    href: '/media',
-    external: false,
-  },
-];
+// The TASI 2025 highlights reel, autoplaying muted. Shown on the homepage
+// and the TASI 2025 page.
+export const tasi2025HighlightsVideoUrl =
+  'https://player.mux.com/WOZbrSwPSYqEFylGFgp5Z8qUGGvCRmJ3eVptCQZ1YSg?autoplay=true&muted=true&metadata-video-title=Trust+and+Safety+India+Festival+2025&video-title=Trust+and+Safety+India+Festival+2025';
 
 // Partners of the TASI 2025 edition, kept here so the 2025 page keeps
 // showing them after the shared partner list moves on to TASI 2026.
