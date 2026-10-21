@@ -61,9 +61,11 @@ export async function GET(request, context) {
       siteUrl: process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL,
     });
     const sha256 = createHash('sha256').update(pdf).digest('hex');
-    if (sha256 !== certificate.pdfSha256)
-      await recordCertificatePdfHash(certificate.id, sha256);
-    await recordCertificateDownload(certificate);
+    await Promise.all([
+      sha256 !== certificate.pdfSha256 &&
+        recordCertificatePdfHash(certificate.id, sha256),
+      recordCertificateDownload(certificate),
+    ]);
     return new Response(pdf, {
       headers: {
         ...NO_STORE,
