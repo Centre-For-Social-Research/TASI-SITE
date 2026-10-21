@@ -204,7 +204,7 @@ export default function CertificateClaim({
                   autoComplete="one-time-code"
                   placeholder="6-digit code"
                   aria-label="6-digit code"
-                  className="h-12 flex-1 rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900"
+                  className="h-12 w-full rounded-[10px] border-stone-200 bg-white px-4 text-center font-mono text-xl tracking-[0.4em] text-stone-900 sm:flex-1"
                 />
                 <Button
                   type="submit"
