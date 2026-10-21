@@ -13,7 +13,10 @@ import certificateUtils from '@/lib/certificate-utils.cjs';
 const { MAX_NAME_CHANGES } = certificateUtils;
 
 // Edits the name (before it is confirmed) or confirms and locks it. Both
-// need the session opened with the emailed code.
+// need the session opened with the emailed code. Once the name is locked,
+// edits are refused here and a repeat confirm changes nothing.
+const LOCKED_MESSAGE =
+  'Your name is already confirmed. Write to tasi.comms@csrindia.org to change it.';
 export async function POST(request, context) {
   const protection = await protectPublicPostRoute(request, 'certificate-name', {
     windowMs: 10 * 60 * 1000,
@@ -42,10 +45,19 @@ export async function POST(request, context) {
         { status: 401, headers: protection.headers }
       );
     }
-    const certificate =
-      body.action === 'confirm'
-        ? await confirmCertificateNameByToken(token)
-        : await changeCertificateNameByToken({ token, name: body.name });
+    if (link.certificate.nameConfirmedAt && body.action !== 'confirm') {
+      return Response.json(
+        { error: LOCKED_MESSAGE },
+        { status: 409, headers: protection.headers }
+      );
+    }
+    let certificate = link.certificate;
+    if (!certificate.nameConfirmedAt) {
+      certificate =
+        body.action === 'confirm'
+          ? await confirmCertificateNameByToken(token)
+          : await changeCertificateNameByToken({ token, name: body.name });
+    }
     return Response.json(
       {
         ok: true,

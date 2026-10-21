@@ -3,7 +3,10 @@ import {
   LINK_STATE_MESSAGES,
   resolveCertificateLink,
 } from '@/lib/certificate-access';
-import { createCertificateEmailCode } from '@/lib/certificates-db';
+import {
+  createCertificateEmailCode,
+  logCertificateEvent,
+} from '@/lib/certificates-db';
 import { sendApplicantConfirmationEmail } from '@/lib/resend';
 import { logoAttachment } from '@/lib/certificates-send';
 import certificatesEmail from '@/lib/certificates-email.cjs';
@@ -46,14 +49,19 @@ export async function POST(request, context) {
       code,
       openUrl: `${buildClaimUrl({ siteUrl: siteUrl(), token })}?code=${code}`,
     });
-    const delivery = await sendApplicantConfirmationEmail({
-      to: link.certificate.email,
-      subject: email.subject,
-      text: email.text,
-      html: email.html,
-      replyTo: CERTIFICATE_REPLY_TO,
-      attachments: [await logoAttachment()],
-    });
+    const [delivery] = await Promise.all([
+      logoAttachment().then((logo) =>
+        sendApplicantConfirmationEmail({
+          to: link.certificate.email,
+          subject: email.subject,
+          text: email.text,
+          html: email.html,
+          replyTo: CERTIFICATE_REPLY_TO,
+          attachments: [logo],
+        })
+      ),
+      logCertificateEvent(link.certificate.id, 'code_sent'),
+    ]);
     if (!delivery.sent)
       throw new Error(
         'We could not send the code. Please try again in a few minutes.'

@@ -581,3 +581,16 @@ test('any live code works and wrong guesses still count', () => {
   assert.match(fn, /attempts: row\.attempts \+ 1/);
   assert.match(fn, /consumed_at: new Date\(\)\.toISOString\(\)/);
 });
+
+test('a name locked on an earlier visit is not offered for editing again', () => {
+  const session = read('src/app/api/certificates/[token]/session/route.js');
+  assert.match(session, /confirmed: Boolean\(certificate\.nameConfirmedAt\)/);
+  const claim = read('src/components/certificates/certificate-claim.jsx');
+  assert.match(claim, /setStep\(data\.confirmed \? 'ready' : 'confirm'\)/);
+  const name = read('src/app/api/certificates/[token]/name/route.js');
+  assert.match(
+    name,
+    /link\.certificate\.nameConfirmedAt && body\.action !== 'confirm'/
+  );
+  assert.match(name, /if \(!certificate\.nameConfirmedAt\)/);
+});

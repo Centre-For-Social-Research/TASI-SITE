@@ -324,16 +324,18 @@ export async function findActiveCertificatesByEmail({ edition, email }) {
 
 export async function recordCertificateDownload(certificate) {
   const now = new Date().toISOString();
-  const { error } = await db()
-    .from('attendee_certificates')
-    .update({
-      download_count: certificate.downloadCount + 1,
-      first_downloaded_at: certificate.firstDownloadedAt || now,
-      last_downloaded_at: now,
-    })
-    .eq('id', certificate.id);
+  const [{ error }] = await Promise.all([
+    db()
+      .from('attendee_certificates')
+      .update({
+        download_count: certificate.downloadCount + 1,
+        first_downloaded_at: certificate.firstDownloadedAt || now,
+        last_downloaded_at: now,
+      })
+      .eq('id', certificate.id),
+    logCertificateEvent(certificate.id, 'downloaded'),
+  ]);
   if (error) console.error('Certificate download not recorded.', error.message);
-  await logCertificateEvent(certificate.id, 'downloaded');
 }
 
 export async function changeCertificateNameByToken({ token, name }) {
@@ -546,7 +548,8 @@ export async function findCertificateByPdfHash(sha256) {
 }
 
 // Issues a one-time email code. At most three codes per 15 minutes per
-// certificate; each code lasts 10 minutes and allows five attempts.
+// certificate; each code lasts 10 minutes and allows five attempts. The
+// caller logs 'code_sent' alongside the email, to save a round trip.
 export async function createCertificateEmailCode(certificateId) {
   const since = new Date(Date.now() - 15 * 60 * 1000).toISOString();
   const { count, error: countError } = await db()
@@ -569,7 +572,6 @@ export async function createCertificateEmailCode(certificateId) {
       expires_at: new Date(Date.now() + CODE_TTL_MS).toISOString(),
     });
   if (error) throw new Error(error.message);
-  await logCertificateEvent(certificateId, 'code_sent');
   return code;
 }
 
@@ -599,13 +601,15 @@ export async function verifyCertificateEmailCode({ certificateId, code }) {
     clean.length === 6 ? hashEmailCode({ certificateId, code: clean }) : null;
   const match = hash ? live.find((row) => row.code_hash === hash) : null;
   if (!match) {
-    for (const row of live) {
-      await db()
-        .from('attendee_certificate_codes')
-        .update({ attempts: row.attempts + 1 })
-        .eq('id', row.id);
-    }
-    await logCertificateEvent(certificateId, 'code_failed');
+    await Promise.all([
+      ...live.map((row) =>
+        db()
+          .from('attendee_certificate_codes')
+          .update({ attempts: row.attempts + 1 })
+          .eq('id', row.id)
+      ),
+      logCertificateEvent(certificateId, 'code_failed'),
+    ]);
     // Attempts left on the freshest code, the one they are most likely using.
     const left = MAX_CODE_ATTEMPTS - live[0].attempts - 1;
     throw new Error(
@@ -615,14 +619,16 @@ export async function verifyCertificateEmailCode({ certificateId, code }) {
     );
   }
   // Use up every live code once one works.
-  await db()
-    .from('attendee_certificate_codes')
-    .update({ consumed_at: new Date().toISOString() })
-    .in(
-      'id',
-      rows.map((row) => row.id)
-    );
-  await logCertificateEvent(certificateId, 'code_verified');
+  await Promise.all([
+    db()
+      .from('attendee_certificate_codes')
+      .update({ consumed_at: new Date().toISOString() })
+      .in(
+        'id',
+        rows.map((row) => row.id)
+      ),
+    logCertificateEvent(certificateId, 'code_verified'),
+  ]);
 }
 
 // The attendee's festival photo folder, if we found them in the photos.
