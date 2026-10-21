@@ -283,7 +283,7 @@ export const tasi2026DayStories = [
     eyebrow: 'Closing Ceremony · 15 October',
     title: 'Safety at a Crossroads',
     paragraphs: [
-      'The festival closed in the Main Hall with a plenary on how to rethink safety, responsibility and human wellbeing, with Shikha Dahiya of MeitY, Rob Lewington of TP, Amlan Mohanty of Anthropic, Manisha Kapoor of ASCI and Rajesh Ranjan of Google, moderated by Sayoni Aiyar.',
+      'The festival closed in the Main Hall with a plenary on how to rethink safety, responsibility and human wellbeing, with Rob Lewington of TP, Amlan Mohanty of Anthropic and Rajesh Ranjan of Google, moderated by Sayoni Aiyar.',
       'Guests then gathered at the Residence of the Ambassador of the Netherlands for the closing reception, welcomed by Ambassador Marisa Gerards, with calls to carry the festival’s recommendations to policymakers.',
     ],
     cardTitle: 'Carried forward',
