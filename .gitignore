@@ -28,6 +28,8 @@ Thumbs.db
 *.xls
 *.csv
 *.zip
+*.sql.gz
+*.dump
 tasi_guest_list_unzipped/
 
 # clerk configuration (can include secrets)

@@ -92,6 +92,15 @@ The codebase mixes JavaScript and TypeScript (`jsconfig.json` + `tsconfig.json` 
 
 A Gemini-powered chatbot is wired into the root layout. Its knowledge base is `src/data/tasi-knowledge.ts`. The API endpoint is `/api/chat`.
 
+## Public Repo Rules
+
+This repository is **public**, and so is everything GitHub stores for it: commit history, PR diffs, workflow logs and workflow artifacts (any signed-in GitHub user can download artifacts).
+
+- Never commit real personal data: no attendee, registrant or speaker emails or phone numbers. Use `example.org` addresses and placeholder numbers in tests and fixtures.
+- Never upload database dumps, exports or spreadsheets from a workflow, and never print personal data in workflow logs. Backups are taken locally, outside the repo.
+- Real data lives in Supabase only. Exports and spreadsheets stay outside the repo (`.gitignore` blocks `*.csv`, `*.xlsx`, `*.zip`, `*.sql.gz` and `*.dump`).
+- Before adding a workflow, script or route that moves data, check who can read where it ends up.
+
 ## Design Rules
 
 - Box/card/panel corner radius must be **`10px` exactly** — not `rounded-lg`, not `12px`, not `8px`.

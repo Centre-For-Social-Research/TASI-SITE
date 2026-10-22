@@ -55,9 +55,9 @@ test('speaker emails accept up to three valid, de-duplicated addresses', () => {
   assert.deepEqual(parseSpeakerEmails(''), []);
   assert.deepEqual(
     parseSpeakerEmails(
-      ' MS.NCPCR@nic.in, sanjeevsharma.edu@nic.in; ms.ncpcr@nic.in '
+      ' OFFICE.HEAD@example.gov.in, second.speaker@example.gov.in; office.head@example.gov.in '
     ),
-    ['ms.ncpcr@nic.in', 'sanjeevsharma.edu@nic.in']
+    ['office.head@example.gov.in', 'second.speaker@example.gov.in']
   );
   assert.throws(() => parseSpeakerEmails('not-an-email'), /not a valid email/);
   assert.throws(
@@ -70,13 +70,13 @@ test('speaker input strips markup and requires a name', () => {
   assert.deepEqual(
     normalizeSpeakerInput({
       name: ' Dr. Abigail <b>Bentley</b> ',
-      emails: 'abigail@abresearchconsulting.com',
+      emails: 'abigail@example.org',
       organization: ' AB Research ',
     }),
     {
       name: 'Dr. Abigail bBentley/b',
       nameKey: 'abigail-bbentley-b',
-      emails: ['abigail@abresearchconsulting.com'],
+      emails: ['abigail@example.org'],
       designation: null,
       organization: 'AB Research',
     }
@@ -130,7 +130,7 @@ test('speaker rows never expose the storage path or download token', () => {
     edition: '2026',
     speaker_name: 'Yoel Roth',
     name_key: 'yoel-roth',
-    emails: ['yoel.roth@match.com'],
+    emails: ['speaker@example.org'],
     badge_path: '2026/sp-1.png',
     badge_sha256: 'abc',
     download_token: 'secret',
