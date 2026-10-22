@@ -235,11 +235,15 @@ test('registration schema adds safe summary function and search indexes', () => 
   assert.match(schema, /idx_event_registrations_organization/);
 });
 
-// Off-season: no crons run between editions. Before the next edition,
-// re-add the daily drain (/api/internal/registration-ops/drain), the pass
-// issuance drain and the "Find my pass" drain, each limited to festival weeks.
-test('vercel crons are switched off between editions', () => {
+// Off-season: only the Supabase keep-alive runs between editions. Before the
+// next edition, re-add the daily drain (/api/internal/registration-ops/drain),
+// the pass issuance drain and the "Find my pass" drain, each limited to
+// festival weeks.
+test('event crons are switched off between editions', () => {
   const config = JSON.parse(readSource('vercel.json'));
 
-  assert.deepEqual(config.crons, []);
+  assert.deepEqual(
+    config.crons.map((cron) => cron.path),
+    ['/api/internal/keep-alive']
+  );
 });
