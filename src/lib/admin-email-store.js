@@ -1,7 +1,7 @@
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 // Every admin request checks this list, so keep it in memory briefly instead of
-// a Seoul round trip each time. Changes made on this instance clear it at once;
+// a database round trip each time. Changes made on this instance clear it at once;
 // other warm instances pick a change up within the TTL.
 const STORED_EMAILS_TTL_MS = 30_000;
 let storedEmailsCache = null;
