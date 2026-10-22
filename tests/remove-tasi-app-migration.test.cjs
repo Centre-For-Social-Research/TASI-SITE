@@ -6,7 +6,7 @@ const path = require('node:path');
 const migration = fs.readFileSync(
   path.join(
     process.cwd(),
-    'supabase/migrations/20261022120000_remove_tasi_app.sql'
+    'supabase/migrations/20261022165816_remove_tasi_app.sql'
   ),
   'utf8'
 );
