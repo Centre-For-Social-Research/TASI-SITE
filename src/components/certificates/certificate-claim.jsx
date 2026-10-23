@@ -356,6 +356,42 @@ export default function CertificateClaim({
                 <Linkedin className="h-4 w-4" /> Add to LinkedIn profile
               </a>
             </div>
+            {/* LinkedIn's "Add to profile" form never shows a link preview, so
+                the personalised card only appears as media on the entry or in
+                a post. */}
+            <div className="mt-6 rounded-[10px] border border-stone-200 bg-stone-50 p-5 dark:border-slate-800 dark:bg-slate-950/40">
+              <p className="text-sm font-semibold text-stone-800 dark:text-slate-200">
+                Show your certificate card on LinkedIn
+              </p>
+              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-stone-600 dark:text-slate-400">
+                <li>
+                  Tap{' '}
+                  <span className="font-medium text-stone-900 dark:text-white">
+                    Add to LinkedIn profile
+                  </span>{' '}
+                  and save. The certificate appears under Licenses &amp;
+                  certifications.
+                </li>
+                <li>
+                  To show the card on your profile, edit that entry, choose{' '}
+                  <span className="font-medium text-stone-900 dark:text-white">
+                    Add media → Add a link
+                  </span>{' '}
+                  and paste your verification link (use{' '}
+                  <span className="font-medium text-stone-900 dark:text-white">
+                    Copy verification link
+                  </span>{' '}
+                  below).
+                </li>
+                <li>
+                  Then tap{' '}
+                  <span className="font-medium text-stone-900 dark:text-white">
+                    Post on LinkedIn
+                  </span>{' '}
+                  to share your personalised certificate card with your network.
+                </li>
+              </ol>
+            </div>
             <p className="mt-6 text-sm font-semibold text-stone-800 dark:text-slate-200">
               Share your certificate
             </p>
