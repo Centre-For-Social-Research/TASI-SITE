@@ -597,3 +597,11 @@ test('a name locked on an earlier visit is not offered for editing again', () =>
   );
   assert.match(name, /if \(!certificate\.nameConfirmedAt\)/);
 });
+
+test('the ready step explains how to show the certificate card on LinkedIn', () => {
+  const claim = read('src/components/certificates/certificate-claim.jsx');
+  const guide = claim.indexOf('Show your certificate card on LinkedIn');
+  assert.ok(guide > claim.indexOf('Add to LinkedIn profile'));
+  assert.ok(guide < claim.indexOf('href={linkedInPostUrl}'));
+  assert.match(claim, /Add media → Add a link/);
+});
