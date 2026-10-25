@@ -14,6 +14,13 @@ const ALLOWED_ADVISORIES = [
       'No patched version exists. Only reached through build and editor tooling (tailwindcss, eslint-config-next, @sanity/cli) on fixed glob patterns; it needs attacker-controlled patterns to trigger and the app never passes user input to it.',
     expires: '2026-11-30',
   },
+  {
+    id: 'GHSA-mrhx-c7xc-m3w5',
+    package: 'zod',
+    reason:
+      'Only the zod 3 copy nested under @sanity/codegen is affected, and the fix exists only in zod 4, which that package does not support. It is reached only by the `sanity typegen` CLI on our own schema files; nothing the site or Studio serves imports it. Upgrading sanity to a release on zod 4 clears it.',
+    expires: '2026-11-30',
+  },
 ];
 
 const FAILING_SEVERITIES = new Set(['high', 'critical']);
