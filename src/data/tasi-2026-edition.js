@@ -254,9 +254,9 @@ export const tasi2026DayStories = [
       'Age assurance and age-appropriate design',
       'A fireside chat with Yoel Roth of Match Group',
     ],
-    image: '/img/tasi-2026/gallery-age-panel-group.webp',
+    image: '/img/tasi-2026/day-one-welcome-jyoti-vadehra.webp',
     imageAlt:
-      'Speakers from the age assurance panel on stage in the Main Hall on day one',
+      'Jyoti Vadehra giving the welcome address in the Main Hall on day one',
   },
   {
     id: 'day-two',
@@ -403,6 +403,11 @@ export const tasi2026SessionRecaps = [
 
 export const tasi2026Gallery = [
   {
+    src: '/img/tasi-2026/gallery-closing-reception-jyoti-vadehra.webp',
+    alt: 'Jyoti Vadehra addressing guests at the closing reception at the Netherlands Residence',
+    caption: 'Jyoti Vadehra at the Closing Reception',
+  },
+  {
     src: '/img/tasi-2026/gallery-main-hall.webp',
     alt: 'A full Main Hall during a panel at TASI 2026',
     caption: 'Main Hall',
@@ -504,8 +509,8 @@ export const tasi2026Gallery = [
   },
   {
     src: '/img/tasi-2026/gallery/gallery-14oct-01.webp',
-    alt: 'Delegates in conversation on day one',
-    caption: 'In Conversation',
+    alt: 'Jyoti Vadehra in conversation with a delegate on day one',
+    caption: 'Jyoti Vadehra in Conversation',
   },
   {
     src: '/img/tasi-2026/gallery/gallery-14oct-02.webp',
@@ -614,8 +619,8 @@ export const tasi2026Gallery = [
   },
   {
     src: '/img/tasi-2026/gallery/gallery-15oct-closing-06.webp',
-    alt: 'Speakers on stage at the closing reception at the Netherlands Residence',
-    caption: 'On Stage',
+    alt: 'Jyoti Vadehra speaking at the closing reception at the Netherlands Residence',
+    caption: 'Jyoti Vadehra on Stage',
   },
   {
     src: '/img/tasi-2026/gallery/gallery-15oct-closing-07.webp',
@@ -644,7 +649,7 @@ export const tasi2026Gallery = [
   },
   {
     src: '/img/tasi-2026/gallery/gallery-15oct-closing-12.webp',
-    alt: 'Speakers and delegates posing together at the closing reception at the Netherlands Residence',
+    alt: 'Jyoti Vadehra with guests at the closing reception at the Netherlands Residence',
     caption: 'Group Portrait',
   },
   {
