@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import QRCode from 'qrcode';
 
 import TeamLanyardRail from '@/components/ui/team-lanyard-rail';
 import speakers2026 from '@/data/speakers-2026.json';
@@ -10,6 +11,25 @@ const { buildSpeakerSlug, getSpeakerPhotoSrc, getSpeakerProfilePath } =
   speakerDirectoryUtils;
 
 const BIO_LIMIT = 170;
+
+// Badges are scanned from a screen, so always point at the live site,
+// even from a preview deployment.
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://trustandsafetyindia.org'
+).replace(/\/+$/, '');
+
+// A real QR code as one SVG path, one 1×1 square per dark module.
+// Built on the server, so the qrcode library never reaches the browser.
+function buildQrCode(url) {
+  const { modules } = QRCode.create(url, { errorCorrectionLevel: 'L' });
+  let path = '';
+  for (let y = 0; y < modules.size; y++) {
+    for (let x = 0; x < modules.size; x++) {
+      if (modules.get(x, y)) path += `M${x} ${y}h1v1h-1z`;
+    }
+  }
+  return { path, size: modules.size };
+}
 
 // The back of a badge fits about four short lines, so keep whole sentences
 // up to the limit and only cut mid-sentence when the first one is too long.
@@ -28,7 +48,8 @@ function shortBio(bio = '') {
 }
 
 function toLanyardMember(speaker) {
-  const links = [{ label: 'Profile', href: getSpeakerProfilePath(speaker) }];
+  const profilePath = getSpeakerProfilePath(speaker);
+  const links = [{ label: 'Profile', href: profilePath }];
   if (speaker.linkedinUrl) {
     links.push({ label: 'LinkedIn', href: speaker.linkedinUrl });
   }
@@ -40,8 +61,10 @@ function toLanyardMember(speaker) {
     team: speaker.organisation,
     image: getSpeakerPhotoSrc(speaker),
     bio: shortBio(speaker.bio),
-    tags: [speaker.category, speaker.country].filter(Boolean),
+    // One tag only: a second row would run into the QR code.
+    tags: [speaker.category].filter(Boolean),
     links,
+    qrCode: buildQrCode(`${SITE_URL}${profilePath}`),
   };
 }
 

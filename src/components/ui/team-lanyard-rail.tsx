@@ -27,6 +27,17 @@ export interface LanyardMember {
   tone?: 1 | 2 | 3 | 4 | 5;
   /** Extra lanyard length in pixels at a 124 px badge; it scales with the badge. */
   drop?: number;
+  /**
+   * A real, scannable QR code for the back of the badge, built ahead of time
+   * (see `buildQrCode` in the speakers wall): an SVG path over a grid of
+   * `size` × `size` modules. Without it the back shows a decorative pattern.
+   */
+  qrCode?: LanyardQrCode;
+}
+
+export interface LanyardQrCode {
+  path: string;
+  size: number;
 }
 
 export interface TeamLanyardRailLabels {
@@ -496,7 +507,10 @@ const BadgeFaces = React.memo(function BadgeFaces({
     () => hash(`${item.id}:${item.name}`),
     [item.id, item.name]
   );
-  const qr = React.useMemo(() => qrPath(seed), [seed]);
+  const qr = React.useMemo(
+    () => item.qrCode ?? { path: qrPath(seed), size: 21 },
+    [item.qrCode, seed]
+  );
   const bars = React.useMemo(() => barcode(seed), [seed]);
   const digits = String(seed % 1000000000).padStart(9, '0');
   const [failed, setFailed] = React.useState(false);
@@ -609,10 +623,25 @@ const BadgeFaces = React.memo(function BadgeFaces({
         )}
         <svg
           aria-hidden="true"
-          viewBox="-1 -1 23 23"
-          className="absolute bottom-[0.8em] right-[0.8em] size-[3.9em] text-foreground"
+          viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
+          shapeRendering={item.qrCode ? 'crispEdges' : undefined}
+          // a real code sits above the glare and is as large as the layout allows, so phones can read it off a screen
+          className={
+            item.qrCode
+              ? 'absolute bottom-[0.55em] right-[0.55em] z-10 size-[5.4em] text-black'
+              : 'absolute bottom-[0.7em] right-[0.7em] size-[3.9em] text-foreground'
+          }
         >
-          <path d={qr} fill="currentColor" />
+          {item.qrCode && (
+            <rect
+              x="-1"
+              y="-1"
+              width={qr.size + 2}
+              height={qr.size + 2}
+              fill="white"
+            />
+          )}
+          <path d={qr.path} fill="currentColor" />
         </svg>
         <Finish />
       </span>
