@@ -42,7 +42,8 @@ export default function LightHeroParticles() {
         fullScreen: {
           enable: false,
         },
-        fpsLimit: 120,
+        // Ambient drift: 60fps is plenty, and 120 doubles the cost on fast displays.
+        fpsLimit: 60,
         detectRetina: true,
         interactivity: {
           events: {
@@ -78,9 +79,12 @@ export default function LightHeroParticles() {
           color: {
             value: '#ffe7a8',
           },
+          // Links are drawn between every pair of nearby particles, so the
+          // count and link distance set the cost: 70 and 130px cost about a
+          // third of the earlier 140 and 160px.
           links: {
             enable: true,
-            distance: 160,
+            distance: 130,
             color: '#f7b267',
             opacity: 0.22,
             width: 1,
@@ -94,7 +98,7 @@ export default function LightHeroParticles() {
             },
           },
           number: {
-            value: 140,
+            value: 70,
             density: {
               enable: true,
               width: 800,

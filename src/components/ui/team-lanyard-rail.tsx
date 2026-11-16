@@ -1264,8 +1264,21 @@ export function TeamLanyardRail({
 
   const stop = React.useCallback(() => setPlaying(false), []);
 
+  // autoplay only while the rail is on screen: offscreen flips are wasted work
+  const [onScreen, setOnScreen] = React.useState(false);
   React.useEffect(() => {
-    if (!playing || reduced || count === 0 || !ready) return;
+    const stage = stageRef.current;
+    if (!stage || !autoplay) return;
+    const observer = new IntersectionObserver(
+      (entries) => setOnScreen(entries.some((entry) => entry.isIntersecting)),
+      { threshold: 0.2 }
+    );
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, [autoplay]);
+
+  React.useEffect(() => {
+    if (!playing || !onScreen || reduced || count === 0 || !ready) return;
     let timer = 0;
     function front(index: number) {
       setActive(index);
@@ -1284,7 +1297,16 @@ export function TeamLanyardRail({
         ? window.setTimeout(() => front(0), FIRST_DELAY)
         : window.setTimeout(() => flip(current), FLIP_DELAY);
     return () => window.clearTimeout(timer);
-  }, [playing, reduced, count, ready, interval, setActive, setFlipped]);
+  }, [
+    playing,
+    onScreen,
+    reduced,
+    count,
+    ready,
+    interval,
+    setActive,
+    setFlipped,
+  ]);
 
   React.useEffect(() => {
     if (flipped === null) return;

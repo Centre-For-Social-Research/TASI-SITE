@@ -531,3 +531,58 @@ a {
   --rc-primary-foreground: 0 0% 100%;
   color-scheme: light;
 }
+
+/* ── Home hero grid (src/components/ui/the-infinite-grid.jsx) ───────────────
+   Slides one 40px cell down and right every 1.33s (30px/s), then snaps back.
+   Transform only, so it runs on the compositor and never repaints. */
+.hero-grid-drift {
+  animation: hero-grid-drift 1.333s linear infinite;
+  will-change: transform;
+}
+
+@keyframes hero-grid-drift {
+  from {
+    transform: translate3d(-40px, -40px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid-drift {
+    animation: none;
+  }
+}
+
+/* ── Sparkle stars on headline text (src/components/ui/sparkles-text.jsx) ──
+   Duration, delay and drift are set per star inline. */
+.sparkle-twinkle {
+  animation-name: sparkle-twinkle;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+@keyframes sparkle-twinkle {
+  0% {
+    opacity: 0.15;
+    transform: translateY(0) scale(0.75);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(var(--sparkle-drift, -5px)) scale(1.12);
+  }
+  100% {
+    opacity: 0.18;
+    transform: translateY(0) scale(0.82);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparkle-twinkle {
+    animation: none;
+    opacity: 0.6;
+  }
+}
