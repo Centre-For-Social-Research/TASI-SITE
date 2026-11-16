@@ -498,3 +498,36 @@ a {
   --ln-column-stroke: rgba(99, 102, 241, 0.12);
   --ln-row-pivot-fill: #111a2e;
 }
+
+/* ── Team lanyard rail (src/components/ui/team-lanyard-rail.tsx) ─────────────
+   The rail was written against Tailwind 4 tokens. Map its --color-* names
+   onto our HSL theme variables, and give it the TASI lanyard tones. */
+:root {
+  --chart-1: 271 96% 20%; /* deep purple */
+  --chart-2: 25 100% 50%; /* vivid orange */
+  --chart-3: 45 100% 50%; /* festival gold */
+  --chart-4: 322 70% 42%; /* magenta */
+  --chart-5: 186 75% 30%; /* teal */
+}
+
+[data-slot='team-lanyard-rail'] {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+}
+
+/* Light palette for the rail, kept even when the site is in dark mode. */
+.lanyard-light {
+  --background: 30 82% 97%;
+  --foreground: 0 0% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  --muted: 30 30% 94%;
+  --muted-foreground: 0 0% 40%;
+  --border: 30 20% 86%;
+  --ring: 271 96% 20%;
+  --rc-primary: 271 96% 20%;
+  --rc-primary-foreground: 0 0% 100%;
+  color-scheme: light;
+}
