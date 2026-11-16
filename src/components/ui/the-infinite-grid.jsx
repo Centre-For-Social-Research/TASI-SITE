@@ -1,17 +1,12 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import {
-  motion,
-  useMotionValue,
-  useMotionTemplate,
-  useAnimationFrame,
-} from 'framer-motion';
+import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 
 /**
  * InfiniteGridOverlay
  *
- * A purely decorative overlay: renders a faint scrolling grid with a
+ * A purely decorative overlay: renders a faint drifting grid with a
  * mouse-reactive radial-gradient reveal layer on top.
  *
  * Usage: place as an `absolute inset-0` child inside a `relative` container.
@@ -19,6 +14,11 @@ import {
  *
  * Mouse tracking uses a window-level pointermove listener so it works
  * even when interactive content sits above this overlay in the z-stack.
+ *
+ * The drift is a CSS transform on an oversized grid (see `.hero-grid-drift`
+ * in globals.css), so the GPU moves it without repainting. The earlier
+ * version shifted an SVG pattern every frame, which repainted the whole
+ * page 60 times a second and made scrolling stutter.
  */
 export function InfiniteGridOverlay({ className = '' }) {
   const containerRef = useRef(null);
@@ -44,70 +44,46 @@ export function InfiniteGridOverlay({ className = '' }) {
         mouseY.set(-9999);
       }
     };
-    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointermove', onMove, { passive: true });
     return () => window.removeEventListener('pointermove', onMove);
   }, [mouseX, mouseY]);
-
-  const gridOffsetX = useMotionValue(0);
-  const gridOffsetY = useMotionValue(0);
-
-  useAnimationFrame(() => {
-    gridOffsetX.set((gridOffsetX.get() + 0.5) % 40);
-    gridOffsetY.set((gridOffsetY.get() + 0.5) % 40);
-  });
 
   const maskImage = useMotionTemplate`radial-gradient(350px circle at ${mouseX}px ${mouseY}px, black 0%, transparent 100%)`;
 
   return (
     <div
       ref={containerRef}
-      className={`absolute inset-0 pointer-events-none ${className}`}
+      className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}
     >
-      {/* Static faint base grid */}
-      <div className="absolute inset-0 opacity-[0.07] text-white">
-        <GridPattern
-          patternId="hero-grid-base"
-          offsetX={gridOffsetX}
-          offsetY={gridOffsetY}
-        />
+      {/* Faint base grid */}
+      <div className="absolute inset-0 overflow-hidden opacity-[0.07] text-white">
+        <GridPattern />
       </div>
 
       {/* Mouse-reactive bright reveal layer */}
       <motion.div
-        className="absolute inset-0 opacity-50 text-white"
+        className="absolute inset-0 overflow-hidden opacity-50 text-white"
         style={{ maskImage, WebkitMaskImage: maskImage }}
       >
-        <GridPattern
-          patternId="hero-grid-reveal"
-          offsetX={gridOffsetX}
-          offsetY={gridOffsetY}
-        />
+        <GridPattern />
       </motion.div>
     </div>
   );
 }
 
-function GridPattern({ patternId, offsetX, offsetY }) {
+// 40px cells with a 1px line on the top and left edge of each cell. The
+// layer is one cell larger than its parent on every side, so sliding it one
+// cell and snapping back loops without a visible seam.
+function GridPattern() {
   return (
-    <svg className="w-full h-full" aria-hidden="true">
-      <defs>
-        <motion.pattern
-          id={patternId}
-          width="40"
-          height="40"
-          patternUnits="userSpaceOnUse"
-          x={offsetX}
-          y={offsetY}
-        >
-          <path
-            d="M 40 0 L 0 0 0 40"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-        </motion.pattern>
-      </defs>
-      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
-    </svg>
+    <div
+      aria-hidden="true"
+      className="hero-grid-drift absolute -inset-10"
+      style={{
+        backgroundImage:
+          'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',
+        backgroundSize: '40px 40px',
+      }}
+    />
   );
 }

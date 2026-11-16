@@ -103,6 +103,23 @@ function AnimatedConnections({
       updatePlayback();
     });
     observer.observe(container);
+    // The renderer bundles three.js (~500 KB), and evaluating it takes a
+    // noticeable slice of the main thread. Start it about a screen early and
+    // in idle time, so it is ready before the map scrolls into view instead
+    // of landing in the middle of a scroll.
+    let idleId = 0;
+    const preload = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        preload.disconnect();
+        idleId =
+          typeof window.requestIdleCallback === 'function'
+            ? window.requestIdleCallback(() => void load(), { timeout: 1500 })
+            : window.setTimeout(() => void load(), 200);
+      },
+      { rootMargin: '100% 0px' }
+    );
+    preload.observe(container);
     document.addEventListener('visibilitychange', updatePlayback);
     const contextLost = (event) => {
       event.preventDefault();
@@ -113,6 +130,12 @@ function AnimatedConnections({
     return () => {
       cancelled = true;
       observer.disconnect();
+      preload.disconnect();
+      if (typeof window.cancelIdleCallback === 'function') {
+        window.cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
       document.removeEventListener('visibilitychange', updatePlayback);
       container.removeEventListener('webglcontextlost', contextLost, true);
       engineRef.current?.dispose();

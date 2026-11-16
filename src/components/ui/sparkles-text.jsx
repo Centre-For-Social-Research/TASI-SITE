@@ -1,6 +1,3 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 const SPARKLES = [
@@ -34,6 +31,9 @@ const SPARKLES = [
   },
 ];
 
+// The twinkle is a CSS animation (`.sparkle-twinkle` in globals.css) of
+// transform and opacity only, so it runs on the compositor. Driving it from
+// framer-motion ran every frame on the main thread.
 export default function SparklesText({ children, className }) {
   return (
     <span className={cn('relative inline-flex items-center', className)}>
@@ -45,27 +45,20 @@ export default function SparklesText({ children, className }) {
         className="pointer-events-none absolute inset-0 z-20 overflow-visible"
       >
         {SPARKLES.map((sparkle, index) => (
-          <motion.span
-            key={`${children}-${index}`}
+          <span
+            key={index}
             className={cn(
-              'absolute inline-flex select-none items-center justify-center font-black leading-none',
+              'sparkle-twinkle absolute inline-flex select-none items-center justify-center font-black leading-none',
               sparkle.className
             )}
-            initial={{ opacity: 0.2, scale: 0.75, y: 0 }}
-            animate={{
-              opacity: [0.15, 0.9, 0.18],
-              scale: [0.75, 1.12, 0.82],
-              y: [0, sparkle.driftY, 0],
-            }}
-            transition={{
-              duration: sparkle.duration,
-              delay: sparkle.delay,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'easeInOut',
+            style={{
+              '--sparkle-drift': `${sparkle.driftY}px`,
+              animationDuration: `${sparkle.duration}s`,
+              animationDelay: `${sparkle.delay}s`,
             }}
           >
             ✦
-          </motion.span>
+          </span>
         ))}
       </span>
     </span>

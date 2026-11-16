@@ -7,18 +7,28 @@ function readFile(relativePath) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
 
-test('branded hero uses shared light-only particles while preserving dark particles', () => {
+test('branded hero mounts only the particles for the current theme', () => {
   const hero = readFile('src/components/ui/branded-page-hero.jsx');
+  const heroParticles = readFile('src/components/ui/hero-particles.jsx');
   const lightParticles = readFile('src/components/ui/light-hero-particles.jsx');
   const aboutPage = readFile('src/app/about/page.jsx');
   const packageJson = readFile('package.json');
 
+  // The hero mounts one shared component that picks the light or dark field
+  // for the current theme, so only one particle loop runs at a time.
   assert.match(
     hero,
+    /import HeroParticles from ['"]@\/components\/ui\/hero-particles['"]/
+  );
+  assert.match(hero, /<HeroParticles \/>/);
+  assert.match(
+    heroParticles,
     /import LightHeroParticles from ['"]@\/components\/ui\/light-hero-particles['"]/
   );
-  assert.match(hero, /<LightHeroParticles \/>/);
-  assert.match(hero, /<DarkHeroParticles \/>/);
+  assert.match(heroParticles, /<LightHeroParticles \/>/);
+  assert.match(heroParticles, /<DarkHeroParticles \/>/);
+  assert.match(heroParticles, /resolvedTheme === 'dark'/);
+  assert.match(heroParticles, /prefers-reduced-motion: reduce/);
   assert.match(lightParticles, /'use client';/);
   assert.match(lightParticles, /@tsparticles\/react/);
   assert.match(lightParticles, /loadSlim/);
